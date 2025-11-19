@@ -27,10 +27,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('email_template_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('email_template_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -46,7 +43,7 @@
 	if (!empty($_POST['email_templates'])) {
 		$action = $_POST['action'];
 		$category = $_POST['category'] ?? null;
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$email_templates = $_POST['email_templates'];
 	}
 
@@ -73,7 +70,7 @@
 				break;
 		}
 
-		header('Location: email_templates.php?'.(!empty($search) ? '&search='.urlencode($search) : null).(!empty($category) ? '&category='.urlencode($category) : null));
+		header('Location: email_templates.php?'.(!empty($search) ? '&search='.urlencode($search) : '').(!empty($category) ? '&category='.urlencode($category) : null));
 		exit;
 	}
 
@@ -100,14 +97,15 @@
 		$sql_search .= " or lower(template_subject) like :search ";
 		$sql_search .= " or lower(template_body) like :search ";
 		$sql_search .= " or lower(template_type) like :search ";
-		$sql_search .= " or lower(template_enabled) like :search ";
 		$sql_search .= " or lower(template_description) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
 
 //prepare to page the results
-	$sql = "select count(*) from v_email_templates where true ";
+	$sql = "select count(*) ";
+	$sql .= "from v_email_templates ";
+	$sql .= "where true ";
 	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('email_template_all')) {
 		if (!empty($sql_search)) {
 			$sql .= "and ".$sql_search;
@@ -121,11 +119,10 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$sql .= $sql_category ?? '';
-	$database = new database;
-	$num_rows = $database->select($sql, $parameters ?? '', 'column');
+	$num_rows = $database->select($sql, $parameters ?? [], 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".$search;
 	if (!empty($_GET['show']) == "all" && permission_exists('email_template_all')) {
 		$param .= "&show=all";
@@ -136,7 +133,32 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select ";
+	$sql .= "email_template_uuid, ";
+	$sql .= "domain_uuid, ";
+	$sql .= "template_language, ";
+	$sql .= "template_category, ";
+	$sql .= "template_subcategory, ";
+	$sql .= "template_subject, ";
+	$sql .= "template_body, ";
+	$sql .= "template_type, ";
+	$sql .= "cast(template_enabled as text), ";
+	$sql .= "template_description ";
+	$sql .= "from v_email_templates ";
+	$sql .= "where true ";
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('email_template_all')) {
+		if (!empty($sql_search)) {
+			$sql .= "and ".$sql_search;
+		}
+	}
+	else {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		if (!empty($sql_search)) {
+			$sql .= "and ".$sql_search;
+		}
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	$sql .= $sql_category ?? '';
 	if ($order_by) {
 		$sql .= order_by($order_by, $order);
 	}
@@ -144,15 +166,13 @@
 		$sql .= "order by domain_uuid, template_language asc, template_category asc, template_subcategory asc, template_type asc, template_description asc ";
 	}
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
-	$result = $database->select($sql, $parameters ?? '', 'all');
+	$result = $database->select($sql, $parameters ?? [], 'all');
 	unset($sql, $parameters);
 
 //get email template categories
 	$sql = "select distinct template_category from v_email_templates ";
 	$sql .= "order by template_category asc ";
-	$database = new database;
-	$rows = $database->select($sql, $parameters ?? '', 'all');
+	$rows = $database->select($sql, $parameters ?? [], 'all');
 	if (!empty($rows)) {
 		foreach ($rows as $row) {
 			$template_categories[$row['template_category']] = ucwords(str_replace('_',' ',$row['template_category']));
@@ -260,7 +280,7 @@
 			$list_row_url = '';
 			if (permission_exists('email_template_edit')) {
 				$list_row_url = "email_template_edit.php?id=".urlencode($row['email_template_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}
@@ -327,4 +347,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

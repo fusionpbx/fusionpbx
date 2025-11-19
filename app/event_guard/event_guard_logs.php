@@ -1,7 +1,7 @@
 <?php
 /*
 	BSD-2-Clause License
-	Copyright (C) 2022-2023 Mark J Crane <markjcrane@fusionpbx.com>
+	Copyright (C) 2022-2025 Mark J Crane <markjcrane@fusionpbx.com>
 
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are met:
@@ -29,10 +29,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('event_guard_log_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('event_guard_log_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -44,7 +41,7 @@
 //get the http post data
 	if (!empty($_POST['event_guard_logs']) && is_array($_POST['event_guard_logs'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$event_guard_logs = $_POST['event_guard_logs'];
 	}
 
@@ -73,7 +70,7 @@
 		}
 
 		//redirect the user
-		header('Location: event_guard_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: event_guard_logs.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -105,7 +102,6 @@
 		$sql .= "and filter = :filter ";
 		$parameters['filter'] = $_GET["filter"];
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -118,12 +114,7 @@
 	$offset = $rows_per_page * $page;
 
 //set the time zone
-	if (isset($_SESSION['domain']['time_zone']['name'])) {
-		$time_zone = $_SESSION['domain']['time_zone']['name'];
-	}
-	else {
-		$time_zone = date_default_timezone_get();
-	}
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 	$parameters['time_zone'] = $time_zone;
 
 //get the list
@@ -157,7 +148,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'log_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$event_guard_logs = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -236,7 +226,7 @@
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
 	echo "<th class='hide-md-dn'>".$text['label-user_agent']."</th>\n";
 	echo th_order_by('log_status', $text['label-log_status'], $order_by, $order);
-	if (permission_exists('event_guard_log_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+	if (permission_exists('event_guard_log_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -247,7 +237,7 @@
 			$list_row_url = '';
 			if (permission_exists('event_guard_log_edit')) {
 				$list_row_url = "event_guard_log_edit.php?id=".urlencode($row['event_guard_log_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}
@@ -277,7 +267,7 @@
 			echo "	<td>".escape($row['extension'])."</td>\n";
 			echo "	<td class='hide-md-dn'>".escape($row['user_agent'])."</td>\n";
 			echo "	<td>".escape($text['label-'.$row['log_status']])."</td>\n";
-			if (permission_exists('event_guard_log_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+			if (permission_exists('event_guard_log_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 				echo "	</td>\n";

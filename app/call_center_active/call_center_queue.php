@@ -29,10 +29,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('call_center_active_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('call_center_active_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -62,7 +59,6 @@
 		$sql .= "and ".$sql_search;
 	}
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //paging the records
@@ -77,7 +73,6 @@
 	$sql = str_replace('count(*)', '*', $sql);
 	$sql .= order_by($order_by, $order);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$call_center_queues = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

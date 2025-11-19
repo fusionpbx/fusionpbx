@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2024
+	Portions created by the Initial Developer are Copyright (C) 2016-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('device_vendor_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('device_vendor_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -45,7 +42,7 @@
 //get posted data
 	if (!empty($_POST['vendors']) && is_array($_POST['vendors'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$vendors = $_POST['vendors'];
 	}
 
@@ -66,7 +63,7 @@
 				break;
 		}
 
-		header('Location: device_vendors.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: device_vendors.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -74,21 +71,19 @@
 	$order_by = $_GET["order_by"] ?? null;
 	$order = $_GET["order"] ?? null;
 
-//add the search term
+//set the search term
 	$search = strtolower($_GET["search"] ?? '');
-	if (!empty($search)) {
-		$sql_where = "where (";
-		$sql_where .= "lower(name) like :search ";
-		$sql_where .= "or lower(enabled) like :search ";
-		$sql_where .= "or lower(description) like :search ";
-		$sql_where .= ")";
-		$parameters['search'] = '%'.$search.'%';
-	}
 
 //prepare to page the results
 	$sql = "select count(*) from v_device_vendors ";
-	$sql .= $sql_where ?? null;
-	$database = new database;
+	if (!empty($search)) {
+		$sql .= "where (";
+		$sql .= " lower(name) like :search ";
+		$sql .= " or lower(enabled) like :search ";
+		$sql .= " or lower(description) like :search ";
+		$sql .= ")";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
@@ -101,10 +96,22 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select ";
+	$sql .= "device_vendor_uuid, ";
+	$sql .= "name, ";
+	$sql .= "cast(enabled as text), ";
+	$sql .= "description ";
+	$sql .= "from v_device_vendors ";
+	if (!empty($search)) {
+		$sql .= "where (";
+		$sql .= " lower(name) like :search ";
+		$sql .= " or lower(enabled) like :search ";
+		$sql .= " or lower(description) like :search ";
+		$sql .= ")";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$sql .= order_by($order_by, $order, 'name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -170,7 +177,7 @@
 	echo th_order_by('name', $text['label-name'], $order_by, $order);
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-xs'");
-	if (permission_exists('device_vendor_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+	if (permission_exists('device_vendor_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -181,7 +188,7 @@
 			$list_row_url = '';
 			if (permission_exists('device_vendor_edit')) {
 				$list_row_url = "device_vendor_edit.php?id=".urlencode($row['device_vendor_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}
@@ -202,7 +209,7 @@
 				echo $text['label-'.$row['enabled']];
 			}
 			echo "	<td class='description overflow hide-xs'>".escape($row['description'])."&nbsp;</td>\n";
-			if (permission_exists('device_vendor_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+			if (permission_exists('device_vendor_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -226,4 +233,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

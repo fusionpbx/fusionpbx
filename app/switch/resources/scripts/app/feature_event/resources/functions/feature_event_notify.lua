@@ -14,16 +14,33 @@ function feature_event_notify.get_db_values(user, domain_name)
 			dbh:query(sql, params, function(row)
 				domain_uuid = row.domain_uuid;
 			end);
-		
+
 			--get extension information
-				local sql = "select * from v_extensions ";
+				local sql = "select ";
+				sql = sql .. " extension_uuid, ";
+				sql = sql .. " extension, ";
+				sql = sql .. " number_alias, ";
+				sql = sql .. " accountcode, ";
+				sql = sql .. " follow_me_uuid, ";
+				sql = sql .. " cast(do_not_disturb as text), ";
+				sql = sql .. " cast(forward_all_enabled as text), ";
+				sql = sql .. " forward_all_destination, ";
+				sql = sql .. " cast(forward_busy_enabled as text), ";
+				sql = sql .. " forward_busy_destination, ";
+				sql = sql .. " cast(forward_no_answer_enabled as text), ";
+				sql = sql .. " forward_no_answer_destination, ";
+				sql = sql .. " cast(forward_user_not_registered_enabled as text), ";
+				sql = sql .. " forward_user_not_registered_destination, ";
+				sql = sql .. " toll_allow, ";
+				sql = sql .. " call_timeout ";
+				sql = sql .. "from v_extensions ";
 				sql = sql .. "where domain_uuid = :domain_uuid ";
 				sql = sql .. "and (extension = :extension or number_alias = :extension) ";
+				sql = sql .. "and enabled = true ";
 				local params = {domain_uuid = domain_uuid, extension = user};
-			--	if (debug["sql"]) then
-			--		freeswitch.consoleLog("notice", "[feature_event] " .. sql .. "; params:" .. json.encode(params) .. "\n");
-			--	end
-				
+				-- if (debug["sql"]) then
+				-- 	freeswitch.consoleLog("notice", "[feature_event] " .. sql .. "; params:" .. json.encode(params) .. "\n");
+				-- end
 				dbh:query(sql, params, function(row)
 					extension_uuid                          = row.extension_uuid;
 					extension                               = row.extension;
@@ -44,15 +61,10 @@ function feature_event_notify.get_db_values(user, domain_name)
 					--freeswitch.consoleLog("NOTICE", "[feature_event] extension "..row.extension.."\n");
 					--freeswitch.consoleLog("NOTICE", "[feature_event] accountcode "..row.accountcode.."\n");
 				end);
-	
+
 		--set some defaults if values in database are NULL
-			if (forward_all_enabled == "") then forward_all_enabled = "false"; end
-			--if (forward_all_destination == "") then forward_all_destination = nil; end
-			if (forward_busy_enabled == "") then forward_busy_enabled = "false"; end
-			if (forward_no_answer_enabled == "") then forward_no_answer_enabled = "false"; end
-			if (do_not_disturb == "") then do_not_disturb = "false"; end
 			if (call_timeout == "") then call_timeout = "30"; end
-			
+
 			return do_not_disturb, forward_all_enabled, forward_all_destination, forward_busy_enabled, forward_busy_destination, forward_no_answer_enabled, forward_no_answer_destination, call_timeout
 end
 
@@ -159,7 +171,7 @@ function feature_event_notify.init(user, host, sip_profiles, forward_immediate_e
 		event:addHeader("device", "")
 		event:addHeader("Feature-Event", "init")
 		event:addHeader("forward_immediate_enabled", forward_immediate_enabled)
-		event:addHeader("forward_immediate", forward_immediate_destination);		
+		event:addHeader("forward_immediate", forward_immediate_destination);
 		event:addHeader("forward_busy", forward_busy_destination)
 		event:addHeader("forward_busy_enabled", forward_busy_enabled)
 		event:addHeader("Feature-Event", "ForwardingEvent")

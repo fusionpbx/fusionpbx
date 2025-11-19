@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('fax_extension_advanced')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('fax_extension_advanced')) {
 		echo "access denied";
 		exit;
 	}
@@ -139,10 +136,7 @@
 						$p->add('fax_add', 'temp');
 						$p->add('fax_edit', 'temp');
 
-						$database = new database;
-						$database->app_name = 'fax';
-						$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
-						$message = $database->save($array);
+						$database->save($array);
 						unset($array);
 
 						//revoke temp permissions
@@ -170,7 +164,6 @@
 		$sql .= "and fax_uuid = :fax_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['fax_uuid'] = $fax_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$fax_email_connection_type = $row["fax_email_connection_type"];
@@ -287,10 +280,21 @@
 		echo "					".$text['label-email_connection_validate']."\n";
 		echo "				</td>\n";
 		echo "				<td class='vtable' align='left'>\n";
-		echo "					<select class='formfld' name='fax_email_connection_validate'>\n";
-		echo "						<option value='true'>".$text['option-true']."</option>\n";
-		echo "						<option value='false' ".(!empty($fax_email_connection_validate) && $fax_email_connection_validate == 'false' ? "selected" : null).">".$text['option-false']."</option>\n";
-		echo "					</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "	<select class='formfld' id='fax_email_connection_validate' name='fax_email_connection_validate'>\n";
+	echo "		<option value='true' ".($fax_email_connection_validate === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($fax_email_connection_validate === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+	}
+//		echo "					<select class='formfld' name='fax_email_connection_validate'>\n";
+//		echo "						<option value='true'>".$text['option-true']."</option>\n";
+//		echo "						<option value='false' ".(!empty($fax_email_connection_validate) && $fax_email_connection_validate == 'false' ? "selected" : null).">".$text['option-false']."</option>\n";
+//		echo "					</select>\n";
 		echo "				<br />\n";
 		echo "					".$text['description-email_connection_validate']."\n";
 		echo "				</td>\n";
@@ -417,7 +421,7 @@
 	echo "			<br>";
 	if ($action == "update") {
 		echo "		<input type='hidden' name='fax_uuid' value='".escape($fax_uuid)."'>\n";
-		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid ?? '')."'>\n";
 	}
 	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "		</td>\n";

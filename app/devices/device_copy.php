@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('device_add')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('device_add')) {
 		echo "access denied";
 		exit;
 	}
@@ -59,7 +56,6 @@
 		$sql = "select count(*) from v_devices ";
 		$sql .= "where device_address = :device_address ";
 		$parameters['device_address'] = $device_address;
-		$database = new database;
 		$num_rows = $database->select($sql, $parameters, 'column');
 		if ($num_rows == 0) {
 			$save = true;
@@ -72,10 +68,31 @@
 	}
 
 //get the device
-	$sql = "select * from v_devices ";
+	$sql = "select ";
+	$sql .= "device_uuid, ";
+	$sql .= "domain_uuid, ";
+	$sql .= "device_profile_uuid, ";
+	$sql .= "device_address, ";
+	$sql .= "device_label, ";
+	$sql .= "device_vendor, ";
+	$sql .= "device_location, ";
+	$sql .= "device_model, ";
+	$sql .= "device_firmware_version, ";
+	$sql .= "cast(device_enabled as text), ";
+	$sql .= "device_template, ";
+	$sql .= "device_user_uuid, ";
+	$sql .= "device_username, ";
+	$sql .= "device_password, ";
+	$sql .= "device_uuid_alternate, ";
+	$sql .= "device_description, ";
+	$sql .= "device_provisioned_date, ";
+	$sql .= "device_provisioned_method, ";
+	$sql .= "device_provisioned_ip, ";
+	$sql .= "device_provisioned_agent, ";
+	$sql .= "device_serial_number ";
+	$sql .= "from v_devices ";
 	$sql .= "where device_uuid = :device_uuid ";
 	$parameters['device_uuid'] = $device_uuid;
-	$database = new database;
 	$devices = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -84,7 +101,6 @@
 	$sql .= "where device_uuid = :device_uuid ";
 	$sql .= "order by line_number asc ";
 	$parameters['device_uuid'] = $device_uuid;
-	$database = new database;
 	$device_lines = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -100,7 +116,6 @@
 	$sql .= "else 100 END, ";
 	$sql .= "cast(device_key_id as int) asc ";
 	$parameters['device_uuid'] = $device_uuid;
-	$database = new database;
 	$device_keys = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -109,7 +124,6 @@
 	$sql .= "where device_uuid = :device_uuid ";
 	$sql .= "order by device_setting_subcategory asc ";
 	$parameters['device_uuid'] = $device_uuid;
-	$database = new database;
 	$device_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -169,11 +183,8 @@
 
 //copy the device
 	if ($save) {
-		$database = new database;
-		$database->app_name = 'devices';
-		$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 		$database->save($array);
-		$response = $database->message;
+		//$response = $database->message;
 		message::add($text['message-copy']);
 	}
 

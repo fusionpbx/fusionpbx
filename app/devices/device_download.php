@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('device_export')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('device_export')) {
 		echo "access denied";
 		exit;
 	}
@@ -44,7 +41,6 @@
 	$user_name = $_SESSION['username'] ?? '';
 
 //create database connection and settings object
-	$database = database::new();
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //add multi-lingual support
@@ -55,6 +51,21 @@
 	$label_required = $text['label-required'];
 
 //define the functions
+	/**
+	 * Converts a multi-dimensional array to CSV format.
+	 *
+	 * This function assumes that the input array is a collection of devices,
+	 * where each device has an array of columns. The function will take all
+	 * column headers from all devices and use them as the header row in the
+	 * generated CSV file.
+	 *
+	 * If any duplicate column headers are found, they will be removed by
+	 * truncating at the pipe character (|).
+	 *
+	 * @param array &$array A multi-dimensional array of device data.
+	 *
+	 * @return string The CSV formatted data as a string. Returns null if the input array is empty.
+	 */
 	function array2csv(array &$array) {
 		if (count($array) == 0) {
 			return null;
@@ -90,6 +101,15 @@
 		return ob_get_clean();
 	}
 
+	/**
+	 * Sends HTTP headers to force a file download.
+	 *
+	 * This function sets various HTTP headers to instruct the browser to download the file instead of displaying it in the browser window.
+	 *
+	 * @param string $filename The filename to use for the downloaded file.
+	 *
+	 * @return void No return value. This function only sends HTTP headers and does not generate any output.
+	 */
 	function download_send_headers($filename) {
 		// disable caching
 		$now = gmdate("D, d M Y H:i:s");
@@ -114,7 +134,6 @@
 	$available_columns['devices'][] = 'device_label';
 	$available_columns['devices'][] = 'device_vendor';
 	$available_columns['devices'][] = 'device_template';
-	$available_columns['devices'][] = 'device_enabled_date';
 	$available_columns['devices'][] = 'device_username';
 	$available_columns['devices'][] = 'device_password';
 	$available_columns['devices'][] = 'device_uuid_alternate';

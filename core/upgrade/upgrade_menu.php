@@ -18,7 +18,7 @@
 
   The Initial Developer of the Original Code is
   Mark J Crane <markjcrane@fusionpbx.com>
-  Portions created by the Initial Developer are Copyright (C) 2008-2023
+  Portions created by the Initial Developer are Copyright (C) 2008-2025
   the Initial Developer. All Rights Reserved.
 
   Contributor(s):
@@ -31,13 +31,6 @@ defined('STDIN') or die('Unauthorized');
 
 //include files
 require_once dirname(__DIR__, 2) . "/resources/require.php";
-
-//create a database connection using default config
-$config = config::load();
-$database = database::new(['config' => $config]);
-
-//load global defaults
-$settings = new settings(['database' => $database]);
 
 //get the language code from global defaults
 $language_code = $settings->get('domain', 'language');
@@ -55,58 +48,86 @@ $text = $language->get($language_code, 'core/upgrade');
 //output to text type instead of html
 $display_type = 'text';
 
-//run
+//run the upgrade menu
 show_upgrade_menu();
 
 /**
- * Show upgrade menu
- * @global type $text
- * @global type $software_name
+ * Display the upgrade menu to the user.
+ *
+ * This function displays a menu with various upgrade options and prompts the
+ * user for input. Based on the user's selection, it performs the corresponding
+ * actions such as upgrading code, schema, auto loader, domains, menu,
+ * permissions, file permissions, services, or restarting services.
+ *
+ * @return void
+ *
+ * @global text $text
+ * @global string $software_name
+ * @global settings $settings
  */
 function show_upgrade_menu() {
+	//set the global variables
 	global $text, $software_name, $settings;
+
+	//debug information
 	//error_reporting(E_ALL);
-	$line = str_repeat('-', strlen($text['title-cli_upgrade']) + 2);
+
+	//build the options array
+	$options = [
+		['1', $text['label-upgrade_source'], $text['description-update_all_source_files']],
+		['1a', $text['label-main_software'], $text['description-main_software']],
+		['1b', $text['label-optional_applications'], $text['description-optional_applications']],
+		['2', $text['label-upgrade_schema'], $text['description-upgrade_schema']],
+		['3', $text['label-upgrade_apps'], $text['description-upgrade_apps']],
+		['4', $text['label-upgrade_menu'], $text['description-upgrade_menu']],
+		['5', $text['label-upgrade_permissions'], $text['description-upgrade_permissions']],
+		['6', $text['label-update_file_permissions'], $text['description-update_file_permissions']],
+		['7', $text['label-upgrade_services'], $text['description-upgrade_services']],
+		['8', $text['label-restart_services'], $text['description-restart_services']]
+	];
+
+	$line = str_repeat('-', strlen($text['title-cli_upgrade']) + 8);
+
+	//show the menu
 	while (true) {
+		//show the upgrade title
+		echo $text['title-cli_upgrade'] . "\n";
+		echo "  ".$software_name . " " . show_software_version();
 		echo "\n";
-		echo "+{$line}+\n";
-		echo "| {$text['title-cli_upgrade']} |\n";
-		echo "+{$line}+\n";
-		echo "version: "; show_software_version();
+
+		//show the command menu
+		echo "Options:\n";
+		foreach ($options as [$key, $label, $description]) {
+			if (!is_numeric($key)) { echo "    "; }
+			echo "  $key) $label" . ((!empty($option) && $option == 'h') ? " - " . $description : "") . "\n";
+		}
 		echo "\n";
-		echo "1) {$text['label-upgrade_source']} - {$text['description-update_all_source_files']}\n";
-		echo "  1a) " . $software_name . " - Update Main Software Only \n";
-		echo "  1b) {$text['label-update_external_repositories']} - {$text['description-repositories']}\n";
-		echo "2) {$text['label-schema']} - {$text['description-upgrade_schema']}\n";
-		echo "  2b) {$text['label-upgrade_data_types']} - {$text['description-upgrade_data_types']}\n";
-		echo "3) {$text['label-upgrade_apps']} - {$text['description-upgrade_apps']}\n";
-		echo "4) {$text['label-upgrade_menu']} - {$text['description-upgrade_menu']}\n";
-		echo "5) {$text['label-upgrade_permissions']} - {$text['description-upgrade_permissions']}\n";
-		echo "6) {$text['label-update_filesystem_permissions']} - {$text['description-update_filesystem_permissions']}\n";
-		echo "7) {$text['label-all_of_the_above']} - {$text['description-all_of_the_above']}\n";
-		echo "0) Exit\n";
+		echo "  a) All\n";
+		echo "  h) Help\n";
+		echo "  q) Quit\n";
+
+		//prompt for user input
 		echo "\n";
-		echo "Choice: ";
-		$choice = readline();
-		switch ($choice) {
+		echo "Enter an Option: ";
+
+		//read the input and then call the correction actions
+		$option = readline();
+		switch ($option) {
 			case 1:
 				do_upgrade_code();
 				do_upgrade_code_submodules();
 				do_upgrade_auto_loader();
-				break;
+				exit();
 			case '1a':
 				do_upgrade_code();
 				do_upgrade_auto_loader();
-				break;
+				exit();
 			case '1b':
 				do_upgrade_code_submodules();
 				do_upgrade_auto_loader();
 				break;
 			case 2:
 				do_upgrade_schema();
-				break;
-			case '2b':
-				do_upgrade_schema(true);
 				break;
 			case 3:
 				do_upgrade_auto_loader();
@@ -122,53 +143,75 @@ function show_upgrade_menu() {
 				break;
 			case 6:
 				do_upgrade_auto_loader();
-				do_filesystem_permissions($text, $settings);
+				do_file_permissions($text, $settings);
 				break;
 			case 7:
+				do_upgrade_auto_loader();
+				do_upgrade_services($text, $settings);
+				break;
+			case 8:
+				do_restart_services($text, $settings);
+				break;
+			case 'a':
 				do_upgrade_code();
 				do_upgrade_auto_loader();
 				do_upgrade_schema();
 				do_upgrade_domains();
 				do_upgrade_menu();
 				do_upgrade_permissions();
-				do_filesystem_permissions($text, $settings);
+				do_file_permissions($text, $settings);
+				do_upgrade_services($text, $settings);
+				do_restart_services($text, $settings);
 				break;
-			case 9:
-				break;
-			case 0:
 			case 'q':
 				exit();
 		}
+
+		//add a few line feeds
+		echo "\n\n";
 	}
 }
 
 /**
- * Rebuild the cache file
- * @global type $text
+ * Upgrade auto loader by removing temporary files and updating it.
+ *
+ * @return void
+ *
+ * @global text $text
+ * @global auto_loader $autoload
  */
 function do_upgrade_auto_loader() {
 	global $text, $autoload;
+
 	//remove temp files
 	unlink(sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE);
 	unlink(sys_get_temp_dir() . '/' . auto_loader::INTERFACES_FILE);
+
 	//create a new instance of the autoloader
 	$autoload->update();
 	echo "{$text['message-updated_autoloader']}\n";
 }
 
 /**
- * Update file system permissions
+ * Update file permissions for the application.
+ *
+ * @param array    $text     Array of text to display to the user.
+ * @param settings $settings Settings object containing various configuration options.
  */
-function do_filesystem_permissions($text, settings $settings) {
+function do_file_permissions($text, settings $settings) {
 
 	echo ($text['label-header1'] ?? "Root account or sudo account must be used for this option") . "\n";
 	echo ($text['label-header2'] ?? "This option is used for resetting the permissions on the filesystem after executing commands using the root user account") . "\n";
 	if (is_root_user()) {
+		//initialize the array
 		$directories = [];
+
 		//get the fusionpbx folder
 		$project_root = dirname(__DIR__, 2);
+
 		//adjust the project root
 		$directories[] = $project_root;
+
 		//adjust the /etc/freeswitch
 		$directories[] = $settings->get('switch', 'conf', null);
 		$directories[] = $settings->get('switch', 'call_center', null); //normally in conf but can be different
@@ -176,51 +219,78 @@ function do_filesystem_permissions($text, settings $settings) {
 		$directories[] = $settings->get('switch', 'directory', null); //normally in conf but can be different
 		$directories[] = $settings->get('switch', 'languages', null); //normally in conf but can be different
 		$directories[] = $settings->get('switch', 'sip_profiles', null); //normally in conf but can be different
+
 		//adjust the /usr/share/freeswitch/{scripts,sounds}
 		$directories[] = $settings->get('switch', 'scripts', null);
 		$directories[] = $settings->get('switch', 'sounds', null);
+
 		//adjust the /var/lib/freeswitch/{db,recordings,storage,voicemail}
 		$directories[] = $settings->get('switch', 'db', null);
 		$directories[] = $settings->get('switch', 'recordings', null);
 		$directories[] = $settings->get('switch', 'storage', null);
 		$directories[] = $settings->get('switch', 'voicemail', null); //normally included in storage but can be different
+
+		//adjust the /var/run/fusionpbx
+		$directories[] = '/var/run/fusionpbx';
+
 		//only set the xml_cdr directory permissions
 		$log_directory = $settings->get('switch', 'log', null);
 		if ($log_directory !== null) {
 			$directories[] = $log_directory . '/xml_cdr';
 		}
+
 		//update the auto_loader cache permissions file
 		$directories[] = sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE;
+
 		//execute chown command for each directory
 		foreach ($directories as $dir) {
-			if ($dir !== null) {
-				//notify user
-				echo "chown -R www-data:www-data $dir\n";
-				//execute
-				exec("chown -R www-data:www-data $dir");
+			//skip empty directories
+			if (empty($dir)) { continue; }
+
+			//skip /dev/shm directory
+			if (strpos($dir, '/dev/shm') !== false) {
+				continue;
 			}
+
+			//notify user
+			echo "chown -R www-data:www-data $dir\n";
+
+			//execute
+			exec("chown -R www-data:www-data $dir");
 		}
-	} else {
+	}
+	else {
 		echo ($text['label-not_running_as_root'] ?? "Not root user - operation skipped")."\n";
 	}
 }
 
-function is_root_user(): bool {
-	return posix_getuid() === 0;
-}
-
+/**
+ * Returns the name of the currently logged in user.
+ *
+ * @return string|null The username of the current user, or null if not available
+ */
 function current_user(): ?string {
 	return posix_getpwuid(posix_getuid())['name'] ?? null;
 }
 
 //show the upgrade type
-function show_software_version() {
-	echo software::version() . "\n";
+/**
+ * Returns a string containing the current version of the software.
+ *
+ * @return string|null The software version as a string, or null if not available.
+ */
+function show_software_version(): ?string {
+	return software::version() . "\n";
 }
 
 /**
- * Upgrade the source folder
- * @return type
+ * Upgrade code by pulling the latest changes from version control.
+ *
+ * If the pull operation is successful, no result message will be returned.
+ * Otherwise, a result array containing 'result' set to false and a 'message'
+ * detailing the failure will be returned.
+ *
+ * @return null A result array or null on success
  */
 function do_upgrade_code() {
 	//assume failed
@@ -237,8 +307,7 @@ function do_upgrade_code() {
 }
 
 /**
- * Upgrade any of the git submodules
- * @global type $text
+ * Upgrade code submodules by pulling the latest changes from Git repositories.
  */
 function do_upgrade_code_submodules() {
 	global $text;
@@ -265,34 +334,37 @@ function do_upgrade_code_submodules() {
 }
 
 /**
- * Execute all app_defaults.php files
+ * Perform upgrade on domains.
  */
 function do_upgrade_domains() {
 	$domain = new domains;
-	$domain->display_type = 'text';
 	$domain->upgrade();
 }
 
 /**
- * Upgrade schema and/or data_types
+ * Upgrades the database schema to the latest version.
+ *
+ * @return void
  */
-function do_upgrade_schema(bool $data_types = false) {
+function do_upgrade_schema() {
 	//get the database schema put it into an array then compare and update the database as needed.
-	$obj = new schema;
-	$obj->data_types = $data_types;
+	$obj = new schema();
 	echo $obj->schema('text');
 }
 
 /**
- * Restore the default menu
+ * Upgrades the menu and restores it to its default state.
+ *
+ * @return void
  */
 function do_upgrade_menu() {
-	global $included, $sel_menu, $menu_uuid, $menu_language;
+	//define the global variables
+	global $database, $settings, $included, $sel_menu, $menu_uuid, $menu_language;
+
 	//get the menu uuid and language
 	$sql = "select menu_uuid, menu_language from v_menus ";
 	$sql .= "where menu_name = :menu_name ";
 	$parameters['menu_name'] = 'default';
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row) && sizeof($row) != 0) {
 		$menu_uuid = $row["menu_uuid"];
@@ -309,7 +381,7 @@ function do_upgrade_menu() {
 	if (!isset($argv[2]) || $argv[2] == 'default') {
 		//restore the menu
 		$included = true;
-		require_once dirname(__DIR__, 2) . "/core/menu/menu_restore_default.php";
+		require dirname(__DIR__, 2) . "/core/menu/menu_restore_default.php";
 		unset($sel_menu);
 		$text = (new text)->get(null, 'core/upgrade');
 		//send message to the console
@@ -318,13 +390,17 @@ function do_upgrade_menu() {
 }
 
 /**
- * Restore the default permissions
+ * Upgrades database permissions to the latest version.
+ *
+ * @return void
  */
 function do_upgrade_permissions() {
-	global $included;
+	//define the global variables
+	global $database, $settings, $included;
+
 	//default the permissions
 	$included = true;
-	require_once dirname(__DIR__, 2) . "/core/groups/permissions_default.php";
+	require dirname(__DIR__, 2) . "/core/groups/permissions_default.php";
 
 	//send message to the console
 	$text = (new text)->get(null, 'core/upgrade');
@@ -332,7 +408,10 @@ function do_upgrade_permissions() {
 }
 
 /**
- * Default upgrade schema and app defaults
+ * Performs default upgrades to the application, including multi-lingual support,
+ * database schema updates, and running of app_defaults.php files.
+ *
+ * @return void
  */
 function do_upgrade_defaults() {
 	//add multi-lingual support
@@ -351,15 +430,91 @@ function do_upgrade_defaults() {
 
 	//run all app_defaults.php files
 	$domain = new domains;
-	$domain->display_type = 'text';
 	$domain->upgrade();
 
 	echo "\n";
 }
 
 /**
- * Load the old config.php file
- * @return type
+ * Upgrades the services to the latest version.
+ *
+ * This function upgrades all service files and enables them as systemd services.
+ *
+ * @param string   $text     An array containing upgrade information. The 'description-upgrade_services' key is used for informational messages.
+ * @param settings $settings Configuration settings object.
+ *
+ * @return void
+ */
+function do_upgrade_services($text, settings $settings) {
+	echo ($text['description-upgrade_services'] ?? "")."\n";
+	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.service");
+	$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.service");
+	$service_files = array_merge($core_files, $app_files);
+	foreach($service_files as $file) {
+		$service_name = get_service_name($file);
+		echo " ".$service_name."\n";
+		system("cp " . escapeshellarg($file) . " /etc/systemd/system/" . escapeshellarg($service_name) . ".service");
+		system("systemctl daemon-reload");
+		system("systemctl enable --now " . escapeshellarg($service_name));
+	}
+}
+
+/**
+ * Retrieves the name of a service from an .ini file.
+ *
+ * @param string $file Path to the .ini file containing service information.
+ *
+ * @return string The name of the service, or empty string if not found.
+ */
+function get_service_name(string $file) {
+	$parsed = parse_ini_file($file);
+	$exec_cmd = $parsed['ExecStart'];
+	$parts = explode(' ', $exec_cmd);
+	$php_file = $parts[1] ?? '';
+	if (!empty($php_file)) {
+		$path_info = pathinfo($php_file);
+		return $path_info['filename'];
+	}
+	return '';
+}
+
+/**
+ * Checks if the current user is the root user.
+ *
+ * @return bool True if the user is the root user, false otherwise.
+ */
+function is_root_user(): bool {
+	return posix_getuid() === 0;
+}
+
+/**
+ * Restarts services defined in the system.
+ *
+ * @param array  $text     An array of strings for service descriptions.
+ * @param object $settings An instance of the settings class, not used in this function.
+ *
+ * @return void
+ */
+function do_restart_services($text, settings $settings) {
+	echo ($text['description-restart_services'] ?? "")."\n";
+	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.service");
+	$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.service");
+	$service_files = array_merge($core_files, $app_files);
+	foreach($service_files as $file) {
+		$service_name = get_service_name($file);
+		echo " ".$service_name."\n";
+		system("systemctl restart ".$service_name);
+	}
+}
+
+/**
+ * Loads configuration from a PHP file and writes it to a new configuration file.
+ *
+ * If the configuration file does not exist but the config.php file is present,
+ * the settings in the config.php file are used as defaults for the new
+ * configuration file. The config directory is created if it does not exist.
+ *
+ * @return void
  */
 function load_config_php() {
 	//if the config file doesn't exist and the config.php does exist use it to write a new config file
@@ -424,6 +579,11 @@ function load_config_php() {
 	$conf .= "temp.dir = /tmp\n";
 	$conf .= "php.dir = " . PHP_BINDIR . "\n";
 	$conf .= "php.bin = php\n";
+	$conf .= "\n";
+	$conf .= "#session settings\n";
+	$conf .= "session.cookie_httponly = true\n";
+	$conf .= "session.cookie_secure = true\n";
+	$conf .= "session.cookie_samesite = Lax\n";
 	$conf .= "\n";
 	$conf .= "#cache settings\n";
 	$conf .= "cache.method = file\n";

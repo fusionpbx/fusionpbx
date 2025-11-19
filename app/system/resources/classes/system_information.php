@@ -1,0 +1,63 @@
+<?php
+
+/*
+ * The MIT License
+ *
+ * Copyright 2025 Tim Fry <tim@fusionpbx.com>.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+/**
+ * Description of system_information
+ *
+ * @author Tim Fry <tim@fusionpbx.com>
+ */
+abstract class system_information {
+
+	abstract public function get_cpu_cores(): int;
+	abstract public function get_uptime();
+	abstract public function get_cpu_percent(): float;
+	abstract public function get_cpu_percent_per_core(): array;
+	abstract public function get_network_speed(string $interface = 'eth0'): array;
+
+	/**
+	 * Returns the system load average.
+	 *
+	 * @return array Three most recent one-minute load averages.
+	 */
+	public function get_load_average() {
+		return sys_getloadavg();
+	}
+
+	/**
+	 * Returns a system information object based on the underlying operating system.
+	 *
+	 * @return ?system_information The system information object for the current OS, or null if not supported.
+	 */
+	public static function new(): ?system_information {
+		if (stristr(PHP_OS, 'BSD')) {
+			return new bsd_system_information();
+		}
+		if (stristr(PHP_OS, 'Linux')) {
+			return new linux_system_information();
+		}
+		return null;
+	}
+}

@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('dialplan_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('dialplan_edit')) {
 		echo "access denied";
 		exit;
 	}
@@ -63,7 +60,6 @@
 				$sql = "select * from v_dialplans ";
 				$sql .= "where dialplan_uuid = :dialplan_uuid ";
 				$parameters['dialplan_uuid'] = $dialplan_uuid;
-				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
 				if (is_array($row) && @sizeof($row) != 0) {
 					$app_uuid = $row["app_uuid"];
@@ -126,9 +122,6 @@
 					$array['dialplans'][$x]["dialplan_xml"] =  $dialplan_xml;
 
 				//save to the data
-					$database = new database;
-					$database->app_name = 'dialplans';
-					$database->app_uuid = is_uuid($app_uuid) ? $app_uuid : '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 					$database->save($array);
 					unset($array);
 
@@ -158,7 +151,6 @@
 		$sql = "select * from v_dialplans ";
 		$sql .= "where dialplan_uuid = :dialplan_uuid ";
 		$parameters['dialplan_uuid'] = $dialplan_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
@@ -179,11 +171,11 @@
 	$text = $language->get();
 
 // load editor preferences/defaults
-	$setting_size = !empty($_SESSION["editor"]["font_size"]["text"]) ? $_SESSION["editor"]["font_size"]["text"] : '12px';
-	$setting_theme = !empty($_SESSION["editor"]["theme"]["text"]) ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
-	$setting_invisibles = isset($_SESSION['editor']['invisibles']['text']) ? $_SESSION['editor']['invisibles']["text"] : 'false';
-	$setting_indenting = isset($_SESSION['editor']['indent_guides']['text']) ? $_SESSION['editor']['indent_guides']["text"]: 'false';
-	$setting_numbering = isset($_SESSION['editor']['line_numbers']['text']) ? $_SESSION['editor']['line_numbers']["text"] : 'true';
+	$setting_size = !empty($settings->get('editor', 'font_size')) ? $settings->get('editor', 'font_size') : '12px';
+	$setting_theme = !empty($settings->get('editor', 'theme')) ? $settings->get('editor', 'theme') : 'cobalt';
+	$setting_invisibles = $settings->get('editor', 'invisibles', 'false');
+	$setting_indenting = $settings->get('editor', 'indent_guides', 'false');
+	$setting_numbering = $settings->get('editor', 'line_numbers', 'true');
 
 //create token
 	$object = new token;

@@ -86,7 +86,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the number translation name.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'number_translation_enabled';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'boolean';
 		$apps[$x]['db'][$y]['fields'][$z]['toggle'] = ['true','false'];
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the number translation enabled.';
 		$z++;

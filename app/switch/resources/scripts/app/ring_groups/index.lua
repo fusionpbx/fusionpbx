@@ -1,5 +1,5 @@
 --	Part of FusionPBX
---	Copyright (C) 2010-2023 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2025 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -28,7 +28,7 @@
 --  Gill Abada <gill.abada@gmail.com>
 
 --include the log
-log = require "resources.functions.log".ring_group
+	log = require "resources.functions.log".ring_group
 
 --connect to the database
 	local Database = require "resources.functions.database";
@@ -54,6 +54,16 @@ log = require "resources.functions.log".ring_group
 	local route_to_bridge = require "resources.functions.route_to_bridge"
 	local play_file   = require "resources.functions.play_file"
 	local send_mail = require 'resources.functions.send_mail'
+
+--define hex_to_char function
+	local hex_to_char = function(x)
+		return string.char(tonumber(x, 16))
+	end
+	
+	--define url_decode function
+	local url_decode = function(url)
+		return url:gsub("%%(%x%x)", hex_to_char)
+	end
 
 --define the session hangup
 	function session_hangup_hook()
@@ -85,7 +95,7 @@ log = require "resources.functions.log".ring_group
 			end
 
 		--send the ring group event
-		    event = freeswitch.Event("CUSTOM", "RING_GROUPS");
+			event = freeswitch.Event("CUSTOM", "RING_GROUPS");
 			event:addHeader("domain_uuid", domain_uuid);
 			event:addHeader("domain_name", domain_name);
 			event:addHeader("ring_group_uuid", ring_group_uuid);
@@ -217,9 +227,31 @@ log = require "resources.functions.log".ring_group
 --get the ring group
 	ring_group_forward_enabled = '';
 	ring_group_forward_destination = '';
-	sql = "SELECT d.domain_name, r.* FROM v_ring_groups as r, v_domains as d ";
-	sql = sql .. "where r.ring_group_uuid = :ring_group_uuid ";
-	sql = sql .. "and r.domain_uuid = d.domain_uuid ";
+	sql = "SELECT d.domain_name, ";
+	sql = sql .. "d.domain_uuid, ";
+	sql = sql .. "d.domain_name, ";
+	sql = sql .. "r.ring_group_name, ";
+	sql = sql .. "r.ring_group_extension, ";
+	sql = sql .. "r.ring_group_greeting, ";
+	sql = sql .. "cast(r.ring_group_forward_enabled as text), ";
+	sql = sql .. "r.ring_group_forward_destination, ";
+	sql = sql .. "r.ring_group_forward_toll_allow, ";
+	sql = sql .. "r.ring_group_timeout_app, ";
+	sql = sql .. "r.ring_group_timeout_data, ";
+	sql = sql .. "r.ring_group_exit_key, ";
+	sql = sql .. "r.ring_group_call_timeout, ";
+	sql = sql .. "r.ring_group_caller_id_name, ";
+	sql = sql .. "r.ring_group_caller_id_number, ";
+	sql = sql .. "r.ring_group_cid_name_prefix, ";
+	sql = sql .. "r.ring_group_cid_number_prefix, ";
+	sql = sql .. "cast(r.ring_group_call_screen_enabled as text), ";
+	sql = sql .. "cast(r.ring_group_call_forward_enabled as text), ";
+	sql = sql .. "cast(r.ring_group_follow_me_enabled as text), ";
+	sql = sql .. "r.ring_group_missed_call_app, ";
+	sql = sql .. "r.ring_group_missed_call_data ";
+	sql = sql .. "FROM v_ring_groups as r, v_domains as d ";
+	sql = sql .. "WHERE r.ring_group_uuid = :ring_group_uuid ";
+	sql = sql .. "AND r.domain_uuid = d.domain_uuid ";
 	local params = {ring_group_uuid = ring_group_uuid};
 	status = dbh:query(sql, params, function(row)
 		domain_uuid = row["domain_uuid"];
@@ -230,6 +262,9 @@ log = require "resources.functions.log".ring_group
 		ring_group_forward_enabled = row["ring_group_forward_enabled"];
 		ring_group_forward_destination = row["ring_group_forward_destination"];
 		ring_group_forward_toll_allow = row["ring_group_forward_toll_allow"];
+		ring_group_timeout_app = row["ring_group_timeout_app"];
+		ring_group_timeout_data = row["ring_group_timeout_data"];
+		ring_group_exit_key = row["ring_group_exit_key"];
 		ring_group_call_timeout = row["ring_group_call_timeout"];
 		ring_group_caller_id_name = row["ring_group_caller_id_name"];
 		ring_group_caller_id_number = row["ring_group_caller_id_number"];
@@ -283,6 +318,17 @@ log = require "resources.functions.log".ring_group
 			ring_group_call_timeout = '300';
 		end
 		session:setVariable("call_timeout", ring_group_call_timeout);
+	end
+
+--set exit key action
+	if (ring_group_timeout_app and ring_group_timeout_data) then
+		if (ring_group_exit_key) then
+			--use the user defined exit key
+			session:execute("bind_digit_action", "exit_key,"..ring_group_exit_key..",exec:"..ring_group_timeout_app..","..ring_group_timeout_data..",both,self");
+		else
+			--use a default exit key of 9
+			session:execute("bind_digit_action", "exit_key,9,exec:"..ring_group_timeout_app..","..ring_group_timeout_data..",both,self");
+		end
 	end
 
 --play the greeting
@@ -414,7 +460,7 @@ log = require "resources.functions.log".ring_group
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					sql = sql .. "AND template_language = :template_language ";
 					sql = sql .. "AND template_category = 'missed' ";
-					sql = sql .. "AND template_enabled = 'true' ";
+					sql = sql .. "AND template_enabled = true ";
 					sql = sql .. "ORDER BY domain_uuid DESC ";
 					local params = {domain_uuid = domain_uuid, template_language = default_language.."-"..default_dialect};
 					if (debug["sql"]) then
@@ -509,7 +555,7 @@ log = require "resources.functions.log".ring_group
 	end
 
 --process the ring group
-	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
+	if (ring_group_forward_enabled == 'true' and string.len(ring_group_forward_destination) > 0) then
 
 		--set the outbound caller id
 			if (caller_is_local == 'true' and outbound_caller_id_name ~= nil) then
@@ -523,6 +569,12 @@ log = require "resources.functions.log".ring_group
 			end
 			if (ring_group_caller_id_number ~= nil and ring_group_caller_id_number ~= '') then
 				caller_id_number = ring_group_caller_id_number;
+			end
+
+		--set the diversion header
+			local diversion_enabled = settings:get('ring_group', 'diversion_enabled', 'boolean') or 'false';
+			if (diversion_enabled == 'true') then
+				session:setVariable("sip_h_Diversion", "<sip:"..ring_group_forward_destination.."@"..context..":5060>;reason=unconditional");
 			end
 
 		--forward the ring group
@@ -548,11 +600,9 @@ log = require "resources.functions.log".ring_group
 				WHERE
 					ring_group_uuid = :ring_group_uuid
 					AND r.domain_uuid = :domain_uuid
-					AND r.ring_group_enabled = 'true'
+					AND r.ring_group_enabled = true
 			]];
-
 			local params = {ring_group_uuid = ring_group_uuid, domain_uuid = domain_uuid};
-
 			dbh:query(sql, params, function(row)
 				if (row.ring_group_strategy == "random") then
 					if (database["type"] == "mysql") then
@@ -560,10 +610,13 @@ log = require "resources.functions.log".ring_group
 					else
 						sql_order = 'random() * 1000000' --both postgresql and sqlite uses random() instead of rand()
 					end
-				else
-					sql_order='d.destination_delay, d.destination_number asc'
 				end
 			end);
+
+		--if the sql_order is not then set a default
+			if (sql_order == nil) then
+					sql_order = 'd.destination_delay, d.destination_number asc';
+			end
 
 		--get the ring group destinations
 			sql = [[
@@ -585,8 +638,8 @@ log = require "resources.functions.log".ring_group
 					d.ring_group_uuid = r.ring_group_uuid
 					AND d.ring_group_uuid = :ring_group_uuid
 					AND r.domain_uuid = :domain_uuid
-					AND r.ring_group_enabled = 'true'
-					AND d.destination_enabled = 'true'
+					AND r.ring_group_enabled = true
+					AND d.destination_enabled = true
 				ORDER BY
 					]]..sql_order..[[
 			]];
@@ -609,7 +662,7 @@ log = require "resources.functions.log".ring_group
 				end
 
 				--follow the forwards
-				if (ring_group_call_forward_enabled == "true") then
+				if (ring_group_call_forward_enabled == 'true') then
 					count, destination_number, toll_allow = get_forward_all(0, row.destination_number, leg_domain_name);
 				else
 					destination_number = row.destination_number;
@@ -666,7 +719,7 @@ log = require "resources.functions.log".ring_group
 		---add follow me destinations
 			for key, row in pairs(destinations) do
 
-				if (ring_group_follow_me_enabled == "true") then
+				if (ring_group_follow_me_enabled == 'true') then
 					cmd = "user_data ".. row.destination_number .."@" ..row.domain_name.." var follow_me_enabled";
 					if (api:executeString(cmd) == "true") then
 
@@ -763,12 +816,24 @@ log = require "resources.functions.log".ring_group
 				end
 			end
 
+		--add the array to the logs
+			-- for key, row in pairs(destinations) do
+			-- 	freeswitch.consoleLog("NOTICE", "[ring group] domain_name: "..row.domain_name.."\n");
+			-- 	freeswitch.consoleLog("NOTICE", "[ring group] destination_number: "..row.destination_number.."\n");
+			-- 	freeswitch.consoleLog("NOTICE", "[ring group] destination_delay: "..row.destination_delay.."\n");
+			-- 	freeswitch.consoleLog("NOTICE", "[ring group] destination_timeout: "..row.destination_timeout.."\n");
+			-- 	freeswitch.consoleLog("NOTICE", "[ring group] destination_prompt: "..row.destination_prompt.."\n");
+			-- end
+
 		--prepare the array of destinations
 			for key, row in pairs(destinations) do
-				--determine if the user is registered if not registered then lookup
 				if (row.user_exists == "true") then
+					--get the results from sofia_contact
 					cmd = "sofia_contact */".. row.destination_number .."@" ..domain_name;
-					if (api:executeString(cmd) == "error/user_not_registered") then
+					sofia_contact_result = api:executeString(cmd);
+
+					--determine if the user is registered if not registered then lookup
+					if (sofia_contact_result == "error/user_not_registered") then
 						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
 						cmd = "user_data ".. row.destination_number .."@" ..domain_name.." var forward_user_not_registered_enabled";
 						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
@@ -784,11 +849,59 @@ log = require "resources.functions.log".ring_group
 							end
 						end
 					end
+
+					--handle multiple registrations
+					contact_array = {};
+					if (row.ring_group_strategy == 'simultaneous' and sofia_contact_result ~= "error/user_not_registered") then
+						--sofia_contact_result = url_decode(sofia_contact_result);
+
+						contact_array = explode(",",sofia_contact_result);
+						if (#contact_array > 1) then
+							i = 0;
+							for index, value in ipairs(contact_array) do
+								--contact_array_sub = explode(";",value);
+								destination_number = string.gsub(value, "sip:", "");
+								if (i == 0) then
+									--row use the original key
+									new_key = key;
+								else
+									--add a new key
+									new_key = #destinations + 1;
+								end
+
+								--multiple registrations - keep the original destination_number
+								destinations[new_key] = {}
+								destinations[new_key]['ring_group_strategy'] = row.ring_group_strategy;
+								destinations[new_key]['ring_group_timeout_app'] = row.ring_group_timeout_app;
+								destinations[new_key]['ring_group_timeout_data'] = row.ring_group_timeout_data;
+								destinations[new_key]['ring_group_caller_id_name'] = row.ring_group_caller_id_name;
+								destinations[new_key]['ring_group_caller_id_number'] = row.ring_group_caller_id_number;
+								destinations[new_key]['ring_group_cid_name_prefix'] = row.ring_group_cid_name_prefix;
+								destinations[new_key]['ring_group_cid_number_prefix'] = row.ring_group_cid_number_prefix;
+								destinations[new_key]['ring_group_distinctive_ring'] = row.ring_group_distinctive_ring;
+								destinations[new_key]['ring_group_ringback'] = row.ring_group_ringback;
+								destinations[new_key]['domain_name'] = domain_name;
+								destinations[new_key]['destination_number'] = destination_number;
+								destinations[new_key]['destination_delay'] = tonumber(row.destination_delay);
+								destinations[new_key]['destination_timeout'] = row.destination_timeout;
+								destinations[new_key]['destination_prompt'] = 'false';
+								destinations[new_key]['group_confirm_key'] = row.group_confirm_key;
+								destinations[new_key]['group_confirm_file'] = row.group_confirm_file;
+								destinations[new_key]['toll_allow'] = toll_allow;
+								destinations[new_key]['user_exists'] = 'false'; --NOT sure about this
+								destinations[new_key]['is_follow_me_destination'] = "true";
+
+								i = i + 1;
+							end
+						end
+					end
+
 				end
 			end
 
 		--add the array to the logs
 			for key, row in pairs(destinations) do
+				freeswitch.consoleLog("NOTICE", "[ring group]\n");
 				freeswitch.consoleLog("NOTICE", "[ring group] domain_name: "..row.domain_name.."\n");
 				freeswitch.consoleLog("NOTICE", "[ring group] destination_number: "..row.destination_number.."\n");
 				freeswitch.consoleLog("NOTICE", "[ring group] destination_delay: "..row.destination_delay.."\n");
@@ -820,13 +933,15 @@ log = require "resources.functions.log".ring_group
 						user_exists = row.user_exists;
 
 					--follow the forwards
-						if (row.ring_group_call_forward_enabled == "true") then
+						if (row.ring_group_call_forward_enabled == 'true') then
 							count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
 						end
 
 					--check if the user exists
-						cmd = "user_exists id ".. destination_number .." "..domain_name;
-						user_exists = api:executeString(cmd);
+						if (user_exists == nil) then
+							cmd = "user_exists id ".. destination_number .." "..domain_name;
+							user_exists = api:executeString(cmd);
+						end
 
 					--set ringback
 						if (ring_group_ringback and string.len(ring_group_ringback) > 0) then
@@ -1063,7 +1178,7 @@ log = require "resources.functions.log".ring_group
 			end
 
 		--release dbh before bridge
-				dbh:release();
+			dbh:release();
 
 		--session execute
 			if (session:ready()) then

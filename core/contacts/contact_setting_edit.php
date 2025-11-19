@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2024
+ Portions created by the Initial Developer are Copyright (C) 2008-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_setting_edit') || permission_exists('contact_setting_add')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('contact_setting_edit') || permission_exists('contact_setting_add'))) {
 		echo "access denied";
 		exit;
 	}
@@ -48,7 +45,6 @@
 	$contact_setting_name = '';
 	$contact_setting_value = '';
 	$contact_setting_order = '';
-	$contact_setting_enabled = '';
 	$contact_setting_description = '';
 
 //action add or update
@@ -132,9 +128,6 @@
 					$p = permissions::new();
 					$p->add('contact_edit', 'temp');
 
-					$database = new database;
-					$database->app_name = 'contacts';
-					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 					$database->save($array);
 					unset($array);
 
@@ -167,9 +160,6 @@
 						$array['contact_settings'][0]['contact_setting_enabled'] = $contact_setting_enabled;
 						$array['contact_settings'][0]['contact_setting_description'] = $contact_setting_description;
 
-						$database = new database;
-						$database->app_name = 'contacts';
-						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 						$database->save($array);
 						unset($array);
 					}
@@ -188,7 +178,6 @@
 		$sql .= "and contact_setting_uuid = :contact_setting_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_setting_uuid'] = $contact_setting_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$contact_setting_category = escape($row["contact_setting_category"]);
@@ -201,6 +190,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	$contact_setting_enabled = $contact_setting_enabled ?? true;
 
 //create token
 	$object = new token;
@@ -296,19 +288,9 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select name='contact_setting_order' class='formfld'>\n";
-		$i=0;
-		while($i<=999) {
-			$selected = ($i == $contact_setting_order) ? "selected" : null;
-			if (strlen($i) == 1) {
-				echo "		<option value='00$i' ".$selected.">00$i</option>\n";
-			}
-			if (strlen($i) == 2) {
-				echo "		<option value='0$i' ".$selected.">0$i</option>\n";
-			}
-			if (strlen($i) == 3) {
-				echo "		<option value='$i' ".$selected.">$i</option>\n";
-			}
-			$i++;
+		echo "		<option value=''></option>\n";
+		for ($i = 0; $i <=999; $i++) {
+			echo "	<option value='".str_pad($i, 3, '0', STR_PAD_LEFT)."' ".(isset($contact_setting_order) && $i == $contact_setting_order ? "selected='selected'" : null).">".str_pad($i, 3, '0', STR_PAD_LEFT)."</option>\n";
 		}
 		echo "	</select>\n";
 		echo "	<br />\n";
@@ -322,20 +304,17 @@
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='contact_setting_enabled'>\n";
-	if ($contact_setting_enabled == "true") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
+	echo "		<select class='formfld' id='contact_setting_enabled' name='contact_setting_enabled'>\n";
+	echo "			<option value='true' ".($contact_setting_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($contact_setting_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
-	if ($contact_setting_enabled == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";

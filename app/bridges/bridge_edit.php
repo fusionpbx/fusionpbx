@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -54,16 +54,16 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
-		$bridge_uuid = $_POST["bridge_uuid"];
-		$bridge_name = $_POST["bridge_name"];
-		$bridge_action = $_POST["bridge_action"];
-		$bridge_profile = $_POST["bridge_profile"];
-		$bridge_variables = $_POST["bridge_variables"];
-		$bridge_gateways = $_POST["bridge_gateways"];
-		$destination_number = $_POST["destination_number"];
-		$bridge_destination = $_POST["bridge_destination"];
-		$bridge_enabled = $_POST["bridge_enabled"] ?? 'false';
-		$bridge_description = $_POST["bridge_description"];
+		$bridge_uuid = $_POST["bridge_uuid"] ?? null;
+		$bridge_name = $_POST["bridge_name"] ?? null;
+		$bridge_action = $_POST["bridge_action"] ?? null;
+		$bridge_profile = $_POST["bridge_profile"] ?? null;
+		$bridge_variables = $_POST["bridge_variables"] ?? null;
+		$bridge_gateways = $_POST["bridge_gateways"] ?? null;
+		$destination_number = $_POST["destination_number"] ?? null;
+		$bridge_destination = $_POST["bridge_destination"] ?? null;
+		$bridge_enabled = $_POST["bridge_enabled"] ?? null;
+		$bridge_description = $_POST["bridge_description"] ?? null;
 	}
 
 //process the user data and save it to the database
@@ -167,9 +167,6 @@
 			$array['bridges'][0]['bridge_description'] = $bridge_description;
 
 		//save to the data
-			$database = new database;
-			$database->app_name = 'bridges';
-			$database->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
 			$database->save($array);
 			$message = $database->message;
 
@@ -197,7 +194,6 @@
 		$sql = "select * from v_bridges ";
 		$sql .= "where bridge_uuid = :bridge_uuid ";
 		$parameters['bridge_uuid'] = $bridge_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters ?? null, 'row');
 		if (!empty($row)) {
 			$bridge_name = $row["bridge_name"];
@@ -318,7 +314,7 @@
 	}
 
 //get the gateways
-	$actions = explode(',', $bridge_destination);
+	$actions = explode(',', $bridge_destination ?? '');
 	foreach ($actions as $action) {
 		$action_array = explode('/',$action);
 		if (!empty($action_array) && is_array($action_array) && !empty($action_array[1]) && $action_array[1] == 'gateway') {
@@ -337,28 +333,22 @@
 		$sql .= "and domain_uuid = :domain_uuid ";
 	}
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$gateways = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //get the domains
 	$sql = "select * from v_domains ";
-	$sql .= "where domain_enabled = 'true' ";
-	$database = new database;
+	$sql .= "where domain_enabled = true ";
 	$domains = $database->select($sql, null, 'all');
 	unset($sql);
 
 //get the sip profiles
 	$sql = "select sip_profile_name ";
 	$sql .= "from v_sip_profiles ";
-	$sql .= "where sip_profile_enabled = 'true' ";
+	$sql .= "where sip_profile_enabled = true ";
 	$sql .= "order by sip_profile_name asc ";
-	$database = new database;
 	$sip_profiles = $database->select($sql, null, 'all');
 	unset($sql);
-
-//set the defaults
-	if (empty($bridge_enabled)) { $bridge_enabled = 'true'; }
 
 //create token
 	$object = new token;
@@ -572,17 +562,16 @@
 	echo "	".$text['label-bridge_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='bridge_enabled' name='bridge_enabled' value='true' ".(!empty($bridge_enabled) && $bridge_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='bridge_enabled' name='bridge_enabled'>\n";
-		echo "		<option value='true' ".($bridge_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($bridge_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='bridge_enabled' name='bridge_enabled'>\n";
+	echo "			<option value='true' ".($bridge_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($bridge_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-bridge_enabled']."\n";

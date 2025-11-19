@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('group_member_view') || if_group("superadmin")) {
-		//access allowed
-	}
-	else {
+	if (!permission_exists('group_member_view')) {
 		echo "access denied";
 		return;
 	}
@@ -42,9 +39,6 @@
 		echo "access denied";
 		return;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -119,7 +113,7 @@
 
 //add group_member to the users array
 	if (!empty($users)) {
-		foreach ($users as $field) {
+		foreach ($users as &$field) {
 			$field['group_member'] = 'false';
 			if (!empty($user_groups)) {
 				foreach($user_groups as $row) {

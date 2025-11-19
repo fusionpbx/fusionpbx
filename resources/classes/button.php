@@ -29,8 +29,10 @@
 
 		public static $collapse = 'hide-md-dn';
 
-		static function create($array) {
-			$button_icons = !empty($_SESSION['theme']['button_icons']['text']) ? $_SESSION['theme']['button_icons']['text'] : 'auto';
+		public static function create($array) {
+			global $settings;
+
+			$button_icons = $settings->get('theme', 'button_icons', 'auto');
 			//parse styles into array
 				if (!empty($array['style'])) {
 					$tmp = explode(';',$array['style']);
@@ -108,7 +110,7 @@
 			//link
 				if (!empty($array['link'])) {
 					$anchor = "<a ";
-					$anchor .= "href='".$array['link']."' ";
+					$anchor .= "href='" . self::escape_href($array['link']) . "' ";
 					$anchor .= "target='".(!empty($array['target']) ? $array['target'] : '_self')."' ";
 					//ensure only margin* styles are applied to the anchor element
 					if (!empty($array['style']) && is_array($array['style']) && @sizeof($array['style']) != 0) {
@@ -132,6 +134,12 @@
 			return substr_count($value, "'") ? '"'.$value.'"' : "'".$value."'";
 		}
 
+		private static function escape_href(string $url): string {
+			// clear whitespace
+			$url = trim($url);
+
+			return htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+		}
 	}
 
 /*

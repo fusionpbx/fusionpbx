@@ -1,4 +1,3 @@
-{* <?php *}
 
 {*//set the doctype *}
 	{if $browser_name == 'Internet Explorer'}
@@ -20,7 +19,7 @@
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-tempusdominus.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-colorpicker.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/fontawesome/css/all.min.css.php'>
-	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202504150207'>
+	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202509221124'>
 {*//link to custom css file *}
 	{if !empty($settings.theme.custom_css)}
 		<link rel='stylesheet' type='text/css' href='{$settings.theme.custom_css}'>
@@ -461,7 +460,7 @@
 					{/if}
 
 				//key: [ctrl]+[c], list,edit: to copy
-					{if $settings.theme.keyboard_shortcut_copy_enabled}
+					{if $settings.theme.keyboard_shortcut_copy_enabled|default:false}
 						{if $browser_name_short == 'Safari'} //emulate with detecting [c] only, as [command] and [control] keys are ignored when captured
 							{literal}
 							if (
@@ -706,6 +705,18 @@
 			})(jQuery);
 			{/literal}
 
+		//slide toggle
+			{literal}
+			var switches = document.getElementsByClassName('switch');
+			var toggle = function(){
+				this.children[0].value = (this.children[0].value == 'false' ? 'true' : 'false');
+				this.children[0].dispatchEvent(new Event('change'));
+				};
+			for (var i = 0; i < switches.length; i++) {
+				switches[i].addEventListener('click', toggle, false);
+			}
+			{/literal}
+
 	{literal}
 	}); //document ready end
 	{/literal}
@@ -715,37 +726,55 @@
 		{literal}
 		var recording_audio, audio_clock, recording_id_playing;
 
-		function recording_play(player_id, data, audio_type) {
+		function recording_load(player_id, data, audio_type) {
+			{/literal}
+			//create and load waveform image
+			{if $settings.theme.audio_player_waveform_enabled == 'true'}
+				{literal}
+				//list playback
+				if (document.getElementById('playback_progress_bar_background_' + player_id)) {
+					// alert("waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : ''));
+					document.getElementById('playback_progress_bar_background_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 20%), url('waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : '') + "')";
+				}
+				//form playback
+				else if (document.getElementById('recording_progress_bar_' + player_id)) {
+					// alert("waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : ''));
+					document.getElementById('recording_progress_bar_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 20%), url('waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : '') + "')";
+				}
+				{/literal}
+			{else}
+				{literal}
+				//list playback
+				if (document.getElementById('playback_progress_bar_background_' + player_id)) {
+					document.getElementById('playback_progress_bar_background_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%)";
+				}
+				//form playback
+				else if (document.getElementById('recording_progress_bar_' + player_id)) {
+					document.getElementById('recording_progress_bar_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%)";
+				}
+				{/literal}
+			{/if}
+			{literal}
+		}
+
+		function recording_play(player_id, data, audio_type, label) {
 			if (document.getElementById('recording_progress_bar_' + player_id)) {
 				document.getElementById('recording_progress_bar_' + player_id).style.display='';
 			}
 			recording_audio = document.getElementById('recording_audio_' + player_id);
 
+			var label_play = "{/literal}{if $php_self == 'xml_cdr_details.php'}{literal}<span class='button-label pad'>{/literal}{$text.label_play}{literal}</span>{/literal}{/if}{literal}";
+			var label_pause = "{/literal}{if $php_self == 'xml_cdr_details.php'}{literal}<span class='button-label pad'>{/literal}{$text.label_pause}{literal}</span>{/literal}{/if}{literal}";
+
 			if (recording_audio.paused) {
-				{/literal}
-				//create and load waveform image
-				{if $settings.theme.audio_player_waveform_enabled == 'true'}
-					{literal}
-					//list playback
-					if (document.getElementById('playback_progress_bar_background_' + player_id)) {
-						// alert("waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : ''));
-						document.getElementById('playback_progress_bar_background_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 20%), url('waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : '') + "')";
-					}
-					//form playback
-					else if (document.getElementById('recording_progress_bar_' + player_id)) {
-						// alert("waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : ''));
-						document.getElementById('recording_progress_bar_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 20%), url('waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : '') + "')";
-					}
-					{/literal}
-				{/if}
-				{literal}
+				recording_load(player_id, data, audio_type);
 				recording_audio.volume = 1;
 				recording_audio.play();
 				recording_id_playing = player_id;
-				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_pause}{literal} fa-fw'></span>";
+				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_pause}{literal} fa-fw'></span>" + (label_pause ?? '');
 				audio_clock = setInterval(function () { update_progress(player_id); }, 20);
 
-				$('[id*=recording_button]').not('[id*=recording_button_' + player_id + ']').html("<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>");
+				$('[id*=recording_button]').not('[id*=recording_button_' + player_id + ']').html("<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>" + (label_play ?? ''));
 				$('[id*=recording_button_intro]').not('[id*=recording_button_' + player_id + ']').html("<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>");
 				$('[id*=recording_progress_bar]').not('[id*=recording_progress_bar_' + player_id + ']').css('display', 'none');
 
@@ -763,7 +792,7 @@
 					document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>";
 				}
 				else {
-					document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>";
+					document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>" + (label_play ?? '');
 				}
 				clearInterval(audio_clock);
 			}
@@ -778,9 +807,15 @@
 			recording_audio = document.getElementById('recording_audio_' + player_id);
 			recording_audio.pause();
 			recording_audio.currentTime = 0;
-			if (document.getElementById('recording_progress_bar_' + player_id)) {
-				document.getElementById('recording_progress_bar_' + player_id).style.display='none';
-			}
+			{/literal}
+			{if $php_self <> 'xml_cdr_details.php'}
+				{literal}
+				if (document.getElementById('recording_progress_bar_' + player_id)) {
+					document.getElementById('recording_progress_bar_' + player_id).style.display='none';
+				}
+				{/literal}
+			{/if}
+			{literal}
 			if (player_id.substring(0,6) == 'intro_') {
 				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>";
 			}
@@ -923,7 +958,7 @@
 	//list page functions
 		{literal}
 		function list_all_toggle(modifier) {
-			var checkboxes = (modifier !== undefined) ? document.getElementsByClassName('checkbox_'+modifier) : document.querySelectorAll("input[type='checkbox']");
+			var checkboxes = (modifier !== undefined) ? document.getElementsByClassName('checkbox_'+modifier) : document.querySelectorAll("input[type='checkbox']:not([id*='_enabled'])");
 			var checkbox_checked = document.getElementById('checkbox_all' + (modifier !== undefined ? '_'+modifier : '')).checked;
 			for (var i = 0, max = checkboxes.length; i < max; i++) {
 				checkboxes[i].checked = checkbox_checked;
@@ -1166,7 +1201,7 @@
 <body>
 
 	{*//video background *}
-	{if !empty({$background_video})}
+	{if !empty($background_video)}
 		<video id="background-video" autoplay muted poster="" disablePictureInPicture="true" onloadstart="this.playbackRate = 1; this.pause();">
 			<source src="{$background_video}" type="video/mp4">
 		</video>

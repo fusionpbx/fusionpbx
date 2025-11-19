@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2023
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -48,7 +48,7 @@
 //get posted data
 	if (!empty($_POST['phrases'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$phrases = $_POST['phrases'];
 	}
 
@@ -78,7 +78,7 @@
 				break;
 		}
 
-		header('Location: phrases.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: phrases.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -91,7 +91,6 @@
 	if (!empty($search)) {
 		$sql_search = "and (";
 		$sql_search .= "lower(phrase_name) like :search ";
-		$sql_search .= "or lower(phrase_enabled) like :search ";
 		$sql_search .= "or lower(phrase_description) like :search ";
 		$sql_search .= ") ";
 		$parameters['search'] = '%'.$search.'%';
@@ -105,7 +104,6 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	$sql .= $sql_search;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
@@ -120,10 +118,22 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select ";
+	$sql .= " phrase_uuid, ";
+	$sql .= " domain_uuid, ";
+	$sql .= " phrase_name, ";
+	$sql .= " phrase_language, ";
+	$sql .= " cast(phrase_enabled as text), ";
+	$sql .= " phrase_description ";
+	$sql .= "from v_phrases ";
+	$sql .= "where true ";
+	if ($show != "all" || !permission_exists('phrase_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	$sql .= $sql_search;
 	$sql .= order_by($order_by, $order, 'phrase_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$phrases = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -203,7 +213,7 @@
 	echo th_order_by('phrase_language', $text['label-language'], $order_by, $order);
 	echo th_order_by('phrase_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('phrase_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn' style='min-width: 40%;'");
-	if (permission_exists('phrase_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+	if (permission_exists('phrase_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -253,7 +263,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['phrase_description'])."&nbsp;</td>\n";
-			if (permission_exists('phrase_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+			if (permission_exists('phrase_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -277,4 +287,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

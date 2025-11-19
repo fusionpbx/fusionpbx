@@ -32,10 +32,7 @@
 	require_once "resources/functions/parse_message.php";
 
 //check permissions
-	if (permission_exists('fax_inbox_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('fax_inbox_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -69,7 +66,6 @@
 			$parameters['fax_uuid'] = $fax_uuid;
 			$parameters['user_uuid'] = $_SESSION['user_uuid'];
 		}
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$fax_name = $row["fax_name"];
@@ -153,7 +149,7 @@
 			if (imap_delete($connection, $email_id, FT_UID)) {
 				if (imap_expunge($connection)) {
 					//clean up local inbox copy
-					$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
+					$fax_dir = $settings->get('switch', 'storage').'/fax/'.$_SESSION['domain_name'];
 					@unlink($fax_dir.'/'.$fax_extension.'/inbox/'.$attachment['name']);
 					//redirect user
 					message::add($text['message-delete']);

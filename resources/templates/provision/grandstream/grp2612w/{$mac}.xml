@@ -380,7 +380,11 @@
 		<!-- BLF Call-pickup  -->
 		<!-- Auto, Force, Disabled -->
 		<!-- Pvalue P6752 -->
-		<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">Auto</item>
+		{if isset($grandstream_blf_callpickup_force) }
+			<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">{$grandstream_blf_callpickup_force}</item>
+		{else}
+			<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">Auto</item>
+		{/if}
 
 		<!-- BLF Call-pickup Prefix -->
 		<!-- Pvalue P1347 -->

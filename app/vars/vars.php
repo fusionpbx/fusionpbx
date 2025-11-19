@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('var_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('var_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -76,7 +73,7 @@
 				break;
 		}
 
-		header('Location: vars.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: vars.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -96,12 +93,11 @@
 		$sql .= "	or lower(var_name) like :search ";
 		$sql .= "	or lower(var_value) like :search ";
 		$sql .= "	or lower(var_hostname) like :search ";
-		$sql .= "	or lower(var_enabled) like :search ";
+		$sql .= "	or lower(cast(var_enabled as text)) like :search ";
 		$sql .= "	or lower(var_description) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
@@ -109,12 +105,20 @@
 	$param = $search ? "&search=".$search : null;
 	$param = $order_by ? "&order_by=".$order_by."&order=".$order : null;
 	$page = empty($_GET['page']) ? $page = 0 : $page = $_GET['page'];
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	[$paging_controls, $rows_per_page] = paging($num_rows, $param, $rows_per_page);
+	[$paging_controls_mini, $rows_per_page] = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_vars ";
+	$sql = "select \n";
+	$sql .= "var_uuid, \n";
+	$sql .= "var_category, \n";
+	$sql .= "var_name, \n";
+	$sql .= "var_value, \n";
+	$sql .= "var_hostname, \n";
+	$sql .= "cast(var_enabled as text), \n";
+	$sql .= "var_description \n";
+	$sql .= "from v_vars ";
 	if (!empty($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
 		$sql .= "where (";
@@ -122,14 +126,13 @@
 		$sql .= "	or lower(var_name) like :search ";
 		$sql .= "	or lower(var_value) like :search ";
 		$sql .= "	or lower(var_hostname) like :search ";
-		$sql .= "	or lower(var_enabled) like :search ";
+		$sql .= "	or lower(cast(var_enabled as text)) like :search ";
 		$sql .= "	or lower(var_description) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
 	$sql .= $order_by != '' ? order_by($order_by, $order) : " order by var_category, var_order asc, var_name asc ";
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$vars = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql);
 
@@ -188,6 +191,13 @@
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
+	/**
+	 * Writes the header for a list of variables.
+	 *
+	 * @param string $modifier The modifier to be used in the header, with slashes and extra spaces removed.
+	 *
+	 * @return void
+	 */
 	function write_header($modifier) {
 		global $text, $order_by, $order, $vars, $list_row_edit_button;
 		$modifier = str_replace('/', '', $modifier);
@@ -216,20 +226,18 @@
 		$previous_category = '';
 		foreach ($vars as $x => $row) {
 			//write category and column headings
-				if ($previous_category != $row["var_category"]) {
-					echo "<tr>\n";
-					echo "<td colspan='7' class='no-link'>\n";
-					echo ($previous_category != '' ? '<br />' : null)."<b>".$row["var_category"]."</b>";
-					echo "</td>\n";
-					echo "</tr>\n";
-					write_header($row["var_category"]);
-				}
+			if ($previous_category != $row["var_category"]) {
+				echo "<tr>\n";
+				echo "<td colspan='7' class='no-link'>\n";
+				echo ($previous_category != '' ? '<br />' : null)."<b>".$row["var_category"]."</b>";
+				echo "</td>\n";
+				echo "</tr>\n";
+				write_header($row["var_category"]);
+			}
+
 			$list_row_url = '';
 			if (permission_exists('var_edit')) {
 				$list_row_url = "var_edit.php?id=".urlencode($row['var_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
-					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
-				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('var_add') || permission_exists('var_edit') || permission_exists('var_delete')) {
@@ -287,4 +295,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

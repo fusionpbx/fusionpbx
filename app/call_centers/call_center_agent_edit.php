@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_center_agent_add') || permission_exists('call_center_agent_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('call_center_agent_add') || permission_exists('call_center_agent_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -41,9 +38,6 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//connect to the database
-	$database = new database;
 
 //set the defaults
 	$agent_id = '';
@@ -125,12 +119,13 @@
 			}
 
 		//set default values
-			if (empty($agent_call_timeout)) { $agent_call_timeout = "20"; }
-			if (empty($agent_max_no_answer)) { $agent_max_no_answer = "0"; }
-			if (empty($agent_wrap_up_time)) { $agent_wrap_up_time = "10"; }
-			if (empty($agent_no_answer_delay_time)) { $agent_no_answer_delay_time = "30"; }
-			if (empty($agent_reject_delay_time)) { $agent_reject_delay_time = "90"; }
-			if (empty($agent_busy_delay_time)) { $agent_busy_delay_time = "90"; }
+			$agent_call_timeout = $agent_call_timeout ?? "20";
+			$agent_max_no_answer = $agent_max_no_answer ?? "0";
+			$agent_wrap_up_time = $agent_wrap_up_time ?? "10";
+			$agent_no_answer_delay_time = $agent_no_answer_delay_time ?? "30";
+			$agent_reject_delay_time = $agent_reject_delay_time ?? "90";
+			$agent_busy_delay_time = $agent_busy_delay_time ?? "90";
+			$agent_record = $agent_record ?? false;
 
 		//add the call_center_agent_uuid
 			if (empty($call_center_agent_uuid)) {
@@ -138,7 +133,7 @@
 			}
 
 		//change the contact string to loopback - Not recommended added for backwards comptability causes multiple problems
-			if ($_SESSION['call_center']['agent_contact_method']['text'] == 'loopback') {
+			if ($settings->get('call_center', 'agent_contact_method') == 'loopback') {
 				$agent_contact = str_replace("user/", "loopback/", $agent_contact);
 				$agent_contact = str_replace("@", "/", $agent_contact);
 			}
@@ -169,9 +164,7 @@
 				$array['users'][0]['user_status'] = $agent_status;
 			}
 
-		//save to the data
-			$database->app_name = 'call_center';
-			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+		//save to the database
 			$database->save($array);
 
 		//syncrhonize configuration
@@ -265,7 +258,23 @@
 //pre-populate the form
 	if (!empty($_GET["id"]) && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$call_center_agent_uuid = $_GET["id"];
-		$sql = "select * from v_call_center_agents ";
+		$sql = "select ";
+		$sql .= "call_center_agent_uuid, ";
+		$sql .= "user_uuid, ";
+		$sql .= "agent_name, ";
+		$sql .= "agent_type, ";
+		$sql .= "agent_call_timeout, ";
+		$sql .= "agent_id, ";
+		$sql .= "agent_password, ";
+		$sql .= "agent_status, ";
+		$sql .= "agent_contact, ";
+		$sql .= "agent_no_answer_delay_time, ";
+		$sql .= "agent_max_no_answer, ";
+		$sql .= "agent_wrap_up_time, ";
+		$sql .= "agent_reject_delay_time, ";
+		$sql .= "agent_busy_delay_time, ";
+		$sql .= "agent_record ";
+		$sql .= "from v_call_center_agents ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and call_center_agent_uuid = :call_center_agent_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -300,6 +309,7 @@
 	if (empty($agent_no_answer_delay_time)) { $agent_no_answer_delay_time = "30"; }
 	if (empty($agent_reject_delay_time)) { $agent_reject_delay_time = "90"; }
 	if (empty($agent_busy_delay_time)) { $agent_busy_delay_time = "90"; }
+	$agent_record = $agent_record ?? false;
 
 //create token
 	$object = new token;
@@ -495,10 +505,17 @@
 	echo "	".$text['label-record_template']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='agent_record'>\n";
-	echo "		<option value='true'>".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".(!empty($agent_record) && $agent_record != "true" ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "		<select class='formfld' id='agent_record' name='agent_record'>\n";
+	echo "			<option value='true' ".($agent_record === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($agent_record === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-record_template']."\n";
 	echo "</td>\n";

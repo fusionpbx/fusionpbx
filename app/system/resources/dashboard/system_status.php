@@ -13,9 +13,15 @@
 		exit;
 	}
 
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'core/user_settings');
+
+//get the dashboard label
+	$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //system status
 	echo "<div class='hud_box'>\n";
@@ -63,18 +69,67 @@
 		$used_space = $tmp[2] ?? '-';
 		$total_space = $tmp[1] ?? '-';
 		$percent_disk_usage = '';
-		
+
 		foreach ($tmp as $stat) {
 			if (substr_count($stat, '%') > 0) { $percent_disk_usage = rtrim($stat,'%'); break; }
 		}
 	}
 
+//include websocket real-time updates
+	$token = (new token())->create($_SERVER['PHP_SELF']);
+	echo "	<input id='token' type='hidden' name='" . $token['name'] . "' value='" . $token['hash'] . "'>\n";
+	subscriber::save_token($token, [system_dashboard_service::get_service_name()]);
+?>
+		<script>
+			const system_status_auth_token = {
+				name: "<?= $token['name']; ?>",
+				hash: "<?= $token['hash']; ?>"
+			}
+
+			function connect_system_cpu_status_websocket() {
+				system_status_client = new ws_client(`wss://${window.location.hostname}/websockets/`, system_status_auth_token);
+				system_status_client.ws.addEventListener("open", async () => {
+					try {
+						console.log('Connected');
+						console.log('Requesting authentication');
+
+						// Wait until we are authenticated
+						await system_status_client.request('authentication');
+						console.log('authenticated');
+
+						// call the update_system_cpu_status function when a cpu usage event occurs
+						system_status_client.onEvent('<?php echo system_dashboard_service::CPU_STATUS_TOPIC; ?>', update_system_cpu_status);
+					} catch (err) {
+						console.error("WS setup failed: ", err);
+						return;
+					}
+				});
+
+				system_status_client.ws.addEventListener("close", async () => {
+					console.warn("Websocket Disconnected");
+				});
+			}
+
+			function update_system_cpu_status(payload) {
+				const progress = document.getElementById('cpu_status_progress_bar');
+
+				if (!progress) return;
+
+				// Update progress bar
+				cpu_percent = Math.round(payload.cpu_status.total);
+				progress.style.width = `${cpu_percent}%`;
+				progress.innerHTML = `${cpu_percent}%`;
+			}
+
+			connect_system_cpu_status_websocket();
+		</script>
+<?php
 
 //show the results
-	echo "	<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
-	echo "		<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-system_status']."</a></span>\n";
+	echo "	<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_system_status_details').slideToggle('fast');\"").">\n";
+	echo "		<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".escape($widget_label)."</a></span>\n";
 
-	if ($dashboard_chart_type == "doughnut") {
+	if ($widget_chart_type == "doughnut") {
 		?>
 		<div class='hud_chart' style='width: 175px;'><canvas id='system_status_chart'></canvas></div>
 
@@ -118,7 +173,7 @@
 							ctx.font = chart_text_size + ' ' + chart_text_font;
 							ctx.textBaseline = 'middle';
 							ctx.textAlign = 'center';
-							ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+							ctx.fillStyle = '<?php echo $widget_number_text_color; ?>';
 							ctx.fillText(options.text + '%', width / 2, top + (height / 2) + 35);
 							ctx.save();
 						}
@@ -129,33 +184,33 @@
 		<?php
 	}
 
-	if ($dashboard_chart_type == "number") {
+	if ($widget_chart_type == "number") {
 		echo "	<span class='hud_stat'>".round($percent_disk_usage)."%</span>";
 	}
-	if (!isset($dashboard_chart_type) || $dashboard_chart_type == "progress_bar") {
+	if (!isset($widget_chart_type) || $widget_chart_type == "progress_bar") {
 		//cpu usage
-		if ($dashboard_row_span > 1) {
+		if ($widget_row_span > 1) {
 			echo "	<span class='hud_title cpu_usage' style='text-align: left; font-size: 11px; line-height: 1.8; font-weight: unset; padding-left: 10%;'>".$text['label-processor_usage']."</span>\n";
-			echo "	<div class='progress_container' style='width: 80%; height: 15px; border-radius: 10px; background: ".($settings->get('theme', 'dashboard_cpu_usage_chart_sub_color') ?? '#d4d4d4').";'>\n";
-			echo "		<div class='progress_bar' style='width: ".($percent_cpu > 100 ? 100 : $percent_cpu)."%; height: 15px; border-radius: 10px; font-size: x-small; color: ".$row['dashboard_number_text_color']."; background: ".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color') ?? '#03c04a').";'>".($percent_cpu > 100 ? 100 : round($percent_cpu))."%</div>\n";
+			echo "	<div class='progress_container' style='width: 80%; height: 15px; overflow: hidden; border-radius: 10px; background: ".($settings->get('theme', 'dashboard_cpu_usage_chart_sub_color') ?? '#d4d4d4').";'>\n";
+			echo "		<div id='cpu_status_progress_bar' class='progress_bar' style='width: ".($percent_cpu > 100 ? 100 : $percent_cpu)."%; height: 15px; border-radius: 10px; font-size: x-small; color: ".$row['widget_number_text_color']."; background: ".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color') ?? '#03c04a')."; transition: 1.5s;'>".($percent_cpu > 100 ? 100 : round($percent_cpu))."%</div>\n";
 			echo "	</div>\n";
 			echo "	<div style='width: 100%; height: 15px'>&nbsp;</div>\n";
 		}
 
 		//disk usage
-		if ($dashboard_row_span >= 1) {
-			echo "	<span class='hud_title' style='text-align: left; font-size: 11px; line-height: 1.8; font-weight: unset; padding-left: 10%;'>".$text['label-disk_usage']."</span>\n";
-			echo "	<div class='progress_container' style='width: 80%; height: 15px; border-radius: 10px; background: ".($settings->get('theme', 'dashboard_disk_usage_chart_sub_color') ?? '#d4d4d4').";'>\n";
-			echo "		<div class='progress_bar' style='width: ".$percent_disk_usage."%; height: 15px; border-radius: 10px; font-size: x-small; color: ".$row['dashboard_number_text_color']."; background: ".($settings->get('theme', 'dashboard_disk_usage_chart_main_color') ?? '#03c04a').";'>".round($percent_disk_usage)."%</div>\n";
+		if ($widget_row_span >= 1) {
+			echo "	<span class='hud_title' style='text-align: left; font-size: 11px; line-height: 1.8; font-weight: unset; padding-left: 10%;'>".$text['label-system_disk_usage']."</span>\n";
+			echo "	<div class='progress_container' style='width: 80%; height: 15px; overflow: hidden; border-radius: 10px; background: ".($settings->get('theme', 'dashboard_disk_usage_chart_sub_color') ?? '#d4d4d4').";'>\n";
+			echo "		<div class='progress_bar' style='width: ".$percent_disk_usage."%; height: 15px; border-radius: 10px; font-size: x-small; color: ".$row['widget_number_text_color']."; background: ".($settings->get('theme', 'dashboard_disk_usage_chart_main_color') ?? '#03c04a').";'>".round($percent_disk_usage)."%</div>\n";
 			echo "	</div>\n";
 			echo "	<div style='width: 100%; height: 15px'>&nbsp;</div>\n";
 		}
 
 		//percent memory
-		if ($dashboard_row_span > 1) {
+		if ($widget_row_span > 1) {
 			echo "	<span class='hud_title' style='text-align: left; font-size: 11px; line-height: 1.8; font-weight: unset; padding-left: 10%;'>".$text['label-memory_usage']."</span>\n";
-			echo "	<div class='progress_container' style='width: 80%; height: 15px; border-radius: 10px; background: ".($settings->get('theme', 'dashboard_disk_usage_chart_sub_color') ?? '#d4d4d4').";'>\n";
-			echo "		<div class='progress_bar' style='width: ".round((int)$memory_details['memory_percent'])."%; height: 15px; border-radius: 10px; font-size: x-small; color: ".$row['dashboard_number_text_color']."; background: ".($settings->get('theme', 'dashboard_disk_usage_chart_main_color') ?? '#03c04a').";'>".round((int)$memory_details['memory_percent'])."%</div>\n";
+			echo "	<div class='progress_container' style='width: 80%; height: 15px; overflow: hidden; border-radius: 10px; background: ".($settings->get('theme', 'dashboard_disk_usage_chart_sub_color') ?? '#d4d4d4').";'>\n";
+			echo "		<div class='progress_bar' style='width: ".round((int)$memory_details['memory_percent'])."%; height: 15px; border-radius: 10px; font-size: x-small; color: ".$row['widget_number_text_color']."; background: ".($settings->get('theme', 'dashboard_disk_usage_chart_main_color') ?? '#03c04a').";'>".round((int)$memory_details['memory_percent'])."%</div>\n";
 			echo "	</div>\n";
 		}
 	}
@@ -163,7 +218,7 @@
 	echo "	</div>\n";
 
 
-	if ($dashboard_details_state != 'disabled') {
+	if ($widget_details_state != 'disabled') {
 		echo "<div class='hud_details hud_box' id='hud_system_status_details'>";
 		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";
@@ -173,7 +228,7 @@
 
 		//pbx version
 			echo "<tr class='tr_link_void'>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".(isset($_SESSION['theme']['title']['text'])?$_SESSION['theme']['title']['text']:'FusionPBX')."</td>\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$settings->get('theme', 'title', 'FusionPBX')."</td>\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".software::version()."</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
@@ -185,15 +240,15 @@
 				if (file_exists('/etc/os-release')) {
 					$os_release = parse_ini_file('/etc/os-release');
 					$os_info = $os_release['PRETTY_NAME'] ?? '';
-				} 
+				}
 				// Fallback to basic uname info
 				elseif (function_exists('php_uname')) {
 					$os_info = php_uname('s') . ' ' . php_uname('r'); // e.g. "Linux 5.10.0"
 				}
-				
+
 				// Clean up the output
 				$os_info = str_replace('"', '', $os_info); // Remove quotes if present
-				
+
 				if (!empty($os_info)) {
 					echo "<tr class='tr_link_void'>\n";
 					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-os_version']."</td>\n";
@@ -224,18 +279,18 @@
 				if (!empty($meminfo)) {
 					$meminfo = preg_replace('/\s+/', ' ', trim($meminfo));
 					$parts = explode(' ', $meminfo);
-					
+
 					$total = $parts[1];
 					$used = $parts[2];
 					$percent_memory = round(($used / $total) * 100, 1);
 
 					// Set style color based on thresholds
 					$style = ($percent_memory > 90) ? "color: red;" : (($percent_memory > 75) ? "color: orange;" : "");
-					
+
 					// Format with used/total (e.g. "40% (3.2G/8G)")
 					$total_h = round($total / (1024*1024*1024), 1) . 'G';
 					$used_h = round($used / (1024*1024*1024), 1) . 'G';
-					
+
 					echo "<tr class='tr_link_void'>\n";
 					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-memory_usage']."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; $style'>".$percent_memory."% (".$used_h." / ".$total_h.")"."</td>\n";
@@ -250,10 +305,10 @@
 				if (!empty($swapinfo)) {
 					$swapinfo = preg_replace('/\s+/', ' ', trim($swapinfo));
 					$parts = explode(' ', $swapinfo);
-					
+
 					$swap_total = $parts[1];
 					$swap_used = $parts[2];
-					
+
 					// Only show swap if it exists (total > 0)
 					if ($swap_total > 0) {
 						$percent_swap = round(($swap_used / $swap_total) * 100, 1);
@@ -262,7 +317,7 @@
 
 						// Set style color based on thresholds
 						$style = ($percent_swap > 90) ? "color: red;" : (($percent_swap > 75) ? "color: orange;" : "");
-						
+
 						echo "<tr class='tr_link_void'>\n";
 						echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-swap_usage']."</td>\n";
 						echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; $style'>".$percent_swap."% (".$swap_used_h." / ".$swap_total_h.")"."</td>\n";
@@ -274,13 +329,13 @@
 
 		//disk usage display
 			if (stristr(PHP_OS, 'Linux') || stristr(PHP_OS, 'FreeBSD')) {
-					  
+
 				if (!empty($percent_disk_usage) && $used_space != '-' && $total_space != '-') {
 					// Set style color based on thresholds
 					$style = ($percent_disk_usage > 90) ? "color: red;" : (($percent_disk_usage > 75) ? "color: orange;" : "");
-					
+
 					echo "<tr class='tr_link_void'>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-disk_usage']."</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-system_disk_usage']."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; $style'>".$percent_disk_usage."% (".$used_space." / ".$total_space.")"."</td>\n";
 					echo "</tr>\n";
 					$c = ($c) ? 0 : 1;
@@ -305,30 +360,29 @@
 						$connections = sizeof($tmp) - 1;
 					}
 			}
-	
+
 			if (!empty($sql_current) && !empty($sql_max)) {
-				if (!isset($database)) { $database = new database; }
-				
+
 				// Get current connections
 				$current_connections = $database->select($sql_current, null, 'column');
-				
+
 				// Get max connections (handles both PostgreSQL & MySQL)
 				$max_result = $database->select($sql_max, null, ($db_type == 'pgsql') ? 'column' : 'row');
 				$max_connections = ($db_type == 'mysql') ? $max_result['Value'] : $max_result;
-				
+
 				// Format as "current/max"
-				$connections = ($current_connections !== false && $max_connections !== false) 
-					? "Current: " . $current_connections . ", Max: " . $max_connections 
+				$connections = ($current_connections !== false && $max_connections !== false)
+					? "Current: " . $current_connections . ", Max: " . $max_connections
 					: "N/A";
-				
+
 				unset($sql_current, $sql_max);
 			}
-	
+
 			if (!empty($connections)) {
 				// Set style color based on thresholds
 				$ratio = $current_connections / $max_connections;
 				$style = ($ratio > 0.9) ? "color: red;" : (($ratio > 0.75) ? "color: orange;" : "");
-				
+
 				echo "<tr class='tr_link_void'>\n";
 				echo "<td valign='top' class='" . $row_style[$c] . " hud_text'>" . $text['label-database_connections'] . "</td>\n";
 				echo "<td valign='top' class='" . $row_style[$c] . " hud_text' style='text-align: right; $style'>" . $connections . "</td>\n";
@@ -345,7 +399,7 @@
 				$matches = Array();
 				preg_match("/(\d+)\s+session\(s\)\s+\-\speak/", $tmp, $matches);
 				$channels = !empty($matches[1]) ? $matches[1] : 0;
-				$tr_link = "href='".PROJECT_PATH."/app/calls_active/calls_active.php'";
+				$tr_link = "href='".PROJECT_PATH."/app/active_calls/active_calls.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-channels']."</a></td>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$channels."</td>\n";
@@ -357,7 +411,7 @@
 		echo "</div>";
 		//$n++;
 
-		echo "<span class='hud_expander' onclick=\"$('#hud_system_status_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>";
+		echo "<span class='hud_expander' onclick=\"$('#hud_system_status_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	}
 	echo "</div>\n";
 

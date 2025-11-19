@@ -31,10 +31,7 @@
 	require_once "resources/functions/google_get_contacts.php";
 
 //check permissions
-	if (permission_exists('contact_add')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_add')) {
 		echo "access denied";
 		exit;
 	}
@@ -80,10 +77,9 @@ if ($_POST['a'] == 'import') {
 			$sql .= "and contact_setting_category = 'google' ";
 			$sql .= "and contact_setting_subcategory = 'id' ";
 			$sql .= "and contact_setting_value = :contact_setting_value ";
-			$sql .= "and contact_setting_enabled = 'true' ";
+			$sql .= "and contact_setting_enabled = true ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['contact_setting_value'] = $contact_id;
-			$database = new database;
 			$result = $database->select($sql, $parameters, 'row');
 			if (is_uuid($result['contact_uuid'])) {
 				$duplicate_exists = true;
@@ -241,9 +237,6 @@ if ($_POST['a'] == 'import') {
 			unset($contact_setting_columns, $contact_setting_array);
 
 			//insert records
-			$database = new database;
-			$database->app_name = 'contacts';
-			$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 			$database->save($array);
 			unset($array);
 
@@ -588,6 +581,13 @@ require_once "resources/footer.php";
 
 
 // used above
+/**
+ * Retrieves the contents of a URL using cURL.
+ *
+ * @param string $url The URL to retrieve.
+ *
+ * @return string The contents of the retrieved URL, or FALSE if an error occurred.
+ */
 function curl_file_get_contents($url) {
 	$curl = curl_init();
 	$userAgent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)';

@@ -27,10 +27,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('fax_queue_add') || permission_exists('fax_queue_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('fax_queue_add') || permission_exists('fax_queue_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -88,20 +85,17 @@
 				switch ($_POST['action']) {
 					case 'copy':
 						if (permission_exists('fax_queue_add')) {
-							$obj = new database;
-							$obj->copy($array);
+							$database->copy($array);
 						}
 						break;
 					case 'delete':
 						if (permission_exists('fax_queue_delete')) {
-							$obj = new database;
-							$obj->delete($array);
+							$database->delete($array);
 						}
 						break;
 					case 'toggle':
 						if (permission_exists('fax_queue_update')) {
-							$obj = new database;
-							$obj->toggle($array);
+							$database->toggle($array);
 						}
 						break;
 				}
@@ -168,9 +162,6 @@
 			$array['fax_queue'][0]['fax_response'] = $fax_response;
 
 		//save the data
-			$database = new database;
-			$database->app_name = 'fax queue';
-			$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
 			$database->save($array);
 
 		//redirect the user
@@ -211,7 +202,6 @@
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['fax_queue_uuid'] = $fax_queue_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$fax_uuid = $row["fax_uuid"];
@@ -411,7 +401,7 @@
 	echo "	".$text['label-fax_notify_date']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='fax_retry_date' maxlength='255' value='".escape($fax_notify_date ?? '')."'>\n";
+	echo "  <input class='formfld' type='text' name='fax_notify_date' maxlength='255' value='".escape($fax_notify_date ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-fax_notify_date']."\n";
 	echo "</td>\n";

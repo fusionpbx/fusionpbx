@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('pin_number_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('pin_number_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -45,7 +42,7 @@
 //get posted data
 	if (is_array($_POST['pin_numbers'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$pin_numbers = $_POST['pin_numbers'];
 	}
 
@@ -72,7 +69,7 @@
 				break;
 		}
 
-		header('Location: pin_numbers.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: pin_numbers.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -86,7 +83,6 @@
 		$sql_search = "and (";
 		$sql_search .= "lower(pin_number) like :search ";
 		$sql_search .= "or lower(accountcode) like :search ";
-		$sql_search .= "or lower(enabled) like :search ";
 		$sql_search .= "or lower(description) like :search ";
 		$sql_search .= ")";
 		$parameters['search'] = '%'.$search.'%';
@@ -97,7 +93,6 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= $sql_search;
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
@@ -109,10 +104,13 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+
+	$sql = "select domain_uuid, pin_number_uuid, pin_number, accountcode, description, cast(enabled as text) ";
+	$sql .= "from v_pin_numbers ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= $sql_search;
 	$sql .= order_by($order_by, $order, 'pin_number', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$pin_numbers = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -182,7 +180,7 @@
 	echo th_order_by('accountcode', $text['label-accountcode'], $order_by, $order);
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('pin_number_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+	if (permission_exists('pin_number_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -223,7 +221,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['description'])."&nbsp;</td>\n";
-			if (permission_exists('pin_number_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+			if (permission_exists('pin_number_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 				echo "	</td>\n";

@@ -13,9 +13,15 @@
 		exit;
 	}
 
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'core/user_settings');
+
+//get the dashboard label
+	$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //create assigned extensions array
 	if (is_array($_SESSION['user']['extension'])) {
@@ -30,8 +36,8 @@
 
 //set the sql time format
 	$sql_time_format = 'DD Mon HH12:MI am';
-	if (!empty($_SESSION['domain']['time_format']['text'])) {
-		$sql_time_format = $_SESSION['domain']['time_format']['text'] == '12h' ? "DD Mon HH12:MI am" : "DD Mon HH24:MI";
+	if (!empty($settings->get('domain', 'time_format'))) {
+		$sql_time_format = $settings->get('domain', 'time_format') == '12h' ? "DD Mon HH12:MI am" : "DD Mon HH24:MI";
 	}
 
 //get the missed calls from call detail records
@@ -76,9 +82,8 @@
 	$sql .=	"start_epoch desc \n";
 	$sql .=	"limit :missed_limit \n";
 	$parameters['missed_limit'] = $missed_limit;
-	$parameters['time_zone'] = isset($_SESSION['domain']['time_zone']['name']) ? $_SESSION['domain']['time_zone']['name'] : date_default_timezone_get();
+	$parameters['time_zone'] = $settings->get('domain', 'time_zone', date_default_timezone_get());
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	if (!isset($database)) { $database = new database; }
 	$result = $database->select($sql, $parameters, 'all');
 	$num_rows = !empty($result) ? sizeof($result) : 0;
 
@@ -90,10 +95,10 @@
 //missed calls
 	echo "<div class='hud_box'>\n";
 
-	echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_missed_calls_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
-	echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'\">".$text['label-missed_calls']."</a></span>";
+	echo "<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_missed_calls_details').slideToggle('fast');\"").">\n";
+	echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?call_result=missed'\">".escape($widget_label)."</a></span>";
 
-	if ($dashboard_chart_type == "doughnut") {
+	if ($widget_chart_type == "doughnut") {
 		//add doughnut chart
 		?>
 		<div class='hud_chart'><canvas id='missed_calls_chart'></canvas></div>
@@ -128,7 +133,7 @@
 							ctx.font = chart_text_size + ' ' + chart_text_font;
 							ctx.textBaseline = 'middle';
 							ctx.textAlign = 'center';
-							ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+							ctx.fillStyle = '<?php echo $widget_number_text_color; ?>';
 							ctx.fillText(options.text, width / 2, top + (height / 2));
 							ctx.save();
 						}
@@ -140,22 +145,20 @@
 	}
 
 	//dashboard number
-	if (!isset($dashboard_chart_type) || $dashboard_chart_type == "number") {
+	if (!isset($widget_chart_type) || $widget_chart_type == "number") {
 		echo "<span class='hud_stat'>".$num_rows."</span>";
 	}
 
 	//dashboard icon
-	if (!isset($dashboard_chart_type) || $dashboard_chart_type == "icon") {
-		echo "<span class='hud_content'>\n";
-		echo "<div style='position: relative; display: inline-block;'>\n";
-		echo "		<span class='hud_stat'><i class=\"fas ".$dashboard_icon." \"></i></span>\n";
-		echo "		<span style=\"background-color: ".(!empty($dashboard_number_background_color) ? $dashboard_number_background_color : '#EA4C46')."; color: ".(!empty($dashboard_number_text_color) ? $dashboard_number_text_color : '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">".$num_rows."</span>\n";
+	if (!isset($widget_chart_type) || $widget_chart_type == "icon") {
+		echo "	<div style='position: relative; display: inline-block;'>\n";
+		echo "		<span class='hud_stat'><i class=\"fas ".$widget_icon." \"></i></span>\n";
+		echo "		<span style=\"background-color: ".(!empty($widget_number_background_color) ? $widget_number_background_color : '#EA4C46')."; color: ".(!empty($widget_number_text_color) ? $widget_number_text_color : '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">".$num_rows."</span>\n";
 		echo "	</div>\n";
-		echo "</span>";
 	}
 	echo "</div>\n";
 
-	if ($dashboard_details_state != 'disabled') {
+	if ($widget_details_state != 'disabled') {
 		echo "<div class='hud_details hud_box' id='hud_missed_calls_details'>";
 		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";
@@ -176,7 +179,7 @@
 
 			foreach ($result as $index => $row) {
 				$start_date_time = str_replace('/0','/', ltrim($row['start_date_time'], '0'));
-				if (!empty($_SESSION['domain']['time_format']) && $_SESSION['domain']['time_format']['text'] == '12h') {
+				if (!empty($_SESSION['domain']['time_format']) && $settings->get('domain', 'time_format') == '12h') {
 					$start_date_time = str_replace(' 0',' ', $start_date_time);
 				}
 				//set click-to-call variables
@@ -188,9 +191,9 @@
 						"&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'] ?? '').
 						"&src=".urlencode($_SESSION['user']['extension'][0]['user'] ?? '').
 						"&dest=".urlencode($row['caller_id_number'] ?? '').
-						"&rec=".(filter_var($_SESSION['click_to_call']['record']['boolean'] ?? false, FILTER_VALIDATE_BOOL) ? "true" : "false").
-						"&ringback=".(isset($_SESSION['click_to_call']['ringback']['text']) ? $_SESSION['click_to_call']['ringback']['text'] : "us-ring").
-						"&auto_answer=".(filter_var($_SESSION['click_to_call']['auto_answer']['boolean'] ?? false, FILTER_VALIDATE_BOOL) ? "true" : "false").
+						"&rec=".(filter_var($settings->get('click_to_call', 'record') ?? false, FILTER_VALIDATE_BOOL) ? "true" : "false").
+						"&ringback=".$settings->get('click_to_call', 'ringback', 'us-ring').
+						"&auto_answer=".(filter_var($settings->get('click_to_call', 'auto_answer') ?? false, FILTER_VALIDATE_BOOL) ? "true" : "false").
 						"');\" ".
 						"style='cursor: pointer;'";
 				}
@@ -199,7 +202,7 @@
 				if ($theme_cdr_images_exist) {
 					$call_result = $row['status'];
 					if (isset($row['direction'])) {
-						echo "	<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+						echo "	<img src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
 					}
 				}
 				echo "</td>\n";
@@ -216,7 +219,7 @@
 		echo "</div>";
 		//$n++;
 
-		echo "<span class='hud_expander' onclick=\"$('#hud_missed_calls_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>";
+		echo "<span class='hud_expander' onclick=\"$('#hud_missed_calls_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 	}
 	echo "</div>\n";
 

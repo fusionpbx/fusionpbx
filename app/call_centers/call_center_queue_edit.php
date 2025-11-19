@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_center_queue_add') || permission_exists('call_center_queue_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('call_center_queue_add') || permission_exists('call_center_queue_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -42,8 +39,7 @@
 	$language = new text;
 	$text = $language->get();
 
-//initialize database and settings
-	$database = database::new();
+//initialize settings object
 	$settings = new settings(['database' => $database, $_SESSION['domain_uuid'] ?? '', $_SESSION['user_uuid'] ?? '']);
 
 //set the defaults
@@ -134,7 +130,7 @@
 			$queue_announce_position = $_POST["queue_announce_position"] ?? null;
 			$queue_announce_sound = $_POST["queue_announce_sound"];
 			$queue_announce_frequency = $_POST["queue_announce_frequency"];
-			$queue_cc_exit_keys = $_POST["queue_cc_exit_keys"];
+			$queue_cc_exit_keys = $_POST["queue_cc_exit_keys"] ?? null;
 			$queue_email_address = $_POST["queue_email_address"] ?? null;
 			$queue_description = $_POST["queue_description"];
 
@@ -205,8 +201,6 @@
 				$p = permissions::new();
 				$p->add('call_center_tier_delete', 'temp');
 
-				$database->app_name = 'call_centers';
-				$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 				$database->delete($array);
 				unset($array);
 
@@ -435,7 +429,7 @@
 			if (!empty($queue_cid_prefix)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"effective_caller_id_name=".xml::sanitize($queue_cid_prefix)."#\${caller_id_name}\"/>\n";
 			}
-			if (!empty($queue_cc_exit_keys)) {
+			if ($queue_cc_exit_keys !== null) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"cc_exit_keys=".xml::sanitize($queue_cc_exit_keys)."\"/>\n";
 			}
 			$dialplan_xml .= "		<action application=\"callcenter\" data=\"".xml::sanitize($queue_extension)."@".$domain_name."\"/>\n";
@@ -454,7 +448,7 @@
 			$array['dialplans'][0]["dialplan_continue"] = "false";
 			$array['dialplans'][0]["dialplan_xml"] = $dialplan_xml;
 			$array['dialplans'][0]["dialplan_order"] = "230";
-			$array['dialplans'][0]["dialplan_enabled"] = "true";
+			$array['dialplans'][0]["dialplan_enabled"] = true;
 			$array['dialplans'][0]["dialplan_description"] = $queue_description;
 			$array['dialplans'][0]["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
 
@@ -464,10 +458,8 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$database->app_name = 'call_centers';
-			$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 			$database->save($array);
-			$message = $database->message;
+			//$message = $database->message;
 
 		//remove the temporary permission
 			$p->delete("dialplan_add", "temp");
@@ -557,7 +549,40 @@
 //pre-populate the form
 	if (!empty($_GET) && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$call_center_queue_uuid = $_GET["id"];
-		$sql = "select * from v_call_center_queues ";
+		$sql = "select ";
+		$sql .= "queue_name, ";
+		$sql .= "dialplan_uuid, ";
+		$sql .= "queue_extension, ";
+		$sql .= "queue_greeting, ";
+		$sql .= "queue_language, ";
+		$sql .= "queue_dialect, ";
+		$sql .= "queue_voice , ";
+		$sql .= "queue_strategy, ";
+		$sql .= "queue_moh_sound, ";
+		$sql .= "queue_record_template, ";
+		$sql .= "queue_time_base_score, ";
+		$sql .= "queue_time_base_score_sec, ";
+		$sql .= "queue_max_wait_time, ";
+		$sql .= "queue_max_wait_time_with_no_agent, ";
+		$sql .= "queue_max_wait_time_with_no_agent_time_reached, ";
+		$sql .= "queue_timeout_action, ";
+		$sql .= "queue_tier_rules_apply, ";
+		$sql .= "queue_tier_rule_wait_second, ";
+		$sql .= "queue_tier_rule_wait_multiply_level, ";
+		$sql .= "queue_tier_rule_no_agent_no_wait, ";
+		$sql .= "queue_discard_abandoned_after, ";
+		$sql .= "queue_abandoned_resume_allowed, ";
+		$sql .= "queue_cid_prefix, ";
+		$sql .= "queue_outbound_caller_id_name, ";
+		$sql .= "queue_outbound_caller_id_number, ";
+		$sql .= "queue_announce_position, ";
+		$sql .= "queue_announce_sound, ";
+		$sql .= "queue_announce_frequency, ";
+		$sql .= "queue_cc_exit_keys, ";
+		$sql .= "queue_email_address, ";
+		$sql .= "queue_context, ";
+		$sql .= "queue_description ";
+		$sql .= "from v_call_center_queues ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and call_center_queue_uuid = :call_center_queue_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
@@ -658,20 +683,22 @@
 	}
 
 //set default values
-	if (empty($queue_strategy)) { $queue_strategy = "longest-idle-agent"; }
-	if (empty($queue_moh_sound)) { $queue_moh_sound = "\$\${hold_music}"; }
-	if (empty($queue_time_base_score)) { $queue_time_base_score = "system"; }
-	if (empty($queue_time_base_score)) { $queue_time_base_score = ""; }
-	if (empty($queue_max_wait_time)) { $queue_max_wait_time = "0"; }
-	if (empty($queue_max_wait_time_with_no_agent)) { $queue_max_wait_time_with_no_agent = "90"; }
-	if (empty($queue_max_wait_time_with_no_agent_time_reached)) { $queue_max_wait_time_with_no_agent_time_reached = "30"; }
-	if (empty($queue_tier_rules_apply)) { $queue_tier_rules_apply = "false"; }
-	if (empty($queue_tier_rule_wait_second)) { $queue_tier_rule_wait_second = "30"; }
-	if (empty($queue_tier_rule_wait_multiply_level)) { $queue_tier_rule_wait_multiply_level = "true"; }
-	if (empty($queue_tier_rule_no_agent_no_wait)) { $queue_tier_rule_no_agent_no_wait = "true"; }
-	if (empty($queue_discard_abandoned_after)) { $queue_discard_abandoned_after = "900"; }
-	if (empty($queue_abandoned_resume_allowed)) { $queue_abandoned_resume_allowed = "false"; }
-	if (empty($queue_context)) { $queue_context = $domain_name; }
+	$queue_greeting = $queue_greeting ?? '';
+	$queue_strategy = $queue_strategy ?? "longest-idle-agent";
+	$queue_moh_sound = $queue_moh_sound ?? "\$\${hold_music}";
+	$queue_time_base_score = $queue_time_base_score ?? "system";
+	$queue_max_wait_time = $queue_max_wait_time ?? "0";
+	$queue_max_wait_time_with_no_agent = $queue_max_wait_time_with_no_agent ?? "90";
+	$queue_max_wait_time_with_no_agent_time_reached = $queue_max_wait_time_with_no_agent_time_reached ?? "30";
+	$queue_tier_rule_wait_second = $queue_tier_rule_wait_second ?? "30";
+	$queue_discard_abandoned_after = $queue_discard_abandoned_after ?? "900";
+	$queue_record_template = $queue_record_template ?? 'false';
+	$queue_tier_rules_apply = $queue_tier_rules_apply ?? false;
+	$queue_tier_rule_wait_multiply_level = $queue_tier_rule_wait_multiply_level ?? true;
+	$queue_tier_rule_no_agent_no_wait = $queue_tier_rule_no_agent_no_wait ?? true;
+	$queue_abandoned_resume_allowed = $queue_abandoned_resume_allowed ?? false;
+	$queue_announce_sound = $queue_announce_sound ?? '';
+	$queue_context = $queue_context ?? $domain_name;
 
 //create token
 	$object = new token;
@@ -1076,20 +1103,17 @@
 	echo "	".$text['label-record_template']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='queue_record_template'>\n";
-	if (!empty($queue_record_template)) {
-		echo "	<option value='".escape($record_template)."' selected='selected' >".$text['option-true']."</option>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<option value='".escape($record_template)."'>".$text['option-true']."</option>\n";
+	echo "		<select class='formfld' id='queue_record_template' name='queue_record_template'>\n";
+	echo "			<option value='true' ".($queue_record_template === 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($queue_record_template === 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
-	if (empty($queue_record_template)) {
-		echo "	<option value='' selected='selected' >".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "	<option value=''>".$text['option-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-record_template']."\n";
 	echo "</td>\n";
@@ -1179,20 +1203,17 @@
 	echo "	".$text['label-tier_rules_apply']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='queue_tier_rules_apply'>\n";
-	if ($queue_tier_rules_apply == "true") {
-		echo "	<option value='true' selected='selected' >".$text['option-true']."</option>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<option value='true'>".$text['option-true']."</option>\n";
+	echo "		<select class='formfld' id='queue_tier_rules_apply' name='queue_tier_rules_apply'>\n";
+	echo "			<option value='true' ".($queue_tier_rules_apply === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($queue_tier_rules_apply === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
-	if ($queue_tier_rules_apply == "false") {
-		echo "	<option value='false' selected='selected' >".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-tier_rules_apply']."\n";
 	echo "</td>\n";
@@ -1214,20 +1235,17 @@
 	echo "	".$text['label-tier_rule_wait_multiply_level']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='queue_tier_rule_wait_multiply_level'>\n";
-	if ($queue_tier_rule_wait_multiply_level == "true") {
-		echo "	<option value='true' selected='selected' >".$text['option-true']."</option>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<option value='true'>".$text['option-true']."</option>\n";
+	echo "		<select class='formfld' id='queue_tier_rule_wait_multiply_level' name='queue_tier_rule_wait_multiply_level'>\n";
+	echo "			<option value='true' ".($queue_tier_rule_wait_multiply_level === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($queue_tier_rule_wait_multiply_level === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
-	if ($queue_tier_rule_wait_multiply_level == "false") {
-		echo "	<option value='false' selected='selected' >".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-tier_rule_wait_multiply_level']."\n";
 	echo "</td>\n";
@@ -1238,20 +1256,17 @@
 	echo "	".$text['label-tier_rule_no_agent_no_wait']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='queue_tier_rule_no_agent_no_wait'>\n";
-	if ($queue_tier_rule_no_agent_no_wait == "true") {
-		echo "	<option value='true' selected='selected' >".$text['option-true']."</option>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<option value='true'>".$text['option-true']."</option>\n";
+	echo "		<select class='formfld' id='queue_tier_rule_no_agent_no_wait' name='queue_tier_rule_no_agent_no_wait'>\n";
+	echo "			<option value='true' ".($queue_tier_rule_no_agent_no_wait === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($queue_tier_rule_no_agent_no_wait === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
-	if ($queue_tier_rule_no_agent_no_wait == "false") {
-		echo "	<option value='false' selected='selected' >".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-tier_rule_no_agent_no_wait']."\n";
 	echo "</td>\n";
@@ -1273,20 +1288,17 @@
 	echo "	".$text['label-abandoned_resume_allowed']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='queue_abandoned_resume_allowed'>\n";
-	if ($queue_abandoned_resume_allowed == "false") {
-		echo "	<option value='false' selected='selected' >".$text['option-false']."</option>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<option value='false'>".$text['option-false']."</option>\n";
+	echo "		<select class='formfld' id='queue_abandoned_resume_allowed' name='queue_abandoned_resume_allowed'>\n";
+	echo "			<option value='true' ".($queue_abandoned_resume_allowed === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($queue_abandoned_resume_allowed === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
-	if ($queue_abandoned_resume_allowed == "true") {
-		echo "	<option value='true' selected='selected' >".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "	<option value='true'>".$text['option-true']."</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-abandoned_resume_allowed']."\n";
 	echo "</td>\n";

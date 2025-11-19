@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017-2023
+	Portions created by the Initial Developer are Copyright (C) 2017-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -31,14 +31,15 @@
 //check permissions
 	if (permission_exists('extension_caller_id')) {
 
+		//convert to a key
+			$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 		//add multi-lingual support
 			$language = new text;
-			$text = $language->get($_SESSION['domain']['language']['code'], 'app/extensions');
+			$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/extensions');
 
-		//connect to the database
-			if (!isset($database)) {
-				$database = new database;
-			}
+		//get the dashboard label
+			$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 		//add or update the database
 			if (isset($_POST['extensions']) && is_array($_POST['extensions']) && @sizeof($_POST['extensions']) != 0) {
@@ -93,8 +94,6 @@
 					$p->add("extension_edit", "temp");
 
 				//save to the data
-					$database->app_name = 'extensions';
-					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 					$message = $database->save($array);
 
 				//update the session array
@@ -118,7 +117,7 @@
 				//clear the cache
 					$cache = new cache;
 					foreach($_SESSION['user']['extension'] as $field) {
-						$cache->delete("directory:".$field['destination']."@".$field['user_context']);
+						$cache->delete(gethostname().":directory:".$field['destination']."@".$field['user_context']);
 					}
 
 				//set the message
@@ -172,11 +171,11 @@
 		//caller id
 			echo "<div class='hud_box'>\n";
 
-			echo "	<div class='hud_content'  ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_caller_id_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
-			echo "		<span class='hud_title'>".$text['label-caller_id_number']."</span>\n";
+			echo "	<div class='hud_content'  ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_caller_id_details').slideToggle('fast');\"").">\n";
+			echo "		<span class='hud_title'>".escape($widget_label)."</span>";
 
 		//doughnut chart
-			if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
+			if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {
 				echo "<div class='hud_chart' style='width: 275px;'><canvas id='caller_id_chart'></canvas></div>\n";
 
 				echo "<script>\n";
@@ -215,7 +214,7 @@
 				echo "						labels: {\n";
 				echo "							usePointStyle: true,\n";
 				echo "							pointStyle: 'rect',\n";
-				echo "							color: '".$dashboard_label_text_color."'\n";
+				echo "							color: '".$widget_label_text_color."'\n";
 				echo "						}\n";
 				echo "					}\n";
 				echo "				}\n";
@@ -227,7 +226,7 @@
 				echo "					ctx.font = chart_text_size + ' ' + chart_text_font;\n";
 				echo "					ctx.textBaseline = 'middle';\n";
 				echo "					ctx.textAlign = 'center';\n";
-				echo "					ctx.fillStyle = '".$dashboard_number_text_color."';\n";
+				echo "					ctx.fillStyle = '".$widget_number_text_color."';\n";
 				echo "					ctx.fillText(options.text, width / 2, top + (height / 2));\n";
 				echo "					ctx.save();\n";
 				echo "				}\n";
@@ -236,13 +235,13 @@
 				echo "	);\n";
 				echo "</script>\n";
 			}
-			if ($dashboard_chart_type == "number") {
+			if ($widget_chart_type == "number") {
 				echo "	<span class='hud_stat'>".$stats['undefined']."</span>";
 			}
 			echo "	</div>\n";
 
 		//details
-			if ($dashboard_details_state != 'disabled') {
+			if ($widget_details_state != 'disabled') {
 				echo "<form id='form_list_caller_id' method='post' action='".PROJECT_PATH."/app/extensions/resources/dashboard/caller_id.php'>\n";
 
 				echo "<div class='hud_details hud_box' id='hud_caller_id_details' style='text-align: right;'>";
@@ -310,7 +309,7 @@
 				echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 				echo "</form>\n";
 
-				echo "<span class='hud_expander' onclick=\"$('#hud_caller_id_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>";
+				echo "<span class='hud_expander' onclick=\"$('#hud_caller_id_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>";
 			}
 			echo "</div>\n";
 

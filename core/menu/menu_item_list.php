@@ -29,16 +29,10 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('menu_add') || permission_exists('menu_edit') || permission_exists('menu_delete')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('menu_add') || !permission_exists('menu_edit') || permission_exists('menu_delete'))) {
 		echo "access denied";
 		exit;
 	}
-
-//initialize the database
-	$database = new database;
 
 //get the http post data
 	if (!empty($_POST['menu_items'])) {
@@ -51,12 +45,12 @@
 //process the http post data by action
 	if (!empty($action) && !empty($menu_items)) {
 		switch ($action) {
-			case 'toggle':
-				if (permission_exists('menu_item_edit')) {
-					$obj = new menu;
-					$obj->toggle_items($menu_items);
-				}
-				break;
+			// case 'toggle':
+			// 	if (permission_exists('menu_item_edit')) {
+			// 		$obj = new menu;
+			// 		$obj->toggle_items($menu_items);
+			// 	}
+			// 	break;
 			case 'delete':
 				if (permission_exists('menu_item_delete')) {
 					$obj = new menu;
@@ -92,8 +86,19 @@
 	$tmp_menu_item_order = 0;
 
 //add the build db child menu list
+	/**
+	 * Builds a child menu list from the database.
+	 *
+	 * @param object $database        The database connection object.
+	 * @param int    $menu_item_level The current level of the menu item.
+	 * @param string $menu_item_uuid  The UUID of the parent menu item.
+	 *
+	 * @return void
+	 */
 	function build_db_child_menu_list ($database, $menu_item_level, $menu_item_uuid) {
-		global $menu_uuid, $list_row_edit_button, $tmp_menu_item_order, $v_link_label_edit, $v_link_label_delete, $page, $text, $x;
+		global $settings, $menu_uuid, $list_row_edit_button;
+		global $tmp_menu_item_order, $v_link_label_edit, $v_link_label_delete;
+		global $page, $text, $x;
 
 		//check for sub menus
 		$menu_item_level = $menu_item_level+1;
@@ -219,8 +224,6 @@
 					$array['menu_items'][0]['menu_uuid'] = $menu_uuid;
 					$array['menu_items'][0]['menu_item_title'] = $row2['menu_item_title'];
 					$array['menu_items'][0]['menu_item_order'] = $tmp_menu_item_order;
-					$database->app_name = 'menu';
-					$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 					$database->save($array);
 					unset($array);
 				}
@@ -246,8 +249,7 @@
 
 	//get the group list
 	$sql = "select group_uuid, group_name from v_groups ";
-	$database = new database;
-	$groups = $database->select($sql, $parameters, 'all');
+	$groups = $database->select($sql, null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -275,18 +277,18 @@
 		echo button::create(['type'=>'button','label'=>$text['button-assign'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_group_items_add','class' => 'btn btn-default revealed','collapse'=>'hide-xs','style'=>'display: none;','onclick'=>"list_action_set('group_items_add'); list_form_submit('form_list');"]);
 	}
 	if (permission_exists('menu_item_delete') && $result) {
-		echo button::create(['type'=>'button','label'=>$text['button-unassign'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'name'=>'btn_group_items_delete','class' => 'btn btn-default revealed','style'=>'display: none; margin-right: 35px;','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-unassign'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'name'=>'btn_group_items_delete','class' => 'btn btn-default revealed','style'=>'display: none; margin-right: 35px;','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete-groups','btn_group_items_delete');"]);
 	}
 	if (permission_exists('menu_item_delete') && $result) {
-		echo modal::create(['id'=>'modal-delete','type'=>'unassign', 'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_group_items_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('group_items_delete'); list_form_submit('form_list');"])]);
+		echo modal::create(['id'=>'modal-delete-groups','type'=>'unassign', 'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_group_items_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('group_items_delete'); list_form_submit('form_list');"])]);
 	}
 	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'menu.php']);
 	if (permission_exists('menu_item_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','collapse'=>'hide-xs','link'=>'menu_item_edit.php?id='.urlencode($menu_uuid)]);
 	}
-	if (permission_exists('menu_item_edit') && $result) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'name'=>'btn_toggle','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
-	}
+	// if (permission_exists('menu_item_edit') && $result) {
+	// 	echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'name'=>'btn_toggle','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+	// }
 	if (permission_exists('menu_item_delete') && $result) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
@@ -294,9 +296,9 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (permission_exists('menu_item_edit') && $result) {
-		echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
-	}
+	// if (permission_exists('menu_item_edit') && $result) {
+	// 	echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
+	// }
 	if (permission_exists('menu_item_delete') && $result) {
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
@@ -431,8 +433,6 @@
 					$array['menu_items'][0]['menu_uuid'] = $menu_uuid;
 					$array['menu_items'][0]['menu_item_title'] = $row['menu_item_title'];
 					$array['menu_items'][0]['menu_item_order'] = $tmp_menu_item_order;
-					//$database->app_name = 'menu';
-					//$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 					//$database->save($array);
 					unset($array);
 				}

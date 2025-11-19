@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('voicemail_greeting_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('voicemail_greeting_edit')) {
 		echo "access denied";
 		exit;
 	}
@@ -43,10 +40,16 @@
 
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-	$speech_enabled = $settings->get('speech', 'enabled', false);
+
+//as long as the class exists, enable speech using default settings
+	$speech_enabled = class_exists('speech') && $settings->get('speech', 'enabled', false);
 	$speech_engine = $settings->get('speech', 'engine', '');
-	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
+
+//as long as the class exists, enable transcribe using default settings
+	$transcribe_enabled = class_exists('transcribe') && $settings->get('transcribe', 'enabled', false);
 	$transcribe_engine = $settings->get('transcribe', 'engine', '');
+
+//set the storage type from default settings
 	$storage_type = $settings->get('voicemail', 'storage_type', '');
 
 //set defaults
@@ -152,7 +155,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$sql .= "order by greeting_id asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['voicemail_id'] = $voicemail_id;
-		$database = new database;
 		$rows = $database->select($sql, $parameters, 'all');
 		$greeting_ids = array();
 		if (!empty($rows) && is_array($rows)) {
@@ -230,9 +232,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			$array['voicemail_greetings'][0]['greeting_description'] = $greeting_description;
 
 			//execute query
-			$database = new database;
-			$database->app_name = 'voicemail_greetings';
-			$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
 			$database->save($array);
 			unset($array);
 
@@ -258,7 +257,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$sql .= "and voicemail_greeting_uuid = :voicemail_greeting_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$greeting_id = $row["greeting_id"];
@@ -385,17 +383,16 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			echo "	".$text['label-translate']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-				echo "	<label class='switch'>\n";
-				echo "		<input type='checkbox' id='translate' name='translate' value='true' ".($translate == 'true' ? "checked='checked'" : null).">\n";
-				echo "		<span class='slider'></span>\n";
-				echo "	</label>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			else {
-				echo "	<select class='formfld' id='translate' name='translate'>\n";
-				echo "		<option value='true' ".($translate == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-				echo "		<option value='false' ".($translate == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-				echo "	</select>\n";
+			echo "	<select class='formfld' id='translate' name='translate'>\n";
+			echo "		<option value='true' ".($translate === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($translate === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
 			}
 			echo "<br />\n";
 			echo $text['description-translate']."\n";

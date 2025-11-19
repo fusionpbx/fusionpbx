@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('fax_log_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('fax_log_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -75,7 +72,6 @@
 		$sql .= "and fax_log_uuid = :fax_log_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['fax_log_uuid'] = $fax_log_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$fax_log_uuid = $row["fax_log_uuid"];

@@ -26,10 +26,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('access_control_add') || permission_exists('access_control_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('access_control_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -37,9 +34,6 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//create the database connection
-	$database = database::new();
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -62,6 +56,12 @@
 
 //process the user data and save it to the database
 	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+
+		//check permissions
+			if (!(permission_exists('access_control_add') || permission_exists('access_control_edit'))) {
+				echo "access denied";
+				exit;
+			}
 
 		//enforce valid data
 			if ($access_control_name == 'providers' || $access_control_name == 'domains') {
@@ -229,8 +229,6 @@
 
 		//save the data
 			if (is_array($array)) {
-				$database->app_name = 'access controls';
-				$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 				$database->save($array);
 			}
 
@@ -334,7 +332,9 @@
 			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','collapse'=>'hide-xs']);
+	if (permission_exists('access_control_add') || permission_exists('access_control_edit')) {
+		echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','collapse'=>'hide-xs']);
+	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";

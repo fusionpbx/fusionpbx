@@ -34,6 +34,9 @@
 --create the api object
 	api = freeswitch.API();
 
+--get the hostname
+	local hostname = api:execute("hostname", "");
+
 --includes
 	require "resources.functions.config";
 	require "resources.functions.channel_utils";
@@ -123,7 +126,17 @@
 --determine whether to update the dial string
 	if not session:ready() then return end
 
-	local sql = "select * from v_extensions ";
+	local sql = "select ";
+	sql = sql .. " extension_uuid, ";
+	sql = sql .. " extension, ";
+	sql = sql .. " number_alias, ";
+	sql = sql .. " accountcode, ";
+	sql = sql .. " cast(forward_all_enabled as text), ";
+	sql = sql .. " forward_all_destination, ";
+	sql = sql .. " toll_allow, ";
+	sql = sql .. " outbound_caller_id_name, ";
+	sql = sql .. " outbound_caller_id_number ";
+	sql = sql .. "from v_extensions ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	local params = {domain_uuid = domain_uuid};
 	if (extension_uuid ~= nil) then
@@ -295,9 +308,9 @@
 
 --clear the cache
 	if extension and #extension > 0 and cache.support() then
-		cache.del("directory:"..extension.."@"..domain_name);
+		cache.del(hostname..":directory:"..extension.."@"..domain_name);
 		if #number_alias > 0 then
-			cache.del("directory:"..number_alias.."@"..domain_name);
+			cache.del(hostname..":directory:"..number_alias.."@"..domain_name);
 		end
 	end
 

@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('xml_cdr_statistics')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('xml_cdr_statistics')) {
 		echo "access denied";
 		exit;
 	}
@@ -357,12 +354,7 @@
 	$seconds_month = $seconds_day * 30;
 
 //set the time zone
-	if (isset($_SESSION['domain']['time_zone']['name'])) {
-		$time_zone = $_SESSION['domain']['time_zone']['name'];
-	}
-	else {
-		$time_zone = date_default_timezone_get();
-	}
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 	$parameters['time_zone'] = $time_zone;
 
 //build the sql query for xml cdr statistics
@@ -583,7 +575,6 @@
 	$sql .= "	group by s.s_id, s.start_date, s.end_date, s.s_hour \n";
 	$sql .= "	order by s.s_id asc \n";
 	$sql .= ") as d; \n";
-	$database = new database;
 	$stats = $database->select($sql, $parameters, 'all');
 
 //set the hours

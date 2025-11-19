@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -154,10 +154,17 @@
 		echo "			".$text['label-include_internal']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field'>\n";
-		echo "			<select class='formfld' name='include_internal' id='include_internal'>\n";
-		echo "				<option value='0'>".$text['option-false']."</option>\n";
-		echo "				<option value='1' ".((!empty($include_internal) && $include_internal == 1) ? "selected" : null).">".$text['option-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='switch'>\n";
+		}
+		echo "			<select class='formfld' id='include_internal' name='include_internal'>\n";
+		echo "				<option value='false' ".(!empty($include_internal) && $include_internal === 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "				<option value='true' ".(!empty($include_internal) && $include_internal === 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "			</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "			<span class='slider'></span>\n";
+			echo "		</span>\n";
+		}
 		echo "		</div>\n";
 
 		echo "	</div>\n";

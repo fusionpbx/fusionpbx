@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,20 +30,19 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('extension_copy')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('extension_copy')) {
 		echo "access denied";
 		exit;
 	}
 
-//initialize the database object
-	$database = new database;
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//get order and order by, page
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_REQUEST["order_by"] ?? 'extension'));
+	$order = $_REQUEST["order"] ?? 'asc';
+	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
 
 //set the http get/post variable(s) to a php variable
 	if (is_uuid($_REQUEST["id"]) && $_REQUEST["ext"] != '') {
@@ -59,12 +58,45 @@
 	$extension = new extension;
 	if ($extension->exists($_SESSION['domain_uuid'], $extension_new)) {
 		message::add($text['message-duplicate'], 'negative');
-		header("Location: extensions.php".(is_numeric($page) ? '?page='.$page : null));
+		header("Location: extensions.php?".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(is_numeric($page) ? '&page='.$page : null));
 		exit;
 	}
 
 //get the extension data
-	$sql = "select * from v_extensions ";
+	$sql = "select ";
+	$sql .= "extension, ";
+	$sql .= "number_alias, ";
+	$sql .= "accountcode, ";
+	$sql .= "effective_caller_id_name, ";
+	$sql .= "effective_caller_id_number, ";
+	$sql .= "outbound_caller_id_name, ";
+	$sql .= "outbound_caller_id_number, ";
+	$sql .= "emergency_caller_id_name, ";
+	$sql .= "emergency_caller_id_number, ";
+	$sql .= "directory_visible, ";
+	$sql .= "directory_exten_visible, ";
+	$sql .= "limit_max, ";
+	$sql .= "limit_destination, ";
+	$sql .= "user_context, ";
+	$sql .= "missed_call_app, ";
+	$sql .= "missed_call_data, ";
+	$sql .= "toll_allow, ";
+	$sql .= "call_timeout, ";
+	$sql .= "call_group, ";
+	$sql .= "user_record, ";
+	$sql .= "hold_music, ";
+	$sql .= "auth_acl, ";
+	$sql .= "cidr, ";
+	$sql .= "sip_force_contact, ";
+	$sql .= "nibble_account, ";
+	$sql .= "sip_force_expires, ";
+	$sql .= "mwi_account, ";
+	$sql .= "sip_bypass_media, ";
+	$sql .= "dial_string, ";
+	$sql .= "extension_type, ";
+	$sql .= "cast(enabled as text), ";
+	$sql .= "description ";
+	$sql .= "from v_extensions ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and extension_uuid = :extension_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -111,7 +143,7 @@
 	$array['extensions'][0]['extension_uuid'] = uuid();
 	$array['extensions'][0]['extension'] = $extension_new;
 	$array['extensions'][0]['number_alias'] = $number_alias_new;
-	$array['extensions'][0]['password'] = generate_password($_SESSION["extension"]["password_length"]["numeric"], $_SESSION["extension"]["password_strength"]["numeric"]);
+	$array['extensions'][0]['password'] = generate_password($settings->get('extension', 'password_length'), $settings->get('extension', 'password_strength'));
 	$array['extensions'][0]['accountcode'] = $password;
 	$array['extensions'][0]['effective_caller_id_name'] = $effective_caller_id_name;
 	$array['extensions'][0]['effective_caller_id_number'] = $effective_caller_id_number;
@@ -149,7 +181,12 @@
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
 
 		//get the voicemails
-			$sql = "select * from v_voicemails ";
+			$sql = "select ";
+			$sql .= "voicemail_mail_to, ";
+			$sql .= "voicemail_file, ";
+			$sql .= "voicemail_local_after_email, ";
+			$sql .= "cast(voicemail_enabled as text) ";
+			$sql .= "from v_voicemails ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and voicemail_id = :voicemail_id ";
 			$parameters['voicemail_id'] = is_numeric($number_alias) ? $number_alias : $extension;
@@ -185,7 +222,7 @@
 	}
 
 //synchronize configuration
-	if (is_writable($_SESSION['switch']['extensions']['dir'])) {
+	if (is_writable($settings->get('switch', 'extensions'))) {
 		$ext = new extension;
 		$ext->xml();
 		unset($ext);
@@ -193,7 +230,7 @@
 
 //redirect the user
 	message::add($text['message-copy']);
-	header("Location: extensions.php".(is_numeric($page) ? '?page='.$page : null));
+	header("Location: extensions.php?".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(is_numeric($page) ? '&page='.$page : null));
 	exit;
 
 ?>

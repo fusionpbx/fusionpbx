@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2016-2024
+ Portions created by the Initial Developer are Copyright (C) 2016-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('device_vendor_function_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('device_vendor_function_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -76,21 +73,22 @@
 	$order_by = $_GET["order_by"] ?? null;
 	$order = $_GET["order"] ?? null;
 
+//get the search term
+	$search = strtolower($_GET["search"] ?? '');
+
 //prepare to page the results
 	$sql = "select count(*) from v_device_vendor_functions ";
 	$sql .= "where device_vendor_uuid = :device_vendor_uuid ";
-	if (isset($_GET["search"])) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	label like :search ";
 		$sql .= "	or type like :search ";
 		$sql .= "	or subtype like :search ";
-		$sql .= "	or enabled like :search ";
 		$sql .= "	or description like :search ";
 		$sql .= ")";
-		$parameters['search'] = '%'.$_GET["search"].'%';
+		$parameters['search'] = '%'.$search.'%';
 	}
 	$parameters['device_vendor_uuid'] = $device_vendor_uuid;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 
@@ -106,23 +104,29 @@
 	}
 
 //get the list
-	$sql = "select * from v_device_vendor_functions ";
+	$sql = "select ";
+	$sql .= "device_vendor_function_uuid, ";
+	$sql .= "device_vendor_uuid, ";
+	$sql .= "type, ";
+	$sql .= "subtype, ";
+	$sql .= "value, ";
+	$sql .= "cast(enabled as text), ";
+	$sql .= "description ";
+	$sql .= "from v_device_vendor_functions ";
 	$sql .= "where device_vendor_uuid = :device_vendor_uuid ";
-	if (isset($_GET["search"])) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	label like :search ";
 		$sql .= "	or type like :search ";
 		$sql .= "	or subtype like :search ";
 		$sql .= "	or value like :search ";
-		$sql .= "	or enabled like :search ";
 		$sql .= "	or description like :search ";
 		$sql .= ")";
-		$parameters['search'] = '%'.$_GET["search"].'%';
+		$parameters['search'] = '%'.$search.'%';
 	}
 	$parameters['device_vendor_uuid'] = $device_vendor_uuid;
 	$sql .= order_by($order_by, $order, 'type', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset ?? null);
-	$database = new database;
 	$vendor_functions = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -176,7 +180,7 @@
 	echo "<th class='hide-sm-dn'>".$text['label-groups']."</th>\n";
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('device_vendor_function_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+	if (permission_exists('device_vendor_function_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -200,7 +204,6 @@
 				$sql .= "g.group_name asc ";
 				$parameters['device_vendor_uuid'] = $device_vendor_uuid;
 				$parameters['device_vendor_function_uuid'] = $row['device_vendor_function_uuid'];
-				$database = new database;
 				$vendor_function_groups = $database->select($sql, $parameters, 'all');
 				unset($sql, $parameters);
 				unset($group_list);
@@ -214,7 +217,7 @@
 				$list_row_url = '';
 				if (permission_exists('device_vendor_function_edit')) {
 					$list_row_url = "device_vendor_function_edit.php?device_vendor_uuid=".urlencode($row['device_vendor_uuid'])."&id=".urlencode($row['device_vendor_function_uuid']);
-					if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 						$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 					}
 				}
@@ -256,7 +259,7 @@
 				}
 				echo "	</td>\n";
 				echo "	<td class='description overflow hide-sm-dn'>".escape($row['description'])."</td>\n";
-				if (permission_exists('device_vendor_function_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+				if (permission_exists('device_vendor_function_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 					echo "	<td class='action-button'>\n";
 					echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 					echo "	</td>\n";
@@ -293,4 +296,3 @@
 	echo "</script>\n";
 
 ?>
-

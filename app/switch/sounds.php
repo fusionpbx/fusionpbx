@@ -32,10 +32,7 @@
 	require_once "resources/check_auth.php";
 
 //check the permission
-	if (permission_exists('recording_play') || permission_exists('recording_download')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('recording_play') || permission_exists('recording_download'))) {
 		echo "access denied";
 		exit;
 	}
@@ -47,14 +44,14 @@
 	if ($action == "download") {
 
 		//get first installed language (like en/us/callie)
-			$language_paths = glob($_SESSION["switch"]['sounds']['dir']."/*/*/*");
+			$language_paths = glob($settings->get('switch', 'sounds')."/*/*/*");
 			foreach ($language_paths as $key => $path) {
-				$path = str_replace($_SESSION["switch"]['sounds']['dir'].'/', "", $path);
+				$path = str_replace($settings->get('switch', 'sounds').'/', "", $path);
 				$path_array = explode('/', $path);
 				if (count($path_array) <> 3 || strlen($path_array[0]) <> 2 || strlen($path_array[1]) <> 2) {
 					unset($language_paths[$key]);
 				}
-				$language_paths[$key] = str_replace($_SESSION["switch"]['sounds']['dir']."/","",$language_paths[$key] ?? '');
+				$language_paths[$key] = str_replace($settings->get('switch', 'sounds')."/","",$language_paths[$key] ?? '');
 				if (empty($language_paths[$key])) {
 					unset($language_paths[$key]);
 				}
@@ -64,7 +61,7 @@
 		//determine the path for sound file
 			$filename_parts = explode('/', str_replace('..', '', $_GET['filename']));
 			if (!is_array($filename_parts) || @sizeof($filename_parts) != 2) { exit; }
-			$path = $_SESSION['switch']['sounds']['dir'].'/'.$language_path.'/'.$filename_parts[0].'/8000/';
+			$path = $settings->get('switch', 'sounds').'/'.$language_path.'/'.$filename_parts[0].'/8000/';
 
 		//set sound filename
 			$sound_filename = $filename_parts[1];
@@ -98,6 +95,13 @@
 	}
 
 //define the download function (helps safari play audio sources)
+	/**
+	 * Downloads a specified range of bytes from the given file.
+	 *
+	 * @param string $file The path to the file to download.
+	 *
+	 * @return void
+	 */
 	function range_download($file) {
 		$fp = @fopen($file, 'rb');
 
@@ -126,7 +130,7 @@
 			$c_start = $start;
 			$c_end   = $end;
 			// Extract the range string
-			list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+			[, $range] = explode('=', $_SERVER['HTTP_RANGE'], 2);
 			// Make sure the client hasn't sent us a multibyte range
 			if (strpos($range, ',') !== false) {
 				// (?) Shoud this be issued here, or should the first

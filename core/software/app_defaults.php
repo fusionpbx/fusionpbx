@@ -51,8 +51,6 @@ if ($domains_processed == 1) {
 			$p->add("software_edit", 'temp');
 
 			//save the data
-			$database->app_name = 'software';
-			$database->app_uuid = 'b88c795f-7dea-4fc8-9ab7-edd555242cff';
 			$database->save($array, false);
 			unset($array);
 

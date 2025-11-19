@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('log_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('log_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -64,27 +61,27 @@
 
 //set default default log file
 	if (isset($_POST['log_file'])) {
-		$approved_files = glob($_SESSION['switch']['log']['dir'].'/freeswitch.log*');
+		$approved_files = glob($settings->get('switch', 'log').'/freeswitch.log*');
 		if (is_array($approved_files)) {
 			foreach($approved_files as $approved_file) {
-				if ($approved_file == $_SESSION['switch']['log']['dir'].'/'.$_POST['log_file']) {
+				if ($approved_file == $settings->get('switch', 'log').'/'.$_POST['log_file']) {
 					$log_file = $approved_file;
 				}
 			}
 		}
 	}
 	else {
-		$log_file = $_SESSION['switch']['log']['dir'].'/freeswitch.log';
+		$log_file = $settings->get('switch', 'log').'/freeswitch.log';
 	}
 
 //download the log
 	if (permission_exists('log_download')) {
 		if (isset($_GET['n'])) {
 			if (isset($filename)) { unset($filename); }
-			$approved_files = glob($_SESSION['switch']['log']['dir'].'/freeswitch.log*');
+			$approved_files = glob($settings->get('switch', 'log').'/freeswitch.log*');
 			if (is_array($approved_files)) {
 				foreach($approved_files as $approved_file) {
-					if ($approved_file == $_SESSION['switch']['log']['dir'].'/'.$_GET['n']) {
+					if ($approved_file == $settings->get('switch', 'log').'/'.$_GET['n']) {
 						$filename = $approved_file;
 					}
 				}
@@ -121,7 +118,7 @@
 	echo "	<div class='actions'>\n";
 	echo 		"<form name='frm' id='frm' class='inline' method='post'>\n";
 	echo "			".$text['label-log_file']." <select name='log_file' class='formfld' style='width: 150px; margin-right: 20px;'>";
-	$files = glob($_SESSION['switch']['log']['dir'].'/freeswitch.log*');
+	$files = glob($settings->get('switch', 'log').'/freeswitch.log*');
 	if (is_array($files)) {
 		foreach($files as $file_name) {
 			$selected = ($file_name == $log_file) ? "selected='selected'" : "";
@@ -141,6 +138,8 @@
 	echo 			"<option value='1024' ".($_POST['size'] == 1024 ? "selected='selected'" : null).">1024</option>";
 	echo 			"<option value='2048' ".($_POST['size'] == 2048 ? "selected='selected'" : null).">2048</option>";
 	echo 			"<option value='4096' ".($_POST['size'] == 4096 ? "selected='selected'" : null).">4096</option>";
+	echo 			"<option value='8192' ".($_POST['size'] == 8192 ? "selected='selected'" : null).">8192</option>";
+	echo 			"<option value='max' ".($_POST['size'] === 'max' ? "selected='selected'" : null).">" . $text['label-max'] . "</option>";
 	echo 		"</select> ";
 	echo 		$text['label-size'];
 	echo button::create(['type'=>'submit','label'=>$text['button-update'],'icon'=>$settings->get('theme', 'button_icon_save'),'style'=>'margin-left: 15px;','name'=>'submit']);
@@ -213,7 +212,11 @@
 
 		echo "<div style='padding-bottom: 10px; text-align: right; color: #fff; margin-bottom: 15px; border-bottom: 1px solid #fff;'>";
 		$user_file_size = '32768';
-		
+
+		if ($_POST['size'] === 'max') {
+			$_POST['size'] = $file_size;
+		}
+
 		if (!is_numeric($_POST['size'])) {
 			//should generate log warning here...
 			$user_file_size = 512 * 1024;

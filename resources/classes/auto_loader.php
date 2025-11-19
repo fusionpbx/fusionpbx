@@ -317,10 +317,15 @@ class auto_loader {
 						foreach ($interface_list as $interface) {
 							$interface_name = trim($interface, " \n\r\t\v\x00\\");
 							// Check that it is declared as an array so we can record the classes
-							if (empty($this->interfaces[$interface_name]))
+							if (empty($this->interfaces[$interface_name])) {
 								$this->interfaces[$interface_name] = [];
-							// Record the classes that implement interface sorting by namspace and class name
-							$this->interfaces[$interface_name][] = $full_name;
+							}
+
+							// Ensure we don't already have the class recorded
+							if (!in_array($full_name, $this->interfaces[$interface_name], true)) {
+								// Record the classes that implement interface sorting by namspace and class name
+								$this->interfaces[$interface_name][] = $full_name;
+							}
 						}
 					}
 				}

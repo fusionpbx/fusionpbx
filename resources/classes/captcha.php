@@ -49,15 +49,6 @@ class captcha {
 	 */
 	public function image_captcha() {
 
-		//includes files
-		require dirname(__DIR__, 2) . "/resources/require.php";
-
-		//includes files
-		require_once "resources/functions.php";
-
-		//start the session
-		if (!isset($_SESSION)) { session_start(); }
-
 		//$_SESSION["captcha"] = substr(md5(uuid()), 0, 6);
 		//$text = $_SESSION["captcha"];
 		$text = $this->code;

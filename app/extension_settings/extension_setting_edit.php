@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021-2023
+	Portions created by the Initial Developer are Copyright (C) 2021-2025
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -26,10 +26,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('extension_setting_add') || permission_exists('extension_setting_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('extension_setting_add') || permission_exists('extension_setting_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -69,7 +66,7 @@
 		$extension_setting_type = $_POST["extension_setting_type"];
 		$extension_setting_name = $_POST["extension_setting_name"];
 		$extension_setting_value = $_POST["extension_setting_value"];
-		$extension_setting_enabled = $_POST["extension_setting_enabled"] ?? 'false';
+		$extension_setting_enabled = $_POST["extension_setting_enabled"];
 		$extension_setting_description = $_POST["extension_setting_description"];
 	}
 
@@ -92,20 +89,17 @@
 				switch ($_POST['action']) {
 					case 'copy':
 						if (permission_exists('extension_setting_add')) {
-							$obj = new database;
-							$obj->copy($array);
+							$database->copy($array);
 						}
 						break;
 					case 'delete':
 						if (permission_exists('extension_setting_delete')) {
-							$obj = new database;
-							$obj->delete($array);
+							$database->delete($array);
 						}
 						break;
 					case 'toggle':
 						if (permission_exists('extension_setting_update')) {
-							$obj = new database;
-							$obj->toggle($array);
+							$database->toggle($array);
 						}
 						break;
 				}
@@ -123,7 +117,7 @@
 			if (empty($extension_setting_type)) { $msg .= $text['message-required']." ".$text['label-extension_setting_type']."<br>\n"; }
 			if (empty($extension_setting_name)) { $msg .= $text['message-required']." ".$text['label-extension_setting_name']."<br>\n"; }
 			//if (empty($extension_setting_value)) { $msg .= $text['message-required']." ".$text['label-extension_setting_value']."<br>\n"; }
-			if (empty($extension_setting_enabled)) { $msg .= $text['message-required']." ".$text['label-extension_setting_enabled']."<br>\n"; }
+			// if (empty($extension_setting_enabled)) { $msg .= $text['message-required']." ".$text['label-extension_setting_enabled']."<br>\n"; }
 			//if (empty($extension_setting_description)) { $msg .= $text['message-required']." ".$text['label-extension_setting_description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -155,20 +149,16 @@
 			$array['extension_settings'][0]['extension_setting_description'] = $extension_setting_description;
 
 		//save the data
-			$database = new database;
-			$database->app_name = 'extension settings';
-			$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 			$database->save($array);
 
 		//clear the cache
 			$sql = "select extension, number_alias, user_context from v_extensions ";
 			$sql .= "where extension_uuid = :extension_uuid ";
 			$parameters['extension_uuid'] = $extension_uuid;
-			$database = new database;
 			$extension = $database->select($sql, $parameters, 'row');
 			$cache = new cache;
-			$cache->delete("directory:".$extension["extension"]."@".$extension["user_context"]);
-			$cache->delete("directory:".$extension["number_alias"]."@".$extension["user_context"]);
+			$cache->delete(gethostname().":directory:".$extension["extension"]."@".$extension["user_context"]);
+			$cache->delete(gethostname().":directory:".$extension["number_alias"]."@".$extension["user_context"]);
 
 		//redirect the user
 			if (isset($action)) {
@@ -193,14 +183,13 @@
 		$sql .= "extension_setting_type, ";
 		$sql .= "extension_setting_name, ";
 		$sql .= "extension_setting_value, ";
-		$sql .= "cast(extension_setting_enabled as text), ";
+		$sql .= "extension_setting_enabled, ";
 		$sql .= "extension_setting_description ";
 		$sql .= "from v_extension_settings ";
 		$sql .= "where extension_setting_uuid = :extension_setting_uuid ";
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['extension_setting_uuid'] = $extension_setting_uuid ?? '';
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			if (!empty($row["extension_uuid"]) && is_uuid($row["extension_uuid"])) {
@@ -217,7 +206,7 @@
 	}
 
 //set the defaults
-	if (empty($extension_setting_enabled)) { $extension_setting_enabled = 'true'; }
+	$extension_setting_enabled = $extension_setting_enabled ?? true;
 
 //create token
 	$object = new token;
@@ -341,17 +330,16 @@
 	echo "	".$text['label-extension_setting_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='extension_setting_enabled' name='extension_setting_enabled' value='true' ".($extension_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='extension_setting_enabled' name='extension_setting_enabled'>\n";
-		echo "		<option value='true' ".($extension_setting_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($extension_setting_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='extension_setting_enabled' name='extension_setting_enabled'>\n";
+	echo "		<option value='true' ".($extension_setting_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($extension_setting_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-extension_setting_enabled']."\n";

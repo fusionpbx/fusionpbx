@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_phone_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_phone_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -44,7 +41,6 @@
 	$sql .= "order by phone_primary desc, phone_label asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_phones = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -85,7 +81,7 @@
 			echo "<th>".$text['label-phone_type']."</th>\n";
 			echo "<th>".$text['label-phone_tools']."</th>\n";
 			echo "<th class='hide-md-dn'>".$text['label-phone_description']."</th>\n";
-			if (permission_exists('contact_phone_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+			if (permission_exists('contact_phone_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
@@ -130,7 +126,7 @@
 					}
 					echo "	</td>\n";
 					echo "	<td class='description overflow hide-md-dn'>".escape($row['phone_description'])."&nbsp;</td>\n";
-					if (permission_exists('contact_phone_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+					if (permission_exists('contact_phone_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 						echo "	<td class='action-button'>\n";
 						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 						echo "	</td>\n";

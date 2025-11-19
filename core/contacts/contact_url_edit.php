@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_url_edit') || permission_exists('contact_url_add')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('contact_url_edit') || permission_exists('contact_url_add'))) {
 		echo "access denied";
 		exit;
 	}
@@ -46,7 +43,6 @@
 	$url_label = '';
 	$url_label_custom = '';
 	$url_address = '';
-	$url_primary = '';
 	$url_description = '';
 
 //action add or update
@@ -118,9 +114,6 @@
 				$p = permissions::new();
 				$p->add('contact_edit', 'temp');
 
-				$database = new database;
-				$database->app_name = 'contacts';
-				$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 				$database->save($array);
 				unset($array);
 
@@ -128,12 +121,11 @@
 
 				//if primary, unmark other primary urls
 				if ($url_primary) {
-					$sql = "update v_contact_urls set url_primary = 0 ";
+					$sql = "update v_contact_urls set url_primary = false ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "and contact_uuid = :contact_uuid ";
 					$parameters['domain_uuid'] = $domain_uuid;
 					$parameters['contact_uuid'] = $contact_uuid;
-					$database = new database;
 					$database->execute($sql, $parameters ?? null);
 					unset($sql, $parameters);
 				}
@@ -159,9 +151,6 @@
 					$array['contact_urls'][0]['url_primary'] = $url_primary ? 1 : 0;
 					$array['contact_urls'][0]['url_description'] = $url_description;
 
-					$database = new database;
-					$database->app_name = 'contacts';
-					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 					$database->save($array);
 					unset($array);
 				}
@@ -180,7 +169,6 @@
 		$sql .= "and contact_url_uuid = :contact_url_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['contact_url_uuid'] = $contact_url_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$url_label = $row["url_label"];
@@ -190,6 +178,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	$url_primary = $url_primary ?? false;
 
 //create token
 	$object = new token;
@@ -294,10 +285,17 @@
 	echo "	".$text['label-primary']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='url_primary' id='url_primary'>\n";
-	echo "		<option value='0'>".$text['option-false']."</option>\n";
-	echo "		<option value='1' ".(($url_primary) ? "selected" : null).">".$text['option-true']."</option>\n";
-	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "		<select class='formfld' id='url_primary' name='url_primary'>\n";
+	echo "			<option value='false' ".($url_primary === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($url_primary === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-url_primary']."\n";
 	echo "</td>\n";

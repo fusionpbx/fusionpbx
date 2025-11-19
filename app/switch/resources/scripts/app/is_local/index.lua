@@ -68,7 +68,7 @@
 		sql = sql .. "	OR destination_number = :destination_number ";
 		sql = sql .. ") ";
 		sql = sql .. "AND destination_type = 'inbound' ";
-		sql = sql .. "AND destination_enabled = 'true' ";
+		sql = sql .. "AND destination_enabled = true ";
 		local params = {destination_number = destination_number};
 		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "SQL:" .. sql .. "; destination_number: " .. destination_number .. "\n");

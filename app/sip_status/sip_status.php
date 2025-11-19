@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('system_status_sofia_status') || permission_exists('system_status_sofia_status_profile') || if_group("superadmin")) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('system_status_sofia_status') || permission_exists('system_status_sofia_status_profile'))) {
 		echo "access denied";
 		exit;
 	}
@@ -41,9 +38,6 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//create the database object
-	$database = database::new();
 
 //create event socket
 	$esl = event_socket::create();
@@ -59,11 +53,10 @@
 	unset($sql);
 
 //get the sip profiles
-	if ($esl->is_connected()) {
-		$hostname = trim(event_socket::api('switchname'));
-	}
+	$hostname = gethostname();
+
 	$sql = "select sip_profile_uuid, sip_profile_name from v_sip_profiles ";
-	$sql .= "where sip_profile_enabled = 'true' ";
+	$sql .= "where sip_profile_enabled = true ";
 	if (!empty($hostname)) {
 		$sql .= "and (sip_profile_hostname = :sip_profile_hostname ";
 		$sql .= "or sip_profile_hostname = '' ";
@@ -95,6 +88,14 @@
 			}
 
 			//sort the array
+			/**
+			 * Compares two XML elements based on their names and sorts them in a natural order.
+			 *
+			 * @param object $a The first XML element to compare.
+			 * @param object $b The second XML element to compare.
+			 *
+			 * @return int A negative integer, zero, or a positive integer if $a's name is less than, equal to, or greater than $b's name respectively.
+			 */
 			function sort_xml($a, $b) {
 				return strnatcmp($a->name, $b->name);
 			}
@@ -139,8 +140,10 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-sip_status']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('system_status_sofia_status')) {
+	if (permission_exists('sip_status_flush_cache')) {
 		echo button::create(['type'=>'button','label'=>$text['button-flush_cache'],'icon'=>'eraser','collapse'=>'hide-xs','link'=>'cmd.php?action=cache-flush']);
+	}
+	if (permission_exists('sip_status_command')) {
 		echo button::create(['type'=>'button','label'=>$text['button-reload_acl'],'icon'=>'shield-alt','collapse'=>'hide-xs','link'=>'cmd.php?action=reloadacl']);
 		echo button::create(['type'=>'button','label'=>$text['button-reload_xml'],'icon'=>'code','collapse'=>'hide-xs','link'=>'cmd.php?action=reloadxml']);
 	}
@@ -173,7 +176,7 @@
 				foreach ($xml->profile as $row) {
 					unset($list_row_url);
 					$profile_name = (string) $row->name;
-					$list_row_url = is_uuid($sip_profiles[$profile_name]) && permission_exists('sip_profile_edit') ? PROJECT_PATH."/app/sip_profiles/sip_profile_edit.php?id=".$sip_profiles[$profile_name] : null;
+					$list_row_url = is_uuid($sip_profiles[$profile_name] ?? '') && permission_exists('sip_profile_edit') ? PROJECT_PATH."/app/sip_profiles/sip_profile_edit.php?id=".$sip_profiles[$profile_name] : null;
 					echo "<tr class='list-row' href='".$list_row_url."'>\n";
 					echo "	<td>";
 					if ($list_row_url) {

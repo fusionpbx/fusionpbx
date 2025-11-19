@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_phone_edit') || permission_exists('contact_phone_add')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('contact_phone_edit') || permission_exists('contact_phone_add'))) {
 		echo "access denied";
 		exit;
 	}
@@ -53,7 +50,6 @@
 	$phone_country_code = '';
 	$phone_number = '';
 	$phone_extension = '';
-	$phone_primary = '';
 	$phone_description = '';
 
 //action add or update
@@ -135,9 +131,6 @@
 					$p = permissions::new();
 					$p->add('contact_edit', 'temp');
 
-					$database = new database;
-					$database->app_name = 'contacts';
-					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 					$database->save($array);
 					unset($array);
 
@@ -145,12 +138,11 @@
 
 				//if primary, unmark other primary numbers
 					if ($phone_primary) {
-						$sql = "update v_contact_phones set phone_primary = 0 ";
+						$sql = "update v_contact_phones set phone_primary = false ";
 						$sql .= "where domain_uuid = :domain_uuid ";
 						$sql .= "and contact_uuid = :contact_uuid ";
 						$parameters['domain_uuid'] = $domain_uuid;
 						$parameters['contact_uuid'] = $contact_uuid;
-						$database = new database;
 						$database->execute($sql, $parameters);
 						unset($sql, $parameters);
 					}
@@ -169,7 +161,6 @@
 							}
 							$parameters['phone_speed_dial'] = $phone_speed_dial;
 							$parameters['domain_uuid'] = $domain_uuid;
-							$database = new database;
 							if (!empty($database->execute($sql, $parameters, 'column'))) {
 								$phone_speed_dial_exists = true;
 							}
@@ -212,9 +203,6 @@
 						$array['contact_phones'][0]['phone_primary'] = $phone_primary ? 1 : 0;
 						$array['contact_phones'][0]['phone_description'] = $phone_description;
 
-						$database = new database;
-						$database->app_name = 'contacts';
-						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 						$database->save($array);
 						unset($array);
 					}
@@ -234,7 +222,6 @@
 		$sql .= "and contact_phone_uuid = :contact_phone_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_phone_uuid'] = $contact_phone_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$phone_label = $row["phone_label"];
@@ -251,6 +238,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	$phone_primary = $phone_primary ?? false;
 
 //create token
 	$object = new token;
@@ -400,10 +390,17 @@
 	echo "	".$text['label-primary']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='phone_primary' id='phone_primary'>\n";
-	echo "		<option value='0'>".$text['option-false']."</option>\n";
-	echo "		<option value='1' ".(($phone_primary) ? "selected" : null).">".$text['option-true']."</option>\n";
-	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "		<select class='formfld' id='phone_primary' name='phone_primary'>\n";
+	echo "			<option value='true' ".($phone_primary === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($phone_primary === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-phone_primary']."\n";
 	echo "</td>\n";

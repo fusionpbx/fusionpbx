@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,62 +30,71 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('extension_add') || permission_exists('extension_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('extension_add') || permission_exists('extension_edit'))) {
 		echo "access denied";
 		exit;
 	}
 
 //get the domain and user UUIDs
-	$domain_uuid = $domain_uuid ?? '';
-	$user_uuid = $user_uuid ?? '';
+	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+	$domain_name = $_SESSION['domain_name'] ?? '';
+	$user_uuid = $_SESSION['user_uuid'] ?? '';
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//return the first item if data type = array, returns value if data type = text 
+//get order and order by, page
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_REQUEST["order_by"] ?? 'extension'));
+	$order = $_REQUEST["order"] ?? 'asc';
+	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
+
+//return the first item if data type = array, returns value if data type = text
+	/**
+	 * Returns the first item of a given value.
+	 *
+	 * If the value is an array, returns the first element of the array.
+	 * Otherwise, returns the value as is.
+	 *
+	 * @param mixed $value The value to retrieve the first item from.
+	 *
+	 * @return mixed The first item of the value.
+	 */
 	function get_first_item($value) {
-	    return is_array($value) ? $value[0] : $value;
+		return is_array($value) ? $value[0] : $value;
 	}
 
-//initialize the core objects
-	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
-	$user_uuid = $_SESSION['user_uuid'] ?? '';
-	$config = config::load();
-	$database = database::new(['config' => $config]);
-	$domain_name = $database->select('select domain_name from v_domains where domain_uuid = :domain_uuid', ['domain_uuid' => $domain_uuid], 'column');
+//initialize the settings object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
-//set defaults
-	$limit_extensions                     = $settings->get('limit', 'extensions', null);
-	$limit_devices                        = $settings->get('limit', 'devices', null);
-	$extension_limit_max                  = $settings->get('extension', 'limit_max', 5);
-	$extension_call_timeout               = $settings->get('extension', 'call_timeout', 30);
-	$extension_max_registrations          = $settings->get('extension', 'max_registrations', null);
-	$extension_password_length            = $settings->get('extension', 'password_length', 20);       //set default to 20
-	$extension_password_strength          = $settings->get('extension', 'password_strength', 4);      //set default to use numbers, Upper/Lowercase letters, special characters
-	$extension_user_record_default        = $settings->get('extension', 'user_record_default', '');
-	$provision_path                       = $settings->get('provision', 'path', '');
-	$provision_line_label                 = $settings->get('provision','line_label', null);
-	$provision_line_display_name          = $settings->get('provision','line_display_name', null);
-	$provision_outbound_proxy_primary     = $settings->get('provision','outbound_proxy_primary', null);
-	$provision_outbound_proxy_secondary   = $settings->get('provision','outbound_proxy_secondary', null);
-	$provision_server_address_primary     = $settings->get('provision','server_address_primary', null);
-	$provision_server_address_secondary   = $settings->get('provision','server_address_secondary', null);
-	$provision_line_sip_port              = $settings->get('provision','line_sip_port', null);
-	$provision_line_sip_transport         = $settings->get('provision','line_sip_transport', null);
-	$provision_line_register_expires      = $settings->get('provision','line_register_expires', null);
-	$theme_input_toggle_style             = $settings->get('theme','input_toggle_style', '');                       //set default to empty string
-	$voicemail_password_length            = $settings->get('voicemail', 'password_length', 6);                      //set default to 6
-	$voicemail_transcription_enabled_default = $settings->get('voicemail', 'transcription_enabled_default', false); //set default to false
-	$voicemail_enabled_default               = $settings->get('voicemail', 'enabled_default', true);
-	$switch_voicemail                        = $settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail') . "/default/$domain_name";
-	$switch_extensions                       = $settings->get('switch', 'extensions', '/etc/freeswitch/directory');
-	$switch_sounds                           = $settings->get('switch', 'sounds', '/usr/share/freeswitch/sounds');
-	$transcribe_enabled                      = $settings->get('transcribe', 'enabled', false);
+//set the defaults
+	$limit_extensions							= $settings->get('limit', 'extensions', null);
+	$limit_devices								= $settings->get('limit', 'devices', null);
+	$extension_limit_max						= $settings->get('extension', 'limit_max', 5);
+	$extension_call_timeout						= $settings->get('extension', 'call_timeout', 30);
+	$extension_max_registrations				= $settings->get('extension', 'max_registrations', null);
+	$extension_password_length					= $settings->get('extension', 'password_length', 20);       //set default to 20
+	$extension_password_strength				= $settings->get('extension', 'password_strength', 4);      //set default to use numbers, Upper/Lowercase letters, special characters
+	$extension_user_record_default				= $settings->get('extension', 'user_record_default', '');
+	$extension_type								= $settings->get('extension', 'type', 'default');
+	$provision_path								= $settings->get('provision', 'path', '');
+	$provision_line_label						= $settings->get('provision','line_label', null);
+	$provision_line_display_name				= $settings->get('provision','line_display_name', null);
+	$provision_outbound_proxy_primary			= $settings->get('provision','outbound_proxy_primary', null);
+	$provision_outbound_proxy_secondary			= $settings->get('provision','outbound_proxy_secondary', null);
+	$provision_server_address_primary			= $settings->get('provision','server_address_primary', null);
+	$provision_server_address_secondary			= $settings->get('provision','server_address_secondary', null);
+	$provision_line_sip_port					= $settings->get('provision','line_sip_port', null);
+	$provision_line_sip_transport				= $settings->get('provision','line_sip_transport', null);
+	$provision_line_register_expires			= $settings->get('provision','line_register_expires', null);
+	$theme_input_toggle_style					= $settings->get('theme','input_toggle_style', '');                    //set default to empty string
+	$voicemail_password_length					= $settings->get('voicemail', 'password_length', 6);                   //set default to 6
+	$voicemail_transcription_enabled_default	= $settings->get('voicemail', 'transcription_enabled_default', false); //set default to false
+	$voicemail_enabled_default					= $settings->get('voicemail', 'enabled_default', true);
+	$switch_voicemail							= $settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail') . "/default/$domain_name";
+	$switch_extensions							= $settings->get('switch', 'extensions', '/etc/freeswitch/directory');
+	$switch_sounds								= $settings->get('switch', 'sounds', '/usr/share/freeswitch/sounds');
+	$transcribe_enabled							= $settings->get('transcribe', 'enabled', false);
 
 //cast to integers if they have values
 	if ($limit_extensions !== null) $limit_extensions = intval($limit_extensions);
@@ -97,7 +106,6 @@
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$extension_uuid = $_REQUEST["id"];
-		$page = $_REQUEST['page'] ?? null;
 	}
 	else {
 		$action = "add";
@@ -115,7 +123,7 @@
 
 			if ($total_extensions >= $limit_extensions) {
 				message::add($text['message-maximum_extensions'].' '.$limit_extensions, 'negative');
-				header('Location: extensions.php'.(isset($page) && is_numeric($page) ? '?page='.$page : null));
+				header('Location: extensions.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null));
 				exit;
 			}
 		}
@@ -156,7 +164,7 @@
 			//$device_uuid = $_POST["device_uuid"];
 			//$device_line = $_POST["device_line"];
 			$voicemail_password = $_POST["voicemail_password"];
-			$voicemail_enabled = $_POST["voicemail_enabled"] ?? 'false';
+			$voicemail_enabled = $_POST["voicemail_enabled"];
 			$voicemail_mail_to = $_POST["voicemail_mail_to"];
 			$voicemail_transcription_enabled = $_POST["voicemail_transcription_enabled"];
 			$voicemail_file = $_POST["voicemail_file"];
@@ -183,7 +191,7 @@
 			$dial_string = $_POST["dial_string"];
 			$extension_language = $_POST["extension_language"];
 			$extension_type = $_POST["extension_type"];
-			$enabled = $_POST["enabled"] ?? 'false';
+			$enabled = $_POST["enabled"];
 			$description = $_POST["description"];
 
 			//set defaults
@@ -312,8 +320,6 @@
 			$p->add('extension_user_delete', 'temp');
 
 		//save the array
-			$database->app_name = 'extensions';
-			$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 			$database->delete($array);
 			unset($array);
 
@@ -321,7 +327,7 @@
 			$p->delete('extension_user_delete', 'temp');
 
 		//redirect
-			header("Location: extension_edit.php?id=".$extension_uuid);
+			header("Location: extension_edit.php?id=".$extension_uuid.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null));
 			exit;
 	}
 
@@ -339,8 +345,6 @@
 				$p->add('device_line_delete', 'temp');
 
 			//save the array
-				$database->app_name = 'extensions';
-				$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 				$database->delete($array);
 				unset($array);
 
@@ -348,7 +352,7 @@
 				$p->delete('device_line_delete', 'temp');
 
 			//redirect
-				header("Location: extension_edit.php?id=".$extension_uuid);
+				header("Location: extension_edit.php?id=".$extension_uuid.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null));
 				exit;
 		}
 	}
@@ -359,9 +363,6 @@
 		//set the domain_uuid
 			if (permission_exists('extension_domain') && is_uuid($_POST["domain_uuid"])) {
 				$domain_uuid = $_POST["domain_uuid"];
-			}
-			else {
-				$domain_uuid = $domain_uuid;
 			}
 
 		//validate the token
@@ -375,9 +376,6 @@
 		//check for all required data
 			$msg = '';
 			if (empty($extension)) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
-			if (permission_exists('extension_enabled')) {
-				if (empty($enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
-			}
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -695,7 +693,7 @@
 													if (!empty($device_templates[$d])) {
 														$array["devices"][$j]["device_template"] = $device_templates[$d];
 													}
-													$array["devices"][$j]["device_enabled"] = "true";
+													$array["devices"][$j]["device_enabled"] = true;
 													$array["devices"][$j]["device_lines"][0]["device_uuid"] = $device_uuids[$d];
 													$array["devices"][$j]["device_lines"][0]["device_line_uuid"] = uuid();
 													$array["devices"][$j]["device_lines"][0]["domain_uuid"] = $domain_uuid;
@@ -718,10 +716,10 @@
 												}
 												else {
 													//send a message to the user the device is not unique
-													$message = $text['message-duplicate'].(if_group("superadmin") && $_SESSION["domain_name"] != $device_domain_name ? ": ".$device_domain_name : null);
+													$message = $text['message-duplicate'].(if_group("superadmin") && $domain_name != $device_domain_name ? ": ".$device_domain_name : null);
 													message::add($message,'negative');
 												}
-												
+
 												//increment
 												$j++;
 											}
@@ -754,7 +752,7 @@
 										//if voicemail_uuid does not exist then get a new uuid
 											if (!is_uuid($voicemail_uuid)) {
 												$voicemail_uuid = uuid();
-												$voicemail_tutorial = 'true';
+												$voicemail_tutorial = true;
 												//if adding a mailbox and don't have the transcription permission, set the default transcribe behavior
 												if (!permission_exists('voicemail_transcription_enabled')) {
 													$voicemail_transcription_enabled = $voicemail_transcription_enabled_default;
@@ -837,9 +835,7 @@
 						unset($sql, $parameters);
 					}
 
-				//save to the data
-					$database->app_name = 'extensions';
-					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
+				//save to the data';
 					$message = $database->save($array);
 					unset($array);
 
@@ -874,9 +870,9 @@
 								$user_context = $database->select($sql, $parameters, 'column');
 							}
 							$cache = new cache;
-							$cache->delete("directory:".$extension."@".$user_context);
+							$cache->delete(gethostname().":directory:".$extension."@".$user_context);
 							if (permission_exists('number_alias') && !empty($number_alias)) {
-								$cache->delete("directory:".$number_alias."@".$user_context);
+								$cache->delete(gethostname().":directory:".$number_alias."@".$user_context);
 							}
 
 						//clear the destinations session array
@@ -894,10 +890,10 @@
 						message::add($text['message-update']);
 					}
 					if ($range > 1) {
-						header("Location: extensions.php");
+						header("Location: extensions.php?".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null));
 					}
 					else {
-						header("Location: extension_edit.php?id=".$extension_uuid.(isset($page) && is_numeric($page) ? '&page='.$page : null));
+						header("Location: extension_edit.php?id=".$extension_uuid.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null));
 					}
 					exit;
 			}
@@ -1021,7 +1017,7 @@
 //get the device vendors
 	$sql = "select name ";
 	$sql .= "from v_device_vendors ";
-	$sql .= "where enabled = 'true' ";
+	$sql .= "where enabled = true ";
 	$sql .= "order by name asc ";
 	$device_vendors = $database->select($sql, null, 'all');
 	unset($sql);
@@ -1031,7 +1027,7 @@
 		$sql = "select u.username, e.user_uuid ";
 		$sql .= "from v_extension_users as e, v_users as u ";
 		$sql .= "where e.user_uuid = u.user_uuid  ";
-		$sql .= "and u.user_enabled = 'true' ";
+		$sql .= "and u.user_enabled = true ";
 		$sql .= "and e.domain_uuid = :domain_uuid ";
 		$sql .= "and e.extension_uuid = :extension_uuid ";
 		$sql .= "order by u.username asc ";
@@ -1055,7 +1051,7 @@
 			$parameters['user_uuid_'.$index] = $assigned_user_uuid;
 		}
 	}
-	$sql .= "and user_enabled = 'true' ";
+	$sql .= "and user_enabled = true ";
 	$sql .= "order by username asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$users = $database->select($sql, $parameters, 'all');
@@ -1099,25 +1095,34 @@
 		}
 	}
 
-//set the defaults
+//set the defaults - extension
 	if (empty($user_context)) { $user_context = $domain_name; }
 	if (empty($max_registrations)) { $max_registrations = $extension_max_registrations ?? ''; }
 	if (empty($accountcode)) { $accountcode = get_accountcode(); }
 	if (empty($limit_max)) { $limit_max = $extension_limit_max; }
 	if (empty($limit_destination)) { $limit_destination = '!USER_BUSY'; }
 	if (empty($call_timeout)) { $call_timeout = $extension_call_timeout; }
-	if (empty($call_screen_enabled)) { $call_screen_enabled = 'false'; }
 	if (empty($user_record)) { $user_record = $extension_user_record_default; }
-	if (empty($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $voicemail_transcription_enabled_default; }
-	if (empty($voicemail_enabled)) { $voicemail_enabled = $voicemail_enabled_default; }
-	if (empty($enabled)) { $enabled = 'true'; }
+	if (!isset($directory_visible)) { $directory_visible = false; }
+	if (!isset($directory_exten_visible)) { $directory_exten_visible = false; }
+	if (!isset($call_screen_enabled)) { $call_screen_enabled = false; }
+	if (!isset($force_ping)) { $force_ping = false; }
+	if (!isset($enabled)) { $enabled = true; }
+
+//set the defaults - voicemail
+	if (!isset($voicemail_local_after_email)) { $voicemail_local_after_email = $settings->get('voicemail','keep_local', true); }
+	if (!isset($voicemail_enabled)) { $voicemail_enabled = $settings->get('voicemail', 'enabled_default', true); }
+	if (!isset($voicemail_transcription_enabled)) { $voicemail_transcription_enabled = $settings->get('voicemail', 'transcription_enabled_default', false); }
+	if (!isset($voicemail_tutorial)) { $voicemail_tutorial = false; }
+	if (!isset($voicemail_recording_instructions)) { $voicemail_recording_instructions = true; }
+	if (!isset($voicemail_recording_options)) { $voicemail_recording_options = true; }
 
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //set the back button
-	$_SESSION['call_forward_back'] = $_SERVER['PHP_SELF']  . "?id=$extension_uuid";
+	$_SESSION['call_forward_back'] = $_SERVER['PHP_SELF'].(!empty($extension_uuid) ? '?id='.$extension_uuid : null);
 
 //begin the page content
 	require_once "resources/header.php";
@@ -1148,13 +1153,13 @@
 	echo "	var new_ext = prompt('".$text['message-extension']."');\n";
 	echo "	if (new_ext != null) {\n";
 	echo "		if (!isNaN(new_ext)) {\n";
-	echo "			document.location.href='extension_copy.php?id=".escape($extension_uuid ?? '')."&ext=' + new_ext".(!empty($page) && is_numeric($page) ? " + '&page=".$page."'" : null).";\n";
+	echo "			document.location.href='extension_copy.php?id=".escape($extension_uuid ?? '')."&ext=' + new_ext + '".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(!empty($page) && is_numeric($page) ? '&page='.$page : null)."';\n";
 	echo "		}\n";
 	echo "		else {\n";
 	echo "			var new_number_alias = prompt('".$text['message-number_alias']."');\n";
 	echo "			if (new_number_alias != null) {\n";
 	echo "				if (!isNaN(new_number_alias)) {\n";
-	echo "					document.location.href='extension_copy.php?id=".escape($extension_uuid ?? '')."&ext=' + new_ext + '&alias=' + new_number_alias".(!empty($page) && is_numeric($page) ? " + '&page=".$page."'" : null).";\n";
+	echo "					document.location.href='extension_copy.php?id=".escape($extension_uuid ?? '')."&ext=' + new_ext + '&alias=' + new_number_alias + '".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(!empty($page) && is_numeric($page) ? '&page='.$page : null)."';\n";
 	echo "				}\n";
 	echo "			}\n";
 	echo "		}\n";
@@ -1174,7 +1179,7 @@
 	}
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'extensions.php'.(isset($page) && is_numeric($page) ? '?page='.$page : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'extensions.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null)]);
 	if ($action == 'update') {
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists('xml_cdr_view')) {
@@ -1193,7 +1198,9 @@
 		}
 
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
+	if (permission_exists('extension_add') || permission_exists('extension_edit')) {
+		echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
+	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -1712,20 +1719,17 @@
 		echo "    ".$text['label-directory_visible']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='directory_visible'>\n";
-		if (!empty($directory_visible) && $directory_visible == "true") {
-			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "    <option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='directory_visible' name='directory_visible'>\n";
+		echo "		<option value='true' ".($directory_visible === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($directory_visible === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
-		if (!empty($directory_visible) && $directory_visible == "false") {
-			echo "    <option value='false' selected >".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "    <option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "    </select>\n";
 		echo "<br />\n";
 		echo $text['description-directory_visible']."\n";
 		echo "</td>\n";
@@ -1736,20 +1740,17 @@
 		echo "    ".$text['label-directory_exten_visible']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='directory_exten_visible'>\n";
-		if (!empty($directory_exten_visible) && $directory_exten_visible == "true") {
-			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "    <option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='directory_exten_visible' name='directory_exten_visible'>\n";
+		echo "		<option value='true' ".($directory_exten_visible === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($directory_exten_visible === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
-		if (!empty($directory_exten_visible) && $directory_exten_visible == "false") {
-			echo "    <option value='false' selected >".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "    <option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "    </select>\n";
 		echo "<br />\n";
 		echo $text['description-directory_exten_visible']."\n";
 		echo "</td>\n";
@@ -1799,21 +1800,17 @@
 		echo "    ".$text['label-voicemail_enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='voicemail_enabled'>\n";
-		echo "    <option value=''></option>\n";
-		if ($voicemail_enabled == true) {
-			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "    <option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='voicemail_enabled' name='voicemail_enabled'>\n";
+		echo "		<option value='true' ".($voicemail_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($voicemail_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
-		if ($voicemail_enabled == false) {
-			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "    <option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "    </select>\n";
 		echo "<br />\n";
 		echo $text['description-voicemail_enabled']."\n";
 		echo "</td>\n";
@@ -1836,11 +1833,17 @@
 			echo "	".$text['label-voicemail_transcription_enabled']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<select class='formfld' name='voicemail_transcription_enabled' id='voicemail_transcription_enabled'>\n";
-			echo "    <option value=''></option>\n";
-			echo "    	<option value='true' ".(($voicemail_transcription_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-			echo "    	<option value='false' ".(($voicemail_transcription_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
+			}
+			echo "	<select class='formfld' id='voicemail_transcription_enabled' name='voicemail_transcription_enabled'>\n";
+			echo "		<option value='true' ".($voicemail_transcription_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($voicemail_transcription_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
+			}
 			echo "<br />\n";
 			echo $text['description-voicemail_transcription_enabled']."\n";
 			echo "</td>\n";
@@ -1870,10 +1873,17 @@
 			echo "    ".$text['label-voicemail_local_after_email']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "    <select class='formfld' name='voicemail_local_after_email' id='voicemail_local_after_email' onchange=\"if (this.selectedIndex == 1) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
-			echo "    	<option value='true' ".(($voicemail_local_after_email == true) ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-			echo "    	<option value='false' ".(($voicemail_local_after_email == false) ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-			echo "    </select>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
+			}
+			echo "	<select class='formfld' id='voicemail_local_after_email' name='voicemail_local_after_email'>\n";
+			echo "		<option value='true' ".($voicemail_local_after_email === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($voicemail_local_after_email === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
+			}
 			echo "<br />\n";
 			echo $text['description-voicemail_local_after_email']."\n";
 			echo "</td>\n";
@@ -1974,21 +1984,17 @@
 		echo "    ".$text['label-call_screen_enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='call_screen_enabled'>\n";
-		echo "    <option value=''></option>\n";
-		if ($call_screen_enabled == "true") {
-			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "    <option value='true'>".$text['label-true']."</option>\n";
+		echo "	<select class='formfld' id='call_screen_enabled' name='call_screen_enabled'>\n";
+		echo "		<option value='true' ".($call_screen_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($call_screen_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
-		if ($call_screen_enabled == "false") {
-			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "    <option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "    </select>\n";
 		echo "<br />\n";
 		echo $text['description-call_screen_enabled']."\n";
 		echo "</td>\n";
@@ -2086,7 +2092,6 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='extension_type' id='extension_type'>\n";
-		echo "		<option value=''></option>\n";
 		echo "		<option value='default' ".(($extension_type == "default") ? "selected='selected'" : null).">".$text['label-default']."</option>\n";
 		echo "		<option value='virtual' ".(($extension_type == "virtual") ? "selected='selected'" : null).">".$text['label-virtual']."</option>\n";
 		echo "	</select>\n";
@@ -2273,11 +2278,17 @@
 			echo "    ".$text['label-force_ping']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "    <select class='formfld' name='force_ping'>\n";
-			echo "    	<option value=''></option>\n";
-			echo "    	<option value='true' ".(!empty($force_ping) && $force_ping == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-			echo "    	<option value='false' ".(!empty($force_ping) && $force_ping == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-			echo "    </select>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
+			}
+			echo "	<select class='formfld' id='force_ping' name='force_ping'>\n";
+			echo "		<option value='true' ".($force_ping === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($force_ping === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
+			}
 			echo "<br />\n";
 			echo $text['description-force_ping']."\n";
 			echo "</td>\n";
@@ -2312,17 +2323,16 @@
 		echo "    ".$text['label-enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-			echo "	<label class='switch'>\n";
-			echo "		<input type='checkbox' id='enabled' name='enabled' value='true' ".($enabled == 'true' ? "checked='checked'" : null).">\n";
-			echo "		<span class='slider'></span>\n";
-			echo "	</label>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "	<select class='formfld' id='enabled' name='enabled'>\n";
-			echo "		<option value='true' ".($enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-			echo "	</select>\n";
+		echo "	<select class='formfld' id='enabled' name='enabled'>\n";
+		echo "		<option value='true' ".($enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
 		echo "<br />\n";
 		echo $text['description-enabled']."\n";
@@ -2345,6 +2355,10 @@
 	echo "</div>\n";
 	echo "<br><br>";
 
+	if (!empty($order_by)) {
+		echo "<input type='hidden' name='order_by' value='".$order_by."'>\n";
+		echo "<input type='hidden' name='order' value='".$order."'>\n";
+	}
 	if (isset($page) && is_numeric($page)) {
 		echo "<input type='hidden' name='page' value='".$page."'>\n";
 	}

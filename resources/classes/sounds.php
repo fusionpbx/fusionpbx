@@ -8,17 +8,32 @@
 class sounds {
 
 	/**
-	* Called when the object is created
-	*/
+	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+	 * @var string
+	 */
 	public $domain_uuid;
+
+	/**
+	* Additional public variables
+	*/
 	public $sound_types;
 	public $full_path;
 
 	/**
-	* Class constructor
-	*/
-	public function __construct() {
+	 * Set in the constructor. Must be a database object and cannot be null.
+	 * @var database Database Object
+	 */
+	private $database;
 
+	/**
+	 * Called when the object is created
+	 */
+	public function __construct(array $setting_array = []) {
+		//set domain and user UUIDs
+		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+
+		//set objects
+		$this->database = $setting_array['database'] ?? database::new();
 	}
 
 	/**
@@ -45,8 +60,7 @@ class sounds {
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$sql .= "order by recording_name asc ";
 				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
-				$database = new database;
-				$recordings = $database->select($sql, $parameters, 'all');
+				$recordings = $this->database->select($sql, $parameters, 'all');
 				if (is_array($recordings) && @sizeof($recordings) != 0) {
 					foreach ($recordings as $x => $row) {
 						$recording_name = $row["recording_name"];
@@ -63,8 +77,7 @@ class sounds {
 				$sql = "select * from v_phrases ";
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
-				$database = new database;
-				$phrases = $database->select($sql, $parameters, 'all');
+				$phrases = $this->database->select($sql, $parameters, 'all');
 				if (is_array($phrases) && @sizeof($phrases) != 0) {
 					foreach ($phrases as $row) {
 						$array['phrases'][$x]['name'] = "phrase:".$row["phrase_name"];
@@ -81,7 +94,7 @@ class sounds {
 				if (is_array($sound_files) && @sizeof($sound_files) != 0) {
 					foreach ($sound_files as $value) {
 						if (substr($value, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
-							$value = substr($var, 71);
+							$value = substr($value, 71);
 						}
 						$array['sounds'][$x]['name'] = $value;
 						$array['sounds'][$x]['value'] = $value;

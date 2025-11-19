@@ -63,8 +63,6 @@
 										$p = permissions::new();
 										$p->add('recording_edit', 'temp');
 									//update recording record with base64
-										$database->app_name = 'recordings';
-										$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 										$database->save($array, false);
 										unset($array);
 									//revoke temporary permissions
@@ -113,8 +111,6 @@
 								$p->add('recording_edit', 'temp');
 
 							//update recording record
-								$database->app_name = 'recordings';
-								$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 								$database->save($array, false);
 								unset($array);
 

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('gateway_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('gateway_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -85,7 +82,7 @@
 				break;
 		}
 
-		header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -94,6 +91,18 @@
 
 //gateway status function
 	if (!function_exists('switch_gateway_status')) {
+		/**
+		 * Switches the status of a gateway.
+		 *
+		 * This function sends an API request to retrieve the status of a gateway.
+		 * If the first request fails, it attempts to send the same request with the
+		 * gateway UUID in uppercase.
+		 *
+		 * @param string $gateway_uuid The unique identifier of the gateway.
+		 * @param string $result_type  The type of response expected (default: 'xml').
+		 *
+		 * @return string The status of the gateway, or an error message if the request fails.
+		 */
 		function switch_gateway_status($gateway_uuid, $result_type = 'xml') {
 			global $esl;
 			if ($esl->is_connected()) {
@@ -141,8 +150,7 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
-	$total_gateways = $database->select($sql, $parameters ?? '', 'column');
+	$total_gateways = $database->select($sql, $parameters ?? [], 'column');
 	$num_rows = $total_gateways;
 
 //prepare to page the results
@@ -155,7 +163,20 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * ";
+	$sql = "select ";
+	$sql .= "gateway_uuid, domain_uuid, gateway, username, password, ";
+	$sql .= "cast(distinct_to as text), auth_username, realm, from_user, from_domain, ";
+	$sql .= "proxy, register_proxy,outbound_proxy,expire_seconds, ";
+	$sql .= "cast(register as text), register_transport, contact_params, retry_seconds, ";
+	$sql .= "extension, ping, ping_min, ping_max, ";
+	$sql .= "cast(contact_in_ping as text) , ";
+	$sql .= "cast(caller_id_in_from as text), ";
+	$sql .= "cast(supress_cng as text), ";
+	$sql .= "sip_cid_type, codec_prefs, channels, ";
+	$sql .= "cast(extension_in_contact as text), ";
+	$sql .= "context, profile, hostname, ";
+	$sql .= "cast(enabled as text), ";
+	$sql .= "description ";
 	$sql .= "from v_gateways ";
 	$sql .= "where true ";
 	if (!($show == "all" && permission_exists('gateway_all'))) {
@@ -179,8 +200,7 @@
 	}
 	$sql .= order_by($order_by, $order, 'gateway', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
-	$gateways = $database->select($sql, $parameters ?? '', 'all');
+	$gateways = $database->select($sql, $parameters ?? [], 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -289,7 +309,7 @@
 			$list_row_url = '';
 			if (permission_exists('gateway_edit')) {
 				$list_row_url = "gateway_edit.php?id=".urlencode($row['gateway_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}
@@ -395,4 +415,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

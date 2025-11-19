@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_center_active_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('call_center_active_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -118,7 +115,7 @@
 
 		//determine refresh rate
 		$refresh_default = 1500; //milliseconds
-		$refresh = is_numeric($_SESSION['call_center']['refresh']['numeric']) ? $_SESSION['call_center']['refresh']['numeric'] : $refresh_default;
+		$refresh = is_numeric($settings->get('call_center', 'refresh')) ? $settings->get('call_center', 'refresh') : $refresh_default;
 		if ($refresh >= 0.5 && $refresh <= 120) { //convert seconds to milliseconds
 			$refresh = $refresh * 1000;
 		}

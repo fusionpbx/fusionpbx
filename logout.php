@@ -26,14 +26,9 @@
 
 //includes files
 	require_once __DIR__ . "/resources/require.php";
-	
+
 //use custom logout destination if set otherwise redirect to the index page
-	if (isset($_SESSION["login"]["logout_destination"]["text"])){
-		$logout_destination = $_SESSION["login"]["logout_destination"]["text"];
-	}
-	else {
-		$logout_destination = PROJECT_PATH."/";
-	}
+	$logout_destination = $settings->get('login', 'logout_destination', PROJECT_PATH.'/');
 
 //destroy session
 	session_unset();

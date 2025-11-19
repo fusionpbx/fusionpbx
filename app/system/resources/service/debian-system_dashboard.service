@@ -1,0 +1,27 @@
+; Author: Mark J Crane <markjcrane@fusionpbx.com>
+; cp /var/www/fusionpbx/app/system/resources/service/debian.service /etc/systemd/system/system_status.service
+; systemctl daemon-reload
+; systemctl enable --now system_status
+
+[Unit]
+Description=FusionPBX System Dashboard Information Service
+Wants=network-online.target
+Requires=network.target local-fs.target
+;Requires=network.target local-fs.target postgresql.service
+After=network.target network-online.target local-fs.target
+;After=network.target network-online.target local-fs.target postgresql.service
+StartLimitIntervalSec=0
+
+[Service]
+WorkingDirectory=/var/www/fusionpbx
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/system/resources/service/system_status.php
+RuntimeDirectory=fusionpbx
+RuntimeDirectoryMode=0755
+RuntimeDirectoryPreserve=yes
+User=www-data
+Group=www-data
+TimeoutSec=55s
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

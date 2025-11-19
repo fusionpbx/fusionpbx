@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,13 +26,10 @@
 
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
-	if (permission_exists('conference_control_detail_add') || permission_exists('conference_control_detail_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('conference_control_detail_add') || permission_exists('conference_control_detail_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -65,7 +62,7 @@
 		$control_digits = $_POST["control_digits"];
 		$control_action = $_POST["control_action"];
 		$control_data = $_POST["control_data"];
-		$control_enabled = $_POST["control_enabled"] ?? 'false';
+		$control_enabled = $_POST["control_enabled"];
 	}
 
 //process the http post
@@ -123,9 +120,6 @@
 				}
 
 				if (is_uuid($array['conference_control_details'][0]['conference_control_detail_uuid'])) {
-					$database = new database;
-					$database->app_name = 'conference_controls';
-					$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
 					$database->save($array);
 					unset($array);
 				}
@@ -144,7 +138,6 @@
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		$parameters['conference_control_detail_uuid'] = $conference_control_detail_uuid;
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$row = $database->select($sql, $parameters ?? null, 'row');
 		if (!empty($row)) {
 			$control_digits = $row["control_digits"];
@@ -156,7 +149,7 @@
 	}
 
 //set the defaults
-	if (empty($control_enabled)) { $control_enabled = 'true'; }
+	$control_enabled = $control_enabled ?? true;
 
 //create token
 	$object = new token;
@@ -219,17 +212,16 @@
 	echo "	".$text['label-control_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='control_enabled' name='control_enabled' value='true' ".($control_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='control_enabled' name='control_enabled'>\n";
-		echo "		<option value='true' ".($control_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($control_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='control_enabled' name='control_enabled'>\n";
+	echo "			<option value='true' ".($control_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($control_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-control_enabled']."\n";

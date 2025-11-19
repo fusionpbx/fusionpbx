@@ -18,7 +18,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2024
+	Portions created by the Initial Developer are Copyright (C) 2024-2025
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -27,10 +27,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('fifo_add') || permission_exists('fifo_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('fifo_add') || permission_exists('fifo_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -39,8 +36,10 @@
 	$language = new text;
 	$text = $language->get();
 
-//connect to the database
-	$database = database::new();
+//set the defaults
+	$fifo_strategy = '';
+	$fifo_exit_key = '';
+	$fifo_exit_action = '';
 
 //add the settings object
 	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
@@ -80,7 +79,7 @@
 		$fifo_music = $_POST["fifo_music"];
 		$domain_uuid = $_POST["domain_uuid"];
 		$fifo_order = $_POST["fifo_order"];
-		$fifo_enabled = $_POST["fifo_enabled"] ?? 'false';
+		$fifo_enabled = $_POST["fifo_enabled"];
 		$fifo_description = $_POST["fifo_description"];
 	}
 
@@ -102,7 +101,7 @@
 				$x = 0;
 				if (is_array($_POST['fifo_members'])) {
 					foreach ($_POST['fifo_members'] as $row) {
-						if (is_uuid($row['fifo_member_uuid']) && $row['checked'] === 'true') {
+						if (is_uuid($row['fifo_member_uuid']) && $row['checked'] == 'true') {
 							$array['fifo'][$x]['checked'] = $row['checked'];
 							$array['fifo'][$x]['fifo_members'][]['fifo_member_uuid'] = $row['fifo_member_uuid'];
 							$x++;
@@ -152,11 +151,11 @@
 					$fifo_members[$i]['member_contact'] = preg_replace('#[^a-zA-Z0-9/@.\-\*]#', '', $row["member_contact"] ?? '');
 					$fifo_members[$i]['member_call_timeout'] = preg_replace('#[^0-9]#', '', $row["member_call_timeout"] ?? '20');
 					$fifo_members[$i]['member_wrap_up_time'] = preg_replace('#[^0-9]#', '', $row["member_wrap_up_time"] ?? '10');
-					$fifo_members[$i]['member_enabled'] = $row["member_enabled"] ?? 'false';
+					$fifo_members[$i]['member_enabled'] = $row["member_enabled"];
 					$i++;
 				}
 			}
-			
+
 		//check for all required data
 			$msg = '';
 			if (strlen($fifo_name) == 0) { $msg .= $text['message-required']." ".$text['label-fifo_name']."<br>\n"; }
@@ -227,7 +226,7 @@
 						$array['fifo'][0]['fifo_members'][$y]['member_call_timeout'] = $row["member_call_timeout"] ?? '20';
 						//$array['fifo'][0]['fifo_members'][$y]['member_simultaneous'] = $row["member_simultaneous"];
 						$array['fifo'][0]['fifo_members'][$y]['member_wrap_up_time'] = $row["member_wrap_up_time"] ?? '10';
-						$array['fifo'][0]['fifo_members'][$y]['member_enabled'] = $row["member_enabled"] ?? 'false';
+						$array['fifo'][0]['fifo_members'][$y]['member_enabled'] = $row["member_enabled"];
 						$y++;
 					}
 				}
@@ -280,6 +279,7 @@
 				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($fifo_extension)."\$\" break=\"on-true\">\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_uuid=".xml::sanitize($fifo_uuid)."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_music=".xml::sanitize($fifo_music)."\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".xml::sanitize($fifo_extension)."@".xml::sanitize($_SESSION['domain_name'])."\" inline=\"true\"/>\n";
 				if ($fifo_strategy == 'longest_idle_agent') {
 					$dialplan_xml .= "		<action application=\"set\" data=\"fifo_strategy=waiting_longer\" inline=\"true\"/>\n";
 				}
@@ -309,6 +309,7 @@
 				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($fifo_agent_status_xml)."\$\" break=\"on-true\">\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_uuid=".xml::sanitize($fifo_uuid)."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_name=".xml::sanitize($queue_name)."\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".xml::sanitize($fifo_agent_status)."@".xml::sanitize($_SESSION['domain_name'])."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"user_name=\${caller_id_number}@\${domain_name}\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"pin_number=\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"lua\" data=\"app/fifo/resources/scripts/member.lua\"/>\n";
@@ -316,6 +317,7 @@
 				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($fifo_agent_queue_xml)."\$\" break=\"on-true\">\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_uuid=".xml::sanitize($fifo_uuid)."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"set\" data=\"fifo_music=".xml::sanitize($fifo_music)."\" inline=\"true\"/>\n";
+				$dialplan_xml .= "		<action application=\"set\" data=\"presence_id=".xml::sanitize($fifo_agent_queue)."@".xml::sanitize($_SESSION['domain_name'])."\" inline=\"true\"/>\n";
 				$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
 				$dialplan_xml .= "		<action application=\"fifo\" data=\"".xml::sanitize($queue_name)." out wait\"/>\n";
 				$dialplan_xml .= "	</condition>\n";
@@ -342,8 +344,6 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save the data
-			$database->app_name = 'fifo';
-			$database->app_uuid = '16589224-c876-aeb3-f59f-523a1c0801f7';
 			$result = $database->save($array);
 
 		//remove the temporary permission
@@ -397,7 +397,7 @@
 		$sql .= " fifo_music, ";
 		$sql .= " domain_uuid, ";
 		$sql .= " fifo_order, ";
-		$sql .= " cast(fifo_enabled as text), ";
+		$sql .= " fifo_enabled, ";
 		$sql .= " fifo_description ";
 		$sql .= "from v_fifo ";
 		$sql .= "where fifo_uuid = :fifo_uuid ";
@@ -424,6 +424,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	$fifo_enabled = $fifo_enabled ?? true;
+
 //get the child data
 	if (!empty($fifo_uuid) && is_uuid($fifo_uuid)) {
 		$sql = "select ";
@@ -434,7 +437,7 @@
 		$sql .= " member_call_timeout, ";
 		//$sql .= " member_simultaneous, ";
 		$sql .= " member_wrap_up_time, ";
-		$sql .= " cast(member_enabled as text) ";
+		$sql .= " member_enabled ";
 		$sql .= "from v_fifo_members ";
 		$sql .= "where fifo_uuid = :fifo_uuid ";
 		//$sql .= "and domain_uuid = '".$domain_uuid."' ";
@@ -477,7 +480,7 @@
 		$fifo_members[$id]['member_call_timeout'] = '';
 		//$fifo_members[$id]['member_simultaneous'] = '';
 		$fifo_members[$id]['member_wrap_up_time'] = '';
-		$fifo_members[$id]['member_enabled'] = '';
+		$fifo_members[$id]['member_enabled'] = false;
 		$id++;
 	}
 
@@ -494,9 +497,6 @@
 	}
 	if (empty($fifo_order)) {
 		$fifo_order = 50;
-	}
-	if (empty($fifo_enabled)) {
-		$fifo_enabled = true;
 	}
 
 //show the header
@@ -585,7 +585,7 @@
 	echo "	".$text['label-strategy']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='fifo_strategy' onchange=\"getElementById('destination_delayorder').innerHTML = (this.selectedIndex == 1 || this.selectedIndex == 3) ? '".$text['label-destination_order']."' : '".$text['label-destination_delay']."';\">\n";
+	echo "	<select class='formfld' name='fifo_strategy' onchange=\"\">\n";
 	echo "		<option value='longest_idle_agent' ".(($fifo_strategy == "'option-longest_idle_agent") ? "selected='selected'" : null).">".$text['option-longest_idle_agent']."</option>\n";
 	echo "		<option value='simultaneous' ".(($fifo_strategy == "simultaneous") ? "selected='selected'" : null).">".$text['option-simultaneous']."</option>\n";
 	echo "	</select>\n";
@@ -629,32 +629,31 @@
 			echo "				<td class='formfld'>\n";
 			echo "					$member_contact\n";
 			echo "			</td>\n";
-			echo "				<td class='formfld'>\n";
+			echo "			<td class='formfld text-center'>\n";
 			echo "				<input class='formfld' type='text' name='fifo_members[$x][member_call_timeout]' maxlength='255' style='width:55px;' value=\"".escape($row["member_call_timeout"])."\">\n";
 			echo "			</td>\n";
 			//echo "			<td class='formfld'>\n";
 			//echo "				<input class='formfld' type='text' name='fifo_members[$x][member_simultaneous]' maxlength='255' style='width:55px;' value=\"".escape($row["member_simultaneous"])."\">\n";
 			//echo "			</td>\n";
-			echo "				<td class='formfld'>\n";
+			echo "			<td class='formfld text-center'>\n";
 			echo "				<input class='formfld' type='text' name='fifo_members[$x][member_wrap_up_time]' maxlength='255' style='width:55px;' value=\"".escape($row["member_wrap_up_time"])."\">\n";
 			echo "			</td>\n";
 			echo "				<td class='formfld'>\n";
-			if (substr($input_toggle_style, 0, 6) == 'switch') {
-				echo "	<label class='switch'>\n";
-				echo "		<input type='checkbox' id='member_enabled' name='fifo_members[$x][member_enabled]' value='true' ".($row['member_enabled'] == 'true' ? "checked='checked'" : null).">\n";
-				echo "		<span class='slider'></span>\n";
-				echo "	</label>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			else {
-				echo "	<select class='formfld' id='member_enabled' name='fifo_members[$x][member_enabled]'>\n";
-				echo "		<option value='true' ".($row['member_enabled'] == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-				echo "		<option value='false' ".($row['$member_enabled'] == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-				echo "	</select>\n";
+			echo "	<select class='formfld' id='member_enabled' name='fifo_members[$x][member_enabled]'>\n";
+			echo "		<option value='true' ".($row['member_enabled'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($row['member_enabled'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
 			}
 			echo "			</td>\n";
 			if ($show_option_delete && is_array($fifo_members) && @sizeof($fifo_members) > 1 && permission_exists('fifo_member_delete')) {
-				if (is_uuid($row['fifo_member_uuid'])) {
-					echo "		<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
+				if (!empty($row['member_contact'])) {
+					echo "		<td style='text-align: center; padding-bottom: 3px;'>\n";
 					echo "			<input type='checkbox' name='fifo_members[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"checkbox_on_change(this);\">\n";
 					echo "		</td>\n";
 				}
@@ -668,7 +667,7 @@
 	}
 	echo "	</table>\n";
 	echo "<br />\n";
-	echo $text['description-member_enabled']."\n";
+	echo $text['description-agents']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -775,17 +774,16 @@
 	echo "	".$text['label-fifo_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr($input_toggle_style, 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='fifo_enabled' name='fifo_enabled' value='true' ".(!empty($fifo_enabled) && $fifo_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='fifo_enabled' name='fifo_enabled'>\n";
-		echo "		<option value='true' ".($fifo_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($fifo_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='fifo_enabled' name='fifo_enabled'>\n";
+	echo "		<option value='true' ".($fifo_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($fifo_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-fifo_enabled']."\n";

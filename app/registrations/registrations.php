@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists("registration_domain") || permission_exists("registration_all") || if_group("superadmin")) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('registration_domain') || permission_exists('registration_all'))) {
 		echo "access denied";
 		exit;
 	}
@@ -45,7 +42,7 @@
 //get common submitted data
 	if (!empty($_REQUEST)) {
 		$show = $_REQUEST['show'] ?? null;
-		$search = $_REQUEST['search'] ?? null;
+		$search = $_REQUEST['search'] ?? '';
 		$profile = $_REQUEST['profile'] ?? null;
 	}
 
@@ -233,13 +230,13 @@
 				echo "	<td class='hide-md-dn'>".escape($row['ping-time'])."</td>\n";
 				echo "	<td class='hide-md-dn' nowrap='nowrap'>".escape($row['sip_profile_name'])."</td>\n";
 				echo "	<td class='action-button'>\n";
-				if (filter_var($_SESSION['registrations']['list_row_button_unregister']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+				if ($settings->get('registrations', 'list_row_button_unregister', false)) {
 					echo button::create(['type'=>'submit','title'=>$text['button-unregister'],'icon'=>'user-slash fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('unregister'); list_form_submit('form_list')"]);
 				}
-				if (filter_var($_SESSION['registrations']['list_row_button_provision']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+				if ($settings->get('registrations', 'list_row_button_provision', false)) {
 					echo button::create(['type'=>'submit','title'=>$text['button-provision'],'icon'=>'fax fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('provision'); list_form_submit('form_list')"]);
 				}
-				if (filter_var($_SESSION['registrations']['list_row_button_reboot']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+				if ($settings->get('registrations', 'list_row_button_reboot', false)) {
 					echo button::create(['type'=>'submit','title'=>$text['button-reboot'],'icon'=>'power-off fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('reboot'); list_form_submit('form_list')"]);
 				}
 				echo 	"</td>\n";

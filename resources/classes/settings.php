@@ -1,10 +1,10 @@
 <?php
 
 /**
- * settings class is used to load settings using hierarchical overriding
+ * The settings class is used to load settings using hierarchical overriding
  *
  * The settings are loaded from the database tables default_settings, domain_settings, and user_settings in that order with
- * each setting overriding the setting from the previous table.
+ * Each setting overrides the setting from the previous table.
  *
  * @access public
  * @author Mark Crane <mark@fusionpbx.com>
@@ -114,6 +114,8 @@ class settings implements clear_cache {
 	 * Reloads the settings from the database
 	 */
 	public function reload() {
+
+		//clear settings
 		$this->settings = [];
 
 		//set the default settings
@@ -121,6 +123,8 @@ class settings implements clear_cache {
 
 		//set the domain settings
 		if (!empty($this->domain_uuid)) {
+
+			//get the domain settings
 			$this->domain_settings();
 
 			//set the user settings only when the domain_uuid was set
@@ -142,11 +146,11 @@ class settings implements clear_cache {
 
 	/**
 	 * Get the value utilizing the hierarchical overriding technique
-	 * @param string $category Returns all settings when empty or the default value if the settings array is null
-	 * @param string $subcategory Returns the array of category items when empty or the default value if the category array is null
+	 * @param string|null $category Returns all settings when empty or the default value if the settings array is null
+	 * @param string|null $subcategory Returns the array of category items when empty or the default value if the category array is null
 	 * @param mixed $default_value allows default value returned if category and subcategory not found
 	 */
-	public function get(string $category = null, string $subcategory = null, $default_value = null) {
+	public function get(?string $category = null, ?string $subcategory = null, $default_value = null) {
 
 		//incremental refinement from all settings to a single setting
 		if (empty($category)) {
@@ -256,7 +260,7 @@ class settings implements clear_cache {
 
 		//get the default settings
 		$sql = "select * from v_default_settings ";
-		$sql .= "where default_setting_enabled = 'true' ";
+		$sql .= "where default_setting_enabled = true ";
 		if (!empty($this->category)) {
 			$sql .= "and default_setting_category = :default_setting_category ";
 			$parameters['default_setting_category'] = $this->category;
@@ -295,8 +299,21 @@ class settings implements clear_cache {
 	 * Update the internal settings array with the domain settings from the database
 	 * @access private
 	 */
-	private function domain_settings() {
-		$key = 'settings_domain_'.$this->domain_uuid;
+	private function domain_settings($domain_uuid = '', $i = 0) {
+		if (empty($domain_uuid)) {
+			$domain_uuid = $this->domain_uuid;
+		}
+
+		$uuid = '';
+		if (class_exists('domain')) {
+			$uuid = domain::get_uuid($this->database, $domain_uuid);
+		}
+		if (!empty($uuid) && $i < 3) {
+			$this->domain_settings($uuid, $i++);
+		}
+
+		$key = 'settings_domain_'.$domain_uuid;
+
 		$result = '';
 		//if the apcu extension is loaded get the cached database result
 		if ($this->apcu_enabled && apcu_exists($key)) {
@@ -304,8 +321,8 @@ class settings implements clear_cache {
 		} else {
 			$sql = "select * from v_domain_settings ";
 			$sql .= "where domain_uuid = :domain_uuid ";
-			$sql .= "and domain_setting_enabled = 'true' ";
-			$parameters['domain_uuid'] = $this->domain_uuid;
+			$sql .= "and domain_setting_enabled = true ";
+			$parameters['domain_uuid'] = $domain_uuid;
 			$result = $this->database->select($sql, $parameters, 'all');
 			//if the apcu extension is loaded store the result
 			if ($this->apcu_enabled) {
@@ -373,7 +390,7 @@ class settings implements clear_cache {
 		}
 		if (!empty($result)) {
 			foreach ($result as $row) {
-				if ($row['user_setting_enabled'] == 'true') {
+				if ($row['user_setting_enabled'] == true) {
 					$name = $row['user_setting_name'];
 					$category = $row['user_setting_category'];
 					$subcategory = $row['user_setting_subcategory'];
@@ -402,11 +419,10 @@ class settings implements clear_cache {
 	private function device_profile_settings() {
 
 		//get the device profile settings
-		$sql = "select profile_setting_name, profile_setting_value from v_device_profile_settings"
-			. " where device_profile_uuid = :device_profile_uuid"
-			. " and domain_uuid = :domain_uuid"
-			. " and profile_setting_enabled = 'true'"
-		;
+		$sql = "select profile_setting_name, profile_setting_value from v_device_profile_settings ";
+		$sql .= "where device_profile_uuid = :device_profile_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$sql .= "and profile_setting_enabled = true ";
 		$params = [];
 		$params['device_profile_uuid'] = $this->device_profile_uuid;
 		$params['domain_uuid'] = $this->domain_uuid;
@@ -428,11 +444,10 @@ class settings implements clear_cache {
 	private function device_settings() {
 
 		//get the device settings
-		$sql = "select device_setting_subcategory, device_setting_value from v_device_settings"
-			. " where device_setting_uuid = :device_uuid"
-			. " and domain_uuid = :domain_uuid"
-			. " and device_setting_enabled = 'true'"
-		;
+		$sql = "select device_setting_subcategory, device_setting_value from v_device_settings ";
+		$sql .= "where device_setting_uuid = :device_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$sql .= "and device_setting_enabled = true ";
 		$params = [];
 		$params['device_uuid'] = $this->device_uuid;
 		$params['domain_uuid'] = $this->domain_uuid;

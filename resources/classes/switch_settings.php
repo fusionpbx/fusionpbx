@@ -12,9 +12,54 @@
 		public $event_socket_password;
 
 		/**
-		 * Called when the object is created
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
 		 */
-		public function __construct() {
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $username;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
+
+		/**
+		 * called when the object is created
+		 */
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+			$this->username = $setting_array['username'] ?? $_SESSION['username'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 		}
 
@@ -23,35 +68,9 @@
 		 */
 		public function settings() {
 
-			//define the variables
-				if (!isset($this->event_socket_ip_address)) {
-					if (!empty($_SESSION['event_socket_ip_address'])) {
-						$this->event_socket_ip_address = $_SESSION['event_socket_ip_address'];
-					}
-					else {
-						$this->event_socket_ip_address = '127.0.0.1';
-					}
-				}
-				if (!isset($this->event_socket_port)) {
-					if (!empty($_SESSION['event_socket_port'])) {
-						$this->event_socket_port = $_SESSION['event_socket_port'];
-					}
-					else {
-						$this->event_socket_port = '8021';
-					}
-				}
-				if (!isset($this->event_socket_password)) {
-					if (!empty($_SESSION['event_socket_password'])) {
-						$this->event_socket_password = $_SESSION['event_socket_password'];
-					}
-					else {
-						$this->event_socket_password = 'ClueCon';
-					}
-				}
-
 			//connect to event socket
 				$esl = event_socket::create($this->event_socket_ip_address, $this->event_socket_port, $this->event_socket_password);
-				
+
 			//run the api command
 				$result = $esl->request('api global_getvar');
 
@@ -78,7 +97,7 @@
 
 			//set the bin directory
 				if ($vars['base_dir'] == "/usr/local/freeswitch") {
-					$bin = '/usr/local/freeswitch/bin'; 
+					$bin = '/usr/local/freeswitch/bin';
 				}
 				else {
 					$bin = '';
@@ -209,8 +228,7 @@
 			//get an array of the default settings
 				$sql = "select * from v_default_settings ";
 				$sql .= "where default_setting_category = 'switch' ";
-				$database = new database;
-				$default_settings = $database->select($sql, null, 'all');
+				$default_settings = $this->database->select($sql, null, 'all');
 				unset($sql);
 
 			//find the missing default settings
@@ -251,10 +269,10 @@
 							$p->add('default_setting_add', 'temp');
 
 						//execute insert
-							$database = new database;
-							$database->app_name = 'switch_settings';
-							$database->app_uuid = '84e91084-a227-43cd-ae99-a0f8ed61eb8b';
-							$database->save($array);
+							$this->database->save($array);
+
+						//clear the apcu cache
+							settings::clear_cache();
 
 						//revoke temporary permissions
 							$p->delete('default_setting_add', 'temp');

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 
 //check permissions
 	require_once "resources/check_auth.php";
-	if (permission_exists('call_flow_add') || permission_exists('call_flow_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('call_flow_add') || permission_exists('call_flow_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -84,7 +81,7 @@
 			$call_flow_alternate_sound = $_POST["call_flow_alternate_sound"];
 			$call_flow_alternate_destination = $_POST["call_flow_alternate_destination"];
 			$call_flow_context = $_POST["call_flow_context"];
-			$call_flow_enabled = $_POST["call_flow_enabled"] ?? 'false';
+			$call_flow_enabled = $_POST["call_flow_enabled"];
 			$call_flow_description = $_POST["call_flow_description"];
 
 		//seperate the action and the param
@@ -242,9 +239,6 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$database = new database;
-			$database->app_name = 'call_flows';
-			$database->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
 			if (!empty($call_flow_uuid)) {
 				$database->uuid($call_flow_uuid);
 			}
@@ -317,7 +311,6 @@
 		$sql .= "and call_flow_uuid = :call_flow_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['call_flow_uuid'] = $call_flow_uuid;
-		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
 		foreach ($result as $row) {
 			//set the php variables
@@ -359,13 +352,13 @@
 		unset ($sql, $parameters, $result, $row);
 	}
 
+//set the defaults
+	$call_flow_enabled = $call_flow_enabled ?? true;
+
 //set the context for users that are not in the superadmin group
 	if (empty($call_flow_context)) {
 		$call_flow_context = $_SESSION['domain_name'];
 	}
-
-//set the defaults
-	if (empty($call_flow_enabled)) { $call_flow_enabled = 'true'; }
 
 //get the sounds
 	$sounds = new sounds;
@@ -477,7 +470,7 @@
 	echo "	".$text['label-call_flow_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_extension' maxlength='255' value=\"".escape($call_flow_extension)."\" required='required' placeholder=\"".($_SESSION['call_flow']['extension_range']['text'] ?? '')."\">\n";
+	echo "	<input class='formfld' type='text' name='call_flow_extension' maxlength='255' value=\"".escape($call_flow_extension)."\" required='required' placeholder=\"".($settings->get('call_flow', 'extension_range') ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-call_flow_extension']."\n";
 	echo "</td>\n";
@@ -582,8 +575,8 @@
 				if ($key == 'recordings') {
 					if (
 						!empty($instance_value) &&
-						($instance_value == $row["value"] || $instance_value == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
-						file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
+						($instance_value == $row["value"] || $instance_value == $settings->get('switch', 'recordings')."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
+						file_exists($settings->get('switch', 'recordings')."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
 						) {
 						$selected = "selected='selected'";
 						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.pathinfo($row["value"], PATHINFO_BASENAME);
@@ -684,8 +677,8 @@
 				if ($key == 'recordings') {
 					if (
 						!empty($instance_value) &&
-						($instance_value == $row["value"] || $instance_value == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
-						file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
+						($instance_value == $row["value"] || $instance_value == $settings->get('switch', 'recordings')."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
+						file_exists($settings->get('switch', 'recordings')."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
 						) {
 						$selected = "selected='selected'";
 						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.pathinfo($row["value"], PATHINFO_BASENAME);
@@ -770,17 +763,16 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td width=\"70%\" class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='call_flow_enabled' name='call_flow_enabled' value='true' ".($call_flow_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='call_flow_enabled' name='call_flow_enabled'>\n";
-		echo "		<option value='true' ".($call_flow_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($call_flow_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='call_flow_enabled' name='call_flow_enabled'>\n";
+	echo "			<option value='true' ".($call_flow_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($call_flow_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";

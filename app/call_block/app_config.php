@@ -170,7 +170,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "call_block_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "block_call_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enable/disable blocking the call.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'call_block_description';

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2019-2024 All Rights Reserved.
+	Copyright (C) 2019-2025 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -29,10 +29,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('device_profile_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('device_profile_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -44,7 +41,7 @@
 //get posted data
 	if (!empty($_POST['profiles']) && is_array($_POST['profiles'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$profiles = $_POST['profiles'];
 	}
 
@@ -118,7 +115,6 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$sql .= $sql_search ?? '';
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
@@ -137,10 +133,21 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select ";
+	$sql .= "device_profile_uuid, ";
+	$sql .= "domain_uuid, ";
+	$sql .= "device_profile_name, ";
+	$sql .= "cast(device_profile_enabled as text), ";
+	$sql .= "device_profile_description ";
+	$sql .= "from v_device_profiles ";
+	$sql .= "where true ";
+	if ($show != "all" || !permission_exists('device_profile_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	$sql .= $sql_search ?? '';
 	$sql .= order_by($order_by, $order, 'device_profile_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$device_profiles = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -229,7 +236,7 @@
 	echo th_order_by('device_profile_name', $text['label-device_profile_name'], $order_by, $order);
 	echo th_order_by('device_profile_enabled', $text['label-device_profile_enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('device_profile_description', $text['label-device_profile_description'], $order_by, $order, null, "class='hide-xs'");
-	if (permission_exists('device_profile_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+	if (permission_exists('device_profile_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -278,7 +285,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-xs'>".escape($row['device_profile_description'])."&nbsp;</td>\n";
-			if (permission_exists('device_profile_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+			if (permission_exists('device_profile_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 				echo "	</td>\n";
@@ -302,4 +309,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

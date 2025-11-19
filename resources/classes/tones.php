@@ -27,41 +27,52 @@
 
 	class tones {
 
-		//define variables
-		private $tones;
+		/**
+		 * declare private variables
+		 */
 		private $music_list;
 		private $recordings_list;
 		private $default_tone_label;
+		private $database;
 
-		//class constructor
-		public function __construct() {
+		/**
+		 * called when the object is created
+		 */
+		public function __construct(array $setting_array = []) {
 			//add multi-lingual support
-				$language = new text;
-				$text = $language->get();
+			$language = new text;
+			$text = $language->get();
 
-			//get the tones
-				$sql = "select * from v_vars ";
-				$sql .= "where var_category = 'Tones' ";
-				$sql .= "order by var_name asc ";
-				$database = new database;
-				$tones = $database->select($sql, null, 'all');
-				if (!empty($tones)) {
-					foreach ($tones as $tone) {
-						$tone = $tone['var_name'];
-						if (isset($text['label-'.$tone])) {
-							$label = $text['label-'.$tone];
-						}
-						else {
-							$label = $tone;
-						}
-						$tone_list[$tone] = $label;
-					}
-				}
-				$this->tones = $tone_list ?? '';
-				unset($sql, $tones, $tone, $tone_list);
+			//connect to the database
+			$this->database = $setting_array['database'] ?? database::new();
 		}
 
+		/**
+		 * tones_list function
+		 *
+		 * @return array
+		 */
 		public function tones_list() {
-			return $this->tones;
+			//get the tones
+			$sql = "select * from v_vars ";
+			$sql .= "where var_category = 'Tones' ";
+			$sql .= "order by var_name asc ";
+			$tones = $this->database->select($sql, null, 'all');
+			if (!empty($tones)) {
+				foreach ($tones as $tone) {
+					$tone = $tone['var_name'];
+					if (isset($text['label-'.$tone])) {
+						$label = $text['label-'.$tone];
+					}
+					else {
+						$label = $tone;
+					}
+					$tone_list[$tone] = $label;
+				}
+			}
+			unset($sql, $tones, $tone);
+
+			//return the tones
+			return $tone_list ?? [];
 		}
 	}

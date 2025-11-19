@@ -37,9 +37,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//initialize the database connection
-	$database = database::new();
-
 //get the session settings
 	$domain_uuid = $_SESSION['domain_uuid'];
 	$domain_name = $_SESSION['domain_name'];
@@ -176,10 +173,7 @@
 	}
 
 //check the permission
-	if (permission_exists('recording_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('recording_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -207,8 +201,6 @@
 						$p = permissions::new();
 						$p->add('recording_edit', 'temp');
 					//execute update
-						$database->app_name = 'recordings';
-						$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 						$database->save($array);
 						unset($array);
 					//remove temporary permissions
@@ -244,8 +236,6 @@
 							$p = permissions::new();
 							$p->add('recording_add', 'temp');
 						//execute insert
-							$database->app_name = 'recordings';
-							$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 							$database->save($array);
 							unset($array);
 						//remove temporary permissions
@@ -265,8 +255,6 @@
 										$p = permissions::new();
 										$p->add('recording_edit', 'temp');
 									//execute update
-										$database->app_name = 'recordings';
-										$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 										$database->save($array);
 										unset($array);
 									//remove temporary permissions
@@ -304,7 +292,7 @@
 				break;
 		}
 
-		header('Location: recordings.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: recordings.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -340,9 +328,19 @@
 	}
 	$param .= "&order_by=".$order_by."&order=".$order;
 	$page = isset($_GET['page']) ? $_GET['page'] : 0;
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	[$paging_controls, $rows_per_page] = paging($num_rows, $param, $rows_per_page);
+	[$paging_controls_mini, $rows_per_page] = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
+
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+	$parameters['time_zone'] = $time_zone;
+
+//set the sql time format
+	$sql_time_format = 'HH12:MI am';
+	if (!empty($settings->get('domain', 'time_format'))) {
+		$sql_time_format = $settings->get('domain', 'time_format') == '12h' ? "HH12:MI am" : "HH24:MI";
+	}
 
 //get the file size
 	if ($recording_storage_type == 'base64') {
@@ -396,11 +394,11 @@
 					d.domain_uuid = :domain_uuid and
 					d.app_uuid = '430737df-5385-42d1-b933-22600d3fb79e' and
 					d.dialplan_name = 'recordings' and
-					d.dialplan_enabled = 'true' and
+					d.dialplan_enabled = true and
 					dd.dialplan_detail_tag = 'action' and
 					dd.dialplan_detail_type = 'set' and
 					dd.dialplan_detail_data like 'pin_number=%' and
-					dd.dialplan_detail_enabled = 'true' ";
+					dd.dialplan_detail_enabled = true ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$recording_password = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
@@ -624,6 +622,13 @@
 	require_once "resources/footer.php";
 
 //define the download function (helps safari play audio sources)
+	/**
+	 * Downloads a file in range mode, allowing the client to request specific byte ranges.
+	 *
+	 * @param string $file Path to the file being downloaded
+	 *
+	 * @return void
+	 */
 	function range_download($file) {
 		$fp = @fopen($file, 'rb');
 
@@ -652,7 +657,7 @@
 			$c_start = $start;
 			$c_end   = $end;
 			// Extract the range string
-			list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+			[, $range] = explode('=', $_SERVER['HTTP_RANGE'], 2);
 			// Make sure the client hasn't sent us a multibyte range
 			if (strpos($range, ',') !== false) {
 				// (?) Shoud this be issued here, or should the first

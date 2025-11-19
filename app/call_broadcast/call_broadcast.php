@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('call_broadcast_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('call_broadcast_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -52,7 +49,7 @@
 //get posted data
 	if (!empty($_POST['call_broadcasts'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$call_broadcasts = $_POST['call_broadcasts'];
 	}
 
@@ -73,7 +70,7 @@
 				break;
 		}
 
-		header('Location: call_broadcast.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: call_broadcast.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -103,12 +100,11 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare the paging
 	$param = '';
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	if (!empty($search)) {
 		$param .= "&search=".urlencode($search);
 	}
@@ -145,7 +141,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'broadcast_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

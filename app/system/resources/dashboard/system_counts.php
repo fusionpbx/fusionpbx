@@ -13,14 +13,15 @@
 		exit;
 	}
 
-//connect to the database
-	if (!isset($database)) {
-		$database = new database;
-	}
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'core/user_settings');
+
+//get the dashboard label
+	$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //system counts
 	//domains
@@ -28,7 +29,7 @@
 		$stats['system']['domains']['total'] = sizeof($_SESSION['domains']);
 		$stats['system']['domains']['disabled'] = 0;
 		foreach ($_SESSION['domains'] as $domain) {
-			$stats['system']['domains']['disabled'] += ($domain['domain_enabled'] != 'true') ? 1 : 0;
+			$stats['system']['domains']['disabled'] += ($domain['domain_enabled'] != true) ? 1 : 0;
 		}
 	}
 
@@ -43,10 +44,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['devices']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['devices']['disabled'] += ($row['device_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['devices']['total']++;
-					$stats['domain']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['devices']['disabled'] += ($row['device_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -64,10 +65,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['extensions']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['extensions']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+				$stats['system']['extensions']['disabled'] += ($row['enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['extensions']['total']++;
-					$stats['domain']['extensions']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['extensions']['disabled'] += ($row['enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -85,10 +86,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['gateways']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['gateways']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+				$stats['system']['gateways']['disabled'] += ($row['enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['gateways']['total']++;
-					$stats['domain']['gateways']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['gateways']['disabled'] += ($row['enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -106,10 +107,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['users']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['users']['disabled'] += ($row['user_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['users']['disabled'] += ($row['user_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['users']['total']++;
-					$stats['domain']['users']['disabled'] += ($row['user_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['users']['disabled'] += ($row['user_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -127,10 +128,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['destinations']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['destinations']['disabled'] += ($row['destination_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['destinations']['disabled'] += ($row['destination_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['destinations']['total']++;
-					$stats['domain']['destinations']['disabled'] += ($row['destination_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['destinations']['disabled'] += ($row['destination_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -148,10 +149,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['call_center_queues']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				//$stats['system']['call_center_queues']['disabled'] += ($row['queue_enabled'] != 'true') ? 1 : 0;
+				//$stats['system']['call_center_queues']['disabled'] += ($row['queue_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['call_center_queues']['total']++;
-					//$stats['domain']['call_center_queues']['disabled'] += ($row['queue_enabled'] != 'true') ? 1 : 0;
+					//$stats['domain']['call_center_queues']['disabled'] += ($row['queue_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -169,10 +170,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['ivr_menus']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['ivr_menus']['total']++;
-					$stats['domain']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -185,15 +186,15 @@
 		$stats['system']['ring_groups']['disabled'] = 0;
 		$stats['domain']['ring_groups']['total'] = 0;
 		$stats['domain']['ring_groups']['disabled'] = 0;
-		$sql = "select domain_uuid, ring_group_enabled from v_ring_groups";
+		$sql = "select domain_uuid, cast(ring_group_enabled as text) from v_ring_groups";
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['ring_groups']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['ring_groups']['total']++;
-					$stats['domain']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -211,10 +212,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['voicemails']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['voicemails']['disabled'] += ($row['voicemail_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['voicemails']['disabled'] += ($row['voicemail_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['voicemails']['total']++;
-					$stats['domain']['voicemails']['disabled'] += ($row['voicemail_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['voicemails']['disabled'] += ($row['voicemail_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -260,8 +261,8 @@
 
 	//get the domain active and inactive counts
 	$sql = "select ";
-	$sql .= "(select count(domain_uuid) from v_domains where domain_enabled = 'true') as active, ";
-	$sql .= "(select count(domain_uuid) from v_domains where domain_enabled = 'false') as inactive; ";
+	$sql .= "(select count(domain_uuid) from v_domains where domain_enabled = true) as active, ";
+	$sql .= "(select count(domain_uuid) from v_domains where domain_enabled = false) as inactive; ";
 	$row = $database->select($sql, null, 'row');
 	$domain_active = $row['active'];
 	$domain_inactive = $row['inactive'];
@@ -295,10 +296,10 @@
 	echo "<div class='hud_box'>\n";
 	if ($show_stat) {
 
-		echo "<div class='hud_content' ".($dashboard_details_state == "disabled" ?: "onclick=\"$('#hud_system_counts_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"").">\n";
-		echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-system_counts']."</a></span>\n";
+		echo "<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_system_counts_details').slideToggle('fast');\"").">\n";
+		echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".escape($widget_label)."</a></span>\n";
 
-		if (!isset($dashboard_chart_type) || $dashboard_chart_type == "doughnut") {
+		if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {
 			//add doughnut chart
 			?>
 			<div class='hud_chart' style='width: 250px;'><canvas id='system_counts_chart'></canvas></div>
@@ -331,7 +332,7 @@
 									labels: {
 										usePointStyle: true,
 										pointStyle: 'rect',
-										color: '<?php echo $dashboard_heading_text_color; ?>'
+										color: '<?php echo $widget_label_text_color; ?>'
 									}
 								}
 							}
@@ -343,7 +344,7 @@
 								ctx.font = chart_text_size + ' ' + chart_text_font;
 								ctx.textBaseline = 'middle';
 								ctx.textAlign = 'center';
-								ctx.fillStyle = '<?php echo $dashboard_number_text_color; ?>';
+								ctx.fillStyle = '<?php echo $widget_number_text_color; ?>';
 								ctx.fillText(options.text, width / 2, top + (height / 2));
 								ctx.save();
 							}
@@ -353,13 +354,13 @@
 			</script>
 			<?php
 		}
-		if ($dashboard_chart_type == "number") {
+		if ($widget_chart_type == "number") {
 			echo "	<span class='hud_stat'>".$domain_total."</span>";
 		}
 		echo "	</div>\n";
 	}
 
-	if ($dashboard_details_state != 'disabled') {
+	if ($widget_details_state != 'disabled') {
 		echo "<div class='hud_details hud_box' id='hud_system_counts_details'>";
 		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";
@@ -499,7 +500,7 @@
 		echo "</div>";
 		//$n++;
 
-		echo "<span class='hud_expander' onclick=\"$('#hud_system_counts_details').slideToggle('fast'); toggle_grid_row_end('".$dashboard_name."')\"><span class='fas fa-ellipsis-h'></span></span>\n";
+		echo "<span class='hud_expander' onclick=\"$('#hud_system_counts_details').slideToggle('fast');\"><span class='fas fa-ellipsis-h'></span></span>\n";
 	}
 	echo "</div>\n";
 ?>

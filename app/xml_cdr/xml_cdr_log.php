@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('log_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('log_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -57,7 +54,6 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$parameters['xml_cdr_uuid'] = $xml_cdr_uuid;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 		$log_content = trim($row["log_content"]);

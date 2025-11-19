@@ -1,0 +1,5 @@
+﻿<extension name="xfer" number="xfer+d" context="global" continue="false" app_uuid="e9f3dd84-d05a-4492-a0c9-11ac4d907e0f" global="true" order="310">
+	<condition field="destination_number" expression="^xfer(\d+)$">
+		<action application="set" data="${uuid_transfer ${uuid} -bleg $1 XML ${context}}"/>
+	</condition>
+</extension>

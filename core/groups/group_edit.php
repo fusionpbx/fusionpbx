@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2023
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,16 +29,10 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('group_add') || permission_exists('group_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('group_add') || permission_exists('group_edit'))) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to database
-	$database = database::new();
 
 //add multi-lingual support
 	$language = new text;
@@ -66,7 +60,7 @@
 		$group_name_previous = $_POST["group_name_previous"];
 		$domain_uuid = $_POST["domain_uuid"];
 		$group_level = $_POST["group_level"] ?? '10';
-		$group_protected = $_POST["group_protected"] ?? '';
+		$group_protected = $_POST["group_protected"] ?? false;
 		$group_description = $_POST["group_description"] ?? '';
 	}
 
@@ -110,7 +104,6 @@
 			if (empty($group_name)) { $msg .= $text['message-required']." ".$text['label-group_name']."<br>\n"; }
 			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
 			if (empty($group_level)) { $msg .= $text['message-required']." ".$text['label-group_level']."<br>\n"; }
-			//if (empty($group_protected)) { $msg .= $text['message-required']." ".$text['label-group_protected']."<br>\n"; }
 			//if (empty($group_description)) { $msg .= $text['message-required']." ".$text['label-group_description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -139,8 +132,6 @@
 			$array['groups'][0]['group_description'] = $group_description;
 
 		//save the data
-			$database->app_name = 'Group Manager';
-			$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 			$database->save($array);
 
 		//update group name in group permissions if group name changed
@@ -152,8 +143,6 @@
 				$parameters['group_name'] = $group_name;
 				$parameters['group_name_previous'] = $group_name_previous;
 				$parameters['group_uuid'] = $group_uuid;
-				$database->app_name = 'Group Manager';
-				$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);
 			}
@@ -190,6 +179,9 @@
 		}
 		unset ($sql, $parameters, $row);
 	}
+
+//set the defaults
+	$group_protected = $group_protected ?? true;
 
 //create token
 	$object = new token;
@@ -300,10 +292,17 @@
 	echo "	".$text['label-group_protected']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select class='formfld' name='group_protected'>\n";
-	echo "		<option value='false'>".$text['label-false']."</option>\n";
-	echo "		<option value='true' ".(!empty($group_protected) && $group_protected == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "	<select class='formfld' id='group_protected' name='group_protected'>\n";
+	echo "		<option value='true' ".($group_protected === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($group_protected === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+	}
 	echo "<br />\n";
 	//echo $text['description-group_protected']."\n";
 	echo "</td>\n";

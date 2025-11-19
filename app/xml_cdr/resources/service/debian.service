@@ -1,8 +1,8 @@
 ; Author: Mark J Crane <markjcrane@fusionpbx.com>
 ; cp /var/www/fusionpbx/app/xml_cdr/resources/service/debian.service /etc/systemd/system/xml_cdr.service
+; systemctl daemon-reload
 ; systemctl enable xml_cdr
 ; systemctl start xml_cdr
-; systemctl daemon-reload
 
 [Unit]
 Description=FusionPBX xml_cdr
@@ -14,20 +14,15 @@ After=network.target network-online.target local-fs.target
 StartLimitIntervalSec=0
 
 [Service]
-Type=simple
-;Type=forking
-PIDFile=/var/run/fusionpbx/xml_cdr.pid
 WorkingDirectory=/var/www/fusionpbx
-;Environment="USER=www-data"
-;Environment="GROUP=www-data"
-;EnvironmentFile=-/etc/default/fusionpbx
-ExecStartPre=/bin/mkdir -p /var/run/fusionpbx
-;ExecStartPre=/bin/chown -R ${USER}:${GROUP} /var/www/fusionpbx
 ExecStart=/usr/bin/php /var/www/fusionpbx/app/xml_cdr/resources/service/xml_cdr.php
+RuntimeDirectory=fusionpbx
+RuntimeDirectoryMode=0755
+RuntimeDirectoryPreserve=yes
+User=www-data
+Group=www-data
 TimeoutSec=55s
 Restart=always
 
 [Install]
 WantedBy=multi-user.target
-Also=
-
