@@ -367,7 +367,7 @@ class menu {
 		//$sql .= " 		menu_item_protected <> 'true' ";
 		//$sql .= "		or menu_item_protected is null ";
 		//$sql .= "	) ";
-		$sql                     .= ") ";
+		$sql .= ") ";
 		$parameters['menu_uuid'] = $this->menu_uuid;
 		$this->database->execute($sql, $parameters);
 		unset($sql, $parameters);
