@@ -86,6 +86,15 @@
 	$tmp_menu_item_order = 0;
 
 //add the build db child menu list
+	/**
+	 * Builds a child menu list from the database.
+	 *
+	 * @param object $database        The database connection object.
+	 * @param int    $menu_item_level The current level of the menu item.
+	 * @param string $menu_item_uuid  The UUID of the parent menu item.
+	 *
+	 * @return void
+	 */
 	function build_db_child_menu_list ($database, $menu_item_level, $menu_item_uuid) {
 		global $settings, $menu_uuid, $list_row_edit_button;
 		global $tmp_menu_item_order, $v_link_label_edit, $v_link_label_delete;

@@ -38,18 +38,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduce the functionality but requires PHP 5.1.0 or higher
-	if (!function_exists('str_getcsv')) {
-		function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
-			$fp = fopen("php://memory", 'r+');
-			fputs($fp, $input);
-			rewind($fp);
-			$data = fgetcsv($fp, null, $delimiter, $enclosure); // $escape only got added in 5.3.0
-			fclose($fp);
-			return $data;
-		}
-	}
-
 //get the http get values and set them as php variables
 	$action = $_POST["action"] ?? '';
 	$from_row = $_POST["from_row"] ?? '';
@@ -220,6 +208,14 @@
 	}
 
 //get the parent table
+	/**
+	 * Retrieves the parent table of a given table in the schema.
+	 *
+	 * @param array  $schema     An array containing schema information, where each row represents a table.
+	 * @param string $table_name The name of the table for which to retrieve the parent.
+	 *
+	 * @return mixed|null The parent table of the specified table, or null if no match is found.
+	 */
 	function get_parent($schema,$table_name) {
 		foreach ($schema as $row) {
 			if ($row['table'] == $table_name) {

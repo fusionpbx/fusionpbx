@@ -578,9 +578,15 @@
 
 	}
 
-
 /**
- * Update file system permissions
+ * Update file permissions for a FusionPBX installation.
+ *
+ * This function updates the permissions of various directories in a FusionPBX installation,
+ * specifically adjusting ownership to match the expected behavior. The changes are only applied
+ * when running as root, and an error message is displayed otherwise.
+ *
+ * @param array    $text     A translation dictionary containing the label for when not running as root.
+ * @param settings $settings The current application settings instance.
  */
 function update_file_permissions($text, settings $settings) {
 
@@ -640,7 +646,14 @@ function update_file_permissions($text, settings $settings) {
 }
 
 /**
- * Upgrade services
+ * Upgrade services by copying and enabling them in systemd.
+ *
+ * This function iterates through all service files found in the application's
+ * core and app directories, copies each one to /etc/systemd/system, reloads
+ * the daemon, and enables the service.
+ *
+ * @param string   $text     Text containing the upgrade description (not used)
+ * @param settings $settings Application settings
  */
 function upgrade_services($text, settings $settings) {
 	//echo ($text['description-upgrade_services'] ?? "")."\n";
@@ -657,7 +670,13 @@ function upgrade_services($text, settings $settings) {
 }
 
 /**
- * Stop services
+ * Stops running services by name.
+ *
+ * This function iterates over all service files, extracts the service names,
+ * and stops each service using systemctl.
+ *
+ * @param array    $text
+ * @param settings $settings
  */
 function stop_services($text, settings $settings) {
 	//echo ($text['description-stop_services'] ?? "")."\n";
@@ -672,7 +691,12 @@ function stop_services($text, settings $settings) {
 }
 
 /**
- * Restart services
+ * Restarts all services
+ *
+ * This function restarts all core and app services.
+ *
+ * @param array    $text     Array containing localized text
+ * @param settings $settings Settings object
  */
 function restart_services($text, settings $settings) {
 	//echo ($text['description-restart_services'] ?? "")."\n";
@@ -687,8 +711,11 @@ function restart_services($text, settings $settings) {
 }
 
 /**
- * Get the service name
- * @param string $file
+ * Finds the service name in an INI file from a given file.
+ *
+ * @param string $file The fully qualified path and file containing the ExecStart command.
+ *
+ * @return string|null The service name if found, otherwise an empty string.
  */
 function find_service_name(string $file) {
 	$parsed = parse_ini_file($file);
@@ -703,9 +730,9 @@ function find_service_name(string $file) {
 }
 
 /**
- * Checks if the current user has root privileges.
+ * Checks whether the current user is the root user or not.
  *
- * @return bool Returns true if the current user is the root user, false otherwise.
+ * @return bool True if the current user has root privileges, false otherwise.
  */
 function is_root(): bool {
 	return posix_getuid() === 0;

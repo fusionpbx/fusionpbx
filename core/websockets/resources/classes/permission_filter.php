@@ -36,11 +36,25 @@ class permission_filter implements filter {
 	private $field_map;
 	private $permissions;
 
+	/**
+	 * Initializes a new instance of this class with a map of event field keys to permissions and an optional list of
+	 * additional permissions.
+	 *
+	 * @param array $event_field_key_to_permission_map Map of event field keys to permissions
+	 * @param array $permissions                       Optional list of additional permissions (default: [])
+	 */
 	public function __construct(array $event_field_key_to_permission_map, array $permissions = []) {
 		$this->field_map = $event_field_key_to_permission_map;
 		$this->add_permissions($permissions);
 	}
 
+	/**
+	 * Invokes the object to check if a value can be set for a given field.
+	 *
+	 * @param string $key The key of the field to check
+	 *
+	 * @return bool|null True if the value can be set, null otherwise
+	 */
 	public function __invoke(string $key, $value): ?bool {
 		$permission = $this->field_map[$key] ?? null;
 		if ($permission === null || $this->has_permission($permission)) {
@@ -50,7 +64,9 @@ class permission_filter implements filter {
 	}
 
 	/**
-	 * Adds an associative array of permissions where $key is the name of the permission and $value is ignored as it should always be set to true.
+	 * Adds an associative array of permissions where $key is the name of the permission and $value is ignored as it
+	 * should always be set to true.
+	 *
 	 * @param array $permissions
 	 */
 	public function add_permissions(array $permissions) {
@@ -62,6 +78,7 @@ class permission_filter implements filter {
 
 	/**
 	 * Adds a single permission
+	 *
 	 * @param string $key
 	 */
 	public function add_permission(string $key) {
@@ -70,7 +87,9 @@ class permission_filter implements filter {
 
 	/**
 	 * Checks if the filter has a permission
+	 *
 	 * @param string $key
+	 *
 	 * @return bool
 	 */
 	public function has_permission(string $key): bool {

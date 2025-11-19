@@ -230,6 +230,16 @@
 	}
 
 //create a function to find matching row in array and return the row or boolean
+	/**
+	 * Searches for a value in an array and returns the corresponding row or boolean result.
+	 *
+	 * @param array  $search_array The array to search in.
+	 * @param string $field        The field name to match.
+	 * @param mixed  $value        The value to search for.
+	 * @param string $type         The type of result to return. Can be 'boolean' or 'row'. Defaults to 'boolean'.
+	 *
+	 * @return bool|mixed The found row if $type is 'row', true if the value exists and $type is 'boolean', false otherwise.
+	 */
 	function find_in_array($search_array, $field, $value, $type = 'boolean') {
 		foreach($search_array as $row) {
 			if ($row[$field] == $value) {

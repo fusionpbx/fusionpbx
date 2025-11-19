@@ -32,6 +32,16 @@
  * @author Tim Fry <tim@fusionpbx.com>
  */
 class subscriber_missing_permission_exception extends \subscriber_exception {
+	/**
+	 * Initializes the object with subscriber id and error message.
+	 *
+	 * @param string|int      $subscriber_id Subscriber's unique identifier
+	 * @param string          $message       [optional] Custom error message. Defaults to "Subscriber is missing required permission".
+	 * @param int             $code          [optional] Error code. Defaults to 0.
+	 * @param \Throwable|null $previous      [optional] The previous exception. Defaults to null.
+	 *
+	 * @return void
+	 */
 	public function __construct($subscriber_id, string $message = "Subscriber is missing required permission", int $code = 0, ?\Throwable $previous = null) {
 		return parent::__construct($subscriber_id, $message, $code, $previous);
 	}
