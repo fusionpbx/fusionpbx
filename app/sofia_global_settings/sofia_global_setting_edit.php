@@ -241,8 +241,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='global_setting_enabled' name='global_setting_enabled'>\n";
-	echo "		<option value='true' ".($global_setting_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($global_setting_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($global_setting_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($global_setting_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

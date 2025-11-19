@@ -263,8 +263,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='attachment_primary' name='attachment_primary'>\n";
-	echo "			<option value='true' ".($attachment_primary === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "			<option value='false' ".($attachment_primary === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($attachment_primary == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($attachment_primary == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

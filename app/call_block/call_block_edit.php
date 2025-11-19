@@ -567,8 +567,8 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='call_block_enabled' name='call_block_enabled'>\n";
-	echo "			<option value='true' ".($call_block_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "			<option value='false' ".($call_block_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($call_block_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($call_block_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

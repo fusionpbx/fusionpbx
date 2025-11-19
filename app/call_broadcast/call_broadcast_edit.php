@@ -540,8 +540,8 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			echo "	<span class='switch'>\n";
 		}
 		echo "	<select class='formfld' id='broadcast_avmd' name='broadcast_avmd'>\n";
-		echo "		<option value='true' ".($broadcast_avmd === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($broadcast_avmd === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($broadcast_avmd == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($broadcast_avmd == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 		if ($input_toggle_style_switch) {
 			echo "		<span class='slider'></span>\n";

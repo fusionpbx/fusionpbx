@@ -260,8 +260,8 @@
 						echo "	<span class='switch'>\n";
 					}
 					echo "	<select class='formfld' id='".escape($row['ring_group_uuid'])."' name='ring_groups[".$x."][ring_group_forward_enabled]' onchange=\"this.value == 'true' && document.getElementById('destination_".$x."').value == '' ? document.getElementById('destination_".$x."').focus() : null;\">\n";
-					echo "		<option value='false' ".($row["ring_group_forward_enabled"] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-					echo "		<option value='true' ".($row["ring_group_forward_enabled"] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+					echo "		<option value='false' ".($row["ring_group_forward_enabled"] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+					echo "		<option value='true' ".($row["ring_group_forward_enabled"] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 					echo "	</select>\n";
 					if ($input_toggle_style_switch) {
 						echo "		<span class='slider'></span>\n";

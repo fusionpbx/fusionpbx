@@ -394,8 +394,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='phone_primary' name='phone_primary'>\n";
-	echo "			<option value='true' ".($phone_primary === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "			<option value='false' ".($phone_primary === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($phone_primary == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($phone_primary == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

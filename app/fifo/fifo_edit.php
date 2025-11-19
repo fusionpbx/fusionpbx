@@ -643,8 +643,8 @@
 				echo "	<span class='switch'>\n";
 			}
 			echo "	<select class='formfld' id='member_enabled' name='fifo_members[$x][member_enabled]'>\n";
-			echo "		<option value='true' ".($row['member_enabled'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($row['member_enabled'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		<option value='true' ".($row['member_enabled'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($row['member_enabled'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 			echo "	</select>\n";
 			if ($input_toggle_style_switch) {
 				echo "		<span class='slider'></span>\n";
@@ -778,8 +778,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='fifo_enabled' name='fifo_enabled'>\n";
-	echo "		<option value='true' ".($fifo_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($fifo_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($fifo_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($fifo_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
