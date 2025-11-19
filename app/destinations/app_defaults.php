@@ -146,31 +146,33 @@ if ($domains_processed == 1) {
 			//loop through the array
 			foreach ($destinations as $row) {
 				$i = 0;
-				foreach (json_decode($row['destination_actions'], true) as $action) {
-					//build the array of destinations
-					if ($i == 0 ) {
-						$destination_action = $action['destination_app'] . ' ' . $action['destination_data'];
-						if ($destination_action !== $row['destination_app'] . ' ' . $row['destination_data']) {
-							$array['destinations'][$z]['destination_uuid'] = $row['destination_uuid'];
-							$array['destinations'][$z]['destination_number'] = $row['destination_number'];
-							$array['destinations'][$z]['destination_app'] = $action['destination_app'];
-							$array['destinations'][$z]['destination_data'] = $action['destination_data'];
-							$z++;
+				if (!empty(json_decode($row['destination_actions'], true))) {
+					foreach (json_decode($row['destination_actions'], true) as $action) {
+						//build the array of destinations
+						if ($i == 0 ) {
+							$destination_action = $action['destination_app'] . ' ' . $action['destination_data'];
+							if ($destination_action !== $row['destination_app'] . ' ' . $row['destination_data']) {
+								$array['destinations'][$z]['destination_uuid'] = $row['destination_uuid'];
+								$array['destinations'][$z]['destination_number'] = $row['destination_number'];
+								$array['destinations'][$z]['destination_app'] = $action['destination_app'];
+								$array['destinations'][$z]['destination_data'] = $action['destination_data'];
+								$z++;
+							}
 						}
-					}
-					if ($i == 1) {
-						$destination_action = $action['destination_app'] . ' ' . $action['destination_data'];
-						if ($destination_action !== $row['destination_alternate_app'] . ' ' . $row['destination_alternate_data']) {
-							$array['destinations'][$z]['destination_uuid'] = $row['destination_uuid'];
-							$array['destinations'][$z]['destination_number'] = $row['destination_number'];
-							$array['destinations'][$z]['destination_alternate_app'] = $action['destination_app'];
-							$array['destinations'][$z]['destination_alternate_data'] = $action['destination_data'];
-							$z++;
+						if ($i == 1) {
+							$destination_action = $action['destination_app'] . ' ' . $action['destination_data'];
+							if ($destination_action !== $row['destination_alternate_app'] . ' ' . $row['destination_alternate_data']) {
+								$array['destinations'][$z]['destination_uuid'] = $row['destination_uuid'];
+								$array['destinations'][$z]['destination_number'] = $row['destination_number'];
+								$array['destinations'][$z]['destination_alternate_app'] = $action['destination_app'];
+								$array['destinations'][$z]['destination_alternate_data'] = $action['destination_data'];
+								$z++;
+							}
 						}
-					}
 
-					//increment the id
-					$i++;
+						//increment the id
+						$i++;
+					}
 				}
 
 				//process a chunk of the array
