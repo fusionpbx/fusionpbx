@@ -72,7 +72,7 @@ class button {
 		$button .= !empty($array['onmouseout']) ? "onmouseleave=" . self::quote($array['onmouseout']) . " " : null;
 		//detect class addition (using + prefix)
 		$button_class = !empty($array['class']) && substr($array['class'], 0, 1) == '+' ? 'default ' . substr($array['class'], 1) : $array['class'] ?? '';
-		$button       .= "class='btn btn-" . (!empty($button_class) ? $button_class : 'default') . " " . (isset($array['disabled']) && $array['disabled'] ? 'disabled' : null) . "' ";
+		$button .= "class='btn btn-" . (!empty($button_class) ? $button_class : 'default') . " " . (isset($array['disabled']) && $array['disabled'] ? 'disabled' : null) . "' ";
 		//ensure margin* styles are not applied to the button element when a link is defined
 		if (!empty($array['style']) && is_array($array['style']) && @sizeof($array['style']) != 0) {
 			$styles = '';
@@ -94,7 +94,7 @@ class button {
 				!$array['label']
 			)) {
 			$icon_class = is_array($array['icon']) ? $array['icon']['text'] : $array['icon'];
-			$button     .= "<span class='" . (substr($icon_class, 0, 3) != 'fa-' ? 'fa-solid fa-' : null) . $icon_class . " fa-fw'></span>";
+			$button .= "<span class='" . (substr($icon_class, 0, 3) != 'fa-' ? 'fa-solid fa-' : null) . $icon_class . " fa-fw'></span>";
 		}
 		//label
 		if (!empty($array['label']) && (
@@ -110,7 +110,7 @@ class button {
 				}
 			}
 			$pad_class = !empty($array['icon']) ? 'pad' : null;
-			$button    .= "<span class='button-label " . ($collapse_class ?? '') . " " . $pad_class . "'>" . $array['label'] . "</span>";
+			$button .= "<span class='button-label " . ($collapse_class ?? '') . " " . $pad_class . "'>" . $array['label'] . "</span>";
 		}
 		//button: close
 		$button .= "</button>";

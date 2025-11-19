@@ -44,6 +44,15 @@ class captcha {
 	}
 
 	/**
+	 * Returns a Base64 encoded version of the CAPTCHA image.
+	 *
+	 * @return string The Base64 encoded CAPTCHA image data.
+	 */
+	public function image_base64() {
+		return base64_encode($this->image_captcha());
+	}
+
+	/**
 	 * Generates a CAPTCHA image.
 	 *
 	 * Requires the object property code for the text to create
@@ -80,8 +89,8 @@ class captcha {
 		}
 
 		// Create the image
-		$size   = $this->image_size($font_size, 0, $font, $text);
-		$width  = $size[2] + $size[0] + 8;
+		$size = $this->image_size($font_size, 0, $font, $text);
+		$width = $size[2] + $size[0] + 8;
 		$height = abs($size[1]) + abs($size[7]);
 		//$width = 100;
 		//$height =  40;
@@ -112,15 +121,6 @@ class captcha {
 	}
 
 	/**
-	 * Returns a Base64 encoded version of the CAPTCHA image.
-	 *
-	 * @return string The Base64 encoded CAPTCHA image data.
-	 */
-	public function image_base64() {
-		return base64_encode($this->image_captcha());
-	}
-
-	/**
 	 * Calculates the bounding box of a text in an image.
 	 *
 	 * @param int    $size  The size of the font.
@@ -133,7 +133,7 @@ class captcha {
 	private function image_size($size, $angle, $font, $text) {
 		$dummy = imagecreate(1, 1);
 		$black = imagecolorallocate($dummy, 0, 0, 0);
-		$bbox  = imagettftext($dummy, $size, $angle, 0, 0, $black, $font, $text);
+		$bbox = imagettftext($dummy, $size, $angle, 0, 0, $black, $font, $text);
 		imagedestroy($dummy);
 		return $bbox;
 	}

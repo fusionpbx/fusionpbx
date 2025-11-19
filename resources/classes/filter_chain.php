@@ -68,7 +68,7 @@ final class filter_chain {
 
 				public function __construct(filter $current, filter $next) {
 					$this->current = $current;
-					$this->next    = $next;
+					$this->next = $next;
 				}
 
 				public function __invoke(string $key, $value): ?bool {

@@ -45,7 +45,7 @@ class tones {
 	public function __construct(array $setting_array = []) {
 		//add multi-lingual support
 		$language = new text;
-		$text     = $language->get();
+		$text = $language->get();
 
 		//connect to the database
 		$this->database = $setting_array['database'] ?? database::new();
@@ -56,13 +56,14 @@ class tones {
 	 *
 	 * This method fetches tone data from the database and formats it for display.
 	 *
-	 * @return array An array of tone names as keys and their labels as values. If no tones are found, an empty array is returned.
+	 * @return array An array of tone names as keys and their labels as values. If no tones are found, an empty array
+	 *               is returned.
 	 */
 	public function tones_list() {
 		//get the tones
-		$sql   = "select * from v_vars ";
-		$sql   .= "where var_category = 'Tones' ";
-		$sql   .= "order by var_name asc ";
+		$sql = "select * from v_vars ";
+		$sql .= "where var_category = 'Tones' ";
+		$sql .= "order by var_name asc ";
 		$tones = $this->database->select($sql, null, 'all');
 		if (!empty($tones)) {
 			foreach ($tones as $tone) {

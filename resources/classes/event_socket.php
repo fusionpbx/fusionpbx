@@ -6,7 +6,7 @@ class buffer {
 
 	public function __construct() {
 		$this->content = '';
-		$this->eol     = "\n";
+		$this->eol = "\n";
 	}
 
 	public function append($str) {
@@ -26,13 +26,13 @@ class buffer {
 		if (strlen($this->content) < $n) {
 			return false;
 		}
-		$s             = substr($this->content, 0, $n);
+		$s = substr($this->content, 0, $n);
 		$this->content = substr($this->content, $n);
 		return $s;
 	}
 
 	public function read_all($n) {
-		$tmp           = $this->content;
+		$tmp = $this->content;
 		$this->content = '';
 		return $tmp;
 	}
@@ -49,17 +49,15 @@ class buffer {
  * @depends buffer::class
  */
 class event_socket {
+	private static $socket = null;
+	public $fp;
 	/**
 	 * Used as a flag to determine if the socket should be created automatically
 	 *
 	 * @var bool
 	 */
 	protected $auto_create;
-
 	private $buffer;
-	public $fp;
-
-	private static $socket = null;
 	private $config;
 
 	/**
@@ -68,17 +66,60 @@ class event_socket {
 	 * @param resource|false $fp
 	 */
 	public function __construct($fp = false, ?config $config = null) {
-		$this->buffer      = new buffer;
+		$this->buffer = new buffer;
 		$this->auto_create = $fp === false;
-		$this->fp          = $fp;
-		$this->config      = $config ?? config::load();
+		$this->fp = $fp;
+		$this->config = $config ?? config::load();
 	}
 
 	/**
-	 * Ensures a closed connection on destruction of object
+	 * Sends an API command on the socket
+	 *
+	 * @param string $api_cmd
+	 *
+	 * @return string|false Response from server or false if failed
 	 */
-	public function __destructor() {
-		$this->close();
+	public static function api(string $api_cmd) {
+		return self::command('api ' . $api_cmd);
+	}
+
+	/**
+	 * Sends a command on the socket blocking for a response
+	 *
+	 * @param string $cmd
+	 *
+	 * @return string|false Response from server or false if failed
+	 */
+	public static function command(string $cmd) {
+		return self::create()->request($cmd);
+	}
+
+	/**
+	 * Send a command to the FreeSWITCH Event Socket Server
+	 * <p>Multi-line commands can be sent when separated by '\n'</p>
+	 *
+	 * @param string $cmd Command to send through the socket
+	 *
+	 * @return mixed Returns the response from FreeSWITCH or false if not connected
+	 * @depends read_event()
+	 */
+	public function request($cmd) {
+		if (!$this->connected()) {
+			return false;
+		}
+
+		$cmd_array = explode("\n", $cmd);
+		foreach ($cmd_array as $value) {
+			fputs($this->fp, $value . "\n");
+		}
+		fputs($this->fp, "\n"); //second line feed to end the headers
+
+		$event = $this->read_event();
+
+		if (array_key_exists('$', $event)) {
+			return $event['$'];
+		}
+		return $event;
 	}
 
 	/**
@@ -92,7 +133,7 @@ class event_socket {
 			return false;
 		}
 
-		$b       = $this->buffer;
+		$b = $this->buffer;
 		$content = [];
 
 		while (true) {
@@ -138,6 +179,29 @@ class event_socket {
 	}
 
 	/**
+	 * Create uses a singleton design to return a connected socket to the FreeSWITCH Event Socket Layer
+	 *
+	 * @param string $host                 Host or IP address of FreeSWITCH event socket server. Defaults to 127.0.0.1
+	 * @param string $port                 Port number of FreeSWITCH event socket server. Defaults to 8021
+	 * @param string $password             Password of FreeSWITCH event socket server. Defaults to ClueCon
+	 * @param int    $timeout_microseconds Number of microseconds before timeout is triggered on socket
+	 *
+	 * @return self
+	 * @global array $conf                 Global configuration used in config.conf
+	 */
+	public static function create($host = null, $port = null, $password = null, $timeout_microseconds = 30000): self {
+		//create the event socket object
+		if (self::$socket === null) {
+			self::$socket = new event_socket();
+		}
+		//attempt to connect it
+		if (!self::$socket->connected()) {
+			self::$socket->connect($host, $port, $password, $timeout_microseconds);
+		}
+		return self::$socket;
+	}
+
+	/**
 	 * Connect to the FreeSWITCH (c) event socket server
 	 * <p>If the configuration is not loaded then the defaults of
 	 * host 127.0.0.1, port of 8021, and default password of ClueCon will be used</p>
@@ -154,8 +218,8 @@ class event_socket {
 	public function connect($host = null, $port = null, $password = null, $timeout_microseconds = 30000) {
 		//set the event socket variables in the order of
 		//param passed to func, conf setting, old conf setting, default
-		$host     = $host ?? $this->config->get('switch.event_socket.host', null) ?? $this->config->get('event_socket.ip_address', null) ?? '127.0.0.1';
-		$port     = intval($port ?? $this->config->get('switch.event_socket.port', null) ?? $this->config->get('event_socket.port', null) ?? '8021');
+		$host = $host ?? $this->config->get('switch.event_socket.host', null) ?? $this->config->get('event_socket.ip_address', null) ?? '127.0.0.1';
+		$port = intval($port ?? $this->config->get('switch.event_socket.port', null) ?? $this->config->get('event_socket.port', null) ?? '8021');
 		$password = $password ?? $this->config->get('switch.event_socket.password', null) ?? $this->config->get('event_socket.password', null) ?? 'ClueCon';
 
 		//if a socket was provided in the constructor, then don't create a new one
@@ -196,6 +260,57 @@ class event_socket {
 	}
 
 	/**
+	 * Sends an API command to FreeSWITCH using asynchronous (non-blocking) mode
+	 *
+	 * @param string $cmd API command to send
+	 *
+	 * @returns string $job_id the Job ID for tracking completion status
+	 */
+	public static function async(string $cmd) {
+		return self::command('bgapi ' . $cmd);
+	}
+
+	/**
+	 * Ensures a closed connection on destruction of object
+	 */
+	public function __destructor() {
+		$this->close();
+	}
+
+	/**
+	 * Close the socket connection with the FreeSWITCH Event Socket Server.
+	 *
+	 * @return void
+	 */
+	public function close() {
+		//fp is public access so ensure it is a resource before closing it
+		if (is_resource($this->fp)) {
+			try {
+				fclose($this->fp);
+			} catch (Exception $t) {
+				//report it
+				trigger_error("event_socket failed to close socket", E_USER_WARNING);
+			}
+		} else {
+			//log an error if fp was set to something other than a resource
+			if ($this->fp !== false) {
+				trigger_error("event_socket not a resource", E_USER_ERROR);
+			}
+		}
+		//force fp to be false
+		$this->fp = false;
+	}
+
+	/**
+	 * alias of connected
+	 *
+	 * @return bool
+	 */
+	public function is_connected(): bool {
+		return $this->connected();
+	}
+
+	/**
 	 * Tests if connected to the FreeSWITCH Event Socket Server
 	 *
 	 * @return bool Returns true when connected or false when not connected
@@ -214,43 +329,6 @@ class event_socket {
 	}
 
 	/**
-	 * alias of connected
-	 *
-	 * @return bool
-	 */
-	public function is_connected(): bool {
-		return $this->connected();
-	}
-
-	/**
-	 * Send a command to the FreeSWITCH Event Socket Server
-	 * <p>Multi-line commands can be sent when separated by '\n'</p>
-	 *
-	 * @param string $cmd Command to send through the socket
-	 *
-	 * @return mixed Returns the response from FreeSWITCH or false if not connected
-	 * @depends read_event()
-	 */
-	public function request($cmd) {
-		if (!$this->connected()) {
-			return false;
-		}
-
-		$cmd_array = explode("\n", $cmd);
-		foreach ($cmd_array as $value) {
-			fputs($this->fp, $value . "\n");
-		}
-		fputs($this->fp, "\n"); //second line feed to end the headers
-
-		$event = $this->read_event();
-
-		if (array_key_exists('$', $event)) {
-			return $event['$'];
-		}
-		return $event;
-	}
-
-	/**
 	 * Sets the current socket resource returning the old
 	 *
 	 * @param resource|bool $fp Sets the current FreeSWITCH resource
@@ -259,89 +337,9 @@ class event_socket {
 	 * @deprecated since version 5.1
 	 */
 	public function reset_fp($fp = false) {
-		$tmp      = $this->fp;
+		$tmp = $this->fp;
 		$this->fp = $fp;
 		return $tmp;
-	}
-
-	/**
-	 * Close the socket connection with the FreeSWITCH Event Socket Server.
-	 *
-	 * @return void
-	 */
-	public function close() {
-		//fp is public access so ensure it is a resource before closing it
-		if (is_resource($this->fp)) {
-			try {
-				fclose($this->fp);
-			} catch (\Exception $t) {
-				//report it
-				trigger_error("event_socket failed to close socket", E_USER_WARNING);
-			}
-		} else {
-			//log an error if fp was set to something other than a resource
-			if ($this->fp !== false) {
-				trigger_error("event_socket not a resource", E_USER_ERROR);
-			}
-		}
-		//force fp to be false
-		$this->fp = false;
-	}
-
-	/**
-	 * Create uses a singleton design to return a connected socket to the FreeSWITCH Event Socket Layer
-	 *
-	 * @param string $host                 Host or IP address of FreeSWITCH event socket server. Defaults to 127.0.0.1
-	 * @param string $port                 Port number of FreeSWITCH event socket server. Defaults to 8021
-	 * @param string $password             Password of FreeSWITCH event socket server. Defaults to ClueCon
-	 * @param int    $timeout_microseconds Number of microseconds before timeout is triggered on socket
-	 *
-	 * @return self
-	 * @global array $conf                 Global configuration used in config.conf
-	 */
-	public static function create($host = null, $port = null, $password = null, $timeout_microseconds = 30000): self {
-		//create the event socket object
-		if (self::$socket === null) {
-			self::$socket = new event_socket();
-		}
-		//attempt to connect it
-		if (!self::$socket->connected()) {
-			self::$socket->connect($host, $port, $password, $timeout_microseconds);
-		}
-		return self::$socket;
-	}
-
-	/**
-	 * Sends a command on the socket blocking for a response
-	 *
-	 * @param string $cmd
-	 *
-	 * @return string|false Response from server or false if failed
-	 */
-	public static function command(string $cmd) {
-		return self::create()->request($cmd);
-	}
-
-	/**
-	 * Sends an API command on the socket
-	 *
-	 * @param string $api_cmd
-	 *
-	 * @return string|false Response from server or false if failed
-	 */
-	public static function api(string $api_cmd) {
-		return self::command('api ' . $api_cmd);
-	}
-
-	/**
-	 * Sends an API command to FreeSWITCH using asynchronous (non-blocking) mode
-	 *
-	 * @param string $cmd API command to send
-	 *
-	 * @returns string $job_id the Job ID for tracking completion status
-	 */
-	public static function async(string $cmd) {
-		return self::command('bgapi ' . $cmd);
 	}
 }
 

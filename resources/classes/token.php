@@ -72,6 +72,23 @@ class token {
 	}
 
 	/**
+	 * clear previously validated tokens
+	 */
+	private function clear_validated() {
+		if (!empty($_SESSION['tokens']) && is_array($_SESSION['tokens']) && @sizeof($_SESSION['tokens']) != 0) {
+			foreach ($_SESSION['tokens'] as $key => $tokens) {
+				if (is_array($tokens) && @sizeof($tokens) != 0) {
+					foreach ($tokens as $t => $token) {
+						if ($token['validated']) {
+							unset($_SESSION['tokens'][$key][$t]);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * validate the token
 	 *
 	 * @var string $key
@@ -107,23 +124,6 @@ class token {
 		}
 		return false;
 
-	}
-
-	/**
-	 * clear previously validated tokens
-	 */
-	private function clear_validated() {
-		if (!empty($_SESSION['tokens']) && is_array($_SESSION['tokens']) && @sizeof($_SESSION['tokens']) != 0) {
-			foreach ($_SESSION['tokens'] as $key => $tokens) {
-				if (is_array($tokens) && @sizeof($tokens) != 0) {
-					foreach ($tokens as $t => $token) {
-						if ($token['validated']) {
-							unset($_SESSION['tokens'][$key][$t]);
-						}
-					}
-				}
-			}
-		}
 	}
 
 }

@@ -93,6 +93,39 @@ class groups {
 	}
 
 	/**
+	 * Retrieves assigned user groups for a given user.
+	 *
+	 * This method executes a SQL query to retrieve the assigned user groups
+	 * for the specified domain and user. The results are returned as an array.
+	 *
+	 * @return array|null An array of assigned user groups, or null if no groups are assigned.
+	 */
+	public function assigned() {
+		$sql = "select ";
+		$sql .= "u.user_group_uuid, ";
+		$sql .= "u.domain_uuid, ";
+		$sql .= "u.user_uuid, ";
+		$sql .= "u.group_uuid, ";
+		$sql .= "g.group_name, ";
+		$sql .= "g.group_level ";
+		$sql .= "from ";
+		$sql .= "v_user_groups as u, ";
+		$sql .= "v_groups as g ";
+		$sql .= "where u.domain_uuid = :domain_uuid ";
+		$sql .= "and u.user_uuid = :user_uuid ";
+		$sql .= "and u.group_uuid = g.group_uuid ";
+		$parameters['domain_uuid'] = $this->domain_uuid;
+		$parameters['user_uuid'] = $this->user_uuid;
+		$groups = $this->database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+		if (!empty($groups)) {
+			return $groups;
+		} else {
+			return [];
+		}
+	}
+
+	/**
 	 * Get the groups for the current context.
 	 *
 	 * @return array An array of group information.
@@ -100,67 +133,6 @@ class groups {
 	public function get_groups() {
 		//return the groups
 		return $this->groups;
-	}
-
-	/**
-	 * Deletes one or multiple records.
-	 *
-	 * @param array $records An array of record IDs to delete, where each ID is an associative array
-	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
-	 *                       whether the corresponding checkbox was checked for deletion.
-	 *
-	 * @return void No return value; this method modifies the database state and sets a message.
-	 */
-	public function delete($records) {
-		//assign the variables
-		$this->name     = 'group';
-		$this->table    = 'groups';
-		$this->location = 'groups.php';
-
-		if (permission_exists($this->name . '_delete')) {
-
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get();
-
-			//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'], 'negative');
-				header('Location: ' . $this->location);
-				exit;
-			}
-
-			//delete multiple records
-			if (is_array($records) && @sizeof($records) != 0) {
-				//build array of checked records
-				foreach ($records as $x => $record) {
-					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-						$array[$this->table][$x][$this->name . '_uuid']        = $record['uuid'];
-						$array['group_permissions'][$x][$this->name . '_uuid'] = $record['uuid'];
-					}
-				}
-
-				//delete the checked rows
-				if (is_array($array) && @sizeof($array) != 0) {
-
-					//grant temporary permissions
-					$p = permissions::new();
-					$p->add('group_permission_delete', 'temp');
-
-					//execute delete
-					$this->database->delete($array);
-					unset($array);
-
-					//revoke temporary permissions
-					$p->delete('group_permission_delete', 'temp');
-
-					//set message
-					message::add($text['message-delete']);
-				}
-				unset($records);
-			}
-		}
 	}
 
 	/**
@@ -172,15 +144,15 @@ class groups {
 	 */
 	public function delete_members($records) {
 		//assign the variables
-		$this->name     = 'group_member';
-		$this->table    = 'user_groups';
+		$this->name = 'group_member';
+		$this->table = 'user_groups';
 		$this->location = 'group_members.php?group_uuid=' . $this->group_uuid;
 
 		if (permission_exists($this->name . '_delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -195,7 +167,7 @@ class groups {
 				//build array of checked records
 				foreach ($records as $x => $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-						$array[$this->table][$x]['user_uuid']  = $record['uuid'];
+						$array[$this->table][$x]['user_uuid'] = $record['uuid'];
 						$array[$this->table][$x]['group_uuid'] = $this->group_uuid;
 					}
 				}
@@ -223,6 +195,67 @@ class groups {
 	}
 
 	/**
+	 * Deletes one or multiple records.
+	 *
+	 * @param array $records An array of record IDs to delete, where each ID is an associative array
+	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                       whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function delete($records) {
+		//assign the variables
+		$this->name = 'group';
+		$this->table = 'groups';
+		$this->location = 'groups.php';
+
+		if (permission_exists($this->name . '_delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->location);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+				//build array of checked records
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$array[$this->table][$x][$this->name . '_uuid'] = $record['uuid'];
+						$array['group_permissions'][$x][$this->name . '_uuid'] = $record['uuid'];
+					}
+				}
+
+				//delete the checked rows
+				if (is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('group_permission_delete', 'temp');
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('group_permission_delete', 'temp');
+
+					//set message
+					message::add($text['message-delete']);
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
 	 * Toggles the state of one or more records.
 	 *
 	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
@@ -233,17 +266,17 @@ class groups {
 	 */
 	public function toggle($records) {
 		//assign the variables
-		$this->name          = 'group';
-		$this->table         = 'groups';
-		$this->toggle_field  = 'group_protected';
+		$this->name = 'group';
+		$this->table = 'groups';
+		$this->toggle_field = 'group_protected';
 		$this->toggle_values = ['true', 'false'];
-		$this->location      = 'groups.php';
+		$this->location = 'groups.php';
 
 		if (permission_exists($this->name . '_edit')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -262,11 +295,11 @@ class groups {
 					}
 				}
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$states[$row['uuid']] = $row['toggle'];
@@ -280,7 +313,7 @@ class groups {
 				foreach ($states as $uuid => $state) {
 					//create the array
 					$array[$this->table][$x][$this->name . '_uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]   = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 
 					//increment the id
 					$x++;
@@ -311,15 +344,15 @@ class groups {
 	 */
 	public function copy($records) {
 		//assign the variables
-		$this->name     = 'group';
-		$this->table    = 'groups';
+		$this->name = 'group';
+		$this->table = 'groups';
 		$this->location = 'groups.php';
 
 		if (permission_exists($this->name . '_add')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -343,11 +376,11 @@ class groups {
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
 
 					//primary table
-					$sql                       = "select * from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$y = 0;
 						foreach ($rows as $x => $row) {
@@ -356,7 +389,7 @@ class groups {
 							//convert boolean values to a string
 							foreach ($row as $key => $value) {
 								if (gettype($value) == 'boolean') {
-									$value     = $value ? 'true' : 'false';
+									$value = $value ? 'true' : 'false';
 									$row[$key] = $value;
 								}
 							}
@@ -365,19 +398,19 @@ class groups {
 							$array[$this->table][$x] = $row;
 
 							//overwrite
-							$array[$this->table][$x][$this->name . '_uuid']        = $primary_uuid;
+							$array[$this->table][$x][$this->name . '_uuid'] = $primary_uuid;
 							$array[$this->table][$x][$this->name . '_description'] = trim($row[$this->name . '_description']) . ' (' . $text['label-copy'] . ')';
 
 							//permissions sub table
-							$sql_2                      = "select * from v_group_permissions where group_uuid = :group_uuid";
+							$sql_2 = "select * from v_group_permissions where group_uuid = :group_uuid";
 							$parameters_2['group_uuid'] = $row['group_uuid'];
-							$rows_2                     = $this->database->select($sql_2, $parameters_2, 'all');
+							$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 							if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 								foreach ($rows_2 as $row_2) {
 									//convert boolean values to a string
 									foreach ($row_2 as $key => $value) {
 										if (gettype($value) == 'boolean') {
-											$value       = $value ? 'true' : 'false';
+											$value = $value ? 'true' : 'false';
 											$row_2[$key] = $value;
 										}
 									}
@@ -387,7 +420,7 @@ class groups {
 
 									//overwrite
 									$array['group_permissions'][$y]['group_permission_uuid'] = uuid();
-									$array['group_permissions'][$y]['group_uuid']            = $primary_uuid;
+									$array['group_permissions'][$y]['group_uuid'] = $primary_uuid;
 
 									//increment
 									$y++;
@@ -423,57 +456,57 @@ class groups {
 	public function defaults() {
 
 		//if the are no groups add the default groups
-		$sql    = "select * from v_groups ";
-		$sql    .= "where domain_uuid is null ";
+		$sql = "select * from v_groups ";
+		$sql .= "where domain_uuid is null ";
 		$result = $this->database->select($sql, null, 'all');
 		if (count($result) == 0) {
-			$x                                               = 0;
-			$array['groups'][$x]['group_uuid']               = uuid();
-			$array['groups'][$x]['domain_uuid']              = null;
-			$array['groups'][$x]['group_name']               = 'superadmin';
-			$array['groups'][$x]['group_level']              = '80';
-			$array['groups'][$x]['group_description']        = 'Super Administrator Group';
-			$array['groups'][$x]['group_protected']          = 'false';
+			$x = 0;
+			$array['groups'][$x]['group_uuid'] = uuid();
+			$array['groups'][$x]['domain_uuid'] = null;
+			$array['groups'][$x]['group_name'] = 'superadmin';
+			$array['groups'][$x]['group_level'] = '80';
+			$array['groups'][$x]['group_description'] = 'Super Administrator Group';
+			$array['groups'][$x]['group_protected'] = 'false';
 			$group_uuids[$array['groups'][$x]['group_name']] = $array['groups'][$x]['group_uuid'];
 			$x++;
-			$array['groups'][$x]['group_uuid']               = uuid();
-			$array['groups'][$x]['domain_uuid']              = null;
-			$array['groups'][$x]['group_name']               = 'admin';
-			$array['groups'][$x]['group_level']              = '50';
-			$array['groups'][$x]['group_description']        = 'Administrator Group';
-			$array['groups'][$x]['group_protected']          = 'false';
+			$array['groups'][$x]['group_uuid'] = uuid();
+			$array['groups'][$x]['domain_uuid'] = null;
+			$array['groups'][$x]['group_name'] = 'admin';
+			$array['groups'][$x]['group_level'] = '50';
+			$array['groups'][$x]['group_description'] = 'Administrator Group';
+			$array['groups'][$x]['group_protected'] = 'false';
 			$group_uuids[$array['groups'][$x]['group_name']] = $array['groups'][$x]['group_uuid'];
 			$x++;
-			$array['groups'][$x]['group_uuid']               = uuid();
-			$array['groups'][$x]['domain_uuid']              = null;
-			$array['groups'][$x]['group_name']               = 'user';
-			$array['groups'][$x]['group_level']              = '30';
-			$array['groups'][$x]['group_description']        = 'User Group';
-			$array['groups'][$x]['group_protected']          = 'false';
+			$array['groups'][$x]['group_uuid'] = uuid();
+			$array['groups'][$x]['domain_uuid'] = null;
+			$array['groups'][$x]['group_name'] = 'user';
+			$array['groups'][$x]['group_level'] = '30';
+			$array['groups'][$x]['group_description'] = 'User Group';
+			$array['groups'][$x]['group_protected'] = 'false';
 			$group_uuids[$array['groups'][$x]['group_name']] = $array['groups'][$x]['group_uuid'];
 			$x++;
-			$array['groups'][$x]['group_uuid']               = uuid();
-			$array['groups'][$x]['domain_uuid']              = null;
-			$array['groups'][$x]['group_name']               = 'agent';
-			$array['groups'][$x]['group_level']              = '20';
-			$array['groups'][$x]['group_description']        = 'Call Center Agent Group';
-			$array['groups'][$x]['group_protected']          = 'false';
+			$array['groups'][$x]['group_uuid'] = uuid();
+			$array['groups'][$x]['domain_uuid'] = null;
+			$array['groups'][$x]['group_name'] = 'agent';
+			$array['groups'][$x]['group_level'] = '20';
+			$array['groups'][$x]['group_description'] = 'Call Center Agent Group';
+			$array['groups'][$x]['group_protected'] = 'false';
 			$group_uuids[$array['groups'][$x]['group_name']] = $array['groups'][$x]['group_uuid'];
 			$x++;
-			$array['groups'][$x]['group_uuid']               = uuid();
-			$array['groups'][$x]['domain_uuid']              = null;
-			$array['groups'][$x]['group_name']               = 'fax';
-			$array['groups'][$x]['group_level']              = '20';
-			$array['groups'][$x]['group_description']        = 'Fax User Group';
-			$array['groups'][$x]['group_protected']          = 'false';
+			$array['groups'][$x]['group_uuid'] = uuid();
+			$array['groups'][$x]['domain_uuid'] = null;
+			$array['groups'][$x]['group_name'] = 'fax';
+			$array['groups'][$x]['group_level'] = '20';
+			$array['groups'][$x]['group_description'] = 'Fax User Group';
+			$array['groups'][$x]['group_protected'] = 'false';
 			$group_uuids[$array['groups'][$x]['group_name']] = $array['groups'][$x]['group_uuid'];
 			$x++;
-			$array['groups'][$x]['group_uuid']               = uuid();
-			$array['groups'][$x]['domain_uuid']              = null;
-			$array['groups'][$x]['group_name']               = 'public';
-			$array['groups'][$x]['group_level']              = '10';
-			$array['groups'][$x]['group_description']        = 'Public Group';
-			$array['groups'][$x]['group_protected']          = 'false';
+			$array['groups'][$x]['group_uuid'] = uuid();
+			$array['groups'][$x]['domain_uuid'] = null;
+			$array['groups'][$x]['group_name'] = 'public';
+			$array['groups'][$x]['group_level'] = '10';
+			$array['groups'][$x]['group_description'] = 'Public Group';
+			$array['groups'][$x]['group_protected'] = 'false';
 			$group_uuids[$array['groups'][$x]['group_name']] = $array['groups'][$x]['group_uuid'];
 
 			//add the temporary permissions
@@ -492,13 +525,13 @@ class groups {
 		unset($result);
 
 		//if there are no permissions listed in v_group_permissions then set the default permissions
-		$sql      = "select count(*) from v_group_permissions ";
-		$sql      .= "where domain_uuid is null ";
+		$sql = "select count(*) from v_group_permissions ";
+		$sql .= "where domain_uuid is null ";
 		$num_rows = $this->database->select($sql, null, 'column');
 		if ($num_rows == 0) {
 			//build the apps array
 			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
-			$x           = 0;
+			$x = 0;
 			foreach ($config_list as $config_path) {
 				include($config_path);
 				$x++;
@@ -510,12 +543,12 @@ class groups {
 					if (is_array($row['groups'])) foreach ($row['groups'] as $group) {
 						$x++;
 						$array['group_permissions'][$x]['group_permission_uuid'] = uuid();
-						$array['group_permissions'][$x]['domain_uuid']           = null;
-						$array['group_permissions'][$x]['permission_name']       = $row['name'];
-						$array['group_permissions'][$x]['permission_protected']  = 'false';
-						$array['group_permissions'][$x]['permission_assigned']   = 'true';
-						$array['group_permissions'][$x]['group_name']            = $group;
-						$array['group_permissions'][$x]['group_uuid']            = $group_uuids[$group];
+						$array['group_permissions'][$x]['domain_uuid'] = null;
+						$array['group_permissions'][$x]['permission_name'] = $row['name'];
+						$array['group_permissions'][$x]['permission_protected'] = 'false';
+						$array['group_permissions'][$x]['permission_assigned'] = 'true';
+						$array['group_permissions'][$x]['group_name'] = $group;
+						$array['group_permissions'][$x]['group_uuid'] = $group_uuids[$group];
 					}
 				}
 			}
@@ -537,39 +570,6 @@ class groups {
 	}
 
 	/**
-	 * Retrieves assigned user groups for a given user.
-	 *
-	 * This method executes a SQL query to retrieve the assigned user groups
-	 * for the specified domain and user. The results are returned as an array.
-	 *
-	 * @return array|null An array of assigned user groups, or null if no groups are assigned.
-	 */
-	public function assigned() {
-		$sql                       = "select ";
-		$sql                       .= "u.user_group_uuid, ";
-		$sql                       .= "u.domain_uuid, ";
-		$sql                       .= "u.user_uuid, ";
-		$sql                       .= "u.group_uuid, ";
-		$sql                       .= "g.group_name, ";
-		$sql                       .= "g.group_level ";
-		$sql                       .= "from ";
-		$sql                       .= "v_user_groups as u, ";
-		$sql                       .= "v_groups as g ";
-		$sql                       .= "where u.domain_uuid = :domain_uuid ";
-		$sql                       .= "and u.user_uuid = :user_uuid ";
-		$sql                       .= "and u.group_uuid = g.group_uuid ";
-		$parameters['domain_uuid'] = $this->domain_uuid;
-		$parameters['user_uuid']   = $this->user_uuid;
-		$groups                    = $this->database->select($sql, $parameters, 'all');
-		unset($sql, $parameters);
-		if (!empty($groups)) {
-			return $groups;
-		} else {
-			return [];
-		}
-	}
-
-	/**
 	 * Stores user data and groups in the session.
 	 *
 	 * This method populates several session variables with relevant user and group information.
@@ -577,8 +577,8 @@ class groups {
 	 * @return void
 	 */
 	public function session() {
-		$_SESSION["groups"]              = $this->groups;
-		$_SESSION["user"]["groups"]      = $this->groups;
+		$_SESSION["groups"] = $this->groups;
+		$_SESSION["user"]["groups"] = $this->groups;
 		$_SESSION["user"]["group_level"] = $this->group_level;
 	}
 }

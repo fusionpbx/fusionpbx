@@ -6,15 +6,15 @@
 
 class user {
 
-	private $database;
 	public $domain_uuid;
 	public $domain_name;
-	private $user_uuid;
-	private $permissions;
-	private $groups;
 	public $username;
 	public $user_email;
 	public $contact_uuid;
+	private $database;
+	private $user_uuid;
+	private $permissions;
+	private $groups;
 
 	/**
 	 * Constructor for the class.
@@ -67,12 +67,12 @@ class user {
 		$sql .= "and u.domain_uuid = d.domain_uuid ";
 		$sql .= "and u.user_setting_enabled = 'true' ";
 		$parameters['domain_uuid'] = $this->domain_uuid;
-		$parameters['user_uuid']   = $this->user_uuid;
+		$parameters['user_uuid'] = $this->user_uuid;
 		$row = $this->database->select($sql, $parameters, 'row');
 		if (is_array($row)) {
-			$this->domain_name  = $row['domain_name'];
-			$this->username     = $row['username'];
-			$this->user_email   = $row['user_email'];
+			$this->domain_name = $row['domain_name'];
+			$this->username = $row['username'];
+			$this->user_email = $row['user_email'];
 			$this->contact_uuid = $row['contact_uuid'];
 		}
 	}
@@ -92,19 +92,7 @@ class user {
 	/*
 	* set_permissions method sets the user assigned permissions
 	*/
-	/**
-	 * Sets the user's permissions.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function set_permissions() {
-		$this->permissions = new permissions($this->database, $this->domain_uuid, $this->user_uuid);
-	}
 
-	/*
-	* get_permissions method gets the user assigned permissions
-	*/
 	/**
 	 * Retrieves the permissions associated with this entity.
 	 *
@@ -116,20 +104,23 @@ class user {
 	}
 
 	/*
-	* set_groups method sets the user assigned groups
+	* get_permissions method gets the user assigned permissions
 	*/
+
 	/**
-	 * Sets the user's group assignments.
+	 * Sets the user's permissions.
 	 *
+	 * @access public
 	 * @return void
 	 */
-	public function set_groups() {
-		$this->groups = new groups($this->database, $this->domain_uuid, $this->user_uuid);
+	public function set_permissions() {
+		$this->permissions = new permissions($this->database, $this->domain_uuid, $this->user_uuid);
 	}
 
 	/*
-	* get_groups method gets the user assigned groups
+	* set_groups method sets the user assigned groups
 	*/
+
 	/**
 	 * Retrieves the user's groups.
 	 *
@@ -137,6 +128,19 @@ class user {
 	 */
 	public function get_groups() {
 		return $this->groups->get_groups();
+	}
+
+	/*
+	* get_groups method gets the user assigned groups
+	*/
+
+	/**
+	 * Sets the user's group assignments.
+	 *
+	 * @return void
+	 */
+	public function set_groups() {
+		$this->groups = new groups($this->database, $this->domain_uuid, $this->user_uuid);
 	}
 
 }

@@ -27,6 +27,7 @@
 
 /**
  * Database class
+ *
  * @property $name Alias of app_name
  */
 class database {
@@ -35,7 +36,20 @@ class database {
 	 *
 	 */
 	const TABLE_PREFIX = "v_";
-
+	/**
+	 * Stores the application built from the app_config files.
+	 *
+	 * @see    $apps
+	 * @access private
+	 * @var array
+	 */
+	private static $apps = [];
+	/**
+	 * Singleton type class
+	 *
+	 * @var database
+	 */
+	private static $database;
 	/**
 	 * Database connection
 	 *
@@ -43,7 +57,6 @@ class database {
 	 * @var PDO object
 	 */
 	public $db;
-
 	/**
 	 * Driver to use.
 	 *
@@ -51,7 +64,6 @@ class database {
 	 * @var string Can be pgsql, mysql, sqlite, odbc
 	 */
 	public $driver;
-
 	/**
 	 * Alias of driver.
 	 *
@@ -60,7 +72,6 @@ class database {
 	 * @var string Can be pgsql, mysql, sqlite, odbc
 	 */
 	public $type;
-
 	/**
 	 * Host for database connection
 	 *
@@ -68,7 +79,6 @@ class database {
 	 * @var string host name or IP address.
 	 */
 	public $host;
-
 	/**
 	 * Port number
 	 *
@@ -76,7 +86,6 @@ class database {
 	 * @var int 1025 - 65534
 	 */
 	public $port;
-
 	/**
 	 * Database name
 	 *
@@ -84,7 +93,6 @@ class database {
 	 * @var string
 	 */
 	public $db_name;
-
 	/**
 	 * Database security
 	 *
@@ -92,7 +100,6 @@ class database {
 	 * @var boolean
 	 */
 	public $db_secure;
-
 	/**
 	 * Specifies the file name of the client SSL certificate
 	 *
@@ -100,7 +107,6 @@ class database {
 	 * @var string full path
 	 */
 	public $db_cert_authority;
-
 	/**
 	 * Username used to connect
 	 *
@@ -108,7 +114,6 @@ class database {
 	 * @var string
 	 */
 	public $username;
-
 	/**
 	 * Password used to connect
 	 *
@@ -116,24 +121,14 @@ class database {
 	 * @var string
 	 */
 	public $password;
-
 	/**
 	 * Full path to file name.
 	 *
 	 * @access public
 	 * @var string full path to file name
 	 */
-	public $path;
-
-	/**
-	 * Table name.
-	 *
-	 * @access private
-	 * @var string sanitized
-	 */
-	private $table;
-
-	/**
+	public $path; //array
+/**
 	 * Where clause(s) of an SQL statement.
 	 * <p>Array of arrays must be passed with each having the
 	 * following keys:
@@ -153,8 +148,7 @@ class database {
 	 * @var array Two dimensional array of key value pairs
 	 */
 	public $where; //array
-
-	/**
+/**
 	 * Order By clause(s) of an SQL statement.
 	 * <p>Array of arrays must be passed with each having the
 	 * following keys:
@@ -173,8 +167,7 @@ class database {
 	 * @see    $where
 	 * @var array Two dimensional array of key value pairs
 	 */
-	public $order_by; //array
-
+	public $order_by;
 	/**
 	 * Ascending or Descending order.
 	 *
@@ -182,7 +175,6 @@ class database {
 	 * @access public
 	 */
 	public $order_type;
-
 	/**
 	 * Numerical value to limit returned results.
 	 *
@@ -190,7 +182,6 @@ class database {
 	 * @access public
 	 */
 	public $limit;
-
 	/**
 	 * Numerical value to offset returned results.
 	 *
@@ -198,7 +189,6 @@ class database {
 	 * @access public
 	 */
 	public $offset;
-
 	/**
 	 * <p>Array of fields.</p>
 	 * <p>Fields are specified in 'name'=>'value' format.
@@ -210,7 +200,6 @@ class database {
 	 * @var array Array of columns
 	 */
 	public $fields;
-
 	/**
 	 * Unknown property
 	 *
@@ -218,7 +207,6 @@ class database {
 	 * @access public
 	 */
 	public $count;
-
 	/**
 	 * Unknown property
 	 *
@@ -226,24 +214,6 @@ class database {
 	 * @access public
 	 */
 	public $sql;
-
-	/**
-	 * <p>Stores the result from the most recent query. The type will be based on what was requested.</p>
-	 * <p><b>NOTE:</b> If an error occurred on the last query the result is set to an empty string.</p>
-	 *
-	 * @var mixed
-	 */
-	private $result;
-
-	/**
-	 * Stores the application built from the app_config files.
-	 *
-	 * @see    $apps
-	 * @access private
-	 * @var array
-	 */
-	private static $apps = [];
-
 	/**
 	 * Stores the application name making the request.
 	 *
@@ -251,7 +221,6 @@ class database {
 	 * @access public
 	 */
 	public $name;
-
 	/**
 	 * Stores the application name making the request.
 	 *
@@ -260,7 +229,6 @@ class database {
 	 * @var string App name making database request.
 	 */
 	public $app_name;
-
 	/**
 	 * Stores the application UUID making the request.
 	 *
@@ -269,7 +237,6 @@ class database {
 	 * @var string
 	 */
 	public $app_uuid;
-
 	/**
 	 * <p>Stores the domain UUID making the request.</p>
 	 * <p>This is defaulted to the Session domain UUID.</p>
@@ -279,7 +246,6 @@ class database {
 	 * @var string Domain UUID making request.
 	 */
 	public $domain_uuid;
-
 	/**
 	 * <p>Stores the user UUID making the request.</p>
 	 * <p>This is defaulted to the Session domain UUID.</p>
@@ -289,7 +255,6 @@ class database {
 	 * @var string Domain UUID making request.
 	 */
 	public $user_uuid;
-
 	/**
 	 * <p>Message for the query results.</p>
 	 *
@@ -297,27 +262,32 @@ class database {
 	 * @access private
 	 */
 	public $message;
-
-	/**
-	 * Config object used to get the database connection params
-	 *
-	 * @var config
-	 */
-	private $config;
-
 	/**
 	 * SSL Mode used to connect to the database
 	 *
 	 * @var string prefer or verify-ca. Default is 'prefer'
 	 */
 	public $ssl_mode;
-
 	/**
-	 * Singleton type class
+	 * Table name.
 	 *
-	 * @var database
+	 * @access private
+	 * @var string sanitized
 	 */
-	private static $database;
+	private $table;
+	/**
+	 * <p>Stores the result from the most recent query. The type will be based on what was requested.</p>
+	 * <p><b>NOTE:</b> If an error occurred on the last query the result is set to an empty string.</p>
+	 *
+	 * @var mixed
+	 */
+	private $result;
+	/**
+	 * Config object used to get the database connection params
+	 *
+	 * @var config
+	 */
+	private $config;
 
 	/**
 	 * Constructor for the class.
@@ -337,16 +307,16 @@ class database {
 		}
 
 		//driver and type point to the same value
-		$this->driver            = $config->get('database.0.type', 'pgsql');
-		$this->type              = $config->get('database.0.type', 'pgsql');
-		$this->host              = $config->get('database.0.host', '127.0.0.1');
-		$this->port              = $config->get('database.0.port', '5432');
-		$this->username          = $config->get('database.0.username', 'fusionpbx');
-		$this->password          = $config->get('database.0.password', 'fusionpbx');
-		$this->db_name           = $config->get('database.0.name', 'fusionpbx');
-		$this->db_secure         = $config->get('database.0.secure', '');
+		$this->driver = $config->get('database.0.type', 'pgsql');
+		$this->type = $config->get('database.0.type', 'pgsql');
+		$this->host = $config->get('database.0.host', '127.0.0.1');
+		$this->port = $config->get('database.0.port', '5432');
+		$this->username = $config->get('database.0.username', 'fusionpbx');
+		$this->password = $config->get('database.0.password', 'fusionpbx');
+		$this->db_name = $config->get('database.0.name', 'fusionpbx');
+		$this->db_secure = $config->get('database.0.secure', '');
 		$this->db_cert_authority = $config->get('database.0.cert_authority', '');
-		$this->ssl_mode          = $config->get('database.0.ssl_mode', '');
+		$this->ssl_mode = $config->get('database.0.ssl_mode', '');
 
 		//save the reference to the single instance of the config to this object
 		$this->config = $config;
@@ -370,6 +340,357 @@ class database {
 		} elseif (!empty($_SESSION['domain_uuid'])) {
 			//use the session when available
 			$this->domain_uuid = $_SESSION['domain_uuid'];
+		}
+	}
+
+	/**
+	 * <p>Connect to the database.</p>
+	 * <p>Database driver must be set before calling connect.</p>
+	 * <p>For types other than sqlite. Execution will stop on failure.</p>
+	 *
+	 * @depends database::driver Alias of database::type.
+	 *
+	 */
+	public function connect() {
+
+		//get the database connection settings
+		//$db_type = $conf['database.0.type'];
+		//$db_host = $conf['database.0.host'];
+		//$db_port = $conf['database.0.port'];
+		//$db_name = $conf['database.0.name'];
+		//$db_username = $conf['database.0.username'];
+		//$db_password = $conf['database.0.password'];
+
+		//debug info
+		//echo "db type:".$db_type."\n";
+		//echo "db host:".$db_host."\n";
+		//echo "db port:".$db_port."\n";
+		//echo "db name:".$db_name."\n";
+		//echo "db username:".$db_username."\n";
+		//echo "db password:".$db_password."\n";
+		//echo "db path:".$db_path."\n";
+		//echo "</pre>\n";
+
+		//set defaults
+		if (!isset($this->driver) && isset($db_type)) {
+			$this->driver = $db_type;
+		}
+		if (!isset($this->type) && isset($db_type)) {
+			$this->type = $db_type;
+		}
+		if (!isset($this->host) && isset($db_host)) {
+			$this->host = $db_host;
+		}
+		if (!isset($this->port) && isset($db_port)) {
+			$this->port = $db_port;
+		}
+		if (!isset($this->db_name) && isset($db_name)) {
+			$this->db_name = $db_name;
+		}
+		if (!isset($this->db_secure) && isset($db_secure)) {
+			$this->db_secure = $db_secure;
+		} else {
+			$this->db_secure = false;
+		}
+		if (!isset($this->username) && isset($db_username)) {
+			$this->username = $db_username;
+		}
+		if (!isset($this->password) && isset($db_password)) {
+			$this->password = $db_password;
+		}
+		if (!isset($this->path) && isset($db_path)) {
+			$this->path = $db_path;
+		}
+
+		if ($this->driver == "sqlite") {
+			if (empty($this->db_name)) {
+				$server_name = $_SERVER["SERVER_NAME"];
+				$server_name = str_replace("www.", "", $server_name);
+				$db_name_short = $server_name;
+				$this->db_name = $server_name . '.db';
+			} else {
+				$db_name_short = $this->db_name;
+			}
+			$this->path = realpath($this->path);
+			if (file_exists($this->path . '/' . $this->db_name)) {
+				//connect to the database
+				$this->db = new PDO('sqlite:' . $this->path . '/' . $this->db_name); //sqlite 3
+				//PRAGMA commands
+				$this->db->query('PRAGMA foreign_keys = ON;');
+				$this->db->query('PRAGMA journal_mode = wal;');
+				//add additional functions to SQLite so that they are accessible inside SQL
+				//bool PDO::sqliteCreateFunction ( string function_name, callback callback [, int num_args] )
+				$this->db->sqliteCreateFunction('md5', 'php_md5', 1);
+				$this->db->sqliteCreateFunction('unix_timestamp', 'php_unix_timestamp', 1);
+				$this->db->sqliteCreateFunction('now', 'php_now', 0);
+				$this->db->sqliteCreateFunction('sqlitedatatype', 'php_sqlite_data_type', 2);
+				$this->db->sqliteCreateFunction('strleft', 'php_left', 2);
+				$this->db->sqliteCreateFunction('strright', 'php_right', 2);
+			} else {
+				$error_message = "file not found";
+				$message['message'] = $error_message;
+				$this->message = $message;
+				return false;
+			}
+		}
+
+		if ($this->driver == "mysql") {
+			try {
+				//mysql pdo connection
+				if (strlen($this->host) == 0 && empty($this->port)) {
+					//if both host and port are empty use the unix socket
+					$this->db = new PDO("mysql:host=$this->host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$this->db_name", $this->username, $this->password);
+				} else {
+					if (empty($this->port)) {
+						//leave out port if it is empty
+						$this->db = new PDO("mysql:host=$this->host;dbname=$this->db_name;", $this->username, $this->password, [
+							PDO::ATTR_ERRMODE,
+							PDO::ERRMODE_EXCEPTION,
+						]);
+					} else {
+						$this->db = new PDO("mysql:host=$this->host;port=$this->port;dbname=$this->db_name;", $this->username, $this->password, [
+							PDO::ATTR_ERRMODE,
+							PDO::ERRMODE_EXCEPTION,
+						]);
+					}
+				}
+			} catch (PDOException $e) {
+				$message['message'] = $e->getMessage();
+				$message['code'] = $e->getCode();
+				$message['line'] = $e->getLine();
+				$message['file'] = $e->getFile();
+				$message['trace'] = $e->getTraceAsString();
+				$message['debug'] = debug_backtrace();
+				$this->message = $message;
+				return false;
+			}
+		}
+
+		if ($this->driver == "pgsql") {
+			//database connection
+			try {
+				if (!empty($this->host)) {
+					if (empty($this->port)) {
+						$this->port = "5432";
+					}
+					if ($this->db_secure === true) {
+						$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password sslmode=$this->ssl_mode sslrootcert=$this->db_cert_authority");
+					} else {
+						$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password");
+					}
+				} else {
+					$this->db = new PDO("pgsql:dbname=$this->db_name user=$this->username password=$this->password");
+				}
+			} catch (PDOException $e) {
+				$message['message'] = $e->getMessage();
+				$message['code'] = $e->getCode();
+				$message['line'] = $e->getLine();
+				$message['file'] = $e->getFile();
+				$message['trace'] = $e->getTraceAsString();
+				$message['debug'] = debug_backtrace();
+				$this->message = $message;
+				return false;
+			}
+		}
+
+		if ($this->driver == "odbc") {
+			//database connection
+			try {
+				$this->db = new PDO("odbc:" . $this->db_name, $this->username, $this->password);
+			} catch (PDOException $e) {
+				$message['message'] = $e->getMessage();
+				$message['code'] = $e->getCode();
+				$message['line'] = $e->getLine();
+				$message['file'] = $e->getFile();
+				$message['trace'] = $e->getTraceAsString();
+				$message['debug'] = debug_backtrace();
+				$this->message = $message;
+				return false;
+			}
+		}
+
+		//connected to the database
+		return true;
+	}
+
+	/**
+	 * Returns the depth of an array
+	 *
+	 * @param array $array Reference to array
+	 *
+	 * @return int Depth of array
+	 * @internal Moved to class to conserve resources.
+	 */
+	public static function array_depth(array &$array) {
+		$depth = 0;
+		if (is_array($array)) {
+			$depth++;
+			foreach ($array as $value) {
+				if (is_array($value)) {
+					$depth = self::array_depth($value) + 1;
+				}
+			}
+		}
+		return $depth;
+	}
+
+	/**
+	 * Searches through all fields to see if domain_uuid exists
+	 *
+	 * @param string $name
+	 *
+	 * @return boolean <b>true</b> on success and <b>false</b> on failure
+	 * @see  database::get_apps()
+	 * @uses self::$apps directly
+	 */
+	public static function domain_uuid_exists($name) {
+		//get the $apps array from the installed apps from the core and mod directories
+		if (count(self::$apps) == 0) {
+			self::get_apps();
+		}
+
+		//search through all fields to see if domain_uuid exists
+		foreach (self::$apps as $x => &$app) {
+			if (is_array($app['db'])) {
+				foreach ($app['db'] as $y => $row) {
+					if (is_array($row['table']['name'])) {
+						$table_name = $row['table']['name']['text'];
+					} else {
+						$table_name = $row['table']['name'];
+					}
+					if ($table_name === self::TABLE_PREFIX . $name) {
+						if (is_array($row['fields'])) {
+							foreach ($row['fields'] as $field) {
+								if ($field['name'] == "domain_uuid") {
+									return true;
+								}
+							} //foreach
+						} //is array
+					}
+				} //foreach
+			} //is array
+		} //foreach
+
+		//not found
+		return false;
+	}
+
+	/**
+	 * Returns a new connected database object.<br>
+	 * <p>This allows a shortcut for a common syntax. For more information
+	 * on how the connection happens see {@link database::__construct()} and
+	 * {@link database::connect()}</p>
+	 * <p><b>Usage:</b><br>
+	 * <code>&nbsp; $database_object = database::new();</code></p>
+	 *
+	 * @return database the new instance of the database object already connected
+	 * @see database::__construct()
+	 * @see database::connect()
+	 */
+	public static function new(array $params = []) {
+
+		//re-use the database connection
+		if (self::$database === null) {
+			self::$database = new database($params);
+			if (!self::$database->is_connected()) {
+				self::$database->connect();
+			}
+		}
+
+		//set the user_uuid
+		if (!empty($params['user_uuid'])) {
+			//use the parameter as the first priority when available
+			self::$database->user_uuid = $params['user_uuid'];
+		} elseif (!empty($_SESSION['user_uuid'])) {
+			//use the session when available
+			self::$database->user_uuid = $_SESSION['user_uuid'];
+		}
+
+		//set the domain_uuid
+		if (!empty($params['domain_uuid'])) {
+			//use the parameter as the first priority when available
+			self::$database->domain_uuid = $params['domain_uuid'];
+		} elseif (!empty($_SESSION['domain_uuid'])) {
+			//use the session when available
+			self::$database->domain_uuid = $_SESSION['domain_uuid'];
+		}
+
+		return self::$database;
+	}
+
+	/**
+	 * Ensure the database is still connected and active.
+	 * <p>NOTE:<br>
+	 * There is no method in PDO that can reliably detect if the connection is active. Therefore, a lightweight
+	 * query is executed using the statement <code>select 1</code>.</p>
+	 *
+	 * @return bool True if the database is connected. False otherwise.
+	 */
+	public function is_connected(): bool {
+		try {
+			$stmt = false;
+			if ($this->db !== null) $stmt = $this->db->query('SELECT 1');
+			return $stmt !== false;
+		} catch (PDOException $ex) {
+			//database is not connected
+			return false;
+		} catch (Exception $e) {
+			//some other error has occurred, so record it
+			$message['message'] = $e->getMessage();
+			$message['code'] = $e->getCode();
+			$message['line'] = $e->getLine();
+			$message['file'] = $e->getFile();
+			$message['trace'] = $e->getTraceAsString();
+			$message['debug'] = debug_backtrace();
+			$this->message = $message;
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Magic function called whenever a property is requested.
+	 * <p>If any case statement is removed then access to the variable will be removed.</p>
+	 *
+	 * @param mixed $name object property
+	 *
+	 * @return mixed
+	 */
+	public function __get($name) {
+		//remove any case statement below to remove access to the variable
+		switch ($name) {
+			case 'name':
+				return $this->app_name;
+			case 'app_name':
+			case 'app_uuid':
+			case 'db':
+			case 'db_cert_authority':
+			case 'db_name':
+			case 'db_secure':
+			case 'domain_uuid':
+			case 'driver':
+			case 'fields':
+			case 'host':
+			case 'limit':
+			case 'message':
+			case 'offset':
+			case 'order_by':
+			case 'order_type':
+			case 'password':
+			case 'path':
+			case 'port':
+			case 'result':
+			case 'sql':
+			case 'table':
+			case 'type':
+			case 'username':
+			case 'where':
+			case 'debug':
+				return $this->{$name};
+			case 'count':
+				return $this->count();
+			default:
+				trigger_error('Object property not available', E_USER_ERROR);
 		}
 	}
 
@@ -444,7 +765,7 @@ class database {
 					case 'mysql':
 					case 'sqlite':
 					case 'odbc':
-						$this->type   = $value;
+						$this->type = $value;
 						$this->driver = $value;
 						break;
 					default:
@@ -472,50 +793,149 @@ class database {
 	}
 
 	/**
-	 * Magic function called whenever a property is requested.
-	 * <p>If any case statement is removed then access to the variable will be removed.</p>
+	 * Returns a sanitized string value safe for the database or table name.
 	 *
-	 * @param mixed $name object property
+	 * @param string $value To be sanitized
 	 *
-	 * @return mixed
+	 * @return string Sanitized using preg_replace('#[^a-zA-Z0-9_\-]#', '')
+	 * @see preg_replace()
 	 */
-	public function __get($name) {
-		//remove any case statement below to remove access to the variable
-		switch ($name) {
-			case 'name':
-				return $this->app_name;
-			case 'app_name':
-			case 'app_uuid':
-			case 'db':
-			case 'db_cert_authority':
-			case 'db_name':
-			case 'db_secure':
-			case 'domain_uuid':
-			case 'driver':
-			case 'fields':
-			case 'host':
-			case 'limit':
-			case 'message':
-			case 'offset':
-			case 'order_by':
-			case 'order_type':
-			case 'password':
-			case 'path':
-			case 'port':
-			case 'result':
-			case 'sql':
-			case 'table':
-			case 'type':
-			case 'username':
-			case 'where':
-			case 'debug':
-				return $this->{$name};
-			case 'count':
-				return $this->count();
-			default:
-				trigger_error('Object property not available', E_USER_ERROR);
+	public static function sanitize(string $value) {
+		return preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
+	}
+
+/**
+	 * Counts the number of rows.
+	 *
+	 * @return int Represents the number of counted rows or -1 if failed.
+	 */
+	public function count() {
+
+		//connect to the database if needed
+		if (!$this->db) {
+			$this->connect();
+		}
+
+		//return if the table name is not set
+		if (empty($this->table)) {
+			return;
+		}
+
+		//sanitize the table name
+		//$this->table = self::sanitize($this->table); // no longer needed
+
+		//get the number of rows
+		$sql = "select count(*) as num_rows from " . $this->table . " ";
+		$i = 0;
+		if (is_array($this->where)) {
+			foreach ($this->where as $row) {
+				//sanitize the name
+				$row['name'] = self::sanitize($row['name']);
+
+				//validate the operator
+				switch ($row['operator']) {
+					case "<":
+						break;
+					case ">":
+						break;
+					case "<=":
+						break;
+					case ">=":
+						break;
+					case "=":
+						break;
+					case "<>":
+						break;
+					case "!=":
+						break;
+					default:
+						//invalid operator
+						return -1;
+				}
+
+				//build the sql
+				if ($i == 0) {
+					$sql .= "where " . $row['name'] . " " . $row['operator'] . " :" . $row['name'] . " ";
+				} else {
+					$sql .= "and " . $row['name'] . " " . $row['operator'] . " :" . $row['name'] . " ";
+				}
+
+				//add the name and value to the params array
+				$params[$row['name']] = $row['value'];
+
+				//increment $i
+				$i++;
+			}
+		}
+
+		//unset($this->where); //should not be objects resposibility
+		$prep_statement = $this->db->prepare($sql);
+		if ($prep_statement) {
+			if (!isset($params)) {
+				$params = null;
+			}
+			$prep_statement->execute($params);
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			if ($row['num_rows'] > 0) {
+				return $row['num_rows'];
+			} else {
+				return 0;
+			}
+		}
+		unset($prep_statement);
+
+	}
+
+	public function execute($sql, $parameters = null, $return_type = 'all') {
+
+		//connect to the database if needed
+		if (!$this->db) {
+			$this->connect();
+		}
+
+		//set the error mode
+		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		//run the query, and return the results
+		try {
+			$prep_statement = $this->db->prepare($sql);
+			if (is_array($parameters)) {
+				$prep_statement->execute($parameters);
+			} else {
+				$prep_statement->execute();
+			}
+			$message["message"] = "OK";
+			$message["code"] = "200";
+			$message["sql"] = $sql;
+			if (is_array($parameters)) {
+				$message["parameters"] = $parameters;
+			}
+			$this->message = $message;
+
+			//return the results
+			switch ($return_type) {
+				case 'all':
+					return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+				case 'row':
+					return $prep_statement->fetch(PDO::FETCH_ASSOC);
+				case 'column';
+					return $prep_statement->fetchColumn();
+				default:
+					return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+			}
+		} catch (PDOException $e) {
+			$message['message'] = $e->getMessage();
+			$message['code'] = $e->getCode();
+			$message['line'] = $e->getLine();
+			$message['file'] = $e->getFile();
+			$message['trace'] = $e->getTraceAsString();
+			$message['debug'] = debug_backtrace();
+			$this->message = $message;
+			return false;
 		}
 	}
+
+	// Use this function to run complex queries
 
 	/**
 	 * Returns the config object used to create this database object
@@ -526,177 +946,7 @@ class database {
 		return $this->config;
 	}
 
-	/**
-	 * <p>Connect to the database.</p>
-	 * <p>Database driver must be set before calling connect.</p>
-	 * <p>For types other than sqlite. Execution will stop on failure.</p>
-	 *
-	 * @depends database::driver Alias of database::type.
-	 *
-	 */
-	public function connect() {
-
-		//get the database connection settings
-		//$db_type = $conf['database.0.type'];
-		//$db_host = $conf['database.0.host'];
-		//$db_port = $conf['database.0.port'];
-		//$db_name = $conf['database.0.name'];
-		//$db_username = $conf['database.0.username'];
-		//$db_password = $conf['database.0.password'];
-
-		//debug info
-		//echo "db type:".$db_type."\n";
-		//echo "db host:".$db_host."\n";
-		//echo "db port:".$db_port."\n";
-		//echo "db name:".$db_name."\n";
-		//echo "db username:".$db_username."\n";
-		//echo "db password:".$db_password."\n";
-		//echo "db path:".$db_path."\n";
-		//echo "</pre>\n";
-
-		//set defaults
-		if (!isset($this->driver) && isset($db_type)) {
-			$this->driver = $db_type;
-		}
-		if (!isset($this->type) && isset($db_type)) {
-			$this->type = $db_type;
-		}
-		if (!isset($this->host) && isset($db_host)) {
-			$this->host = $db_host;
-		}
-		if (!isset($this->port) && isset($db_port)) {
-			$this->port = $db_port;
-		}
-		if (!isset($this->db_name) && isset($db_name)) {
-			$this->db_name = $db_name;
-		}
-		if (!isset($this->db_secure) && isset($db_secure)) {
-			$this->db_secure = $db_secure;
-		} else {
-			$this->db_secure = false;
-		}
-		if (!isset($this->username) && isset($db_username)) {
-			$this->username = $db_username;
-		}
-		if (!isset($this->password) && isset($db_password)) {
-			$this->password = $db_password;
-		}
-		if (!isset($this->path) && isset($db_path)) {
-			$this->path = $db_path;
-		}
-
-		if ($this->driver == "sqlite") {
-			if (empty($this->db_name)) {
-				$server_name   = $_SERVER["SERVER_NAME"];
-				$server_name   = str_replace("www.", "", $server_name);
-				$db_name_short = $server_name;
-				$this->db_name = $server_name . '.db';
-			} else {
-				$db_name_short = $this->db_name;
-			}
-			$this->path = realpath($this->path);
-			if (file_exists($this->path . '/' . $this->db_name)) {
-				//connect to the database
-				$this->db = new PDO('sqlite:' . $this->path . '/' . $this->db_name); //sqlite 3
-				//PRAGMA commands
-				$this->db->query('PRAGMA foreign_keys = ON;');
-				$this->db->query('PRAGMA journal_mode = wal;');
-				//add additional functions to SQLite so that they are accessible inside SQL
-				//bool PDO::sqliteCreateFunction ( string function_name, callback callback [, int num_args] )
-				$this->db->sqliteCreateFunction('md5', 'php_md5', 1);
-				$this->db->sqliteCreateFunction('unix_timestamp', 'php_unix_timestamp', 1);
-				$this->db->sqliteCreateFunction('now', 'php_now', 0);
-				$this->db->sqliteCreateFunction('sqlitedatatype', 'php_sqlite_data_type', 2);
-				$this->db->sqliteCreateFunction('strleft', 'php_left', 2);
-				$this->db->sqliteCreateFunction('strright', 'php_right', 2);
-			} else {
-				$error_message      = "file not found";
-				$message['message'] = $error_message;
-				$this->message      = $message;
-				return false;
-			}
-		}
-
-		if ($this->driver == "mysql") {
-			try {
-				//mysql pdo connection
-				if (strlen($this->host) == 0 && empty($this->port)) {
-					//if both host and port are empty use the unix socket
-					$this->db = new PDO("mysql:host=$this->host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$this->db_name", $this->username, $this->password);
-				} else {
-					if (empty($this->port)) {
-						//leave out port if it is empty
-						$this->db = new PDO("mysql:host=$this->host;dbname=$this->db_name;", $this->username, $this->password, [
-							PDO::ATTR_ERRMODE,
-							PDO::ERRMODE_EXCEPTION,
-						]);
-					} else {
-						$this->db = new PDO("mysql:host=$this->host;port=$this->port;dbname=$this->db_name;", $this->username, $this->password, [
-							PDO::ATTR_ERRMODE,
-							PDO::ERRMODE_EXCEPTION,
-						]);
-					}
-				}
-			} catch (PDOException $e) {
-				$message['message'] = $e->getMessage();
-				$message['code']    = $e->getCode();
-				$message['line']    = $e->getLine();
-				$message['file']    = $e->getFile();
-				$message['trace']   = $e->getTraceAsString();
-				$message['debug']   = debug_backtrace();
-				$this->message      = $message;
-				return false;
-			}
-		}
-
-		if ($this->driver == "pgsql") {
-			//database connection
-			try {
-				if (!empty($this->host)) {
-					if (empty($this->port)) {
-						$this->port = "5432";
-					}
-					if ($this->db_secure === true) {
-						$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password sslmode=$this->ssl_mode sslrootcert=$this->db_cert_authority");
-					} else {
-						$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password");
-					}
-				} else {
-					$this->db = new PDO("pgsql:dbname=$this->db_name user=$this->username password=$this->password");
-				}
-			} catch (PDOException $e) {
-				$message['message'] = $e->getMessage();
-				$message['code']    = $e->getCode();
-				$message['line']    = $e->getLine();
-				$message['file']    = $e->getFile();
-				$message['trace']   = $e->getTraceAsString();
-				$message['debug']   = debug_backtrace();
-				$this->message      = $message;
-				return false;
-			}
-		}
-
-		if ($this->driver == "odbc") {
-			//database connection
-			try {
-				$this->db = new PDO("odbc:" . $this->db_name, $this->username, $this->password);
-			} catch (PDOException $e) {
-				$message['message'] = $e->getMessage();
-				$message['code']    = $e->getCode();
-				$message['line']    = $e->getLine();
-				$message['file']    = $e->getFile();
-				$message['trace']   = $e->getTraceAsString();
-				$message['debug']   = debug_backtrace();
-				$this->message      = $message;
-				return false;
-			}
-		}
-
-		//connected to the database
-		return true;
-	}
-
-	/**
+		/**
 	 * Returns the table names from the database.
 	 *
 	 * @return array tables
@@ -739,65 +989,15 @@ class database {
 		if ($this->type == "mysql") {
 			if (is_array($tmp)) {
 				foreach ($tmp as $row) {
-					$table_array      = array_values($row);
+					$table_array = array_values($row);
 					$result[]['name'] = $table_array[0];
 				}
 			}
 		}
 		return $result;
-	}
+	} //delete
 
-	/**
-	 * Returns table information from the database.
-	 *
-	 * @return array table info
-	 * @depends connect()
-	 */
-	public function table_info() {
-		//public $db;
-		//public $type;
-		//public $table;
-		//public $name;
-
-		//connect to the database if needed
-		if (!$this->db) {
-			$this->connect();
-		}
-
-		//get the table info
-		if (empty($this->table)) {
-			return false;
-		}
-		if ($this->type == "sqlite") {
-			$sql = "PRAGMA table_info(" . $this->table . ");";
-		}
-		if ($this->type == "pgsql") {
-			$sql = "SELECT ordinal_position, ";
-			$sql .= "column_name, ";
-			$sql .= "data_type, ";
-			$sql .= "column_default, ";
-			$sql .= "is_nullable, ";
-			$sql .= "character_maximum_length, ";
-			$sql .= "numeric_precision ";
-			$sql .= "FROM information_schema.columns ";
-			$sql .= "WHERE table_name = '" . $this->table . "' ";
-			$sql .= "and table_catalog = '" . $this->db_name . "' ";
-			$sql .= "ORDER BY ordinal_position; ";
-		}
-		if ($this->type == "mysql") {
-			$sql = "DESCRIBE " . $this->table . ";";
-		}
-		if ($this->type == "mssql") {
-			$sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" . $this->table . "'";
-		}
-		$prep_statement = $this->db->prepare($sql);
-		$prep_statement->execute();
-
-		//set the result array
-		return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	}
-
-	/**
+		/**
 	 * Checks if the table exists in the database.
 	 * <p><b>Note:</b><br>
 	 * Table name must be sanitized. Otherwise, a warning will be
@@ -822,12 +1022,12 @@ class database {
 		//if unable to connect to the database
 		if (!$this->db) {
 			$message['message'] = 'Unable to connect to database';
-			$message['code']    = '500';
-			$message['line']    = __LINE__;
-			$message['file']    = __FILE__;
-			$message['trace']   = '';
-			$message['debug']   = debug_backtrace();
-			$this->message      = $message;
+			$message['code'] = '500';
+			$message['line'] = __LINE__;
+			$message['file'] = __FILE__;
+			$message['trace'] = '';
+			$message['debug'] = debug_backtrace();
+			$this->message = $message;
 			return false;
 		}
 
@@ -850,9 +1050,9 @@ class database {
 		} else {
 			return false; //table doesn't exist
 		}
-	}
+	} //count
 
-	/**
+		/**
 	 * Checks if the column exists in the database.
 	 * <p><b>Note:</b><br>
 	 * Tables and Column names must be sanitized. Otherwise, a warning will be
@@ -933,7 +1133,7 @@ class database {
 			unset ($prep_statement);
 		}
 
-	}
+	} //select
 
 	/**
 	 * Queries {@link database::table_info()} to return the fields.
@@ -989,6 +1189,56 @@ class database {
 	}
 
 	/**
+	 * Returns table information from the database.
+	 *
+	 * @return array table info
+	 * @depends connect()
+	 */
+	public function table_info() {
+		//public $db;
+		//public $type;
+		//public $table;
+		//public $name;
+
+		//connect to the database if needed
+		if (!$this->db) {
+			$this->connect();
+		}
+
+		//get the table info
+		if (empty($this->table)) {
+			return false;
+		}
+		if ($this->type == "sqlite") {
+			$sql = "PRAGMA table_info(" . $this->table . ");";
+		}
+		if ($this->type == "pgsql") {
+			$sql = "SELECT ordinal_position, ";
+			$sql .= "column_name, ";
+			$sql .= "data_type, ";
+			$sql .= "column_default, ";
+			$sql .= "is_nullable, ";
+			$sql .= "character_maximum_length, ";
+			$sql .= "numeric_precision ";
+			$sql .= "FROM information_schema.columns ";
+			$sql .= "WHERE table_name = '" . $this->table . "' ";
+			$sql .= "and table_catalog = '" . $this->db_name . "' ";
+			$sql .= "ORDER BY ordinal_position; ";
+		}
+		if ($this->type == "mysql") {
+			$sql = "DESCRIBE " . $this->table . ";";
+		}
+		if ($this->type == "mssql") {
+			$sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" . $this->table . "'";
+		}
+		$prep_statement = $this->db->prepare($sql);
+		$prep_statement->execute();
+
+		//set the result array
+		return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+		/**
 	 * Searches database using the following object properties:
 	 * <ol>
 	 *  <li>table - sanitized name of the table {@see database::table}</li>
@@ -1063,7 +1313,7 @@ class database {
 		}
 		if (is_array($this->order_by)) {
 			$sql .= "order by ";
-			$i   = 1;
+			$i = 1;
 			if (is_array($this->order_by)) {
 				foreach ($this->order_by as $row) {
 					//sanitize the name
@@ -1110,57 +1360,7 @@ class database {
 		} else {
 			return false;
 		}
-	}
-
-	// Use this function to run complex queries
-	public function execute($sql, $parameters = null, $return_type = 'all') {
-
-		//connect to the database if needed
-		if (!$this->db) {
-			$this->connect();
-		}
-
-		//set the error mode
-		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-		//run the query, and return the results
-		try {
-			$prep_statement = $this->db->prepare($sql);
-			if (is_array($parameters)) {
-				$prep_statement->execute($parameters);
-			} else {
-				$prep_statement->execute();
-			}
-			$message["message"] = "OK";
-			$message["code"]    = "200";
-			$message["sql"]     = $sql;
-			if (is_array($parameters)) {
-				$message["parameters"] = $parameters;
-			}
-			$this->message = $message;
-
-			//return the results
-			switch ($return_type) {
-				case 'all':
-					return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-				case 'row':
-					return $prep_statement->fetch(PDO::FETCH_ASSOC);
-				case 'column';
-					return $prep_statement->fetchColumn();
-				default:
-					return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-			}
-		} catch (PDOException $e) {
-			$message['message'] = $e->getMessage();
-			$message['code']    = $e->getCode();
-			$message['line']    = $e->getLine();
-			$message['file']    = $e->getFile();
-			$message['trace']   = $e->getTraceAsString();
-			$message['debug']   = debug_backtrace();
-			$this->message      = $message;
-			return false;
-		}
-	}
+	} //end function copy
 
 	public function delete(array $array) {
 		//set the default value
@@ -1187,7 +1387,7 @@ class database {
 
 		//loop through the array
 		$checked = false;
-		$x       = 0;
+		$x = 0;
 		foreach ($array as $parent_name => $tables) {
 			if (is_array($tables)) {
 
@@ -1201,7 +1401,7 @@ class database {
 				foreach ($tables as $id => $row) {
 
 					//prepare the variables
-					$parent_name     = self::sanitize($parent_name);
+					$parent_name = self::sanitize($parent_name);
 					$parent_key_name = self::singular($parent_name) . "_uuid";
 
 					//build the delete array
@@ -1225,7 +1425,7 @@ class database {
 						$y = 0;
 						if (is_array($field_value)) {
 							//prepare the variables
-							$child_name     = self::sanitize($field_name);
+							$child_name = self::sanitize($field_name);
 							$child_key_name = self::singular($child_name) . "_uuid";
 
 							//loop through the child rows
@@ -1285,7 +1485,7 @@ class database {
 							$sql .= "and ";
 						}
 						$sql .= $field_name . " in ( ";
-						$i   = 0;
+						$i = 0;
 						foreach ($keys[$table_name][$field_name] as $field_value) {
 							$field_name = self::sanitize($field_name);
 							if ($i > 0) {
@@ -1295,7 +1495,7 @@ class database {
 							$i++;
 						}
 						$sql .= ") ";
-						$i   = 0;
+						$i = 0;
 						foreach ($keys[$table_name][$field_name] as $field_value) {
 							$parameters[$field_name . '_' . $i] = $field_value;
 							$i++;
@@ -1337,7 +1537,7 @@ class database {
 								$sql = "select * from " . self::TABLE_PREFIX . $child_table . " ";
 								$sql .= "where " . $relation['field'] . " = :" . $relation['field'];
 								$parameters[$relation['field']] = $row[$relation['field']];
-								$results                        = $this->execute($sql, $parameters, 'all');
+								$results = $this->execute($sql, $parameters, 'all');
 								unset($parameters);
 								if (is_array($results) && $parent_name !== $child_table) {
 									$old_array[$parent_name][$x][$child_table] = $results;
@@ -1384,7 +1584,7 @@ class database {
 				foreach ($rows as $row) {
 					if (permission_exists(self::singular($table_name) . '_delete')) {
 						$sql = "delete from " . self::TABLE_PREFIX . $table_name . " ";
-						$i   = 0;
+						$i = 0;
 						foreach ($row as $field_name => $field_value) {
 							//echo "field: ".$field_name." = ".$field_value."\n";
 							if ($i == 0) {
@@ -1398,12 +1598,12 @@ class database {
 						}
 						try {
 							$this->execute($sql, $parameters);
-							$message["message"]                = "OK";
-							$message["code"]                   = "200";
-							$message["uuid"]                   = $id;
-							$message["details"][$m]["name"]    = $this->app_name;
+							$message["message"] = "OK";
+							$message["code"] = "200";
+							$message["uuid"] = $id;
+							$message["details"][$m]["name"] = $this->app_name;
 							$message["details"][$m]["message"] = "OK";
-							$message["details"][$m]["code"]    = "200";
+							$message["details"][$m]["code"] = "200";
 							//$message["details"][$m]["uuid"] = $parent_key_value;
 							$message["details"][$m]["sql"] = $sql;
 
@@ -1411,13 +1611,13 @@ class database {
 							$m++;
 							unset($sql, $statement);
 						} catch (PDOException $e) {
-							$retval                            = false;
-							$message["message"]                = "Bad Request";
-							$message["code"]                   = "400";
-							$message["details"][$m]["name"]    = $this->app_name;
+							$retval = false;
+							$message["message"] = "Bad Request";
+							$message["code"] = "400";
+							$message["details"][$m]["name"] = $this->app_name;
 							$message["details"][$m]["message"] = $e->getMessage();
-							$message["details"][$m]["code"]    = "400";
-							$message["details"][$m]["sql"]     = $sql;
+							$message["details"][$m]["code"] = "400";
+							$message["details"][$m]["sql"] = $sql;
 
 							$this->message = $message;
 							$m++;
@@ -1430,7 +1630,7 @@ class database {
 			//commit the atomic transaction
 			$this->db->commit();
 
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			//rollback the transaction on error
 			if ($this->db->inTransaction()) {
 				$this->db->rollback();
@@ -1438,12 +1638,12 @@ class database {
 
 			//prepare the message array
 			$message['message'] = $e->getMessage();
-			$message['code']    = $e->getCode();
-			$message['line']    = $e->getLine();
-			$message['file']    = $e->getFile();
-			$message['trace']   = $e->getTraceAsString();
-			$message['debug']   = debug_backtrace();
-			$this->message      = $message;
+			$message['code'] = $e->getCode();
+			$message['line'] = $e->getLine();
+			$message['file'] = $e->getFile();
+			$message['trace'] = $e->getTraceAsString();
+			$message['debug'] = debug_backtrace();
+			$this->message = $message;
 			return false;
 		}
 
@@ -1531,91 +1731,123 @@ class database {
 			unset($sql);
 		}
 		return $retval;
-	} //delete
+	} //end function toggle
 
-	/**
-	 * Counts the number of rows.
+		/**
+	 * Converts a plural English word to singular.
 	 *
-	 * @return int Represents the number of counted rows or -1 if failed.
+	 * @param string $word English word
+	 *
+	 * @return string Singular version of English word
+	 * @internal Moved to class to conserve resources.
 	 */
-	public function count() {
-
-		//connect to the database if needed
-		if (!$this->db) {
-			$this->connect();
-		}
-
-		//return if the table name is not set
-		if (empty($this->table)) {
-			return;
-		}
-
-		//sanitize the table name
-		//$this->table = self::sanitize($this->table); // no longer needed
-
-		//get the number of rows
-		$sql = "select count(*) as num_rows from " . $this->table . " ";
-		$i   = 0;
-		if (is_array($this->where)) {
-			foreach ($this->where as $row) {
-				//sanitize the name
-				$row['name'] = self::sanitize($row['name']);
-
-				//validate the operator
-				switch ($row['operator']) {
-					case "<":
-						break;
-					case ">":
-						break;
-					case "<=":
-						break;
-					case ">=":
-						break;
-					case "=":
-						break;
-					case "<>":
-						break;
-					case "!=":
-						break;
-					default:
-						//invalid operator
-						return -1;
-				}
-
-				//build the sql
-				if ($i == 0) {
-					$sql .= "where " . $row['name'] . " " . $row['operator'] . " :" . $row['name'] . " ";
-				} else {
-					$sql .= "and " . $row['name'] . " " . $row['operator'] . " :" . $row['name'] . " ";
-				}
-
-				//add the name and value to the params array
-				$params[$row['name']] = $row['value'];
-
-				//increment $i
-				$i++;
-			}
-		}
-
-		//unset($this->where); //should not be objects resposibility
-		$prep_statement = $this->db->prepare($sql);
-		if ($prep_statement) {
-			if (!isset($params)) {
-				$params = null;
-			}
-			$prep_statement->execute($params);
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				return $row['num_rows'];
+	public static function singular(string $word) {
+		//"-es" is used for words that end in "-x", "-s", "-z", "-sh", "-ch" in which case you add
+		if (substr($word, -2) == "es") {
+			if (substr($word, -4) == "sses") { // eg. 'addresses' to 'address'
+				return substr($word, 0, -2);
+			} elseif (substr($word, -3) == "ses") { // eg. 'databases' to 'database' (necessary!)
+				return substr($word, 0, -1);
+			} elseif (substr($word, -3) == "ies") { // eg. 'countries' to 'country'
+				return substr($word, 0, -3) . "y";
+			} elseif (substr($word, -3, 1) == "x") {
+				return substr($word, 0, -2);
+			} elseif (substr($word, -3, 1) == "s") {
+				return substr($word, 0, -2);
+			} elseif (substr($word, -3, 1) == "z") {
+				return substr($word, 0, -2);
+			} elseif (substr($word, -4, 2) == "sh") {
+				return substr($word, 0, -2);
+			} elseif (substr($word, -4, 2) == "ch") {
+				return substr($word, 0, -2);
 			} else {
-				return 0;
+				return rtrim($word, "s");
 			}
+		} else {
+			return rtrim($word, "s");
 		}
-		unset($prep_statement);
-
-	} //count
+	} //save method
 
 	/**
+	 * Get Relations searches through all fields to find relations
+	 *
+	 * @param string $schema Table name
+	 *
+	 * @return array Returns array or false
+	 * @internal Moved to class to conserve resources.
+	 */
+	public static function get_relations($schema) {
+
+		//remove the v_ prefix
+		if (substr($schema, 0, strlen(self::TABLE_PREFIX)) == self::TABLE_PREFIX) {
+			$schema = substr($schema, strlen(self::TABLE_PREFIX));
+		}
+
+		//sanitize the values
+		$schema = self::sanitize($schema);
+
+		//get the apps array
+		$config_list = [];
+		$directories = ["core", "app"];
+		$applications = [$schema, self::singular($schema)];
+		foreach ($directories as $directory) {
+			foreach ($applications as $application) {
+				$path = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/$directory/$application/app_config.php";
+				$app_config_files = glob($path);
+				if ($app_config_files !== false) {
+					$config_list = array_merge($config_list, $app_config_files);
+				}
+			}
+		}
+		$x = 0;
+		foreach ($config_list as $config_path) {
+			include($config_path);
+			$x++;
+		}
+
+		//search through all fields to find relations
+		if (!empty($apps) && is_array($apps)) {
+			foreach ($apps as $x => $app) {
+				foreach ($app['db'] as $y => $row) {
+					foreach ($row['fields'] as $z => $field) {
+						if (!empty($field['deprecated']) && $field['deprecated'] != "true") {
+							if (!empty($field['key']['type']) && $field['key']['type'] == "foreign") {
+								if ($row['table']['name'] == self::TABLE_PREFIX . $schema || $field['key']['reference']['table'] == self::TABLE_PREFIX . $schema) {
+									//get the field name
+									if (!empty($field['name']) && is_array($field['name'])) {
+										$field_name = trim($field['name']['text']);
+									} else {
+										$field_name = trim($field['name']);
+									}
+									//build the array
+									$relations[$i]['table'] = $row['table']['name'];
+									$relations[$i]['field'] = $field_name;
+									$relations[$i]['key']['type'] = $field['key']['type'];
+									$relations[$i]['key']['table'] = $field['key']['reference']['table'];
+									$relations[$i]['key']['field'] = $field['key']['reference']['field'];
+									if (isset($field['key']['reference']['action'])) {
+										$relations[$i]['key']['action'] = $field['key']['reference']['action'];
+									}
+									//increment the value
+									$i++;
+								}
+							}
+						}
+						unset($field_name);
+					}
+				}
+			}
+		}
+
+		//return the array
+		if (!empty($relations) && is_array($relations)) {
+			return $relations;
+		} else {
+			return false;
+		}
+	}
+
+/**
 	 * Performs a select query on database using the <b>$sql</b> statement supplied.
 	 *
 	 * @param string     $sql         Valid SQL statement.
@@ -1634,10 +1866,10 @@ class database {
 
 		//unable to connect to the database
 		if (!$this->db) {
-			$error_message      = "Connection Failed<br />\n";
-			$error_message      .= "line number " . __line__ . "<br />\n";
+			$error_message = "Connection Failed<br />\n";
+			$error_message .= "line number " . __line__ . "<br />\n";
 			$message['message'] = $error_message;
-			$this->message      = $message;
+			$this->message = $message;
 			return false;
 		}
 
@@ -1660,8 +1892,8 @@ class database {
 				$prep_statement->execute();
 			}
 			$message["message"] = "OK";
-			$message["code"]    = "200";
-			$message["sql"]     = $sql;
+			$message["code"] = "200";
+			$message["sql"] = $sql;
 			if (is_array($parameters)) {
 				$message["parameters"] = $parameters;
 			}
@@ -1680,15 +1912,15 @@ class database {
 			}
 		} catch (PDOException $e) {
 			$message['message'] = $e->getMessage();
-			$message['code']    = $e->getCode();
-			$message['line']    = $e->getLine();
-			$message['file']    = $e->getFile();
-			$message['trace']   = $e->getTraceAsString();
-			$message['debug']   = debug_backtrace();
-			$this->message      = $message;
+			$message['code'] = $e->getCode();
+			$message['line'] = $e->getLine();
+			$message['file'] = $e->getFile();
+			$message['trace'] = $e->getTraceAsString();
+			$message['debug'] = debug_backtrace();
+			$this->message = $message;
 			return false;
 		}
-	} //select
+	}
 
 	/**
 	 * Sets the object <i>$result</i> to sql array
@@ -1781,27 +2013,27 @@ class database {
 		try {
 			$prep_statement = $this->db->prepare($sql);
 			$prep_statement->execute($params);
-			$message["message"]                = "OK";
-			$message["code"]                   = "200";
-			$message["details"][$m]["name"]    = $this->name;
+			$message["message"] = "OK";
+			$message["code"] = "200";
+			$message["details"][$m]["name"] = $this->name;
 			$message["details"][$m]["message"] = "OK";
-			$message["details"][$m]["code"]    = "200";
-			$message["details"][$m]["sql"]     = $sql;
+			$message["details"][$m]["code"] = "200";
+			$message["details"][$m]["sql"] = $sql;
 
 			$this->message = $message;
-			$this->result  = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			$this->result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			unset($prep_statement);
 			$m++;
 		} catch (PDOException $e) {
-			$message["message"]                = "Bad Request";
-			$message["code"]                   = "400";
-			$message["details"][$m]["name"]    = $this->name;
+			$message["message"] = "Bad Request";
+			$message["code"] = "400";
+			$message["details"][$m]["name"] = $this->name;
 			$message["details"][$m]["message"] = $e->getMessage();
-			$message["details"][$m]["code"]    = "400";
-			$message["details"][$m]["sql"]     = $sql;
+			$message["details"][$m]["code"] = "400";
+			$message["details"][$m]["sql"] = $sql;
 
 			$this->message = $message;
-			$this->result  = '';
+			$this->result = '';
 			$m++;
 		}
 		return $this;
@@ -1819,7 +2051,7 @@ class database {
 		return $this;
 	}
 
-	/**
+/**
 	 * Copies records and appends <i>suffix</i> to the column <i>description</i> data
 	 *
 	 * @param array $array Three dimensional Array. The first dimension is the table name without the prefix 'v_'.
@@ -1849,7 +2081,7 @@ class database {
 				foreach ($tables as $id => $row) {
 
 					//prepare the variables
-					$parent_name     = self::sanitize($parent_name);
+					$parent_name = self::sanitize($parent_name);
 					$parent_key_name = self::singular($parent_name) . "_uuid";
 
 					//build the copy array
@@ -1871,7 +2103,7 @@ class database {
 							if (is_array($field_value)) {
 
 								//prepare the variables
-								$child_name     = self::sanitize($field_name);
+								$child_name = self::sanitize($field_name);
 								$child_key_name = self::singular($child_name) . "_uuid";
 
 								//loop through the child rows
@@ -1926,7 +2158,7 @@ class database {
 							$sql .= "and ";
 						}
 						$sql .= $field_name . " in ( ";
-						$i   = 0;
+						$i = 0;
 						foreach ($keys[$table_name][$field_name] as $field_value) {
 							$field_name = self::sanitize($field_name);
 							if ($i > 0) {
@@ -1936,7 +2168,7 @@ class database {
 							$i++;
 						}
 						$sql .= ") ";
-						$i   = 0;
+						$i = 0;
 						foreach ($keys[$table_name][$field_name] as $field_value) {
 							$parameters[$field_name . '_' . $i] = $field_value;
 							$i++;
@@ -1987,14 +2219,14 @@ class database {
 
 		//update the parent and child keys
 		$checked = false;
-		$x       = 0;
+		$x = 0;
 		foreach ($array as $parent_name => $tables) {
 			if (is_array($tables)) {
 				foreach ($tables as $id => $row) {
 
 					//prepare the variables
-					$parent_name      = self::sanitize($parent_name);
-					$parent_key_name  = self::singular($parent_name) . "_uuid";
+					$parent_name = self::sanitize($parent_name);
+					$parent_key_name = self::singular($parent_name) . "_uuid";
 					$parent_key_value = uuid();
 
 					//update the parent key id
@@ -2021,7 +2253,7 @@ class database {
 						$y = 0;
 						if (is_array($field_value)) {
 							//prepare the variables
-							$child_name     = self::sanitize($field_name);
+							$child_name = self::sanitize($field_name);
 							$child_key_name = self::singular($child_name) . "_uuid";
 
 							//loop through the child rows
@@ -2051,149 +2283,14 @@ class database {
 			unset($array);
 		}
 		return $retval;
-	} //end function copy
+	}
 
-	/**
-	 * Toggles fields on a table using the <i>toggle_field</i> array values within the app object.
-	 *
-	 * @param array $array Three dimensional array. The first dimension is the table name without the prefix 'v_'.
-	 *                     Second dimension in the row value as int. Third dimension is the column name.
-	 *
-	 * @return bool Returns <b>true</b> on success and <b>false</b> on failure.
-	 * @depends database::save()
-	 * @depends database::get_apps()
-	 */
-	public function toggle(array $array) {
-
-		//return the array
-		if (!is_array($array)) {
-			return false;
-		}
-
-		//set the message id
-		$m = 0;
-
-		//loop through the array
-		if (!empty($array) && is_array($array)) {
-			$x = 0;
-			foreach ($array as $parent_name => $tables) {
-				if (!empty($tables) && is_array($tables)) {
-					foreach ($tables as $id => $row) {
-
-						//prepare the variables
-						$parent_name     = self::sanitize($parent_name);
-						$parent_key_name = self::singular($parent_name) . "_uuid";
-
-						//build the toggle array
-						if (!empty($row['checked']) && $row['checked'] == 'true') {
-							//toggle the field value
-							//$toggle_array[$parent_name][$x][$parent_key_name] = $row[$parent_key_name];
-							$toggle_array[$parent_name][$x] = $row;
-
-							//remove the row from the main array
-							unset($array[$parent_name][$x]);
-						}
-
-						//loop through the fields
-						foreach ($row as $field_name => $field_value) {
-
-							//find the child tables
-							$y = 0;
-							if (!empty($field_value) && is_array($field_value)) {
-								//prepare the variables
-								$child_name     = self::sanitize($field_name);
-								$child_key_name = self::singular($child_name) . "_uuid";
-
-								//loop through the child rows
-								foreach ($field_value as $sub_row) {
-
-									//build the delete array
-									if ($sub_row['checked'] == 'true') {
-										//delete the child data
-										$delete_array[$child_name][$y][$child_key_name] = $sub_row[$child_key_name];
-
-										//remove the row from the main array
-										unset($array[$parent_name][$x][$child_name][$y]);
-									}
-
-									//increment the value
-									$y++;
-								}
-							}
-						}
-
-						//increment the value
-						$x++;
-
-					}
-				}
-			}
-		}
-
-		//unset the original array
-		unset($array);
-
-		//get the $apps array from the installed apps from the core and mod directories
-		if (count(self::$apps) == 0) {
-			self::get_apps();
-		}
-
-		//search through all fields to see if toggle field exists
-		foreach (self::$apps as $x => $app) {
-			if (!empty($app['db']) && is_array($app['db'])) {
-				foreach ($app['db'] as $y => $row) {
-					if (is_array($row['table']['name'])) {
-						$table_name = $row['table']['name']['text'];
-					} else {
-						$table_name = $row['table']['name'];
-					}
-					if ($table_name === self::TABLE_PREFIX . $parent_name) {
-						if (is_array($row['fields'])) {
-							foreach ($row['fields'] as $field) {
-								if (isset($field['toggle'])) {
-									$toggle_field  = $field['name'];
-									$toggle_values = $field['toggle'];
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		//if the toggle field and values are empty then set defaults
-		if (empty($toggle_field)) {
-			$toggle_field = self::singular($parent_name) . "_enabled";
-		}
-		if (empty($toggle_values)) {
-			$toggle_values[] = 'true';
-			$toggle_values[] = 'false';
-		}
-
-		//get the current values from the database
-		foreach ($toggle_array as $table_name => $table) {
-			$x = 0;
-			foreach ($table as $row) {
-				$child_name     = self::sanitize($table_name);
-				$child_key_name = self::singular($child_name) . "_uuid";
-
-				$array[$table_name][$x][$child_key_name] = $row[$child_key_name];
-				$array[$table_name][$x][$toggle_field]   = ($row[$toggle_field] === $toggle_values[0]) ? $toggle_values[1] : $toggle_values[0];
-				$x++;
-			}
-		}
-		unset($toggle_array);
-
-		//save the array
-		return $this->save($array);
-
-	} //end function toggle
-
-	/**
+/**
 	 * <p>Save an array to the database.</p>
 	 * <p>Usage Example:<br><code><br>$row = 0;<br>$array['mytable'][$row]['mycolumn'] = "myvalue";<br>if
 	 * ($database->save($array)) { <br>&nbsp;&nbsp;echo "Saved Successfully.";<br> } else {<br>&nbsp;&nbsp;echo "Save
-	 * Failed.";<br>}</code></p>
+     * Failed.";<br>}</code></p>
+     *
 	 *
 	 * @param array $array Three dimensional Array. The first dimension is the table name without the prefix 'v_'.
 	 *                     Second dimension in the row value as int. Third dimension is the column name.
@@ -2205,16 +2302,16 @@ class database {
 
 		//prepare the values
 		$parent_field_names = [];
-		$child_field_names  = [];
-		$this->message      = [];
-		$parent_key_exists  = false;
-		$parent_key_name    = null;
-		$parent_key_value   = null;
-		$child_key_exists   = false;
-		$child_key_name     = null;
-		$child_key_value    = null;
-		$table_name         = null;
-		$child_table_name   = null;
+		$child_field_names = [];
+		$this->message = [];
+		$parent_key_exists = false;
+		$parent_key_name = null;
+		$parent_key_value = null;
+		$child_key_exists = false;
+		$child_key_name = null;
+		$child_key_value = null;
+		$table_name = null;
+		$child_table_name = null;
 
 		//set default return value
 		$retval = true;
@@ -2253,8 +2350,8 @@ class database {
 				if (is_array($parent_array)) foreach ($parent_array as $row_id => $parent_field_array) {
 
 					//set the variables
-					$parent_name     = self::sanitize($parent_name);
-					$table_name      = self::TABLE_PREFIX . $parent_name;
+					$parent_name = self::sanitize($parent_name);
+					$table_name = self::TABLE_PREFIX . $parent_name;
 					$parent_key_name = self::singular($parent_name) . "_uuid";
 					$parent_key_name = self::sanitize($parent_key_name);
 
@@ -2262,12 +2359,12 @@ class database {
 					//determine if the parent_key_exists
 					$parent_key_exists = false;
 					if (isset($parent_field_array[$parent_key_name])) {
-						$parent_key_value  = $parent_field_array[$parent_key_name];
+						$parent_key_value = $parent_field_array[$parent_key_name];
 						$parent_key_exists = true;
 					} else {
 						if (isset($this->uuid)) {
 							$parent_key_exists = true;
-							$parent_key_value  = $this->uuid;
+							$parent_key_value = $this->uuid;
 						} else {
 							$parent_key_value = uuid();
 						}
@@ -2322,7 +2419,7 @@ class database {
 
 						if (permission_exists(self::singular($parent_name) . '_add')) {
 							//add to the old and new arrays
-							$old_array                 = null;
+							$old_array = null;
 							$new_array[$parent_name][] = $parent_field_array;
 
 							//prepare the insert statement
@@ -2405,14 +2502,14 @@ class database {
 								$prep_statement = $this->db->prepare($sql);
 								$prep_statement->execute($params);
 								unset($prep_statement);
-								$message["message"]                = "OK";
-								$message["code"]                   = "200";
-								$message["uuid"]                   = $parent_key_value;
-								$message["details"][$m]["name"]    = $this->app_name;
+								$message["message"] = "OK";
+								$message["code"] = "200";
+								$message["uuid"] = $parent_key_value;
+								$message["details"][$m]["name"] = $this->app_name;
 								$message["details"][$m]["message"] = "OK";
-								$message["details"][$m]["code"]    = "200";
-								$message["details"][$m]["uuid"]    = $parent_key_value;
-								$message["details"][$m]["sql"]     = $sql;
+								$message["details"][$m]["code"] = "200";
+								$message["details"][$m]["uuid"] = $parent_key_value;
+								$message["details"][$m]["sql"] = $sql;
 								if (is_array($params)) {
 									$message["details"][$m]["params"] = $params;
 								}
@@ -2420,14 +2517,14 @@ class database {
 								$this->message = $message;
 								$m++;
 							} catch (PDOException $e) {
-								$retval                            = false;
-								$message["message"]                = "Bad Request";
-								$message["code"]                   = "400";
-								$message["details"][$m]["name"]    = $this->app_name;
+								$retval = false;
+								$message["message"] = "Bad Request";
+								$message["code"] = "400";
+								$message["details"][$m]["name"] = $this->app_name;
 								$message["details"][$m]["message"] = $e->getMessage();
-								$message["details"][$m]["code"]    = "400";
-								$message["details"][$m]["array"]   = $parent_field_array;
-								$message["details"][$m]["sql"]     = $sql;
+								$message["details"][$m]["code"] = "400";
+								$message["details"][$m]["array"] = $parent_field_array;
+								$message["details"][$m]["sql"] = $sql;
 								if (is_array($params)) {
 									$message["details"][$m]["params"] = $params;
 								}
@@ -2437,12 +2534,12 @@ class database {
 							}
 							unset($sql);
 						} else {
-							$retval             = false;
-							$message["name"]    = $this->app_name;
+							$retval = false;
+							$message["name"] = $this->app_name;
 							$message["message"] = "Forbidden, does not have '" . self::singular($parent_name) . "_add'";
-							$message["code"]    = "403";
-							$message["line"]    = __line__;
-							$this->message[]    = $message;
+							$message["code"] = "403";
+							$message["line"] = __line__;
+							$this->message[] = $message;
 							$m++;
 						}
 					}
@@ -2463,7 +2560,7 @@ class database {
 
 									//get the variable type of the value
 									$database_field_type = gettype($parent_results[$i][$array_key]);
-									$user_field_type     = gettype($array_value);
+									$user_field_type = gettype($array_value);
 
 									//trim the string and update the value
 									if ($user_field_type === 'string') {
@@ -2542,7 +2639,7 @@ class database {
 								}
 
 								//add to the old and new arrays
-								$old_array[$parent_name]   = $parent_results;
+								$old_array[$parent_name] = $parent_results;
 								$new_array[$parent_name][] = $temp_array;
 
 								//empty the temp array
@@ -2607,14 +2704,14 @@ class database {
 								try {
 									$prep_statement = $this->db->prepare($sql);
 									$prep_statement->execute($params);
-									$message["message"]                = "OK";
-									$message["code"]                   = "200";
-									$message["uuid"]                   = $parent_key_value;
-									$message["details"][$m]["name"]    = $this->app_name;
+									$message["message"] = "OK";
+									$message["code"] = "200";
+									$message["uuid"] = $parent_key_value;
+									$message["details"][$m]["name"] = $this->app_name;
 									$message["details"][$m]["message"] = "OK";
-									$message["details"][$m]["code"]    = "200";
-									$message["details"][$m]["uuid"]    = $parent_key_value;
-									$message["details"][$m]["sql"]     = $sql;
+									$message["details"][$m]["code"] = "200";
+									$message["details"][$m]["uuid"] = $parent_key_value;
+									$message["details"][$m]["sql"] = $sql;
 									if (is_array($params)) {
 										$message["details"][$m]["params"] = $params;
 									}
@@ -2623,13 +2720,13 @@ class database {
 									$m++;
 									unset($sql);
 								} catch (PDOException $e) {
-									$retval                            = false;
-									$message["message"]                = "Bad Request";
-									$message["code"]                   = "400";
-									$message["details"][$m]["name"]    = $this->app_name;
+									$retval = false;
+									$message["message"] = "Bad Request";
+									$message["code"] = "400";
+									$message["details"][$m]["name"] = $this->app_name;
 									$message["details"][$m]["message"] = $e->getMessage();
-									$message["details"][$m]["code"]    = "400";
-									$message["details"][$m]["sql"]     = $sql;
+									$message["details"][$m]["code"] = "400";
+									$message["details"][$m]["sql"] = $sql;
 									if (is_array($params)) {
 										$message["details"][$m]["params"] = $params;
 									}
@@ -2638,19 +2735,19 @@ class database {
 									$m++;
 								}
 							} else {
-								$message["details"][$m]["name"]    = $parent_name;
+								$message["details"][$m]["name"] = $parent_name;
 								$message["details"][$m]["message"] = 'No Changes';
-								$message["details"][$m]["code"]    = "000";
-								$message["details"][$m]["uuid"]    = $parent_key_value;
-								$this->message                     = $message;
+								$message["details"][$m]["code"] = "000";
+								$message["details"][$m]["uuid"] = $parent_key_value;
+								$this->message = $message;
 								$m++;
 							}
 						} else {
-							$retval             = false;
+							$retval = false;
 							$message["message"] = "Forbidden, does not have '" . self::singular($parent_name) . "_edit'";
-							$message["code"]    = "403";
-							$message["line"]    = __line__;
-							$this->message      = $message;
+							$message["code"] = "403";
+							$message["line"] = __line__;
+							$this->message = $message;
 							$m++;
 						}
 					}
@@ -2666,8 +2763,8 @@ class database {
 								$child_table_name = self::sanitize($child_table_name);
 								foreach ($value as $id => $row) {
 									//prepare the variables
-									$child_name     = self::singular($key);
-									$child_name     = self::sanitize($child_name);
+									$child_name = self::singular($key);
+									$child_name = self::sanitize($child_name);
 									$child_key_name = $child_name . "_uuid";
 
 									//determine if the parent key exists in the child array
@@ -2685,7 +2782,7 @@ class database {
 													$v = trim($v);
 												}
 												$child_key_value = $v;
-												$uuid_exists     = true;
+												$uuid_exists = true;
 												break;
 											}
 										} else {
@@ -2729,12 +2826,12 @@ class database {
 											unset($prep_statement);
 										} catch (PDOException $e) {
 											$message['message'] = $e->getMessage();
-											$message['code']    = $e->getCode();
-											$message['line']    = $e->getLine();
-											$message['file']    = $e->getFile();
-											$message['trace']   = $e->getTraceAsString();
-											$message['debug']   = debug_backtrace();
-											$this->message      = $message;
+											$message['code'] = $e->getCode();
+											$message['line'] = $e->getLine();
+											$message['file'] = $e->getFile();
+											$message['trace'] = $e->getTraceAsString();
+											$message['debug'] = debug_backtrace();
+											$this->message = $message;
 											return false;
 										}
 
@@ -2755,7 +2852,7 @@ class database {
 
 													//get the variable type of the value
 													$database_field_type = gettype($child_results[$k]);
-													$user_field_type     = gettype($v);
+													$user_field_type = gettype($v);
 
 													//trim the string
 													if ($user_field_type === 'string') {
@@ -2880,8 +2977,8 @@ class database {
 												$sql .= "WHERE " . $parent_key_name . " = :parent_key_value ";
 												$sql .= "AND " . $child_key_name . " = :child_key_value; ";
 												$params['parent_key_value'] = $parent_key_value;
-												$params['child_key_value']  = $child_key_value;
-												$sql  = str_replace(", WHERE", " WHERE", $sql);
+												$params['child_key_value'] = $child_key_value;
+												$sql = str_replace(", WHERE", " WHERE", $sql);
 
 												//set the error mode
 												$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -2895,11 +2992,11 @@ class database {
 													$prep_statement = $this->db->prepare($sql);
 													$prep_statement->execute($params);
 													unset($prep_statement);
-													$message["details"][$m]["name"]    = $key;
+													$message["details"][$m]["name"] = $key;
 													$message["details"][$m]["message"] = "OK";
-													$message["details"][$m]["code"]    = "200";
-													$message["details"][$m]["uuid"]    = $child_key_value;
-													$message["details"][$m]["sql"]     = $sql;
+													$message["details"][$m]["code"] = "200";
+													$message["details"][$m]["uuid"] = $child_key_value;
+													$message["details"][$m]["sql"] = $sql;
 													if (is_array($params)) {
 														$message["details"][$m]["params"] = $params;
 													}
@@ -2910,12 +3007,12 @@ class database {
 													$retval = false;
 													if ($message["code"] == "200") {
 														$message["message"] = "Bad Request";
-														$message["code"]    = "400";
+														$message["code"] = "400";
 													}
-													$message["details"][$m]["name"]    = $key;
+													$message["details"][$m]["name"] = $key;
 													$message["details"][$m]["message"] = $e->getMessage();
-													$message["details"][$m]["code"]    = "400";
-													$message["details"][$m]["sql"]     = $sql;
+													$message["details"][$m]["code"] = "400";
+													$message["details"][$m]["sql"] = $sql;
 													if (is_array($params)) {
 														$message["details"][$m]["params"] = $params;
 													}
@@ -2925,20 +3022,20 @@ class database {
 												}
 
 											} else {
-												$message["details"][$m]["name"]    = $key;
+												$message["details"][$m]["name"] = $key;
 												$message["details"][$m]["message"] = 'No Changes';
-												$message["details"][$m]["code"]    = "000";
-												$message["details"][$m]["uuid"]    = $child_key_value;
-												$this->message                     = $message;
+												$message["details"][$m]["code"] = "000";
+												$message["details"][$m]["uuid"] = $child_key_value;
+												$this->message = $message;
 												$m++;
 											}
 										} else {
-											$retval             = false;
-											$message["name"]    = $child_name;
+											$retval = false;
+											$message["name"] = $child_name;
 											$message["message"] = "Forbidden, does not have '" . $child_name . "_edit'";
-											$message["code"]    = "403";
-											$message["line"]    = __line__;
-											$this->message      = $message;
+											$message["code"] = "403";
+											$message["line"] = __line__;
+											$this->message = $message;
 											$m++;
 										}
 									} //action update
@@ -2947,9 +3044,9 @@ class database {
 									if ($action == "add") {
 										if (permission_exists($child_name . '_add')) {
 											//determine if child or parent key exists
-											$child_key_name    = $child_name . '_uuid';
+											$child_key_name = $child_name . '_uuid';
 											$parent_key_exists = false;
-											$child_key_exists  = false;
+											$child_key_exists = false;
 											if (is_array($row)) {
 												foreach ($row as $k => $v) {
 													if ($k == $parent_key_name) {
@@ -2969,7 +3066,7 @@ class database {
 											}
 
 											//add to the old and new arrays
-											$old_array                = null;
+											$old_array = null;
 											$new_array[$child_name][] = $row;
 
 											//build the insert
@@ -3064,12 +3161,12 @@ class database {
 												$prep_statement = $this->db->prepare($sql);
 												$prep_statement->execute($params);
 												unset($prep_statement);
-												$message["code"]                   = "200";
-												$message["details"][$m]["name"]    = $key;
+												$message["code"] = "200";
+												$message["details"][$m]["name"] = $key;
 												$message["details"][$m]["message"] = "OK";
-												$message["details"][$m]["code"]    = "200";
-												$message["details"][$m]["uuid"]    = $child_key_value;
-												$message["details"][$m]["sql"]     = $sql;
+												$message["details"][$m]["code"] = "200";
+												$message["details"][$m]["uuid"] = $child_key_value;
+												$message["details"][$m]["sql"] = $sql;
 												if (is_array($params)) {
 													$message["details"][$m]["params"] = $params;
 												}
@@ -3080,12 +3177,12 @@ class database {
 												$retval = false;
 												if ($message["code"] == "200") {
 													$message["message"] = "Bad Request";
-													$message["code"]    = "400";
+													$message["code"] = "400";
 												}
-												$message["details"][$m]["name"]    = $key;
+												$message["details"][$m]["name"] = $key;
 												$message["details"][$m]["message"] = $e->getMessage();
-												$message["details"][$m]["code"]    = "400";
-												$message["details"][$m]["sql"]     = $sql;
+												$message["details"][$m]["code"] = "400";
+												$message["details"][$m]["sql"] = $sql;
 												if (is_array($params)) {
 													$message["details"][$m]["params"] = $params;
 												}
@@ -3094,12 +3191,12 @@ class database {
 												$m++;
 											}
 										} else {
-											$retval             = false;
-											$message["name"]    = $child_name;
+											$retval = false;
+											$message["name"] = $child_name;
 											$message["message"] = "Forbidden, does not have '" . $child_name . "_add'";
-											$message["code"]    = "403";
-											$message["line"]    = __line__;
-											$this->message      = $message;
+											$message["code"] = "403";
+											$message["line"] = __line__;
+											$this->message = $message;
 											$m++;
 										}
 									} //action add
@@ -3121,7 +3218,7 @@ class database {
 			//commit the atomic transaction
 			$this->db->commit();
 
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			//rollback the transaction on error
 			if ($this->db->inTransaction()) {
 				$this->db->rollback();
@@ -3129,12 +3226,12 @@ class database {
 
 			//prepare the message array
 			$message['message'] = $e->getMessage();
-			$message['code']    = $e->getCode();
-			$message['line']    = $e->getLine();
-			$message['file']    = $e->getFile();
-			$message['trace']   = $e->getTraceAsString();
-			$message['debug']   = debug_backtrace();
-			$this->message      = $message;
+			$message['code'] = $e->getCode();
+			$message['line'] = $e->getLine();
+			$message['file'] = $e->getFile();
+			$message['trace'] = $e->getTraceAsString();
+			$message['debug'] = debug_backtrace();
+			$this->message = $message;
 			return false;
 		}
 
@@ -3165,7 +3262,7 @@ class database {
 			foreach ($this->message['details'] as $row) {
 				if ($row['code'] === '200') {
 					$database_updated = true;
-					$message["code"]  = '200';
+					$message["code"] = '200';
 					break;
 				}
 			}
@@ -3264,81 +3361,152 @@ class database {
 				unset($sql, $old_array, $old_json, $new_array, $new_json);
 			} catch (PDOException $e) {
 				$message['message'] = $e->getMessage();
-				$message['code']    = $e->getCode();
-				$message['line']    = $e->getLine();
-				$message['file']    = $e->getFile();
-				$message['trace']   = $e->getTraceAsString();
-				$message['debug']   = debug_backtrace();
-				$this->message      = $message;
+				$message['code'] = $e->getCode();
+				$message['line'] = $e->getLine();
+				$message['file'] = $e->getFile();
+				$message['trace'] = $e->getTraceAsString();
+				$message['debug'] = debug_backtrace();
+				$this->message = $message;
 				return false;
 			}
 		}
 		return $this->message;
-	} //save method
-
-	/**
-	 * Ensure the database is still connected and active.
-	 * <p>NOTE:<br>
-	 * There is no method in PDO that can reliably detect if the connection is active. Therefore, a lightweight
-	 * query is executed using the statement <code>select 1</code>.</p>
-	 *
-	 * @return bool True if the database is connected. False otherwise.
-	 */
-	public function is_connected(): bool {
-		try {
-			$stmt = false;
-			if ($this->db !== null) $stmt = $this->db->query('SELECT 1');
-			return $stmt !== false;
-		} catch (PDOException $ex) {
-			//database is not connected
-			return false;
-		} catch (Exception $e) {
-			//some other error has occurred, so record it
-			$message['message'] = $e->getMessage();
-			$message['code']    = $e->getCode();
-			$message['line']    = $e->getLine();
-			$message['file']    = $e->getFile();
-			$message['trace']   = $e->getTraceAsString();
-			$message['debug']   = debug_backtrace();
-			$this->message      = $message;
-			return false;
-		}
-		return true;
 	}
 
-	/**
-	 * Converts a plural English word to singular.
+/**
+	 * Toggles fields on a table using the <i>toggle_field</i> array values within the app object.
 	 *
-	 * @param string $word English word
+	 * @param array $array Three dimensional array. The first dimension is the table name without the prefix 'v_'.
+	 *                     Second dimension in the row value as int. Third dimension is the column name.
 	 *
-	 * @return string Singular version of English word
-	 * @internal Moved to class to conserve resources.
+	 * @return bool Returns <b>true</b> on success and <b>false</b> on failure.
+	 * @depends database::save()
+	 * @depends database::get_apps()
 	 */
-	public static function singular(string $word) {
-		//"-es" is used for words that end in "-x", "-s", "-z", "-sh", "-ch" in which case you add
-		if (substr($word, -2) == "es") {
-			if (substr($word, -4) == "sses") { // eg. 'addresses' to 'address'
-				return substr($word, 0, -2);
-			} elseif (substr($word, -3) == "ses") { // eg. 'databases' to 'database' (necessary!)
-				return substr($word, 0, -1);
-			} elseif (substr($word, -3) == "ies") { // eg. 'countries' to 'country'
-				return substr($word, 0, -3) . "y";
-			} elseif (substr($word, -3, 1) == "x") {
-				return substr($word, 0, -2);
-			} elseif (substr($word, -3, 1) == "s") {
-				return substr($word, 0, -2);
-			} elseif (substr($word, -3, 1) == "z") {
-				return substr($word, 0, -2);
-			} elseif (substr($word, -4, 2) == "sh") {
-				return substr($word, 0, -2);
-			} elseif (substr($word, -4, 2) == "ch") {
-				return substr($word, 0, -2);
-			} else {
-				return rtrim($word, "s");
-			}
-		} else {
-			return rtrim($word, "s");
+	public function toggle(array $array) {
+
+		//return the array
+		if (!is_array($array)) {
+			return false;
 		}
+
+		//set the message id
+		$m = 0;
+
+		//loop through the array
+		if (!empty($array) && is_array($array)) {
+			$x = 0;
+			foreach ($array as $parent_name => $tables) {
+				if (!empty($tables) && is_array($tables)) {
+					foreach ($tables as $id => $row) {
+
+						//prepare the variables
+						$parent_name = self::sanitize($parent_name);
+						$parent_key_name = self::singular($parent_name) . "_uuid";
+
+						//build the toggle array
+						if (!empty($row['checked']) && $row['checked'] == 'true') {
+							//toggle the field value
+							//$toggle_array[$parent_name][$x][$parent_key_name] = $row[$parent_key_name];
+							$toggle_array[$parent_name][$x] = $row;
+
+							//remove the row from the main array
+							unset($array[$parent_name][$x]);
+						}
+
+						//loop through the fields
+						foreach ($row as $field_name => $field_value) {
+
+							//find the child tables
+							$y = 0;
+							if (!empty($field_value) && is_array($field_value)) {
+								//prepare the variables
+								$child_name = self::sanitize($field_name);
+								$child_key_name = self::singular($child_name) . "_uuid";
+
+								//loop through the child rows
+								foreach ($field_value as $sub_row) {
+
+									//build the delete array
+									if ($sub_row['checked'] == 'true') {
+										//delete the child data
+										$delete_array[$child_name][$y][$child_key_name] = $sub_row[$child_key_name];
+
+										//remove the row from the main array
+										unset($array[$parent_name][$x][$child_name][$y]);
+									}
+
+									//increment the value
+									$y++;
+								}
+							}
+						}
+
+						//increment the value
+						$x++;
+
+					}
+				}
+			}
+		}
+
+		//unset the original array
+		unset($array);
+
+		//get the $apps array from the installed apps from the core and mod directories
+		if (count(self::$apps) == 0) {
+			self::get_apps();
+		}
+
+		//search through all fields to see if toggle field exists
+		foreach (self::$apps as $x => $app) {
+			if (!empty($app['db']) && is_array($app['db'])) {
+				foreach ($app['db'] as $y => $row) {
+					if (is_array($row['table']['name'])) {
+						$table_name = $row['table']['name']['text'];
+					} else {
+						$table_name = $row['table']['name'];
+					}
+					if ($table_name === self::TABLE_PREFIX . $parent_name) {
+						if (is_array($row['fields'])) {
+							foreach ($row['fields'] as $field) {
+								if (isset($field['toggle'])) {
+									$toggle_field = $field['name'];
+									$toggle_values = $field['toggle'];
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		//if the toggle field and values are empty then set defaults
+		if (empty($toggle_field)) {
+			$toggle_field = self::singular($parent_name) . "_enabled";
+		}
+		if (empty($toggle_values)) {
+			$toggle_values[] = 'true';
+			$toggle_values[] = 'false';
+		}
+
+		//get the current values from the database
+		foreach ($toggle_array as $table_name => $table) {
+			$x = 0;
+			foreach ($table as $row) {
+				$child_name = self::sanitize($table_name);
+				$child_key_name = self::singular($child_name) . "_uuid";
+
+				$array[$table_name][$x][$child_key_name] = $row[$child_key_name];
+				$array[$table_name][$x][$toggle_field] = ($row[$toggle_field] === $toggle_values[0]) ? $toggle_values[1] : $toggle_values[0];
+				$x++;
+			}
+		}
+		unset($toggle_array);
+
+		//save the array
+		return $this->save($array);
+
 	}
 
 	/**
@@ -3353,7 +3521,7 @@ class database {
 	public static function get_apps() {
 		//get the $apps array from the installed apps from the core and mod directories
 		$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
-		$x           = 0;
+		$x = 0;
 		if (is_array($config_list)) {
 			foreach ($config_list as $config_path) {
 				include($config_path);
@@ -3361,147 +3529,6 @@ class database {
 			}
 		}
 		self::$apps = $apps;
-	}
-
-	/**
-	 * Returns the depth of an array
-	 *
-	 * @param array $array Reference to array
-	 *
-	 * @return int Depth of array
-	 * @internal Moved to class to conserve resources.
-	 */
-	public static function array_depth(array &$array) {
-		$depth = 0;
-		if (is_array($array)) {
-			$depth++;
-			foreach ($array as $value) {
-				if (is_array($value)) {
-					$depth = self::array_depth($value) + 1;
-				}
-			}
-		}
-		return $depth;
-	}
-
-	/**
-	 * Searches through all fields to see if domain_uuid exists
-	 *
-	 * @param string $name
-	 *
-	 * @return boolean <b>true</b> on success and <b>false</b> on failure
-	 * @see  database::get_apps()
-	 * @uses self::$apps directly
-	 */
-	public static function domain_uuid_exists($name) {
-		//get the $apps array from the installed apps from the core and mod directories
-		if (count(self::$apps) == 0) {
-			self::get_apps();
-		}
-
-		//search through all fields to see if domain_uuid exists
-		foreach (self::$apps as $x => &$app) {
-			if (is_array($app['db'])) {
-				foreach ($app['db'] as $y => $row) {
-					if (is_array($row['table']['name'])) {
-						$table_name = $row['table']['name']['text'];
-					} else {
-						$table_name = $row['table']['name'];
-					}
-					if ($table_name === self::TABLE_PREFIX . $name) {
-						if (is_array($row['fields'])) {
-							foreach ($row['fields'] as $field) {
-								if ($field['name'] == "domain_uuid") {
-									return true;
-								}
-							} //foreach
-						} //is array
-					}
-				} //foreach
-			} //is array
-		} //foreach
-
-		//not found
-		return false;
-	}
-
-	/**
-	 * Get Relations searches through all fields to find relations
-	 *
-	 * @param string $schema Table name
-	 *
-	 * @return array Returns array or false
-	 * @internal Moved to class to conserve resources.
-	 */
-	public static function get_relations($schema) {
-
-		//remove the v_ prefix
-		if (substr($schema, 0, strlen(self::TABLE_PREFIX)) == self::TABLE_PREFIX) {
-			$schema = substr($schema, strlen(self::TABLE_PREFIX));
-		}
-
-		//sanitize the values
-		$schema = self::sanitize($schema);
-
-		//get the apps array
-		$config_list  = [];
-		$directories  = ["core", "app"];
-		$applications = [$schema, self::singular($schema)];
-		foreach ($directories as $directory) {
-			foreach ($applications as $application) {
-				$path             = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/$directory/$application/app_config.php";
-				$app_config_files = glob($path);
-				if ($app_config_files !== false) {
-					$config_list = array_merge($config_list, $app_config_files);
-				}
-			}
-		}
-		$x = 0;
-		foreach ($config_list as $config_path) {
-			include($config_path);
-			$x++;
-		}
-
-		//search through all fields to find relations
-		if (!empty($apps) && is_array($apps)) {
-			foreach ($apps as $x => $app) {
-				foreach ($app['db'] as $y => $row) {
-					foreach ($row['fields'] as $z => $field) {
-						if (!empty($field['deprecated']) && $field['deprecated'] != "true") {
-							if (!empty($field['key']['type']) && $field['key']['type'] == "foreign") {
-								if ($row['table']['name'] == self::TABLE_PREFIX . $schema || $field['key']['reference']['table'] == self::TABLE_PREFIX . $schema) {
-									//get the field name
-									if (!empty($field['name']) && is_array($field['name'])) {
-										$field_name = trim($field['name']['text']);
-									} else {
-										$field_name = trim($field['name']);
-									}
-									//build the array
-									$relations[$i]['table']        = $row['table']['name'];
-									$relations[$i]['field']        = $field_name;
-									$relations[$i]['key']['type']  = $field['key']['type'];
-									$relations[$i]['key']['table'] = $field['key']['reference']['table'];
-									$relations[$i]['key']['field'] = $field['key']['reference']['field'];
-									if (isset($field['key']['reference']['action'])) {
-										$relations[$i]['key']['action'] = $field['key']['reference']['action'];
-									}
-									//increment the value
-									$i++;
-								}
-							}
-						}
-						unset($field_name);
-					}
-				}
-			}
-		}
-
-		//return the array
-		if (!empty($relations) && is_array($relations)) {
-			return $relations;
-		} else {
-			return false;
-		}
 	}
 
 	/**
@@ -3519,7 +3546,7 @@ class database {
 			try {
 				include $file;
 				$views[$id] = $view;
-			} catch (\Exception $e) {
+			} catch (Exception $e) {
 				$views[$id]['error'] = $e->getMessage();
 			} finally {
 				$views[$id]['file'] = $file;
@@ -3538,8 +3565,8 @@ class database {
 				if (!empty($row['name']) && !empty($row['sql'])) {
 					//set the variables
 					$view_name = $row['name'];
-					$view_sql  = $row['sql'];
-					$view_sql  = str_replace(';', '', $view_sql);
+					$view_sql = $row['sql'];
+					$view_sql = str_replace(';', '', $view_sql);
 					//$view_version = $row['version'];
 					//$view_description = $row['description'];
 
@@ -3584,61 +3611,6 @@ class database {
 			//return views array
 			return $views;
 		}
-	}
-
-	/**
-	 * Returns a sanitized string value safe for the database or table name.
-	 *
-	 * @param string $value To be sanitized
-	 *
-	 * @return string Sanitized using preg_replace('#[^a-zA-Z0-9_\-]#', '')
-	 * @see preg_replace()
-	 */
-	public static function sanitize(string $value) {
-		return preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
-	}
-
-	/**
-	 * Returns a new connected database object.<br>
-	 * <p>This allows a shortcut for a common syntax. For more information
-	 * on how the connection happens see {@link database::__construct()} and
-	 * {@link database::connect()}</p>
-	 * <p><b>Usage:</b><br>
-	 * <code>&nbsp; $database_object = database::new();</code></p>
-	 *
-	 * @return database the new instance of the database object already connected
-	 * @see database::__construct()
-	 * @see database::connect()
-	 */
-	public static function new(array $params = []) {
-
-		//re-use the database connection
-		if (self::$database === null) {
-			self::$database = new database($params);
-			if (!self::$database->is_connected()) {
-				self::$database->connect();
-			}
-		}
-
-		//set the user_uuid
-		if (!empty($params['user_uuid'])) {
-			//use the parameter as the first priority when available
-			self::$database->user_uuid = $params['user_uuid'];
-		} elseif (!empty($_SESSION['user_uuid'])) {
-			//use the session when available
-			self::$database->user_uuid = $_SESSION['user_uuid'];
-		}
-
-		//set the domain_uuid
-		if (!empty($params['domain_uuid'])) {
-			//use the parameter as the first priority when available
-			self::$database->domain_uuid = $params['domain_uuid'];
-		} elseif (!empty($_SESSION['domain_uuid'])) {
-			//use the session when available
-			self::$database->domain_uuid = $_SESSION['domain_uuid'];
-		}
-
-		return self::$database;
 	}
 
 } //class database

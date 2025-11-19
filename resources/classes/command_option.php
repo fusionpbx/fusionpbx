@@ -44,12 +44,12 @@ class command_option {
 	 * Constructs an empty command_option
 	 */
 	public function __construct() {
-		$this->short_option      = '';
-		$this->long_option       = '';
-		$this->description       = '';
+		$this->short_option = '';
+		$this->long_option = '';
+		$this->description = '';
 		$this->short_description = '';
-		$this->long_description  = '';
-		$this->functions         = [];
+		$this->long_description = '';
+		$this->functions = [];
 	}
 
 	/**
@@ -91,6 +91,58 @@ class command_option {
 				$obj->{$key} = $value;
 			}
 		}
+	}
+
+	/**
+	 * Appends the callback function to the array of existing callback functions
+	 *
+	 * @param string|null $function When function param is set, the callback function will be appended to the list of
+	 *                              functions. When called without a param, the array will be returned of current
+	 *                              callbacks.
+	 *
+	 * @return $this|array Returns the array of callbacks if no parameters passed or this object when appending a
+	 *                     callback
+	 */
+	public function callback(?string $function = null) {
+		if ($function !== null) {
+			$this->functions += [$function];
+			return $this;
+		}
+		return $this->functions;
+	}
+
+	/**
+	 * Appends the callback function to the array of existing callback functions
+	 *
+	 * @param string|null $function When function param is set, the callback function will be appended to the list of
+	 *                              functions. When called without a param, the array will be returned of current
+	 *                              callbacks.
+	 *
+	 * @return $this|array Returns the array of callbacks if no parameters passed or this object when appending a
+	 *                     callback
+	 */
+	public function function_append(?string $function = null) {
+		if ($function !== null) {
+			$this->functions += [$function];
+			return $this;
+		}
+		return $this->functions;
+	}
+
+	/**
+	 * Converts the current object to an array.
+	 *
+	 * @return array The array representation of the current object, containing
+	 *               information about options and functions.
+	 */
+	public function to_array(): array {
+		$array['short_option'] = $this->short_option();
+		$array['long_option'] = $this->long_option();
+		$array['description'] = $this->description();
+		$array['short_description'] = $this->short_description();
+		$array['long_description'] = $this->long_description();
+		$array['functions'] = $this->functions();
+		return $array;
 	}
 
 	/**
@@ -153,7 +205,7 @@ class command_option {
 		}
 		if (empty($this->short_description)) {
 			if (str_ends_with($this->short_option, ':')) {
-				$short             = rtrim($this->short_option, ':');
+				$short = rtrim($this->short_option, ':');
 				$short_description = "-$short <value>";
 			} else {
 				$short_description = '-' . $this->short_option;
@@ -179,7 +231,7 @@ class command_option {
 		}
 		if (empty($this->long_description)) {
 			if (str_ends_with($this->long_option, ':')) {
-				$long             = rtrim($this->long_option, ':');
+				$long = rtrim($this->long_option, ':');
 				$long_description = "--$long <value>";
 			} else {
 				$long_description = '--' . $this->long_option;
@@ -196,7 +248,8 @@ class command_option {
 	 * @param array|null $functions When functions param is set, the array will be assigned to the list of callbacks.
 	 *                              When called without a parameter, the current array of callbacks will be returned.
 	 *
-	 * @return $this|array Returns the array of callbacks if no parameters passed or this object when setting a new array
+	 * @return $this|array Returns the array of callbacks if no parameters passed or this object when setting a new
+	 *                     array
 	 */
 	public function functions(?array $functions = null) {
 		if ($functions !== null) {
@@ -204,58 +257,6 @@ class command_option {
 			return $this;
 		}
 		return $this->functions;
-	}
-
-	/**
-	 * Appends the callback function to the array of existing callback functions
-	 *
-	 * @param string|null $function When function param is set, the callback function will be appended to the list of
-	 *                              functions. When called without a param, the array will be returned of current
-	 *                              callbacks.
-	 *
-	 * @return $this|array Returns the array of callbacks if no parameters passed or this object when appending a
-	 *                     callback
-	 */
-	public function callback(?string $function = null) {
-		if ($function !== null) {
-			$this->functions += [$function];
-			return $this;
-		}
-		return $this->functions;
-	}
-
-	/**
-	 * Appends the callback function to the array of existing callback functions
-	 *
-	 * @param string|null $function When function param is set, the callback function will be appended to the list of
-	 *                              functions. When called without a param, the array will be returned of current
-	 *                              callbacks.
-	 *
-	 * @return $this|array Returns the array of callbacks if no parameters passed or this object when appending a
-	 *                     callback
-	 */
-	public function function_append(?string $function = null) {
-		if ($function !== null) {
-			$this->functions += [$function];
-			return $this;
-		}
-		return $this->functions;
-	}
-
-	/**
-	 * Converts the current object to an array.
-	 *
-	 * @return array The array representation of the current object, containing
-	 *               information about options and functions.
-	 */
-	public function to_array(): array {
-		$array['short_option']      = $this->short_option();
-		$array['long_option']       = $this->long_option();
-		$array['description']       = $this->description();
-		$array['short_description'] = $this->short_description();
-		$array['long_description']  = $this->long_description();
-		$array['functions']         = $this->functions();
-		return $array;
 	}
 }
 

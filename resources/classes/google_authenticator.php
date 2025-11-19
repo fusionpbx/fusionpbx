@@ -47,7 +47,8 @@ class google_authenticator {
 	 * Generates a PIN code based on the provided secret and time.
 	 *
 	 * @param string   $secret The secret to use for generating the code.
-	 * @param int|null $time   The current time in seconds since the Unix epoch. Defaults to the current time divided by 30.
+	 * @param int|null $time   The current time in seconds since the Unix epoch. Defaults to the current time divided
+	 *                         by 30.
 	 *
 	 * @return string A six-digit PIN code.
 	 */
@@ -63,12 +64,12 @@ class google_authenticator {
 		$time = pack("N", $time);
 		$time = str_pad($time, 8, chr(0), STR_PAD_LEFT);
 
-		$hash   = hash_hmac('sha1', $time, $secret, true);
+		$hash = hash_hmac('sha1', $time, $secret, true);
 		$offset = ord(substr($hash, -1));
 		$offset = $offset & 0xF;
 
 		$truncatedHash = self::hashToInt($hash, $offset) & 0x7FFFFFFF;
-		$pinValue      = str_pad($truncatedHash % self::$PIN_MODULO, 6, "0", STR_PAD_LEFT);;
+		$pinValue = str_pad($truncatedHash % self::$PIN_MODULO, 6, "0", STR_PAD_LEFT);
 		return $pinValue;
 	}
 
@@ -82,7 +83,7 @@ class google_authenticator {
 	 */
 	protected function hashToInt($bytes, $start) {
 		$input = substr($bytes, $start, strlen($bytes) - $start);
-		$val2  = unpack("N", substr($input, 0, 4));
+		$val2 = unpack("N", substr($input, 0, 4));
 		return $val2[1];
 	}
 
@@ -96,8 +97,8 @@ class google_authenticator {
 	 * @return string A URL that can be used to generate a QR code with the provided secret.
 	 */
 	public function getUrl($user, $hostname, $secret) {
-		$url        = sprintf("otpauth://totp/%s@%s?secret=%s", $user, $hostname, $secret);
-		$encoder    = "https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=";
+		$url = sprintf("otpauth://totp/%s@%s?secret=%s", $user, $hostname, $secret);
+		$encoder = "https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=";
 		$encoderURL = sprintf("%sotpauth://totp/%s@%s&secret=%s", $encoder, $user, $hostname, $secret);
 		return $encoderURL;
 	}
@@ -110,7 +111,7 @@ class google_authenticator {
 	public function generateSecret() {
 		$secret = "";
 		for ($i = 1; $i <= self::$SECRET_LENGTH; $i++) {
-			$c      = rand(0, 255);
+			$c = rand(0, 255);
 			$secret .= pack("c", $c);
 		}
 

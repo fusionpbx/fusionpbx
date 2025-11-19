@@ -24,11 +24,11 @@ class cache {
 
 		//get the settings
 		$this->settings = $settings;
-		$this->method   = $this->setting('method');
-		$this->syslog   = $this->setting('syslog');
+		$this->method = $this->setting('method');
+		$this->syslog = $this->setting('syslog');
 		$this->location = $this->setting('location');
-		$this->method   = 'file';
-		$this->syslog   = 'false';
+		$this->method = 'file';
+		$this->syslog = 'false';
 		$this->location = '/var/cache/fusionpbx';
 	}
 
@@ -41,44 +41,6 @@ class cache {
 	 */
 	private function setting($subcategory) {
 		return $this->settings->get('cache', $subcategory);
-	}
-
-	/**
-	 * Set a value in the cache based on the cache type in global default settings.
-	 * 
-	 * Cache location is based on the global default setting for either "memcache" or "file".
-	 *
-	 * @param string $key   The key of the value to set.
-	 * @param mixed  $value The value to store.
-	 *
-	 * @return mixed When location is "file" the return value is in bytes written or null. When location is "memcache" return value is the return value from the switch socket response or false.
-	 */
-	public function set($key, $value) {
-
-		//change the delimiter
-		$key = str_replace(":", ".", $key);
-
-		//save to memcache
-		if ($this->method === "memcache") {
-			//connect to event socket
-			$esl = event_socket::create();
-			if ($esl === false) {
-				return false;
-			}
-
-			//run the memcache
-			$command = "memcache set " . $key . " " . $value;
-			$result  = event_socket::api($command);
-
-		}
-
-		//save to the file cache
-		if ($this->method === "file") {
-			$result = file_put_contents($this->location . "/" . $key, $value);
-		}
-
-		//return result
-		return $result;
 	}
 
 	/**
@@ -105,7 +67,7 @@ class cache {
 
 			//run the memcache
 			$command = "memcache get " . $key;
-			$result  = event_socket::api($command);
+			$result = event_socket::api($command);
 
 		}
 
@@ -118,6 +80,45 @@ class cache {
 
 		//return result
 		return $result ?? null;
+	}
+
+	/**
+	 * Set a value in the cache based on the cache type in global default settings.
+	 *
+	 * Cache location is based on the global default setting for either "memcache" or "file".
+	 *
+	 * @param string $key   The key of the value to set.
+	 * @param mixed  $value The value to store.
+	 *
+	 * @return mixed When location is "file" the return value is in bytes written or null. When location is "memcache"
+	 *               return value is the return value from the switch socket response or false.
+	 */
+	public function set($key, $value) {
+
+		//change the delimiter
+		$key = str_replace(":", ".", $key);
+
+		//save to memcache
+		if ($this->method === "memcache") {
+			//connect to event socket
+			$esl = event_socket::create();
+			if ($esl === false) {
+				return false;
+			}
+
+			//run the memcache
+			$command = "memcache set " . $key . " " . $value;
+			$result = event_socket::api($command);
+
+		}
+
+		//save to the file cache
+		if ($this->method === "file") {
+			$result = file_put_contents($this->location . "/" . $key, $value);
+		}
+
+		//return result
+		return $result;
 	}
 
 	/**
@@ -154,7 +155,7 @@ class cache {
 
 			//run the memcache
 			$command = "memcache delete " . $key;
-			$result  = event_socket::api($command);
+			$result = event_socket::api($command);
 
 		}
 
@@ -233,7 +234,7 @@ class cache {
 
 			//run the memcache
 			$command = "memcache flush";
-			$result  = event_socket::api($command);
+			$result = event_socket::api($command);
 
 		}
 

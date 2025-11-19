@@ -17,16 +17,16 @@ class array_order {
 	 * @return array The sorted array
 	 */
 	function sort() {
-		$args  = func_get_args();
+		$args = func_get_args();
 		$array = $args[0];
 		if (!$array) return [];
 		$this->sort_fields = array_slice($args, 1);
 		if (!$this->sort_fields) return $array();
 
 		if ($this->numeric) {
-			usort($array, array($this, 'numericCompare'));
+			usort($array, [$this, 'numericCompare']);
 		} else {
-			usort($array, array($this, 'stringCompare'));
+			usort($array, [$this, 'stringCompare']);
 		}
 		return $array;
 	}
@@ -37,7 +37,8 @@ class array_order {
 	 * @param array $a The first value to compare.
 	 * @param array $b The second value to compare.
 	 *
-	 * @return int A negative integer if the first value is less than the second, a positive integer if the first value is greater than the second, and zero if they are equal.
+	 * @return int A negative integer if the first value is less than the second, a positive integer if the first value
+	 *             is greater than the second, and zero if they are equal.
 	 */
 	function numericCompare($a, $b) {
 		foreach ($this->sort_fields as $sort_field) {

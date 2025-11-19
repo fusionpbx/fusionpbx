@@ -59,9 +59,9 @@ class template {
 		if ($this->engine === 'twig') {
 			require_once "resources/templates/engine/Twig/Autoloader.php";
 			Twig_Autoloader::register();
-			$loader       = new Twig_Loader_Filesystem($this->template_dir);
+			$loader = new Twig_Loader_Filesystem($this->template_dir);
 			$this->object = new Twig_Environment($loader);
-			$lexer        = new Twig_Lexer($this->object, [
+			$lexer = new Twig_Lexer($this->object, [
 				'tag_comment' => ['{*', '*}'],
 				'tag_block' => ['{', '}'],
 				'tag_variable' => ['{$', '}'],

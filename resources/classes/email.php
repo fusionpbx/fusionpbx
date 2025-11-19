@@ -88,6 +88,7 @@ class email {
 
 	/**
 	 * declare private variables
+	 *
 	 * @var string $name Property is only written but never read
 	 */
 	private $name;
@@ -97,14 +98,14 @@ class email {
 	 */
 	public function __construct(array $setting_array = []) {
 		//assign the variables
-		$this->name              = 'email'; //unused
-		$this->priority          = 0;
-		$this->debug_level       = 3;
+		$this->name = 'email'; //unused
+		$this->priority = 0;
+		$this->debug_level = 3;
 		$this->read_confirmation = false;
 
 		//set the domain and user uuids
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set the objects
 		$this->database = $setting_array['database'] ?? database::new();
@@ -129,9 +130,9 @@ class email {
 		}
 
 		//parse the email message
-		$mime                = new mime_parser_class;
+		$mime = new mime_parser_class;
 		$mime->decode_bodies = 1;
-		$parameters          = [
+		$parameters = [
 			//'File'=>$message_file,
 
 			// Read a message from a string instead of a file
@@ -143,7 +144,7 @@ class email {
 			// Do not retrieve or save message body parts
 			//   'SkipBody' => 1,
 		];
-		$success             = $mime->Decode($parameters, $decoded);
+		$success = $mime->Decode($parameters, $decoded);
 		unset($parameters);
 
 		if (!$success) {
@@ -151,13 +152,13 @@ class email {
 		} else {
 
 			//get the headers
-			$this->headers      = json_decode($decoded[0]["Headers"]["x-headers:"], true);
-			$this->subject      = $decoded[0]["Headers"]["subject:"];
-			$this->from_name    = $decoded[0]["ExtractedAddresses"]["from:"][0]["name"];
+			$this->headers = json_decode($decoded[0]["Headers"]["x-headers:"], true);
+			$this->subject = $decoded[0]["Headers"]["subject:"];
+			$this->from_name = $decoded[0]["ExtractedAddresses"]["from:"][0]["name"];
 			$this->from_address = $decoded[0]["ExtractedAddresses"]["from:"][0]["address"];
-			$this->reply_to     = $decoded[0]["Headers"]["reply-to:"];
-			$this->recipients   = $decoded[0]["ExtractedAddresses"]["to:"];
-			$this->date         = $decoded[0]["Headers"]["date:"];
+			$this->reply_to = $decoded[0]["Headers"]["reply-to:"];
+			$this->recipients = $decoded[0]["ExtractedAddresses"]["to:"];
+			$this->date = $decoded[0]["Headers"]["date:"];
 
 			//debug information
 			//view_array($decoded[0]);
@@ -168,7 +169,7 @@ class email {
 			$this->body = ''; //$parts_array["Parts"][0]["Headers"]["content-type:"];
 
 			//get the body
-			$this->body         = '';
+			$this->body = '';
 			$this->content_type = $decoded[0]['Headers']['content-type:'];
 			if (substr($this->content_type, 0, 15) == "multipart/mixed" || substr($this->content_type, 0, 21) == "multipart/alternative") {
 				foreach ($decoded[0]["Parts"] as $row) {
@@ -183,7 +184,7 @@ class email {
 				}
 			} else {
 				$content_type_array = explode(";", $content_type);
-				$this->body         = $decoded[0]["Body"];
+				$this->body = $decoded[0]["Body"];
 				//if ($content_type_array[0] == "text/html" || $content_type_array[0] == "text/plain") {
 				//	$body = $row["Body"];
 				//}
@@ -208,14 +209,14 @@ class email {
 				//inline
 				$filedisposition = $parts_array["FileDisposition"];
 
-				$body_part   = $parts_array["BodyPart"];
+				$body_part = $parts_array["BodyPart"];
 				$body_length = $parts_array["BodyLength"];
 
 				if (!empty($file)) {
 					//get the file information
-					$file_ext  = pathinfo($file, PATHINFO_EXTENSION);
+					$file_ext = pathinfo($file, PATHINFO_EXTENSION);
 					$file_name = substr($file, 0, (strlen($file) - strlen($file_ext)) - 1);
-					$encoding  = "base64"; //base64_decode
+					$encoding = "base64"; //base64_decode
 
 					switch ($file_ext) {
 						case "wav":
@@ -239,8 +240,8 @@ class email {
 					}
 
 					//add attachment(s)
-					$this->attachments[$x]['type']  = 'string';
-					$this->attachments[$x]['name']  = $file;
+					$this->attachments[$x]['type'] = 'string';
+					$this->attachments[$x]['name'] = $file;
 					$this->attachments[$x]['value'] = $parts_array["Body"];
 
 					//increment the id
@@ -284,15 +285,15 @@ class email {
 			}
 
 			//prepare the array
-			$array['email_queue'][0]['email_queue_uuid']  = $email_queue_uuid;
-			$array['email_queue'][0]['domain_uuid']       = $this->domain_uuid;
-			$array['email_queue'][0]['hostname']          = gethostname();
-			$array['email_queue'][0]['email_date']        = 'now()';
-			$array['email_queue'][0]['email_from']        = $email_from;
-			$array['email_queue'][0]['email_to']          = $this->recipients;
-			$array['email_queue'][0]['email_subject']     = $this->subject;
-			$array['email_queue'][0]['email_body']        = $this->body;
-			$array['email_queue'][0]['email_status']      = 'waiting';
+			$array['email_queue'][0]['email_queue_uuid'] = $email_queue_uuid;
+			$array['email_queue'][0]['domain_uuid'] = $this->domain_uuid;
+			$array['email_queue'][0]['hostname'] = gethostname();
+			$array['email_queue'][0]['email_date'] = 'now()';
+			$array['email_queue'][0]['email_from'] = $email_from;
+			$array['email_queue'][0]['email_to'] = $this->recipients;
+			$array['email_queue'][0]['email_subject'] = $this->subject;
+			$array['email_queue'][0]['email_body'] = $this->body;
+			$array['email_queue'][0]['email_status'] = 'waiting';
 			$array['email_queue'][0]['email_retry_count'] = null;
 			//$array['email_queue'][0]['email_action_before'] = $email_action_before;
 			//$array['email_queue'][0]['email_action_after'] = $email_action_after;
@@ -352,13 +353,13 @@ class email {
 
 					//add the attachments to the array
 					$array['email_queue_attachments'][$y]['email_queue_attachment_uuid'] = uuid();
-					$array['email_queue_attachments'][$y]['email_queue_uuid']            = $email_queue_uuid;
-					$array['email_queue_attachments'][$y]['domain_uuid']                 = $this->domain_uuid;
-					$array['email_queue_attachments'][$y]['email_attachment_mime_type']  = $attachment['mime_type'];
-					$array['email_queue_attachments'][$y]['email_attachment_type']       = $attachment['type'];
-					$array['email_queue_attachments'][$y]['email_attachment_name']       = $attachment['name'];
-					$array['email_queue_attachments'][$y]['email_attachment_path']       = $attachment['path'];
-					$array['email_queue_attachments'][$y]['email_attachment_base64']     = $attachment['base64'];
+					$array['email_queue_attachments'][$y]['email_queue_uuid'] = $email_queue_uuid;
+					$array['email_queue_attachments'][$y]['domain_uuid'] = $this->domain_uuid;
+					$array['email_queue_attachments'][$y]['email_attachment_mime_type'] = $attachment['mime_type'];
+					$array['email_queue_attachments'][$y]['email_attachment_type'] = $attachment['type'];
+					$array['email_queue_attachments'][$y]['email_attachment_name'] = $attachment['name'];
+					$array['email_queue_attachments'][$y]['email_attachment_path'] = $attachment['path'];
+					$array['email_queue_attachments'][$y]['email_attachment_base64'] = $attachment['base64'];
 					$y++;
 				}
 			}
@@ -461,25 +462,25 @@ class email {
 				if (!empty($this->settings->get('email', 'smtp_hostname'))) {
 					$smtp['hostname'] = $this->settings->get('email', 'smtp_hostname');
 				}
-				$smtp['host']                 = $this->settings->get('email', 'smtp_host', '127.0.0.1');
-				$smtp['port']                 = (int)$this->settings->get('email', 'smtp_port', 0);
-				$smtp['secure']               = $this->settings->get('email', 'smtp_secure');
-				$smtp['auth']                 = $this->settings->get('email', 'smtp_auth');
-				$smtp['username']             = $this->settings->get('email', 'smtp_username');
-				$smtp['password']             = $this->settings->get('email', 'smtp_password');
-				$smtp['from']                 = $this->settings->get('voicemail', 'smtp_from') ?? $this->settings->get('email', 'smtp_from');
-				$smtp['from_name']            = $this->settings->get('voicemail', 'smtp_from_name') ?? $this->settings->get('email', 'smtp_from_name');
+				$smtp['host'] = $this->settings->get('email', 'smtp_host', '127.0.0.1');
+				$smtp['port'] = (int)$this->settings->get('email', 'smtp_port', 0);
+				$smtp['secure'] = $this->settings->get('email', 'smtp_secure');
+				$smtp['auth'] = $this->settings->get('email', 'smtp_auth');
+				$smtp['username'] = $this->settings->get('email', 'smtp_username');
+				$smtp['password'] = $this->settings->get('email', 'smtp_password');
+				$smtp['from'] = $this->settings->get('voicemail', 'smtp_from') ?? $this->settings->get('email', 'smtp_from');
+				$smtp['from_name'] = $this->settings->get('voicemail', 'smtp_from_name') ?? $this->settings->get('email', 'smtp_from_name');
 				$smtp['validate_certificate'] = $this->settings->get('email', 'smtp_validate_certificate', true);
-				$smtp['crypto_method']        = $this->settings->get('email', 'smtp_crypto_method') ?? null;
+				$smtp['crypto_method'] = $this->settings->get('email', 'smtp_crypto_method') ?? null;
 
 				//override the domain-specific smtp server settings, if any
-				$sql                       = "select domain_setting_subcategory, domain_setting_value ";
-				$sql                       .= "from v_domain_settings ";
-				$sql                       .= "where domain_uuid = :domain_uuid ";
-				$sql                       .= "and (domain_setting_category = 'email' or domain_setting_category = 'voicemail') ";
-				$sql                       .= "and domain_setting_enabled = 'true' ";
+				$sql = "select domain_setting_subcategory, domain_setting_value ";
+				$sql .= "from v_domain_settings ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and (domain_setting_category = 'email' or domain_setting_category = 'voicemail') ";
+				$sql .= "and domain_setting_enabled = 'true' ";
 				$parameters['domain_uuid'] = $this->domain_uuid;
-				$result                    = $this->database->select($sql, $parameters, 'all');
+				$result = $this->database->select($sql, $parameters, 'all');
 				if (is_array($result) && @sizeof($result) != 0) {
 					foreach ($result as $row) {
 						if ($row['domain_setting_value'] != '') {
@@ -490,9 +491,9 @@ class email {
 				unset($sql, $parameters, $result, $row);
 
 				//value adjustments
-				$smtp['auth']     = ($smtp['auth'] == "true") ? true : false;
+				$smtp['auth'] = ($smtp['auth'] == "true") ? true : false;
 				$smtp['password'] = ($smtp['password'] != '') ? $smtp['password'] : null;
-				$smtp['secure']   = ($smtp['secure'] != "none") ? $smtp['secure'] : null;
+				$smtp['secure'] = ($smtp['secure'] != "none") ? $smtp['secure'] : null;
 				$smtp['username'] = ($smtp['username'] != '') ? $smtp['username'] : null;
 
 				//create the email object and set general settings
@@ -516,21 +517,21 @@ class email {
 
 				$smtp_secure = true;
 				if ($smtp['secure'] == "") {
-					$mail->SMTPSecure  = 'none';
+					$mail->SMTPSecure = 'none';
 					$mail->SMTPAutoTLS = false;
-					$smtp_secure       = false;
+					$smtp_secure = false;
 				} elseif ($smtp['secure'] == "none") {
-					$mail->SMTPSecure  = 'none';
+					$mail->SMTPSecure = 'none';
 					$mail->SMTPAutoTLS = false;
-					$smtp_secure       = false;
+					$smtp_secure = false;
 				} else {
 					$mail->SMTPSecure = $smtp['secure'];
 				}
 
 				if ($smtp_secure && isset($smtp['validate_certificate']) && !$smtp['validate_certificate']) {
 					//bypass certificate check e.g. for self-signed certificates
-					$smtp_options['ssl']['verify_peer']       = false;
-					$smtp_options['ssl']['verify_peer_name']  = false;
+					$smtp_options['ssl']['verify_peer'] = false;
+					$smtp_options['ssl']['verify_peer_name'] = false;
 					$smtp_options['ssl']['allow_self_signed'] = true;
 				}
 
@@ -545,7 +546,7 @@ class email {
 				}
 
 				$this->from_address = ($this->from_address != '') ? $this->from_address : $smtp['from'];
-				$this->from_name    = ($this->from_name != '') ? $this->from_name : $smtp['from_name'];
+				$this->from_name = ($this->from_name != '') ? $this->from_name : $smtp['from_name'];
 				$mail->SetFrom($this->from_address, $this->from_name);
 				$mail->AddReplyTo($this->from_address, $this->from_name);
 				$mail->Subject = $this->subject;
@@ -559,7 +560,7 @@ class email {
 				if (is_numeric($this->debug_level) && $this->debug_level > 0) {
 					$mail->SMTPDebug = $this->debug_level;
 				}
-				$mail->Timeout       = 20; //set the timeout (seconds)
+				$mail->Timeout = 20; //set the timeout (seconds)
 				$mail->SMTPKeepAlive = true; //don't close the connection between messages
 
 				//add the email recipients

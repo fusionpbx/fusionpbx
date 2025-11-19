@@ -27,7 +27,7 @@ class vcard {
 	 * @return bool True on successful initialization.
 	 */
 	public function __construct() {
-		$this->log  = "New vcard() called<br />";
+		$this->log = "New vcard() called<br />";
 		$this->data = [
 			"display_name" => null
 			, "first_name" => null
@@ -76,6 +76,33 @@ class vcard {
 	build() method checks all the values, builds appropriate defaults for
 	missing values, generates the vcard data string.
 	*/
+
+	/**
+	 * Downloads the vCard data as a file.
+	 *
+	 * @access public
+	 * @return bool True on successful download, false otherwise.
+	 */
+	function download() {
+		$this->log .= "vcard download() called<br />";
+		if (!$this->card) {
+			$this->build();
+		}
+		if (!$this->filename) {
+			$this->filename = trim($this->data['display_name']);
+		}
+		$this->filename = str_replace(" ", "_", $this->filename);
+		header("Content-type: text/directory");
+		header("Content-Disposition: attachment; filename=" . $this->filename . ".vcf");
+		header("Pragma: public");
+		echo $this->card;
+		return true;
+	}
+
+	/*
+	download() method streams the vcard to the browser client.
+	*/
+
 	/**
 	 * Builds the vCard.
 	 *
@@ -213,30 +240,5 @@ class vcard {
 		}
 		$this->card .= "TZ:" . $this->data['timezone'] . "\r\n";
 		$this->card .= "END:VCARD";
-	}
-
-	/*
-	download() method streams the vcard to the browser client.
-	*/
-	/**
-	 * Downloads the vCard data as a file.
-	 *
-	 * @access public
-	 * @return bool True on successful download, false otherwise.
-	 */
-	function download() {
-		$this->log .= "vcard download() called<br />";
-		if (!$this->card) {
-			$this->build();
-		}
-		if (!$this->filename) {
-			$this->filename = trim($this->data['display_name']);
-		}
-		$this->filename = str_replace(" ", "_", $this->filename);
-		header("Content-type: text/directory");
-		header("Content-Disposition: attachment; filename=" . $this->filename . ".vcf");
-		header("Pragma: public");
-		echo $this->card;
-		return true;
 	}
 }

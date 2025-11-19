@@ -52,7 +52,7 @@ class modal {
 
 		//add multi-lingual support
 		$language = new text;
-		$text     = $language->get();
+		$text = $language->get();
 
 		$modal = "<div id='" . (!empty($array['id']) ? $array['id'] : 'modal') . "' class='modal-window'>\n";
 		$modal .= "	<div>\n";
@@ -61,19 +61,19 @@ class modal {
 			//determine type
 			switch ($array['type']) {
 				case 'copy':
-					$array['title']   = $text['modal_title-confirmation'];
+					$array['title'] = $text['modal_title-confirmation'];
 					$array['message'] = $text['confirm-copy'];
 					break;
 				case 'toggle':
-					$array['title']   = $text['modal_title-confirmation'];
+					$array['title'] = $text['modal_title-confirmation'];
 					$array['message'] = $text['confirm-toggle'];
 					break;
 				case 'delete':
-					$array['title']   = $text['modal_title-confirmation'];
+					$array['title'] = $text['modal_title-confirmation'];
 					$array['message'] = $text['confirm-delete'];
 					break;
 				case 'unassign':
-					$array['title']   = $text['modal_title-confirmation'];
+					$array['title'] = $text['modal_title-confirmation'];
 					$array['message'] = $text['confirm-unassign'];
 				default: //general
 					$array['title'] = !empty($array['title']) ? $array['title'] : $text['modal_title-confirmation'];

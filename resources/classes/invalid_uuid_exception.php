@@ -41,7 +41,7 @@ class invalid_uuid_exception extends Exception {
 	 *
 	 * @return void
 	 */
-	public function __construct(string $message = "UUID is not valid", int $code = 0, ?\Throwable $previous = null) {
+	public function __construct(string $message = "UUID is not valid", int $code = 0, ?Throwable $previous = null) {
 		parent::__construct($message, $code, $previous);
 	}
 }

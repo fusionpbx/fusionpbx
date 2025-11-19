@@ -40,6 +40,18 @@ class logging {
 	}
 
 	/**
+	 * Clear debug settings
+	 *
+	 * @return void
+	 */
+	private function clear_debug() {
+		$this->debug_line = null;
+		$this->debug_file = null;
+		$this->debug_func = null;
+		$this->debug_class = null;
+	}
+
+	/**
 	 * Clean up any resources held by this object on destruction.
 	 *
 	 * @throws Exception if an error occurs during flushing or closing of the file pointer.
@@ -57,6 +69,8 @@ class logging {
 		}
 	}
 
+	// write message to the log file
+
 	/**
 	 * Ensure all data arrives on disk
 	 *
@@ -72,50 +86,6 @@ class logging {
 		} catch (Exception $ex) {
 			throw $ex;
 		}
-	}
-
-	// write message to the log file
-
-	/**
-	 * Writes a message to the underlying output stream.
-	 *
-	 * @param string $msg The message to be written
-	 *
-	 * @throws Exception If an error occurs while writing to the stream
-	 */
-	private function _write($msg) {
-		// define current time and suppress E_WARNING if using the system TZ settings
-	}
-
-	/**
-	 * Clear debug settings
-	 *
-	 * @return void
-	 */
-	private function clear_debug() {
-		$this->debug_line  = null;
-		$this->debug_file  = null;
-		$this->debug_func  = null;
-		$this->debug_class = null;
-	}
-
-	/**
-	 * Write a log message to the file
-	 *
-	 * @param string $level   The level of the log message (e.g. 'error', 'warning', etc.)
-	 * @param string $message The actual log message
-	 *
-	 * @return void
-	 */
-	public function write(string $level, string $message) {
-		$this->get_backtrace_details();
-		// write current time, script name and message to the log file
-		// (don't forget to set the INI setting date.timezone)
-		$time = @date('Y-m-d H:i:s');
-		$file = $this->debug_file ?? 'file not set';
-		$line = $this->debug_line ?? '0000';
-		fwrite($this->fp, "[$time] [$level] [{$file}:{$line}] $message");
-		$this->clear_debug();
 	}
 
 	/**
@@ -183,6 +153,37 @@ class logging {
 	}
 
 	/**
+	 * Write a debug message to the log along with its backtrace details
+	 *
+	 * @param string $message The debug message to be written
+	 *
+	 * @return void
+	 */
+	public function debug($message) {
+		$this->get_backtrace_details();
+		$this->writeln("DEBUG", $message);
+	}
+
+	/**
+	 * Get detailed backtrace information for the current call stack.
+	 *
+	 * If the debug file, line and function have not been cached, this method will
+	 * cache them in object properties to prevent repeated calls to debug_backtrace().
+	 *
+	 * @return void
+	 */
+	private function get_backtrace_details() {
+		if ($this->debug_file === null) {
+			$debug = debug_backtrace();
+			$ndx = count($debug) - 1;
+			$this->debug_file = $debug[$ndx]['file'];
+			$this->debug_line = $debug[$ndx]['line'];
+			$this->debug_func = $debug[$ndx]['function'];
+			$this->debug_class = $debug[$ndx]['class'] ?? '';
+		}
+	}
+
+	/**
 	 * Write a message to the output with an optional level and trailing newline character.
 	 *
 	 * @param string $level   The logging level (optional).
@@ -194,15 +195,22 @@ class logging {
 	}
 
 	/**
-	 * Write a debug message to the log along with its backtrace details
+	 * Write a log message to the file
 	 *
-	 * @param string $message The debug message to be written
+	 * @param string $level   The level of the log message (e.g. 'error', 'warning', etc.)
+	 * @param string $message The actual log message
 	 *
 	 * @return void
 	 */
-	public function debug($message) {
+	public function write(string $level, string $message) {
 		$this->get_backtrace_details();
-		$this->writeln("DEBUG", $message);
+		// write current time, script name and message to the log file
+		// (don't forget to set the INI setting date.timezone)
+		$time = @date('Y-m-d H:i:s');
+		$file = $this->debug_file ?? 'file not set';
+		$line = $this->debug_line ?? '0000';
+		fwrite($this->fp, "[$time] [$level] [{$file}:{$line}] $message");
+		$this->clear_debug();
 	}
 
 	/**
@@ -240,22 +248,14 @@ class logging {
 	}
 
 	/**
-	 * Get detailed backtrace information for the current call stack.
+	 * Writes a message to the underlying output stream.
 	 *
-	 * If the debug file, line and function have not been cached, this method will
-	 * cache them in object properties to prevent repeated calls to debug_backtrace().
+	 * @param string $msg The message to be written
 	 *
-	 * @return void
+	 * @throws Exception If an error occurs while writing to the stream
 	 */
-	private function get_backtrace_details() {
-		if ($this->debug_file === null) {
-			$debug             = debug_backtrace();
-			$ndx               = count($debug) - 1;
-			$this->debug_file  = $debug[$ndx]['file'];
-			$this->debug_line  = $debug[$ndx]['line'];
-			$this->debug_func  = $debug[$ndx]['function'];
-			$this->debug_class = $debug[$ndx]['class'] ?? '';
-		}
+	private function _write($msg) {
+		// define current time and suppress E_WARNING if using the system TZ settings
 	}
 }
 

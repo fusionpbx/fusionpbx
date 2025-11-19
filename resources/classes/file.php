@@ -51,11 +51,59 @@ class file {
 	public function __construct(array $setting_array = []) {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
 		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+	}
+
+	/**
+	 * Returns an array of sound files.
+	 *
+	 * This method retrieves a list of sound files based on the provided language,
+	 * dialect, and voice settings. If no specific values are provided, default values
+	 * will be used.
+	 *
+	 * @param string $language The desired language (default: 'en').
+	 * @param string $dialect  The desired dialect (default: 'us').
+	 * @param string $voice    The desired voice (default: 'callie').
+	 *
+	 * @return array An array of sound files.
+	 */
+	public function sounds($language = 'en', $dialect = 'us', $voice = 'callie') {
+		//define an empty array
+		$array = [];
+
+		//set default values
+		if (!isset($language)) {
+			$language = 'en';
+		}
+		if (!isset($dialect)) {
+			$dialect = 'us';
+		}
+		if (!isset($voice)) {
+			$voice = 'callie';
+		}
+
+		//set the variables
+		if (!empty($this->settings->get('switch', 'sounds')) && file_exists($this->settings->get('switch', 'sounds'))) {
+			$dir = $this->settings->get('switch', 'sounds') . '/' . $language . '/' . $dialect . '/' . $voice;
+			$rate = '8000';
+			$files = $this->glob($dir . '/*/' . $rate, true);
+		}
+
+		//loop through the languages
+		if (!empty($files)) {
+			foreach ($files as $file) {
+				$file = substr($file, strlen($dir) + 1);
+				$file = str_replace("/" . $rate, "", $file);
+				$array[] = $file;
+			}
+		}
+
+		//return the list of sounds
+		return $array;
 	}
 
 	/**
@@ -89,54 +137,6 @@ class file {
 			}
 		}
 		return $files;
-	}
-
-	/**
-	 * Returns an array of sound files.
-	 *
-	 * This method retrieves a list of sound files based on the provided language,
-	 * dialect, and voice settings. If no specific values are provided, default values
-	 * will be used.
-	 *
-	 * @param string $language The desired language (default: 'en').
-	 * @param string $dialect  The desired dialect (default: 'us').
-	 * @param string $voice    The desired voice (default: 'callie').
-	 *
-	 * @return array An array of sound files.
-	 */
-	public function sounds($language = 'en', $dialect = 'us', $voice = 'callie') {
-		//define an empty array
-		$array = [];
-
-		//set default values
-		if (!isset($language)) {
-			$language = 'en';
-		}
-		if (!isset($dialect)) {
-			$dialect = 'us';
-		}
-		if (!isset($voice)) {
-			$voice = 'callie';
-		}
-
-		//set the variables
-		if (!empty($this->settings->get('switch', 'sounds')) && file_exists($this->settings->get('switch', 'sounds'))) {
-			$dir   = $this->settings->get('switch', 'sounds') . '/' . $language . '/' . $dialect . '/' . $voice;
-			$rate  = '8000';
-			$files = $this->glob($dir . '/*/' . $rate, true);
-		}
-
-		//loop through the languages
-		if (!empty($files)) {
-			foreach ($files as $file) {
-				$file    = substr($file, strlen($dir) + 1);
-				$file    = str_replace("/" . $rate, "", $file);
-				$array[] = $file;
-			}
-		}
-
-		//return the list of sounds
-		return $array;
 	}
 
 }

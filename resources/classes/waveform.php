@@ -26,33 +26,34 @@
 
 namespace maximal\audio;
 
+use Exception;
+
 /**
  * Waveform class allows you to get waveform data and images from audio files
  *
  * @package maximal\audio
  */
 class Waveform {
-	protected $filename;
-	protected $info;
-	protected $channels;
-	protected $samples;
-	protected $sampleRate;
-	protected $duration;
-
 	public static $linesPerPixel = 8;
 	public static $samplesPerLine = 512;
-	public static $singlePhase; // set `true` to get positive waveform phase only, `false` to get both positive and negative waveform phases
-	public static $singleAxis; // combine double or single phases to use same axis
+public static $singlePhase;
+public static $singleAxis;
+	public static $color = [95, 95, 95, 0.5];
+public static $colorA;
+public static $colorB;
+	public static $backgroundColor = [245, 245, 245, 1];
+		public static $axisColor = [0, 0, 0, 0.1]; // set `true` to get positive waveform phase only, `false` to get both positive and negative waveform phases
+		public static $soxCommand = 'sox'; // combine double or single phases to use same axis
 
 	// Colors in CSS `rgba(red, green, blue, opacity)` format
-	public static $color = [95, 95, 95, 0.5];
-	public static $colorA; // color of left channel (1)
-	public static $colorB; // color of right channel (2)
-	public static $backgroundColor = [245, 245, 245, 1];
-	public static $axisColor = [0, 0, 0, 0.1];
+	protected $filename;
+		protected $info; // color of left channel (1)
+		protected $channels; // color of right channel (2)
+	protected $samples;
+	protected $sampleRate;
 
 	// SoX command: 'sox', '/usr/local/bin/sox' etc
-	public static $soxCommand = 'sox';
+	protected $duration;
 
 	/**
 	 * Initializes a new instance of this class with the specified filename.
@@ -63,90 +64,6 @@ class Waveform {
 	 */
 	public function __construct($filename) {
 		$this->filename = $filename;
-	}
-
-	/**
-	 * Retrieves information about the audio file associated with this instance.
-	 *
-	 * @access public
-	 */
-	public function getInfo() {
-		$out = null;
-		$ret = null;
-		exec(self::$soxCommand . ' --i ' . escapeshellarg($this->filename) . ' 2>&1', $out, $ret);
-		$str = implode('|', $out);
-
-		$match = null;
-		if (preg_match('/Channels?\s*\:\s*(\d+)/ui', $str, $match)) {
-			$this->channels = intval($match[1]);
-		}
-
-		$match = null;
-		if (preg_match('/Sample\s*Rate\s*\:\s*(\d+)/ui', $str, $match)) {
-			$this->sampleRate = intval($match[1]);
-		}
-
-		$match = null;
-		if (preg_match('/Duration.*[^\d](\d+)\s*samples?/ui', $str, $match)) {
-			$this->samples = intval($match[1]);
-		}
-
-		if ($this->samples && $this->sampleRate) {
-			$this->duration = 1.0 * $this->samples / $this->sampleRate;
-		}
-
-		if ($ret !== 0) {
-			throw new \Exception('Failed to get audio info.' . PHP_EOL . 'Error: ' . implode(PHP_EOL, $out) . PHP_EOL);
-		}
-	}
-
-	/**
-	 * Retrieves the sample rate associated with this instance.
-	 *
-	 * If the sample rate has not been previously retrieved, it will be obtained
-	 * by calling getInfo(). The sample rate is then cached for future retrieval.
-	 *
-	 * @return int|null The sample rate in Hz, or null if unable to retrieve the information.
-	 *
-	 * @access public
-	 */
-	public function getSampleRate() {
-		if (!$this->sampleRate) {
-			$this->getInfo();
-		}
-		return $this->sampleRate;
-	}
-
-	/**
-	 * Retrieves a collection of channels.
-	 *
-	 * If no channels have been loaded yet, the {@link getInfo()} method is called to load them first.
-	 *
-	 * @return array A collection of channel objects.
-	 *
-	 * @access public
-	 */
-	public function getChannels() {
-		if (!$this->channels) {
-			$this->getInfo();
-		}
-		return $this->channels;
-	}
-
-	/**
-	 * Retrieves a collection of sample data.
-	 *
-	 * If no samples have been retrieved yet, this method will call getInfo() to populate the internal samples list.
-	 *
-	 * @return int The collection of sample data.
-	 *
-	 * @access public
-	 */
-	public function getSamples() {
-		if (!$this->samples) {
-			$this->getInfo();
-		}
-		return $this->samples;
 	}
 
 	/**
@@ -178,9 +95,9 @@ class Waveform {
 	public function getWaveform($filename, $width, $height) {
 		// Calculating parameters
 		$needChannels = $this->getChannels() > 1 ? 2 : 1;
-		$data         = $this->getWaveformData($width, self::$singlePhase ?? false);
-		$lines1       = $data['lines1'];
-		$lines2       = $data['lines2'];
+		$data = $this->getWaveformData($width, self::$singlePhase ?? false);
+		$lines1 = $data['lines1'];
+		$lines2 = $data['lines2'];
 
 		// Creating image
 		$img = imagecreatetruecolor($width, $height);
@@ -190,11 +107,11 @@ class Waveform {
 		//}
 
 		// Colors
-		$back       = self::rgbaToColor($img, self::$backgroundColor);
-		$color      = self::rgbaToColor($img, self::$color);
-		$colorA     = self::$colorA ? self::rgbaToColor($img, self::$colorA) : null;
-		$colorB     = self::$colorB ? self::rgbaToColor($img, self::$colorB) : null;
-		$axis       = self::rgbaToColor($img, self::$axisColor);
+		$back = self::rgbaToColor($img, self::$backgroundColor);
+		$color = self::rgbaToColor($img, self::$color);
+		$colorA = self::$colorA ? self::rgbaToColor($img, self::$colorA) : null;
+		$colorB = self::$colorB ? self::rgbaToColor($img, self::$colorB) : null;
+		$axis = self::rgbaToColor($img, self::$axisColor);
 		$singleAxis = self::$singleAxis ?? false;
 		imagefill($img, 0, 0, $back);
 
@@ -263,6 +180,22 @@ class Waveform {
 	}
 
 	/**
+	 * Retrieves a collection of channels.
+	 *
+	 * If no channels have been loaded yet, the {@link getInfo()} method is called to load them first.
+	 *
+	 * @return array A collection of channel objects.
+	 *
+	 * @access public
+	 */
+	public function getChannels() {
+		if (!$this->channels) {
+			$this->getInfo();
+		}
+		return $this->channels;
+	}
+
+	/**
 	 * Get waveform data from the audio file.
 	 *
 	 * @param int $width Desired width of the image file in pixels
@@ -272,9 +205,9 @@ class Waveform {
 	 */
 	public function getWaveformData($width) {
 		// Calculating parameters
-		$needChannels    = $this->getChannels() > 1 ? 2 : 1;
+		$needChannels = $this->getChannels() > 1 ? 2 : 1;
 		$samplesPerPixel = self::$samplesPerLine * self::$linesPerPixel;
-		$needRate        = 1.0 * $width * $samplesPerPixel * $this->getSampleRate() / $this->getSamples();
+		$needRate = 1.0 * $width * $samplesPerPixel * $this->getSampleRate() / $this->getSamples();
 
 		//if ($needRate > 4000) {
 		//	$needRate = 4000;
@@ -291,16 +224,16 @@ class Waveform {
 			1 => ['pipe', 'w'],  // stdout
 			2 => ['pipe', 'w'],  // stderr
 		];
-		$pipes   = null;
-		$proc    = proc_open($command, $outputs, $pipes);
+		$pipes = null;
+		$proc = proc_open($command, $outputs, $pipes);
 		if (!$proc) {
-			throw new \Exception('Failed to run `sox` command');
+			throw new Exception('Failed to run `sox` command');
 		}
 
 		$lines1 = [];
 		$lines2 = [];
 		while ($chunk = fread($pipes[1], 4 * $needChannels * self::$samplesPerLine)) {
-			$data     = unpack('f*', $chunk);
+			$data = unpack('f*', $chunk);
 			$channel1 = [];
 			$channel2 = [];
 			foreach ($data as $index => $sample) {
@@ -333,10 +266,78 @@ class Waveform {
 		$ret = proc_close($proc);
 
 		if ($ret !== 0) {
-			throw new \Exception('Failed to run `sox` command. Error:' . PHP_EOL . $err);
+			throw new Exception('Failed to run `sox` command. Error:' . PHP_EOL . $err);
 		}
 
 		return ['lines1' => $lines1, 'lines2' => $lines2];
+	}
+
+	/**
+	 * Retrieves the sample rate associated with this instance.
+	 *
+	 * If the sample rate has not been previously retrieved, it will be obtained
+	 * by calling getInfo(). The sample rate is then cached for future retrieval.
+	 *
+	 * @return int|null The sample rate in Hz, or null if unable to retrieve the information.
+	 *
+	 * @access public
+	 */
+	public function getSampleRate() {
+		if (!$this->sampleRate) {
+			$this->getInfo();
+		}
+		return $this->sampleRate;
+	}
+
+	/**
+	 * Retrieves information about the audio file associated with this instance.
+	 *
+	 * @access public
+	 */
+	public function getInfo() {
+		$out = null;
+		$ret = null;
+		exec(self::$soxCommand . ' --i ' . escapeshellarg($this->filename) . ' 2>&1', $out, $ret);
+		$str = implode('|', $out);
+
+		$match = null;
+		if (preg_match('/Channels?\s*\:\s*(\d+)/ui', $str, $match)) {
+			$this->channels = intval($match[1]);
+		}
+
+		$match = null;
+		if (preg_match('/Sample\s*Rate\s*\:\s*(\d+)/ui', $str, $match)) {
+			$this->sampleRate = intval($match[1]);
+		}
+
+		$match = null;
+		if (preg_match('/Duration.*[^\d](\d+)\s*samples?/ui', $str, $match)) {
+			$this->samples = intval($match[1]);
+		}
+
+		if ($this->samples && $this->sampleRate) {
+			$this->duration = 1.0 * $this->samples / $this->sampleRate;
+		}
+
+		if ($ret !== 0) {
+			throw new Exception('Failed to get audio info.' . PHP_EOL . 'Error: ' . implode(PHP_EOL, $out) . PHP_EOL);
+		}
+	}
+
+	/**
+	 * Retrieves a collection of sample data.
+	 *
+	 * If no samples have been retrieved yet, this method will call getInfo() to populate the internal samples list.
+	 *
+	 * @return int The collection of sample data.
+	 *
+	 * @access public
+	 */
+	public function getSamples() {
+		if (!$this->samples) {
+			$this->getInfo();
+		}
+		return $this->samples;
 	}
 
 	/**

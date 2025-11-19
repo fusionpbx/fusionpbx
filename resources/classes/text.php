@@ -7,12 +7,17 @@
 class text implements clear_cache {
 
 	/**
+	 * Translated flattened text array using the file path as key
+	 *
+	 * @var array
+	 */
+	private static $tanslated;
+	/**
 	 * Contains the list of supported languages
 	 *
 	 * @var array
 	 */
 	public $languages;
-
 	/**
 	 * Legacy older list of supported languages
 	 *
@@ -33,21 +38,18 @@ class text implements clear_cache {
 		'fr' => 'fr-fr',
 		'pt' => 'pt-pt',
 	];
-
 	/**
 	 * Set in the constructor. Must be a database object and cannot be null.
 	 *
 	 * @var database Database Object
 	 */
 	private $database;
-
 	/**
 	 * Settings object set in the constructor. Must be a settings object and cannot be null.
 	 *
 	 * @var settings Settings Object
 	 */
 	private $settings;
-
 	/**
 	 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in
 	 * the session global array
@@ -55,7 +57,6 @@ class text implements clear_cache {
 	 * @var string
 	 */
 	private $user_uuid;
-
 	/**
 	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set
 	 * in the session global array
@@ -63,14 +64,6 @@ class text implements clear_cache {
 	 * @var string
 	 */
 	private $domain_uuid;
-
-	/**
-	 * Translated flattened text array using the file path as key
-	 *
-	 * @var array
-	 */
-	private static $tanslated;
-
 	/**
 	 * @var bool
 	 */
@@ -92,7 +85,7 @@ class text implements clear_cache {
 
 		//set the domain and user uuids
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//open a database connection
 		if (empty($setting_array['database'])) {
@@ -124,7 +117,34 @@ class text implements clear_cache {
 		//support legacy variable
 		if (is_array($languages)) {
 			$_SESSION['app']['languages'] = $languages;
-			$this->languages              = $languages;
+			$this->languages = $languages;
+		}
+	}
+
+	/**
+	 * The clear_cache method is called automatically for any class that implements the clear_cache interface.
+	 * The function declared here ensures that all clear_cache methods have the same number of parameters being passed,
+	 * which in this case, are no parameters.
+	 */
+	public static function clear_cache() {
+		//check for apcu extension and if is enabled
+		if (!function_exists('apcu_enabled') || !apcu_enabled()) {
+			return;
+		}
+
+		//get all cache entries
+		$cache = apcu_cache_info(false);
+		if (empty($cache['cache_list'])) {
+			//no entries to process
+			return;
+		}
+
+		//clear apcu cache of any text entries
+		foreach ($cache['cache_list'] as $entry) {
+			$key = $entry['info'];
+			if (str_starts_with($key, 'text_')) {
+				apcu_delete($key);
+			}
 		}
 	}
 
@@ -208,6 +228,52 @@ class text implements clear_cache {
 	}
 
 	/**
+	 * Detect all languages from the application and session language settings.
+	 *
+	 * @param bool $no_sort Flag to prevent sorting of detected languages.
+	 *
+	 * @return void
+	 */
+	public function detect_all_languages($no_sort = false) {
+
+		//clear $text ready for the import
+		$text = [];
+		$languages = [];
+
+		//retrieve all the languages
+		$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*/app_languages.php");
+		foreach ($files as $file) {
+			include $file;
+		}
+		include $_SERVER["PROJECT_ROOT"] . "/resources/app_languages.php";
+
+		//check every tag
+		foreach ($text as $lang_codes) {
+			foreach ($lang_codes as $language_code => $value) {
+				if (strlen($language_code) == 2) {
+					if (array_key_exists($language_code, $this->legacy_map)) {
+						$language_code = $this->legacy_map[$language_code];
+					}
+				}
+				$languages[$language_code] = 1;
+			}
+		}
+
+		//set $this->languages up according to what we found
+		unset($languages['en-us']);
+		$languages = array_keys($languages);
+		asort($languages);
+		array_unshift($languages, 'en-us');
+
+		//support legacy variable
+		$_SESSION['app']['languages'] = $languages;
+		$this->languages = $languages;
+
+		//rewrite resources/app_languges
+		$this->organize_language('resources', $no_sort);
+	}
+
+	/**
 	 * Organize a specific language from the language file.
 	 *
 	 * @param string $app_path Path to the application where the language file is located.
@@ -235,7 +301,7 @@ class text implements clear_cache {
 		}
 
 		//collect existing comments
-		$comment     = [];
+		$comment = [];
 		$file_handle = fopen($lang_path, "r");
 		while (!feof($file_handle)) {
 			if (preg_match('/\$text\[[\'"](.+)[\'"]\]\[[\'"](.+)[\'"]]\s+=\s+[\'"].*[\'"];\s+\/\/(.+)/', fgets($file_handle), $matches)) {
@@ -302,9 +368,9 @@ class text implements clear_cache {
 				if ($last_lang_label != $lang_label)
 					fwrite($lang_file, "\n");
 				foreach ($this->languages as $lang_code) {
-					$value       = "";
-					$append      = "";
-					$spacer      = "";
+					$value = "";
+					$append = "";
+					$spacer = "";
 					$target_lang = $lang_code;
 					if (strlen($lang_code) == 2) {
 						if (array_key_exists($lang_code, $this->legacy_map)) {
@@ -329,7 +395,7 @@ class text implements clear_cache {
 					if (empty($value)) {
 						foreach ($this->languages as $lang_code) {
 							if (substr($lang_code, 0, 2) == $base_code and !empty($text[$lang_label][$lang_code])) {
-								$value  = $text[$lang_label][$lang_code];
+								$value = $text[$lang_label][$lang_code];
 								$append = " //copied from $lang_code";
 								continue;
 							}
@@ -350,49 +416,19 @@ class text implements clear_cache {
 	}
 
 	/**
-	 * Detect all languages from the application and session language settings.
+	 * Escapes special characters in a string for use in a SQL query.
 	 *
-	 * @param bool $no_sort Flag to prevent sorting of detected languages.
+	 * @param string $string The input string to be escaped. Defaults to an empty string if not provided.
 	 *
-	 * @return void
+	 * @return string The escaped string.
 	 */
-	public function detect_all_languages($no_sort = false) {
-
-		//clear $text ready for the import
-		$text      = [];
-		$languages = [];
-
-		//retrieve all the languages
-		$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*/app_languages.php");
-		foreach ($files as $file) {
-			include $file;
-		}
-		include $_SERVER["PROJECT_ROOT"] . "/resources/app_languages.php";
-
-		//check every tag
-		foreach ($text as $lang_codes) {
-			foreach ($lang_codes as $language_code => $value) {
-				if (strlen($language_code) == 2) {
-					if (array_key_exists($language_code, $this->legacy_map)) {
-						$language_code = $this->legacy_map[$language_code];
-					}
-				}
-				$languages[$language_code] = 1;
-			}
-		}
-
-		//set $this->languages up according to what we found
-		unset($languages['en-us']);
-		$languages = array_keys($languages);
-		asort($languages);
-		array_unshift($languages, 'en-us');
-
-		//support legacy variable
-		$_SESSION['app']['languages'] = $languages;
-		$this->languages              = $languages;
-
-		//rewrite resources/app_languges
-		$this->organize_language('resources', $no_sort);
+	private function escape_str($string = '') {
+		//perform initial escape
+		$string = addslashes(stripslashes($string));
+		//swap \' as we don't need to escape those
+		return preg_replace("/\\\'/", "'", $string);
+		//escape " as we write our strings double quoted
+		return preg_replace("/\"/", '\"', $string);
 	}
 
 	/**
@@ -407,16 +443,16 @@ class text implements clear_cache {
 	public function language_totals() {
 
 		//setup variables
-		$language_totals                              = [];
-		$language_totals['languages']['total']        = 0;
-		$language_totals['menu_items']['total']       = 0;
+		$language_totals = [];
+		$language_totals['languages']['total'] = 0;
+		$language_totals['menu_items']['total'] = 0;
 		$language_totals['app_descriptions']['total'] = 0;
 		foreach ($this->languages as $language_code) {
 			$language_totals[$language_code] = 0;
 		}
 
 		//retrieve all the languages
-		$text  = [];
+		$text = [];
 		$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*/app_languages.php");
 		foreach ($files as $file) {
 			include $file;
@@ -434,7 +470,7 @@ class text implements clear_cache {
 		unset($text);
 
 		//retrieve all the menus
-		$x     = 0;
+		$x = 0;
 		$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*");
 		foreach ($files as $file) {
 			if (file_exists($file . "/app_menu.php"))
@@ -462,48 +498,5 @@ class text implements clear_cache {
 		}
 
 		return $language_totals;
-	}
-
-	/**
-	 * Escapes special characters in a string for use in a SQL query.
-	 *
-	 * @param string $string The input string to be escaped. Defaults to an empty string if not provided.
-	 *
-	 * @return string The escaped string.
-	 */
-	private function escape_str($string = '') {
-		//perform initial escape
-		$string = addslashes(stripslashes($string));
-		//swap \' as we don't need to escape those
-		return preg_replace("/\\\'/", "'", $string);
-		//escape " as we write our strings double quoted
-		return preg_replace("/\"/", '\"', $string);
-	}
-
-	/**
-	 * The clear_cache method is called automatically for any class that implements the clear_cache interface.
-	 * The function declared here ensures that all clear_cache methods have the same number of parameters being passed,
-	 * which in this case, are no parameters.
-	 */
-	public static function clear_cache() {
-		//check for apcu extension and if is enabled
-		if (!function_exists('apcu_enabled') || !apcu_enabled()) {
-			return;
-		}
-
-		//get all cache entries
-		$cache = apcu_cache_info(false);
-		if (empty($cache['cache_list'])) {
-			//no entries to process
-			return;
-		}
-
-		//clear apcu cache of any text entries
-		foreach ($cache['cache_list'] as $entry) {
-			$key = $entry['info'];
-			if (str_starts_with($key, 'text_')) {
-				apcu_delete($key);
-			}
-		}
 	}
 }
