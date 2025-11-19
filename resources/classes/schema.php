@@ -97,8 +97,6 @@ class schema {
 		}
 	}
 
-	//create the database schema
-
 	/**
 	 * Generate SQL statements for creating tables.
 	 *
@@ -163,8 +161,6 @@ class schema {
 		}
 	}
 
-	//add the database schema
-
 	/**
 	 * Executes the SQL queries in the result array.
 	 *
@@ -189,9 +185,7 @@ class schema {
 		}
 	}
 
-	//check if a column exists
-
-/**
+	/**
 	 * Generates the schema for the provided applications.
 	 *
 	 * This method iterates through the application configurations and database
@@ -200,7 +194,7 @@ class schema {
 	 *
 	 * @param string $format The output format (default: '').
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public function schema($format = '') {
 
@@ -658,8 +652,6 @@ class schema {
 
 	}
 
-	//get the table information
-
 	/**
 	 * Checks if a table exists in the database.
 	 *
@@ -688,8 +680,6 @@ class schema {
 			}
 		}
 	}
-
-	//database table exists
 
 	/**
 	 * Check if a column exists in the specified table.
@@ -750,8 +740,6 @@ class schema {
 		}
 	}
 
-	//database type
-
 	/**
 	 * Retrieves table information.
 	 *
@@ -782,8 +770,6 @@ class schema {
 		return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	//sqlite column exists
-
 	/**
 	 * Checks if a column exists in the provided table information.
 	 *
@@ -803,8 +789,6 @@ class schema {
 		}
 		return false;
 	}
-
-	//database column data type
 
 	/**
 	 * Creates a table based on the provided app and table name.
@@ -869,8 +853,6 @@ class schema {
 		}
 	}
 
-	//database create table
-
 	/**
 	 * Returns the data type of a column.
 	 *
@@ -886,8 +868,6 @@ class schema {
 		$table_info = $this->table_info($table_name);
 		return $this->data_type($table_info, $column_name);
 	}
-
-	//database insert
 
 	/**
 	 * Retrieves the data type of a column in the database.
@@ -924,9 +904,7 @@ class schema {
 		}
 	}
 
-	//datatase schema
-
-		/**
+	/**
 	 * Inserts data from temporary tables into a specified database table.
 	 *
 	 * This method iterates through the provided applications, database definitions,
