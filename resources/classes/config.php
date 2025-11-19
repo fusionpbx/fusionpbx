@@ -2,39 +2,48 @@
 
 /**
  * config class loads configuration from the file system
- * @param string $db_type Type of database
- * @param string $db_driver Alias of type
- * @param string $db_host Host to connect to
- * @param string $db_path Path of the database if it is file system based
- * @param string $db_file File name of the database if it is file system based
- * @param string $db_port Port to connect to
- * @param string $db_name Name of the database
- * @param string $db_sslmode SSL Mode to use
- * @param string $db_cert_authority The certificate authority
- * @param string $db_secure If the database is using a secure connection
- * @param string $db_username Username credentials to connect with
- * @param string $db_password Password credentials to connect with
- * @param string $config_path Configuration path currently in use
- * @param string $config_file Configuration file currently in use
+ *
+ * @param string $db_type                  Type of database
+ * @param string $db_driver                Alias of type
+ * @param string $db_host                  Host to connect to
+ * @param string $db_path                  Path of the database if it is file system based
+ * @param string $db_file                  File name of the database if it is file system based
+ * @param string $db_port                  Port to connect to
+ * @param string $db_name                  Name of the database
+ * @param string $db_sslmode               SSL Mode to use
+ * @param string $db_cert_authority        The certificate authority
+ * @param string $db_secure                If the database is using a secure connection
+ * @param string $db_username              Username credentials to connect with
+ * @param string $db_password              Password credentials to connect with
+ * @param string $config_path              Configuration path currently in use
+ * @param string $config_file              Configuration file currently in use
  * @param string $config_path_and_filename Full path and configuration file currently in use
- * @internal the @param statements are used because they match the magic __get function that allows those to be accessed publicly
+ *
+ * @internal the @param statements are used because they match the magic __get function that allows those to be
+ *           accessed publicly
  */
 final class config {
 
 	// Full path and filename of config.conf
-	private $file;
-
-	// The internal array that holds the configuration in the config.conf file
-	private $configuration;
-
 	/**
 	 * Configuration object used to hold a single instance
+	 *
 	 * @var array
 	 */
 	public static $config = null;
 
+	// The internal array that holds the configuration in the config.conf file
+	private $file;
+	private $configuration;
+
 	/**
-	 * Loads the framework configuration file
+	 * Initializes a new instance of the class with an optional configuration file.
+	 *
+	 * If no file is provided, it will attempt to locate one using the `find()` method.
+	 *
+	 * @param string $file The path to the configuration file (optional).
+	 *
+	 * @return void
 	 */
 	public function __construct(string $file = '') {
 
@@ -60,78 +69,45 @@ final class config {
 	}
 
 	/**
-	 * Magic method to allow backward compatibility for variables such as db_type.
-	 * <p>This will allow using config object with the syntax of:<br>
-	 * $config = new config();<br>
-	 * $db_type = $config->db_type;<br></p>
-	 * <p>Note:<br>
-	 * The <i>InvalidArgumentException</i> is thrown if there is no such variable accessed such as:<br>
-	 * $config = new config();<br>
-	 * $db_function = $config->db_function();
-	 * </p>
-	 * <p>This is ensure that any invalid code is detected and fixed.</p>
-	 * @param string $name Name of the object property
-	 * @return string Returns the value as a string
+	 * Finds and returns the path of the configuration file.
+	 *
+	 * Find tries to look for the config.conf file in the following locations: /etc/fusionpbx, /usr/local/etc/fusionpbx.
+	 * When unsuccessful it will then search for the config.php file in the same locations. Last, find will search the
+	 * SystemDrive folder for Windows operating systems trying first for config.conf and then config.php.
+	 *
+	 * @return string path to the configuration file
 	 */
-	public function __get(string $name): string {
-		switch($name) {
-			case 'db_type':
-			case 'db_driver':
-				return $this->configuration['database.0.type'] ?? '';
-			case 'db_path':
-			case 'path':
-				return $this->configuration['database.0.path'] ?? '';
-			case 'db_host':
-				return $this->configuration['database.0.host'] ?? '';
-			case 'db_port':
-				return $this->configuration['database.0.port'] ?? '';
-			case 'db_name':
-				return $this->configuration['database.0.name'] ?? '';
-			case 'db_sslmode':
-				return $this->configuration['database.0.sslmode'] ?? 'prefer';
-			case 'db_cert_authority':
-				return $this->configuration['database.0.cert_authority'] ?? '';
-			case 'db_secure':
-				return $this->configuration['database.0.secure'] ?? 'false';
-			case 'db_username':
-			case 'username':
-				return $this->configuration['database.0.username'] ?? '';
-			case 'db_password':
-			case 'password':
-				return $this->configuration['database.0.password'] ?? '';
-			case 'db_file':
-				return $this->configuration['database.0.file'] ?? '';
-			case 'config_path':
-				return $this->path();
-			case 'config_filename':
-				return $this->filename();
-			case 'config_path_and_filename':
-			case 'config_file':
-				return $this->path_and_filename();
-			default:
-				if (property_exists($this, $name)) {
-					return $this->{$name};
-				}
-				elseif (array_key_exists($name, $this->configuration)) {
-					return $this->configuration[$name];
-				}
+	public static function find(): string {
+		//define the file variable
+		$file = "";
+
+		//find the file
+		if (file_exists("/etc/fusionpbx/config.conf")) {
+			$file = "/etc/fusionpbx/config.conf";
+		} elseif (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
+			$file = "/usr/local/etc/fusionpbx/config.conf";
+		} elseif (file_exists("/etc/fusionpbx/config.php")) {
+			$file = "/etc/fusionpbx/config.php";
+		} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
+			$file = "/usr/local/etc/fusionpbx/config.php";
+		} elseif (file_exists(getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf')) {
+			$file = getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf';
+		} elseif (file_exists(dirname(__DIR__, 2) . "/resources/config.php")) {
+			//use the current web directory to find it as a last resort
+			$file = "/var/www/fusionpbx/resources/config.php";
 		}
-		return "";
+		return $file;
 	}
 
 	/**
-	 * Returns the string representation of the configuration file
-	 * @return string configuration
+	 * Reads and parses the configuration file.
+	 *
+	 * If the file has a .php extension, it will be included as PHP code. Otherwise,
+	 * it will be parsed using the parse_ini_file function.
+	 * The old properties from config.php are converted to the new standard.
+	 *
+	 * @return void
 	 */
-	public function __toString(): string {
-		$string_builder = "";
-		foreach ($this->configuration as $key => $value) {
-			$string_builder .= "$key = '$value'\n";
-		}
-		return $string_builder;
-	}
-
-	// loads the config.conf file
 	public function read() {
 
 		//check if include is needed
@@ -183,27 +159,39 @@ final class config {
 
 			//remove from the global namespace
 			unset($db_type, $db_host, $db_port, $db_name, $db_username, $db_password, $db_sslmode, $db_secure, $db_cert_authority);
-		}
-		else {
+		} else {
 			//save the loaded and parsed conf file to the object
 			$this->configuration = parse_ini_file($this->file);
 		}
 
 	}
 
-	// set project paths if not already defined
+	// loads the config.conf file
+
+	/**
+	 * Defines project paths and sets internal server variables
+	 *
+	 * @return void
+	 */
 	private function define_project_paths() {
 		// Load the document root
 		$doc_root = $this->get('document.root', '/var/www/fusionpbx');
 		$doc_path = $this->get('document.path', '');
 		//set the server variables and define project path constant
 		if (!empty($doc_path)) {
-			if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", $doc_path); }
-			if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $doc_root.'/'.$doc_path); }
-		}
-		else {
-			if (!defined('PROJECT_PATH')) { define("PROJECT_PATH", ''); }
-			if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $doc_root); }
+			if (!defined('PROJECT_PATH')) {
+				define("PROJECT_PATH", $doc_path);
+			}
+			if (!defined('PROJECT_ROOT')) {
+				define("PROJECT_ROOT", $doc_root . '/' . $doc_path);
+			}
+		} else {
+			if (!defined('PROJECT_PATH')) {
+				define("PROJECT_PATH", '');
+			}
+			if (!defined('PROJECT_ROOT')) {
+				define("PROJECT_ROOT", $doc_root);
+			}
 		}
 
 		// internal definitions to the framework
@@ -217,41 +205,15 @@ final class config {
 		set_include_path(PROJECT_ROOT);
 	}
 
-	/**
-	 * Find the path to the config.conf file
-	 * @var string $config_path - full path to the config.php file
-	 */
-	public static function find(): string {
-		//define the file variable
-		$file = "";
-
-		//find the file
-		if (file_exists("/etc/fusionpbx/config.conf")) {
-			$file = "/etc/fusionpbx/config.conf";
-		}
-		elseif (file_exists("/usr/local/etc/fusionpbx/config.conf")) {
-			$file = "/usr/local/etc/fusionpbx/config.conf";
-		}
-		elseif (file_exists("/etc/fusionpbx/config.php")) {
-			$file = "/etc/fusionpbx/config.php";
-		}
-		elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
-			$file = "/usr/local/etc/fusionpbx/config.php";
-		}
- 		elseif (file_exists(getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf')) {
-				$file = getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf';
-		}
-		elseif (file_exists(dirname(__DIR__, 2) . "/resources/config.php")) {
-			//use the current web directory to find it as a last resort
-			$file = "/var/www/fusionpbx/resources/config.php";
-		}
-		return $file;
-	}
+	// set project paths if not already defined
 
 	/**
 	 * Get a configuration value using a key in the configuration file
-	 * @param string $key Match key on the left hand side of the '=' in the config file. If $key is null the default value is returned
+	 *
+	 * @param string      $key           Match key on the left hand side of the '=' in the config file. If $key is null
+	 *                                   the default value is returned
 	 * @param string|null $default_value if no matching key is found, then this value will be returned
+	 *
 	 * @return string|null returns a value in the config.conf file or an empty string
 	 */
 	public function get(string $key, ?string $default_value = ''): ?string {
@@ -262,54 +224,140 @@ final class config {
 	}
 
 	/**
-	 * Returns the config path or an empty string
-	 * @return string
+	 * Magic method to allow backward compatibility for variables such as db_type.
+	 * <p>This will allow using config object with the syntax of:<br>
+	 * $config = new config();<br>
+	 * $db_type = $config->db_type;<br></p>
+	 * <p>Note:<br>
+	 * The <i>InvalidArgumentException</i> is thrown if there is no such variable accessed such as:<br>
+	 * $config = new config();<br>
+	 * $db_function = $config->db_function();
+	 * </p>
+	 * <p>This is ensure that any invalid code is detected and fixed.</p>
+	 *
+	 * @param string $name Name of the object property
+	 *
+	 * @return string Returns the value as a string
+	 */
+	public function __get(string $name): string {
+		switch ($name) {
+			case 'db_type':
+			case 'db_driver':
+				return $this->configuration['database.0.type'] ?? '';
+			case 'db_path':
+			case 'path':
+				return $this->configuration['database.0.path'] ?? '';
+			case 'db_host':
+				return $this->configuration['database.0.host'] ?? '';
+			case 'db_port':
+				return $this->configuration['database.0.port'] ?? '';
+			case 'db_name':
+				return $this->configuration['database.0.name'] ?? '';
+			case 'db_sslmode':
+				return $this->configuration['database.0.sslmode'] ?? 'prefer';
+			case 'db_cert_authority':
+				return $this->configuration['database.0.cert_authority'] ?? '';
+			case 'db_secure':
+				return $this->configuration['database.0.secure'] ?? 'false';
+			case 'db_username':
+			case 'username':
+				return $this->configuration['database.0.username'] ?? '';
+			case 'db_password':
+			case 'password':
+				return $this->configuration['database.0.password'] ?? '';
+			case 'db_file':
+				return $this->configuration['database.0.file'] ?? '';
+			case 'config_path':
+				return $this->path();
+			case 'config_filename':
+				return $this->filename();
+			case 'config_path_and_filename':
+			case 'config_file':
+				return $this->path_and_filename();
+			default:
+				if (property_exists($this, $name)) {
+					return $this->{$name};
+				} elseif (array_key_exists($name, $this->configuration)) {
+					return $this->configuration[$name];
+				}
+		}
+		return "";
+	}
+
+	/**
+	 * Returns the directory path of the configuration file.
+	 *
+	 * @return string the directory path of the configuration file
 	 */
 	public function path(): string {
 		return dirname($this->file);
 	}
 
 	/**
-	 * Returns the file name only of the configuration file
-	 * @return string
+	 * Returns the filename of the processed file.
+	 *
+	 * @return string filename
 	 */
 	public function filename(): string {
 		return basename($this->file);
 	}
 
 	/**
-	 * Returns the path and the file name
-	 * @return string
+	 * Returns the file's path and filename.
+	 *
+	 * @return string path and filename of the file
 	 */
 	public function path_and_filename(): string {
 		return $this->file;
 	}
 
 	/**
-	 * Returns if the config class has a loaded configuration or not
-	 * @return bool True if configuration has loaded and false if it is empty
-	 */
-	public function is_empty(): bool {
-		return count($this->configuration) === 0;
-	}
-
-	/**
-	 * Returns the array of configuration settings
-	 * @return array
-	 */
-	public function configuration(): array {
-		return $this->configuration;
-	}
-
-	/**
-	 * Ensures the configuration file is loaded only once
-	 * @return config
+	 * Returns a singleton instance of the configuration object
+	 *
+	 * If no file path is provided, loads the default configuration.
+	 * Otherwise, attempts to load the specified file and returns the result.
+	 *
+	 * @param string $file The optional file path to load (default: ''). Note: If the configuration file is already
+	 *                     loaded, the file provided will be ignored.
+	 *
+	 * @return config The loaded or default configuration object
 	 */
 	public static function load(string $file = ''): config {
 		if (self::$config === null) {
 			self::$config = new config($file);
 		}
 		return self::$config;
+	}
+
+	/**
+	 * Returns the string representation of the configuration file
+	 *
+	 * @return string configuration
+	 */
+	public function __toString(): string {
+		$string_builder = "";
+		foreach ($this->configuration as $key => $value) {
+			$string_builder .= "$key = '$value'\n";
+		}
+		return $string_builder;
+	}
+
+	/**
+	 * Checks if the configuration is empty.
+	 *
+	 * @return bool true if the configuration is empty, false otherwise
+	 */
+	public function is_empty(): bool {
+		return count($this->configuration) === 0;
+	}
+
+	/**
+	 * Returns the current application configuration
+	 *
+	 * @return array configuration data
+	 */
+	public function configuration(): array {
+		return $this->configuration;
 	}
 }
 

@@ -32,20 +32,32 @@
 class captcha {
 
 	/**
-	* Called when the object is created
-	*/
+	 * Called when the object is created
+	 */
 	public $code;
 
 	/**
-	* Class constructor
-	*/
+	 * Class constructor
+	 */
 	public function __construct() {
 
 	}
 
 	/**
-	 * Create the captcha image
-	 * @var string $code
+	 * Returns a Base64 encoded version of the CAPTCHA image.
+	 *
+	 * @return string The Base64 encoded CAPTCHA image data.
+	 */
+	public function image_base64() {
+		return base64_encode($this->image_captcha());
+	}
+
+	/**
+	 * Generates a CAPTCHA image.
+	 *
+	 * Requires the object property code for the text to create
+	 *
+	 * @return string The CAPTCHA image buffer.
 	 */
 	public function image_captcha() {
 
@@ -54,25 +66,25 @@ class captcha {
 		$text = $this->code;
 
 		// Set the font path
-		$font_path = $_SERVER["DOCUMENT_ROOT"]."/resources/captcha/fonts";
+		$font_path = $_SERVER["DOCUMENT_ROOT"] . "/resources/captcha/fonts";
 
 		// Array of fonts
 		//$fonts[] = 'ROUGD.TTF';
 		//$fonts[] = 'Zebra.ttf';
 		//$fonts[] = 'hanshand.ttf';
-		$fonts = glob($font_path.'/*.[tT][tT][fF]');
+		$fonts = glob($font_path . '/*.[tT][tT][fF]');
 		//print_r($fonts);
 		//exit;
 
 		// Randomize the fonts
 		srand();
-		$random = (rand()%count($fonts));
+		$random = (rand() % count($fonts));
 		//$font = $font_path.'/'.$fonts[$random];
 		$font = $fonts[$random];
 
 		// Set the font size
 		$font_size = 16;
-		if(@$_GET['fontsize']) {
+		if (@$_GET['fontsize']) {
 			$font_size = $_GET['fontsize'];
 		}
 
@@ -109,15 +121,14 @@ class captcha {
 	}
 
 	/**
-	 * return the image in base64
-	 */
-	public function image_base64() {
-		return base64_encode($this->image_captcha());
-	}
-
-	/**
-	 * Get the image size
-	 * @var string $value	string image size
+	 * Calculates the bounding box of a text in an image.
+	 *
+	 * @param int    $size  The size of the font.
+	 * @param float  $angle The angle of rotation.
+	 * @param string $font  The path to the font file.
+	 * @param string $text  The text to be rendered.
+	 *
+	 * @return array An array containing the bounding box coordinates (x, y, w, h).
 	 */
 	private function image_size($size, $angle, $font, $text) {
 		$dummy = imagecreate(1, 1);
@@ -135,5 +146,3 @@ $captcha->code = 'abcdefg';
 $image_base64 = $captcha->base64();
 echo "<img src=\"data:image/png;base64, ".$image_base64."\" />\n";
 */
-
-?>

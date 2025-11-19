@@ -28,88 +28,69 @@
 
 /**
  * Service class
+ *
  * @version 1.00
- * @author Tim Fry <tim@fusionpbx.com>
+ * @author  Tim Fry <tim@fusionpbx.com>
  */
 abstract class service {
 
 	const VERSION = "1.00";
-
-	/**
-	 * Track the internal loop. It is recommended to use this variable to control the loop inside the run function. See the example
-	 * below the class for a more complete explanation
-	 * @var bool
-	 */
-	protected $running;
-
 	/**
 	 * current debugging level for output to syslog
+	 *
 	 * @var int Syslog level
 	 */
 	protected static $log_level = LOG_NOTICE;
-
 	/**
 	 * config object
+	 *
 	 * @var config config object
 	 */
 	protected static $config;
-
 	/**
 	 * Holds the parsed options from the command line
+	 *
 	 * @var array
 	 */
 	protected static $parsed_command_options;
-
-	/**
-	 * Operating System process identification file
-	 * @var string
-	 */
-	private static $pid_file = "";
-
 	/**
 	 * Cli Options Array
+	 *
 	 * @var array
 	 */
 	protected static $available_command_options = [];
-
 	/**
 	 * Holds the configuration file location
+	 *
 	 * @var string
 	 */
 	protected static $config_file = "";
-
 	/**
 	 * Fork the service to it's own process ID
+	 *
 	 * @var bool
 	 */
 	protected static $daemon_mode = false;
-
 	/**
 	 * Suppress the timestamp
 	 * Used to suppress the timestamp in syslog
+	 *
 	 * @var bool
 	 */
 	protected static $show_timestamp_log = false;
-
 	/**
-	 * Child classes must provide a mechanism to reload settings
+	 * Operating System process identification file
+	 *
+	 * @var string
 	 */
-	abstract protected function reload_settings(): void;
-
+	private static $pid_file = "";
 	/**
-	 * Method to start the child class internal loop
+	 * Track the internal loop. It is recommended to use this variable to control the loop inside the run function. See
+	 * the example below the class for a more complete explanation
+	 *
+	 * @var bool
 	 */
-	abstract public function run(): int;
-
-	/**
-	 * Display version notice
-	 */
-	abstract protected static function display_version(): void;
-
-	/**
-	 * Called when the display_help_message is run in the base class for extra command line parameter explanation
-	 */
-	abstract protected static function set_command_options();
+	protected $running;
 
 	/**
 	 * Open a log when created.
@@ -121,27 +102,6 @@ abstract class service {
 	 */
 	protected function __construct() {
 		openlog('[php][' . self::class . ']', LOG_CONS | LOG_NDELAY | LOG_PID, LOG_DAEMON);
-	}
-
-	/**
-	 * Ensures the correct PID file is unlinked when this process terminates.
-	 *
-	 * This method is called automatically by PHP when an object's reference count reaches zero,
-	 * or when it's explicitly destroyed using unset(). It checks if the process is still running
-	 * and unlinks the corresponding PID file. Finally, it ensures that any open log connections
-	 * are properly closed before the script exits.
-	 *
-	 * @return void
-	 */
-	public function __destruct() {
-		//ensure we unlink the correct PID file if needed
-		if (self::is_running()) {
-			unlink(self::$pid_file);
-			self::log("Initiating Shutdown...", LOG_NOTICE);
-			$this->running = false;
-		}
-		//this should remain the last statement to execute before exit
-		closelog();
 	}
 
 	/**
@@ -162,66 +122,214 @@ abstract class service {
 		}
 	}
 
-	// register signal handlers
-	private function register_signal_handlers() {
-		// Allow the calls to be made while the main loop is running
-		pcntl_async_signals(true);
-
-		// A signal listener to reload the service for any config changes in the database
-		pcntl_signal(SIGUSR1, [$this, 'reload_settings']);
-		pcntl_signal(SIGHUP, [$this, 'reload_settings']);
-
-		// A signal listener to stop the service
-		pcntl_signal(SIGUSR2, [self::class, 'shutdown']);
-		pcntl_signal(SIGTERM, [self::class, 'shutdown']);
+	/**
+	 * Checks if any service process is running.
+	 *
+	 * @return bool True if a service process is found, false otherwise
+	 */
+	public static function is_any_running(): bool {
+		return self::get_service_pid() !== false;
 	}
 
 	/**
-	 * Extracts the short options from the cli options array and returns a string. The resulting string must
-	 * return a single string with all options in the string such as 'rxc:'.
-	 * This can be overridden by the child class.
-	 *
-	 * @return string
+	 * Sends the shutdown signal to the service using a posix signal.
+	 * <p>NOTE:<br>
+	 * The signal will not be received from the service if the
+	 * command is sent from a user that has less privileges then
+	 * the running service. For example, if the service is started
+	 * by user root and then the command line option '-r' is given
+	 * as user www-data, the service will not receive this signal
+	 * because the OS will not allow the signal to be passed to a
+	 * more privileged user due to security concerns. This would
+	 * be the main reason why you must run a 'systemctl' or a
+	 * 'service' command as root user. It is possible to start the
+	 * service with user www-data and then the web UI would in fact
+	 * be able to send the reload signal to the running service.</p>
 	 */
-	protected static function get_short_options(): string {
-		return implode('' , array_map(function ($option) { return $option['short_option']; }, self::$available_command_options));
-	}
-
-	/**
-	 * Extracts the long options from the cli options array and returns an array. The resulting array must
-	 * return a single dimension array with an integer indexed key but does not have to be sequential order.
-	 * This can be overridden by the child class.
-	 *
-	 * @return array
-	 */
-	protected static function get_long_options(): array {
-		return array_map(function ($option) { return $option['long_option']; }, self::$available_command_options);
-	}
-
-	/**
-	 * Retrieves the callback functions associated with the cli options array.
-	 *
-	 * @param string $set_option The set option to match against available options
-	 *
-	 * @return array An array of callback functions that need to be called for the matched option
-	 */
-	protected static function get_user_callbacks_from_available_options(string $set_option): array {
-		//match the available option to the set option and return the callback function that needs to be called
-		foreach(self::$available_command_options as $option) {
-			$short_option = $option['short_option'] ?? '';
-			if (str_ends_with($short_option, ':')) {
-				$short_option = rtrim($short_option, ':');
-			}
-			$long_option = $option['long_option'] ?? '';
-			if (str_ends_with($long_option, ':')) {
-				$long_option = rtrim($long_option, ':');
-			}
-			if ($short_option === $set_option ||
-				$long_option  === $set_option) {
-					return $option['functions'] ?? [$option['function']] ?? [];
+	public static function send_signal($posix_signal) {
+		$signal_name = "";
+		switch ($posix_signal) {
+			case 1:   //SIGHUP
+			case 10:  //SIGUSR1
+				$signal_name = "Reload";
+				break;
+			case 12:  //SIGUSR2
+			case 15:  //SIGTERM
+				$signal_name = "Shutdown";
+				break;
+		}
+		$pid = self::get_service_pid();
+		if ($pid === false) {
+			self::log("service not running", LOG_EMERG);
+		} else {
+			if (posix_kill((int)$pid, $posix_signal)) {
+				echo "Sent $signal_name\n";
+			} else {
+				$err = posix_strerror(posix_get_last_error());
+				echo "Failed to send $signal_name: $err\n";
 			}
 		}
-		return [];
+	}
+
+	/**
+	 * Write a standard copyright notice to the console
+	 *
+	 * @return void
+	 */
+	public static function display_copyright(): void {
+		echo "FusionPBX\n";
+		echo "Version: MPL 1.1\n";
+		echo "\n";
+		echo "The contents of this file are subject to the Mozilla Public License Version\n";
+		echo "1.1 (the \"License\"); you may not use this file except in compliance with\n";
+		echo "the License. You may obtain a copy of the License at\n";
+		echo "http://www.mozilla.org/MPL/\n";
+		echo "\n";
+		echo "Software distributed under the License is distributed on an \"AS IS\" basis,\n";
+		echo "WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License\n";
+		echo "for the specific language governing rights and limitations under the\n";
+		echo "License.\n";
+		echo "\n";
+		echo "The Original Code is FusionPBX\n";
+		echo "\n";
+		echo "The Initial Developer of the Original Code is\n";
+		echo "Mark J Crane <markjcrane@fusionpbx.com>\n";
+		echo "Portions created by the Initial Developer are Copyright (C) 2008-2023\n";
+		echo "the Initial Developer. All Rights Reserved.\n";
+		echo "\n";
+		echo "Contributor(s):\n";
+		echo "Mark J Crane <markjcrane@fusionpbx.com>\n";
+		echo "Tim Fry <tim@fusionpbx.com>\n";
+		echo "\n";
+	}
+
+	/**
+	 * Sends a reload signal to running services, or exits if no service is running.
+	 *
+	 * @return void
+	 */
+	public static function send_reload() {
+		if (self::is_any_running()) {
+			self::send_signal(10);
+		} else {
+			die("Service Not Started\n");
+		}
+		exit();
+	}
+
+	/**
+	 * Set to foreground when started
+	 */
+	public static function enable_daemon_mode() {
+		self::$daemon_mode = true;
+		self::$show_timestamp_log = false;
+	}
+
+	// register signal handlers
+
+	/**
+	 * Set the configuration file to be used by FusionPBX.
+	 *
+	 * @param string $file The path to the configuration file (default: '/etc/fusionpbx/config.conf')
+	 *
+	 * @return void
+	 */
+	public static function set_config_file(string $file = '/etc/fusionpbx/config.conf') {
+		if (empty(self::$config_file)) {
+			self::$config_file = $file;
+		}
+		self::$config = new config(self::$config_file);
+	}
+
+	/**
+	 * Appends a command option to the list of available options.
+	 *
+	 * @param command_option $option The command option to append.
+	 *
+	 * @return int The index where the option was appended.
+	 */
+	public static function append_command_option(command_option $option): int {
+		$index = count(self::$available_command_options);
+		self::$available_command_options[$index] = $option->to_array();
+		return $index;
+	}
+
+	/**
+	 * Add a new command option to the available options list.
+	 *
+	 * @param string  $short_option      Short option (e.g., 'h' for '-h')
+	 * @param string  $long_option       Long option (e.g., 'help' for '--help')
+	 * @param string  $description       Brief description of the option
+	 * @param string  $short_description Short description of the short option (optional)
+	 * @param string  $long_description  Long description of the long option (optional)
+	 * @param mixed[] ...$callback       Callback function(s) associated with this option
+	 *
+	 * @return int Index of the newly added command option in self::$available_command_options array
+	 */
+	public static function add_command_option(string $short_option, string $long_option, string $description, string $short_description = '', string $long_description = '', ...$callback): int {
+		//use the option as the description if not filled in
+		if (empty($short_description)) {
+			$short_description = '-' . $short_option;
+			if (str_ends_with($short_option, ':')) {
+				$short_description .= " <setting>";
+			}
+		}
+		if (empty($long_description)) {
+			$long_description = '-' . $long_option;
+			if (str_ends_with($long_option, ':')) {
+				$long_description .= " <setting>";
+			}
+		}
+		$index = count(self::$available_command_options);
+		self::$available_command_options[$index]['short_option'] = $short_option;
+		self::$available_command_options[$index]['long_option'] = $long_option;
+		self::$available_command_options[$index]['description'] = $description;
+		self::$available_command_options[$index]['short_description'] = $short_description;
+		self::$available_command_options[$index]['long_description'] = $long_description;
+		self::$available_command_options[$index]['functions'] = $callback;
+		return $index;
+	}
+
+	/**
+	 * Creates a new instance of the service class, initializing it and returning the object.
+	 *
+	 * @return self A new instance of the service class.
+	 */
+	public static function create(): self {
+		//can only start from command line
+		defined('STDIN') or die('Unauthorized');
+
+		//parse the cli options and store them statically
+		self::parse_service_command_options();
+
+		//fork process
+		if (self::$daemon_mode) {
+			//force launching in a separate process
+			if ($pid = pcntl_fork()) {
+				exit;
+			}
+
+			if ($cid = pcntl_fork()) {
+				exit;
+			}
+		}
+
+		//create the config object if not already created
+		if (self::$config === null) {
+			self::$config = new config(self::$config_file);
+		}
+
+		//get the name of child object
+		$class = self::base_class_name();
+
+		//create the child object
+		$service = new $class();
+
+		//initialize the service
+		$service->init();
+
+		//return the initialized object
+		return $service;
 	}
 
 	/**
@@ -278,7 +386,7 @@ abstract class service {
 				//check for more than one function to be called is permitted
 				if (is_array($funcs)) {
 					//call each one
-					foreach($funcs as $func) {
+					foreach ($funcs as $func) {
 						//use the best method to call the function
 						self::call_function($func, $option_value);
 					}
@@ -291,366 +399,22 @@ abstract class service {
 	}
 
 	//
-	// Calls a function using the best suited PHP method
 	//
-	private static function call_function($function, $args) {
-		if ($function === 'exit') {
-			//check for exit
-			exit($args);
-		} elseif ($function instanceof Closure || function_exists($function)) {
-			//globally available function or closure
-			$function($args);
-		} else {
-			static::$function($args);
-		}
-	}
-
-	/**
-	 * Checks the file system for a pid file that matches the process ID from this running instance
-	 *
-	 * @return bool true if pid exists and false if not
-	 */
-	public static function is_running(): bool {
-		return posix_getpid() === self::get_service_pid();
-	}
-
-	/**
-	 * Checks if any service process is running.
-	 *
-	 * @return bool True if a service process is found, false otherwise
-	 */
-	public static function is_any_running(): bool {
-		return self::get_service_pid() !== false;
-	}
-
-	/**
-	 * Returns the process ID of the service if it exists and is running.
-	 *
-	 * @return int|false The process ID of the service, or false if it does not exist or is not running.
-	 */
-	protected static function get_service_pid() {
-		if (file_exists(static::get_pid_filename())) {
-			$pid = file_get_contents(static::get_pid_filename());
-			if (function_exists('posix_getsid')) {
-				if (posix_getsid($pid) !== false) {
-					//return the pid for reloading configuration
-					return intval($pid);
-				}
-			} else {
-				if (file_exists('/proc/' . $pid)) {
-					//return the pid for reloading configuration
-					return intval($pid);
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Create an operating system PID file removing any existing PID file
-	 */
-	private function create_service_pid() {
-		// Set the pid filename
-		$basename = basename(self::$pid_file, '.pid');
-		$pid = getmypid();
-
-		// Remove the old pid file
-		if (file_exists(self::$pid_file)) {
-			if (is_writable(self::$pid_file)) {
-				unlink(self::$pid_file);
-			} else {
-				throw new \RuntimeException("Unable to write to PID file " . self::$pid_file, 73); //Unix error code 73 - unable to write/create file
-			}
-		}
-
-		// Show the details to the user
-		self::log("Starting up...");
-		self::log("Mode      : " . (self::$daemon_mode ? "Daemon" : "Foreground"), LOG_INFO);
-		self::log("Service   : $basename", LOG_INFO);
-		self::log("Process ID: $pid", LOG_INFO);
-		self::log("PID File  : " . self::$pid_file, LOG_INFO);
-		self::log("Log level : " . self::log_level_to_string(self::$log_level), LOG_INFO);
-		self::log("Timestamps: " . (self::$show_timestamp_log ? "Yes" : "No"), LOG_INFO);
-
-		// Save the pid file
-		$success = file_put_contents(self::$pid_file, $pid);
-		if ($success === false) {
-			throw new \RuntimeException("Failed writing to PID file " . self::$pid_file, 74); //Unix error code 74 - I/O error
-		}
-	}
-
-	/**
-	 * Creates the service directory to store the PID
-	 *
-	 * @return void
-	 * @throws Exception thrown when the service directory is unable to be created
-	 */
-	private function create_service_directory() {
-		//make sure the /var/run/fusionpbx directory exists
-		if (!file_exists('/var/run/fusionpbx')) {
-			$result = mkdir('/var/run/fusionpbx', 0777, true);
-			if (!$result) {
-				throw new Exception('Failed to create /var/run/fusionpbx');
-			}
-		}
-	}
-
-	/**
-	 * Parses the debug level to an integer and stores it in the class for syslog use
-	 *
-	 * @param string $debug_level Debug level with any of the Linux system log levels
-	 *
-	 * @return void
-	 */
-	protected static function set_debug_level(string $debug_level) {
-		// Map user input log level to syslog constant
-		switch ($debug_level) {
-			case '0':
-			case 'emergency':
-				self::$log_level = LOG_EMERG; // Hardware failures
-				break;
-			case '1':
-			case 'alert':
-				self::$log_level = LOG_ALERT; // Loss of network connection or a condition that should be corrected immediately
-				break;
-			case '2':
-			case 'critical':
-				self::$log_level = LOG_CRIT; // Condition like low disk space
-				break;
-			case '3':
-			case 'error':
-				self::$log_level = LOG_ERR;  // Database query failure, file not found
-				break;
-			case '4':
-			case 'warning':
-				self::$log_level = LOG_WARNING; // Deprecated function usage, approaching resource limits
-				break;
-			case '5':
-			case 'notice':
-				self::$log_level = LOG_NOTICE; // Normal conditions
-				break;
-			case '6':
-			case 'info':
-				self::$log_level = LOG_INFO; // Informational
-				break;
-			case '7':
-			case 'debug':
-				self::$log_level = LOG_DEBUG; // Debugging
-				break;
-			default:
-				self::$log_level = LOG_NOTICE; // Default to NOTICE if invalid level
-		}
-
-		// When we are using LOG_DEBUG there is a high chance we are logging to the console
-		// directly without systemctl so enable the timestamps by default
-		if (self::$log_level === LOG_DEBUG && !self::$daemon_mode) {
-			self::show_timestamp();
-		}
-	}
-
-	/**
-	 * Converts a log level integer to its corresponding string representation.
-	 *
-	 * @param int $level The log level as an integer, defaults to LOG_NOTICE (5).
-	 *
-	 * @return string The log level as a string.
-	 */
-	private static function log_level_to_string(int $level = LOG_NOTICE): string {
-		switch ($level){
-			case 0:
-				return 'EMERGENCY';
-			case 1:
-				return 'ALERT';
-			case 2:
-				return 'CRITICAL';
-			case 3:
-				return 'ERROR';
-			case 4:
-				return 'WARNING';
-			case 5:
-				return 'NOTICE';
-			case 6:
-				return 'INFO';
-			case 7:
-				return 'DEBUG';
-			default:
-				return 'INFO';
-		}
-	}
-
-	/**
-	 * Logs the current and peak memory usage of the application at the INFO level.
-	 *
-	 * @return void
-	 */
-	protected static function show_mem_usage() {
-		//current memory
-		$memory_usage = memory_get_usage();
-		//peak memory
-		$memory_peak = memory_get_peak_usage();
-		self::log('Current memory: ' . round($memory_usage / 1024) . " KB", LOG_INFO);
-		self::log('Peak memory: ' . round($memory_peak / 1024) . " KB", LOG_INFO);
-	}
-
-	/**
-	 * Logs to the system log or console when running in foreground
-	 *
-	 * @param string $message Message to display in the system log or console when running in foreground
-	 * @param int    $level   (Optional) Level to use for logging to the console or daemon. Default value is LOG_NOTICE
-	 *
-	 * @return void
-	 */
-	protected static function log(string $message, int $level = LOG_NOTICE) {
-		// Check if we need to show the message
-		if ($level <= self::$log_level) {
-			// When not in daemon mode we log to console directly
-			if (!self::$daemon_mode) {
-				$level_as_string = self::log_level_to_string($level);
-				if (!self::$show_timestamp_log) {
-					echo "[$level_as_string] $message\n";
-				} else {
-					$time = date('Y-m-d H:i:s');
-					echo "[$time][$level_as_string] $message\n";
-				}
-			} else {
-				// Log the message to syslog
-				syslog($level, 'fusionpbx[' . posix_getpid() . ']: ['.static::class.'] '.$message);
-			}
-		}
-	}
-
-	/**
-	 * Returns a file safe class name with \ from namespaces converted to _
-	 * @return string file safe name
-	 */
-	protected static function base_file_name(): string {
-		return str_replace('\\', "_", static::class);
-	}
-
-	/**
-	 * Returns only the name of the class without namespace
-	 * @return string base class name
-	 */
-	protected static function base_class_name(): string {
-		$class_and_namespace = explode('\\', static::class);
-		return array_pop($class_and_namespace);
-	}
-
-	/**
-	 * Write a standard copyright notice to the console
-	 *
-	 * @return void
-	 */
-	public static function display_copyright(): void {
-		echo "FusionPBX\n";
-		echo "Version: MPL 1.1\n";
-		echo "\n";
-		echo "The contents of this file are subject to the Mozilla Public License Version\n";
-		echo "1.1 (the \"License\"); you may not use this file except in compliance with\n";
-		echo "the License. You may obtain a copy of the License at\n";
-		echo "http://www.mozilla.org/MPL/\n";
-		echo "\n";
-		echo "Software distributed under the License is distributed on an \"AS IS\" basis,\n";
-		echo "WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License\n";
-		echo "for the specific language governing rights and limitations under the\n";
-		echo "License.\n";
-		echo "\n";
-		echo "The Original Code is FusionPBX\n";
-		echo "\n";
-		echo "The Initial Developer of the Original Code is\n";
-		echo "Mark J Crane <markjcrane@fusionpbx.com>\n";
-		echo "Portions created by the Initial Developer are Copyright (C) 2008-2023\n";
-		echo "the Initial Developer. All Rights Reserved.\n";
-		echo "\n";
-		echo "Contributor(s):\n";
-		echo "Mark J Crane <markjcrane@fusionpbx.com>\n";
-		echo "Tim Fry <tim@fusionpbx.com>\n";
-		echo "\n";
-	}
-
-	/**
-	 * Sends the shutdown signal to the service using a posix signal.
-	 * <p>NOTE:<br>
-	 * The signal will not be received from the service if the
-	 * command is sent from a user that has less privileges then
-	 * the running service. For example, if the service is started
-	 * by user root and then the command line option '-r' is given
-	 * as user www-data, the service will not receive this signal
-	 * because the OS will not allow the signal to be passed to a
-	 * more privileged user due to security concerns. This would
-	 * be the main reason why you must run a 'systemctl' or a
-	 * 'service' command as root user. It is possible to start the
-	 * service with user www-data and then the web UI would in fact
-	 * be able to send the reload signal to the running service.</p>
-	 */
-	public static function send_signal($posix_signal) {
-		$signal_name = "";
-		switch ($posix_signal) {
-			case 1:   //SIGHUP
-			case 10:  //SIGUSR1
-				$signal_name = "Reload";
-				break;
-			case 12:  //SIGUSR2
-			case 15:  //SIGTERM
-				$signal_name = "Shutdown";
-				break;
-		}
-		$pid = self::get_service_pid();
-		if ($pid === false) {
-			self::log("service not running", LOG_EMERG);
-		} else {
-			if (posix_kill((int) $pid, $posix_signal) ) {
-				echo "Sent $signal_name\n";
-			} else {
-				$err = posix_strerror(posix_get_last_error());
-				echo "Failed to send $signal_name: $err\n";
-			}
-		}
-	}
-
-	/**
-	 * Displays a help message for the available command options.
-	 */
-	protected static function display_help_message(): void {
-		//get the classname of the child class
-		$class_name = self::base_class_name();
-
-		//get the widest options for proper alignment
-		$width_short = max(array_map(function ($arr) { return strlen($arr['short_description'] ?? ''); }, self::$available_command_options));
-		$width_long  = max(array_map(function ($arr) { return strlen($arr['long_description' ] ?? ''); }, self::$available_command_options));
-
-		//display usage help using the class name of child
-		echo "Usage: php $class_name [options]\n";
-
-		//display the options aligned to the widest short and long options
-		echo "Options:\n";
-		foreach (self::$available_command_options as $option) {
-			printf("%-{$width_short}s %-{$width_long}s %s\n",
-				$option['short_description'],
-				$option['long_description'],
-				$option['description']
-			);
-		}
-	}
-
-	/**
-	 * Sends a reload signal to running services, or exits if no service is running.
-	 *
-	 * @return void
-	 */
-	public static function send_reload() {
-		if (self::is_any_running()) {
-			self::send_signal(10);
-		} else {
-			die("Service Not Started\n");
-		}
-		exit();
-	}
-
 	//
-	// Options built-in to the base service class. These can be overridden with the child class
-	// or they can be extended using the array
-	//
+
+	/**
+	 * Returns an array of base command options.
+	 *
+	 * This method constructs an array of help options for the command line interface,
+	 * including short and long option descriptions, functions that these options
+	 * trigger, and other metadata. The resulting array can be used to provide help
+	 * messages or determine which functions are available based on the input.
+	 *
+	 * @return array An associative array where each key represents a help option and
+	 *               its corresponding value is an associative array containing
+	 *               short_option, long_option, description, short_description,
+	 *               long_description, and functions keys.
+	 */
 	private static function base_command_options(): array {
 		//put the display for help in an array so we can calculate width
 		$help_options = [];
@@ -727,88 +491,80 @@ abstract class service {
 	}
 
 	/**
-	 * Enables timestamp logging.
+	 * Called when the display_help_message is run in the base class for extra command line parameter explanation
+	 */
+	abstract protected static function set_command_options();
+
+	/**
+	 * Extracts the short options from the cli options array and returns a string. The resulting string must
+	 * return a single string with all options in the string such as 'rxc:'.
+	 * This can be overridden by the child class.
+	 *
+	 * @return string
+	 */
+	protected static function get_short_options(): string {
+		return implode('', array_map(function ($option) {
+			return $option['short_option'];
+		}, self::$available_command_options));
+	}
+
+	/**
+	 * Extracts the long options from the cli options array and returns an array. The resulting array must
+	 * return a single dimension array with an integer indexed key but does not have to be sequential order.
+	 * This can be overridden by the child class.
+	 *
+	 * @return array
+	 */
+	protected static function get_long_options(): array {
+		return array_map(function ($option) {
+			return $option['long_option'];
+		}, self::$available_command_options);
+	}
+
+	/**
+	 * Retrieves the callback functions associated with the cli options array.
+	 *
+	 * @param string $set_option The set option to match against available options
+	 *
+	 * @return array An array of callback functions that need to be called for the matched option
+	 */
+	protected static function get_user_callbacks_from_available_options(string $set_option): array {
+		//match the available option to the set option and return the callback function that needs to be called
+		foreach (self::$available_command_options as $option) {
+			$short_option = $option['short_option'] ?? '';
+			if (str_ends_with($short_option, ':')) {
+				$short_option = rtrim($short_option, ':');
+			}
+			$long_option = $option['long_option'] ?? '';
+			if (str_ends_with($long_option, ':')) {
+				$long_option = rtrim($long_option, ':');
+			}
+			if ($short_option === $set_option ||
+				$long_option === $set_option) {
+				return $option['functions'] ?? [$option['function']] ?? [];
+			}
+		}
+		return [];
+	}
+
+	/**
+	 * Calls a function using the best suited PHP method.
+	 *
+	 * @param string $function The name of the function to call, either as a string or an instance of Closure.
+	 * @param mixed  $args     An array of arguments to pass to the called function.
 	 *
 	 * @return void
 	 */
-	public static function show_timestamp() {
-		self::$show_timestamp_log = true;
-	}
-
-	/**
-	 * Set to foreground when started
-	 */
-	public static function enable_daemon_mode() {
-		self::$daemon_mode = true;
-		self::$show_timestamp_log = false;
-	}
-
-	/**
-	 * Set the configuration file location to use for a config object
-	 */
-	public static function set_config_file(string $file = '/etc/fusionpbx/config.conf') {
-		if (empty(self::$config_file)) {
-			self::$config_file = $file;
+	private static function call_function($function, $args) {
+		if ($function === 'exit') {
+			//check for exit
+			exit($args);
+		} elseif ($function instanceof Closure || function_exists($function)) {
+			//globally available function or closure
+			$function($args);
+		} else {
+			static::$function($args);
 		}
-		self::$config = new config(self::$config_file);
-	}
-
-	/**
-	 * Appends the CLI option to the list given to the user as a command line argument.
-	 * @param command_option $option
-	 * @return int The index of the item added
-	 */
-	public static function append_command_option(command_option $option): int {
-		$index = count(self::$available_command_options);
-		self::$available_command_options[$index] = $option->to_array();
-		return $index;
-	}
-
-	/**
-	 * Add a new command option to the available options list.
-	 *
-	 * @param string  $short_option      Short option (e.g., 'h' for '-h')
-	 * @param string  $long_option       Long option (e.g., 'help' for '--help')
-	 * @param string  $description       Brief description of the option
-	 * @param string  $short_description Short description of the short option (optional)
-	 * @param string  $long_description  Long description of the long option (optional)
-	 * @param mixed[] ...$callback       Callback function(s) associated with this option
-	 *
-	 * @return int Index of the newly added command option in self::$available_command_options array
-	 */
-	public static function add_command_option(string $short_option, string $long_option, string $description, string $short_description = '', string $long_description = '', ...$callback): int {
-		//use the option as the description if not filled in
-		if (empty($short_description)) {
-			$short_description = '-' . $short_option;
-			if (str_ends_with($short_option, ':')) {
-				$short_description .= " <setting>";
-			}
-		}
-		if (empty($long_description)) {
-			$long_description = '-' . $long_option;
-			if (str_ends_with($long_option, ':')) {
-				$long_description .= " <setting>";
-			}
-		}
-		$index = count(self::$available_command_options);
-		self::$available_command_options[$index]['short_option'] = $short_option;
-		self::$available_command_options[$index]['long_option'] = $long_option;
-		self::$available_command_options[$index]['description'] = $description;
-		self::$available_command_options[$index]['short_description'] = $short_description;
-		self::$available_command_options[$index]['long_description'] = $long_description;
-		self::$available_command_options[$index]['functions'] = $callback;
-		return $index;
-	}
-
-	/**
-	 * Returns the filename of the PID file.
-	 *
-	 * The PID file is located in /var/run/fusionpbx/ and its name is based on the base file name.
-	 *
-	 * @return string The path to the PID file
-	 */
-	public static function get_pid_filename(): string {
-		return '/var/run/fusionpbx/' . self::base_file_name() . '.pid';
 	}
 
 	/**
@@ -852,46 +608,340 @@ abstract class service {
 	}
 
 	/**
-	 * Creates a new instance of the service class, initializing it and returning the object.
+	 * Creates the service directory to store the PID
 	 *
-	 * @return self A new instance of the service class.
+	 * @return void
+	 * @throws Exception thrown when the service directory is unable to be created
 	 */
-	public static function create(): self {
-		//can only start from command line
-		defined('STDIN') or die('Unauthorized');
-
-		//parse the cli options and store them statically
-		self::parse_service_command_options();
-
-		//fork process
-		if (self::$daemon_mode) {
-			//force launching in a separate process
-			if ($pid = pcntl_fork()) {
-				exit;
-			}
-
-			if ($cid = pcntl_fork()) {
-				exit;
+	private function create_service_directory() {
+		//make sure the /var/run/fusionpbx directory exists
+		if (!file_exists('/var/run/fusionpbx')) {
+			$result = mkdir('/var/run/fusionpbx', 0777, true);
+			if (!$result) {
+				throw new Exception('Failed to create /var/run/fusionpbx');
 			}
 		}
-
-		//create the config object if not already created
-		if (self::$config === null) {
-			self::$config = new config(self::$config_file);
-		}
-
-		//get the name of child object
-		$class = self::base_class_name();
-
-		//create the child object
-		$service = new $class();
-
-		//initialize the service
-		$service->init();
-
-		//return the initialized object
-		return $service;
 	}
+
+	/**
+	 * Create an operating system PID file removing any existing PID file
+	 */
+	private function create_service_pid() {
+		// Set the pid filename
+		$basename = basename(self::$pid_file, '.pid');
+		$pid = getmypid();
+
+		// Remove the old pid file
+		if (file_exists(self::$pid_file)) {
+			if (is_writable(self::$pid_file)) {
+				unlink(self::$pid_file);
+			} else {
+				throw new RuntimeException("Unable to write to PID file " . self::$pid_file, 73); //Unix error code 73 - unable to write/create file
+			}
+		}
+
+		// Show the details to the user
+		self::log("Starting up...");
+		self::log("Mode      : " . (self::$daemon_mode ? "Daemon" : "Foreground"), LOG_INFO);
+		self::log("Service   : $basename", LOG_INFO);
+		self::log("Process ID: $pid", LOG_INFO);
+		self::log("PID File  : " . self::$pid_file, LOG_INFO);
+		self::log("Log level : " . self::log_level_to_string(self::$log_level), LOG_INFO);
+		self::log("Timestamps: " . (self::$show_timestamp_log ? "Yes" : "No"), LOG_INFO);
+
+		// Save the pid file
+		$success = file_put_contents(self::$pid_file, $pid);
+		if ($success === false) {
+			throw new RuntimeException("Failed writing to PID file " . self::$pid_file, 74); //Unix error code 74 - I/O error
+		}
+	}
+
+	/**
+	 * Registers signal handlers for handling various system signals.
+	 *
+	 * This method sets up event listeners for the following signals:
+	 * - SIGUSR1 and SIGHUP: reload the service settings from the database
+	 * - SIGUSR2 and SIGTERM: shut down the service
+	 *
+	 * @return void
+	 */
+	private function register_signal_handlers() {
+		// Allow the calls to be made while the main loop is running
+		pcntl_async_signals(true);
+
+		// A signal listener to reload the service for any config changes in the database
+		pcntl_signal(SIGUSR1, [$this, 'reload_settings']);
+		pcntl_signal(SIGHUP, [$this, 'reload_settings']);
+
+		// A signal listener to stop the service
+		pcntl_signal(SIGUSR2, [self::class, 'shutdown']);
+		pcntl_signal(SIGTERM, [self::class, 'shutdown']);
+	}
+
+	/**
+	 * Display version notice
+	 */
+	abstract protected static function display_version(): void;
+
+	/**
+	 * Parses the debug level to an integer and stores it in the class for syslog use
+	 *
+	 * @param string $debug_level Debug level with any of the Linux system log levels
+	 *
+	 * @return void
+	 */
+	protected static function set_debug_level(string $debug_level) {
+		// Map user input log level to syslog constant
+		switch ($debug_level) {
+			case '0':
+			case 'emergency':
+				self::$log_level = LOG_EMERG; // Hardware failures
+				break;
+			case '1':
+			case 'alert':
+				self::$log_level = LOG_ALERT; // Loss of network connection or a condition that should be corrected immediately
+				break;
+			case '2':
+			case 'critical':
+				self::$log_level = LOG_CRIT; // Condition like low disk space
+				break;
+			case '3':
+			case 'error':
+				self::$log_level = LOG_ERR;  // Database query failure, file not found
+				break;
+			case '4':
+			case 'warning':
+				self::$log_level = LOG_WARNING; // Deprecated function usage, approaching resource limits
+				break;
+			case '5':
+			case 'notice':
+				self::$log_level = LOG_NOTICE; // Normal conditions
+				break;
+			case '6':
+			case 'info':
+				self::$log_level = LOG_INFO; // Informational
+				break;
+			case '7':
+			case 'debug':
+				self::$log_level = LOG_DEBUG; // Debugging
+				break;
+			default:
+				self::$log_level = LOG_NOTICE; // Default to NOTICE if invalid level
+		}
+
+		// When we are using LOG_DEBUG there is a high chance we are logging to the console
+		// directly without systemctl so enable the timestamps by default
+		if (self::$log_level === LOG_DEBUG && !self::$daemon_mode) {
+			self::show_timestamp();
+		}
+	}
+
+	/**
+	 * Enables timestamp logging.
+	 *
+	 * @return void
+	 */
+	public static function show_timestamp() {
+		self::$show_timestamp_log = true;
+	}
+
+	/**
+	 * Logs the current and peak memory usage of the application at the INFO level.
+	 *
+	 * @return void
+	 */
+	protected static function show_mem_usage() {
+		//current memory
+		$memory_usage = memory_get_usage();
+		//peak memory
+		$memory_peak = memory_get_peak_usage();
+		self::log('Current memory: ' . round($memory_usage / 1024) . " KB", LOG_INFO);
+		self::log('Peak memory: ' . round($memory_peak / 1024) . " KB", LOG_INFO);
+	}
+
+	/**
+	 * Displays a help message for the available command options.
+	 */
+	protected static function display_help_message(): void {
+		//get the classname of the child class
+		$class_name = self::base_class_name();
+
+		//get the widest options for proper alignment
+		$width_short = max(array_map(function ($arr) {
+			return strlen($arr['short_description'] ?? '');
+		}, self::$available_command_options));
+		$width_long = max(array_map(function ($arr) {
+			return strlen($arr['long_description'] ?? '');
+		}, self::$available_command_options));
+
+		//display usage help using the class name of child
+		echo "Usage: php $class_name [options]\n";
+
+		//display the options aligned to the widest short and long options
+		echo "Options:\n";
+		foreach (self::$available_command_options as $option) {
+			printf("%-{$width_short}s %-{$width_long}s %s\n",
+				$option['short_description'],
+				$option['long_description'],
+				$option['description']
+			);
+		}
+	}
+
+	/**
+	 * Returns only the name of the class without namespace
+	 *
+	 * @return string base class name
+	 */
+	protected static function base_class_name(): string {
+		$class_and_namespace = explode('\\', static::class);
+		return array_pop($class_and_namespace);
+	}
+
+	//
+	// Options built-in to the base service class. These can be overridden with the child class
+	// or they can be extended using the array
+	//
+
+	/**
+	 * Method to start the child class internal loop
+	 */
+	abstract public function run(): int;
+
+	/**
+	 * Ensures the correct PID file is unlinked when this process terminates.
+	 *
+	 * This method is called automatically by PHP when an object's reference count reaches zero,
+	 * or when it's explicitly destroyed using unset(). It checks if the process is still running
+	 * and unlinks the corresponding PID file. Finally, it ensures that any open log connections
+	 * are properly closed before the script exits.
+	 *
+	 * @return void
+	 */
+	public function __destruct() {
+		//ensure we unlink the correct PID file if needed
+		if (self::is_running()) {
+			unlink(self::$pid_file);
+			self::log("Initiating Shutdown...", LOG_NOTICE);
+			$this->running = false;
+		}
+		//this should remain the last statement to execute before exit
+		closelog();
+	}
+
+	/**
+	 * Checks the file system for a pid file that matches the process ID from this running instance
+	 *
+	 * @return bool true if pid exists and false if not
+	 */
+	public static function is_running(): bool {
+		return posix_getpid() === self::get_service_pid();
+	}
+
+	/**
+	 * Returns the process ID of the service if it exists and is running.
+	 *
+	 * @return int|false The process ID of the service, or false if it does not exist or is not running.
+	 */
+	protected static function get_service_pid() {
+		if (file_exists(static::get_pid_filename())) {
+			$pid = file_get_contents(static::get_pid_filename());
+			if (function_exists('posix_getsid')) {
+				if (posix_getsid($pid) !== false) {
+					//return the pid for reloading configuration
+					return intval($pid);
+				}
+			} else {
+				if (file_exists('/proc/' . $pid)) {
+					//return the pid for reloading configuration
+					return intval($pid);
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns the filename of the PID file.
+	 *
+	 * The PID file is located in /var/run/fusionpbx/ and its name is based on the base file name.
+	 *
+	 * @return string The path to the PID file
+	 */
+	public static function get_pid_filename(): string {
+		return '/var/run/fusionpbx/' . self::base_file_name() . '.pid';
+	}
+
+	/**
+	 * Returns a file safe class name with \ from namespaces converted to _
+	 *
+	 * @return string file safe name
+	 */
+	protected static function base_file_name(): string {
+		return str_replace('\\', "_", static::class);
+	}
+
+	/**
+	 * Logs to the system log or console when running in foreground
+	 *
+	 * @param string $message Message to display in the system log or console when running in foreground
+	 * @param int    $level   (Optional) Level to use for logging to the console or daemon. Default value is LOG_NOTICE
+	 *
+	 * @return void
+	 */
+	protected static function log(string $message, int $level = LOG_NOTICE) {
+		// Check if we need to show the message
+		if ($level <= self::$log_level) {
+			// When not in daemon mode we log to console directly
+			if (!self::$daemon_mode) {
+				$level_as_string = self::log_level_to_string($level);
+				if (!self::$show_timestamp_log) {
+					echo "[$level_as_string] $message\n";
+				} else {
+					$time = date('Y-m-d H:i:s');
+					echo "[$time][$level_as_string] $message\n";
+				}
+			} else {
+				// Log the message to syslog
+				syslog($level, 'fusionpbx[' . posix_getpid() . ']: [' . static::class . '] ' . $message);
+			}
+		}
+	}
+
+	/**
+	 * Converts a log level integer to its corresponding string representation.
+	 *
+	 * @param int $level The log level as an integer, defaults to LOG_NOTICE (5).
+	 *
+	 * @return string The log level as a string.
+	 */
+	private static function log_level_to_string(int $level = LOG_NOTICE): string {
+		switch ($level) {
+			case 0:
+				return 'EMERGENCY';
+			case 1:
+				return 'ALERT';
+			case 2:
+				return 'CRITICAL';
+			case 3:
+				return 'ERROR';
+			case 4:
+				return 'WARNING';
+			case 5:
+				return 'NOTICE';
+			case 6:
+				return 'INFO';
+			case 7:
+				return 'DEBUG';
+			default:
+				return 'INFO';
+		}
+	}
+
+	/**
+	 * Child classes must provide a mechanism to reload settings
+	 */
+	abstract protected function reload_settings(): void;
 
 	/**
 	 * Logs a message at the DEBUG level.
@@ -917,7 +967,7 @@ abstract class service {
 
 	/**
 	 * Logs a message at the NOTICE level.
-	 * 
+	 *
 	 * @param string $message The message to be logged. Defaults to an empty string.
 	 *
 	 * @return void
