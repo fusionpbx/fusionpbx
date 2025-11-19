@@ -6,7 +6,7 @@ class buffer {
 
 	public function __construct() {
 		$this->content = '';
-		$this->eol = "\n";
+		$this->eol     = "\n";
 	}
 
 	public function append($str) {
@@ -26,17 +26,18 @@ class buffer {
 		if (strlen($this->content) < $n) {
 			return false;
 		}
-		$s = substr($this->content, 0, $n);
+		$s             = substr($this->content, 0, $n);
 		$this->content = substr($this->content, $n);
 		return $s;
 	}
 
 	public function read_all($n) {
-		$tmp = $this->content;
+		$tmp           = $this->content;
 		$this->content = '';
 		return $tmp;
 	}
 }
+
 //$b = new buffer;
 //$b->append("hello\nworld\n");
 //print($b->read_line());
@@ -44,11 +45,13 @@ class buffer {
 
 /**
  * Subscribes to the event socket of the FreeSWITCH (c) Event Socket Server
+ *
  * @depends buffer::class
  */
 class event_socket {
 	/**
 	 * Used as a flag to determine if the socket should be created automatically
+	 *
 	 * @var bool
 	 */
 	protected $auto_create;
@@ -61,13 +64,14 @@ class event_socket {
 
 	/**
 	 * Create a new connection to the socket
+	 *
 	 * @param resource|false $fp
 	 */
 	public function __construct($fp = false, ?config $config = null) {
-		$this->buffer = new buffer;
+		$this->buffer      = new buffer;
 		$this->auto_create = $fp === false;
-		$this->fp = $fp;
-		$this->config = $config ?? config::load();
+		$this->fp          = $fp;
+		$this->config      = $config ?? config::load();
 	}
 
 	/**
@@ -79,7 +83,8 @@ class event_socket {
 
 	/**
 	 * Read the event body from the socket
-	 * @return string|false Content body or false if not connected or empty message
+	 *
+	 * @return mixed Content body or false if not connected or empty message
 	 * @depends buffer::class
 	 */
 	public function read_event() {
@@ -87,8 +92,8 @@ class event_socket {
 			return false;
 		}
 
-		$b = $this->buffer;
-		$content = array();
+		$b       = $this->buffer;
+		$content = [];
 
 		while (true) {
 			$line = $b->read_line();
@@ -96,7 +101,7 @@ class event_socket {
 				if ($line === '') {
 					break;
 				}
-				list($key, $value) = explode(':', $line, 2);
+				[$key, $value] = explode(':', $line, 2);
 				$content[trim($key)] = trim($value);
 			}
 
@@ -136,17 +141,21 @@ class event_socket {
 	 * Connect to the FreeSWITCH (c) event socket server
 	 * <p>If the configuration is not loaded then the defaults of
 	 * host 127.0.0.1, port of 8021, and default password of ClueCon will be used</p>
-	 * @param null|string $host Host or IP address of FreeSWITCH event socket server. Defaults to 127.0.0.1
-	 * @param null|string|int $port Port number of FreeSWITCH event socket server. Defaults to 8021
-	 * @param null|string $password Password of FreeSWITCH event socket server. Defaults to ClueCon
-	 * @param int $timeout_microseconds Number of microseconds before timeout is triggered on socket. Defaults to 30,000
+	 *
+	 * @param null|string     $host                 Host or IP address of FreeSWITCH event socket server. Defaults to
+	 *                                              127.0.0.1
+	 * @param null|string|int $port                 Port number of FreeSWITCH event socket server. Defaults to 8021
+	 * @param null|string     $password             Password of FreeSWITCH event socket server. Defaults to ClueCon
+	 * @param int             $timeout_microseconds Number of microseconds before timeout is triggered on socket.
+	 *                                              Defaults to 30,000
+	 *
 	 * @return bool Returns true on success or false if not connected
 	 */
 	public function connect($host = null, $port = null, $password = null, $timeout_microseconds = 30000) {
 		//set the event socket variables in the order of
 		//param passed to func, conf setting, old conf setting, default
-		$host = $host ?? $this->config->get('switch.event_socket.host', null) ?? $this->config->get('event_socket.ip_address', null) ?? '127.0.0.1';
-		$port = intval($port ?? $this->config->get('switch.event_socket.port', null) ?? $this->config->get('event_socket.port', null) ?? '8021');
+		$host     = $host ?? $this->config->get('switch.event_socket.host', null) ?? $this->config->get('event_socket.ip_address', null) ?? '127.0.0.1';
+		$port     = intval($port ?? $this->config->get('switch.event_socket.port', null) ?? $this->config->get('event_socket.port', null) ?? '8021');
 		$password = $password ?? $this->config->get('switch.event_socket.password', null) ?? $this->config->get('event_socket.password', null) ?? 'ClueCon';
 
 		//if a socket was provided in the constructor, then don't create a new one
@@ -165,7 +174,7 @@ class event_socket {
 		//wait auth request and send a response
 		while ($this->connected()) {
 			$event = $this->read_event();
-			if(($event['Content-Type'] ?? '') === 'auth/request'){
+			if (($event['Content-Type'] ?? '') === 'auth/request') {
 				fputs($this->fp, "auth $password\n\n");
 				break;
 			}
@@ -188,6 +197,7 @@ class event_socket {
 
 	/**
 	 * Tests if connected to the FreeSWITCH Event Socket Server
+	 *
 	 * @return bool Returns true when connected or false when not connected
 	 */
 	public function connected(): bool {
@@ -205,6 +215,7 @@ class event_socket {
 
 	/**
 	 * alias of connected
+	 *
 	 * @return bool
 	 */
 	public function is_connected(): bool {
@@ -214,7 +225,9 @@ class event_socket {
 	/**
 	 * Send a command to the FreeSWITCH Event Socket Server
 	 * <p>Multi-line commands can be sent when separated by '\n'</p>
+	 *
 	 * @param string $cmd Command to send through the socket
+	 *
 	 * @return mixed Returns the response from FreeSWITCH or false if not connected
 	 * @depends read_event()
 	 */
@@ -225,7 +238,7 @@ class event_socket {
 
 		$cmd_array = explode("\n", $cmd);
 		foreach ($cmd_array as $value) {
-			fputs($this->fp, $value."\n");
+			fputs($this->fp, $value . "\n");
 		}
 		fputs($this->fp, "\n"); //second line feed to end the headers
 
@@ -239,18 +252,22 @@ class event_socket {
 
 	/**
 	 * Sets the current socket resource returning the old
+	 *
 	 * @param resource|bool $fp Sets the current FreeSWITCH resource
+	 *
 	 * @return mixed Returns the original resource
 	 * @deprecated since version 5.1
 	 */
-	public function reset_fp($fp = false){
-		$tmp = $this->fp;
+	public function reset_fp($fp = false) {
+		$tmp      = $this->fp;
 		$this->fp = $fp;
 		return $tmp;
 	}
 
 	/**
-	 * Closes the socket
+	 * Close the socket connection with the FreeSWITCH Event Socket Server.
+	 *
+	 * @return void
 	 */
 	public function close() {
 		//fp is public access so ensure it is a resource before closing it
@@ -273,12 +290,14 @@ class event_socket {
 
 	/**
 	 * Create uses a singleton design to return a connected socket to the FreeSWITCH Event Socket Layer
-	 * @global array $conf Global configuration used in config.conf
-	 * @param string $host Host or IP address of FreeSWITCH event socket server. Defaults to 127.0.0.1
-	 * @param string $port Port number of FreeSWITCH event socket server. Defaults to 8021
-	 * @param string $password Password of FreeSWITCH event socket server. Defaults to ClueCon
-	 * @param int $timeout_microseconds Number of microseconds before timeout is triggered on socket
+	 *
+	 * @param string $host                 Host or IP address of FreeSWITCH event socket server. Defaults to 127.0.0.1
+	 * @param string $port                 Port number of FreeSWITCH event socket server. Defaults to 8021
+	 * @param string $password             Password of FreeSWITCH event socket server. Defaults to ClueCon
+	 * @param int    $timeout_microseconds Number of microseconds before timeout is triggered on socket
+	 *
 	 * @return self
+	 * @global array $conf                 Global configuration used in config.conf
 	 */
 	public static function create($host = null, $port = null, $password = null, $timeout_microseconds = 30000): self {
 		//create the event socket object
@@ -286,7 +305,7 @@ class event_socket {
 			self::$socket = new event_socket();
 		}
 		//attempt to connect it
-		if(!self::$socket->connected()) {
+		if (!self::$socket->connected()) {
 			self::$socket->connect($host, $port, $password, $timeout_microseconds);
 		}
 		return self::$socket;
@@ -294,7 +313,9 @@ class event_socket {
 
 	/**
 	 * Sends a command on the socket blocking for a response
+	 *
 	 * @param string $cmd
+	 *
 	 * @return string|false Response from server or false if failed
 	 */
 	public static function command(string $cmd) {
@@ -303,24 +324,26 @@ class event_socket {
 
 	/**
 	 * Sends an API command on the socket
+	 *
 	 * @param string $api_cmd
+	 *
 	 * @return string|false Response from server or false if failed
 	 */
 	public static function api(string $api_cmd) {
-		return self::command('api '.$api_cmd);
+		return self::command('api ' . $api_cmd);
 	}
 
 	/**
 	 * Sends an API command to FreeSWITCH using asynchronous (non-blocking) mode
+	 *
 	 * @param string $cmd API command to send
+	 *
 	 * @returns string $job_id the Job ID for tracking completion status
 	 */
 	public static function async(string $cmd) {
-		return self::command('bgapi '.$cmd);
+		return self::command('bgapi ' . $cmd);
 	}
 }
 
 // $esl = event_socket::create('127.0.0.1', 8021, 'ClueCon');
 // print($esl->request('api sofia status'));
-
-?>

@@ -28,58 +28,67 @@
 
 /**
  * Service class
+ *
  * @version 1.00
- * @author Tim Fry <tim@fusionpbx.com>
+ * @author  Tim Fry <tim@fusionpbx.com>
  */
 abstract class service {
 
 	const VERSION = "1.00";
 
 	/**
-	 * Track the internal loop. It is recommended to use this variable to control the loop inside the run function. See the example
-	 * below the class for a more complete explanation
+	 * Track the internal loop. It is recommended to use this variable to control the loop inside the run function. See
+	 * the example below the class for a more complete explanation
+	 *
 	 * @var bool
 	 */
 	protected $running;
 
 	/**
 	 * current debugging level for output to syslog
+	 *
 	 * @var int Syslog level
 	 */
 	protected static $log_level = LOG_NOTICE;
 
 	/**
 	 * config object
+	 *
 	 * @var config config object
 	 */
 	protected static $config;
 
 	/**
 	 * Holds the parsed options from the command line
+	 *
 	 * @var array
 	 */
 	protected static $parsed_command_options;
 
 	/**
 	 * Operating System process identification file
+	 *
 	 * @var string
 	 */
 	private static $pid_file = "";
 
 	/**
 	 * Cli Options Array
+	 *
 	 * @var array
 	 */
 	protected static $available_command_options = [];
 
 	/**
 	 * Holds the configuration file location
+	 *
 	 * @var string
 	 */
 	protected static $config_file = "";
 
 	/**
 	 * Fork the service to it's own process ID
+	 *
 	 * @var bool
 	 */
 	protected static $daemon_mode = false;
@@ -87,6 +96,7 @@ abstract class service {
 	/**
 	 * Suppress the timestamp
 	 * Used to suppress the timestamp in syslog
+	 *
 	 * @var bool
 	 */
 	protected static $show_timestamp_log = false;
@@ -163,6 +173,16 @@ abstract class service {
 	}
 
 	// register signal handlers
+
+	/**
+	 * Registers signal handlers for handling various system signals.
+	 *
+	 * This method sets up event listeners for the following signals:
+	 * - SIGUSR1 and SIGHUP: reload the service settings from the database
+	 * - SIGUSR2 and SIGTERM: shut down the service
+	 *
+	 * @return void
+	 */
 	private function register_signal_handlers() {
 		// Allow the calls to be made while the main loop is running
 		pcntl_async_signals(true);
@@ -184,7 +204,9 @@ abstract class service {
 	 * @return string
 	 */
 	protected static function get_short_options(): string {
-		return implode('' , array_map(function ($option) { return $option['short_option']; }, self::$available_command_options));
+		return implode('', array_map(function ($option) {
+			return $option['short_option'];
+		}, self::$available_command_options));
 	}
 
 	/**
@@ -195,7 +217,9 @@ abstract class service {
 	 * @return array
 	 */
 	protected static function get_long_options(): array {
-		return array_map(function ($option) { return $option['long_option']; }, self::$available_command_options);
+		return array_map(function ($option) {
+			return $option['long_option'];
+		}, self::$available_command_options);
 	}
 
 	/**
@@ -207,7 +231,7 @@ abstract class service {
 	 */
 	protected static function get_user_callbacks_from_available_options(string $set_option): array {
 		//match the available option to the set option and return the callback function that needs to be called
-		foreach(self::$available_command_options as $option) {
+		foreach (self::$available_command_options as $option) {
 			$short_option = $option['short_option'] ?? '';
 			if (str_ends_with($short_option, ':')) {
 				$short_option = rtrim($short_option, ':');
@@ -217,8 +241,8 @@ abstract class service {
 				$long_option = rtrim($long_option, ':');
 			}
 			if ($short_option === $set_option ||
-				$long_option  === $set_option) {
-					return $option['functions'] ?? [$option['function']] ?? [];
+				$long_option === $set_option) {
+				return $option['functions'] ?? [$option['function']] ?? [];
 			}
 		}
 		return [];
@@ -278,7 +302,7 @@ abstract class service {
 				//check for more than one function to be called is permitted
 				if (is_array($funcs)) {
 					//call each one
-					foreach($funcs as $func) {
+					foreach ($funcs as $func) {
 						//use the best method to call the function
 						self::call_function($func, $option_value);
 					}
@@ -291,8 +315,16 @@ abstract class service {
 	}
 
 	//
-	// Calls a function using the best suited PHP method
 	//
+	//
+	/**
+	 * Calls a function using the best suited PHP method.
+	 *
+	 * @param string $function The name of the function to call, either as a string or an instance of Closure.
+	 * @param mixed  $args     An array of arguments to pass to the called function.
+	 *
+	 * @return void
+	 */
 	private static function call_function($function, $args) {
 		if ($function === 'exit') {
 			//check for exit
@@ -352,7 +384,7 @@ abstract class service {
 	private function create_service_pid() {
 		// Set the pid filename
 		$basename = basename(self::$pid_file, '.pid');
-		$pid = getmypid();
+		$pid      = getmypid();
 
 		// Remove the old pid file
 		if (file_exists(self::$pid_file)) {
@@ -456,7 +488,7 @@ abstract class service {
 	 * @return string The log level as a string.
 	 */
 	private static function log_level_to_string(int $level = LOG_NOTICE): string {
-		switch ($level){
+		switch ($level) {
 			case 0:
 				return 'EMERGENCY';
 			case 1:
@@ -514,13 +546,14 @@ abstract class service {
 				}
 			} else {
 				// Log the message to syslog
-				syslog($level, 'fusionpbx[' . posix_getpid() . ']: ['.static::class.'] '.$message);
+				syslog($level, 'fusionpbx[' . posix_getpid() . ']: [' . static::class . '] ' . $message);
 			}
 		}
 	}
 
 	/**
 	 * Returns a file safe class name with \ from namespaces converted to _
+	 *
 	 * @return string file safe name
 	 */
 	protected static function base_file_name(): string {
@@ -529,6 +562,7 @@ abstract class service {
 
 	/**
 	 * Returns only the name of the class without namespace
+	 *
 	 * @return string base class name
 	 */
 	protected static function base_class_name(): string {
@@ -599,7 +633,7 @@ abstract class service {
 		if ($pid === false) {
 			self::log("service not running", LOG_EMERG);
 		} else {
-			if (posix_kill((int) $pid, $posix_signal) ) {
+			if (posix_kill((int)$pid, $posix_signal)) {
 				echo "Sent $signal_name\n";
 			} else {
 				$err = posix_strerror(posix_get_last_error());
@@ -616,8 +650,12 @@ abstract class service {
 		$class_name = self::base_class_name();
 
 		//get the widest options for proper alignment
-		$width_short = max(array_map(function ($arr) { return strlen($arr['short_description'] ?? ''); }, self::$available_command_options));
-		$width_long  = max(array_map(function ($arr) { return strlen($arr['long_description' ] ?? ''); }, self::$available_command_options));
+		$width_short = max(array_map(function ($arr) {
+			return strlen($arr['short_description'] ?? '');
+		}, self::$available_command_options));
+		$width_long  = max(array_map(function ($arr) {
+			return strlen($arr['long_description'] ?? '');
+		}, self::$available_command_options));
 
 		//display usage help using the class name of child
 		echo "Usage: php $class_name [options]\n";
@@ -651,78 +689,91 @@ abstract class service {
 	// Options built-in to the base service class. These can be overridden with the child class
 	// or they can be extended using the array
 	//
+	/**
+	 * Returns an array of base command options.
+	 *
+	 * This method constructs an array of help options for the command line interface,
+	 * including short and long option descriptions, functions that these options
+	 * trigger, and other metadata. The resulting array can be used to provide help
+	 * messages or determine which functions are available based on the input.
+	 *
+	 * @return array An associative array where each key represents a help option and
+	 *               its corresponding value is an associative array containing
+	 *               short_option, long_option, description, short_description,
+	 *               long_description, and functions keys.
+	 */
 	private static function base_command_options(): array {
 		//put the display for help in an array so we can calculate width
-		$help_options = [];
-		$index = 0;
-		$help_options[$index]['short_option'] = 'v';
-		$help_options[$index]['long_option'] = 'version';
-		$help_options[$index]['description'] = 'Show the version information';
+		$help_options                              = [];
+		$index                                     = 0;
+		$help_options[$index]['short_option']      = 'v';
+		$help_options[$index]['long_option']       = 'version';
+		$help_options[$index]['description']       = 'Show the version information';
 		$help_options[$index]['short_description'] = '-v';
-		$help_options[$index]['long_description'] = '--version';
-		$help_options[$index]['functions'][] = 'display_version';
-		$help_options[$index]['functions'][] = 'shutdown';
+		$help_options[$index]['long_description']  = '--version';
+		$help_options[$index]['functions'][]       = 'display_version';
+		$help_options[$index]['functions'][]       = 'shutdown';
 		$index++;
-		$help_options[$index]['short_option'] = 'h';
-		$help_options[$index]['long_option'] = 'help';
-		$help_options[$index]['description'] = 'Show the version and help message';
+		$help_options[$index]['short_option']      = 'h';
+		$help_options[$index]['long_option']       = 'help';
+		$help_options[$index]['description']       = 'Show the version and help message';
 		$help_options[$index]['short_description'] = '-h';
-		$help_options[$index]['long_description'] = '--help';
-		$help_options[$index]['functions'][] = 'display_version';
-		$help_options[$index]['functions'][] = 'display_help_message';
-		$help_options[$index]['functions'][] = 'shutdown';
+		$help_options[$index]['long_description']  = '--help';
+		$help_options[$index]['functions'][]       = 'display_version';
+		$help_options[$index]['functions'][]       = 'display_help_message';
+		$help_options[$index]['functions'][]       = 'shutdown';
 		$index++;
-		$help_options[$index]['short_option'] = 'a';
-		$help_options[$index]['long_option'] = 'about';
-		$help_options[$index]['description'] = 'Show the version and copyright information';
+		$help_options[$index]['short_option']      = 'a';
+		$help_options[$index]['long_option']       = 'about';
+		$help_options[$index]['description']       = 'Show the version and copyright information';
 		$help_options[$index]['short_description'] = '-a';
-		$help_options[$index]['long_description'] = '--about';
-		$help_options[$index]['functions'][] = 'display_version';
-		$help_options[$index]['functions'][] = 'display_copyright';
-		$help_options[$index]['functions'][] = 'shutdown';
+		$help_options[$index]['long_description']  = '--about';
+		$help_options[$index]['functions'][]       = 'display_version';
+		$help_options[$index]['functions'][]       = 'display_copyright';
+		$help_options[$index]['functions'][]       = 'shutdown';
 		$index++;
-		$help_options[$index]['short_option'] = 'r';
-		$help_options[$index]['long_option'] = 'reload';
-		$help_options[$index]['description'] = 'Reload settings for an already running service';
+		$help_options[$index]['short_option']      = 'r';
+		$help_options[$index]['long_option']       = 'reload';
+		$help_options[$index]['description']       = 'Reload settings for an already running service';
 		$help_options[$index]['short_description'] = '-r';
-		$help_options[$index]['long_description'] = '--reload';
-		$help_options[$index]['functions'][] = 'send_reload';
+		$help_options[$index]['long_description']  = '--reload';
+		$help_options[$index]['functions'][]       = 'send_reload';
 		$index++;
-		$help_options[$index]['short_option'] = 'd:';
-		$help_options[$index]['long_option'] = 'debug:';
-		$help_options[$index]['description'] = 'Set the syslog level between 0 (EMERG) and 7 (DEBUG). 5 (INFO) is default';
+		$help_options[$index]['short_option']      = 'd:';
+		$help_options[$index]['long_option']       = 'debug:';
+		$help_options[$index]['description']       = 'Set the syslog level between 0 (EMERG) and 7 (DEBUG). 5 (INFO) is default';
 		$help_options[$index]['short_description'] = '-d <level>';
-		$help_options[$index]['long_description'] = '--debug <level>';
-		$help_options[$index]['functions'][] = 'set_debug_level';
+		$help_options[$index]['long_description']  = '--debug <level>';
+		$help_options[$index]['functions'][]       = 'set_debug_level';
 		$index++;
-		$help_options[$index]['short_option'] = 'c:';
-		$help_options[$index]['long_option'] = 'config:';
-		$help_options[$index]['description'] = 'Full path and file name of the configuration file to use. /etc/fusionpbx/config.conf or /usr/local/etc/fusionpbx/config.conf on FreeBSD is default';
+		$help_options[$index]['short_option']      = 'c:';
+		$help_options[$index]['long_option']       = 'config:';
+		$help_options[$index]['description']       = 'Full path and file name of the configuration file to use. /etc/fusionpbx/config.conf or /usr/local/etc/fusionpbx/config.conf on FreeBSD is default';
 		$help_options[$index]['short_description'] = '-c <path>';
-		$help_options[$index]['long_description'] = '--config <path>';
-		$help_options[$index]['functions'][] = 'set_config_file';
+		$help_options[$index]['long_description']  = '--config <path>';
+		$help_options[$index]['functions'][]       = 'set_config_file';
 		$index++;
-		$help_options[$index]['short_option'] = 'f';
-		$help_options[$index]['long_option'] = 'daemon';
-		$help_options[$index]['description'] = 'Start the process as a daemon. (Also known as forking)';
+		$help_options[$index]['short_option']      = 'f';
+		$help_options[$index]['long_option']       = 'daemon';
+		$help_options[$index]['description']       = 'Start the process as a daemon. (Also known as forking)';
 		$help_options[$index]['short_description'] = '-f';
-		$help_options[$index]['long_description'] = '--daemon';
-		$help_options[$index]['functions'][] = 'enable_daemon_mode';
+		$help_options[$index]['long_description']  = '--daemon';
+		$help_options[$index]['functions'][]       = 'enable_daemon_mode';
 		$index++;
-		$help_options[$index]['short_option'] = '';
-		$help_options[$index]['long_option'] = 'show-timestamp';
-		$help_options[$index]['description'] = 'Enable the timestamp when logging';
+		$help_options[$index]['short_option']      = '';
+		$help_options[$index]['long_option']       = 'show-timestamp';
+		$help_options[$index]['description']       = 'Enable the timestamp when logging';
 		$help_options[$index]['short_description'] = '';
-		$help_options[$index]['long_description'] = '--show-timestamp';
-		$help_options[$index]['functions'][] = 'show_timestamp';
+		$help_options[$index]['long_description']  = '--show-timestamp';
+		$help_options[$index]['functions'][]       = 'show_timestamp';
 		$index++;
-		$help_options[$index]['short_option'] = 'x';
-		$help_options[$index]['long_option'] = 'exit';
-		$help_options[$index]['description'] = 'Exit the service gracefully';
+		$help_options[$index]['short_option']      = 'x';
+		$help_options[$index]['long_option']       = 'exit';
+		$help_options[$index]['description']       = 'Exit the service gracefully';
 		$help_options[$index]['short_description'] = '-x';
-		$help_options[$index]['long_description'] = '--exit';
-		$help_options[$index]['functions'][] = 'send_shutdown';
-		$help_options[$index]['functions'][] = 'shutdown';
+		$help_options[$index]['long_description']  = '--exit';
+		$help_options[$index]['functions'][]       = 'send_shutdown';
+		$help_options[$index]['functions'][]       = 'shutdown';
 		return $help_options;
 	}
 
@@ -739,12 +790,16 @@ abstract class service {
 	 * Set to foreground when started
 	 */
 	public static function enable_daemon_mode() {
-		self::$daemon_mode = true;
+		self::$daemon_mode        = true;
 		self::$show_timestamp_log = false;
 	}
 
 	/**
-	 * Set the configuration file location to use for a config object
+	 * Set the configuration file to be used by FusionPBX.
+	 *
+	 * @param string $file The path to the configuration file (default: '/etc/fusionpbx/config.conf')
+	 *
+	 * @return void
 	 */
 	public static function set_config_file(string $file = '/etc/fusionpbx/config.conf') {
 		if (empty(self::$config_file)) {
@@ -754,12 +809,14 @@ abstract class service {
 	}
 
 	/**
-	 * Appends the CLI option to the list given to the user as a command line argument.
-	 * @param command_option $option
-	 * @return int The index of the item added
+	 * Appends a command option to the list of available options.
+	 *
+	 * @param command_option $option The command option to append.
+	 *
+	 * @return int The index where the option was appended.
 	 */
 	public static function append_command_option(command_option $option): int {
-		$index = count(self::$available_command_options);
+		$index                                   = count(self::$available_command_options);
 		self::$available_command_options[$index] = $option->to_array();
 		return $index;
 	}
@@ -790,13 +847,13 @@ abstract class service {
 				$long_description .= " <setting>";
 			}
 		}
-		$index = count(self::$available_command_options);
-		self::$available_command_options[$index]['short_option'] = $short_option;
-		self::$available_command_options[$index]['long_option'] = $long_option;
-		self::$available_command_options[$index]['description'] = $description;
+		$index                                                        = count(self::$available_command_options);
+		self::$available_command_options[$index]['short_option']      = $short_option;
+		self::$available_command_options[$index]['long_option']       = $long_option;
+		self::$available_command_options[$index]['description']       = $description;
 		self::$available_command_options[$index]['short_description'] = $short_description;
-		self::$available_command_options[$index]['long_description'] = $long_description;
-		self::$available_command_options[$index]['functions'] = $callback;
+		self::$available_command_options[$index]['long_description']  = $long_description;
+		self::$available_command_options[$index]['functions']         = $callback;
 		return $index;
 	}
 
@@ -917,7 +974,7 @@ abstract class service {
 
 	/**
 	 * Logs a message at the NOTICE level.
-	 * 
+	 *
 	 * @param string $message The message to be logged. Defaults to an empty string.
 	 *
 	 * @return void

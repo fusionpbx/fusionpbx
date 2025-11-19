@@ -8,15 +8,17 @@ class text implements clear_cache {
 
 	/**
 	 * Contains the list of supported languages
+	 *
 	 * @var array
 	 */
 	public $languages;
 
 	/**
 	 * Legacy older list of supported languages
+	 *
 	 * @var array
 	 */
-	public $legacy_map = array(
+	public $legacy_map = [
 		'he' => 'he-il',
 		'pl' => 'pl-pl',
 		'uk' => 'uk-ua',
@@ -30,34 +32,41 @@ class text implements clear_cache {
 		'es' => 'es-cl',
 		'fr' => 'fr-fr',
 		'pt' => 'pt-pt',
-	);
+	];
 
 	/**
 	 * Set in the constructor. Must be a database object and cannot be null.
+	 *
 	 * @var database Database Object
 	 */
 	private $database;
 
 	/**
 	 * Settings object set in the constructor. Must be a settings object and cannot be null.
+	 *
 	 * @var settings Settings Object
 	 */
 	private $settings;
 
 	/**
-	 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+	 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in
+	 * the session global array
+	 *
 	 * @var string
 	 */
 	private $user_uuid;
 
 	/**
-	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set
+	 * in the session global array
+	 *
 	 * @var string
 	 */
 	private $domain_uuid;
 
 	/**
 	 * Translated flattened text array using the file path as key
+	 *
 	 * @var array
 	 */
 	private static $tanslated;
@@ -68,272 +77,276 @@ class text implements clear_cache {
 	private $apcu_enabled;
 
 	/**
-	 * Called when the object is created
+	 * Constructor for the class.
+	 *
+	 * This method initializes the object with setting_array and session data.
+	 *
+	 * @param array $setting_array An optional array of settings to override default values. Defaults to [].
 	 */
 	public function __construct($setting_array = []) {
 		//define the text array
-			$text = array();
+		$text = [];
 
 		//check for apcu caching
-			$this->apcu_enabled = function_exists('apcu_enabled') && apcu_enabled();
+		$this->apcu_enabled = function_exists('apcu_enabled') && apcu_enabled();
 
 		//set the domain and user uuids
-			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//open a database connection
-			if (empty($setting_array['database'])) {
-				$this->database = database::new();
-			} else {
-				$this->database = $setting_array['database'];
-			}
+		if (empty($setting_array['database'])) {
+			$this->database = database::new();
+		} else {
+			$this->database = $setting_array['database'];
+		}
 
 		//load the settings
-			if (empty($setting_array['settings'])) {
-				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
-			} else {
-				$this->settings = $setting_array['settings'];
-			}
+		if (empty($setting_array['settings'])) {
+			$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+		} else {
+			$this->settings = $setting_array['settings'];
+		}
 
 		//get the global app_languages.php so we can get the list of languages
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/resources/app_languages.php")) {
-				include $_SERVER["PROJECT_ROOT"]."/resources/app_languages.php";
-			}
+		if (file_exists($_SERVER["PROJECT_ROOT"] . "/resources/app_languages.php")) {
+			include $_SERVER["PROJECT_ROOT"] . "/resources/app_languages.php";
+		}
 
 		//get the list of languages, remove en-us, sort it then put en-us in front
-			unset($text['language-name']['en-us']);
-			if (is_array($text['language-name'])) {
-				$languages = array_keys($text['language-name']);
-				asort($languages);
-				array_unshift($languages, 'en-us');
-			}
+		unset($text['language-name']['en-us']);
+		if (is_array($text['language-name'])) {
+			$languages = array_keys($text['language-name']);
+			asort($languages);
+			array_unshift($languages, 'en-us');
+		}
 
 		//support legacy variable
-			if (is_array($languages)) {
-				$_SESSION['app']['languages'] = $languages;
-				$this->languages = $languages;
-			}
+		if (is_array($languages)) {
+			$_SESSION['app']['languages'] = $languages;
+			$this->languages              = $languages;
+		}
 	}
 
 	/**
 	 * Get a specific language from the language file
-	 * @param string|null $language_code    examples: en-us, es-cl, fr-fr, pt-pt
-	 * @param string|null $app_path         examples: app/exec or core/domains
-	 * @param bool        $exclude_global   Exclude the global languages file
+	 *
+	 * @param string|null $language_code  examples: en-us, es-cl, fr-fr, pt-pt
+	 * @param string|null $app_path       examples: app/exec or core/domains
+	 * @param bool        $exclude_global Exclude the global languages file
 	 *
 	 * @return array A flattened array containing the desired language
 	 */
 	public function get(?string $language_code = null, ?string $app_path = null, bool $exclude_global = false) {
 
 		//define the text array
-			$text = [];
+		$text = [];
 
 		//check the session language
-			if ($language_code == null) {
-				$language_code = $this->settings->get('domain', 'language', 'en-us');
-			}
+		if ($language_code == null) {
+			$language_code = $this->settings->get('domain', 'language', 'en-us');
+		}
 
 		//check the language code
-			if (strlen($language_code) == 2 && array_key_exists($language_code, $this->legacy_map)) {
-				$language_code = $this->legacy_map[$language_code];
-			}
+		if (strlen($language_code) == 2 && array_key_exists($language_code, $this->legacy_map)) {
+			$language_code = $this->legacy_map[$language_code];
+		}
 
 		//get the app_languages.php
-			if ($app_path != null) {
-				$lang_path = $_SERVER["PROJECT_ROOT"]."/".$app_path;
-			}
-			else {
-				$lang_path = getcwd();
-			}
+		if ($app_path != null) {
+			$lang_path = $_SERVER["PROJECT_ROOT"] . "/" . $app_path;
+		} else {
+			$lang_path = getcwd();
+		}
 
 		//check the class cache
-			$cache_key = "text_{$language_code}_{$lang_path}";
-			if ($this->apcu_enabled && apcu_exists($cache_key)) {
-				return apcu_fetch($cache_key);
+		$cache_key = "text_{$language_code}_{$lang_path}";
+		if ($this->apcu_enabled && apcu_exists($cache_key)) {
+			return apcu_fetch($cache_key);
 
-			}
-			if (isset(self::$tanslated[$cache_key])) {
-				return self::$tanslated[$cache_key];
-			}
+		}
+		if (isset(self::$tanslated[$cache_key])) {
+			return self::$tanslated[$cache_key];
+		}
 
 		//get the global app_languages.php
-			if (!$exclude_global && file_exists($_SERVER["PROJECT_ROOT"]."/resources/app_languages.php")) {
-				require $_SERVER["PROJECT_ROOT"]."/resources/app_languages.php";
-			}
+		if (!$exclude_global && file_exists($_SERVER["PROJECT_ROOT"] . "/resources/app_languages.php")) {
+			require $_SERVER["PROJECT_ROOT"] . "/resources/app_languages.php";
+		}
 
-			if (file_exists($lang_path."/app_languages.php") && ($lang_path != 'resources' or $exclude_global)) {
-				include "{$lang_path}/app_languages.php";
-			}
-			//else {
-			//	throw new Exception("could not find app_languages for '$app_path'");
-			//}
+		if (file_exists($lang_path . "/app_languages.php") && ($lang_path != 'resources' or $exclude_global)) {
+			include "{$lang_path}/app_languages.php";
+		}
+		//else {
+		//	throw new Exception("could not find app_languages for '$app_path'");
+		//}
 
 		//reduce to specific language
-			if ($language_code != 'all' && is_array($text)) {
-				foreach ($text as $key => $value) {
-					if (isset($value[$language_code]) && !empty($value[$language_code])) {
-						//use the selected language
-						$text[$key] = $value[$language_code];
-					} elseif (isset($value['en-us'])) {
-						//fallback to en-us
-						$text[$key] = $value['en-us'];
-					} else {
-						$text[$key] = '';
-					}
+		if ($language_code != 'all' && is_array($text)) {
+			foreach ($text as $key => $value) {
+				if (isset($value[$language_code]) && !empty($value[$language_code])) {
+					//use the selected language
+					$text[$key] = $value[$language_code];
+				} elseif (isset($value['en-us'])) {
+					//fallback to en-us
+					$text[$key] = $value['en-us'];
+				} else {
+					$text[$key] = '';
 				}
 			}
+		}
 
 		//cache the reduced language using the file as a key
-			if ($this->apcu_enabled) {
-				apcu_store($cache_key, $text);
-			} else {
-				self::$tanslated[$cache_key] = $text;
-			}
+		if ($this->apcu_enabled) {
+			apcu_store($cache_key, $text);
+		} else {
+			self::$tanslated[$cache_key] = $text;
+		}
 
 		//return the array of translations
-			return $text;
+		return $text;
 	}
 
 	/**
-	 * reorganize an app_languages.php into a consistent format
-	 * @var string $app_path		examples: app/exec or core/domains
-	 * @var string $no_sort			don't sort the text label order
+	 * Organize a specific language from the language file.
+	 *
+	 * @param string $app_path Path to the application where the language file is located.
+	 * @param bool   $no_sort  Flag to determine if the text should be sorted or not.
+	 *
+	 * @return void
 	 */
 	public function organize_language($app_path = null, $no_sort = false) {
 
 		//clear $text ready for the import
-			$text = array();
+		$text = [];
 
 		//get the app_languages.php
-			if ($app_path == null) {
-				throw new Exception("\$app_path must be specified");
-			}
-			$lang_path = $_SERVER["PROJECT_ROOT"]."/$app_path/app_languages.php";
-			if (!file_exists($lang_path)) {
-				throw new Exception("could not find app_languages for '$app_path'");
-			}
-			require $lang_path;
+		if ($app_path == null) {
+			throw new Exception("\$app_path must be specified");
+		}
+		$lang_path = $_SERVER["PROJECT_ROOT"] . "/$app_path/app_languages.php";
+		if (!file_exists($lang_path)) {
+			throw new Exception("could not find app_languages for '$app_path'");
+		}
+		require $lang_path;
 
-			if (!is_array($text)) {
-				throw new Exception("failed to import text data from '$app_path'");
-			}
+		if (!is_array($text)) {
+			throw new Exception("failed to import text data from '$app_path'");
+		}
 
 		//collect existing comments
-			$comment = array();
-			$file_handle = fopen($lang_path, "r");
-			while (!feof($file_handle)) {
-				if(preg_match('/\$text\[[\'"](.+)[\'"]\]\[[\'"](.+)[\'"]]\s+=\s+[\'"].*[\'"];\s+\/\/(.+)/', fgets($file_handle), $matches)){
-					$comment[$matches[0]][$matches[1]] = $matches[2];
-				}
+		$comment     = [];
+		$file_handle = fopen($lang_path, "r");
+		while (!feof($file_handle)) {
+			if (preg_match('/\$text\[[\'"](.+)[\'"]\]\[[\'"](.+)[\'"]]\s+=\s+[\'"].*[\'"];\s+\/\/(.+)/', fgets($file_handle), $matches)) {
+				$comment[$matches[0]][$matches[1]] = $matches[2];
 			}
-			fclose($file_handle);
+		}
+		fclose($file_handle);
 
 		//open the language file for writing
-			$lang_file = fopen($lang_path, 'w');
-			date_default_timezone_set('UTC');
-			fwrite($lang_file, "<?php\n#This file was last reorganized on " . date("jS \of F Y h:i:s A e") . "\n");
-			if (!$no_sort) {
-				if ($app_path == 'resources') {
-					$temp_A['language-name'] = $text['language-name'];
-					unset($text['language-name']);
-					foreach($this->languages as $language) {
-						$temp_B["language-$language"] = $text["language-$language"];
-						unset($text["language-$language"]);
-					}
-					$temp_C["language-en-us"] = $temp_B["language-en-us"];
-					unset($temp_B["language-en-us"]);
-					ksort($temp_B);
-					$temp_B = array_merge($temp_C, $temp_B);
-					ksort($text);
-					$text = array_merge($temp_A, $temp_B, $text);
-					unset($temp_A, $temp_B, $temp_C);
+		$lang_file = fopen($lang_path, 'w');
+		date_default_timezone_set('UTC');
+		fwrite($lang_file, "<?php\n#This file was last reorganized on " . date("jS \of F Y h:i:s A e") . "\n");
+		if (!$no_sort) {
+			if ($app_path == 'resources') {
+				$temp_A['language-name'] = $text['language-name'];
+				unset($text['language-name']);
+				foreach ($this->languages as $language) {
+					$temp_B["language-$language"] = $text["language-$language"];
+					unset($text["language-$language"]);
 				}
-				else {
-					ksort($text);
+				$temp_C["language-en-us"] = $temp_B["language-en-us"];
+				unset($temp_B["language-en-us"]);
+				ksort($temp_B);
+				$temp_B = array_merge($temp_C, $temp_B);
+				ksort($text);
+				$text = array_merge($temp_A, $temp_B, $text);
+				unset($temp_A, $temp_B, $temp_C);
+			} else {
+				ksort($text);
+			}
+		} else {
+			if ($app_path == 'resources') {
+				foreach ($this->languages as $language) {
+					$label = array_shift($text["language-$language"]);
+					if (empty($label))
+						$label = $language;
+					$text["language-$language"]['en-us'] = $label;
 				}
 			}
-			else {
-				if ($app_path == 'resources') {
-					foreach($this->languages as $language) {
-						$label = array_shift($text["language-$language"]);
-						if (empty($label))
-							$label = $language;
-						$text["language-$language"]['en-us'] = $label;
-					}
-				}
-			}
-			$last_lang_label = "";
-			foreach ($text as $lang_label => $lang_codes) {
+		}
+		$last_lang_label = "";
+		foreach ($text as $lang_label => $lang_codes) {
 
-				//behave differently if we are one of the special language-* tags
-					if (preg_match('/\Alanguage-(\w{2}|\w{2}-\w{2})\z/', $lang_label, $lang_code)) {
-						if ($lang_label == 'language-en-us')
-							fwrite($lang_file, "\n");
-						$target_lang = $lang_code[1];
-						if (strlen($target_lang) == 2) {
-							if (array_key_exists($target_lang, $this->legacy_map)) {
-								$target_lang = $this->legacy_map[$target_lang];
+			//behave differently if we are one of the special language-* tags
+			if (preg_match('/\Alanguage-(\w{2}|\w{2}-\w{2})\z/', $lang_label, $lang_code)) {
+				if ($lang_label == 'language-en-us')
+					fwrite($lang_file, "\n");
+				$target_lang = $lang_code[1];
+				if (strlen($target_lang) == 2) {
+					if (array_key_exists($target_lang, $this->legacy_map)) {
+						$target_lang = $this->legacy_map[$target_lang];
+					}
+				}
+				$spacer = "";
+				if (strlen($target_lang) == 11)
+					$spacer = "   ";
+				$language_name = $this->escape_str(array_shift($text[$lang_label]));
+				if (empty($language_name))
+					$language_name = $this->escape_str($target_lang);
+				fwrite($lang_file, "\$text['language-$target_lang'$spacer]['en-us'] = \"$language_name\";\n");
+			} else {
+
+				//put a line break in between the last tag if it has changed
+				if ($last_lang_label != $lang_label)
+					fwrite($lang_file, "\n");
+				foreach ($this->languages as $lang_code) {
+					$value       = "";
+					$append      = "";
+					$spacer      = "";
+					$target_lang = $lang_code;
+					if (strlen($lang_code) == 2) {
+						if (array_key_exists($lang_code, $this->legacy_map)) {
+							$target_lang = $this->legacy_map[$lang_code];
+						}
+					}
+					if (strlen($target_lang) == 2)
+						$spacer = "   ";
+					if (array_key_exists($lang_code, $text[$lang_label]))
+						$value = $text[$lang_label][$lang_code];
+					if (empty($value) and array_key_exists($target_lang, $this->legacy_map)) {
+						$value = $text[$lang_label][$this->legacy_map[$target_lang]];
+					}
+					$base_code = substr($target_lang, 0, 2);
+					if (!empty($value)
+						and array_key_exists($base_code, $this->legacy_map)
+						and $this->legacy_map[$base_code] != $target_lang
+						and $value == $text[$lang_label][$this->legacy_map[$base_code]]
+					) {
+						$append = " //copied from " . $this->legacy_map[$base_code];
+					}
+					if (empty($value)) {
+						foreach ($this->languages as $lang_code) {
+							if (substr($lang_code, 0, 2) == $base_code and !empty($text[$lang_label][$lang_code])) {
+								$value  = $text[$lang_label][$lang_code];
+								$append = " //copied from $lang_code";
+								continue;
 							}
 						}
-						$spacer = "";
-						if (strlen($target_lang) == 11)
-							$spacer = "   ";
-						$language_name = $this->escape_str(array_shift($text[$lang_label]));
-						if (empty($language_name))
-							$language_name = $this->escape_str($target_lang);
-						fwrite($lang_file, "\$text['language-$target_lang'$spacer]['en-us'] = \"$language_name\";\n");
 					}
-					else {
-
-						//put a line break in between the last tag if it has changed
-							if ($last_lang_label != $lang_label)
-								fwrite($lang_file, "\n");
-								foreach ($this->languages as $lang_code) {
-									$value = "";
-									$append = "";
-									$spacer = "";
-									$target_lang = $lang_code;
-									if (strlen($lang_code) == 2) {
-										if (array_key_exists($lang_code, $this->legacy_map)) {
-											$target_lang = $this->legacy_map[$lang_code];
-										}
-									}
-									if (strlen($target_lang) == 2)
-										$spacer = "   ";
-									if (array_key_exists($lang_code, $text[$lang_label]))
-										$value = $text[$lang_label][$lang_code];
-									if (empty($value) and array_key_exists($target_lang, $this->legacy_map)) {
-										$value = $text[$lang_label][$this->legacy_map[$target_lang]];
-									}
-									$base_code = substr($target_lang, 0, 2);
-									if (!empty($value)
-										and array_key_exists($base_code, $this->legacy_map )
-										and $this->legacy_map[$base_code] != $target_lang
-										and $value == $text[$lang_label][$this->legacy_map[$base_code]]
-									) {
-										$append = " //copied from ".$this->legacy_map[$base_code];
-									}
-									if (empty($value)) {
-										foreach($this->languages as $lang_code) {
-											if (substr($lang_code, 0, 2) == $base_code and !empty($text[$lang_label][$lang_code])) {
-												$value = $text[$lang_label][$lang_code];
-												$append = " //copied from $lang_code";
-												continue;
-											}
-										}
-									}
-									if(empty($append) && array_key_exists($comment[$lang_label], $lang_code)) {
-										$append = " //$comment[$lang_label][$lang_code]";
-									}
-									fwrite($lang_file, "\$text['$lang_label']['$target_lang'$spacer] = \"".$this->escape_str($value)."\";$append\n");
-								}
+					if (empty($append) && array_key_exists($comment[$lang_label], $lang_code)) {
+						$append = " //$comment[$lang_label][$lang_code]";
 					}
-					$last_lang_label = $lang_label;
+					fwrite($lang_file, "\$text['$lang_label']['$target_lang'$spacer] = \"" . $this->escape_str($value) . "\";$append\n");
+				}
 			}
+			$last_lang_label = $lang_label;
+		}
 
 		//close the language file
-			fwrite($lang_file, "\n?>\n");
-			fclose($lang_file);
+		fwrite($lang_file, "\n?>\n");
+		fclose($lang_file);
 	}
 
 	/**
@@ -346,40 +359,40 @@ class text implements clear_cache {
 	public function detect_all_languages($no_sort = false) {
 
 		//clear $text ready for the import
-			$text = array();
-			$languages = array();
+		$text      = [];
+		$languages = [];
 
 		//retrieve all the languages
-			$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*/app_languages.php");
-			foreach($files as $file) {
-				include $file;
-			}
-			include $_SERVER["PROJECT_ROOT"] . "/resources/app_languages.php";
+		$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*/app_languages.php");
+		foreach ($files as $file) {
+			include $file;
+		}
+		include $_SERVER["PROJECT_ROOT"] . "/resources/app_languages.php";
 
 		//check every tag
-			foreach($text as $lang_codes) {
-				foreach($lang_codes as $language_code => $value) {
-					if (strlen($language_code) == 2) {
-						if (array_key_exists($language_code, $this->legacy_map)) {
-							$language_code = $this->legacy_map[$language_code];
-						}
+		foreach ($text as $lang_codes) {
+			foreach ($lang_codes as $language_code => $value) {
+				if (strlen($language_code) == 2) {
+					if (array_key_exists($language_code, $this->legacy_map)) {
+						$language_code = $this->legacy_map[$language_code];
 					}
-					$languages[$language_code] = 1;
 				}
+				$languages[$language_code] = 1;
 			}
+		}
 
 		//set $this->languages up according to what we found
-			unset($languages['en-us']);
-			$languages = array_keys($languages);
-			asort($languages);
-			array_unshift($languages, 'en-us');
+		unset($languages['en-us']);
+		$languages = array_keys($languages);
+		asort($languages);
+		array_unshift($languages, 'en-us');
 
 		//support legacy variable
-			$_SESSION['app']['languages'] = $languages;
-			$this->languages = $languages;
+		$_SESSION['app']['languages'] = $languages;
+		$this->languages              = $languages;
 
 		//rewrite resources/app_languges
-			$this->organize_language('resources', $no_sort);
+		$this->organize_language('resources', $no_sort);
 	}
 
 	/**
@@ -394,75 +407,83 @@ class text implements clear_cache {
 	public function language_totals() {
 
 		//setup variables
-			$language_totals = array();
-			$language_totals['languages']['total'] = 0;
-			$language_totals['menu_items']['total'] = 0;
-			$language_totals['app_descriptions']['total'] = 0;
-			foreach ($this->languages as $language_code) {
-				$language_totals[$language_code] = 0;
-			}
+		$language_totals                              = [];
+		$language_totals['languages']['total']        = 0;
+		$language_totals['menu_items']['total']       = 0;
+		$language_totals['app_descriptions']['total'] = 0;
+		foreach ($this->languages as $language_code) {
+			$language_totals[$language_code] = 0;
+		}
 
 		//retrieve all the languages
-			$text = array();
-			$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*/app_languages.php");
-			foreach($files as $file) {
-				include $file;
-			}
-			include $_SERVER["PROJECT_ROOT"] . "/resources/app_languages.php";
+		$text  = [];
+		$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*/app_languages.php");
+		foreach ($files as $file) {
+			include $file;
+		}
+		include $_SERVER["PROJECT_ROOT"] . "/resources/app_languages.php";
 
 		//check every tag
-			foreach($text as $label_name => $values) {
-				$language_totals['languages']['total']++;
-				foreach ($this->languages as $language_code) {
-					if (!empty($values[$language_code]))
-						$language_totals['languages'][$language_code]++;
-				}
+		foreach ($text as $label_name => $values) {
+			$language_totals['languages']['total']++;
+			foreach ($this->languages as $language_code) {
+				if (!empty($values[$language_code]))
+					$language_totals['languages'][$language_code]++;
 			}
-			unset($text);
+		}
+		unset($text);
 
 		//retrieve all the menus
-			$x = 0;
-			$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*");
-			foreach($files as $file) {
-				if (file_exists($file . "/app_menu.php"))
-					include $file . "/app_menu.php";
-				if (file_exists($file . "/app_config.php"))
-					include $file . "/app_config.php";
-				$x++;
-			}
+		$x     = 0;
+		$files = glob($_SERVER["PROJECT_ROOT"] . "/*/*");
+		foreach ($files as $file) {
+			if (file_exists($file . "/app_menu.php"))
+				include $file . "/app_menu.php";
+			if (file_exists($file . "/app_config.php"))
+				include $file . "/app_config.php";
+			$x++;
+		}
 
 		//check every tag
-			foreach ($apps as $app) {
-				$language_totals['app_descriptions']['total']++;
-				foreach($app['menu'] as $menu_item) {
-					$language_totals['menu_items']['total']++;
-					foreach ($this->languages as $language_code) {
-						if (!empty($menu_item['title'][$language_code]))
-							$language_totals['menu_items'][$language_code]++;
-					}
-				}
+		foreach ($apps as $app) {
+			$language_totals['app_descriptions']['total']++;
+			foreach ($app['menu'] as $menu_item) {
+				$language_totals['menu_items']['total']++;
 				foreach ($this->languages as $language_code) {
-					if (!empty($app['description'][$language_code])) {
-						$language_totals['app_descriptions'][$language_code]++;
-					}
+					if (!empty($menu_item['title'][$language_code]))
+						$language_totals['menu_items'][$language_code]++;
 				}
 			}
+			foreach ($this->languages as $language_code) {
+				if (!empty($app['description'][$language_code])) {
+					$language_totals['app_descriptions'][$language_code]++;
+				}
+			}
+		}
 
-			return $language_totals;
+		return $language_totals;
 	}
 
+	/**
+	 * Escapes special characters in a string for use in a SQL query.
+	 *
+	 * @param string $string The input string to be escaped. Defaults to an empty string if not provided.
+	 *
+	 * @return string The escaped string.
+	 */
 	private function escape_str($string = '') {
 		//perform initial escape
-			$string = addslashes(stripslashes($string));
+		$string = addslashes(stripslashes($string));
 		//swap \' as we don't need to escape those
-			return preg_replace("/\\\'/", "'", $string);
+		return preg_replace("/\\\'/", "'", $string);
 		//escape " as we write our strings double quoted
-			return preg_replace("/\"/", '\"', $string);
+		return preg_replace("/\"/", '\"', $string);
 	}
 
 	/**
 	 * The clear_cache method is called automatically for any class that implements the clear_cache interface.
-	 * The function declared here ensures that all clear_cache methods have the same number of parameters being passed, which in this case, is no parameters.
+	 * The function declared here ensures that all clear_cache methods have the same number of parameters being passed,
+	 * which in this case, are no parameters.
 	 */
 	public static function clear_cache() {
 		//check for apcu extension and if is enabled

@@ -28,6 +28,7 @@
 
 /**
  * Container object for creating command line options when creating a service
+ *
  * @author Tim Fry <tim@fusionpbx.com>
  */
 class command_option {
@@ -43,18 +44,20 @@ class command_option {
 	 * Constructs an empty command_option
 	 */
 	public function __construct() {
-		$this->short_option = '';
-		$this->long_option = '';
-		$this->description = '';
+		$this->short_option      = '';
+		$this->long_option       = '';
+		$this->description       = '';
 		$this->short_description = '';
-		$this->long_description = '';
-		$this->functions = [];
+		$this->long_description  = '';
+		$this->functions         = [];
 	}
 
 	/**
-	 * A factory method to create a new command_option
-	 * @param type $options
-	 * @return command_option
+	 * Creates a new instance of CommandOption with automatically assigned properties.
+	 *
+	 * @param array $options Key/Value pairs to assign as properties on the new instance.
+	 *
+	 * @return command_option Returns a populated instance of command_option.
 	 */
 	public static function new(...$options): command_option {
 		$obj = new command_option();
@@ -67,6 +70,15 @@ class command_option {
 	}
 
 	// used to parse object values when created
+
+	/**
+	 * Recursively parses the provided options array and applies its values to the given object.
+	 *
+	 * @param mixed $obj     The object whose properties will be updated with the parsed options
+	 * @param array $options The associative array containing the options to parse and apply
+	 *
+	 * @return void This method does not return a value, it updates the provided object instead.
+	 */
 	private static function parse_options($obj, $options) {
 		foreach ($options as $key => $value) {
 			if (is_array($value)) {
@@ -83,7 +95,9 @@ class command_option {
 
 	/**
 	 * Sets or returns the short option value
+	 *
 	 * @param string|null $short_option
+	 *
 	 * @return $this
 	 */
 	public function short_option(?string $short_option = null) {
@@ -96,7 +110,9 @@ class command_option {
 
 	/**
 	 * Sets or returns the long option value
+	 *
 	 * @param string|null $long_option
+	 *
 	 * @return $this
 	 */
 	public function long_option(?string $long_option = null) {
@@ -109,7 +125,9 @@ class command_option {
 
 	/**
 	 * Set the general description
+	 *
 	 * @param string|null $description
+	 *
 	 * @return $this
 	 */
 	public function description(?string $description = null) {
@@ -122,7 +140,10 @@ class command_option {
 
 	/**
 	 * Sets or returns the short_description. If short_description is empty then the short_option is used as a default.
-	 * @param string|null $short_description When parameter is null, it returns the currently set value. When not null the short description is set to the passed value.
+	 *
+	 * @param string|null $short_description When parameter is null, it returns the currently set value. When not null
+	 *                                       the short description is set to the passed value.
+	 *
 	 * @return $this
 	 */
 	public function short_description(?string $short_description = null) {
@@ -132,7 +153,7 @@ class command_option {
 		}
 		if (empty($this->short_description)) {
 			if (str_ends_with($this->short_option, ':')) {
-				$short = rtrim($this->short_option, ':');
+				$short             = rtrim($this->short_option, ':');
 				$short_description = "-$short <value>";
 			} else {
 				$short_description = '-' . $this->short_option;
@@ -145,8 +166,11 @@ class command_option {
 
 	/**
 	 * Sets or returns the long_description. If long_description is empty then the long_option is used as a default.
-	 * @param string|null $long_description When parameter is null, it returns the currently set value. When not null the long description is set to the passed value.
-	 * @return $this
+	 *
+	 * @param string|null $long_description When parameter is null, it returns the currently set value. When not null
+	 *                                      the long description is set to the passed value.
+	 *
+	 * @return self|string
 	 */
 	public function long_description(?string $long_description = null) {
 		if ($long_description !== null) {
@@ -155,7 +179,7 @@ class command_option {
 		}
 		if (empty($this->long_description)) {
 			if (str_ends_with($this->long_option, ':')) {
-				$long = rtrim($this->long_option, ':');
+				$long             = rtrim($this->long_option, ':');
 				$long_description = "--$long <value>";
 			} else {
 				$long_description = '--' . $this->long_option;
@@ -167,9 +191,12 @@ class command_option {
 	}
 
 	/**
-	 * Adds an array of callback functions replacing the existing callback functions
-	 * @param array|null $functions
-	 * @return $this
+	 * Sets or retrieves the array of callback functions
+	 *
+	 * @param array|null $functions When functions param is set, the array will be assigned to the list of callbacks.
+	 *                              When called without a parameter, the current array of callbacks will be returned.
+	 *
+	 * @return $this|array Returns the array of callbacks if no parameters passed or this object when setting a new array
 	 */
 	public function functions(?array $functions = null) {
 		if ($functions !== null) {
@@ -181,8 +208,13 @@ class command_option {
 
 	/**
 	 * Appends the callback function to the array of existing callback functions
-	 * @param string|null $function When function param is set, the callback function will be appended to the list of functions. When called without a param, the array will be returned of current callbacks.
-	 * @return $this|array Returns the array of callbacks if no parameters passed or this object when appending a callback
+	 *
+	 * @param string|null $function When function param is set, the callback function will be appended to the list of
+	 *                              functions. When called without a param, the array will be returned of current
+	 *                              callbacks.
+	 *
+	 * @return $this|array Returns the array of callbacks if no parameters passed or this object when appending a
+	 *                     callback
 	 */
 	public function callback(?string $function = null) {
 		if ($function !== null) {
@@ -194,8 +226,13 @@ class command_option {
 
 	/**
 	 * Appends the callback function to the array of existing callback functions
-	 * @param string|null $function
-	 * @return $this
+	 *
+	 * @param string|null $function When function param is set, the callback function will be appended to the list of
+	 *                              functions. When called without a param, the array will be returned of current
+	 *                              callbacks.
+	 *
+	 * @return $this|array Returns the array of callbacks if no parameters passed or this object when appending a
+	 *                     callback
 	 */
 	public function function_append(?string $function = null) {
 		if ($function !== null) {
@@ -206,16 +243,18 @@ class command_option {
 	}
 
 	/**
-	 * Returns the array structure required for service
-	 * @return array
+	 * Converts the current object to an array.
+	 *
+	 * @return array The array representation of the current object, containing
+	 *               information about options and functions.
 	 */
 	public function to_array(): array {
-		$array['short_option'] = $this->short_option();
-		$array['long_option'] = $this->long_option();
-		$array['description'] = $this->description();
+		$array['short_option']      = $this->short_option();
+		$array['long_option']       = $this->long_option();
+		$array['description']       = $this->description();
 		$array['short_description'] = $this->short_description();
-		$array['long_description'] = $this->long_description();
-		$array['functions'] = $this->functions();
+		$array['long_description']  = $this->long_description();
+		$array['functions']         = $this->functions();
 		return $array;
 	}
 }

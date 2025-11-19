@@ -35,7 +35,9 @@ final class filter_chain {
 
 	/**
 	 * Builds a filter chain link for filter objects
+	 *
 	 * @param array $filters Array of filter objects
+	 *
 	 * @return filter
 	 */
 	public static function or_link(array $filters): filter {
@@ -66,7 +68,7 @@ final class filter_chain {
 
 				public function __construct(filter $current, filter $next) {
 					$this->current = $current;
-					$this->next = $next;
+					$this->next    = $next;
 				}
 
 				public function __invoke(string $key, $value): ?bool {
@@ -84,6 +86,13 @@ final class filter_chain {
 		return $chain;
 	}
 
+	/**
+	 * Builds a filter chain link for filter objects
+	 *
+	 * @param array $filters Array of filter objects
+	 *
+	 * @return filter
+	 */
 	public static function and_link(array $filters): filter {
 		return new class($filters) implements filter {
 			private $filters;
@@ -98,7 +107,7 @@ final class filter_chain {
 					// Check if a filter requires a null to be returned
 					if ($result === null) {
 						return null;
-					} elseif(!$result) {
+					} elseif (!$result) {
 						return false;
 					}
 				}

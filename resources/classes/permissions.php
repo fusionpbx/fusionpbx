@@ -34,7 +34,15 @@ class permissions {
 	private static $permission;
 
 	/**
-	 * called when the object is created
+	 * Constructor.
+	 *
+	 * Initializes this object with a database connection, domain UUID, and user UUID.
+	 *
+	 * @param Database|null $database    Database connection. If null, a new database connection will be created.
+	 * @param string|null   $domain_uuid Domain UUID. If null, the value from the session will be used.
+	 * @param string|null   $user_uuid   User UUID. If null, the value from the session will be used.
+	 *
+	 * @return void
 	 */
 	public function __construct($database = null, $domain_uuid = null, $user_uuid = null) {
 
@@ -83,15 +91,26 @@ class permissions {
 	}
 
 	/**
-	 * get the array of permissions
+	 * Returns an array of permissions assigned to this user.
+	 *
+	 * The list of permissions is populated from the session or retrieved from the database based on
+	 * the domain UUID and user UUID associated with this object.
+	 *
+	 * @return array An array of permission identifiers (e.g. 'create_user', 'edit_group', etc.)
 	 */
 	public function get_permissions() {
 		return $this->permissions;
 	}
 
 	/**
-	 * Add the permission
-	 * @var string $permission
+	 * Adds a permission to this object.
+	 *
+	 * If the specified permission does not already exist, it will be added to the permissions array with the provided type.
+	 *
+	 * @param string $permission Permission to add.
+	 * @param mixed  $type       Type of the permission.
+	 *
+	 * @return void
 	 */
 	public function add($permission, $type) {
 		//add the permission if it is not in array
@@ -101,8 +120,14 @@ class permissions {
 	}
 
 	/**
-	 * Remove the permission
-	 * @var string $permission
+	 * Deletes a permission.
+	 *
+	 * If the permission exists and is not temporary, it will be removed from the permissions array.
+	 *
+	 * @param string $permission The name of the permission to delete.
+	 * @param string $type       The type of permission (e.g. "temp", "permanent").
+	 *
+	 * @return void
 	 */
 	public function delete($permission, $type) {
 		if ($this->exists($permission) && !empty($this->permissions[$permission])) {
@@ -120,8 +145,13 @@ class permissions {
 	}
 
 	/**
-	 * Check to see if the permission exists
-	 * @var string $permission
+	 * Checks if a permission exists.
+	 *
+	 * Returns true if the permission is assigned to the user, or if this method is called from the command line.
+	 *
+	 * @param string $permission_name Name of the permission to check for existence.
+	 *
+	 * @return bool True if the permission exists, false otherwise.
 	 */
 	public function exists($permission_name) {
 
@@ -139,8 +169,14 @@ class permissions {
 	}
 
 	/**
-	 * get the assigned permissions
-	 * @var array $groups
+	 * Method to retrieve permissions assigned to the user through their groups.
+	 *
+	 * Retrieves the list of group names associated with the user's assigned groups,
+	 * and then uses these group names to query for distinct permission names that are
+	 * assigned to these groups. The resulting list of permission names is stored in
+	 * this object's 'permissions' array.
+	 *
+	 * @return void
 	 */
 	private function assigned() {
 		//define the array
@@ -180,7 +216,9 @@ class permissions {
 	}
 
 	/**
-	 * save the assigned permissions to a session
+	 * Saves the current permissions to the session.
+	 *
+	 * @return void
 	 */
 	public function session() {
 		if (!empty($this->permissions)) {
@@ -192,7 +230,15 @@ class permissions {
 	}
 
 	/**
-	 * Returns a new permission object
+	 * A singleton pattern for either creating a new object or the existing object.
+	 *
+	 * Initializes this object with a database connection, domain UUID, and user UUID.
+	 *
+	 * @param Database|null $database    Database connection. If null, a new database connection will be created.
+	 * @param string|null   $domain_uuid Domain UUID. If null, the value from the session will be used.
+	 * @param string|null   $user_uuid   User UUID. If null, the value from the session will be used.
+	 *
+	 * @return self
 	 */
 	public static function new($database = null, $domain_uuid = null, $user_uuid = null) {
 		if (self::$permission === null) {

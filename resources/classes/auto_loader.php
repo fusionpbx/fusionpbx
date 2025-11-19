@@ -43,18 +43,21 @@ class auto_loader {
 
 	/**
 	 * Tracks the APCu extension for caching to RAM drive across requests
+	 *
 	 * @var bool
 	 */
 	private $apcu_enabled;
 
 	/**
 	 * Cache path and file name for classes
+	 *
 	 * @var string
 	 */
 	private static $classes_file = null;
 
 	/**
 	 * Maps interfaces to classes
+	 *
 	 * @var array
 	 */
 	private $interfaces;
@@ -66,10 +69,16 @@ class auto_loader {
 
 	/**
 	 * Cache path and file name for interfaces
+	 *
 	 * @var string
 	 */
 	private static $interfaces_file = null;
 
+	/**
+	 * Initializes the class and sets up caching mechanisms.
+	 *
+	 * @param bool $disable_cache If true, disables cache usage. Defaults to false.
+	 */
 	public function __construct($disable_cache = false) {
 
 		//set if we can use RAM cache
@@ -93,12 +102,14 @@ class auto_loader {
 			$this->update_cache();
 		}
 		//register this object to load any unknown classes
-		spl_autoload_register(array($this, 'loader'));
+		spl_autoload_register([$this, 'loader']);
 	}
 
 	/**
 	 * The loader is set to private because only the PHP engine should be calling this method
+	 *
 	 * @param string $class_name The class name that needs to be loaded
+	 *
 	 * @return bool True if the class is loaded or false when the class is not found
 	 * @access private
 	 */
@@ -167,7 +178,12 @@ class auto_loader {
 	}
 
 	/**
-	 * Update the auto loader
+	 * Main method used to update internal state by clearing cache, reloading classes and updating cache.
+	 *
+	 * @return void
+	 * @see \auto_loader::clear_cache()
+	 * @see \auto_loader::reload_classes()
+	 * @see \auto_loader::update_cache()
 	 */
 	public function update() {
 		self::clear_cache();
@@ -175,6 +191,11 @@ class auto_loader {
 		$this->update_cache();
 	}
 
+	/**
+	 * Updates the cache by writing the classes and interfaces to files on disk.
+	 *
+	 * @return bool True if the update was successful, false otherwise
+	 */
 	public function update_cache(): bool {
 		//guard against writing an empty file
 		if (empty($this->classes)) {
@@ -183,7 +204,7 @@ class auto_loader {
 
 		//update RAM cache when available
 		if ($this->apcu_enabled) {
-			$classes_cached = apcu_store(self::CLASSES_KEY, $this->classes);
+			$classes_cached    = apcu_store(self::CLASSES_KEY, $this->classes);
 			$interfaces_cached = apcu_store(self::INTERFACES_KEY, $this->interfaces);
 			//do not save to drive when we are using apcu
 			if ($classes_cached && $interfaces_cached)
@@ -217,14 +238,19 @@ class auto_loader {
 		return $result;
 	}
 
+	/**
+	 * Loads the class cache from various sources.
+	 *
+	 * @return bool True if the cache is loaded successfully, false otherwise.
+	 */
 	public function load_cache(): bool {
-		$this->classes = [];
+		$this->classes    = [];
 		$this->interfaces = [];
-		$this->traits = [];
+		$this->traits     = [];
 
 		//use apcu when available
 		if ($this->apcu_enabled && apcu_exists(self::CLASSES_KEY)) {
-			$this->classes = apcu_fetch(self::CLASSES_KEY, $classes_cached);
+			$this->classes    = apcu_fetch(self::CLASSES_KEY, $classes_cached);
 			$this->interfaces = apcu_fetch(self::INTERFACES_KEY, $interfaces_cached);
 			//don't use files when we are using apcu caching
 			if ($classes_cached && $interfaces_cached)
@@ -251,6 +277,15 @@ class auto_loader {
 		return (!empty($this->classes) && !empty($this->interfaces));
 	}
 
+	/**
+	 * Reloads classes and interfaces from the project's resources.
+	 *
+	 * This method scans all PHP files in the specified locations, parses their contents,
+	 * and updates the internal storage of classes and interfaces. It also processes
+	 * implementation relationships between classes and interfaces.
+	 *
+	 * @return void
+	 */
 	public function reload_classes() {
 		//set project path using magic dir constant
 		$project_path = dirname(__DIR__, 2);
@@ -351,6 +386,7 @@ class auto_loader {
 
 	/**
 	 * Returns a list of classes loaded by the auto_loader. If no classes have been loaded an empty array is returned.
+	 *
 	 * @return array List of classes loaded by the auto_loader or empty array
 	 */
 	public function get_class_list(): array {
@@ -362,7 +398,9 @@ class auto_loader {
 
 	/**
 	 * Returns a list of classes implementing the interface
+	 *
 	 * @param string $interface_name
+	 *
 	 * @return array
 	 */
 	public function get_interface_list(string $interface_name): array {
@@ -379,6 +417,11 @@ class auto_loader {
 		return [];
 	}
 
+	/**
+	 * Returns a list of all user defined interfaces that have been registered.
+	 *
+	 * @return array
+	 */
 	public function get_interfaces(): array {
 		if (!empty($this->interfaces)) {
 			return $this->interfaces;
@@ -386,6 +429,11 @@ class auto_loader {
 		return [];
 	}
 
+	/**
+	 * Clears the cache of stored classes and interfaces.
+	 *
+	 * @return void
+	 */
 	public static function clear_cache() {
 
 		//check for apcu cache
@@ -426,8 +474,14 @@ class auto_loader {
 		}
 	}
 
+	/**
+	 * Logs a message at the specified level
+	 *
+	 * @param int    $level   The log level (e.g. E_ERROR)
+	 * @param string $message The log message
+	 */
 	private static function log(int $level, string $message): void {
-		if (filter_var($_REQUEST['debug'] ?? false, FILTER_VALIDATE_BOOL) || filter_var(getenv('DEBUG') ?? false, FILTER_VALIDATE_BOOL)) {
+		if (filter_var($_REQUEST['debug'] ?? false, FILTER_VALIDATE_BOOLEAN) || filter_var(getenv('DEBUG') ?? false, FILTER_VALIDATE_BOOLEAN)) {
 			openlog("PHP", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 			syslog($level, "[auto_loader] " . $message);
 			closelog();
