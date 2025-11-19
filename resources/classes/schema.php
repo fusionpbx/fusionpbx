@@ -610,78 +610,76 @@
 											}
 										}
 
-										//change the data type if it has been changed
-										//if the data type in the app db array is different than the type in the database then change the data type
-										if ($this->data_types) {
-											$db_field_type = $this->column_data_type($table_name, $field_name);
-											$field_type_array = explode("(", $field_type);
-											$field_type = $field_type_array[0];
-											if (trim($db_field_type) != trim($field_type) && !empty($db_field_type)) {
-												if ($this->db_type == "pgsql") {
-													if (strtolower($field_type) == "uuid") {
-														$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE uuid USING\n";
-														$sql_update .= "CAST(regexp_replace(" . $field_name . ", '([A-Z0-9]{4})([A-Z0-9]{12})', E'\\1-\\2')\n";
-														$sql_update .= "AS uuid);\n";
-													} else {
-														//field type has not changed
-														if ($db_field_type == "integer" && strtolower($field_type) == "serial") {
+										//change the schema data types if needed
+										//if the data type described in the app_config array is different than the type in the database then update the data type
+										$db_field_type = $this->column_data_type($table_name, $field_name);
+										$field_type_array = explode("(", $field_type);
+										$field_type = $field_type_array[0];
+										if (trim($db_field_type) != trim($field_type) && !empty($db_field_type)) {
+											if ($this->db_type == "pgsql") {
+												if (strtolower($field_type) == "uuid") {
+													$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE uuid USING\n";
+													$sql_update .= "CAST(regexp_replace(" . $field_name . ", '([A-Z0-9]{4})([A-Z0-9]{12})', E'\\1-\\2')\n";
+													$sql_update .= "AS uuid);\n";
+												} else {
+													//field type has not changed
+													if ($db_field_type == "integer" && strtolower($field_type) == "serial") {
 
-														} else if ($db_field_type == "timestamp without time zone" && strtolower($field_type) == "timestamp") {
+													} else if ($db_field_type == "timestamp without time zone" && strtolower($field_type) == "timestamp") {
 
-														} else if ($db_field_type == "timestamp without time zone" && strtolower($field_type) == "datetime") {
+													} else if ($db_field_type == "timestamp without time zone" && strtolower($field_type) == "datetime") {
 
-														} else if ($db_field_type == "timestamp with time zone" && strtolower($field_type) == "timestamptz") {
+													} else if ($db_field_type == "timestamp with time zone" && strtolower($field_type) == "timestamptz") {
 
-														} else if ($db_field_type == "integer" && strtolower($field_type) == "numeric") {
+													} else if ($db_field_type == "integer" && strtolower($field_type) == "numeric") {
 
-														} else if ($db_field_type == "character" && strtolower($field_type) == "char") {
+													} else if ($db_field_type == "character" && strtolower($field_type) == "char") {
 
-														}
-														//field type has changed
-														else {
-															switch ($field_type) {
-																case 'numeric':
-																	$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE " . $field_type . " USING " . $field_name . "::numeric;\n";
-																	break;
-																case 'timestamp':
-																	$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE " . $field_type . " USING " . $field_name . "::timestamp with time zone;\n";
-																	break;
-																case 'datetime':
-																	$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE " . $field_type . " USING " . $field_name . "::timestamp without time zone;\n";
-																	break;
-																case 'timestamptz':
-																	$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE " . $field_type . " USING " . $field_name . "::timestamp with time zone;\n";
-																	break;
-																case 'boolean':
-																	if ($db_field_type == 'numeric') {
-																		$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE text USING " . $field_name . "::text;\n";
-																	}
-																	if ($db_field_type == 'text') {
-																		$sql_update .= "UPDATE " . $table_name . " set " . $field_name . " = 'false' where " . $field_name . " = '';\n";
-																	}
-																	$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE " . $field_type . " USING " . $field_name . "::boolean;\n";
-																	break;
-																default: unset($using);
-																	$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE " . $field_type . "\n";
-															}
+													}
+													//field type has changed
+													else {
+														switch ($field_type) {
+															case 'numeric':
+																$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE " . $field_type . " USING " . $field_name . "::numeric;\n";
+																break;
+															case 'timestamp':
+																$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE " . $field_type . " USING " . $field_name . "::timestamp with time zone;\n";
+																break;
+															case 'datetime':
+																$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE " . $field_type . " USING " . $field_name . "::timestamp without time zone;\n";
+																break;
+															case 'timestamptz':
+																$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE " . $field_type . " USING " . $field_name . "::timestamp with time zone;\n";
+																break;
+															case 'boolean':
+																if ($db_field_type == 'numeric') {
+																	$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE text USING " . $field_name . "::text;\n";
+																}
+																if ($db_field_type == 'text') {
+																	$sql_update .= "UPDATE " . $table_name . " set " . $field_name . " = 'false' where " . $field_name . " = '';\n";
+																}
+																$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE " . $field_type . " USING " . $field_name . "::boolean;\n";
+																break;
+															default: unset($using);
+																$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE " . $field_type . "\n";
 														}
 													}
 												}
-												if ($this->db_type == "mysql") {
-													$type = explode("(", $db_field_type);
-													if ($type[0] == $field_type) {
-														//do nothing
-													} else if ($field_type == "numeric" && $type[0] == "decimal") {
-														//do nothing
-													} else {
-														$sql_update .= "ALTER TABLE " . $table_name . " modify " . $field_name . " " . $field_type . ";\n";
-													}
-													unset($type);
+											}
+											if ($this->db_type == "mysql") {
+												$type = explode("(", $db_field_type);
+												if ($type[0] == $field_type) {
+													//do nothing
+												} else if ($field_type == "numeric" && $type[0] == "decimal") {
+													//do nothing
+												} else {
+													$sql_update .= "ALTER TABLE " . $table_name . " modify " . $field_name . " " . $field_type . ";\n";
 												}
-												if ($this->db_type == "sqlite") {
-													//a change has been made to the field type
-													$this->applications[$x]['db'][$y]['rebuild'] = 'true';
-												}
+												unset($type);
+											}
+											if ($this->db_type == "sqlite") {
+												//a change has been made to the field type
+												$this->applications[$x]['db'][$y]['rebuild'] = 'true';
 											}
 										}
 									}

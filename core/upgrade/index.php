@@ -149,9 +149,6 @@
 		//load an array of the database schema and compare it with the active database
 		if (!empty($action["upgrade_schema"]) && permission_exists("upgrade_schema")) {
 			$obj = new schema(['database' => $database]);
-			if (isset($action["data_types"]) && $action["data_types"] == 'true') {
-				$obj->data_types = true;
-			}
 			$_SESSION["response"]["schema"] = $obj->schema("html");
 			message::add($text['message-upgrade_schema'], null, $message_timeout);
 		}
@@ -369,29 +366,16 @@
 
 	if (permission_exists("upgrade_schema")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr onclick=\"document.getElementById('do_schema').checked = !document.getElementById('do_schema').checked; (!document.getElementById('do_schema').checked ? $('#do_data_types').prop('checked', false) : null); $('#tr_data_types').slideToggle('fast');\">\n";
+		echo "<tr onclick=\"document.getElementById('do_schema').checked = !document.getElementById('do_schema').checked;\">\n";
 		echo "	<td width='30%' class='vncellreq' style='vertical-align: middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		<div class='mt-1'>".$text['label-upgrade_schema']."</div>\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
-		echo "		<input type='checkbox' name='action[upgrade_schema]' id='do_schema' value='1' onclick=\"event.stopPropagation(); $('#tr_data_types').slideToggle('fast'); (!document.getElementById('do_schema').checked ? $('#do_data_types').prop('checked', false) : null);\"> &nbsp;".$text['description-upgrade_schema']."\n";
+		echo "		<input type='checkbox' name='action[upgrade_schema]' id='do_schema' value='1' onclick=\"event.stopPropagation();\"> &nbsp;".$text['description-upgrade_schema']."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
-
-		echo "<div id='tr_data_types' style='display: none;'>\n";
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr onclick=\"document.getElementById('do_data_types').checked = !document.getElementById('do_data_types').checked;\">\n";
-		echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
-		echo "		".$text['label-upgrade_data_types'];
-		echo "	</td>\n";
-		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
-		echo "		<input type='checkbox' name='action[data_types]' id='do_data_types' value='true' onclick=\"event.stopPropagation();\"> &nbsp;".$text['description-upgrade_data_types']."\n";
-		echo "	</td>\n";
-		echo "</tr>\n";
-		echo "</table>\n";
-		echo "</div>\n";
 		$step++;
 	}
 
