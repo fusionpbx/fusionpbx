@@ -204,8 +204,7 @@
 		echo "  -v --version                           Show the version.\n";
 		echo "  -n --main                              Update the main application.\n";
 		echo "  -o --optional                          Update the optional applications.\n";
-		echo "  -s --schema                            Check the table and field structure.\n";
-		echo "  -t --types                             Updates field data types as needed.\n";
+		echo "  -s --schema                            Update the database tables, columns and data types.\n";
 		echo "  -d --defaults                          Restore application defaults.\n";
 		echo "  -m --menu [default|list]               Restore menu default or show the menu list\n";
 		echo "  -p --permissions                       Restore default file and group permissions.\n";
@@ -222,7 +221,7 @@
 		echo software::version()."\n";
 	}
 
-//upgrade schema and/or data_types
+//upgrade the schema and data_types
 	if ($upgrade_type == 'schema' or $upgrade_type == '-s' or $upgrade_type == '--schema') {
 		//send a message to the console
 		if ($display_type === 'text') {
@@ -230,9 +229,6 @@
 		}
 
 		//get the database schema put it into an array then compare and update the database as needed.
-		if (isset($argv[2]) && $argv[2] == 'data_types') {
-			$schema->data_types = true;
-		}
 		$response = $schema->schema($format ?? '');
 		if ($display_type === 'text') {
 			foreach(explode("\n", $response) as $row) {
@@ -241,22 +237,6 @@
 		}
 	}
 
-//upgrade schema and/or data_types
-	if ($upgrade_type == 'data_types' or $upgrade_type == '-t' or $upgrade_type == '--types') {
-		//send a message to the console
-		if ($display_type === 'text') {
-			echo "[ Update ] Table, field structure and data types.\n";
-		}
-
-		//get the database schema put it into an array then compare and update the database as needed.
-		$schema->data_types = true;
-		$response = $schema->schema($format ?? '');
-		if ($display_type === 'text') {
-			foreach(explode("\n", $response) as $row) {
-				echo "        ".trim($row)."\n";
-			}
-		}
-	}
 
 //run all application defaults - add missing defaults
 	if ($upgrade_type == 'defaults' or $upgrade_type == '-d' or $upgrade_type == '--defaults') {
