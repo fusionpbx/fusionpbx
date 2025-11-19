@@ -62,8 +62,8 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 		if (is_array($param_array)) {
 			foreach ($param_array as $row) {
 				$param_sub_array = explode("=", $row);
-				$key             = preg_replace('#[^a-zA-Z0-9_\-]#', '', $param_sub_array['0']);
-				$value           = urldecode($param_sub_array['1'] ?? '');
+				$key = preg_replace('#[^a-zA-Z0-9_\-]#', '', $param_sub_array['0']);
+				$value = urldecode($param_sub_array['1'] ?? '');
 				if ($key === 'order_by' && !empty($value)) {
 					//validate order by
 					$sanitized_parameters .= "&order_by=" . preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
@@ -95,11 +95,11 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 
 	//add multi-lingual support
 	$language = new text;
-	$text     = $language->get();
+	$text = $language->get();
 
 	//print the link to access each page
 	$self = htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8');
-	$nav  = '';
+	$nav = '';
 	for ($page = 1; $page <= $max_page; $page++) {
 		if ($page == $page_number) {
 			$nav .= " $page ";   // no need to create a link to current page
@@ -109,8 +109,8 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 	}
 
 	if ($page_number > 0) {
-		$page  = $page_number - 1;
-		$prev  = button::create(['type' => 'button', 'label' => $text['button-back'], 'icon' => 'chevron-left', 'link' => $self . "?page=" . $page . $sanitized_parameters, 'title' => $text['label-page'] . ' ' . ($page + 1)]);
+		$page = $page_number - 1;
+		$prev = button::create(['type' => 'button', 'label' => $text['button-back'], 'icon' => 'chevron-left', 'link' => $self . "?page=" . $page . $sanitized_parameters, 'title' => $text['label-page'] . ' ' . ($page + 1)]);
 		$first = button::create(['type' => 'button', 'label' => $text['button-next'], 'icon' => 'chevron-left', 'link' => $self . "?page=1" . $sanitized_parameters]);
 	} else {
 		$prev = button::create(['type' => 'button', 'label' => $text['button-back'], 'icon' => 'chevron-left', 'onclick' => "return false;", 'title' => '', 'style' => 'opacity: 0.4; -moz-opacity: 0.4; cursor: default;']);
@@ -131,7 +131,7 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 	}
 
 	$array = [];
-	$code  = '';
+	$code = '';
 	if ($max_page > 1) {
 		//define javascript to include
 		$script = "<script>\n" .
