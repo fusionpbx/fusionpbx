@@ -109,7 +109,7 @@ class fax {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
 		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
@@ -157,7 +157,7 @@ class fax {
 		} else {
 			//build previous details delete array
 			$array['dialplan_details'][0]['dialplan_uuid'] = $this->dialplan_uuid;
-			$array['dialplan_details'][0]['domain_uuid']   = $this->domain_uuid;
+			$array['dialplan_details'][0]['domain_uuid'] = $this->domain_uuid;
 
 			//grant temporary permissions
 			$p = permissions::new();
@@ -207,18 +207,18 @@ class fax {
 		$dialplan_xml .= "</extension>\n";
 
 		//build the dialplan array
-		$dialplan["app_uuid"]             = "24108154-4ac3-1db6-1551-4731703a4440";
-		$dialplan["domain_uuid"]          = $this->domain_uuid;
-		$dialplan["dialplan_uuid"]        = $this->dialplan_uuid;
-		$dialplan["dialplan_name"]        = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
-		$dialplan["dialplan_number"]      = $this->fax_extension;
-		$dialplan["dialplan_context"]     = $this->domain_name;
-		$dialplan["dialplan_continue"]    = false;
-		$dialplan["dialplan_xml"]         = $dialplan_xml;
-		$dialplan["dialplan_order"]       = "40";
-		$dialplan["dialplan_enabled"]     = true;
+		$dialplan["app_uuid"] = "24108154-4ac3-1db6-1551-4731703a4440";
+		$dialplan["domain_uuid"] = $this->domain_uuid;
+		$dialplan["dialplan_uuid"] = $this->dialplan_uuid;
+		$dialplan["dialplan_name"] = ($this->fax_name != '') ? $this->fax_name : format_phone($this->destination_number);
+		$dialplan["dialplan_number"] = $this->fax_extension;
+		$dialplan["dialplan_context"] = $this->domain_name;
+		$dialplan["dialplan_continue"] = false;
+		$dialplan["dialplan_xml"] = $dialplan_xml;
+		$dialplan["dialplan_order"] = "40";
+		$dialplan["dialplan_enabled"] = true;
 		$dialplan["dialplan_description"] = $this->fax_description;
-		$dialplan_detail_order            = 10;
+		$dialplan_detail_order = 10;
 
 		//prepare the array
 		$array['dialplans'][] = $dialplan;
@@ -264,15 +264,15 @@ class fax {
 
 		//set private variables
 		$this->permission_prefix = 'fax_extension_';
-		$this->list_page         = 'fax.php';
-		$this->table             = 'fax';
-		$this->uuid_prefix       = 'fax_';
+		$this->list_page = 'fax.php';
+		$this->table = 'fax';
+		$this->uuid_prefix = 'fax_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -294,11 +294,11 @@ class fax {
 
 				//get necessary fax details
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, dialplan_uuid from v_" . $this->table . " ";
-					$sql                       .= "where domain_uuid = :domain_uuid ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, dialplan_uuid from v_" . $this->table . " ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$faxes[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
@@ -309,11 +309,11 @@ class fax {
 
 				//get necessary fax file details
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select fax_file_uuid as uuid, fax_mode, fax_file_path, fax_file_type from v_fax_files ";
-					$sql                       .= "where domain_uuid = :domain_uuid ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select fax_file_uuid as uuid, fax_mode, fax_file_path, fax_file_type from v_fax_files ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							if ($row['fax_mode'] == 'rx') {
@@ -357,17 +357,17 @@ class fax {
 				if (!empty($faxes) && is_array($faxes) && @sizeof($faxes) != 0) {
 					foreach ($faxes as $fax_uuid => $fax) {
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $fax_uuid;
-						$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
-						$array['fax_users'][$x][$this->uuid_prefix . 'uuid']  = $fax_uuid;
-						$array['fax_users'][$x]['domain_uuid']                = $this->domain_uuid;
-						$array['fax_files'][$x][$this->uuid_prefix . 'uuid']  = $fax_uuid;
-						$array['fax_files'][$x]['domain_uuid']                = $this->domain_uuid;
-						$array['fax_logs'][$x][$this->uuid_prefix . 'uuid']   = $fax_uuid;
-						$array['fax_logs'][$x]['domain_uuid']                 = $this->domain_uuid;
-						$array['dialplans'][$x]['dialplan_uuid']              = $fax['dialplan_uuid'];
-						$array['dialplans'][$x]['domain_uuid']                = $this->domain_uuid;
-						$array['dialplan_details'][$x]['dialplan_uuid']       = $fax['dialplan_uuid'];
-						$array['dialplan_details'][$x]['domain_uuid']         = $this->domain_uuid;
+						$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
+						$array['fax_users'][$x][$this->uuid_prefix . 'uuid'] = $fax_uuid;
+						$array['fax_users'][$x]['domain_uuid'] = $this->domain_uuid;
+						$array['fax_files'][$x][$this->uuid_prefix . 'uuid'] = $fax_uuid;
+						$array['fax_files'][$x]['domain_uuid'] = $this->domain_uuid;
+						$array['fax_logs'][$x][$this->uuid_prefix . 'uuid'] = $fax_uuid;
+						$array['fax_logs'][$x]['domain_uuid'] = $this->domain_uuid;
+						$array['dialplans'][$x]['dialplan_uuid'] = $fax['dialplan_uuid'];
+						$array['dialplans'][$x]['domain_uuid'] = $this->domain_uuid;
+						$array['dialplan_details'][$x]['dialplan_uuid'] = $fax['dialplan_uuid'];
+						$array['dialplan_details'][$x]['domain_uuid'] = $this->domain_uuid;
 						$x++;
 					}
 				}
@@ -419,7 +419,8 @@ class fax {
 	/**
 	 * Deletes multiple fax files.
 	 *
-	 * @param array $records An array of records to delete, where each record is an associative array containing the 'checked' and 'uuid' keys.
+	 * @param array $records An array of records to delete, where each record is an associative array containing the
+	 *                       'checked' and 'uuid' keys.
 	 *
 	 * @return void
 	 */
@@ -427,15 +428,15 @@ class fax {
 
 		//set private variables
 		$this->permission_prefix = 'fax_file_';
-		$this->list_page         = 'fax_files.php?id=' . urlencode($this->fax_uuid) . '&box=' . urlencode($this->box);
-		$this->table             = 'fax_files';
-		$this->uuid_prefix       = 'fax_file_';
+		$this->list_page = 'fax_files.php?id=' . urlencode($this->fax_uuid) . '&box=' . urlencode($this->box);
+		$this->table = 'fax_files';
+		$this->uuid_prefix = 'fax_file_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -457,11 +458,11 @@ class fax {
 
 				//get necessary fax file details
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, fax_mode, fax_file_path, fax_file_type from v_" . $this->table . " ";
-					$sql                       .= "where domain_uuid = :domain_uuid ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, fax_mode, fax_file_path, fax_file_type from v_" . $this->table . " ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							if ($row['fax_mode'] == 'rx') {
@@ -504,7 +505,7 @@ class fax {
 				$x = 0;
 				foreach ($fax_files as $fax_file_uuid => $fax_file) {
 					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $fax_file_uuid;
-					$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
+					$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 					$x++;
 				}
 
@@ -537,15 +538,15 @@ class fax {
 
 		//set private variables
 		$this->permission_prefix = 'fax_log_';
-		$this->list_page         = 'fax_logs.php?id=' . urlencode($this->fax_uuid);
-		$this->table             = 'fax_logs';
-		$this->uuid_prefix       = 'fax_log_';
+		$this->list_page = 'fax_logs.php?id=' . urlencode($this->fax_uuid);
+		$this->table = 'fax_logs';
+		$this->uuid_prefix = 'fax_log_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -562,7 +563,7 @@ class fax {
 				foreach ($records as $x => $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
+						$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 					}
 				}
 
@@ -594,15 +595,15 @@ class fax {
 
 		//set private variables
 		$this->permission_prefix = 'fax_extension_';
-		$this->list_page         = 'fax.php';
-		$this->table             = 'fax';
-		$this->uuid_prefix       = 'fax_';
+		$this->list_page = 'fax.php';
+		$this->table = 'fax';
+		$this->uuid_prefix = 'fax_';
 
 		if (permission_exists($this->permission_prefix . 'copy')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -626,21 +627,21 @@ class fax {
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
 
 					//primary table
-					$sql                       = "select * from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$y = 0;
 						foreach ($rows as $x => $row) {
-							$new_fax_uuid      = uuid();
+							$new_fax_uuid = uuid();
 							$new_dialplan_uuid = uuid();
 
 							//convert boolean values to a string
 							foreach ($row as $key => $value) {
 								if (gettype($value) == 'boolean') {
-									$value     = $value ? 'true' : 'false';
+									$value = $value ? 'true' : 'false';
 									$row[$key] = $value;
 								}
 							}
@@ -650,27 +651,27 @@ class fax {
 
 							//overwrite
 							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $new_fax_uuid;
-							$array[$this->table][$x]['dialplan_uuid']             = $new_dialplan_uuid;
+							$array[$this->table][$x]['dialplan_uuid'] = $new_dialplan_uuid;
 							if ($row['fax_forward_number'] == '') {
 								unset($array[$this->table][$x]['fax_forward_number']);
 							}
 							$array[$this->table][$x]['fax_description'] = trim($row['fax_description'] . ' (' . $text['label-copy'] . ')');
 
 							//fax users sub table
-							$sql_2                       = "select e.* from v_fax_users as e, v_users as u ";
-							$sql_2                       .= "where e.user_uuid = u.user_uuid  ";
-							$sql_2                       .= "and e.domain_uuid = :domain_uuid ";
-							$sql_2                       .= "and e.fax_uuid = :fax_uuid ";
+							$sql_2 = "select e.* from v_fax_users as e, v_users as u ";
+							$sql_2 .= "where e.user_uuid = u.user_uuid  ";
+							$sql_2 .= "and e.domain_uuid = :domain_uuid ";
+							$sql_2 .= "and e.fax_uuid = :fax_uuid ";
 							$parameters_2['domain_uuid'] = $this->domain_uuid;
-							$parameters_2['fax_uuid']    = $row['fax_uuid'];
-							$rows_2                      = $this->database->select($sql_2, $parameters_2, 'all');
+							$parameters_2['fax_uuid'] = $row['fax_uuid'];
+							$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 							if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 								foreach ($rows_2 as $row_2) {
 
 									//convert boolean values to a string
 									foreach ($row_2 as $key => $value) {
 										if (gettype($value) == 'boolean') {
-											$value       = $value ? 'true' : 'false';
+											$value = $value ? 'true' : 'false';
 											$row_2[$key] = $value;
 										}
 									}
@@ -680,7 +681,7 @@ class fax {
 
 									//overwrite
 									$array['fax_users'][$y]['fax_user_uuid'] = uuid();
-									$array['fax_users'][$y]['fax_uuid']      = $new_fax_uuid;
+									$array['fax_users'][$y]['fax_uuid'] = $new_fax_uuid;
 
 									//increment
 									$y++;
@@ -690,15 +691,15 @@ class fax {
 							unset($sql_2, $parameters_2, $rows_2, $row_2);
 
 							//fax dialplan record
-							$sql_3                         = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
+							$sql_3 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
 							$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
-							$dialplan                      = $this->database->select($sql_3, $parameters_3, 'row');
+							$dialplan = $this->database->select($sql_3, $parameters_3, 'row');
 							if (is_array($dialplan) && @sizeof($dialplan) != 0) {
 
 								//convert boolean values to a string
 								foreach ($dialplan as $key => $value) {
 									if (gettype($value) == 'boolean') {
-										$value          = $value ? 'true' : 'false';
+										$value = $value ? 'true' : 'false';
 										$dialplan[$key] = $value;
 									}
 								}
@@ -707,11 +708,11 @@ class fax {
 								$array['dialplans'][$x] = $dialplan;
 
 								//overwrite
-								$array['dialplans'][$x]['dialplan_uuid']        = $new_dialplan_uuid;
-								$dialplan_xml                                   = $dialplan['dialplan_xml'];
-								$dialplan_xml                                   = str_replace($row['fax_uuid'], $new_fax_uuid, $dialplan_xml); //replace source fax_uuid with new
-								$dialplan_xml                                   = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
-								$array['dialplans'][$x]['dialplan_xml']         = $dialplan_xml;
+								$array['dialplans'][$x]['dialplan_uuid'] = $new_dialplan_uuid;
+								$dialplan_xml = $dialplan['dialplan_xml'];
+								$dialplan_xml = str_replace($row['fax_uuid'], $new_fax_uuid, $dialplan_xml); //replace source fax_uuid with new
+								$dialplan_xml = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
+								$array['dialplans'][$x]['dialplan_xml'] = $dialplan_xml;
 								$array['dialplans'][$x]['dialplan_description'] = trim($dialplan['dialplan_description'] . ' (' . $text['label-copy'] . ')');
 
 							}
@@ -759,9 +760,10 @@ class fax {
 	/**
 	 * Toggles the read state of multiple fax file records based on user input.
 	 *
-	 * @param array $records An array of record data, where each record is an associative array containing information about the log entry to toggle.
-	 *                       Each array should have a 'checked' key with a value of either true or false indicating whether the log entry
-	 *                       should be toggled, and a 'uuid' key containing the UUID of the log entry.
+	 * @param array $records An array of record data, where each record is an associative array containing information
+	 *                       about the log entry to toggle. Each array should have a 'checked' key with a value of
+	 *                       either true or false indicating whether the log entry should be toggled, and a 'uuid' key
+	 *                       containing the UUID of the log entry.
 	 *
 	 * @return int The number of fax files toggled (0 if none were toggled).
 	 */
@@ -771,7 +773,7 @@ class fax {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			if (empty($this->download) || $this->download == false) {
@@ -791,15 +793,15 @@ class fax {
 				foreach ($records as $x => $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 						//get current read state
-						$sql                         = "select read_date from v_fax_files where fax_file_uuid = :fax_file_uuid";
+						$sql = "select read_date from v_fax_files where fax_file_uuid = :fax_file_uuid";
 						$parameters['fax_file_uuid'] = $record['uuid'];
-						$read_date                   = $this->database->select($sql, $parameters, 'column');
+						$read_date = $this->database->select($sql, $parameters, 'column');
 						unset($sql, $parameters);
 
 						//toggle read state
 						$array['fax_files'][$x]['fax_file_uuid'] = $record['uuid'];
-						$array['fax_files'][$x]['domain_uuid']   = $this->domain_uuid;
-						$array['fax_files'][$x]['read_date']     = empty($read_date) ? 'now()' : null;
+						$array['fax_files'][$x]['domain_uuid'] = $this->domain_uuid;
+						$array['fax_files'][$x]['read_date'] = empty($read_date) ? 'now()' : null;
 						$fax_files_toggled++;
 					}
 				}

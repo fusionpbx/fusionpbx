@@ -34,7 +34,7 @@ class presence {
 	 * @return bool True if presence is active, False otherwise
 	 */
 	public function active($presence_id) {
-		$json       = event_socket::api('show calls as json');
+		$json = event_socket::api('show calls as json');
 		$call_array = json_decode($json, true);
 		if (isset($call_array['rows'])) {
 			$x = 0;
@@ -67,21 +67,21 @@ class presence {
 	 * @return array An array of arrays containing presence information.
 	 */
 	public function show() {
-		$array      = [];
-		$json       = event_socket::api('show calls as json');
+		$array = [];
+		$json = event_socket::api('show calls as json');
 		$call_array = json_decode($json, true);
 		if (isset($call_array['rows'])) {
 			$x = 0;
 			foreach ($call_array['rows'] as $row) {
-				$array[$x]['presence_id']   = $row['presence_id'];
+				$array[$x]['presence_id'] = $row['presence_id'];
 				$array[$x]['presence_user'] = explode('@', $row['presence_id'])[0];
-				$array[$x]['domain_name']   = explode('@', $row['presence_id'])[1];
+				$array[$x]['domain_name'] = explode('@', $row['presence_id'])[1];
 
 				if (isset($row['b_presence_id']) && $row['b_presence_id'] != 0) {
 					$x++;
-					$array[$x]['presence_id']   = $row['b_presence_id'];
+					$array[$x]['presence_id'] = $row['b_presence_id'];
 					$array[$x]['presence_user'] = explode('@', $row['b_presence_id'])[0];
-					$array[$x]['domain_name']   = explode('@', $row['b_presence_id'])[1];
+					$array[$x]['domain_name'] = explode('@', $row['b_presence_id'])[1];
 				}
 
 				$x++;

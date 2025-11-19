@@ -112,8 +112,8 @@ class voicemail {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
 		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
-		$this->username    = $setting_array['username'] ?? $_SESSION['username'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->username = $setting_array['username'] ?? $_SESSION['username'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
@@ -121,154 +121,110 @@ class voicemail {
 
 		//assign private variables
 		$this->permission_prefix = 'voicemail_';
-		$this->list_page         = 'voicemails.php';
-		$this->table             = 'voicemails';
-		$this->uuid_prefix       = 'voicemail_';
-		$this->toggle_field      = 'voicemail_enabled';
-		$this->toggle_values     = ['true', 'false'];
+		$this->list_page = 'voicemails.php';
+		$this->table = 'voicemails';
+		$this->uuid_prefix = 'voicemail_';
+		$this->toggle_field = 'voicemail_enabled';
+		$this->toggle_values = ['true', 'false'];
 
 	}
 
 	/**
-	 * retrieves the voicemail id
+	 * Removes old entries for in the database voicemails table
+	 * see {@link https://github.com/fusionpbx/fusionpbx-app-maintenance/} FusionPBX Maintenance App
 	 *
-	 * @return int|null the voicemail id if it exists, otherwise null
-	 */
-	public function get_voicemail_id() {
-
-		//check if for valid input
-		if (!is_uuid($this->voicemail_uuid) || !is_uuid($this->domain_uuid)) {
-			return false;
-		}
-
-		//get the voicemail id if it isn't set already
-		if (!isset($this->voicemail_id)) {
-			$sql                          = "select voicemail_id from v_voicemails ";
-			$sql                          .= "where domain_uuid = :domain_uuid ";
-			$sql                          .= "and voicemail_uuid = :voicemail_uuid ";
-			$parameters['domain_uuid']    = $this->domain_uuid;
-			$parameters['voicemail_uuid'] = $this->voicemail_uuid;
-			$voicemail_id                 = $this->database->select($sql, $parameters, 'column');
-			if (is_numeric($voicemail_id)) {
-				$this->voicemail_id = $voicemail_id;
-			}
-			unset($sql, $parameters, $voicemail_id);
-		}
-	}
-
-	/**
-	 * retrieves the list of assigned voicemails
+	 * @param settings $settings Settings object
 	 *
-	 * @return array|false list of assigned voicemail boxes
+	 * @return void
 	 */
-	public function voicemails() {
+	public static function database_maintenance(settings $settings): void {
+		//set table name for query
+		//$table = self::TABLE;
+		$table = 'voicemail_messages';
+		$database = $settings->database();
 
-		//check if for valid input
-		if (!is_uuid($this->domain_uuid)) {
-			return false;
-		}
+		//get a list of domains
+		$domains = maintenance::get_domains($database);
+		foreach ($domains as $domain_uuid => $domain_name) {
+			//get domain settings
+			$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
-		//get the assigned extensions
-		$sql                       = "select e.extension_uuid, e.extension, e.number_alias, e.enabled, e.description ";
-		$sql                       .= "from v_extensions e, v_extension_users eu ";
-		$sql                       .= "where e.extension_uuid = eu.extension_uuid ";
-		$sql                       .= "and eu.user_uuid = :user_uuid ";
-		$sql                       .= "and e.domain_uuid = :domain_uuid ";
-		$sql                       .= "order by e.extension asc ";
-		$parameters['domain_uuid'] = $this->domain_uuid;
-		$parameters['user_uuid']   = $this->user_uuid;
-		$assigned_extensions       = $this->database->select($sql, $parameters, 'all');
-		unset($sql, $parameters);
-
-		//set the voicemail id arrays
-		$voicemail_ids = [];
-		if (isset($assigned_extensions)) {
-			foreach ($assigned_extensions as $index => $row) {
-				$voicemail_ids[] = (is_numeric($row['number_alias'])) ? $row['number_alias'] : $row['extension'];
-			}
-		}
-
-		//get the assigned voicemails
-		$assigned_voicemails = [];
-		if (!empty($voicemail_ids) && @sizeof($voicemail_ids) != 0) {
-			$sql = "select * from v_voicemails ";
-			$sql .= "where voicemail_id  in (";
-			foreach ($voicemail_ids as $i => $voicemail_id) {
-				if ($i > 0) {
-					$sql .= ",";
-				}
-				$sql                              .= ":voicemail_id_" . $i;
-				$parameters['voicemail_id_' . $i] = $voicemail_id;
-			}
-			$sql                       .= ") ";
-			$sql                       .= "and domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $this->domain_uuid;
-			$assigned_voicemails       = $this->database->select($sql, $parameters, 'all');
-			unset($sql, $parameters);
-		}
-
-		//set the voicemail uuid arrays
-		$voicemail_uuids = [];
-		if (isset($assigned_voicemails)) {
-			foreach ($assigned_voicemails as $row) {
-				if (!empty($row['voicemail_uuid'])) {
-					$voicemail_uuids[]['voicemail_uuid'] = $row['voicemail_uuid'];
-				}
-			}
-		}
-
-		//get the uuid and voicemail_id
-		$sql = "select * from v_voicemails ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		if (is_uuid($this->voicemail_uuid)) {
-			if (permission_exists('voicemail_delete')) {
-				//view specific voicemail box usually reserved for an admin or superadmin
-				$sql                          .= "and voicemail_uuid = :voicemail_uuid ";
-				$parameters['voicemail_uuid'] = $this->voicemail_uuid;
-			} else {
-				//ensure that the requested voicemail box is assigned to this user
-				$found = false;
-				foreach ($voicemail_uuids as $row) {
-					if ($this->voicemail_uuid == $row['voicemail_uuid']) {
-						$sql                          .= "and voicemail_uuid = :voicemail_uuid ";
-						$parameters['voicemail_uuid'] = $row['voicemail_uuid'];
-						$found                        = true;
-					}
-				}
-				//id requested is not owned by the user return no results
-				if (!$found) {
-					$sql .= "and voicemail_uuid is null ";
-				}
-			}
-		} else {
-			if (!empty($voicemail_ids) && @sizeof($voicemail_ids) != 0) {
-				//show only the assigned voicemail ids
-				$sql .= "and ";
-				if (is_numeric($this->voicemail_id) && in_array($this->voicemail_id, $voicemail_ids)) {
-					$sql_where                  = 'voicemail_id = :voicemail_id ';
-					$parameters['voicemail_id'] = $this->voicemail_id;
+			//ensure we have a retention day
+			$retention_days = $domain_settings->get('voicemail', maintenance::DATABASE_SUBCATEGORY, '');
+			if (!empty($retention_days) && is_numeric($retention_days)) {
+				//clear out old records
+				$sql = "delete from v_{$table} WHERE to_timestamp(created_epoch) < NOW() - INTERVAL '{$retention_days} days'"
+					. " and domain_uuid = '{$domain_uuid}'";
+				$database->execute($sql);
+				$code = $database->message['code'] ?? 0;
+				if ($database->message['code'] == 200) {
+					maintenance_service::log_write(self::class, "Successfully removed entries older than $retention_days", $domain_uuid);
 				} else {
-					$x         = 0;
-					$sql_where = '';
-					foreach ($voicemail_ids as $voicemail_id) {
-						$sql_where_or[]                   = "voicemail_id = :voicemail_id_" . $x;
-						$parameters['voicemail_id_' . $x] = $voicemail_id;
-						$x++;
-					}
-					$sql_where .= '(' . implode(' or ', $sql_where_or) . ') ';
+					$message = $database->message['message'] ?? "An unknown error has occurred";
+					maintenance_service::log_write(self::class, "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
 				}
-				$sql .= $sql_where;
-				unset($sql_where_or);
-			} else {
-				//no assigned voicemail ids so return no results
-				$sql .= "and voicemail_uuid is null ";
 			}
 		}
-		$sql                       .= "order by voicemail_id asc ";
-		$parameters['domain_uuid'] = $this->domain_uuid;
-		$result                    = $this->database->select($sql, $parameters, 'all');
-		unset($sql, $parameters);
-		return $result;
+
+		//ensure logs are saved
+		maintenance_service::log_flush();
+	}
+
+	/**
+	 * Called by the maintenance system to remove old files
+	 *
+	 * @param settings $settings Settings object
+	 *
+	 * @return void
+	 */
+	public static function filesystem_maintenance(settings $settings): void {
+		//get a list of domains
+		$domains = maintenance::get_domains($settings->database());
+
+		//loop through domains to handle domains with different defaults
+		foreach ($domains as $domain_uuid => $domain_name) {
+
+			//get settings for this domain
+			$domain_settings = new settings(['database' => $settings->database(), 'domain_uuid' => $domain_uuid]);
+
+			//get the switch voicemail location
+			$voicemail_location = $domain_settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail') . '/default';
+
+			//get the filesystem retention days
+			$retention_days = $domain_settings->get('voicemail', maintenance::FILESYSTEM_SUBCATEGORY, '');
+			if (!empty($retention_days)) {
+
+				//get all wav and mp3 voicemail files
+				$mp3_files = glob("$voicemail_location/$domain_name/*/msg_*.mp3");
+				$wav_files = glob("$voicemail_location/$domain_name/*/msg_*.wav");
+				$mp3_intro_files = glob("$voicemail_location/$domain_name/*/intro_*.mp3");
+				$wav_intro_files = glob("$voicemail_location/$domain_name/*/intro_*.wav");
+				$domain_voicemail_files = array_merge($mp3_files, $wav_files, $mp3_intro_files, $wav_intro_files);
+
+				//delete individually
+				foreach ($domain_voicemail_files as $file) {
+
+					//check modified date on file
+					if (maintenance_service::days_since_modified($file) > $retention_days) {
+
+						//date is older so remove
+						if (unlink($file)) {
+							//successfully deleted
+							maintenance_service::log_write(self::class, "Removed $file from voicemails", $domain_uuid);
+						} else {
+							//failed to delete file
+							maintenance_service::log_write(self::class, "Unable to remove $file", $domain_uuid, maintenance_service::LOG_ERROR);
+						}
+					}
+				}
+			} else {
+				//log retention days not valid
+				maintenance_service::log_write(self::class, "Retention days not set or not a valid number", $domain_uuid, maintenance_service::LOG_ERROR);
+			}
+		}
+
+		//ensure logs are saved
+		maintenance_service::log_flush();
 	}
 
 	/**
@@ -293,6 +249,121 @@ class voicemail {
 
 		//return the array
 		return $voicemails;
+	}
+
+	/**
+	 * retrieves the list of assigned voicemails
+	 *
+	 * @return array|false list of assigned voicemail boxes
+	 */
+	public function voicemails() {
+
+		//check if for valid input
+		if (!is_uuid($this->domain_uuid)) {
+			return false;
+		}
+
+		//get the assigned extensions
+		$sql = "select e.extension_uuid, e.extension, e.number_alias, e.enabled, e.description ";
+		$sql .= "from v_extensions e, v_extension_users eu ";
+		$sql .= "where e.extension_uuid = eu.extension_uuid ";
+		$sql .= "and eu.user_uuid = :user_uuid ";
+		$sql .= "and e.domain_uuid = :domain_uuid ";
+		$sql .= "order by e.extension asc ";
+		$parameters['domain_uuid'] = $this->domain_uuid;
+		$parameters['user_uuid'] = $this->user_uuid;
+		$assigned_extensions = $this->database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+
+		//set the voicemail id arrays
+		$voicemail_ids = [];
+		if (isset($assigned_extensions)) {
+			foreach ($assigned_extensions as $index => $row) {
+				$voicemail_ids[] = (is_numeric($row['number_alias'])) ? $row['number_alias'] : $row['extension'];
+			}
+		}
+
+		//get the assigned voicemails
+		$assigned_voicemails = [];
+		if (!empty($voicemail_ids) && @sizeof($voicemail_ids) != 0) {
+			$sql = "select * from v_voicemails ";
+			$sql .= "where voicemail_id  in (";
+			foreach ($voicemail_ids as $i => $voicemail_id) {
+				if ($i > 0) {
+					$sql .= ",";
+				}
+				$sql .= ":voicemail_id_" . $i;
+				$parameters['voicemail_id_' . $i] = $voicemail_id;
+			}
+			$sql .= ") ";
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $this->domain_uuid;
+			$assigned_voicemails = $this->database->select($sql, $parameters, 'all');
+			unset($sql, $parameters);
+		}
+
+		//set the voicemail uuid arrays
+		$voicemail_uuids = [];
+		if (isset($assigned_voicemails)) {
+			foreach ($assigned_voicemails as $row) {
+				if (!empty($row['voicemail_uuid'])) {
+					$voicemail_uuids[]['voicemail_uuid'] = $row['voicemail_uuid'];
+				}
+			}
+		}
+
+		//get the uuid and voicemail_id
+		$sql = "select * from v_voicemails ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		if (is_uuid($this->voicemail_uuid)) {
+			if (permission_exists('voicemail_delete')) {
+				//view specific voicemail box usually reserved for an admin or superadmin
+				$sql .= "and voicemail_uuid = :voicemail_uuid ";
+				$parameters['voicemail_uuid'] = $this->voicemail_uuid;
+			} else {
+				//ensure that the requested voicemail box is assigned to this user
+				$found = false;
+				foreach ($voicemail_uuids as $row) {
+					if ($this->voicemail_uuid == $row['voicemail_uuid']) {
+						$sql .= "and voicemail_uuid = :voicemail_uuid ";
+						$parameters['voicemail_uuid'] = $row['voicemail_uuid'];
+						$found = true;
+					}
+				}
+				//id requested is not owned by the user return no results
+				if (!$found) {
+					$sql .= "and voicemail_uuid is null ";
+				}
+			}
+		} else {
+			if (!empty($voicemail_ids) && @sizeof($voicemail_ids) != 0) {
+				//show only the assigned voicemail ids
+				$sql .= "and ";
+				if (is_numeric($this->voicemail_id) && in_array($this->voicemail_id, $voicemail_ids)) {
+					$sql_where = 'voicemail_id = :voicemail_id ';
+					$parameters['voicemail_id'] = $this->voicemail_id;
+				} else {
+					$x = 0;
+					$sql_where = '';
+					foreach ($voicemail_ids as $voicemail_id) {
+						$sql_where_or[] = "voicemail_id = :voicemail_id_" . $x;
+						$parameters['voicemail_id_' . $x] = $voicemail_id;
+						$x++;
+					}
+					$sql_where .= '(' . implode(' or ', $sql_where_or) . ') ';
+				}
+				$sql .= $sql_where;
+				unset($sql_where_or);
+			} else {
+				//no assigned voicemail ids so return no results
+				$sql .= "and voicemail_uuid is null ";
+			}
+		}
+		$sql .= "order by voicemail_id asc ";
+		$parameters['domain_uuid'] = $this->domain_uuid;
+		$result = $this->database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+		return $result;
 	}
 
 	/**
@@ -322,10 +393,10 @@ class voicemail {
 		$sql .= "where m.domain_uuid = :domain_uuid ";
 		$sql .= "and m.voicemail_uuid = v.voicemail_uuid ";
 		if (is_array($voicemail_id) && @sizeof($voicemail_id) != 0) {
-			$x   = 0;
+			$x = 0;
 			$sql .= "and ( ";
 			foreach ($voicemail_id as $row) {
-				$sql_where_or[]                   = "v.voicemail_id = :voicemail_id_" . $x;
+				$sql_where_or[] = "v.voicemail_id = :voicemail_id_" . $x;
 				$parameters['voicemail_id_' . $x] = $row['voicemail_id'];
 				$x++;
 			}
@@ -333,7 +404,7 @@ class voicemail {
 			$sql .= ") ";
 			unset($sql_where_or);
 		} else {
-			$sql                        .= "and v.voicemail_id = :voicemail_id ";
+			$sql .= "and v.voicemail_id = :voicemail_id ";
 			$parameters['voicemail_id'] = $voicemail_id;
 		}
 		if (empty($this->order_by)) {
@@ -344,12 +415,12 @@ class voicemail {
 		//if paging offset defined, apply it along with rows per page
 		if (isset($this->offset)) {
 			$rows_per_page = $this->settings->get('domain', 'paging', 50);
-			$offset        = isset($this->offset) && is_numeric($this->offset) ? $this->offset : 0;
-			$sql           .= limit_offset($rows_per_page, $offset);
+			$offset = isset($this->offset) && is_numeric($this->offset) ? $this->offset : 0;
+			$sql .= limit_offset($rows_per_page, $offset);
 		}
 		$parameters['domain_uuid'] = $this->domain_uuid;
-		$parameters['time_zone']   = $time_zone;
-		$result                    = $this->database->select($sql, $parameters, 'all');
+		$parameters['time_zone'] = $time_zone;
+		$result = $this->database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 
 		//update the array with additional information
@@ -363,16 +434,16 @@ class voicemail {
 				if (file_exists($path . '/msg_' . $row['voicemail_message_uuid'] . '.mp3')) {
 					$result[$i]['file_path'] = $path . '/msg_' . $row['voicemail_message_uuid'] . '.mp3';
 				}
-				$result[$i]['file_size']       = filesize($result[$i]['file_path'] ?? '');
+				$result[$i]['file_size'] = filesize($result[$i]['file_path'] ?? '');
 				$result[$i]['file_size_label'] = byte_convert($result[$i]['file_size'] ?? 0);
-				$result[$i]['file_ext']        = substr($result[$i]['file_path'] ?? '', -3);
+				$result[$i]['file_ext'] = substr($result[$i]['file_path'] ?? '', -3);
 
 				$message_minutes = floor($row['message_length'] / 60);
 				$message_seconds = $row['message_length'] % 60;
 
 				//use International System of Units (SI) - Source: https://en.wikipedia.org/wiki/International_System_of_Units
 				$result[$i]['message_length_label'] = ($message_minutes > 0 ? $message_minutes . ' min' : '') . ($message_seconds > 0 ? ' ' . $message_seconds . ' s' : '');
-				$result[$i]['created_date']         = date("j M Y g:i a", $row['created_epoch']);
+				$result[$i]['created_date'] = date("j M Y g:i a", $row['created_epoch']);
 			}
 		} else {
 			$result = [];
@@ -394,7 +465,7 @@ class voicemail {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -416,8 +487,8 @@ class voicemail {
 
 				//get necessary voicemail details
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql  = "select " . $this->uuid_prefix . "uuid as uuid, voicemail_id from v_" . $this->table . " ";
-					$sql  .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, voicemail_id from v_" . $this->table . " ";
+					$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$rows = $this->database->select($sql, $parameters ?? null, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
@@ -442,27 +513,27 @@ class voicemail {
 						}
 
 						//reset message waiting indicator status
-						$this->voicemail_id   = $voicemail_id;
+						$this->voicemail_id = $voicemail_id;
 						$this->voicemail_uuid = $voicemail_uuid;
-						$this->domain_uuid    = $this->domain_uuid;
+						$this->domain_uuid = $this->domain_uuid;
 						$this->message_waiting();
 
 						//build the delete array
-						$array[$this->table][$x]['voicemail_uuid']             = $voicemail_uuid;
-						$array[$this->table][$x]['domain_uuid']                = $this->domain_uuid;
-						$array['voicemail_options'][$x]['voicemail_uuid']      = $voicemail_uuid;
-						$array['voicemail_options'][$x]['domain_uuid']         = $this->domain_uuid;
-						$array['voicemail_messages'][$x]['voicemail_uuid']     = $voicemail_uuid;
-						$array['voicemail_messages'][$x]['domain_uuid']        = $this->domain_uuid;
+						$array[$this->table][$x]['voicemail_uuid'] = $voicemail_uuid;
+						$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
+						$array['voicemail_options'][$x]['voicemail_uuid'] = $voicemail_uuid;
+						$array['voicemail_options'][$x]['domain_uuid'] = $this->domain_uuid;
+						$array['voicemail_messages'][$x]['voicemail_uuid'] = $voicemail_uuid;
+						$array['voicemail_messages'][$x]['domain_uuid'] = $this->domain_uuid;
 						$array['voicemail_destinations'][$x]['voicemail_uuid'] = $voicemail_uuid;
-						$array['voicemail_destinations'][$x]['domain_uuid']    = $this->domain_uuid;
+						$array['voicemail_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
 						if (is_numeric($voicemail_id)) {
 							$array['voicemail_greetings'][$x]['voicemail_id'] = $voicemail_id;
-							$array['voicemail_greetings'][$x]['domain_uuid']  = $this->domain_uuid;
+							$array['voicemail_greetings'][$x]['domain_uuid'] = $this->domain_uuid;
 						}
 						$x++;
 						$array['voicemail_destinations'][$x]['voicemail_uuid_copy'] = $voicemail_uuid;
-						$array['voicemail_destinations'][$x]['domain_uuid']         = $this->domain_uuid;
+						$array['voicemail_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
 						$x++;
 					}
 				}
@@ -503,6 +574,51 @@ class voicemail {
 	}
 
 	/**
+	 * Send the message waiting status using the switch api command
+	 *
+	 * @return void
+	 */
+	public function message_waiting() {
+		//get the voicemail id
+		$this->get_voicemail_id();
+
+		//send the message waiting status
+
+		$esl = event_socket::create();
+		if ($esl->is_connected()) {
+			$switch_cmd = "luarun app.lua voicemail mwi " . $this->voicemail_id . "@" . $this->domain_name;
+			$switch_result = event_socket::api($switch_cmd);
+		}
+	}
+
+	/**
+	 * retrieves the voicemail id
+	 *
+	 * @return int|null the voicemail id if it exists, otherwise null
+	 */
+	public function get_voicemail_id() {
+
+		//check if for valid input
+		if (!is_uuid($this->voicemail_uuid) || !is_uuid($this->domain_uuid)) {
+			return false;
+		}
+
+		//get the voicemail id if it isn't set already
+		if (!isset($this->voicemail_id)) {
+			$sql = "select voicemail_id from v_voicemails ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and voicemail_uuid = :voicemail_uuid ";
+			$parameters['domain_uuid'] = $this->domain_uuid;
+			$parameters['voicemail_uuid'] = $this->voicemail_uuid;
+			$voicemail_id = $this->database->select($sql, $parameters, 'column');
+			if (is_numeric($voicemail_id)) {
+				$this->voicemail_id = $voicemail_id;
+			}
+			unset($sql, $parameters, $voicemail_id);
+		}
+	}
+
+	/**
 	 * Deletes one or more records.
 	 *
 	 * @param array $records An array of record IDs to delete, where each ID is an associative array
@@ -514,15 +630,15 @@ class voicemail {
 	public function voicemail_options_delete($records) {
 		//assign private variables
 		$this->permission_prefix = 'voicemail_option_';
-		$this->list_page         = 'voicemail_edit.php?id=' . $this->voicemail_uuid;
-		$this->table             = 'voicemail_options';
-		$this->uuid_prefix       = 'voicemail_option_';
+		$this->list_page = 'voicemail_edit.php?id=' . $this->voicemail_uuid;
+		$this->table = 'voicemail_options';
+		$this->uuid_prefix = 'voicemail_option_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -540,8 +656,8 @@ class voicemail {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 						//build the delete array
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array[$this->table][$x]['voicemail_uuid']            = $this->voicemail_uuid;
-						$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
+						$array[$this->table][$x]['voicemail_uuid'] = $this->voicemail_uuid;
+						$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 					}
 				}
 
@@ -567,15 +683,15 @@ class voicemail {
 	 */
 	public function voicemail_destinations_delete($records) {
 		//assign private variables
-		$this->list_page   = 'voicemail_edit.php?id=' . $this->voicemail_uuid;
-		$this->table       = 'voicemail_destinations';
+		$this->list_page = 'voicemail_edit.php?id=' . $this->voicemail_uuid;
+		$this->table = 'voicemail_destinations';
 		$this->uuid_prefix = 'voicemail_destination_';
 
 		if (permission_exists('voicemail_forward')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -593,8 +709,8 @@ class voicemail {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 						//build the delete array
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array[$this->table][$x]['voicemail_uuid']            = $this->voicemail_uuid;
-						$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
+						$array[$this->table][$x]['voicemail_uuid'] = $this->voicemail_uuid;
+						$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 					}
 				}
 
@@ -630,7 +746,7 @@ class voicemail {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -652,15 +768,15 @@ class voicemail {
 
 				//get necessary voicemail details
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, voicemail_id, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, voicemail_id, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$voicemails[$row['uuid']]['state'] = $row['toggle'];
-							$voicemails[$row['uuid']]['id']    = $row['voicemail_id'];
+							$voicemails[$row['uuid']]['id'] = $row['voicemail_id'];
 						}
 					}
 					unset($sql, $parameters, $rows, $row);
@@ -672,14 +788,14 @@ class voicemail {
 					foreach ($voicemails as $voicemail_uuid => $voicemail) {
 
 						//reset message waiting indicator status
-						$this->voicemail_id   = $voicemail['id'];
+						$this->voicemail_id = $voicemail['id'];
 						$this->voicemail_uuid = $voicemail_uuid;
-						$this->domain_uuid    = $this->domain_uuid;
+						$this->domain_uuid = $this->domain_uuid;
 						$this->message_waiting();
 
 						//build update array
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $voicemail_uuid;
-						$array[$this->table][$x][$this->toggle_field]         = $voicemail['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+						$array[$this->table][$x][$this->toggle_field] = $voicemail['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 						$x++;
 					}
 				}
@@ -719,30 +835,12 @@ class voicemail {
 		}
 
 		//return the message count
-		$sql                          = "select count(*) from v_voicemail_messages ";
-		$sql                          .= "where domain_uuid = :domain_uuid ";
-		$sql                          .= "and voicemail_uuid = :voicemail_uuid ";
-		$parameters['domain_uuid']    = $this->domain_uuid;
+		$sql = "select count(*) from v_voicemail_messages ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and voicemail_uuid = :voicemail_uuid ";
+		$parameters['domain_uuid'] = $this->domain_uuid;
 		$parameters['voicemail_uuid'] = $this->voicemail_uuid;
 		return $this->database->select($sql, $parameters, 'column');
-	}
-
-	/**
-	 * Send the message waiting status using the switch api command
-	 *
-	 * @return void
-	 */
-	public function message_waiting() {
-		//get the voicemail id
-		$this->get_voicemail_id();
-
-		//send the message waiting status
-
-		$esl = event_socket::create();
-		if ($esl->is_connected()) {
-			$switch_cmd    = "luarun app.lua voicemail mwi " . $this->voicemail_id . "@" . $this->domain_name;
-			$switch_result = event_socket::api($switch_cmd);
-		}
 	}
 
 	/**
@@ -785,7 +883,7 @@ class voicemail {
 		}
 
 		//build delete array
-		$array['voicemail_messages'][0]['domain_uuid']    = $this->domain_uuid;
+		$array['voicemail_messages'][0]['domain_uuid'] = $this->domain_uuid;
 		$array['voicemail_messages'][0]['voicemail_uuid'] = $this->voicemail_uuid;
 		if (is_uuid($this->voicemail_message_uuid)) {
 			$array['voicemail_messages'][0]['voicemail_message_uuid'] = $this->voicemail_message_uuid;
@@ -828,15 +926,15 @@ class voicemail {
 		}
 
 		//get message status
-		$sql                                  = "select message_status from v_voicemail_messages ";
-		$sql                                  .= "where voicemail_message_uuid = :voicemail_message_uuid ";
+		$sql = "select message_status from v_voicemail_messages ";
+		$sql .= "where voicemail_message_uuid = :voicemail_message_uuid ";
 		$parameters['voicemail_message_uuid'] = $this->voicemail_message_uuid;
-		$new_status                           = $this->database->select($sql, $parameters, 'column') != 'saved' ? 'saved' : null;
+		$new_status = $this->database->select($sql, $parameters, 'column') != 'saved' ? 'saved' : null;
 		unset($sql, $parameters);
 
 		//build message status update array
 		$array['voicemail_messages'][0]['voicemail_message_uuid'] = $this->voicemail_message_uuid;
-		$array['voicemail_messages'][0]['message_status']         = $new_status;
+		$array['voicemail_messages'][0]['message_status'] = $new_status;
 
 		//grant temporary permissions
 		$p = permissions::new();
@@ -870,56 +968,56 @@ class voicemail {
 
 		//add multi-lingual support
 		$language = new text;
-		$text     = $language->get();
+		$text = $language->get();
 
 		//add the settings object
-		$settings            = new settings(["domain_uuid" => $this->domain_uuid, "user_uuid" => $this->user_uuid]);
-		$email_from          = $settings->get('email', 'smtp_from', '');
-		$email_from_name     = $settings->get('email', 'smtp_from_name', 'PBX');
-		$switch_scripts      = $settings->get('switch', 'scripts', '/usr/share/freeswitch/scripts');
-		$switch_voicemail    = $settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail');
-		$language_dialect    = $settings->get('domain', 'language', 'en-us');
-		$time_zone           = $settings->get('domain', 'time_zone', 'UTC');
+		$settings = new settings(["domain_uuid" => $this->domain_uuid, "user_uuid" => $this->user_uuid]);
+		$email_from = $settings->get('email', 'smtp_from', '');
+		$email_from_name = $settings->get('email', 'smtp_from_name', 'PBX');
+		$switch_scripts = $settings->get('switch', 'scripts', '/usr/share/freeswitch/scripts');
+		$switch_voicemail = $settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail');
+		$language_dialect = $settings->get('domain', 'language', 'en-us');
+		$time_zone = $settings->get('domain', 'time_zone', 'UTC');
 		$display_domain_name = $settings->get('voicemail', 'display_domain_name', 'false');
 
 		//get voicemail message details
-		$sql                                  = "select ";
-		$sql                                  .= "	vm.*, ";
-		$sql                                  .= "	to_char(timezone(:time_zone, to_timestamp(vm.created_epoch)), 'Day DD Mon YYYY HH:MI:SS PM') as message_date, ";
-		$sql                                  .= "	v.voicemail_id, ";
-		$sql                                  .= "	v.voicemail_mail_to, ";
-		$sql                                  .= "	v.voicemail_description, ";
-		$sql                                  .= "	v.voicemail_file, ";
-		$sql                                  .= "	d.domain_name ";
-		$sql                                  .= "from ";
-		$sql                                  .= "	v_voicemail_messages as vm ";
-		$sql                                  .= "	left join v_voicemails as v on vm.voicemail_uuid = v.voicemail_uuid ";
-		$sql                                  .= "	left join v_domains as d on vm.domain_uuid = d.domain_uuid ";
-		$sql                                  .= "where ";
-		$sql                                  .= "	vm.voicemail_message_uuid = :voicemail_message_uuid ";
-		$sql                                  .= "limit 1";
-		$parameters['time_zone']              = $time_zone;
+		$sql = "select ";
+		$sql .= "	vm.*, ";
+		$sql .= "	to_char(timezone(:time_zone, to_timestamp(vm.created_epoch)), 'Day DD Mon YYYY HH:MI:SS PM') as message_date, ";
+		$sql .= "	v.voicemail_id, ";
+		$sql .= "	v.voicemail_mail_to, ";
+		$sql .= "	v.voicemail_description, ";
+		$sql .= "	v.voicemail_file, ";
+		$sql .= "	d.domain_name ";
+		$sql .= "from ";
+		$sql .= "	v_voicemail_messages as vm ";
+		$sql .= "	left join v_voicemails as v on vm.voicemail_uuid = v.voicemail_uuid ";
+		$sql .= "	left join v_domains as d on vm.domain_uuid = d.domain_uuid ";
+		$sql .= "where ";
+		$sql .= "	vm.voicemail_message_uuid = :voicemail_message_uuid ";
+		$sql .= "limit 1";
+		$parameters['time_zone'] = $time_zone;
 		$parameters['voicemail_message_uuid'] = $this->voicemail_message_uuid;
-		$message                              = $this->database->select($sql, $parameters, 'row');
+		$message = $this->database->select($sql, $parameters, 'row');
 		unset($sql, $parameters);
 
 		//retrieve appropriate email template
-		$sql                             = "select ";
-		$sql                             .= "	template_subject, ";
-		$sql                             .= "	template_body ";
-		$sql                             .= "from ";
-		$sql                             .= "	v_email_templates ";
-		$sql                             .= "where ";
-		$sql                             .= "	template_language = :template_language ";
-		$sql                             .= "	and template_category = 'voicemail' ";
-		$sql                             .= "	and template_subcategory = '" . (!empty($message['message_transcription']) ? 'transcription' : 'default') . "' ";
-		$sql                             .= "	and template_type = 'html' ";
-		$sql                             .= "	and template_enabled = true ";
-		$sql                             .= "	and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$sql                             .= "limit 1 ";
+		$sql = "select ";
+		$sql .= "	template_subject, ";
+		$sql .= "	template_body ";
+		$sql .= "from ";
+		$sql .= "	v_email_templates ";
+		$sql .= "where ";
+		$sql .= "	template_language = :template_language ";
+		$sql .= "	and template_category = 'voicemail' ";
+		$sql .= "	and template_subcategory = '" . (!empty($message['message_transcription']) ? 'transcription' : 'default') . "' ";
+		$sql .= "	and template_type = 'html' ";
+		$sql .= "	and template_enabled = true ";
+		$sql .= "	and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "limit 1 ";
 		$parameters['template_language'] = $language_dialect;
-		$parameters['domain_uuid']       = $this->domain_uuid;
-		$template                        = $this->database->select($sql, $parameters, 'row');
+		$parameters['domain_uuid'] = $this->domain_uuid;
+		$template = $this->database->select($sql, $parameters, 'row');
 		unset($sql, $parameters);
 
 		//determine formatted voicemail name
@@ -958,7 +1056,7 @@ class voicemail {
 		) {
 			$voicemail_message_decoded = base64_decode($message['message_base64']);
 			file_put_contents($voicemail_message_path . '/msg_' . $message['voicemail_message_uuid'] . '.ext', $voicemail_message_decoded);
-			$finfo                       = finfo_open(FILEINFO_MIME_TYPE);
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
 			$voicemail_message_file_mime = finfo_file($finfo, $voicemail_message_path . '/msg_' . $message['voicemail_message_uuid'] . '.ext');
 			finfo_close($finfo);
 			unset($voicemail_message_decoded);
@@ -981,7 +1079,7 @@ class voicemail {
 			if (file_exists($voicemail_message_path . '/msg_' . $message['voicemail_message_uuid'] . '.mp3')) {
 				$voicemail_message_file_ext = 'mp3';
 			}
-			$voicemail_message_file      = 'msg_' . $message['voicemail_message_uuid'] . '.' . $voicemail_message_file_ext;
+			$voicemail_message_file = 'msg_' . $message['voicemail_message_uuid'] . '.' . $voicemail_message_file_ext;
 			$voicemail_message_file_mime = mime_content_type($voicemail_message_path . '/msg_' . $message['voicemail_message_uuid'] . '.' . $voicemail_message_file_ext);
 		}
 
@@ -1051,33 +1149,33 @@ class voicemail {
 		}
 
 		//build message status update array
-		$array['email_queue'][0]['email_queue_uuid']    = $email_queue_uuid = uuid();
-		$array['email_queue'][0]['domain_uuid']         = $this->domain_uuid;
-		$array['email_queue'][0]['hostname']            = gethostname();
-		$array['email_queue'][0]['email_date']          = 'now()';
-		$array['email_queue'][0]['email_from']          = $email_from_name . '<' . $email_from . '>';
-		$array['email_queue'][0]['email_to']            = $message['voicemail_mail_to'];
-		$array['email_queue'][0]['email_subject']       = $template['template_subject'];
-		$array['email_queue'][0]['email_body']          = $template['template_body'];
-		$array['email_queue'][0]['email_status']        = 'waiting';
-		$array['email_queue'][0]['email_uuid']          = $this->voicemail_message_uuid;
+		$array['email_queue'][0]['email_queue_uuid'] = $email_queue_uuid = uuid();
+		$array['email_queue'][0]['domain_uuid'] = $this->domain_uuid;
+		$array['email_queue'][0]['hostname'] = gethostname();
+		$array['email_queue'][0]['email_date'] = 'now()';
+		$array['email_queue'][0]['email_from'] = $email_from_name . '<' . $email_from . '>';
+		$array['email_queue'][0]['email_to'] = $message['voicemail_mail_to'];
+		$array['email_queue'][0]['email_subject'] = $template['template_subject'];
+		$array['email_queue'][0]['email_body'] = $template['template_body'];
+		$array['email_queue'][0]['email_status'] = 'waiting';
+		$array['email_queue'][0]['email_uuid'] = $this->voicemail_message_uuid;
 		$array['email_queue'][0]['email_transcription'] = $message['message_transcription'];
-		$array['email_queue'][0]['insert_date']         = 'now()';
-		$array['email_queue'][0]['insert_user']         = $this->user_uuid;
+		$array['email_queue'][0]['insert_date'] = 'now()';
+		$array['email_queue'][0]['insert_user'] = $this->user_uuid;
 
 		//add voicemail file details (and/or base64) to queue attachments
 		if (!empty($message['voicemail_file']) && $message['voicemail_file'] == 'attach' && (file_exists($voicemail_message_path . '/' . $voicemail_combined_file) || file_exists($voicemail_message_path . '/' . $voicemail_message_file))) {
 			$array['email_queue_attachments'][0]['email_queue_attachment_uuid'] = uuid();
-			$array['email_queue_attachments'][0]['domain_uuid']                 = $this->domain_uuid;
-			$array['email_queue_attachments'][0]['email_queue_uuid']            = $email_queue_uuid;
-			$array['email_queue_attachments'][0]['email_attachment_type']       = $voicemail_message_file_ext;
-			$array['email_queue_attachments'][0]['email_attachment_path']       = $voicemail_message_path;
-			$array['email_queue_attachments'][0]['email_attachment_name']       = $voicemail_combined_file ?? $voicemail_message_file;
-			$array['email_queue_attachments'][0]['email_attachment_base64']     = $message['message_combined_base64'] ?? $message['message_base64'];
-			$array['email_queue_attachments'][0]['email_attachment_cid']        = !empty($message['message_combined_base64']) || !empty($message['message_base64']) ? uuid() : null;
-			$array['email_queue_attachments'][0]['email_attachment_mime_type']  = $voicemail_message_file_mime;
-			$array['email_queue_attachments'][0]['insert_date']                 = 'now()';
-			$array['email_queue_attachments'][0]['insert_user']                 = $this->user_uuid;
+			$array['email_queue_attachments'][0]['domain_uuid'] = $this->domain_uuid;
+			$array['email_queue_attachments'][0]['email_queue_uuid'] = $email_queue_uuid;
+			$array['email_queue_attachments'][0]['email_attachment_type'] = $voicemail_message_file_ext;
+			$array['email_queue_attachments'][0]['email_attachment_path'] = $voicemail_message_path;
+			$array['email_queue_attachments'][0]['email_attachment_name'] = $voicemail_combined_file ?? $voicemail_message_file;
+			$array['email_queue_attachments'][0]['email_attachment_base64'] = $message['message_combined_base64'] ?? $message['message_base64'];
+			$array['email_queue_attachments'][0]['email_attachment_cid'] = !empty($message['message_combined_base64']) || !empty($message['message_base64']) ? uuid() : null;
+			$array['email_queue_attachments'][0]['email_attachment_mime_type'] = $voicemail_message_file_mime;
+			$array['email_queue_attachments'][0]['insert_date'] = 'now()';
+			$array['email_queue_attachments'][0]['insert_user'] = $this->user_uuid;
 		}
 
 		//grant temporary permissions
@@ -1123,18 +1221,18 @@ class voicemail {
 		}
 
 		//add the settings object
-		$settings           = new settings(["domain_uuid" => $this->domain_uuid, "user_uuid" => $this->user_uuid]);
+		$settings = new settings(["domain_uuid" => $this->domain_uuid, "user_uuid" => $this->user_uuid]);
 		$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
-		$transcribe_engine  = $settings->get('transcribe', 'engine', '');
-		$switch_voicemail   = $settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail');
+		$transcribe_engine = $settings->get('transcribe', 'engine', '');
+		$switch_voicemail = $settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail');
 
 		//transcribe multiple recordings
 		if ($transcribe_enabled && !empty($transcribe_engine)) {
 
 			//get voicemail message base64
-			$sql                                  = "select message_base64 from v_voicemail_messages where voicemail_message_uuid = :voicemail_message_uuid ";
+			$sql = "select message_base64 from v_voicemail_messages where voicemail_message_uuid = :voicemail_message_uuid ";
 			$parameters['voicemail_message_uuid'] = $this->voicemail_message_uuid;
-			$voicemail_message_base64             = $this->database->select($sql, $parameters, 'column');
+			$voicemail_message_base64 = $this->database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
 
 			//define voicemail message file path
@@ -1148,7 +1246,7 @@ class voicemail {
 			) {
 				$voicemail_message_decoded = base64_decode($voicemail_message_base64);
 				file_put_contents($voicemail_message_path . '/msg_' . $this->voicemail_message_uuid . '.ext', $voicemail_message_decoded);
-				$finfo                       = finfo_open(FILEINFO_MIME_TYPE);
+				$finfo = finfo_open(FILEINFO_MIME_TYPE);
 				$voicemail_message_file_mime = finfo_file($finfo, $voicemail_message_path . '/msg_' . $this->voicemail_message_uuid . '.ext');
 				finfo_close($finfo);
 				switch ($voicemail_message_file_mime) {
@@ -1179,14 +1277,14 @@ class voicemail {
 			$transcribe = new transcribe($settings);
 
 			//transcribe the voicemail message file
-			$transcribe->audio_path     = $voicemail_message_path;
+			$transcribe->audio_path = $voicemail_message_path;
 			$transcribe->audio_filename = basename($voicemail_message_file);
-			$message_transcription      = $transcribe->transcribe();
+			$message_transcription = $transcribe->transcribe();
 
 			//build voicemail message data array
 			if (!empty($message_transcription)) {
 				$array['voicemail_messages'][0]['voicemail_message_uuid'] = $this->voicemail_message_uuid;
-				$array['voicemail_messages'][0]['message_transcription']  = $message_transcription;
+				$array['voicemail_messages'][0]['message_transcription'] = $message_transcription;
 			}
 
 			//update the checked rows
@@ -1218,40 +1316,6 @@ class voicemail {
 	}
 
 	/**
-	 * Update message status to 'saved' in database.
-	 *
-	 * @return bool true if update is successful, false otherwise.
-	 */
-	public function message_saved() {
-
-		//check if for valid input
-		if (!is_uuid($this->voicemail_uuid)
-			|| !is_uuid($this->domain_uuid)
-			|| !is_uuid($this->voicemail_message_uuid)
-		) {
-			return false;
-		}
-
-		//build message status update array
-		$array['voicemail_messages'][0]['voicemail_message_uuid'] = $this->voicemail_message_uuid;
-		$array['voicemail_messages'][0]['message_status']         = 'saved';
-
-		//grant temporary permissions
-		$p = permissions::new();
-		$p->add('voicemail_message_edit', 'temp');
-
-		//execute update
-		$this->database->save($array);
-		unset($array);
-
-		//revoke temporary permissions
-		$p->delete('voicemail_message_edit', 'temp');
-
-		//check the message waiting status
-		$this->message_waiting();
-	}
-
-	/**
 	 * download the voicemail message intro
 	 *
 	 * @param string domain_name if domain name is not passed, then will be used from the session variable (if
@@ -1279,24 +1343,24 @@ class voicemail {
 
 		//prepare base64 content from the database, if enabled
 		if ($this->settings->get('voicemail', 'storage_type', '') == 'base64') {
-			$sql                                  = "select message_intro_base64 ";
-			$sql                                  .= "from ";
-			$sql                                  .= "v_voicemail_messages as m, ";
-			$sql                                  .= "v_voicemails as v ";
-			$sql                                  .= "where ";
-			$sql                                  .= "m.voicemail_uuid = v.voicemail_uuid ";
-			$sql                                  .= "and v.voicemail_id = :voicemail_id ";
-			$sql                                  .= "and m.voicemail_uuid = :voicemail_uuid ";
-			$sql                                  .= "and m.domain_uuid = :domain_uuid ";
-			$sql                                  .= "and m.voicemail_message_uuid = :voicemail_message_uuid ";
-			$parameters['voicemail_id']           = $this->voicemail_id;
-			$parameters['voicemail_uuid']         = $this->voicemail_uuid;
-			$parameters['domain_uuid']            = $this->domain_uuid;
+			$sql = "select message_intro_base64 ";
+			$sql .= "from ";
+			$sql .= "v_voicemail_messages as m, ";
+			$sql .= "v_voicemails as v ";
+			$sql .= "where ";
+			$sql .= "m.voicemail_uuid = v.voicemail_uuid ";
+			$sql .= "and v.voicemail_id = :voicemail_id ";
+			$sql .= "and m.voicemail_uuid = :voicemail_uuid ";
+			$sql .= "and m.domain_uuid = :domain_uuid ";
+			$sql .= "and m.voicemail_message_uuid = :voicemail_message_uuid ";
+			$parameters['voicemail_id'] = $this->voicemail_id;
+			$parameters['voicemail_uuid'] = $this->voicemail_uuid;
+			$parameters['domain_uuid'] = $this->domain_uuid;
 			$parameters['voicemail_message_uuid'] = $this->voicemail_message_uuid;
-			$message_intro_base64                 = $this->database->select($sql, $parameters, 'column');
+			$message_intro_base64 = $this->database->select($sql, $parameters, 'column');
 			if ($message_intro_base64 != '') {
 				$message_intro_decoded = base64_decode($message_intro_base64);
-				$file_ext              = $this->settings->get('voicemail', 'file_ext', 'mp3');
+				$file_ext = $this->settings->get('voicemail', 'file_ext', 'mp3');
 				file_put_contents($path . '/intro_' . $this->voicemail_message_uuid . '.' . $file_ext, $message_intro_decoded);
 			}
 			unset($sql, $parameters, $message_intro_base64, $message_intro_decoded);
@@ -1368,6 +1432,137 @@ class voicemail {
 
 	}
 
+	/*
+	 * range download method (helps safari play audio sources)
+	 */
+
+	/**
+	 * Update message status to 'saved' in database.
+	 *
+	 * @return bool true if update is successful, false otherwise.
+	 */
+	public function message_saved() {
+
+		//check if for valid input
+		if (!is_uuid($this->voicemail_uuid)
+			|| !is_uuid($this->domain_uuid)
+			|| !is_uuid($this->voicemail_message_uuid)
+		) {
+			return false;
+		}
+
+		//build message status update array
+		$array['voicemail_messages'][0]['voicemail_message_uuid'] = $this->voicemail_message_uuid;
+		$array['voicemail_messages'][0]['message_status'] = 'saved';
+
+		//grant temporary permissions
+		$p = permissions::new();
+		$p->add('voicemail_message_edit', 'temp');
+
+		//execute update
+		$this->database->save($array);
+		unset($array);
+
+		//revoke temporary permissions
+		$p->delete('voicemail_message_edit', 'temp');
+
+		//check the message waiting status
+		$this->message_waiting();
+	}
+
+	/**
+	 * Downloads the specified file in range mode.
+	 *
+	 * @param string $file The path to the file to be downloaded.
+	 */
+	private function range_download($file) {
+		$esl = @fopen($file, 'rb');
+
+		$size = filesize($file); // File size
+		$length = $size;           // Content length
+		$start = 0;               // Start byte
+		$end = $size - 1;       // End byte
+		// Now that we've gotten so far without errors we send the accept range header
+		/* At the moment we only support single ranges.
+		* Multiple ranges requires some more work to ensure it works correctly
+		* and comply with the spesifications: http://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html#sec19.2
+		*
+		* Multirange support annouces itself with:
+		* header('Accept-Ranges: bytes');
+		*
+		* Multirange content must be sent with multipart/byteranges mediatype,
+		* (mediatype = mimetype)
+		* as well as a boundry header to indicate the various chunks of data.
+		*/
+		header("Accept-Ranges: 0-$length");
+		// header('Accept-Ranges: bytes');
+		// multipart/byteranges
+		// http://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html#sec19.2
+		if (isset($_SERVER['HTTP_RANGE'])) {
+
+			$c_start = $start;
+			$c_end = $end;
+			// Extract the range string
+			[, $range] = explode('=', $_SERVER['HTTP_RANGE'], 2);
+			// Make sure the client hasn't sent us a multibyte range
+			if (strpos($range, ',') !== false) {
+				// (?) Shoud this be issued here, or should the first
+				// range be used? Or should the header be ignored and
+				// we output the whole content?
+				header('HTTP/1.1 416 Requested Range Not Satisfiable');
+				header("Content-Range: bytes $start-$end/$size");
+				// (?) Echo some info to the client?
+				exit;
+			}
+			// If the range starts with an '-' we start from the beginning
+			// If not, we forward the file pointer
+			// And make sure to get the end byte if spesified
+			if (!empty($range0) && $range0 == '-') {
+				// The n-number of the last bytes is requested
+				$c_start = $size - substr($range, 1);
+			} else {
+				$range = explode('-', $range);
+				$c_start = $range[0];
+				$c_end = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $size;
+			}
+			/* Check the range and make sure it's treated according to the specs.
+			* http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+			*/
+			// End bytes can not be larger than $end.
+			$c_end = ($c_end > $end) ? $end : $c_end;
+			// Validate the requested range and return an error if it's not correct.
+			if ($c_start > $c_end || $c_start > $size - 1 || $c_end >= $size) {
+
+				header('HTTP/1.1 416 Requested Range Not Satisfiable');
+				header("Content-Range: bytes $start-$end/$size");
+				// (?) Echo some info to the client?
+				exit;
+			}
+			$start = $c_start;
+			$end = $c_end;
+			$length = $end - $start + 1; // Calculate new content length
+			fseek($esl, $start);
+			header('HTTP/1.1 206 Partial Content');
+		}
+		// Notify the client the byte range we'll be outputting
+		header("Content-Range: bytes $start-$end/$size");
+		header("Content-Length: $length");
+
+		// Start buffered download
+		$buffer = 1024 * 8;
+		while (!feof($esl) && ($p = ftell($esl)) <= $end) {
+			if ($p + $buffer > $end) {
+				// In case we're only outputtin a chunk, make sure we don't
+				// read past the length
+				$buffer = $end - $p + 1;
+			}
+			set_time_limit(0); // Reset time limit for big files
+			echo fread($esl, $buffer);
+			flush(); // Free up memory. Otherwise large files will trigger PHP's memory limit.
+		}
+
+	}
+
 	/**
 	 * download the voicemail message
 	 *
@@ -1396,24 +1591,24 @@ class voicemail {
 
 		//prepare base64 content from the database, if enabled
 		if ($this->settings->get('voicemail', 'storage_type', '') == 'base64') {
-			$sql                                  = "select message_base64 ";
-			$sql                                  .= "from ";
-			$sql                                  .= "v_voicemail_messages as m, ";
-			$sql                                  .= "v_voicemails as v ";
-			$sql                                  .= "where ";
-			$sql                                  .= "m.voicemail_uuid = v.voicemail_uuid ";
-			$sql                                  .= "and v.voicemail_id = :voicemail_id ";
-			$sql                                  .= "and m.voicemail_uuid = :voicemail_uuid ";
-			$sql                                  .= "and m.domain_uuid = :domain_uuid ";
-			$sql                                  .= "and m.voicemail_message_uuid = :voicemail_message_uuid ";
-			$parameters['voicemail_id']           = $this->voicemail_id;
-			$parameters['voicemail_uuid']         = $this->voicemail_uuid;
-			$parameters['domain_uuid']            = $this->domain_uuid;
+			$sql = "select message_base64 ";
+			$sql .= "from ";
+			$sql .= "v_voicemail_messages as m, ";
+			$sql .= "v_voicemails as v ";
+			$sql .= "where ";
+			$sql .= "m.voicemail_uuid = v.voicemail_uuid ";
+			$sql .= "and v.voicemail_id = :voicemail_id ";
+			$sql .= "and m.voicemail_uuid = :voicemail_uuid ";
+			$sql .= "and m.domain_uuid = :domain_uuid ";
+			$sql .= "and m.voicemail_message_uuid = :voicemail_message_uuid ";
+			$parameters['voicemail_id'] = $this->voicemail_id;
+			$parameters['voicemail_uuid'] = $this->voicemail_uuid;
+			$parameters['domain_uuid'] = $this->domain_uuid;
 			$parameters['voicemail_message_uuid'] = $this->voicemail_message_uuid;
-			$message_base64                       = $this->database->select($sql, $parameters, 'column');
+			$message_base64 = $this->database->select($sql, $parameters, 'column');
 			if ($message_base64 != '') {
 				$message_decoded = base64_decode($message_base64);
-				$file_ext        = $this->settings->get('voicemail', 'file_ext', 'mp3');
+				$file_ext = $this->settings->get('voicemail', 'file_ext', 'mp3');
 				file_put_contents($path . '/msg_' . $this->voicemail_message_uuid . '.' . $file_ext, $message_decoded);
 			}
 			unset($sql, $parameters, $message_base64, $message_decoded);
@@ -1483,200 +1678,6 @@ class voicemail {
 			@unlink($path . '/msg_' . $this->voicemail_message_uuid . '.' . $file_ext);
 		}
 
-	}
-
-	/*
-	 * range download method (helps safari play audio sources)
-	 */
-	/**
-	 * Downloads the specified file in range mode.
-	 *
-	 * @param string $file The path to the file to be downloaded.
-	 */
-	private function range_download($file) {
-		$esl = @fopen($file, 'rb');
-
-		$size   = filesize($file); // File size
-		$length = $size;           // Content length
-		$start  = 0;               // Start byte
-		$end    = $size - 1;       // End byte
-		// Now that we've gotten so far without errors we send the accept range header
-		/* At the moment we only support single ranges.
-		* Multiple ranges requires some more work to ensure it works correctly
-		* and comply with the spesifications: http://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html#sec19.2
-		*
-		* Multirange support annouces itself with:
-		* header('Accept-Ranges: bytes');
-		*
-		* Multirange content must be sent with multipart/byteranges mediatype,
-		* (mediatype = mimetype)
-		* as well as a boundry header to indicate the various chunks of data.
-		*/
-		header("Accept-Ranges: 0-$length");
-		// header('Accept-Ranges: bytes');
-		// multipart/byteranges
-		// http://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html#sec19.2
-		if (isset($_SERVER['HTTP_RANGE'])) {
-
-			$c_start = $start;
-			$c_end   = $end;
-			// Extract the range string
-			[, $range] = explode('=', $_SERVER['HTTP_RANGE'], 2);
-			// Make sure the client hasn't sent us a multibyte range
-			if (strpos($range, ',') !== false) {
-				// (?) Shoud this be issued here, or should the first
-				// range be used? Or should the header be ignored and
-				// we output the whole content?
-				header('HTTP/1.1 416 Requested Range Not Satisfiable');
-				header("Content-Range: bytes $start-$end/$size");
-				// (?) Echo some info to the client?
-				exit;
-			}
-			// If the range starts with an '-' we start from the beginning
-			// If not, we forward the file pointer
-			// And make sure to get the end byte if spesified
-			if (!empty($range0) && $range0 == '-') {
-				// The n-number of the last bytes is requested
-				$c_start = $size - substr($range, 1);
-			} else {
-				$range   = explode('-', $range);
-				$c_start = $range[0];
-				$c_end   = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $size;
-			}
-			/* Check the range and make sure it's treated according to the specs.
-			* http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
-			*/
-			// End bytes can not be larger than $end.
-			$c_end = ($c_end > $end) ? $end : $c_end;
-			// Validate the requested range and return an error if it's not correct.
-			if ($c_start > $c_end || $c_start > $size - 1 || $c_end >= $size) {
-
-				header('HTTP/1.1 416 Requested Range Not Satisfiable');
-				header("Content-Range: bytes $start-$end/$size");
-				// (?) Echo some info to the client?
-				exit;
-			}
-			$start  = $c_start;
-			$end    = $c_end;
-			$length = $end - $start + 1; // Calculate new content length
-			fseek($esl, $start);
-			header('HTTP/1.1 206 Partial Content');
-		}
-		// Notify the client the byte range we'll be outputting
-		header("Content-Range: bytes $start-$end/$size");
-		header("Content-Length: $length");
-
-		// Start buffered download
-		$buffer = 1024 * 8;
-		while (!feof($esl) && ($p = ftell($esl)) <= $end) {
-			if ($p + $buffer > $end) {
-				// In case we're only outputtin a chunk, make sure we don't
-				// read past the length
-				$buffer = $end - $p + 1;
-			}
-			set_time_limit(0); // Reset time limit for big files
-			echo fread($esl, $buffer);
-			flush(); // Free up memory. Otherwise large files will trigger PHP's memory limit.
-		}
-
-	}
-
-	/**
-	 * Removes old entries for in the database voicemails table
-	 * see {@link https://github.com/fusionpbx/fusionpbx-app-maintenance/} FusionPBX Maintenance App
-	 *
-	 * @param settings $settings Settings object
-	 *
-	 * @return void
-	 */
-	public static function database_maintenance(settings $settings): void {
-		//set table name for query
-		//$table = self::TABLE;
-		$table    = 'voicemail_messages';
-		$database = $settings->database();
-
-		//get a list of domains
-		$domains = maintenance::get_domains($database);
-		foreach ($domains as $domain_uuid => $domain_name) {
-			//get domain settings
-			$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
-
-			//ensure we have a retention day
-			$retention_days = $domain_settings->get('voicemail', maintenance::DATABASE_SUBCATEGORY, '');
-			if (!empty($retention_days) && is_numeric($retention_days)) {
-				//clear out old records
-				$sql = "delete from v_{$table} WHERE to_timestamp(created_epoch) < NOW() - INTERVAL '{$retention_days} days'"
-					. " and domain_uuid = '{$domain_uuid}'";
-				$database->execute($sql);
-				$code = $database->message['code'] ?? 0;
-				if ($database->message['code'] == 200) {
-					maintenance_service::log_write(self::class, "Successfully removed entries older than $retention_days", $domain_uuid);
-				} else {
-					$message = $database->message['message'] ?? "An unknown error has occurred";
-					maintenance_service::log_write(self::class, "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
-				}
-			}
-		}
-
-		//ensure logs are saved
-		maintenance_service::log_flush();
-	}
-
-	/**
-	 * Called by the maintenance system to remove old files
-	 *
-	 * @param settings $settings Settings object
-	 *
-	 * @return void
-	 */
-	public static function filesystem_maintenance(settings $settings): void {
-		//get a list of domains
-		$domains = maintenance::get_domains($settings->database());
-
-		//loop through domains to handle domains with different defaults
-		foreach ($domains as $domain_uuid => $domain_name) {
-
-			//get settings for this domain
-			$domain_settings = new settings(['database' => $settings->database(), 'domain_uuid' => $domain_uuid]);
-
-			//get the switch voicemail location
-			$voicemail_location = $domain_settings->get('switch', 'voicemail', '/var/lib/freeswitch/storage/voicemail') . '/default';
-
-			//get the filesystem retention days
-			$retention_days = $domain_settings->get('voicemail', maintenance::FILESYSTEM_SUBCATEGORY, '');
-			if (!empty($retention_days)) {
-
-				//get all wav and mp3 voicemail files
-				$mp3_files              = glob("$voicemail_location/$domain_name/*/msg_*.mp3");
-				$wav_files              = glob("$voicemail_location/$domain_name/*/msg_*.wav");
-				$mp3_intro_files        = glob("$voicemail_location/$domain_name/*/intro_*.mp3");
-				$wav_intro_files        = glob("$voicemail_location/$domain_name/*/intro_*.wav");
-				$domain_voicemail_files = array_merge($mp3_files, $wav_files, $mp3_intro_files, $wav_intro_files);
-
-				//delete individually
-				foreach ($domain_voicemail_files as $file) {
-
-					//check modified date on file
-					if (maintenance_service::days_since_modified($file) > $retention_days) {
-
-						//date is older so remove
-						if (unlink($file)) {
-							//successfully deleted
-							maintenance_service::log_write(self::class, "Removed $file from voicemails", $domain_uuid);
-						} else {
-							//failed to delete file
-							maintenance_service::log_write(self::class, "Unable to remove $file", $domain_uuid, maintenance_service::LOG_ERROR);
-						}
-					}
-				}
-			} else {
-				//log retention days not valid
-				maintenance_service::log_write(self::class, "Retention days not set or not a valid number", $domain_uuid, maintenance_service::LOG_ERROR);
-			}
-		}
-
-		//ensure logs are saved
-		maintenance_service::log_flush();
 	}
 
 }

@@ -84,7 +84,7 @@ class gateways {
 	public function __construct(array $setting_array = []) {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
@@ -92,11 +92,11 @@ class gateways {
 
 		//assign private variables
 		$this->permission_prefix = 'gateway_';
-		$this->list_page         = 'gateways.php';
-		$this->table             = 'gateways';
-		$this->uuid_prefix       = 'gateway_';
-		$this->toggle_field      = 'enabled';
-		$this->toggle_values     = ['true', 'false'];
+		$this->list_page = 'gateways.php';
+		$this->table = 'gateways';
+		$this->uuid_prefix = 'gateway_';
+		$this->toggle_field = 'enabled';
+		$this->toggle_values = ['true', 'false'];
 	}
 
 	/**
@@ -115,7 +115,7 @@ class gateways {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -141,14 +141,14 @@ class gateways {
 					if (permission_exists('gateway_all')) {
 						$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					} else {
-						$sql                       .= "where (domain_uuid = :domain_uuid) ";
-						$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+						$sql .= "where (domain_uuid = :domain_uuid) ";
+						$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 						$parameters['domain_uuid'] = $this->domain_uuid;
 					}
 					$rows = $this->database->select($sql, $parameters ?? null, 'all');
 					if (!empty($rows) && is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
-							$gateways[$row['uuid']]['name']    = $row['gateway'];
+							$gateways[$row['uuid']]['name'] = $row['gateway'];
 							$gateways[$row['uuid']]['profile'] = $row['profile'];
 							$gateways[$row['uuid']]['enabled'] = $row['enabled'];
 						}
@@ -166,7 +166,7 @@ class gateways {
 								//start gateways
 								foreach ($gateways as $gateway_uuid => $gateway) {
 									if ($gateway['enabled'] == 'true') {
-										$cmd                                 = 'sofia profile ' . $gateway['profile'] . ' startgw ' . $gateway_uuid;
+										$cmd = 'sofia profile ' . $gateway['profile'] . ' startgw ' . $gateway_uuid;
 										$responses[$gateway_uuid]['gateway'] = $gateway['name'];
 										$responses[$gateway_uuid]['message'] = trim(event_socket::api($cmd));
 									}
@@ -209,7 +209,7 @@ class gateways {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -235,14 +235,14 @@ class gateways {
 					if (permission_exists('gateway_all')) {
 						$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					} else {
-						$sql                       .= "where (domain_uuid = :domain_uuid) ";
-						$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+						$sql .= "where (domain_uuid = :domain_uuid) ";
+						$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 						$parameters['domain_uuid'] = $this->domain_uuid;
 					}
 					$rows = $this->database->select($sql, $parameters ?? null, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
-							$gateways[$row['uuid']]['name']    = $row['gateway'];
+							$gateways[$row['uuid']]['name'] = $row['gateway'];
 							$gateways[$row['uuid']]['profile'] = $row['profile'];
 							$gateways[$row['uuid']]['enabled'] = $row['enabled'];
 						}
@@ -257,7 +257,7 @@ class gateways {
 						//stop gateways
 						foreach ($gateways as $gateway_uuid => $gateway) {
 							if ($gateway['enabled'] == 'true') {
-								$cmd                                 = 'sofia profile ' . $gateway['profile'] . ' killgw ' . $gateway_uuid;
+								$cmd = 'sofia profile ' . $gateway['profile'] . ' killgw ' . $gateway_uuid;
 								$responses[$gateway_uuid]['gateway'] = $gateway['name'];
 								$responses[$gateway_uuid]['message'] = trim(event_socket::api($cmd));
 							}
@@ -278,133 +278,6 @@ class gateways {
 	}
 
 	/**
-	 * Deletes one or more records.
-	 *
-	 * @param array $records An array of record IDs to delete, where each ID is an associative array
-	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
-	 *                       whether the corresponding checkbox was checked for deletion.
-	 *
-	 * @return void No return value; this method modifies the database state and sets a message.
-	 */
-	public function delete($records) {
-		if (permission_exists($this->permission_prefix . 'delete')) {
-
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get();
-
-			//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'], 'negative');
-				header('Location: ' . $this->list_page);
-				exit;
-			}
-
-			//delete multiple records
-			if (!empty($records) && is_array($records) && @sizeof($records) != 0) {
-
-				//filter out unchecked gateways, build where clause for below
-				foreach ($records as $record) {
-					if (!empty($record['checked']) == 'true' && is_uuid($record['uuid'])) {
-						$uuids[] = "'" . $record['uuid'] . "'";
-					}
-				}
-
-				//get necessary gateway details
-				if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql = "select " . $this->uuid_prefix . "uuid as uuid, gateway, profile from v_" . $this->table . " ";
-					if (permission_exists('gateway_all')) {
-						$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
-					} else {
-						$sql                       .= "where (domain_uuid = :domain_uuid) ";
-						$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
-						$parameters['domain_uuid'] = $this->domain_uuid;
-					}
-					$rows = $this->database->select($sql, $parameters ?? null, 'all');
-					if (!empty($rows) && is_array($rows) && @sizeof($rows) != 0) {
-						foreach ($rows as $row) {
-							$gateways[$row['uuid']]['name']    = $row['gateway'];
-							$gateways[$row['uuid']]['profile'] = $row['profile'];
-						}
-					}
-					unset($sql, $parameters, $rows, $row);
-				}
-
-				//create the event socket connection
-				$esl = event_socket::create();
-
-				//loop through gateways
-				$x = 0;
-				foreach ($gateways as $gateway_uuid => $gateway) {
-
-					//remove gateway from session variable
-					unset($_SESSION['gateways'][$gateway_uuid]);
-
-					//remove the xml file (if any)
-					if (!empty($this->settings->get('switch', 'sip_profiles'))) {
-						$gateway_xml_file = $this->settings->get('switch', 'sip_profiles') . "/" . $gateway['profile'] . "/v_" . $gateway_uuid . ".xml";
-						if (file_exists($gateway_xml_file)) {
-							unlink($gateway_xml_file);
-						}
-					}
-
-					//send the api command to stop the gateway
-					if ($esl->is_connected()) {
-						$cmd      = 'sofia profile ' . $gateway['profile'] . ' killgw ' . $gateway_uuid;
-						$response = event_socket::api($cmd);
-						unset($cmd);
-					}
-
-					//build delete array
-					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $gateway_uuid;
-					$x++;
-
-				}
-
-				//delete the checked rows
-				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-
-					//execute delete
-					$this->database->delete($array);
-					unset($array);
-
-					//synchronize the xml config
-					save_gateway_xml();
-
-					//clear the cache
-
-					$cache = new cache;
-					$cache->delete(gethostname() . ":configuration:sofia.conf");
-
-					//rescan the sip profile to look for new or stopped gateways
-					$esl = event_socket::create();
-					if ($esl->is_connected()) {
-						//get distinct profiles from gateways
-						foreach ($gateways as $gateway) {
-							$array[] = $gateway['profile'];
-						}
-						$profiles = array_unique($array);
-
-						//send the api command to rescan each profile
-						foreach ($profiles as $profile) {
-							$response = event_socket::api("sofia profile $profile rescan");
-						}
-					}
-					usleep(1000);
-
-					//clear the apply settings reminder
-					$_SESSION["reload_xml"] = false;
-
-					//set message
-					message::add($text['message-delete']);
-				}
-				unset($records);
-			}
-		}
-	}
-
-	/**
 	 * Toggles the state of one or more records.
 	 *
 	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
@@ -418,7 +291,7 @@ class gateways {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -442,15 +315,15 @@ class gateways {
 					if (permission_exists('gateway_all')) {
 						$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					} else {
-						$sql                       .= "where (domain_uuid = :domain_uuid) ";
-						$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+						$sql .= "where (domain_uuid = :domain_uuid) ";
+						$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 						$parameters['domain_uuid'] = $this->domain_uuid;
 					}
 					$rows = $this->database->select($sql, $parameters ?? null, 'all');
 					if (!empty($rows) && is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
-							$gateways[$row['uuid']]['state']   = $row['state'];
-							$gateways[$row['uuid']]['name']    = $row['gateway'];
+							$gateways[$row['uuid']]['state'] = $row['state'];
+							$gateways[$row['uuid']]['name'] = $row['gateway'];
 							$gateways[$row['uuid']]['profile'] = $row['profile'];
 						}
 					}
@@ -461,7 +334,7 @@ class gateways {
 				$x = 0;
 				foreach ($gateways as $uuid => $gateway) {
 					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]         = $gateway['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $gateway['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 					$x++;
 				}
 
@@ -528,6 +401,133 @@ class gateways {
 	}
 
 	/**
+	 * Deletes one or more records.
+	 *
+	 * @param array $records An array of record IDs to delete, where each ID is an associative array
+	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                       whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function delete($records) {
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (!empty($records) && is_array($records) && @sizeof($records) != 0) {
+
+				//filter out unchecked gateways, build where clause for below
+				foreach ($records as $record) {
+					if (!empty($record['checked']) == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
+					}
+				}
+
+				//get necessary gateway details
+				if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, gateway, profile from v_" . $this->table . " ";
+					if (permission_exists('gateway_all')) {
+						$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					} else {
+						$sql .= "where (domain_uuid = :domain_uuid) ";
+						$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+						$parameters['domain_uuid'] = $this->domain_uuid;
+					}
+					$rows = $this->database->select($sql, $parameters ?? null, 'all');
+					if (!empty($rows) && is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							$gateways[$row['uuid']]['name'] = $row['gateway'];
+							$gateways[$row['uuid']]['profile'] = $row['profile'];
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
+				}
+
+				//create the event socket connection
+				$esl = event_socket::create();
+
+				//loop through gateways
+				$x = 0;
+				foreach ($gateways as $gateway_uuid => $gateway) {
+
+					//remove gateway from session variable
+					unset($_SESSION['gateways'][$gateway_uuid]);
+
+					//remove the xml file (if any)
+					if (!empty($this->settings->get('switch', 'sip_profiles'))) {
+						$gateway_xml_file = $this->settings->get('switch', 'sip_profiles') . "/" . $gateway['profile'] . "/v_" . $gateway_uuid . ".xml";
+						if (file_exists($gateway_xml_file)) {
+							unlink($gateway_xml_file);
+						}
+					}
+
+					//send the api command to stop the gateway
+					if ($esl->is_connected()) {
+						$cmd = 'sofia profile ' . $gateway['profile'] . ' killgw ' . $gateway_uuid;
+						$response = event_socket::api($cmd);
+						unset($cmd);
+					}
+
+					//build delete array
+					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $gateway_uuid;
+					$x++;
+
+				}
+
+				//delete the checked rows
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//synchronize the xml config
+					save_gateway_xml();
+
+					//clear the cache
+
+					$cache = new cache;
+					$cache->delete(gethostname() . ":configuration:sofia.conf");
+
+					//rescan the sip profile to look for new or stopped gateways
+					$esl = event_socket::create();
+					if ($esl->is_connected()) {
+						//get distinct profiles from gateways
+						foreach ($gateways as $gateway) {
+							$array[] = $gateway['profile'];
+						}
+						$profiles = array_unique($array);
+
+						//send the api command to rescan each profile
+						foreach ($profiles as $profile) {
+							$response = event_socket::api("sofia profile $profile rescan");
+						}
+					}
+					usleep(1000);
+
+					//clear the apply settings reminder
+					$_SESSION["reload_xml"] = false;
+
+					//set message
+					message::add($text['message-delete']);
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
 	 * Copies one or more records
 	 *
 	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
@@ -541,7 +541,7 @@ class gateways {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -567,8 +567,8 @@ class gateways {
 					if (permission_exists('gateway_all')) {
 						$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					} else {
-						$sql                       .= "where (domain_uuid = :domain_uuid) ";
-						$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+						$sql .= "where (domain_uuid = :domain_uuid) ";
+						$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 						$parameters['domain_uuid'] = $this->domain_uuid;
 					}
 					$rows = $this->database->select($sql, $parameters ?? null, 'all');
@@ -579,7 +579,7 @@ class gateways {
 							//convert boolean values to a string
 							foreach ($row as $key => $value) {
 								if (gettype($value) == 'boolean') {
-									$value     = $value ? 'true' : 'false';
+									$value = $value ? 'true' : 'false';
 									$row[$key] = $value;
 								}
 							}
@@ -589,7 +589,7 @@ class gateways {
 
 							//overwrite
 							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $primary_uuid;
-							$array[$this->table][$x]['description']               = trim($row['description'] . ' (' . $text['label-copy'] . ')');
+							$array[$this->table][$x]['description'] = trim($row['description'] . ' (' . $text['label-copy'] . ')');
 							unset($array[$this->table][$x]['channels']);
 
 							//defaults

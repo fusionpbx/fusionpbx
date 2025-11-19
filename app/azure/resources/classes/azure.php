@@ -136,73 +136,12 @@ class azure {
 	public function __construct(array $setting_array = []) {
 		//set domain and user UUIDs
 		$domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-		$user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
-		$config         = $setting_array['config'] ?? config::load();
+		$config = $setting_array['config'] ?? config::load();
 		$this->database = $setting_array['database'] ?? database::new(['config' => $config]);
 		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
-	}
-
-	/**
-	 * Returns the URL for obtaining a token from Microsoft Cognitive Services.
-	 *
-	 * @return string The URL for issuing a token
-	 */
-	private static function getTokenUrl() {
-		return "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
-	}
-
-	/**
-	 * Returns the URL for interacting with Microsoft Bing Speech API.
-	 *
-	 * @return string The URL for making requests to the Bing Speech API
-	 */
-	private static function getApiUrl() {
-		return "https://speech.platform.bing.com/synthesize";
-	}
-
-	/**
-	 * Returns the subscription key from Azure settings.
-	 *
-	 * @param settings $settings The settings object containing Azure configuration
-	 *
-	 * @return string The subscription key for Azure services
-	 */
-	private static function getSubscriptionKey(settings $settings) {
-		return $settings->get('azure', 'key');
-	}
-
-	/**
-	 * Obtains a token from Microsoft Cognitive Services.
-	 *
-	 * @param settings $settings Settings object containing subscription key and other parameters.
-	 *
-	 * @return string The response from the server, which is expected to be an XML token.
-	 */
-	private static function _getToken(settings $settings) {
-		$url             = self::getTokenUrl();
-		$subscriptionKey = self::getSubscriptionKey($settings);
-
-		$headers   = [];
-		$headers[] = 'Ocp-Apim-Subscription-Key: ' . $subscriptionKey;
-		$headers[] = 'Content-Length: 0';
-
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_URL, $url);
-		//curl_setopt($ch, CURLOPT_SSLVERSION, 1);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 300);
-		curl_setopt($ch, CURLOPT_VERBOSE, false);
-		curl_setopt($ch, CURLOPT_POST, true);
-		//curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_post_string);
-
-		$response = curl_exec($ch);
-
-		curl_close($ch);
-		return $response;
 	}
 
 	/**
@@ -216,14 +155,14 @@ class azure {
 	 */
 	public static function synthesize(settings $settings, $data, $format_key) {
 
-		$lang   = self::$formats[$format_key]['lang'];
+		$lang = self::$formats[$format_key]['lang'];
 		$gender = self::$formats[$format_key]['gender'];
-		$name   = self::$formats[$format_key]['name'];
-		$token  = self::_getToken($settings);
+		$name = self::$formats[$format_key]['name'];
+		$token = self::_getToken($settings);
 
 		$url = self::getApiUrl();
 
-		$headers   = [];
+		$headers = [];
 		$headers[] = 'Authorization: Bearer ' . $token;
 		$headers[] = 'Content-Type: application/ssml+xml';
 		$headers[] = 'X-Microsoft-OutputFormat: riff-16khz-16bit-mono-pcm';
@@ -252,5 +191,66 @@ class azure {
 
 		curl_close($ch);
 		return $filename;
+	}
+
+	/**
+	 * Obtains a token from Microsoft Cognitive Services.
+	 *
+	 * @param settings $settings Settings object containing subscription key and other parameters.
+	 *
+	 * @return string The response from the server, which is expected to be an XML token.
+	 */
+	private static function _getToken(settings $settings) {
+		$url = self::getTokenUrl();
+		$subscriptionKey = self::getSubscriptionKey($settings);
+
+		$headers = [];
+		$headers[] = 'Ocp-Apim-Subscription-Key: ' . $subscriptionKey;
+		$headers[] = 'Content-Length: 0';
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_URL, $url);
+		//curl_setopt($ch, CURLOPT_SSLVERSION, 1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+		curl_setopt($ch, CURLOPT_VERBOSE, false);
+		curl_setopt($ch, CURLOPT_POST, true);
+		//curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_post_string);
+
+		$response = curl_exec($ch);
+
+		curl_close($ch);
+		return $response;
+	}
+
+	/**
+	 * Returns the URL for obtaining a token from Microsoft Cognitive Services.
+	 *
+	 * @return string The URL for issuing a token
+	 */
+	private static function getTokenUrl() {
+		return "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
+	}
+
+	/**
+	 * Returns the subscription key from Azure settings.
+	 *
+	 * @param settings $settings The settings object containing Azure configuration
+	 *
+	 * @return string The subscription key for Azure services
+	 */
+	private static function getSubscriptionKey(settings $settings) {
+		return $settings->get('azure', 'key');
+	}
+
+	/**
+	 * Returns the URL for interacting with Microsoft Bing Speech API.
+	 *
+	 * @return string The URL for making requests to the Bing Speech API
+	 */
+	private static function getApiUrl() {
+		return "https://speech.platform.bing.com/synthesize";
 	}
 }

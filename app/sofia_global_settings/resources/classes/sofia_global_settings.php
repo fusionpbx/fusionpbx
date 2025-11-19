@@ -60,12 +60,12 @@ class sofia_global_settings {
 		$this->database = $setting_array['database'] ?? database::new();
 
 		//assign the variables
-		$this->name              = 'sofia_global_setting';
-		$this->table             = 'sofia_global_settings';
-		$this->toggle_field      = 'global_setting_enabled';
-		$this->toggle_values     = ['true', 'false'];
+		$this->name = 'sofia_global_setting';
+		$this->table = 'sofia_global_settings';
+		$this->toggle_field = 'global_setting_enabled';
+		$this->toggle_values = ['true', 'false'];
 		$this->description_field = 'global_setting_description';
-		$this->location          = 'sofia_global_settings.php';
+		$this->location = 'sofia_global_settings.php';
 	}
 
 	/**
@@ -82,7 +82,7 @@ class sofia_global_settings {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -134,7 +134,7 @@ class sofia_global_settings {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -153,8 +153,8 @@ class sofia_global_settings {
 					}
 				}
 				if (!empty($uuids) && @sizeof($uuids) != 0) {
-					$sql  = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql  .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
 					$rows = $this->database->select($sql, null, 'all');
 					if (!empty($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
@@ -169,7 +169,7 @@ class sofia_global_settings {
 				foreach ($states as $uuid => $state) {
 					//create the array
 					$array[$this->table][$x][$this->name . '_uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]   = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 
 					//increment the id
 					$x++;
@@ -204,7 +204,7 @@ class sofia_global_settings {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -226,8 +226,8 @@ class sofia_global_settings {
 
 				//create the array from existing data
 				if (!empty($uuids) && @sizeof($uuids) != 0) {
-					$sql  = "select * from v_" . $this->table . " ";
-					$sql  .= "where sofia_global_setting_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where sofia_global_setting_uuid in (" . implode(', ', $uuids) . ") ";
 					$rows = $this->database->select($sql, null, 'all');
 					if (!empty($rows) && @sizeof($rows) != 0) {
 						$x = 0;
@@ -236,7 +236,7 @@ class sofia_global_settings {
 							$array[$this->table][$x] = $row;
 
 							//add copy to the description
-							$array[$this->table][$x][$this->name . '_uuid']    = uuid();
+							$array[$this->table][$x][$this->name . '_uuid'] = uuid();
 							$array[$this->table][$x]['global_setting_enabled'] = $row['global_setting_enabled'] === true ? 'true' : 'false';
 							$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field] ?? '') . trim(' (' . $text['label-copy'] . ')');
 

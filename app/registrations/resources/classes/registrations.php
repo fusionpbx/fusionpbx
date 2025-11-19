@@ -31,21 +31,19 @@ class registrations {
 	 */
 	const app_name = 'registrations';
 	const app_uuid = '5d9e7cd7-629e-3553-4cf5-f26e39fefa39';
-
+	public $show;
 	/**
 	 * Set in the constructor. Must be a database object and cannot be null.
 	 *
 	 * @var database Database Object
 	 */
 	private $database;
-
 	/**
 	 * Settings object set in the constructor. Must be a settings object and cannot be null.
 	 *
 	 * @var settings Settings Object
 	 */
 	private $settings;
-
 	/**
 	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set
 	 * in the session global array
@@ -53,7 +51,6 @@ class registrations {
 	 * @var string
 	 */
 	private $domain_uuid;
-
 	/**
 	 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set
 	 * in the session global array
@@ -61,20 +58,17 @@ class registrations {
 	 * @var string
 	 */
 	private $domain_name;
-
 	/**
 	 * Set in the constructor. Must be an event_socket object and cannot be null.
 	 *
 	 * @var event_socket Event Socket Connection Object
 	 */
 	private $event_socket;
-
 	/**
 	 * declare private variables
 	 */
 	private $permission_prefix;
 	private $list_page;
-	public $show;
 
 	/**
 	 * Initializes the object with setting array.
@@ -90,19 +84,39 @@ class registrations {
 		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
 
 		//set objects
-		$this->database     = $setting_array['database'] ?? database::new();
+		$this->database = $setting_array['database'] ?? database::new();
 		$this->event_socket = $setting_array['event_socket'] ?? event_socket::create();
 
 		//trap passing an invalid connection object for communicating to the switch
 		if (!($this->event_socket instanceof event_socket)) {
 			//should never happen but will trap it here just in case
-			throw new \InvalidArgumentException('Event socket object passed in the constructor is not a valid event_socket object');
+			throw new InvalidArgumentException('Event socket object passed in the constructor is not a valid event_socket object');
 		}
 
 		//assign private variables
 		$this->permission_prefix = 'registration_';
-		$this->list_page         = 'registrations.php';
-		$this->show              = 'local';
+		$this->list_page = 'registrations.php';
+		$this->show = 'local';
+	}
+
+	/**
+	 * Retrieves the registration count for a given SIP profile.
+	 *
+	 * @param string|null $profile The name of the SIP profile to retrieve. Defaults to 'all'.
+	 *
+	 * @return int The registration count, or 0 if no profiles are found.
+	 */
+	public function count($profile = 'all') {
+
+		//use get the registrations to count
+		$registrations = $this->get($profile);
+
+		//set the count
+		$count = !empty($registrations) ? @sizeof($registrations) : 0;
+
+		//return the registrations count
+		return $count;
+
 	}
 
 	/**
@@ -116,7 +130,7 @@ class registrations {
 
 		//add multi-lingual support
 		$language = new text;
-		$text     = $language->get(null, '/app/registrations');
+		$text = $language->get(null, '/app/registrations');
 
 		//initialize the id used in the registrations array
 		$id = 0;
@@ -140,22 +154,22 @@ class registrations {
 		$sql = "select sip_profile_name from v_sip_profiles ";
 		$sql .= "where true ";
 		if (!empty($profile) && $profile != 'all') {
-			$sql                            .= "and sip_profile_name = :sip_profile_name ";
+			$sql .= "and sip_profile_name = :sip_profile_name ";
 			$parameters['sip_profile_name'] = $profile;
 		}
-		$sql          .= "and sip_profile_enabled = true ";
+		$sql .= "and sip_profile_enabled = true ";
 		$sip_profiles = $this->database->select($sql, $parameters ?? null, 'all');
 
 		if (!empty($sip_profiles)) {
 
 			//use a while loop to ensure the event socket stays connected while communicating
 			$count = count($sip_profiles);
-			$i     = 0;
+			$i = 0;
 			while ($event_socket->is_connected() && $i < $count) {
 				$field = $sip_profiles[$i++];
 
 				//get sofia status profile information including registrations
-				$cmd          = "api sofia xmlstatus profile '" . $field['sip_profile_name'] . "' reg";
+				$cmd = "api sofia xmlstatus profile '" . $field['sip_profile_name'] . "' reg";
 				$xml_response = trim($event_socket->request($cmd));
 
 				//show an error message
@@ -199,21 +213,21 @@ class registrations {
 
 						//build the registrations array
 						//$registrations[0] = $row;
-						$user_array                             = explode('@', $row['user'] ?? '');
-						$registrations[$id]['user']             = $row['user'] ?? '';
-						$registrations[$id]['call-id']          = $row['call-id'] ?? '';
-						$registrations[$id]['contact']          = $row['contact'] ?? '';
-						$registrations[$id]['sip-auth-user']    = $row['sip-auth-user'] ?? '';
-						$registrations[$id]['agent']            = $row['agent'] ?? '';
-						$registrations[$id]['host']             = $row['host'] ?? '';
-						$registrations[$id]['network-ip']       = $row['network-ip'] ?? '';
-						$registrations[$id]['network-port']     = $row['network-port'] ?? '';
-						$registrations[$id]['sip-auth-user']    = $row['sip-auth-user'] ?? '';
-						$registrations[$id]['sip-auth-realm']   = $row['sip-auth-realm'] ?? '';
-						$registrations[$id]['mwi-account']      = $row['mwi-account'] ?? '';
-						$registrations[$id]['status']           = $row['status'] ?? '';
-						$registrations[$id]['ping-time']        = $row['ping-time'] ?? '';
-						$registrations[$id]['ping-status']      = $row['ping-status'] ?? '';
+						$user_array = explode('@', $row['user'] ?? '');
+						$registrations[$id]['user'] = $row['user'] ?? '';
+						$registrations[$id]['call-id'] = $row['call-id'] ?? '';
+						$registrations[$id]['contact'] = $row['contact'] ?? '';
+						$registrations[$id]['sip-auth-user'] = $row['sip-auth-user'] ?? '';
+						$registrations[$id]['agent'] = $row['agent'] ?? '';
+						$registrations[$id]['host'] = $row['host'] ?? '';
+						$registrations[$id]['network-ip'] = $row['network-ip'] ?? '';
+						$registrations[$id]['network-port'] = $row['network-port'] ?? '';
+						$registrations[$id]['sip-auth-user'] = $row['sip-auth-user'] ?? '';
+						$registrations[$id]['sip-auth-realm'] = $row['sip-auth-realm'] ?? '';
+						$registrations[$id]['mwi-account'] = $row['mwi-account'] ?? '';
+						$registrations[$id]['status'] = $row['status'] ?? '';
+						$registrations[$id]['ping-time'] = $row['ping-time'] ?? '';
+						$registrations[$id]['ping-status'] = $row['ping-status'] ?? '';
 						$registrations[$id]['sip_profile_name'] = $field['sip_profile_name'];
 
 						//get network-ip to url or blank
@@ -226,7 +240,7 @@ class registrations {
 						//get the LAN IP address if it exists replace the external ip
 						$call_id_array = explode('@', $row['call-id'] ?? '');
 						if (isset($call_id_array[1])) {
-							$agent  = $row['agent'];
+							$agent = $row['agent'];
 							$lan_ip = $call_id_array[1];
 							if (!empty($agent) && (false !== stripos($agent, 'grandstream') || false !== stripos($agent, 'ooma'))) {
 								$lan_ip = str_ireplace(
@@ -240,10 +254,10 @@ class registrations {
 							$registrations[$id]['lan-ip'] = $lan_ip;
 						} elseif (preg_match('/real=\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $row['contact'] ?? '', $ip_match)) {
 							//get ip address for snom phones
-							$lan_ip                       = str_replace('real=', '', $ip_match[0]);
+							$lan_ip = str_replace('real=', '', $ip_match[0]);
 							$registrations[$id]['lan-ip'] = $lan_ip;
 						} elseif (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $row['contact'] ?? '', $ip_match)) {
-							$lan_ip                       = preg_replace('/_/', '.', $ip_match[0]);
+							$lan_ip = preg_replace('/_/', '.', $ip_match[0]);
 							$registrations[$id]['lan-ip'] = $lan_ip;
 						} else {
 							$registrations[$id]['lan-ip'] = '';
@@ -272,26 +286,6 @@ class registrations {
 	}
 
 	/**
-	 * Retrieves the registration count for a given SIP profile.
-	 *
-	 * @param string|null $profile The name of the SIP profile to retrieve. Defaults to 'all'.
-	 *
-	 * @return int The registration count, or 0 if no profiles are found.
-	 */
-	public function count($profile = 'all') {
-
-		//use get the registrations to count
-		$registrations = $this->get($profile);
-
-		//set the count
-		$count = !empty($registrations) ? @sizeof($registrations) : 0;
-
-		//return the registrations count
-		return $count;
-
-	}
-
-	/**
 	 * Unregisters a list of registrations from a given SIP profile or all profiles if no profile is specified.
 	 *
 	 * @param array $registrations The list of registrations to unregister, keyed by SIP URI.
@@ -302,29 +296,7 @@ class registrations {
 		$this->switch_api('unregister', $registrations);
 	}
 
-	/**
-	 * Provision a set of SIP registrations.
-	 *
-	 * @param array $registrations The list of registrations to provision.
-	 *
-	 * @returnvoid This method does not return any value.
-	 */
-	public function provision($registrations) {
-		$this->switch_api('provision', $registrations);
-	}
-
-	/**
-	 * Initiates a system reboot with the specified registrations.
-	 *
-	 * @param array $registrations The list of registrations to persist before rebooting.
-	 *
-	 * @return void This method does not return any value.
-	 */
-	public function reboot($registrations) {
-		$this->switch_api('reboot', $registrations);
-	}
-
-	/**
+/**
 	 * Processes API commands for a list of registered devices.
 	 *
 	 * This will cause execution to exit.
@@ -339,7 +311,7 @@ class registrations {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -362,7 +334,7 @@ class registrations {
 			if (is_array($registrations) && @sizeof($registrations) != 0) {
 
 				//retrieve sip profiles list
-				$sql          = "select sip_profile_name as name from v_sip_profiles ";
+				$sql = "select sip_profile_name as name from v_sip_profiles ";
 				$sip_profiles = $this->database->select($sql, null, 'all');
 				unset($sql);
 
@@ -407,18 +379,18 @@ class registrations {
 							if (!empty($profile) && $user) {
 								switch ($action) {
 									case 'unregister':
-										$command          = "sofia profile " . $profile . " flush_inbound_reg " . $user . " reboot";
+										$command = "sofia profile " . $profile . " flush_inbound_reg " . $user . " reboot";
 										$response_message = $text['message-registrations_unregistered'];
 										break;
 									case 'provision':
 										if ($vendor && $host) {
-											$command          = "lua app.lua event_notify " . $profile . " check_sync " . $user . " " . $vendor . " " . $host;
+											$command = "lua app.lua event_notify " . $profile . " check_sync " . $user . " " . $vendor . " " . $host;
 											$response_message = $text['message-registrations_provisioned'];
 										}
 										break;
 									case 'reboot':
 										if ($vendor && $host) {
-											$command          = "lua app.lua event_notify " . $profile . " reboot " . $user . " " . $vendor . " " . $host;
+											$command = "lua app.lua event_notify " . $profile . " reboot " . $user . " " . $vendor . " " . $host;
 											$response_message = $text['message-registrations_rebooted'];
 										}
 										break;
@@ -430,9 +402,9 @@ class registrations {
 
 							//send the api command
 							if (!empty($command) && $event_socket->is_connected()) {
-								$response                       = $event_socket->request('api ' . $command);
+								$response = $event_socket->request('api ' . $command);
 								$response_api[$user]['command'] = $command;
-								$response_api[$user]['log']     = $response;
+								$response_api[$user]['log'] = $response;
 							}
 						}
 					}
@@ -463,6 +435,28 @@ class registrations {
 			}
 
 		}
+	}
+
+	/**
+	 * Provision a set of SIP registrations.
+	 *
+	 * @param array $registrations The list of registrations to provision.
+	 *
+	 * @returnvoid This method does not return any value.
+	 */
+	public function provision($registrations) {
+		$this->switch_api('provision', $registrations);
+	}
+
+		/**
+	 * Initiates a system reboot with the specified registrations.
+	 *
+	 * @param array $registrations The list of registrations to persist before rebooting.
+	 *
+	 * @return void This method does not return any value.
+	 */
+	public function reboot($registrations) {
+		$this->switch_api('reboot', $registrations);
 	} //method
 
 } //class

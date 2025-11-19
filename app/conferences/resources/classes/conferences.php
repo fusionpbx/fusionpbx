@@ -86,18 +86,112 @@ class conferences {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
 		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
 
 		//assign private variables
 		$this->permission_prefix = 'conference_';
-		$this->list_page         = 'conferences.php';
-		$this->table             = 'conferences';
-		$this->uuid_prefix       = 'conference_';
-		$this->toggle_field      = 'conference_enabled';
-		$this->toggle_values     = ['true', 'false'];
+		$this->list_page = 'conferences.php';
+		$this->table = 'conferences';
+		$this->uuid_prefix = 'conference_';
+		$this->toggle_field = 'conference_enabled';
+		$this->toggle_values = ['true', 'false'];
+	}
+
+	/**
+	 * Toggles the state of one or more records.
+	 *
+	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
+	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                        whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function toggle($records) {
+		if (permission_exists($this->permission_prefix . 'edit')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//toggle the checked records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//get current toggle state
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
+					}
+				}
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, dialplan_uuid from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows = $this->database->select($sql, $parameters, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							$conferences[$row['uuid']]['state'] = $row['toggle'];
+							$conferences[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
+				}
+
+				//build update array
+				$x = 0;
+				foreach ($conferences as $uuid => $conference) {
+					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
+					$array[$this->table][$x][$this->toggle_field] = $conference['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array['dialplans'][$x]['dialplan_uuid'] = $conference['dialplan_uuid'];
+					$array['dialplans'][$x]['dialplan_enabled'] = $conference['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$x++;
+				}
+
+				//save the changes
+				if (is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('dialplan_edit', 'temp');
+
+					//save the array
+
+					$this->database->save($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('dialplan_edit', 'temp');
+
+					//apply settings reminder
+					$_SESSION["reload_xml"] = true;
+
+					//clear the cache
+					$cache = new cache;
+					$cache->delete("dialplan:" . $this->domain_name);
+
+					//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
+					}
+
+					//set message
+					message::add($text['message-toggle']);
+				}
+				unset($records, $states);
+			}
+
+		}
 	}
 
 	/**
@@ -114,7 +208,7 @@ class conferences {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -132,23 +226,23 @@ class conferences {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 						//get the dialplan uuid
-						$sql                           = "select dialplan_uuid from v_conferences ";
-						$sql                           .= "where domain_uuid = :domain_uuid ";
-						$sql                           .= "and conference_uuid = :conference_uuid ";
-						$parameters['domain_uuid']     = $this->domain_uuid;
+						$sql = "select dialplan_uuid from v_conferences ";
+						$sql .= "where domain_uuid = :domain_uuid ";
+						$sql .= "and conference_uuid = :conference_uuid ";
+						$parameters['domain_uuid'] = $this->domain_uuid;
 						$parameters['conference_uuid'] = $record['uuid'];
-						$dialplan_uuid                 = $this->database->select($sql, $parameters, 'column');
+						$dialplan_uuid = $this->database->select($sql, $parameters, 'column');
 						unset($sql, $parameters);
 
 						//build array
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
-						$array['conference_users'][$x]['conference_uuid']     = $record['uuid'];
-						$array['conference_users'][$x]['domain_uuid']         = $this->domain_uuid;
-						$array['dialplans'][$x]['dialplan_uuid']              = $dialplan_uuid;
-						$array['dialplans'][$x]['domain_uuid']                = $this->domain_uuid;
-						$array['dialplan_details'][$x]['dialplan_uuid']       = $dialplan_uuid;
-						$array['dialplan_details'][$x]['domain_uuid']         = $this->domain_uuid;
+						$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
+						$array['conference_users'][$x]['conference_uuid'] = $record['uuid'];
+						$array['conference_users'][$x]['domain_uuid'] = $this->domain_uuid;
+						$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
+						$array['dialplans'][$x]['domain_uuid'] = $this->domain_uuid;
+						$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+						$array['dialplan_details'][$x]['domain_uuid'] = $this->domain_uuid;
 
 					}
 				}
@@ -193,100 +287,6 @@ class conferences {
 	}
 
 	/**
-	 * Toggles the state of one or more records.
-	 *
-	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
-	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
-	 *                        whether the corresponding checkbox was checked for deletion.
-	 *
-	 * @return void No return value; this method modifies the database state and sets a message.
-	 */
-	public function toggle($records) {
-		if (permission_exists($this->permission_prefix . 'edit')) {
-
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get();
-
-			//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'], 'negative');
-				header('Location: ' . $this->list_page);
-				exit;
-			}
-
-			//toggle the checked records
-			if (is_array($records) && @sizeof($records) != 0) {
-
-				//get current toggle state
-				foreach ($records as $x => $record) {
-					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-						$uuids[] = "'" . $record['uuid'] . "'";
-					}
-				}
-				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, dialplan_uuid from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
-					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
-					if (is_array($rows) && @sizeof($rows) != 0) {
-						foreach ($rows as $row) {
-							$conferences[$row['uuid']]['state']         = $row['toggle'];
-							$conferences[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
-						}
-					}
-					unset($sql, $parameters, $rows, $row);
-				}
-
-				//build update array
-				$x = 0;
-				foreach ($conferences as $uuid => $conference) {
-					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]         = $conference['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-					$array['dialplans'][$x]['dialplan_uuid']              = $conference['dialplan_uuid'];
-					$array['dialplans'][$x]['dialplan_enabled']           = $conference['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-					$x++;
-				}
-
-				//save the changes
-				if (is_array($array) && @sizeof($array) != 0) {
-
-					//grant temporary permissions
-					$p = permissions::new();
-					$p->add('dialplan_edit', 'temp');
-
-					//save the array
-
-					$this->database->save($array);
-					unset($array);
-
-					//revoke temporary permissions
-					$p->delete('dialplan_edit', 'temp');
-
-					//apply settings reminder
-					$_SESSION["reload_xml"] = true;
-
-					//clear the cache
-					$cache = new cache;
-					$cache->delete("dialplan:" . $this->domain_name);
-
-					//clear the destinations session array
-					if (isset($_SESSION['destinations']['array'])) {
-						unset($_SESSION['destinations']['array']);
-					}
-
-					//set message
-					message::add($text['message-toggle']);
-				}
-				unset($records, $states);
-			}
-
-		}
-	}
-
-	/**
 	 * Copies one or more records
 	 *
 	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
@@ -300,7 +300,7 @@ class conferences {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -322,21 +322,21 @@ class conferences {
 
 				//create insert array from existing data
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select * from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$y = 0;
 						foreach ($rows as $x => $row) {
 							$new_conference_uuid = uuid();
-							$new_dialplan_uuid   = uuid();
+							$new_dialplan_uuid = uuid();
 
 							//convert boolean values to a string
 							foreach ($row as $key => $value) {
 								if (gettype($value) == 'boolean') {
-									$value     = $value ? 'true' : 'false';
+									$value = $value ? 'true' : 'false';
 									$row[$key] = $value;
 								}
 							}
@@ -346,23 +346,23 @@ class conferences {
 
 							//overwrite
 							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $new_conference_uuid;
-							$array[$this->table][$x]['dialplan_uuid']             = $new_dialplan_uuid;
-							$array[$this->table][$x]['conference_description']    = trim($row['conference_description'] . ' (' . $text['label-copy'] . ')');
+							$array[$this->table][$x]['dialplan_uuid'] = $new_dialplan_uuid;
+							$array[$this->table][$x]['conference_description'] = trim($row['conference_description'] . ' (' . $text['label-copy'] . ')');
 
 							//conference users sub table
-							$sql_2                           = "select * from v_conference_users ";
-							$sql_2                           .= "where conference_uuid = :conference_uuid ";
-							$sql_2                           .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+							$sql_2 = "select * from v_conference_users ";
+							$sql_2 .= "where conference_uuid = :conference_uuid ";
+							$sql_2 .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 							$parameters_2['conference_uuid'] = $row['conference_uuid'];
-							$parameters_2['domain_uuid']     = $this->domain_uuid;
-							$conference_users                = $this->database->select($sql_2, $parameters_2, 'all');
+							$parameters_2['domain_uuid'] = $this->domain_uuid;
+							$conference_users = $this->database->select($sql_2, $parameters_2, 'all');
 							if (is_array($conference_users) && @sizeof($conference_users) != 0) {
 								foreach ($conference_users as $conference_user) {
 
 									//convert boolean values to a string
 									foreach ($conference_user as $key => $value) {
 										if (gettype($value) == 'boolean') {
-											$value                 = $value ? 'true' : 'false';
+											$value = $value ? 'true' : 'false';
 											$conference_user[$key] = $value;
 										}
 									}
@@ -372,7 +372,7 @@ class conferences {
 
 									//overwrite
 									$array['conference_users'][$y]['conference_user_uuid'] = uuid();
-									$array['conference_users'][$y]['conference_uuid']      = $new_conference_uuid;
+									$array['conference_users'][$y]['conference_uuid'] = $new_conference_uuid;
 
 									//increment
 									$y++;
@@ -382,15 +382,15 @@ class conferences {
 							unset($sql_2, $parameters_2, $conference_users, $conference_user);
 
 							//conference dialplan record
-							$sql_3                         = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
+							$sql_3 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
 							$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
-							$dialplan                      = $this->database->select($sql_3, $parameters_3, 'row');
+							$dialplan = $this->database->select($sql_3, $parameters_3, 'row');
 							if (is_array($dialplan) && @sizeof($dialplan) != 0) {
 
 								//convert boolean values to a string
 								foreach ($dialplan as $key => $value) {
 									if (gettype($value) == 'boolean') {
-										$value          = $value ? 'true' : 'false';
+										$value = $value ? 'true' : 'false';
 										$dialplan[$key] = $value;
 									}
 								}
@@ -399,11 +399,11 @@ class conferences {
 								$array['dialplans'][$x] = $dialplan;
 
 								//overwrite
-								$array['dialplans'][$x]['dialplan_uuid']        = $new_dialplan_uuid;
-								$dialplan_xml                                   = $dialplan['dialplan_xml'];
-								$dialplan_xml                                   = str_replace($row['conference_uuid'], $new_conference_uuid, $dialplan_xml); //replace source conference_uuid with new
-								$dialplan_xml                                   = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
-								$array['dialplans'][$x]['dialplan_xml']         = $dialplan_xml;
+								$array['dialplans'][$x]['dialplan_uuid'] = $new_dialplan_uuid;
+								$dialplan_xml = $dialplan['dialplan_xml'];
+								$dialplan_xml = str_replace($row['conference_uuid'], $new_conference_uuid, $dialplan_xml); //replace source conference_uuid with new
+								$dialplan_xml = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
+								$array['dialplans'][$x]['dialplan_xml'] = $dialplan_xml;
 								$array['dialplans'][$x]['dialplan_description'] = trim($dialplan['dialplan_description'] . ' (' . $text['label-copy'] . ')');
 
 							}

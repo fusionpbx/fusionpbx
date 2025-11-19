@@ -66,25 +66,11 @@ class number_translations {
 
 		//assign private variables
 		$this->permission_prefix = 'number_translation_';
-		$this->list_page         = 'number_translations.php';
-		$this->table             = 'number_translations';
-		$this->uuid_prefix       = 'number_translation_';
-		$this->toggle_field      = 'number_translation_enabled';
-		$this->toggle_values     = ['true', 'false'];
-	}
-
-	/**
-	 * Checks if a given name exists as a number translation.
-	 *
-	 * @param string $name The name to check for existence.
-	 *
-	 * @return bool True if the number translation exists, false otherwise.
-	 */
-	public function number_translation_exists($name) {
-		$sql                                   = "select count(*) from v_number_translations ";
-		$sql                                   .= "where number_translation_name = :number_translation_name ";
-		$parameters['number_translation_name'] = $name;
-		return $this->database->select($sql, $parameters, 'column') != 0 ? true : false;
+		$this->list_page = 'number_translations.php';
+		$this->table = 'number_translations';
+		$this->uuid_prefix = 'number_translation_';
+		$this->toggle_field = 'number_translation_enabled';
+		$this->toggle_values = ['true', 'false'];
 	}
 
 	/**
@@ -110,8 +96,8 @@ class number_translations {
 		//check if the number_translation exists
 		if (!$this->number_translation_exists($number_translation['@attributes']['name'])) {
 			//begin insert array
-			$x                                                              = 0;
-			$array['number_translations'][$x]['number_translation_name']    = $number_translation['@attributes']['name'];
+			$x = 0;
+			$array['number_translations'][$x]['number_translation_name'] = $number_translation['@attributes']['name'];
 			$array['number_translations'][$x]['number_translation_enabled'] = "true";
 			if (!empty($number_translation['@attributes']['enabled'])) {
 				$array['number_translations'][$x]['number_translation_enabled'] = $number_translation['@attributes']['enabled'];
@@ -124,10 +110,10 @@ class number_translations {
 					if (array_key_exists('@attributes', $row)) {
 						$row = $row['@attributes'];
 					}
-					$array['number_translations'][$x]['number_translation_details'][$order]['number_translation_detail_regex']   = $row['regex'];
+					$array['number_translations'][$x]['number_translation_details'][$order]['number_translation_detail_regex'] = $row['regex'];
 					$array['number_translations'][$x]['number_translation_details'][$order]['number_translation_detail_replace'] = $row['replace'];
-					$array['number_translations'][$x]['number_translation_details'][$order]['number_translation_detail_order']   = $order;
-					$order                                                                                                       = $order + 5;
+					$array['number_translations'][$x]['number_translation_details'][$order]['number_translation_detail_order'] = $order;
+					$order = $order + 5;
 				}
 			}
 			//grant temporary permissions
@@ -154,6 +140,20 @@ class number_translations {
 	}
 
 	/**
+	 * Checks if a given name exists as a number translation.
+	 *
+	 * @param string $name The name to check for existence.
+	 *
+	 * @return bool True if the number translation exists, false otherwise.
+	 */
+	public function number_translation_exists($name) {
+		$sql = "select count(*) from v_number_translations ";
+		$sql .= "where number_translation_name = :number_translation_name ";
+		$parameters['number_translation_name'] = $name;
+		return $this->database->select($sql, $parameters, 'column') != 0 ? true : false;
+	}
+
+	/**
 	 * Deletes one or more records.
 	 *
 	 * @param array $records An array of record IDs to delete, where each ID is an associative array
@@ -167,7 +167,7 @@ class number_translations {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -183,7 +183,7 @@ class number_translations {
 				//build the delete array
 				foreach ($records as $x => $record) {
 					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-						$array[$this->table][$x][$this->uuid_prefix . 'uuid']                 = $record['uuid'];
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
 						$array['number_translation_details'][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
 					}
 				}
@@ -213,9 +213,10 @@ class number_translations {
 	/**
 	 * Deletes multiple records from the number_translation_details table.
 	 *
-	 * @param array $records  An array of records to be deleted, where each record is an associative array containing 'checked' and 'uuid' keys.
-	 *                        The 'checked' key should contain a boolean value indicating whether the record should be deleted,
-	 *                        while the 'uuid' key contains the unique identifier of the record.
+	 * @param array $records  An array of records to be deleted, where each record is an associative array containing
+	 *                        'checked' and 'uuid' keys. The 'checked' key should contain a boolean value indicating
+	 *                        whether the record should be deleted, while the 'uuid' key contains the unique identifier
+	 *                        of the record.
 	 *
 	 * @return void
 	 */
@@ -223,14 +224,14 @@ class number_translations {
 
 		//assign private variables
 		$this->permission_prefix = 'number_translation_detail_';
-		$this->table             = 'number_translation_details';
-		$this->uuid_prefix       = 'number_translation_detail_';
+		$this->table = 'number_translation_details';
+		$this->uuid_prefix = 'number_translation_detail_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -247,7 +248,7 @@ class number_translations {
 				foreach ($records as $x => $record) {
 					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array[$this->table][$x]['number_translation_uuid']   = $this->number_translation_uuid;
+						$array[$this->table][$x]['number_translation_uuid'] = $this->number_translation_uuid;
 					}
 				}
 
@@ -278,7 +279,7 @@ class number_translations {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -298,8 +299,8 @@ class number_translations {
 					}
 				}
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql  = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql  .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$rows = $this->database->select($sql, null, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
@@ -313,7 +314,7 @@ class number_translations {
 				$x = 0;
 				foreach ($states as $uuid => $state) {
 					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]         = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 					$x++;
 				}
 
@@ -348,7 +349,7 @@ class number_translations {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -372,8 +373,8 @@ class number_translations {
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
 
 					//primary table
-					$sql  = "select * from v_" . $this->table . " ";
-					$sql  .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$rows = $this->database->select($sql, null, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$y = 0;
@@ -383,7 +384,7 @@ class number_translations {
 							//convert boolean values to a string
 							foreach ($row as $key => $value) {
 								if (gettype($value) == 'boolean') {
-									$value     = $value ? 'true' : 'false';
+									$value = $value ? 'true' : 'false';
 									$row[$key] = $value;
 								}
 							}
@@ -392,19 +393,19 @@ class number_translations {
 							$array[$this->table][$x] = $row;
 
 							//overwrite
-							$array[$this->table][$x][$this->uuid_prefix . 'uuid']      = $primary_uuid;
+							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $primary_uuid;
 							$array[$this->table][$x]['number_translation_description'] = trim($row['number_translation_description'] . ' (' . $text['label-copy'] . ')');
 
 							//nodes sub table
-							$sql_2                                   = "select * from v_number_translation_details where number_translation_uuid = :number_translation_uuid";
+							$sql_2 = "select * from v_number_translation_details where number_translation_uuid = :number_translation_uuid";
 							$parameters_2['number_translation_uuid'] = $row['number_translation_uuid'];
-							$rows_2                                  = $this->database->select($sql_2, $parameters_2, 'all');
+							$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 							if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 								foreach ($rows_2 as $row_2) {
 									//convert boolean values to a string
 									foreach ($row_2 as $key => $value) {
 										if (gettype($value) == 'boolean') {
-											$value       = $value ? 'true' : 'false';
+											$value = $value ? 'true' : 'false';
 											$row_2[$key] = $value;
 										}
 									}
@@ -414,7 +415,7 @@ class number_translations {
 
 									//overwrite
 									$array['number_translation_details'][$y]['number_translation_detail_uuid'] = uuid();
-									$array['number_translation_details'][$y]['number_translation_uuid']        = $primary_uuid;
+									$array['number_translation_details'][$y]['number_translation_uuid'] = $primary_uuid;
 
 									//increment
 									$y++;

@@ -32,21 +32,22 @@ class sip_profiles {
 	 */
 	const app_name = 'sip_profiles';
 	const app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
-
+	/**
+	 * declare public variables
+	 */
+	public $sip_profile_uuid;
 	/**
 	 * Set in the constructor. Must be a database object and cannot be null.
 	 *
 	 * @var database Database Object
 	 */
 	private $database;
-
 	/**
 	 * Settings object set in the constructor. Must be a settings object and cannot be null.
 	 *
 	 * @var settings Settings Object
 	 */
 	private $settings;
-
 	/**
 	 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in
 	 * the session global array
@@ -54,7 +55,6 @@ class sip_profiles {
 	 * @var string
 	 */
 	private $user_uuid;
-
 	/**
 	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set
 	 * in the session global array
@@ -62,7 +62,6 @@ class sip_profiles {
 	 * @var string
 	 */
 	private $domain_uuid;
-
 	/**
 	 * declare private variables
 	 */
@@ -72,11 +71,6 @@ class sip_profiles {
 	private $uuid_prefix;
 	private $toggle_field;
 	private $toggle_values;
-
-	/**
-	 * declare public variables
-	 */
-	public $sip_profile_uuid;
 
 	/**
 	 * Initializes the object with setting array.
@@ -89,7 +83,7 @@ class sip_profiles {
 	public function __construct(array $setting_array = []) {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
@@ -97,11 +91,89 @@ class sip_profiles {
 
 		//assign private variables
 		$this->permission_prefix = 'sip_profile_';
-		$this->list_page         = 'sip_profiles.php';
-		$this->table             = 'sip_profiles';
-		$this->uuid_prefix       = 'sip_profile_';
-		$this->toggle_field      = 'sip_profile_enabled';
-		$this->toggle_values     = ['true', 'false'];
+		$this->list_page = 'sip_profiles.php';
+		$this->table = 'sip_profiles';
+		$this->uuid_prefix = 'sip_profile_';
+		$this->toggle_field = 'sip_profile_enabled';
+		$this->toggle_values = ['true', 'false'];
+	}
+
+	/**
+	 * Deletes specified domains from the system.
+	 *
+	 * @param array $records An array of records to be deleted, each containing 'checked' and 'uuid' keys.
+	 *
+	 * @return void
+	 */
+	public function delete_domains($records) {
+		//assign private variables
+		$this->permission_prefix = 'sip_profile_domain_';
+		$this->list_page = 'sip_profile_edit.php?id=' . $this->sip_profile_uuid;
+		$this->table = 'sip_profile_domains';
+		$this->uuid_prefix = 'sip_profile_domain_';
+
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//filter out unchecked sip profiles, build the delete array
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+						$array[$this->table][$x]['sip_profile_uuid'] = $this->sip_profile_uuid;
+					}
+				}
+
+				//get necessary sip profile details
+				if (!empty($this->sip_profile_uuid) && is_uuid($this->sip_profile_uuid)) {
+					$sql = "select sip_profile_hostname from v_sip_profiles ";
+					$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
+					$parameters['sip_profile_uuid'] = $this->sip_profile_uuid;
+					$sip_profile_hostname = $this->database->select($sql, $parameters, 'column');
+					unset($sql, $parameters);
+				}
+
+				//delete the checked rows
+				if (!empty($array) && @sizeof($array) != 0) {
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//save the sip profile xml
+					save_sip_profile_xml();
+
+					//apply settings reminder
+					$_SESSION["reload_xml"] = true;
+
+					//get system hostname if necessary
+					if (empty($sip_profile_hostname)) {
+						$sip_profile_hostname = gethostname();
+					}
+
+					//clear the cache
+					if (!empty($sip_profile_hostname)) {
+						$cache = new cache;
+						$cache->delete($sip_profile_hostname . ":configuration:sofia.conf");
+					}
+
+				}
+				unset($records);
+			}
+		}
 	}
 
 	/**
@@ -118,7 +190,7 @@ class sip_profiles {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -139,12 +211,12 @@ class sip_profiles {
 				}
 
 				//get necessary sip profile details
-				$sql  = "select " . $this->uuid_prefix . "uuid as uuid, sip_profile_name, sip_profile_hostname from v_" . $this->table . " ";
-				$sql  .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+				$sql = "select " . $this->uuid_prefix . "uuid as uuid, sip_profile_name, sip_profile_hostname from v_" . $this->table . " ";
+				$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 				$rows = $this->database->select($sql, $parameters ?? null, 'all');
 				if (is_array($rows) && @sizeof($rows) != 0) {
 					foreach ($rows as $row) {
-						$sip_profiles[$row['uuid']]['name']     = $row['sip_profile_name'];
+						$sip_profiles[$row['uuid']]['name'] = $row['sip_profile_name'];
 						$sip_profiles[$row['uuid']]['hostname'] = $row['sip_profile_hostname'];
 					}
 				}
@@ -153,8 +225,8 @@ class sip_profiles {
 				//build the delete array
 				$x = 0;
 				foreach ($sip_profiles as $sip_profile_uuid => $sip_profile) {
-					$array[$this->table][$x][$this->uuid_prefix . 'uuid']           = $sip_profile_uuid;
-					$array['sip_profile_domains'][$x][$this->uuid_prefix . 'uuid']  = $sip_profile_uuid;
+					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $sip_profile_uuid;
+					$array['sip_profile_domains'][$x][$this->uuid_prefix . 'uuid'] = $sip_profile_uuid;
 					$array['sip_profile_settings'][$x][$this->uuid_prefix . 'uuid'] = $sip_profile_uuid;
 					$x++;
 				}
@@ -204,7 +276,7 @@ class sip_profiles {
 					//clear the cache
 					if (is_array($hostnames) && @sizeof($hostnames) != 0) {
 						$hostnames = array_unique($hostnames);
-						$cache     = new cache;
+						$cache = new cache;
 						foreach ($hostnames as $hostname) {
 							$cache->delete($hostname . ":configuration:sofia.conf");
 						}
@@ -219,103 +291,25 @@ class sip_profiles {
 	}
 
 	/**
-	 * Deletes specified domains from the system.
-	 *
-	 * @param array $records An array of records to be deleted, each containing 'checked' and 'uuid' keys.
-	 *
-	 * @return void
-	 */
-	public function delete_domains($records) {
-		//assign private variables
-		$this->permission_prefix = 'sip_profile_domain_';
-		$this->list_page         = 'sip_profile_edit.php?id=' . $this->sip_profile_uuid;
-		$this->table             = 'sip_profile_domains';
-		$this->uuid_prefix       = 'sip_profile_domain_';
-
-		if (permission_exists($this->permission_prefix . 'delete')) {
-
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get();
-
-			//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'], 'negative');
-				header('Location: ' . $this->list_page);
-				exit;
-			}
-
-			//delete multiple records
-			if (is_array($records) && @sizeof($records) != 0) {
-
-				//filter out unchecked sip profiles, build the delete array
-				foreach ($records as $x => $record) {
-					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array[$this->table][$x]['sip_profile_uuid']          = $this->sip_profile_uuid;
-					}
-				}
-
-				//get necessary sip profile details
-				if (!empty($this->sip_profile_uuid) && is_uuid($this->sip_profile_uuid)) {
-					$sql                            = "select sip_profile_hostname from v_sip_profiles ";
-					$sql                            .= "where sip_profile_uuid = :sip_profile_uuid ";
-					$parameters['sip_profile_uuid'] = $this->sip_profile_uuid;
-					$sip_profile_hostname           = $this->database->select($sql, $parameters, 'column');
-					unset($sql, $parameters);
-				}
-
-				//delete the checked rows
-				if (!empty($array) && @sizeof($array) != 0) {
-
-					//execute delete
-					$this->database->delete($array);
-					unset($array);
-
-					//save the sip profile xml
-					save_sip_profile_xml();
-
-					//apply settings reminder
-					$_SESSION["reload_xml"] = true;
-
-					//get system hostname if necessary
-					if (empty($sip_profile_hostname)) {
-						$sip_profile_hostname = gethostname();
-					}
-
-					//clear the cache
-					if (!empty($sip_profile_hostname)) {
-						$cache = new cache;
-						$cache->delete($sip_profile_hostname . ":configuration:sofia.conf");
-					}
-
-				}
-				unset($records);
-			}
-		}
-	}
-
-	/**
 	 * Deletes settings for one or more sip profiles.
 	 *
-	 * @param array $records An associative array containing the records to delete, where each record is an associative array
-	 *                       with 'uuid' and optionally 'checked' keys. Defaults to an empty array.
+	 * @param array $records An associative array containing the records to delete, where each record is an associative
+	 *                       array with 'uuid' and optionally 'checked' keys. Defaults to an empty array.
 	 *
 	 * @return void
 	 */
 	public function delete_settings($records) {
 		//assign private variables
 		$this->permission_prefix = 'sip_profile_setting_';
-		$this->list_page         = 'sip_profile_edit.php?id=' . $this->sip_profile_uuid;
-		$this->table             = 'sip_profile_settings';
-		$this->uuid_prefix       = 'sip_profile_setting_';
+		$this->list_page = 'sip_profile_edit.php?id=' . $this->sip_profile_uuid;
+		$this->table = 'sip_profile_settings';
+		$this->uuid_prefix = 'sip_profile_setting_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -332,16 +326,16 @@ class sip_profiles {
 				foreach ($records as $x => $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array[$this->table][$x]['sip_profile_uuid']          = $this->sip_profile_uuid;
+						$array[$this->table][$x]['sip_profile_uuid'] = $this->sip_profile_uuid;
 					}
 				}
 
 				//get necessary sip profile details
 				if (!empty($this->sip_profile_uuid) && is_uuid($this->sip_profile_uuid)) {
-					$sql                            = "select sip_profile_hostname from v_sip_profiles ";
-					$sql                            .= "where sip_profile_uuid = :sip_profile_uuid ";
+					$sql = "select sip_profile_hostname from v_sip_profiles ";
+					$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
 					$parameters['sip_profile_uuid'] = $this->sip_profile_uuid;
-					$sip_profile_hostname           = $this->database->select($sql, $parameters, 'column');
+					$sip_profile_hostname = $this->database->select($sql, $parameters, 'column');
 					unset($sql, $parameters);
 				}
 
@@ -389,7 +383,7 @@ class sip_profiles {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -409,12 +403,12 @@ class sip_profiles {
 					}
 				}
 				if (!empty($uuids) && @sizeof($uuids) != 0) {
-					$sql  = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, sip_profile_hostname from v_" . $this->table . " ";
-					$sql  .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, sip_profile_hostname from v_" . $this->table . " ";
+					$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$rows = $this->database->select($sql, $parameters ?? null, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
-							$sip_profiles[$row['uuid']]['state']    = $row['toggle'];
+							$sip_profiles[$row['uuid']]['state'] = $row['toggle'];
 							$sip_profiles[$row['uuid']]['hostname'] = $row['sip_profile_hostname'];
 						}
 					}
@@ -425,7 +419,7 @@ class sip_profiles {
 				$x = 0;
 				foreach ($sip_profiles as $uuid => $sip_profile) {
 					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]         = $sip_profile['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $sip_profile['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 					$x++;
 				}
 
@@ -456,7 +450,7 @@ class sip_profiles {
 					//clear the cache
 					if (!empty($hostnames) && @sizeof($hostnames) != 0) {
 						$hostnames = array_unique($hostnames);
-						$cache     = new cache;
+						$cache = new cache;
 						foreach ($hostnames as $hostname) {
 							$cache->delete($hostname . ":configuration:sofia.conf");
 						}

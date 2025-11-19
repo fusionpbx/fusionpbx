@@ -82,11 +82,11 @@ class pin_numbers {
 
 		//assign private variables
 		$this->permission_prefix = 'pin_number_';
-		$this->list_page         = 'pin_numbers.php';
-		$this->table             = 'pin_numbers';
-		$this->uuid_prefix       = 'pin_number_';
-		$this->toggle_field      = 'enabled';
-		$this->toggle_values     = ['true', 'false'];
+		$this->list_page = 'pin_numbers.php';
+		$this->table = 'pin_numbers';
+		$this->uuid_prefix = 'pin_number_';
+		$this->toggle_field = 'enabled';
+		$this->toggle_values = ['true', 'false'];
 	}
 
 	/**
@@ -103,7 +103,7 @@ class pin_numbers {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -120,7 +120,7 @@ class pin_numbers {
 				foreach ($records as $x => $record) {
 					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
+						$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 					}
 				}
 
@@ -153,7 +153,7 @@ class pin_numbers {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -173,11 +173,11 @@ class pin_numbers {
 					}
 				}
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$states[$row['uuid']] = $row['toggle'];
@@ -190,7 +190,7 @@ class pin_numbers {
 				$x = 0;
 				foreach ($states as $uuid => $state) {
 					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]         = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 					$x++;
 				}
 
@@ -225,7 +225,7 @@ class pin_numbers {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -247,18 +247,18 @@ class pin_numbers {
 
 				//create insert array from existing data
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select * from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $x => $row) {
 
 							//convert boolean values to a string
 							foreach ($row as $key => $value) {
 								if (gettype($value) == 'boolean') {
-									$value     = $value ? 'true' : 'false';
+									$value = $value ? 'true' : 'false';
 									$row[$key] = $value;
 								}
 							}
@@ -268,7 +268,7 @@ class pin_numbers {
 
 							//overwrite
 							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = uuid();
-							$array[$this->table][$x]['description']               = trim($row['description'] . ' (' . $text['label-copy'] . ')');
+							$array[$this->table][$x]['description'] = trim($row['description'] . ' (' . $text['label-copy'] . ')');
 
 						}
 					}

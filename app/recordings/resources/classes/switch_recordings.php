@@ -94,7 +94,7 @@ class switch_recordings {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
 		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
@@ -102,9 +102,9 @@ class switch_recordings {
 
 		//assign private variables
 		$this->permission_prefix = 'recording_';
-		$this->list_page         = 'recordings.php';
-		$this->table             = 'recordings';
-		$this->uuid_prefix       = 'recording_';
+		$this->list_page = 'recordings.php';
+		$this->table = 'recordings';
+		$this->uuid_prefix = 'recording_';
 	}
 
 	/**
@@ -118,11 +118,11 @@ class switch_recordings {
 	 *               or false if no recordings were found.
 	 */
 	public function list_recordings() {
-		$sql                       = "select recording_uuid, recording_filename ";
-		$sql                       .= "from v_recordings ";
-		$sql                       .= "where domain_uuid = :domain_uuid ";
+		$sql = "select recording_uuid, recording_filename ";
+		$sql .= "from v_recordings ";
+		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $this->domain_uuid;
-		$result                    = $this->database->select($sql, $parameters, 'all');
+		$result = $this->database->select($sql, $parameters, 'all');
 		if (!empty($result)) {
 			$switch_recordings_domain_dir = $this->settings->get('switch', 'recordings') . '/' . $this->domain_name;
 			foreach ($result as $row) {
@@ -149,7 +149,7 @@ class switch_recordings {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -167,17 +167,17 @@ class switch_recordings {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && !empty($record['uuid'])) {
 
 						//get filename
-						$sql                          = "select recording_filename from v_recordings ";
-						$sql                          .= "where domain_uuid = :domain_uuid ";
-						$sql                          .= "and recording_uuid = :recording_uuid ";
-						$parameters['domain_uuid']    = $this->domain_uuid;
+						$sql = "select recording_filename from v_recordings ";
+						$sql .= "where domain_uuid = :domain_uuid ";
+						$sql .= "and recording_uuid = :recording_uuid ";
+						$parameters['domain_uuid'] = $this->domain_uuid;
 						$parameters['recording_uuid'] = $record['uuid'];
-						$filenames[]                  = $this->database->select($sql, $parameters, 'column');
+						$filenames[] = $this->database->select($sql, $parameters, 'column');
 						unset($sql, $parameters);
 
 						//build delete array
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
+						$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 					}
 				}
 

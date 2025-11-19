@@ -34,7 +34,8 @@ class linux_system_information extends system_information {
 	/**
 	 * Returns the number of CPU cores available on the system.
 	 *
-	 * This method executes a shell command to parse the /proc/cpuinfo file and counts the number of processor entries found.
+	 * This method executes a shell command to parse the /proc/cpuinfo file and counts the number of processor entries
+	 * found.
 	 *
 	 * @return int The total number of CPU cores
 	 */
@@ -119,7 +120,7 @@ class linux_system_information extends system_information {
 
 		foreach ($lines as $line) {
 			if (preg_match('/^cpu(\d+)\s+(.+)$/', $line, $matches)) {
-				$core = (int) $matches[1];
+				$core = (int)$matches[1];
 				$parts = preg_split('/\s+/', trim($matches[2]));
 				$total = array_sum($parts);
 				$idle = $parts[3] ?? 0;
@@ -159,8 +160,8 @@ class linux_system_information extends system_information {
 		foreach ($data as $line) {
 			if (strpos($line, $interface . ':') !== false) {
 				$parts = preg_split('/\s+/', trim(str_replace(':', ' ', $line)));
-				$rx_bytes = (int) $parts[1];
-				$tx_bytes = (int) $parts[9];
+				$rx_bytes = (int)$parts[1];
+				$tx_bytes = (int)$parts[9];
 
 				$now = microtime(true);
 
@@ -177,7 +178,7 @@ class linux_system_information extends system_information {
 
 				return [
 					'rx_bps' => $delta_rx / $delta_time,
-					'tx_bps' => $delta_tx / $delta_time
+					'tx_bps' => $delta_tx / $delta_time,
 				];
 			}
 		}

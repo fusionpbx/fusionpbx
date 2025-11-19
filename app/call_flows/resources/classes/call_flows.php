@@ -28,16 +28,14 @@
 class call_flows {
 
 	/**
-	 * declare public variables
-	 */
-	public $toggle_field;
-
-	/**
 	 * declare constant variables
 	 */
 	const app_name = 'call_flows';
 	const app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
-
+	/**
+	 * declare public variables
+	 */
+	public $toggle_field;
 	/**
 	 * Set in the constructor. Must be a database object and cannot be null.
 	 *
@@ -96,120 +94,17 @@ class call_flows {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
 		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
 
 		//assign private variables
 		$this->permission_prefix = 'call_flow_';
-		$this->list_page         = 'call_flows.php';
-		$this->table             = 'call_flows';
-		$this->uuid_prefix       = 'call_flow_';
-		$this->toggle_values     = ['true', 'false'];
-	}
-
-	/**
-	 * Deletes one or multiple records from the access controls table.
-	 *
-	 * @param array $records An array of record IDs to delete, where each ID is an associative array
-	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
-	 *                       whether the corresponding checkbox was checked for deletion.
-	 *
-	 * @return void No return value; this method modifies the database state and sets a message.
-	 */
-	public function delete($records) {
-		if (permission_exists($this->permission_prefix . 'delete')) {
-
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get();
-
-			//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'], 'negative');
-				header('Location: ' . $this->list_page);
-				exit;
-			}
-
-			//delete multiple records
-			if (is_array($records) && @sizeof($records) != 0) {
-
-				//filter out unchecked call flows, build where clause for below
-				foreach ($records as $x => $record) {
-					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-						$uuids[] = "'" . $record['uuid'] . "'";
-					}
-				}
-
-				//get necessary call flow details
-				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, dialplan_uuid, call_flow_context from v_" . $this->table . " ";
-					$sql                       .= "where domain_uuid = :domain_uuid ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
-					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
-					if (is_array($rows) && @sizeof($rows) != 0) {
-						foreach ($rows as $row) {
-							$call_flows[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
-							$call_flow_contexts[]                      = $row['call_flow_context'];
-						}
-					}
-					unset($sql, $parameters, $rows, $row);
-				}
-
-				//build the delete array
-				$x = 0;
-				foreach ($call_flows as $call_flow_uuid => $call_flow) {
-					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $call_flow_uuid;
-					$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
-					$array['dialplans'][$x]['dialplan_uuid']              = $call_flow['dialplan_uuid'];
-					$array['dialplans'][$x]['domain_uuid']                = $this->domain_uuid;
-					$array['dialplan_details'][$x]['dialplan_uuid']       = $call_flow['dialplan_uuid'];
-					$array['dialplan_details'][$x]['domain_uuid']         = $this->domain_uuid;
-					$x++;
-				}
-
-				//delete the checked rows
-				if (is_array($array) && @sizeof($array) != 0) {
-
-					//grant temporary permissions
-					$p = permissions::new();
-					$p->add('dialplan_delete', 'temp');
-					$p->add('dialplan_detail_delete', 'temp');
-
-					//execute delete
-					$this->database->delete($array);
-					unset($array);
-
-					//revoke temporary permissions
-					$p->delete('dialplan_delete', 'temp');
-					$p->delete('dialplan_detail_delete', 'temp');
-
-					//apply settings reminder
-					$_SESSION["reload_xml"] = true;
-
-					//clear the cache
-					if (is_array($call_flow_contexts) && @sizeof($call_flow_contexts) != 0) {
-						$call_flow_contexts = array_unique($call_flow_contexts);
-						$cache              = new cache;
-						foreach ($call_flow_contexts as $call_flow_context) {
-							$cache->delete("dialplan:" . $call_flow_context);
-						}
-					}
-
-					//clear the destinations session array
-					if (isset($_SESSION['destinations']['array'])) {
-						unset($_SESSION['destinations']['array']);
-					}
-
-					//set message
-					message::add($text['message-delete']);
-				}
-				unset($records);
-			}
-		}
+		$this->list_page = 'call_flows.php';
+		$this->table = 'call_flows';
+		$this->uuid_prefix = 'call_flow_';
+		$this->toggle_values = ['true', 'false'];
 	}
 
 	/**
@@ -225,7 +120,7 @@ class call_flows {
 		if (permission_exists($this->permission_prefix . 'edit')) {
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -246,18 +141,18 @@ class call_flows {
 				}
 
 				if (!empty($uuids)) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, ";
-					$sql                       .= "dialplan_uuid, call_flow_feature_code, call_flow_context from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, ";
+					$sql .= "dialplan_uuid, call_flow_feature_code, call_flow_context from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (!empty($rows)) {
 						foreach ($rows as $row) {
-							$call_flows[$row['uuid']]['state']                  = $row['toggle'];
-							$call_flows[$row['uuid']]['dialplan_uuid']          = $row['dialplan_uuid'];
+							$call_flows[$row['uuid']]['state'] = $row['toggle'];
+							$call_flows[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
 							$call_flows[$row['uuid']]['call_flow_feature_code'] = $row['call_flow_feature_code'];
-							$call_flow_contexts[]                               = $row['call_flow_context'];
+							$call_flow_contexts[] = $row['call_flow_context'];
 						}
 					}
 					unset($sql, $parameters, $rows, $row);
@@ -267,9 +162,9 @@ class call_flows {
 				$x = 0;
 				foreach ($call_flows as $uuid => $call_flow) {
 					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]         = $call_flow['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $call_flow['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 					if ($this->toggle_field == 'call_flow_enabled') {
-						$array['dialplans'][$x]['dialplan_uuid']    = $call_flow['dialplan_uuid'];
+						$array['dialplans'][$x]['dialplan_uuid'] = $call_flow['dialplan_uuid'];
 						$array['dialplans'][$x]['dialplan_enabled'] = $call_flow['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 					}
 					$x++;
@@ -296,7 +191,7 @@ class call_flows {
 					//clear the cache
 					if (is_array($call_flow_contexts) && @sizeof($call_flow_contexts) != 0) {
 						$call_flow_contexts = array_unique($call_flow_contexts);
-						$cache              = new cache;
+						$cache = new cache;
 						foreach ($call_flow_contexts as $call_flow_context) {
 							$cache->delete("dialplan:" . $call_flow_context);
 						}
@@ -345,6 +240,109 @@ class call_flows {
 	}
 
 	/**
+	 * Deletes one or multiple records from the access controls table.
+	 *
+	 * @param array $records An array of record IDs to delete, where each ID is an associative array
+	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                       whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function delete($records) {
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//filter out unchecked call flows, build where clause for below
+				foreach ($records as $x => $record) {
+					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
+					}
+				}
+
+				//get necessary call flow details
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, dialplan_uuid, call_flow_context from v_" . $this->table . " ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows = $this->database->select($sql, $parameters, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							$call_flows[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
+							$call_flow_contexts[] = $row['call_flow_context'];
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
+				}
+
+				//build the delete array
+				$x = 0;
+				foreach ($call_flows as $call_flow_uuid => $call_flow) {
+					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $call_flow_uuid;
+					$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
+					$array['dialplans'][$x]['dialplan_uuid'] = $call_flow['dialplan_uuid'];
+					$array['dialplans'][$x]['domain_uuid'] = $this->domain_uuid;
+					$array['dialplan_details'][$x]['dialplan_uuid'] = $call_flow['dialplan_uuid'];
+					$array['dialplan_details'][$x]['domain_uuid'] = $this->domain_uuid;
+					$x++;
+				}
+
+				//delete the checked rows
+				if (is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('dialplan_delete', 'temp');
+					$p->add('dialplan_detail_delete', 'temp');
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('dialplan_delete', 'temp');
+					$p->delete('dialplan_detail_delete', 'temp');
+
+					//apply settings reminder
+					$_SESSION["reload_xml"] = true;
+
+					//clear the cache
+					if (is_array($call_flow_contexts) && @sizeof($call_flow_contexts) != 0) {
+						$call_flow_contexts = array_unique($call_flow_contexts);
+						$cache = new cache;
+						foreach ($call_flow_contexts as $call_flow_context) {
+							$cache->delete("dialplan:" . $call_flow_context);
+						}
+					}
+
+					//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
+					}
+
+					//set message
+					message::add($text['message-delete']);
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
 	 * Copies one or more records
 	 *
 	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
@@ -358,7 +356,7 @@ class call_flows {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -382,20 +380,20 @@ class call_flows {
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
 
 					//primary table
-					$sql                       = "select * from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $x => $row) {
 							$new_call_flow_uuid = uuid();
-							$new_dialplan_uuid  = uuid();
+							$new_dialplan_uuid = uuid();
 
 							//convert boolean values to a string
 							foreach ($row as $key => $value) {
 								if (gettype($value) == 'boolean') {
-									$value     = $value ? 'true' : 'false';
+									$value = $value ? 'true' : 'false';
 									$row[$key] = $value;
 								}
 							}
@@ -405,19 +403,19 @@ class call_flows {
 
 							//overwrite
 							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $new_call_flow_uuid;
-							$array[$this->table][$x]['dialplan_uuid']             = $new_dialplan_uuid;
-							$array[$this->table][$x]['call_flow_description']     = trim($row['call_flow_description'] . ' (' . $text['label-copy'] . ')');
+							$array[$this->table][$x]['dialplan_uuid'] = $new_dialplan_uuid;
+							$array[$this->table][$x]['call_flow_description'] = trim($row['call_flow_description'] . ' (' . $text['label-copy'] . ')');
 
 							//call flow dialplan record
-							$sql_2                         = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
+							$sql_2 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
 							$parameters_2['dialplan_uuid'] = $row['dialplan_uuid'];
-							$dialplan                      = $this->database->select($sql_2, $parameters_2, 'row');
+							$dialplan = $this->database->select($sql_2, $parameters_2, 'row');
 							if (is_array($dialplan) && @sizeof($dialplan) != 0) {
 
 								//convert boolean values to a string
 								foreach ($dialplan as $key => $value) {
 									if (gettype($value) == 'boolean') {
-										$value          = $value ? 'true' : 'false';
+										$value = $value ? 'true' : 'false';
 										$dialplan[$key] = $value;
 									}
 								}
@@ -426,11 +424,11 @@ class call_flows {
 								$array['dialplans'][$x] = $dialplan;
 
 								//overwrite
-								$array['dialplans'][$x]['dialplan_uuid']        = $new_dialplan_uuid;
-								$dialplan_xml                                   = $dialplan['dialplan_xml'];
-								$dialplan_xml                                   = str_replace($row['call_flow_uuid'], $new_call_flow_uuid, $dialplan_xml); //replace source call_flow_uuid with new
-								$dialplan_xml                                   = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
-								$array['dialplans'][$x]['dialplan_xml']         = $dialplan_xml;
+								$array['dialplans'][$x]['dialplan_uuid'] = $new_dialplan_uuid;
+								$dialplan_xml = $dialplan['dialplan_xml'];
+								$dialplan_xml = str_replace($row['call_flow_uuid'], $new_call_flow_uuid, $dialplan_xml); //replace source call_flow_uuid with new
+								$dialplan_xml = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
+								$array['dialplans'][$x]['dialplan_xml'] = $dialplan_xml;
 								$array['dialplans'][$x]['dialplan_description'] = trim($dialplan['dialplan_description'] . ' (' . $text['label-copy'] . ')');
 
 							}
@@ -464,7 +462,7 @@ class call_flows {
 					//clear the cache
 					if (is_array($call_flow_contexts) && @sizeof($call_flow_contexts) != 0) {
 						$call_flow_contexts = array_unique($call_flow_contexts);
-						$cache              = new cache;
+						$cache = new cache;
 						foreach ($call_flow_contexts as $call_flow_context) {
 							$cache->delete("dialplan:" . $call_flow_context);
 						}

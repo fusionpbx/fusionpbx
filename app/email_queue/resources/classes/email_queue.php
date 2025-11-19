@@ -61,18 +61,18 @@ class email_queue {
 	public function __construct(array $setting_array = []) {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
 		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 		//assign the variables
-		$this->name          = 'email_queue';
-		$this->table         = 'email_queue';
-		$this->toggle_field  = '';
+		$this->name = 'email_queue';
+		$this->table = 'email_queue';
+		$this->toggle_field = '';
 		$this->toggle_values = ['true', 'false'];
-		$this->location      = 'email_queue.php';
+		$this->location = 'email_queue.php';
 	}
 
 	/**
@@ -89,7 +89,7 @@ class email_queue {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -106,7 +106,7 @@ class email_queue {
 				foreach ($records as $record) {
 					//add to the array
 					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-						$array[$this->table][$x][$this->name . '_uuid']              = $record['uuid'];
+						$array[$this->table][$x][$this->name . '_uuid'] = $record['uuid'];
 						$array['email_queue_attachments'][$x][$this->name . '_uuid'] = $record['uuid'];
 						//$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 					}
@@ -146,7 +146,7 @@ class email_queue {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -164,8 +164,8 @@ class email_queue {
 					//add to the array
 					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 						$array[$this->table][$x][$this->name . '_uuid'] = $record['uuid'];
-						$array[$this->table][$x]['email_status']        = 'waiting';
-						$array[$this->table][$x]['email_retry_count']   = null;
+						$array[$this->table][$x]['email_status'] = 'waiting';
+						$array[$this->table][$x]['email_retry_count'] = null;
 					}
 
 					//increment the id
@@ -201,7 +201,7 @@ class email_queue {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -220,11 +220,11 @@ class email_queue {
 					}
 				}
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql                       .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
-					$sql                       .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$states[$row['uuid']] = $row['toggle'];
@@ -238,7 +238,7 @@ class email_queue {
 				foreach ($states as $uuid => $state) {
 					//create the array
 					$array[$this->table][$x][$this->name . '_uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]   = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 
 					//increment the id
 					$x++;
@@ -273,7 +273,7 @@ class email_queue {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -295,11 +295,11 @@ class email_queue {
 
 				//create the array from existing data
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select * from v_" . $this->table . " ";
-					$sql                       .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
-					$sql                       .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$x = 0;
 						foreach ($rows as $row) {

@@ -28,6 +28,7 @@
 
 /**
  * Active call filter class definition
+ *
  * @author Tim Fry <tim@fusionpbx.com>
  */
 class event_key_filter implements filter {
@@ -44,6 +45,18 @@ class event_key_filter implements filter {
 	}
 
 	/**
+	 * Adds the array list to the filters.
+	 *
+	 * @param array $list_of_keys
+	 */
+	public function add_filters(array $list_of_keys) {
+		// Add all event key filters passed
+		foreach ($list_of_keys as $key) {
+			$this->filters[$key] = $key;
+		}
+	}
+
+	/**
 	 * Invokes a filter check with the given key and value.
 	 *
 	 * @param string $key   The key of the filter to check
@@ -56,7 +69,19 @@ class event_key_filter implements filter {
 	}
 
 	/**
+	 * Checks if a filter key exists.
+	 *
+	 * @param string $key The filter key to check for existence.
+	 *
+	 * @return bool True if the filter key exists, false otherwise.
+	 */
+	public function has_filter_key(string $key): bool {
+		return isset($this->filters[$key]);
+	}
+
+	/**
 	 * Adds a single filter
+	 *
 	 * @param string $key
 	 */
 	public function add_filter(string $key) {
@@ -65,6 +90,7 @@ class event_key_filter implements filter {
 
 	/**
 	 * Returns the current list of filters
+	 *
 	 * @return array
 	 */
 	public function get_filters(): array {
@@ -73,6 +99,7 @@ class event_key_filter implements filter {
 
 	/**
 	 * Removes a single list of filters
+	 *
 	 * @param string $key
 	 */
 	public function remove_filter(string $key) {
@@ -84,27 +111,5 @@ class event_key_filter implements filter {
 	 */
 	public function clear_filters() {
 		$this->filters = [];
-	}
-
-	/**
-	 * Adds the array list to the filters.
-	 * @param array $list_of_keys
-	 */
-	public function add_filters(array $list_of_keys) {
-		// Add all event key filters passed
-		foreach ($list_of_keys as $key) {
-			$this->filters[$key] = $key;
-		}
-	}
-
-	/**
-	 * Checks if a filter key exists.
-	 *
-	 * @param string $key The filter key to check for existence.
-	 *
-	 * @return bool True if the filter key exists, false otherwise.
-	 */
-	public function has_filter_key(string $key): bool {
-		return isset($this->filters[$key]);
 	}
 }

@@ -99,7 +99,7 @@ class call_center {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
 		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
@@ -119,10 +119,10 @@ class call_center {
 		//delete previous dialplan
 		if (is_uuid($this->dialplan_uuid)) {
 			//build delete array
-			$array['dialplans'][0]['dialplan_uuid']        = $this->dialplan_uuid;
-			$array['dialplans'][0]['domain_uuid']          = $this->domain_uuid;
+			$array['dialplans'][0]['dialplan_uuid'] = $this->dialplan_uuid;
+			$array['dialplans'][0]['domain_uuid'] = $this->domain_uuid;
 			$array['dialplan_details'][0]['dialplan_uuid'] = $this->dialplan_uuid;
-			$array['dialplan_details'][0]['domain_uuid']   = $this->domain_uuid;
+			$array['dialplan_details'][0]['domain_uuid'] = $this->domain_uuid;
 
 			//grant temporary permissions
 			$p = permissions::new();
@@ -139,120 +139,120 @@ class call_center {
 		}
 
 		//build the dialplan array
-		$dialplan["app_uuid"]             = "95788e50-9500-079e-2807-fd530b0ea370";
-		$dialplan["domain_uuid"]          = $this->domain_uuid;
-		$dialplan["dialplan_name"]        = ($this->queue_name != '') ? $this->queue_name : format_phone($this->destination_number);
-		$dialplan["dialplan_number"]      = $this->destination_number;
-		$dialplan["dialplan_context"]     = $this->domain_name;
-		$dialplan["dialplan_continue"]    = false;
-		$dialplan["dialplan_order"]       = "210";
-		$dialplan["dialplan_enabled"]     = true;
+		$dialplan["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
+		$dialplan["domain_uuid"] = $this->domain_uuid;
+		$dialplan["dialplan_name"] = ($this->queue_name != '') ? $this->queue_name : format_phone($this->destination_number);
+		$dialplan["dialplan_number"] = $this->destination_number;
+		$dialplan["dialplan_context"] = $this->domain_name;
+		$dialplan["dialplan_continue"] = false;
+		$dialplan["dialplan_order"] = "210";
+		$dialplan["dialplan_enabled"] = true;
 		$dialplan["dialplan_description"] = $this->queue_description;
-		$dialplan_detail_order            = 10;
+		$dialplan_detail_order = 10;
 
 		//add the public condition
-		$y                                                         = 1;
-		$dialplan["dialplan_details"][$y]["domain_uuid"]           = $this->domain_uuid;
-		$dialplan["dialplan_details"][$y]["dialplan_detail_tag"]   = "condition";
-		$dialplan["dialplan_details"][$y]["dialplan_detail_type"]  = "\${caller_id_name}";
-		$dialplan["dialplan_details"][$y]["dialplan_detail_data"]  = "^([^#]+#)(.*)$";
+		$y = 1;
+		$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+		$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
+		$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "\${caller_id_name}";
+		$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "^([^#]+#)(.*)$";
 		$dialplan["dialplan_details"][$y]["dialplan_detail_break"] = "never";
 		$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
 		$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 		$y++;
-		$dialplan["dialplan_details"][$y]["domain_uuid"]           = $this->domain_uuid;
-		$dialplan["dialplan_details"][$y]["dialplan_detail_tag"]   = "action";
-		$dialplan["dialplan_details"][$y]["dialplan_detail_type"]  = "set";
-		$dialplan["dialplan_details"][$y]["dialplan_detail_data"]  = "caller_id_name=$2";
+		$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+		$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+		$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+		$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "caller_id_name=$2";
 		$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "1";
 		$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 		$y++;
-		$dialplan["dialplan_details"][$y]["domain_uuid"]           = $this->domain_uuid;
-		$dialplan["dialplan_details"][$y]["dialplan_detail_tag"]   = "condition";
-		$dialplan["dialplan_details"][$y]["dialplan_detail_type"]  = "destination_number";
-		$dialplan["dialplan_details"][$y]["dialplan_detail_data"]  = "^" . $this->destination_number . "\$";
+		$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+		$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
+		$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
+		$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "^" . $this->destination_number . "\$";
 		$dialplan["dialplan_details"][$y]["dialplan_detail_break"] = "";
 		$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 		$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 		$y++;
-		$dialplan["dialplan_details"][$y]["domain_uuid"]           = $this->domain_uuid;
-		$dialplan["dialplan_details"][$y]["dialplan_detail_tag"]   = "action";
-		$dialplan["dialplan_details"][$y]["dialplan_detail_type"]  = "answer";
-		$dialplan["dialplan_details"][$y]["dialplan_detail_data"]  = "";
+		$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+		$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+		$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "answer";
+		$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "";
 		$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 		$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 		$y++;
-		$dialplan["dialplan_details"][$y]["domain_uuid"]           = $this->domain_uuid;
-		$dialplan["dialplan_details"][$y]["dialplan_detail_tag"]   = "action";
-		$dialplan["dialplan_details"][$y]["dialplan_detail_type"]  = "set";
-		$dialplan["dialplan_details"][$y]["dialplan_detail_data"]  = "hangup_after_bridge=true";
+		$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+		$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+		$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+		$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "hangup_after_bridge=true";
 		$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 		$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 		$y++;
 
 		if (!empty($this->queue_cid_prefix)) {
-			$dialplan["dialplan_details"][$y]["domain_uuid"]           = $this->domain_uuid;
-			$dialplan["dialplan_details"][$y]["dialplan_detail_tag"]   = "action";
-			$dialplan["dialplan_details"][$y]["dialplan_detail_type"]  = "set";
-			$dialplan["dialplan_details"][$y]["dialplan_detail_data"]  = "effective_caller_id_name=" . $this->queue_cid_prefix . "#\${caller_id_name}";
+			$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+			$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+			$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+			$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "effective_caller_id_name=" . $this->queue_cid_prefix . "#\${caller_id_name}";
 			$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 			$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 			$y++;
 		}
 
 		if (!empty($this->queue_greeting)) {
-			$dialplan["dialplan_details"][$y]["domain_uuid"]           = $this->domain_uuid;
-			$dialplan["dialplan_details"][$y]["dialplan_detail_tag"]   = "action";
-			$dialplan["dialplan_details"][$y]["dialplan_detail_type"]  = "sleep";
-			$dialplan["dialplan_details"][$y]["dialplan_detail_data"]  = "1000";
+			$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+			$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+			$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "sleep";
+			$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "1000";
 			$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 			$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 			$y++;
 		}
 
 		if (!empty($this->queue_greeting)) {
-			$dialplan["dialplan_details"][$y]["domain_uuid"]           = $this->domain_uuid;
-			$dialplan["dialplan_details"][$y]["dialplan_detail_tag"]   = "action";
-			$dialplan["dialplan_details"][$y]["dialplan_detail_type"]  = "playback";
-			$dialplan["dialplan_details"][$y]["dialplan_detail_data"]  = "" . $this->queue_greeting;
+			$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+			$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+			$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "playback";
+			$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "" . $this->queue_greeting;
 			$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 			$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 			$y++;
 		}
 
 		if (!empty($this->queue_cc_exit_keys)) {
-			$dialplan["dialplan_details"][$y]["domain_uuid"]           = $this->domain_uuid;
-			$dialplan["dialplan_details"][$y]["dialplan_detail_tag"]   = "action";
-			$dialplan["dialplan_details"][$y]["dialplan_detail_type"]  = "set";
-			$dialplan["dialplan_details"][$y]["dialplan_detail_data"]  = "cc_exit_keys=" . $this->queue_cc_exit_keys;
+			$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+			$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+			$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+			$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "cc_exit_keys=" . $this->queue_cc_exit_keys;
 			$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 			$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 			$y++;
 		}
 
-		$dialplan["dialplan_details"][$y]["domain_uuid"]           = $this->domain_uuid;
-		$dialplan["dialplan_details"][$y]["dialplan_detail_tag"]   = "action";
-		$dialplan["dialplan_details"][$y]["dialplan_detail_type"]  = "callcenter";
-		$dialplan["dialplan_details"][$y]["dialplan_detail_data"]  = $this->queue_name . '@' . $this->domain_name;
+		$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+		$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+		$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "callcenter";
+		$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $this->queue_name . '@' . $this->domain_name;
 		$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 		$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 		$y++;
 
 		if (!empty($this->queue_timeout_action)) {
-			$action_array                                              = explode(":", $this->queue_timeout_action);
-			$dialplan["dialplan_details"][$y]["domain_uuid"]           = $this->domain_uuid;
-			$dialplan["dialplan_details"][$y]["dialplan_detail_tag"]   = "action";
-			$dialplan["dialplan_details"][$y]["dialplan_detail_type"]  = $action_array[0];
-			$dialplan["dialplan_details"][$y]["dialplan_detail_data"]  = substr($this->queue_timeout_action, strlen($action_array[0]) + 1, strlen($this->queue_timeout_action));
+			$action_array = explode(":", $this->queue_timeout_action);
+			$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+			$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+			$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $action_array[0];
+			$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = substr($this->queue_timeout_action, strlen($action_array[0]) + 1, strlen($this->queue_timeout_action));
 			$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 			$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 			$y++;
 		}
 
-		$dialplan["dialplan_details"][$y]["domain_uuid"]           = $this->domain_uuid;
-		$dialplan["dialplan_details"][$y]["dialplan_detail_tag"]   = "action";
-		$dialplan["dialplan_details"][$y]["dialplan_detail_type"]  = "hangup";
-		$dialplan["dialplan_details"][$y]["dialplan_detail_data"]  = "";
+		$dialplan["dialplan_details"][$y]["domain_uuid"] = $this->domain_uuid;
+		$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+		$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "hangup";
+		$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "";
 		$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = "2";
 		$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $y * 10;
 
@@ -268,7 +268,7 @@ class call_center {
 
 		//save the dialplan
 		$this->database->save($array);
-		$dialplan_response   = $this->database->message;
+		$dialplan_response = $this->database->message;
 		$this->dialplan_uuid = $dialplan_response['uuid'];
 		unset($array);
 
@@ -280,7 +280,7 @@ class call_center {
 
 		//build call center queue update array
 		$array['call_center_queues'][0]['call_center_queue_uuid'] = $this->call_center_queue_uuid;
-		$array['call_center_queues'][0]['dialplan_uuid']          = $this->dialplan_uuid;
+		$array['call_center_queues'][0]['dialplan_uuid'] = $this->dialplan_uuid;
 
 		//grant temporary permissions
 		$p = permissions::new();
@@ -315,15 +315,15 @@ class call_center {
 
 		//assign private variables
 		$this->permission_prefix = 'call_center_queue_';
-		$this->list_page         = 'call_center_queues.php';
-		$this->table             = 'call_center_queues';
-		$this->uuid_prefix       = 'call_center_queue_';
+		$this->list_page = 'call_center_queues.php';
+		$this->table = 'call_center_queues';
+		$this->uuid_prefix = 'call_center_queue_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -345,15 +345,15 @@ class call_center {
 
 				//get necessary details
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, dialplan_uuid, queue_name, queue_extension from v_" . $this->table . " ";
-					$sql                       .= "where domain_uuid = :domain_uuid ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in ('" . implode("','", $uuids) . "') ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, dialplan_uuid, queue_name, queue_extension from v_" . $this->table . " ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in ('" . implode("','", $uuids) . "') ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
-							$call_center_queues[$row['uuid']]['dialplan_uuid']   = $row['dialplan_uuid'];
-							$call_center_queues[$row['uuid']]['queue_name']      = $row['queue_name'];
+							$call_center_queues[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
+							$call_center_queues[$row['uuid']]['queue_name'] = $row['queue_name'];
 							$call_center_queues[$row['uuid']]['queue_extension'] = $row['queue_extension'];
 						}
 					}
@@ -363,16 +363,16 @@ class call_center {
 				//build the delete array
 				$x = 0;
 				foreach ($call_center_queues as $call_center_queue_uuid => $call_center_queue) {
-					$array[$this->table][$x][$this->uuid_prefix . 'uuid']        = $call_center_queue_uuid;
-					$array[$this->table][$x]['domain_uuid']                      = $this->domain_uuid;
-					$array['dialplans'][$x]['dialplan_uuid']                     = $call_center_queue['dialplan_uuid'];
-					$array['dialplans'][$x]['domain_uuid']                       = $this->domain_uuid;
-					$array['dialplan_details'][$x]['dialplan_uuid']              = $call_center_queue['dialplan_uuid'];
-					$array['dialplan_details'][$x]['domain_uuid']                = $this->domain_uuid;
+					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $call_center_queue_uuid;
+					$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
+					$array['dialplans'][$x]['dialplan_uuid'] = $call_center_queue['dialplan_uuid'];
+					$array['dialplans'][$x]['domain_uuid'] = $this->domain_uuid;
+					$array['dialplan_details'][$x]['dialplan_uuid'] = $call_center_queue['dialplan_uuid'];
+					$array['dialplan_details'][$x]['domain_uuid'] = $this->domain_uuid;
 					$array['call_center_tiers'][$x][$this->uuid_prefix . 'uuid'] = $call_center_queue_uuid;
-					$array['call_center_tiers'][$x]['domain_uuid']               = $this->domain_uuid;
+					$array['call_center_tiers'][$x]['domain_uuid'] = $this->domain_uuid;
 					$x++;
-					$array['call_center_tiers'][$x]['queue_name']  = $call_center_queue['queue_extension'] . "@" . $this->domain_name;
+					$array['call_center_tiers'][$x]['queue_name'] = $call_center_queue['queue_extension'] . "@" . $this->domain_name;
 					$array['call_center_tiers'][$x]['domain_uuid'] = $this->domain_uuid;
 					$x++;
 				}
@@ -386,7 +386,7 @@ class call_center {
 					//delete the queue in the switch
 					if ($esl->is_connected()) {
 						foreach ($uuids as $uuid) {
-							$cmd      = "callcenter_config queue unload " . $call_center_queues[$uuid]['queue_extension'] . "@" . $this->domain_name;
+							$cmd = "callcenter_config queue unload " . $call_center_queues[$uuid]['queue_extension'] . "@" . $this->domain_name;
 							$response = event_socket::api($cmd);
 						}
 					}
@@ -442,15 +442,15 @@ class call_center {
 
 		//assign private variables
 		$this->permission_prefix = 'call_center_agent_';
-		$this->list_page         = 'call_center_agents.php';
-		$this->table             = 'call_center_agents';
-		$this->uuid_prefix       = 'call_center_agent_';
+		$this->list_page = 'call_center_agents.php';
+		$this->table = 'call_center_agents';
+		$this->uuid_prefix = 'call_center_agent_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -473,10 +473,10 @@ class call_center {
 				//build the delete array
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
 					foreach ($uuids as $x => $uuid) {
-						$array[$this->table][$x][$this->uuid_prefix . 'uuid']     = $uuid;
-						$array[$this->table][$x]['domain_uuid']                   = $this->domain_uuid;
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
+						$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 						$array['call_center_tiers'][$x]['call_center_agent_uuid'] = $uuid;
-						$array['call_center_tiers'][$x]['domain_uuid']            = $this->domain_uuid;
+						$array['call_center_tiers'][$x]['domain_uuid'] = $this->domain_uuid;
 					}
 				}
 
@@ -529,15 +529,15 @@ class call_center {
 
 		//assign private variables
 		$this->permission_prefix = 'call_center_queue_';
-		$this->list_page         = 'call_center_queues.php';
-		$this->table             = 'call_center_queues';
-		$this->uuid_prefix       = 'call_center_queue_';
+		$this->list_page = 'call_center_queues.php';
+		$this->table = 'call_center_queues';
+		$this->uuid_prefix = 'call_center_queue_';
 
 		if (permission_exists($this->permission_prefix . 'add')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -561,19 +561,19 @@ class call_center {
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
 
 					//primary table
-					$sql  = "select * from v_" . $this->table . " ";
-					$sql  .= "where " . $this->uuid_prefix . "uuid in ('" . implode("','", $uuids) . "') ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where " . $this->uuid_prefix . "uuid in ('" . implode("','", $uuids) . "') ";
 					$rows = $this->database->select($sql, null, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$y = 0;
 						foreach ($rows as $x => $row) {
 							$new_call_center_queue_uuid = uuid();
-							$new_dialplan_uuid          = uuid();
+							$new_dialplan_uuid = uuid();
 
 							//convert boolean values to a string
 							foreach ($row as $key => $value) {
 								if (gettype($value) == 'boolean') {
-									$value     = $value ? 'true' : 'false';
+									$value = $value ? 'true' : 'false';
 									$row[$key] = $value;
 								}
 							}
@@ -583,13 +583,13 @@ class call_center {
 
 							//overwrite
 							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $new_call_center_queue_uuid;
-							$array[$this->table][$x]['dialplan_uuid']             = $new_dialplan_uuid;
-							$array[$this->table][$x]['queue_description']         = trim($row['queue_description'] . ' (' . $text['label-copy'] . ')');
+							$array[$this->table][$x]['dialplan_uuid'] = $new_dialplan_uuid;
+							$array[$this->table][$x]['queue_description'] = trim($row['queue_description'] . ' (' . $text['label-copy'] . ')');
 
 							//call center tiers sub table
-							$sql_2                                  = "select * from v_call_center_tiers where call_center_queue_uuid = :call_center_queue_uuid";
+							$sql_2 = "select * from v_call_center_tiers where call_center_queue_uuid = :call_center_queue_uuid";
 							$parameters_2['call_center_queue_uuid'] = $row['call_center_queue_uuid'];
-							$rows_2                                 = $this->database->select($sql_2, $parameters_2, 'all');
+							$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 							if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 								foreach ($rows_2 as $row_2) {
 
@@ -597,7 +597,7 @@ class call_center {
 									$array['call_center_tiers'][$y] = $row_2;
 
 									//overwrite
-									$array['call_center_tiers'][$y]['call_center_tier_uuid']  = uuid();
+									$array['call_center_tiers'][$y]['call_center_tier_uuid'] = uuid();
 									$array['call_center_tiers'][$y]['call_center_queue_uuid'] = $new_call_center_queue_uuid;
 
 									$y++;
@@ -606,15 +606,15 @@ class call_center {
 							unset($sql_2, $parameters_2, $rows_2, $row_2);
 
 							//call center queue dialplan record
-							$sql_3                         = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
+							$sql_3 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
 							$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
-							$dialplan                      = $this->database->select($sql_3, $parameters_3, 'row');
+							$dialplan = $this->database->select($sql_3, $parameters_3, 'row');
 							if (is_array($dialplan) && @sizeof($dialplan) != 0) {
 
 								//convert boolean values to a string
 								foreach ($dialplan as $key => $value) {
 									if (gettype($value) == 'boolean') {
-										$value          = $value ? 'true' : 'false';
+										$value = $value ? 'true' : 'false';
 										$dialplan[$key] = $value;
 									}
 								}
@@ -623,11 +623,11 @@ class call_center {
 								$array['dialplans'][$x] = $dialplan;
 
 								//overwrite
-								$array['dialplans'][$x]['dialplan_uuid']        = $new_dialplan_uuid;
-								$dialplan_xml                                   = $dialplan['dialplan_xml'];
-								$dialplan_xml                                   = str_replace($row['call_center_queue_uuid'], $new_call_center_queue_uuid, $dialplan_xml); //replace source call_center_queue_uuid with new
-								$dialplan_xml                                   = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
-								$array['dialplans'][$x]['dialplan_xml']         = $dialplan_xml;
+								$array['dialplans'][$x]['dialplan_uuid'] = $new_dialplan_uuid;
+								$dialplan_xml = $dialplan['dialplan_xml'];
+								$dialplan_xml = str_replace($row['call_center_queue_uuid'], $new_call_center_queue_uuid, $dialplan_xml); //replace source call_center_queue_uuid with new
+								$dialplan_xml = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
+								$array['dialplans'][$x]['dialplan_xml'] = $dialplan_xml;
 								$array['dialplans'][$x]['dialplan_description'] = trim($dialplan['dialplan_description'] . ' (' . $text['label-copy'] . ')');
 
 							}

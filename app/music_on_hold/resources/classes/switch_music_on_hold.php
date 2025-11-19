@@ -103,7 +103,7 @@ class switch_music_on_hold {
 	public function __construct(array $setting_array = []) {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
@@ -111,9 +111,93 @@ class switch_music_on_hold {
 
 		//assign private variables
 		$this->permission_prefix = 'music_on_hold_';
-		$this->list_page         = 'music_on_hold.php';
-		$this->table             = 'music_on_hold';
-		$this->uuid_prefix       = 'music_on_hold_';
+		$this->list_page = 'music_on_hold.php';
+		$this->table = 'music_on_hold';
+		$this->uuid_prefix = 'music_on_hold_';
+	}
+
+	/**
+	 * Imports music on hold records.
+	 *
+	 * Retrieves domain and music on hold data, builds an array of sound files,
+	 * and saves the data to the database.
+	 */
+	public function import() {
+		//get the domains
+		$sql = "select * from v_domains ";
+		$domains = $this->database->select($sql, null, 'all');
+		unset($sql);
+
+		//get the music_on_hold array
+		$sql = "select * from v_music_on_hold ";
+		$sql .= "order by domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc";
+		$music_on_hold = $this->database->select($sql, null, 'all');
+		unset($sql);
+
+		//build an array of the sound files
+		$music_directory = $this->settings->get('switch', 'sounds') . '/music';
+		if (file_exists($music_directory)) {
+			$files = array_merge(glob($music_directory . '/*/*/*.wav'), glob($music_directory . '/*/*/*/*.wav'));
+		}
+
+		//build a new file array
+		foreach ($files as $file) {
+			$path = substr($file, strlen($music_directory . '/'));
+			$path = str_replace("\\", "/", $path);
+			$path_array = explode("/", $path);
+			$file_array[$path_array[0]][$path_array[1]][$path_array[2]] = dirname($file);
+			//echo "domain_name ".$path_array[0]."<br />\n";
+			//echo "category_name ".$path_array[1]."<br />\n";
+		}
+		//view_array($file_array);
+
+		//prepare the data
+		$i = 0;
+		foreach ($file_array as $domain_name => $a1) {
+			foreach ($a1 as $category_name => $a2) {
+				foreach ($a2 as $sample_rate => $file_path) {
+					//echo "domain_name ".$domain_name."<br />\n";
+					//echo "category_name ".$category_name."<br />\n";
+					foreach ($domains as $field) {
+						if ($field['domain_name'] === $domain_name) {
+							$domain_uuid = $field['domain_uuid'];
+							//echo "domain_uuid ".$domain_uuid."<br />\n";
+						}
+					}
+
+					if ($domain_name == 'global' || $domain_name == 'default') {
+						$domain_uuid = null;
+					}
+
+					$array['music_on_hold'][$i]['music_on_hold_uuid'] = uuid();
+					$array['music_on_hold'][$i]['domain_uuid'] = $domain_uuid;
+					$array['music_on_hold'][$i]['music_on_hold_name'] = $category_name;
+					$array['music_on_hold'][$i]['music_on_hold_path'] = $file_path;
+					$array['music_on_hold'][$i]['music_on_hold_rate'] = strlen($sample_rate) != 0 ? $sample_rate : null;
+					$array['music_on_hold'][$i]['music_on_hold_shuffle'] = 'false';
+					$array['music_on_hold'][$i]['music_on_hold_channels'] = 1;
+					$array['music_on_hold'][$i]['music_on_hold_interval'] = 20;
+					$array['music_on_hold'][$i]['music_on_hold_timer_name'] = 'soft';
+					$array['music_on_hold'][$i]['music_on_hold_chime_list'] = null;
+					$array['music_on_hold'][$i]['music_on_hold_chime_freq'] = null;
+					$array['music_on_hold'][$i]['music_on_hold_chime_max'] = null;
+					$i++;
+				}
+			}
+		}
+		//view_array($array, false);
+
+		//save the data
+		$p = permissions::new();
+		$p->add('music_on_hold_add', 'temp');
+
+		$this->database->app_name = 'music_on_hold';
+		$this->database->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
+		$this->database->save($array);
+		//echo $this->database->message;
+		unset($array);
+
+		$p->delete('music_on_hold_add', 'temp');
 	}
 
 	/**
@@ -128,7 +212,7 @@ class switch_music_on_hold {
 	public function select($name, $selected, $options) {
 		//add multi-lingual support
 		$language = new text;
-		$text     = $language->get();
+		$text = $language->get();
 
 		//start the select
 		$select = "<select class='formfld' name='" . $name . "' id='" . $name . "' style='width: auto;'>\n";
@@ -136,8 +220,8 @@ class switch_music_on_hold {
 		//music on hold
 		$music_list = $this->get();
 		if (count($music_list) > 0) {
-			$select        .= "	<option value=''>\n";
-			$select        .= "	<optgroup label='" . $text['label-music_on_hold'] . "'>\n";
+			$select .= "	<option value=''>\n";
+			$select .= "	<optgroup label='" . $text['label-music_on_hold'] . "'>\n";
 			$previous_name = '';
 			foreach ($music_list as $row) {
 				if ($previous_name != $row['music_on_hold_name']) {
@@ -145,7 +229,7 @@ class switch_music_on_hold {
 					if (!empty($row['domain_uuid'])) {
 						$name = $row['domain_name'] . '/';
 					}
-					$name   .= $row['music_on_hold_name'];
+					$name .= $row['music_on_hold_name'];
 					$select .= "		<option value='local_stream://" . $name . "' " . (($selected == "local_stream://" . $name) ? 'selected="selected"' : null) . ">" . $row['music_on_hold_name'] . "</option>\n";
 				}
 				$previous_name = $row['music_on_hold_name'];
@@ -155,7 +239,7 @@ class switch_music_on_hold {
 		//recordings
 		if (is_dir($_SERVER["PROJECT_ROOT"] . '/app/recordings')) {
 			$recordings_c = new switch_recordings;
-			$recordings   = $recordings_c->list_recordings();
+			$recordings = $recordings_c->list_recordings();
 			if (is_array($recordings) && sizeof($recordings) > 0) {
 				$select .= "	<optgroup label='" . $text['label-recordings'] . "'>";
 				foreach ($recordings as $recording_value => $recording_name) {
@@ -166,12 +250,12 @@ class switch_music_on_hold {
 		}
 		//streams
 		if (is_dir($_SERVER["PROJECT_ROOT"] . '/app/streams')) {
-			$sql                       = "select * from v_streams ";
-			$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-			$sql                       .= "and stream_enabled = 'true' ";
-			$sql                       .= "order by stream_name asc ";
+			$sql = "select * from v_streams ";
+			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$sql .= "and stream_enabled = 'true' ";
+			$sql .= "order by stream_name asc ";
 			$parameters['domain_uuid'] = $this->domain_uuid;
-			$streams                   = $this->database->select($sql, $parameters, 'all');
+			$streams = $this->database->select($sql, $parameters, 'all');
 			if (is_array($streams) && @sizeof($streams) != 0) {
 				$select .= "	<optgroup label='" . $text['label-streams'] . "'>";
 				foreach ($streams as $row) {
@@ -200,39 +284,15 @@ class switch_music_on_hold {
 	 */
 	public function get() {
 		//get moh records, build array
-		$sql                       = "select ";
-		$sql                       .= "d.domain_name, ";
-		$sql                       .= "m.* ";
-		$sql                       .= "from v_music_on_hold as m ";
-		$sql                       .= "left join v_domains as d on d.domain_uuid = m.domain_uuid ";
-		$sql                       .= "where (m.domain_uuid = :domain_uuid or m.domain_uuid is null) ";
-		$sql                       .= "order by m.domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc ";
+		$sql = "select ";
+		$sql .= "d.domain_name, ";
+		$sql .= "m.* ";
+		$sql .= "from v_music_on_hold as m ";
+		$sql .= "left join v_domains as d on d.domain_uuid = m.domain_uuid ";
+		$sql .= "where (m.domain_uuid = :domain_uuid or m.domain_uuid is null) ";
+		$sql .= "order by m.domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc ";
 		$parameters['domain_uuid'] = $this->domain_uuid;
 		return $this->database->select($sql, $parameters, 'all');
-	}
-
-	/**
-	 * Reloads the module and establishes a connection to the Event Socket.
-	 */
-	public function reload() {
-		//add multi-lingual support
-		$language = new text;
-		$text     = $language->get();
-
-		//if the handle does not exist create it
-		$esl = event_socket::create();
-
-		//if the handle still does not exist show an error message
-		if (!$esl->is_connected()) {
-			$msg = "<div align='center'>" . $text['message-event-socket'] . "<br /></div>";
-		}
-
-		//send the api command to check if the module exists
-		if ($esl->is_connected()) {
-			$cmd           = "reload mod_local_stream";
-			$switch_result = event_socket::api($cmd);
-			unset($cmd);
-		}
 	}
 
 	/**
@@ -267,87 +327,27 @@ class switch_music_on_hold {
 	}
 
 	/**
-	 * Imports music on hold records.
-	 *
-	 * Retrieves domain and music on hold data, builds an array of sound files,
-	 * and saves the data to the database.
+	 * Reloads the module and establishes a connection to the Event Socket.
 	 */
-	public function import() {
-		//get the domains
-		$sql     = "select * from v_domains ";
-		$domains = $this->database->select($sql, null, 'all');
-		unset($sql);
+	public function reload() {
+		//add multi-lingual support
+		$language = new text;
+		$text = $language->get();
 
-		//get the music_on_hold array
-		$sql           = "select * from v_music_on_hold ";
-		$sql           .= "order by domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc";
-		$music_on_hold = $this->database->select($sql, null, 'all');
-		unset($sql);
+		//if the handle does not exist create it
+		$esl = event_socket::create();
 
-		//build an array of the sound files
-		$music_directory = $this->settings->get('switch', 'sounds') . '/music';
-		if (file_exists($music_directory)) {
-			$files = array_merge(glob($music_directory . '/*/*/*.wav'), glob($music_directory . '/*/*/*/*.wav'));
+		//if the handle still does not exist show an error message
+		if (!$esl->is_connected()) {
+			$msg = "<div align='center'>" . $text['message-event-socket'] . "<br /></div>";
 		}
 
-		//build a new file array
-		foreach ($files as $file) {
-			$path                                                       = substr($file, strlen($music_directory . '/'));
-			$path                                                       = str_replace("\\", "/", $path);
-			$path_array                                                 = explode("/", $path);
-			$file_array[$path_array[0]][$path_array[1]][$path_array[2]] = dirname($file);
-			//echo "domain_name ".$path_array[0]."<br />\n";
-			//echo "category_name ".$path_array[1]."<br />\n";
+		//send the api command to check if the module exists
+		if ($esl->is_connected()) {
+			$cmd = "reload mod_local_stream";
+			$switch_result = event_socket::api($cmd);
+			unset($cmd);
 		}
-		//view_array($file_array);
-
-		//prepare the data
-		$i = 0;
-		foreach ($file_array as $domain_name => $a1) {
-			foreach ($a1 as $category_name => $a2) {
-				foreach ($a2 as $sample_rate => $file_path) {
-					//echo "domain_name ".$domain_name."<br />\n";
-					//echo "category_name ".$category_name."<br />\n";
-					foreach ($domains as $field) {
-						if ($field['domain_name'] === $domain_name) {
-							$domain_uuid = $field['domain_uuid'];
-							//echo "domain_uuid ".$domain_uuid."<br />\n";
-						}
-					}
-
-					if ($domain_name == 'global' || $domain_name == 'default') {
-						$domain_uuid = null;
-					}
-
-					$array['music_on_hold'][$i]['music_on_hold_uuid']       = uuid();
-					$array['music_on_hold'][$i]['domain_uuid']              = $domain_uuid;
-					$array['music_on_hold'][$i]['music_on_hold_name']       = $category_name;
-					$array['music_on_hold'][$i]['music_on_hold_path']       = $file_path;
-					$array['music_on_hold'][$i]['music_on_hold_rate']       = strlen($sample_rate) != 0 ? $sample_rate : null;
-					$array['music_on_hold'][$i]['music_on_hold_shuffle']    = 'false';
-					$array['music_on_hold'][$i]['music_on_hold_channels']   = 1;
-					$array['music_on_hold'][$i]['music_on_hold_interval']   = 20;
-					$array['music_on_hold'][$i]['music_on_hold_timer_name'] = 'soft';
-					$array['music_on_hold'][$i]['music_on_hold_chime_list'] = null;
-					$array['music_on_hold'][$i]['music_on_hold_chime_freq'] = null;
-					$array['music_on_hold'][$i]['music_on_hold_chime_max']  = null;
-					$i++;
-				}
-			}
-		}
-		//view_array($array, false);
-
-		//save the data
-		$p = permissions::new();
-		$p->add('music_on_hold_add', 'temp');
-
-		$this->database->app_name = 'music_on_hold';
-		$this->database->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
-		$this->database->save($array);
-		//echo $this->database->message;
-		unset($array);
-
-		$p->delete('music_on_hold_add', 'temp');
 	}
 
 	/**
@@ -364,7 +364,7 @@ class switch_music_on_hold {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -397,11 +397,11 @@ class switch_music_on_hold {
 				if (is_array($moh) && @sizeof($moh) != 0) {
 
 					//get music on hold details
-					$sql                       = "select * from v_music_on_hold ";
-					$sql                       .= "where (domain_uuid = :domain_uuid " . (!permission_exists('music_on_hold_domain') ? "" : "or domain_uuid is null ") . ") ";
-					$sql                       .= "and music_on_hold_uuid in ('" . implode("','", array_keys($moh)) . "') ";
+					$sql = "select * from v_music_on_hold ";
+					$sql .= "where (domain_uuid = :domain_uuid " . (!permission_exists('music_on_hold_domain') ? "" : "or domain_uuid is null ") . ") ";
+					$sql .= "and music_on_hold_uuid in ('" . implode("','", array_keys($moh)) . "') ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$streams[$row['music_on_hold_uuid']] = $row;

@@ -54,7 +54,8 @@ class extension_filter {
 	 * @param string $key   The presence ID key to look up in the extensions array.
 	 * @param mixed  $value The value associated with the key, which is used as an index in the extensions array.
 	 *
-	 * @return bool|null True if no match was found or the key is not 'channel_presence_id', null otherwise when dropping a message.
+	 * @return bool|null True if no match was found or the key is not 'channel_presence_id', null otherwise when
+	 *                   dropping a message.
 	 */
 	public function __invoke(string $key, $value): ?bool {
 		//only match on channel_presence_id key
