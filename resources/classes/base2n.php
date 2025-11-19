@@ -157,7 +157,7 @@ class base2n {
 
                     if ($padFinalGroup) {
                         // Array of the lowest common multiples of $bitsPerCharacter and 8, divided by 8
-                        $lcmMap        = [1 => 1, 2 => 1, 3 => 3, 4 => 1, 5 => 5, 6 => 3, 7 => 7, 8 => 1];
+                        $lcmMap        = array(1 => 1, 2 => 1, 3 => 3, 4 => 1, 5 => 5, 6 => 3, 7 => 7, 8 => 1);
                         $bytesPerGroup = $lcmMap[$bitsPerCharacter];
                         $pads          = $bytesPerGroup * $charsPerByte - ceil((strlen($rawString) % $bytesPerGroup) * $charsPerByte);
                         $encodedString .= str_repeat($padCharacter, $pads);
@@ -181,7 +181,7 @@ class base2n {
             $bitsRead += $newBitCount;
 
             if ($oldBitCount) {
-                // Bits come from seperate bytes, add $oldBits to $bits
+                // Bits come from separate bytes, add $oldBits to $bits
                 $bits = ($oldBits << $newBitCount) | $bits;
             }
 
