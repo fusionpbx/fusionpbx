@@ -38,7 +38,7 @@ class user {
 			$this->user_uuid = $user_uuid;
 		}
 
-		//set the user groups, permission and details
+		//set the user groups, permission, and details
 		if (isset($domain_uuid) && is_uuid($domain_uuid) && isset($user_uuid) && is_uuid($user_uuid)) {
 			$this->set_groups();
 			$this->set_permissions();
@@ -60,15 +60,15 @@ class user {
 	 * @return bool True if the query is successful, false otherwise.
 	 */
 	public function set_details() {
-		$sql                       = "select d.domain_name, u.username, u.user_email, u.contact_uuid ";
-		$sql                       .= "from v_users as u, v_domains as d ";
-		$sql                       .= "where u.domain_uuid = :domain_uuid ";
-		$sql                       .= "and u.user_uuid = :user_uuid ";
-		$sql                       .= "and u.domain_uuid = d.domain_uuid ";
-		$sql                       .= "and u.user_setting_enabled = 'true' ";
+		$sql = "select d.domain_name, u.username, u.user_email, u.contact_uuid ";
+		$sql .= "from v_users as u, v_domains as d ";
+		$sql .= "where u.domain_uuid = :domain_uuid ";
+		$sql .= "and u.user_uuid = :user_uuid ";
+		$sql .= "and u.domain_uuid = d.domain_uuid ";
+		$sql .= "and u.user_setting_enabled = 'true' ";
 		$parameters['domain_uuid'] = $this->domain_uuid;
 		$parameters['user_uuid']   = $this->user_uuid;
-		$row                       = $this->database->select($sql, $parameters, 'row');
+		$row = $this->database->select($sql, $parameters, 'row');
 		if (is_array($row)) {
 			$this->domain_name  = $row['domain_name'];
 			$this->username     = $row['username'];
