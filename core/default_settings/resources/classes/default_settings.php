@@ -27,309 +27,333 @@
 /**
  * default_settings class
  */
-	class default_settings {
+class default_settings {
 
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'default_settings';
-		const app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
+	/**
+	 * declare constant variables
+	 */
+	const app_name = 'default_settings';
+	const app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
 
-		/**
-		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		public $domain_uuid;
+	/**
+	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set
+	 * in the session global array
+	 *
+	 * @var string
+	 */
+	public $domain_uuid;
 
-		/**
-		 * Set in the constructor. Must be a database object and cannot be null.
-		 * @var database Database Object
-		 */
-		private $database;
+	/**
+	 * Set in the constructor. Must be a database object and cannot be null.
+	 *
+	 * @var database Database Object
+	 */
+	private $database;
 
-		/**
-		 * Settings object set in the constructor. Must be a settings object and cannot be null.
-		 * @var settings Settings Object
-		 */
-		private $settings;
+	/**
+	 * Settings object set in the constructor. Must be a settings object and cannot be null.
+	 *
+	 * @var settings Settings Object
+	 */
+	private $settings;
 
-		/**
-		* declare private variables
-		*/
-		private $name;
-		private $table;
-		private $toggle_field;
-		private $toggle_values;
-		private $location;
+	/**
+	 * declare private variables
+	 */
+	private $name;
+	private $table;
+	private $toggle_field;
+	private $toggle_values;
+	private $location;
 
-		/**
-		 * called when the object is created
-		 */
-		public function __construct(array $setting_array = []) {
-			//set domain and user UUIDs
-			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+	/**
+	 * Constructor for the class.
+	 *
+	 * This method initializes the object with setting_array and session data.
+	 *
+	 * @param array $setting_array An optional array of settings to override default values. Defaults to [].
+	 */
+	public function __construct(array $setting_array = []) {
+		//set domain and user UUIDs
+		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
 
-			//set objects
-			$this->database = $setting_array['database'] ?? database::new();
+		//set objects
+		$this->database = $setting_array['database'] ?? database::new();
 
-			//assign the variables
-			$this->name = 'default_setting';
-			$this->table = 'default_settings';
-			$this->toggle_field = 'default_setting_enabled';
-			$this->toggle_values = ['true','false'];
-			$this->location = 'default_settings.php';
-		}
+		//assign the variables
+		$this->name          = 'default_setting';
+		$this->table         = 'default_settings';
+		$this->toggle_field  = 'default_setting_enabled';
+		$this->toggle_values = ['true', 'false'];
+		$this->location      = 'default_settings.php';
+	}
 
-		/**
-		 * delete rows from the database
-		 */
-		public function delete($records) {
-			if (permission_exists($this->name.'_delete')) {
+	/**
+	 * Deletes one or multiple records.
+	 *
+	 * @param array $records An array of record IDs to delete, where each ID is an associative array
+	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                       whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function delete($records) {
+		if (permission_exists($this->name . '_delete')) {
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->location);
-						exit;
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->location);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+				//build the delete array
+				$x = 0;
+				foreach ($records as $record) {
+					//add to the array
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$array[$this->table][$x][$this->name . '_uuid'] = $record['uuid'];
 					}
 
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-						//build the delete array
-							$x = 0;
-							foreach ($records as $record) {
-								//add to the array
-									if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-										$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
-									}
+					//increment the id
+					$x++;
+				}
 
-								//increment the id
-									$x++;
-							}
+				//delete the checked rows
+				if (is_array($array) && @sizeof($array) != 0) {
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
 
-						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
-
-								//set message
-									message::add($text['message-delete']);
-							}
-							unset($records);
-					}
+					//set message
+					message::add($text['message-delete']);
+				}
+				unset($records);
 			}
 		}
+	}
 
-		/**
-		 * toggle a field between two values
-		 */
-		public function toggle($records) {
-			if (permission_exists($this->name.'_edit')) {
+	/**
+	 * Toggles the state of one or more records.
+	 *
+	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
+	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                        whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function toggle($records) {
+		if (permission_exists($this->name . '_edit')) {
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->location);
-						exit;
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->location);
+				exit;
+			}
+
+			//toggle the checked records
+			if (is_array($records) && @sizeof($records) != 0) {
+				//get current toggle state
+				foreach ($records as $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
 					}
-
-				//toggle the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
-						//get current toggle state
-							foreach($records as $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
-							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
-								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->database->select($sql, $parameters ?? null, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									foreach ($rows as $row) {
-										$states[$row['uuid']] = $row['toggle'];
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-							}
-
-						//build update array
-							$x = 0;
-							foreach($states as $uuid => $state) {
-								//create the array
-									$array[$this->table][$x][$this->name.'_uuid'] = $uuid;
-									$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-
-								//increment the id
-									$x++;
-							}
-
-						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
-								//save the array
-
-									$this->database->save($array);
-									unset($array);
-
-								//set message
-									message::add($text['message-toggle']);
-							}
-							unset($records, $states);
+				}
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql  = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql  .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
+					$rows = $this->database->select($sql, $parameters ?? null, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							$states[$row['uuid']] = $row['toggle'];
+						}
 					}
+					unset($sql, $parameters, $rows, $row);
+				}
+
+				//build update array
+				$x = 0;
+				foreach ($states as $uuid => $state) {
+					//create the array
+					$array[$this->table][$x][$this->name . '_uuid'] = $uuid;
+					$array[$this->table][$x][$this->toggle_field]   = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+
+					//increment the id
+					$x++;
+				}
+
+				//save the changes
+				if (is_array($array) && @sizeof($array) != 0) {
+					//save the array
+
+					$this->database->save($array);
+					unset($array);
+
+					//set message
+					message::add($text['message-toggle']);
+				}
+				unset($records, $states);
 			}
 		}
+	}
 
-		/**
-		 * copy rows from the database
-		 */
-		public function copy($records) {
-			if (permission_exists($this->name.'_add')) {
+	/**
+	 * Copies one or more records
+	 *
+	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
+	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                        whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function copy($records) {
+		if (permission_exists($this->name . '_add')) {
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->location);
-						exit;
-					}
-
-				//copy the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//get checked records
-							foreach($records as $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = $record['uuid'];
-								}
-							}
-
-						//copy settings
-							if (is_array($uuids) && sizeof($uuids) > 0) {
-								$settings_copied = 0;
-								foreach ($uuids as $x => $uuid) {
-
-									// get default setting from db
-									$sql = "select * from v_default_settings ";
-									$sql .= "where default_setting_uuid = :default_setting_uuid ";
-									$parameters['default_setting_uuid'] = $uuid;
-									$row = $this->database->select($sql, $parameters, 'row');
-									if (is_array($row) && sizeof($row) != 0) {
-										$default_setting_category = $row["default_setting_category"];
-										$default_setting_subcategory = $row["default_setting_subcategory"];
-										$default_setting_name = $row["default_setting_name"];
-										$default_setting_value = $row["default_setting_value"];
-										$default_setting_order = $row["default_setting_order"];
-										$default_setting_enabled = $row["default_setting_enabled"];
-										$default_setting_description = $row["default_setting_description"];
-										$default_setting = $row; // all values
-									}
-									unset($sql, $parameters, $row);
-
-									//set a random password for http_auth_password
-									if ($default_setting_subcategory == "http_auth_password") {
-										$default_setting_value = generate_password();
-									}
-
-									//copy to domain
-									if (is_uuid($this->domain_uuid)) {
-
-										// check if exists
-										$sql = "select domain_setting_uuid from v_domain_settings ";
-										$sql .= "where domain_uuid = :domain_uuid ";
-										$sql .= "and domain_setting_category = :domain_setting_category ";
-										$sql .= "and domain_setting_subcategory = :domain_setting_subcategory ";
-										$sql .= "and domain_setting_name = :domain_setting_name ";
-										$sql .= "and domain_setting_name <> 'array' ";
-										$parameters['domain_uuid'] = $this->domain_uuid;
-										$parameters['domain_setting_category'] = $default_setting_category;
-										$parameters['domain_setting_subcategory'] = $default_setting_subcategory;
-										$parameters['domain_setting_name'] = $default_setting_name;
-										$target_domain_setting_uuid = $this->database->select($sql, $parameters, 'column');
-										$message = $this->database->message;
-
-										$action = is_uuid($target_domain_setting_uuid) ? 'update' : 'add';
-										unset($sql, $parameters);
-
-										// fix null
-										$default_setting_order = $default_setting_order != '' ? $default_setting_order : null;
-
-										//begin array
-										$array['domain_settings'][$x]['domain_uuid'] = $this->domain_uuid;
-										$array['domain_settings'][$x]['domain_setting_category'] = $default_setting_category;
-										$array['domain_settings'][$x]['domain_setting_subcategory'] = $default_setting_subcategory;
-										$array['domain_settings'][$x]['domain_setting_name'] = $default_setting_name;
-										$array['domain_settings'][$x]['domain_setting_value'] = $default_setting_value;
-										$array['domain_settings'][$x]['domain_setting_order'] = $default_setting_order;
-										$array['domain_settings'][$x]['domain_setting_enabled'] = $default_setting_enabled ?: 0;
-										$array['domain_settings'][$x]['domain_setting_description'] = $default_setting_description;
-
-										//insert
-										if ($action == "add" && permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
-											$array['domain_settings'][$x]['domain_setting_uuid'] = uuid();
-										}
-										//update
-										if ($action == "update" && permission_exists('domain_setting_edit')) {
-											$array['domain_settings'][$x]['domain_setting_uuid'] = $target_domain_setting_uuid;
-										}
-
-										//execute
-										if (is_uuid($array['domain_settings'][$x]['domain_setting_uuid'])) {
-											$this->database->save($array);
-											$message = $this->database->message;
-											unset($array);
-
-											$settings_copied++;
-										}
-
-									}
-
-									//duplicate default setting
-									else {
-
-										//populate and adjust array
-										$array['default_settings'][$x] = $default_setting;
-										$array['default_settings'][$x]['default_setting_uuid'] = uuid();
-										$array['default_settings'][$x]['default_setting_enabled'] = $default_setting_enabled ?: 0;
-										$array['default_settings'][$x]['default_setting_description'] .= ' (Copy)';
-										unset($array['default_settings'][$x]['insert_date']);
-										unset($array['default_settings'][$x]['insert_user']);
-										unset($array['default_settings'][$x]['update_date']);
-										unset($array['default_settings'][$x]['update_user']);
-
-										//execute
-										$this->database->save($array);
-										$message = $this->database->message;
-										unset($array);
-
-										$settings_copied++;
-
-									}
-
-								} // foreach
-							}
-
-						//set message
-							if ($settings_copied != 0) {
-								message::add($text['message-copy']);
-							}
-							unset($records);
-					}
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->location);
+				exit;
 			}
-		} //method
 
-	} //class
+			//copy the checked records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//get checked records
+				foreach ($records as $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = $record['uuid'];
+					}
+				}
+
+				//copy settings
+				if (is_array($uuids) && sizeof($uuids) > 0) {
+					$settings_copied = 0;
+					foreach ($uuids as $x => $uuid) {
+
+						// get default setting from db
+						$sql                                = "select * from v_default_settings ";
+						$sql                                .= "where default_setting_uuid = :default_setting_uuid ";
+						$parameters['default_setting_uuid'] = $uuid;
+						$row                                = $this->database->select($sql, $parameters, 'row');
+						if (is_array($row) && sizeof($row) != 0) {
+							$default_setting_category    = $row["default_setting_category"];
+							$default_setting_subcategory = $row["default_setting_subcategory"];
+							$default_setting_name        = $row["default_setting_name"];
+							$default_setting_value       = $row["default_setting_value"];
+							$default_setting_order       = $row["default_setting_order"];
+							$default_setting_enabled     = $row["default_setting_enabled"];
+							$default_setting_description = $row["default_setting_description"];
+							$default_setting             = $row; // all values
+						}
+						unset($sql, $parameters, $row);
+
+						//set a random password for http_auth_password
+						if ($default_setting_subcategory == "http_auth_password") {
+							$default_setting_value = generate_password();
+						}
+
+						//copy to domain
+						if (is_uuid($this->domain_uuid)) {
+
+							// check if exists
+							$sql                                      = "select domain_setting_uuid from v_domain_settings ";
+							$sql                                      .= "where domain_uuid = :domain_uuid ";
+							$sql                                      .= "and domain_setting_category = :domain_setting_category ";
+							$sql                                      .= "and domain_setting_subcategory = :domain_setting_subcategory ";
+							$sql                                      .= "and domain_setting_name = :domain_setting_name ";
+							$sql                                      .= "and domain_setting_name <> 'array' ";
+							$parameters['domain_uuid']                = $this->domain_uuid;
+							$parameters['domain_setting_category']    = $default_setting_category;
+							$parameters['domain_setting_subcategory'] = $default_setting_subcategory;
+							$parameters['domain_setting_name']        = $default_setting_name;
+							$target_domain_setting_uuid               = $this->database->select($sql, $parameters, 'column');
+							$message                                  = $this->database->message;
+
+							$action = is_uuid($target_domain_setting_uuid) ? 'update' : 'add';
+							unset($sql, $parameters);
+
+							// fix null
+							$default_setting_order = $default_setting_order != '' ? $default_setting_order : null;
+
+							//begin array
+							$array['domain_settings'][$x]['domain_uuid']                = $this->domain_uuid;
+							$array['domain_settings'][$x]['domain_setting_category']    = $default_setting_category;
+							$array['domain_settings'][$x]['domain_setting_subcategory'] = $default_setting_subcategory;
+							$array['domain_settings'][$x]['domain_setting_name']        = $default_setting_name;
+							$array['domain_settings'][$x]['domain_setting_value']       = $default_setting_value;
+							$array['domain_settings'][$x]['domain_setting_order']       = $default_setting_order;
+							$array['domain_settings'][$x]['domain_setting_enabled']     = $default_setting_enabled ?: 0;
+							$array['domain_settings'][$x]['domain_setting_description'] = $default_setting_description;
+
+							//insert
+							if ($action == "add" && permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
+								$array['domain_settings'][$x]['domain_setting_uuid'] = uuid();
+							}
+							//update
+							if ($action == "update" && permission_exists('domain_setting_edit')) {
+								$array['domain_settings'][$x]['domain_setting_uuid'] = $target_domain_setting_uuid;
+							}
+
+							//execute
+							if (is_uuid($array['domain_settings'][$x]['domain_setting_uuid'])) {
+								$this->database->save($array);
+								$message = $this->database->message;
+								unset($array);
+
+								$settings_copied++;
+							}
+
+						} //duplicate default setting
+						else {
+
+							//populate and adjust array
+							$array['default_settings'][$x]                                = $default_setting;
+							$array['default_settings'][$x]['default_setting_uuid']        = uuid();
+							$array['default_settings'][$x]['default_setting_enabled']     = $default_setting_enabled ?: 0;
+							$array['default_settings'][$x]['default_setting_description'] .= ' (Copy)';
+							unset($array['default_settings'][$x]['insert_date']);
+							unset($array['default_settings'][$x]['insert_user']);
+							unset($array['default_settings'][$x]['update_date']);
+							unset($array['default_settings'][$x]['update_user']);
+
+							//execute
+							$this->database->save($array);
+							$message = $this->database->message;
+							unset($array);
+
+							$settings_copied++;
+
+						}
+
+					} // foreach
+				}
+
+				//set message
+				if ($settings_copied != 0) {
+					message::add($text['message-copy']);
+				}
+				unset($records);
+			}
+		}
+	} //method
+
+} //class
