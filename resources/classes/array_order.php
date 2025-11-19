@@ -24,9 +24,9 @@ class array_order {
 		if (!$this->sort_fields) return $array();
 
 		if ($this->numeric) {
-			usort($array, [$this, 'numericCompare']);
+			usort($array, array($this, 'numericCompare'));
 		} else {
-			usort($array, [$this, 'stringCompare']);
+			usort($array, array($this, 'stringCompare'));
 		}
 		return $array;
 	}
