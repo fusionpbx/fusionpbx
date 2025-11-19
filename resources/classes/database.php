@@ -1276,8 +1276,8 @@ class database {
 			foreach ($new_array as $table_name => $rows) {
 				foreach ($rows as $row) {
 					$table_name = self::sanitize($table_name);
-					$sql        = "select * from " . self::TABLE_PREFIX . $table_name . " ";
-					$i          = 0;
+					$sql = "select * from " . self::TABLE_PREFIX . $table_name . " ";
+					$i = 0;
 					foreach ($row as $field_name => $field_value) {
 						if ($i == 0) {
 							$sql .= "where ";
@@ -1334,8 +1334,8 @@ class database {
 								}
 
 								//get the child data
-								$sql                            = "select * from " . self::TABLE_PREFIX . $child_table . " ";
-								$sql                            .= "where " . $relation['field'] . " = :" . $relation['field'];
+								$sql = "select * from " . self::TABLE_PREFIX . $child_table . " ";
+								$sql .= "where " . $relation['field'] . " = :" . $relation['field'];
 								$parameters[$relation['field']] = $row[$relation['field']];
 								$results                        = $this->execute($sql, $parameters, 'all');
 								unset($parameters);
@@ -1345,8 +1345,8 @@ class database {
 
 								//delete the child data
 								if (isset($row[$relation['field']]) && !empty($row[$relation['field']])) {
-									$sql                            = "delete from " . self::TABLE_PREFIX . $child_table . " ";
-									$sql                            .= "where " . $relation['field'] . " = :" . $relation['field'];
+									$sql = "delete from " . self::TABLE_PREFIX . $child_table . " ";
+									$sql .= "where " . $relation['field'] . " = :" . $relation['field'];
 									$parameters[$relation['field']] = $row[$relation['field']];
 //											$this->execute($sql, $parameters);
 								}
@@ -1392,7 +1392,7 @@ class database {
 							} else {
 								$sql .= "and ";
 							}
-							$sql                     .= $field_name . " = :" . $field_name . " ";
+							$sql .= $field_name . " = :" . $field_name . " ";
 							$parameters[$field_name] = $field_value;
 							$i++;
 						}
@@ -1504,8 +1504,8 @@ class database {
 			} else {
 				$sql .= "null, ";
 			}
-			$sql       .= ":transaction_result ";
-			$sql       .= ")";
+			$sql .= ":transaction_result ";
+			$sql .= ")";
 			$statement = $this->db->prepare($sql);
 			if (isset($this->user_uuid) && is_uuid($this->user_uuid)) {
 				$statement->bindParam(':user_uuid', $this->user_uuid);
@@ -1766,7 +1766,7 @@ class database {
 			//order by
 			if (isset($array['order_by'])) {
 				$array['order_by'] = self::sanitize($array['order_by']);
-				$sql               .= "ORDER BY " . $array['order_by'] . " ";
+				$sql .= "ORDER BY " . $array['order_by'] . " ";
 			}
 			//limit
 			if (isset($array['limit']) && is_numeric($array['limit'])) {
@@ -1913,12 +1913,12 @@ class database {
 			//unset the array
 			unset($array);
 
-			//use the array to get a copy of the paent data before deleting it
+			//use the array to get a copy of the parent data before deleting it
 			foreach ($copy_array as $table_name => $rows) {
 				foreach ($rows as $row) {
 					$table_name = self::sanitize($table_name);
-					$sql        = "select * from " . self::TABLE_PREFIX . $table_name . " ";
-					$i          = 0;
+					$sql = "select * from " . self::TABLE_PREFIX . $table_name . " ";
+					$i = 0;
 					foreach ($row as $field_name => $field_value) {
 						if ($i == 0) {
 							$sql .= "where ";
@@ -1970,10 +1970,10 @@ class database {
 							}
 
 							//get the child data
-							$sql                            = "select * from " . self::TABLE_PREFIX . $child_table . " ";
-							$sql                            .= "where " . $relation['field'] . " = :" . $relation['field'];
+							$sql = "select * from " . self::TABLE_PREFIX . $child_table . " ";
+							$sql .= "where " . $relation['field'] . " = :" . $relation['field'];
 							$parameters[$relation['field']] = $row[$relation['field']];
-							$results                        = $this->execute($sql, $parameters, 'all');
+							$results = $this->execute($sql, $parameters, 'all');
 							unset($parameters);
 							if (is_array($results)) {
 								$array[$parent_name][$x][$child_table] = $results;
@@ -2056,7 +2056,7 @@ class database {
 	/**
 	 * Toggles fields on a table using the <i>toggle_field</i> array values within the app object.
 	 *
-	 * @param array $array Three dimensional Array. The first dimension is the table name without the prefix 'v_'.
+	 * @param array $array Three dimensional array. The first dimension is the table name without the prefix 'v_'.
 	 *                     Second dimension in the row value as int. Third dimension is the column name.
 	 *
 	 * @return bool Returns <b>true</b> on success and <b>false</b> on failure.
@@ -2288,8 +2288,8 @@ class database {
 
 					//determine action update or delete, and get the original data
 					if ($parent_key_exists) {
-						$sql            = "SELECT " . implode(", ", $parent_field_names) . " FROM " . $table_name . " ";
-						$sql            .= "WHERE " . $parent_key_name . " = '" . $parent_key_value . "'; ";
+						$sql = "SELECT " . implode(", ", $parent_field_names) . " FROM " . $table_name . " ";
+						$sql .= "WHERE " . $parent_key_name . " = '" . $parent_key_value . "'; ";
 						$prep_statement = $this->db->prepare($sql);
 						if ($prep_statement) {
 							//get the data
@@ -2297,11 +2297,11 @@ class database {
 								$prep_statement->execute();
 								$parent_results = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 							} catch (PDOException $e) {
-								$message["type"]    = 'error';
-								$message["code"]    = $e->getCode();
+								$message["type"] = 'error';
+								$message["code"] = $e->getCode();
 								$message["message"] = $e->getMessage();
-								$message["sql"]     = $sql;
-								$this->message      = $message;
+								$message["sql"] = $sql;
+								$this->message = $message;
 								return false;
 							}
 
@@ -2327,8 +2327,8 @@ class database {
 
 							//prepare the insert statement
 							$params = [];
-							$sql    = "INSERT INTO " . $table_name . " ";
-							$sql    .= "(";
+							$sql = "INSERT INTO " . $table_name . " ";
+							$sql .= "(";
 							if (!$parent_key_exists) {
 								$sql .= $parent_key_name . ", ";
 							}
@@ -2351,7 +2351,7 @@ class database {
 							$sql .= "VALUES ";
 							$sql .= "(";
 							if (!$parent_key_exists) {
-								$sql                        .= ":parent_key_value, ";
+								$sql .= ":parent_key_value, ";
 								$params['parent_key_value'] = $parent_key_value;
 							}
 							if (is_array($parent_field_array)) {
@@ -2366,13 +2366,13 @@ class database {
 											} elseif ($array_value === "now()") {
 												$sql .= "now(), ";
 											} elseif ($array_value === "user_uuid()") {
-												$sql                .= ':' . $array_key . ", ";
+												$sql .= ':' . $array_key . ", ";
 												$params[$array_key] = $this->user_uuid ?? null;
 											} elseif ($array_value === "remote_address()") {
-												$sql                .= ':' . $array_key . ", ";
+												$sql .= ':' . $array_key . ", ";
 												$params[$array_key] = $_SERVER['REMOTE_ADDR'];
 											} elseif (gettype($array_value) === 'boolean') {
-												$sql                .= ':' . $array_key . ", ";
+												$sql .= ':' . $array_key . ", ";
 												$params[$array_key] = $array_value;
 											} else {
 												$sql .= ':' . $array_key . ", ";
@@ -2550,7 +2550,7 @@ class database {
 
 								//prepare the update statement
 								$params = [];
-								$sql    = "UPDATE " . $table_name . " SET ";
+								$sql = "UPDATE " . $table_name . " SET ";
 								if (is_array($parent_field_array)) {
 									foreach ($parent_field_array as $array_key => $array_value) {
 										if (is_array($array_value)) {
@@ -2563,13 +2563,13 @@ class database {
 											} elseif ($array_value === "now()") {
 												$sql .= $array_key . " = now(), ";
 											} elseif ($array_value === "user_uuid()") {
-												$sql                .= $array_key . " = :" . $array_key . ", ";
+												$sql .= $array_key . " = :" . $array_key . ", ";
 												$params[$array_key] = $this->user_uuid ?? null;
 											} elseif ($array_value === "remote_address()") {
-												$sql                .= $array_key . " = :" . $array_key . ", ";
+												$sql .= $array_key . " = :" . $array_key . ", ";
 												$params[$array_key] = $_SERVER['REMOTE_ADDR'];
 											} elseif (gettype($array_value) === 'boolean') {
-												$sql                .= $array_key . " = :" . $array_key . ", ";
+												$sql .= $array_key . " = :" . $array_key . ", ";
 												$params[$array_key] = $array_value;
 											} else {
 												$sql .= $array_key . " = :" . $array_key . ", ";
@@ -2583,14 +2583,14 @@ class database {
 								}
 
 								//add the modified date and user
-								$sql                   .= "update_date = now(), ";
-								$sql                   .= "update_user = :update_user ";
+								$sql .= "update_date = now(), ";
+								$sql .= "update_user = :update_user ";
 								$params['update_user'] = $this->user_uuid ?? null;
 
 								//add the where with the parent name and value
-								$sql                        .= "WHERE " . $parent_key_name . " = :parent_key_value; ";
+								$sql .= "WHERE " . $parent_key_name . " = :parent_key_value; ";
 								$params['parent_key_value'] = $parent_key_value;
-								$sql                        = str_replace(", WHERE", " WHERE", $sql);
+								$sql = str_replace(", WHERE", " WHERE", $sql);
 
 								//add update user parameter
 								$params['update_user'] = $this->user_uuid ?? null;
@@ -2852,13 +2852,13 @@ class database {
 															} elseif ($v === "now()") {
 																$sql .= $k . " = now(), ";
 															} elseif ($v === "user_uuid()") {
-																$sql        .= $k . " = :" . $k . ", ";
+																$sql .= $k . " = :" . $k . ", ";
 																$params[$k] = $this->user_uuid ?? null;
 															} elseif ($v === "remote_address()") {
-																$sql        .= $k . " = :" . $k . ", ";
+																$sql .= $k . " = :" . $k . ", ";
 																$params[$k] = $_SERVER['REMOTE_ADDR'];
 															} elseif (gettype($v) === 'boolean') {
-																$sql        .= $k . " = :" . $k . ", ";
+																$sql .= $k . " = :" . $k . ", ";
 																$params[$k] = $v;
 															} else {
 																$sql .= $k . " = :" . $k . ", ";
@@ -2872,16 +2872,16 @@ class database {
 												}
 
 												//add the modified date and user
-												$sql                   .= "update_date = now(), ";
-												$sql                   .= "update_user = :update_user ";
+												$sql .= "update_date = now(), ";
+												$sql .= "update_user = :update_user ";
 												$params['update_user'] = $this->user_uuid ?? null;
 
 												//add the where with the parent name and value
-												$sql                        .= "WHERE " . $parent_key_name . " = :parent_key_value ";
-												$sql                        .= "AND " . $child_key_name . " = :child_key_value; ";
+												$sql .= "WHERE " . $parent_key_name . " = :parent_key_value ";
+												$sql .= "AND " . $child_key_name . " = :child_key_value; ";
 												$params['parent_key_value'] = $parent_key_value;
 												$params['child_key_value']  = $child_key_value;
-												$sql                        = str_replace(", WHERE", " WHERE", $sql);
+												$sql  = str_replace(", WHERE", " WHERE", $sql);
 
 												//set the error mode
 												$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -3000,11 +3000,11 @@ class database {
 											$sql .= "VALUES ";
 											$sql .= "(";
 											if (!$parent_key_exists) {
-												$sql                        .= ":parent_key_value, ";
+												$sql .= ":parent_key_value, ";
 												$params['parent_key_value'] = $parent_key_value;
 											}
 											if (!$child_key_exists) {
-												$sql                       .= ":child_key_value, ";
+												$sql .= ":child_key_value, ";
 												$params['child_key_value'] = $child_key_value;
 											}
 											if (is_array($row)) {
@@ -3019,13 +3019,13 @@ class database {
 															} elseif ($v === "now()") {
 																$sql .= "now(), ";
 															} elseif ($v === "user_uuid()") {
-																$sql        .= ':' . $k . ", ";
+																$sql .= ':' . $k . ", ";
 																$params[$k] = $this->user_uuid ?? null;
 															} elseif ($v === "remote_address()") {
-																$sql        .= ':' . $k . ", ";
+																$sql .= ':' . $k . ", ";
 																$params[$k] = $_SERVER['REMOTE_ADDR'];
 															} elseif (gettype($v) === 'boolean') {
-																$sql        .= ':' . $k . ", ";
+																$sql .= ':' . $k . ", ";
 																$params[$k] = $v;
 															} else {
 																$k = self::sanitize($k);
@@ -3235,8 +3235,8 @@ class database {
 				} else {
 					$sql .= "null, ";
 				}
-				$sql       .= ":transaction_result ";
-				$sql       .= ")";
+				$sql .= ":transaction_result ";
+				$sql .= ")";
 				$statement = $this->db->prepare($sql);
 				if (isset($this->domain_uuid) && is_uuid($this->domain_uuid)) {
 					$statement->bindParam(':domain_uuid', $this->domain_uuid);
@@ -3279,7 +3279,7 @@ class database {
 	/**
 	 * Ensure the database is still connected and active.
 	 * <p>NOTE:<br>
-	 * There is no method in PDO that can reliably detect if the connection is active. Therefor, a lightweight
+	 * There is no method in PDO that can reliably detect if the connection is active. Therefore, a lightweight
 	 * query is executed using the statement <code>select 1</code>.</p>
 	 *
 	 * @return bool True if the database is connected. False otherwise.
@@ -3293,7 +3293,7 @@ class database {
 			//database is not connected
 			return false;
 		} catch (Exception $e) {
-			//some other error has occurred so record it
+			//some other error has occurred, so record it
 			$message['message'] = $e->getMessage();
 			$message['code']    = $e->getCode();
 			$message['line']    = $e->getLine();
@@ -3587,7 +3587,7 @@ class database {
 	}
 
 	/**
-	 * Returns a sanitized string value safe for database or table name.
+	 * Returns a sanitized string value safe for the database or table name.
 	 *
 	 * @param string $value To be sanitized
 	 *
@@ -3606,7 +3606,7 @@ class database {
 	 * <p><b>Usage:</b><br>
 	 * <code>&nbsp; $database_object = database::new();</code></p>
 	 *
-	 * @return database new instance of database object already connected
+	 * @return database the new instance of the database object already connected
 	 * @see database::__construct()
 	 * @see database::connect()
 	 */
