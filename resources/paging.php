@@ -135,41 +135,41 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 	if ($max_page > 1) {
 		//define javascript to include
 		$script = "<script>\n" .
-			"function go(e) {\n" .
-			"var page_num;\n" .
-			"page_num = document.getElementById('paging_page_num').value;\n" .
+			"   function go(e) {\n" .
+			"      var page_num;\n" .
+			"      page_num = document.getElementById('paging_page_num').value;\n" .
 
-			"do_action = false;\n" .
-			"if (e != null) {\n" .
-			"// called from a form field keypress event\n" .
-			"var keyevent;\n" .
-			"var keychar;\n" .
+			"      do_action = false;\n" .
+			"      if (e != null) {\n" .
+			"          // called from a form field keypress event\n" .
+			"          var keyevent;\n" .
+			"          var keychar;\n" .
 
-			"if (window.event) { keyevent = e.keyCode; }\n" .
-			"else if (e.which) { keyevent = e.which; }\n" .
+			"          if (window.event) { keyevent = e.keyCode; }\n" .
+			"          else if (e.which) { keyevent = e.which; }\n" .
 
-			"keychar = keyevent;\n" .
-			"if (keychar == 13) {\n" .
-			"do_action = true;\n" .
-			"}\n" .
-			"else {\n" .
-			"keychar;\n" .
-			"return true;\n" .
-			"}\n" .
-			"}\n" .
-			"else {\n" .
-			"// called from something else (non-keypress)\n" .
-			"do_action = true;\n" .
-			"}\n" .
+			"          keychar = keyevent;\n" .
+			"          if (keychar == 13) {\n" .
+			"              do_action = true;\n" .
+			"          }\n" .
+			"          else {\n" .
+			"              keychar;\n" .
+			"              return true;\n" .
+			"          }\n" .
+			"      }\n" .
+			"      else {\n" .
+			"          // called from something else (non-keypress)\n" .
+			"          do_action = true;\n" .
+			"      }\n" .
 
-			"if (do_action) {\n" .
-			"// action to peform when enter is hit\n" .
-			"if (page_num < 1) { page_num = 1; }\n" .
-			"if (page_num > " . $max_page . ") { page_num = " . $max_page . "; }\n" .
-			"document.location.href = '" . $self . "?page='+(--page_num)+'" . $sanitized_parameters . "';\n" .
-			"return false;\n" .
-			"}\n" .
-			"}\n" .
+			"      if (do_action) {\n" .
+			"          // action to perform when enter is hit\n" .
+			"          if (page_num < 1) { page_num = 1; }\n" .
+			"          if (page_num > " . $max_page . ") { page_num = " . $max_page . "; }\n" .
+			"          document.location.href = '" . $self . "?page='+(--page_num)+'" . $sanitized_parameters . "';\n" .
+			"          return false;\n" .
+			"      }\n" .
+			"   }\n" .
 			"</script>\n";
 		//determine size
 		if ($mini) {
