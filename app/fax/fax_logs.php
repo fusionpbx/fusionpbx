@@ -141,7 +141,7 @@
 	$parameters['fax_uuid'] = $fax_uuid;
 	$parameters['time_zone'] = $time_zone;
 	$fax_logs = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters)
+	unset($sql, $parameters);
 
 //create token
 	$object = new token;
