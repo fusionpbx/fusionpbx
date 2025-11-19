@@ -32,6 +32,19 @@
  * @author Tim Fry <tim@fusionpbx.com>
  */
 class subscriber_token_expired_exception extends \subscriber_exception {
+	/**
+	 * Constructor for the class.
+	 *
+	 * Initializes a new instance of the class with optional subscriber ID, message,
+	 * code, and previous exception information.
+	 *
+	 * @param string|null     $subscriber_id Optional subscriber ID.
+	 * @param string          $message       The error message. Defaults to "Subscriber token expired".
+	 * @param int             $code          The HTTP status code. Defaults to 0.
+	 * @param \Throwable|null $previous      The previous exception. Defaults to null.
+	 *
+	 * @return void
+	 */
 	public function __construct($subscriber_id = null, string $message = "Subscriber token expired", int $code = 0, ?\Throwable $previous = null) {
 		return parent::__construct($subscriber_id, $message, $code, $previous);
 	}

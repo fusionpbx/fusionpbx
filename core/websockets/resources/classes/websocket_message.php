@@ -29,17 +29,18 @@
 /**
  * A structured web socket message easily converted to and from a json string
  *
+ * @param string $service_name  ;
+ * @param string $token_name    ;
+ * @param string $token_hash    ;
+ * @param string $status_string ;
+ * @param string $status_code   ;
+ * @param string $request_id    ;
+ * @param string $resource_id   ;
+ * @param string $domain_uuid   ;
+ * @param string $permissions   ;
+ * @param string $topic         ;
+ *
  * @author Tim Fry <tim@fusionpbx.com>
- * @param string $service_name;
- * @param string $token_name;
- * @param string $token_hash;
- * @param string $status_string;
- * @param string $status_code;
- * @param string $request_id;
- * @param string $resource_id;
- * @param string $domain_uuid;
- * @param string $permissions;
- * @param string $topic;
  */
 class websocket_message extends base_message {
 
@@ -58,30 +59,39 @@ class websocket_message extends base_message {
 
 	public function __construct($associative_properties_array = []) {
 		// Initialize empty default values
-		$this->service_name = '';
-		$this->token_name = '';
-		$this->token_hash = '';
+		$this->service_name  = '';
+		$this->token_name    = '';
+		$this->token_hash    = '';
 		$this->status_string = '';
-		$this->status_code = '';
-		$this->request_id = '';
-		$this->resource_id = '';
-		$this->domain_uuid = '';
-		$this->domain_name = '';
-		$this->permissions = [];
-		$this->topic = '';
+		$this->status_code   = '';
+		$this->request_id    = '';
+		$this->resource_id   = '';
+		$this->domain_uuid   = '';
+		$this->domain_name   = '';
+		$this->permissions   = [];
+		$this->topic         = '';
 		//
 		// Send to parent (base_message) constructor
 		//
 		parent::__construct($associative_properties_array);
 	}
 
+	/**
+	 * Checks if a permission is granted to this service.
+	 *
+	 * @param string $permission_name The name of the permission to check for.
+	 *
+	 * @return bool True if the permission is granted, false otherwise.
+	 */
 	public function has_permission($permission_name) {
 		return isset($this->permissions[$permission_name]);
 	}
 
 	/**
 	 * Alias of service_name.
+	 *
 	 * @param string $service_name
+	 *
 	 * @return $this
 	 * @see service_name
 	 */
@@ -97,7 +107,9 @@ class websocket_message extends base_message {
 	 * Gets or Sets the service name
 	 * If no parameters are provided then the service_name is returned. If the service name is provided, then the
 	 * service_name is set to the value provided.
+	 *
 	 * @param string $service_name
+	 *
 	 * @return $this
 	 */
 	public function service_name($service_name = null) {
@@ -110,7 +122,9 @@ class websocket_message extends base_message {
 
 	/**
 	 * Gets or sets the permissions array
+	 *
 	 * @param array $permissions
+	 *
 	 * @return $this
 	 */
 	public function permissions($permissions = []) {
@@ -124,6 +138,7 @@ class websocket_message extends base_message {
 	/**
 	 * Applies a filter to the payload of this message.
 	 * When a filter returns null then the payload is set to null
+	 *
 	 * @param filter $filter
 	 */
 	public function apply_filter(?filter $filter) {
@@ -134,9 +149,8 @@ class websocket_message extends base_message {
 				if ($result === null) {
 					$this->payload = null;
 					return;
-				}
-				// Remove a key if filter does not pass
-				elseif(!$result) {
+				} // Remove a key if filter does not pass
+				elseif (!$result) {
 					unset($this->payload[$key]);
 				}
 			}
@@ -145,7 +159,9 @@ class websocket_message extends base_message {
 
 	/**
 	 * Gets or sets the domain UUID
+	 *
 	 * @param string $domain_uuid
+	 *
 	 * @return $this or $domain_uuid
 	 */
 	public function domain_uuid($domain_uuid = '') {
@@ -158,7 +174,9 @@ class websocket_message extends base_message {
 
 	/**
 	 * Gets or sets the domain name
+	 *
 	 * @param string $domain_name
+	 *
 	 * @return $this or $domain_name
 	 */
 	public function domain_name($domain_name = '') {
@@ -173,7 +191,9 @@ class websocket_message extends base_message {
 	 * Gets or Sets the service name
 	 * If no parameters are provided then the service_name is returned. If the service name is provided, then the
 	 * topic is set to the value provided.
+	 *
 	 * @param string $topic
+	 *
 	 * @return $this
 	 */
 	public function topic($topic = null) {
@@ -186,7 +206,9 @@ class websocket_message extends base_message {
 
 	/**
 	 * Gets or sets the token array using the key values of 'name' and 'hash'
+	 *
 	 * @param array $token_array
+	 *
 	 * @return array|$this
 	 * @see token_name
 	 * @see token_hash
@@ -201,11 +223,13 @@ class websocket_message extends base_message {
 
 	/**
 	 * Sets the token name
+	 *
 	 * @param string $token_name
+	 *
 	 * @return $this
 	 * @see token_hash
 	 */
-	public function token_name($token_name  = '') {
+	public function token_name($token_name = '') {
 		if (func_num_args() > 0) {
 			$this->token_name = $token_name;
 			return $this;
@@ -215,7 +239,9 @@ class websocket_message extends base_message {
 
 	/**
 	 * Gets or sets the status code of this message
+	 *
 	 * @param int $status_code
+	 *
 	 * @return $this
 	 */
 	public function status_code($status_code = '') {
@@ -228,7 +254,9 @@ class websocket_message extends base_message {
 
 	/**
 	 * Gets or sets the resource id
-	 * @param type $resource_id
+	 *
+	 * @param mixed $resource_id
+	 *
 	 * @return $this
 	 */
 	public function resource_id($resource_id = null) {
@@ -241,7 +269,9 @@ class websocket_message extends base_message {
 
 	/**
 	 * Gets or sets the request ID
-	 * @param type $request_id
+	 *
+	 * @param string $request_id
+	 *
 	 * @return $this
 	 */
 	public function request_id($request_id = null) {
@@ -254,10 +284,12 @@ class websocket_message extends base_message {
 
 	/**
 	 * Gets or sets the status string
-	 * @param type $status_string
+	 *
+	 * @param string $status_string
+	 *
 	 * @return $this
 	 */
-	public function status_string( $status_string = null) {
+	public function status_string($status_string = null) {
 		if (func_num_args() > 0) {
 			$this->status_string = $status_string;
 			return $this;
@@ -267,7 +299,9 @@ class websocket_message extends base_message {
 
 	/**
 	 * Gets or sets the token hash
-	 * @param type $token_hash
+	 *
+	 * @param string $token_hash
+	 *
 	 * @return $this
 	 * @see token_name
 	 */
@@ -281,8 +315,10 @@ class websocket_message extends base_message {
 
 	/**
 	 * Convert the 'statusString' key that comes from javascript
-	 * @param type $status_string
-	 * @return type
+	 *
+	 * @param string $status_string
+	 *
+	 * @return string
 	 */
 	public function statusString($status_string = '') {
 		return $this->status_string($status_string);
@@ -290,7 +326,9 @@ class websocket_message extends base_message {
 
 	/**
 	 * Convert the 'statusCode' key that comes from javascript
-	 * @param type $status_code
+	 *
+	 * @param string $status_code
+	 *
 	 * @return $this
 	 */
 	public function statusCode($status_code = 200) {
@@ -299,7 +337,9 @@ class websocket_message extends base_message {
 
 	/**
 	 * Unwrap a JSON message to an associative array
+	 *
 	 * @param string $json_string
+	 *
 	 * @return array
 	 */
 	public static function unwrap($json_string = '') {
@@ -308,7 +348,9 @@ class websocket_message extends base_message {
 
 	/**
 	 * Helper function to respond with a connected message
+	 *
 	 * @param string|int $request_id
+	 *
 	 * @return string
 	 */
 	public static function connected($request_id = ''): string {
@@ -317,7 +359,9 @@ class websocket_message extends base_message {
 
 	/**
 	 * Helper function to respond with a authentication message
+	 *
 	 * @param string|int $request_id
+	 *
 	 * @return string
 	 */
 	public static function request_authentication($request_id = ''): string {
@@ -334,9 +378,11 @@ class websocket_message extends base_message {
 
 	/**
 	 * Helper function to respond with a bad request message
+	 *
 	 * @param string|int $request_id
-	 * @param string $service
-	 * @param string $topic
+	 * @param string     $service
+	 * @param string     $topic
+	 *
 	 * @return string
 	 */
 	public static function request_is_bad($request_id = '', string $service = '', string $topic = ''): string {
@@ -352,28 +398,32 @@ class websocket_message extends base_message {
 
 	/**
 	 * Helper function to respond with an authenticated message
+	 *
 	 * @param string|int $request_id
-	 * @param string $service
-	 * @param string $topic
+	 * @param string     $service
+	 * @param string     $topic
+	 *
 	 * @return string
 	 */
 	public static function request_authenticated($request_id = '', string $service = '', string $topic = 'authenticated'): string {
 		$class = static::class;
 		return (new $class())
-				->request_id($request_id)
-				->service_name($service)
-				->topic($topic)
-				->status_code(200)
-				->status_string('OK')
-				->__toString()
+			->request_id($request_id)
+			->service_name($service)
+			->topic($topic)
+			->status_code(200)
+			->status_string('OK')
+			->__toString()
 		;
 	}
 
 	/**
 	 * Helper function to respond with an unauthorized request message
+	 *
 	 * @param string|int $request_id
-	 * @param string $service
-	 * @param string $topic
+	 * @param string     $service
+	 * @param string     $topic
+	 *
 	 * @return string
 	 */
 	public static function request_unauthorized($request_id = '', string $service = '', string $topic = 'unauthorized'): string {
@@ -389,9 +439,11 @@ class websocket_message extends base_message {
 
 	/**
 	 * Helper function to respond with a forbidden message
+	 *
 	 * @param string|int $request_id
-	 * @param string $service
-	 * @param string $topic
+	 * @param string     $service
+	 * @param string     $topic
+	 *
 	 * @return string
 	 */
 	public static function request_forbidden($request_id = '', string $service = '', string $topic = 'forbidden'): string {
@@ -407,7 +459,9 @@ class websocket_message extends base_message {
 
 	/**
 	 * Returns a websocket_message object (or child object) using the provided JSON string or JSON array
+	 *
 	 * @param string|array $websocket_message_json JSON array or JSON string
+	 *
 	 * @return static|null Returns a new websocket_message object (or child object)
 	 * @throws \InvalidArgumentException
 	 */

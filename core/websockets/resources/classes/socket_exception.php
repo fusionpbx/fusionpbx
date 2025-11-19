@@ -33,6 +33,17 @@
  */
 class socket_exception extends \Exception {
 	public $id;
+
+	/**
+	 * Initializes a new instance of the object.
+	 *
+	 * @param mixed           $id       Unique identifier for this exception (default: null)
+	 * @param string          $message  Exception message (default: "")
+	 * @param int             $code     Exception code (default: 0)
+	 * @param \Throwable|null $previous The previous exception (default: null)
+	 *
+	 * @return void
+	 */
 	public function __construct($id = null, string $message = "", int $code = 0, ?\Throwable $previous = null) {
 		$this->id = $id;
 		return parent::__construct($message, $code, $previous);

@@ -581,6 +581,13 @@ require_once "resources/footer.php";
 
 
 // used above
+/**
+ * Retrieves the contents of a URL using cURL.
+ *
+ * @param string $url The URL to retrieve.
+ *
+ * @return string The contents of the retrieved URL, or FALSE if an error occurred.
+ */
 function curl_file_get_contents($url) {
 	$curl = curl_init();
 	$userAgent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)';

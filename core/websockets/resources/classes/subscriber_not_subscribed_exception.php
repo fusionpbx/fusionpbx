@@ -32,6 +32,14 @@
  * @author Tim Fry <tim@fusionpbx.com>
  */
 class subscriber_not_subscribed_exception extends subscriber_exception {
+	/**
+	 * Initializes a new instance of the class with the specified subscriber ID and message.
+	 *
+	 * @param string|int      $subscriber_id The identifier for the subscriber.
+	 * @param string          $message       The error message. Defaults to "Subscriber is not subscribed".
+	 * @param int             $code          The HTTP status code. Defaults to 0.
+	 * @param \Throwable|null $previous      The previous exception, if any.
+	 */
 	public function __construct($subscriber_id, string $message = "Subscriber is not subscribed", int $code = 0, ?\Throwable $previous = null) {
 		parent::__construct($subscriber_id, $message, $code, $previous);
 	}

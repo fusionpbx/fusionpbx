@@ -40,94 +40,133 @@ class websocket_server {
 
 	/**
 	 * Address to bind to. (Default 8080)
+	 *
 	 * @var string
 	 */
 	protected $address;
 
 	/**
 	 * Port to bind to. (Default 0.0.0.0 - all PHP detected IP addresses of the system)
+	 *
 	 * @var int
 	 */
 	protected $port;
 
 	/**
 	 * Tracks if the server is running
+	 *
 	 * @var bool
 	 */
 	protected $running;
 
 	/**
 	 * Resource or stream of the server socket binding
+	 *
 	 * @var resource|stream
 	 */
 	protected $server_socket;
 
 	/**
 	 * List of connected client sockets
+	 *
 	 * @var array
 	 */
 	protected $clients;
 
 	/**
 	 * Used to track on_message events
+	 *
 	 * @var array
 	 */
 	private $message_callbacks;
 
 	/**
 	 * Used to track on_connect events
+	 *
 	 * @var array
 	 */
 	private $connect_callbacks;
 
 	/**
 	 * Used to track on_disconnect events
+	 *
 	 * @var array
 	 */
 	private $disconnect_callbacks;
 
 	/**
 	 * Used to track switch listeners or other socket connection types
+	 *
 	 * @var array
 	 */
 	private $listeners;
 
 	/**
 	 * Creates a websocket_server instance
+	 *
 	 * @param string $address IP to bind (default 0.0.0.0)
 	 * @param int    $port    TCP port (default 8080)
 	 */
 	public function __construct(string $address = '127.0.0.1', int $port = 8080) {
 		$this->running = false;
 		$this->address = $address;
-		$this->port = $port;
+		$this->port    = $port;
 
 		// Initialize arrays
-		$this->listeners = [];
-		$this->clients = [];
-		$this->message_callbacks = [];
-		$this->connect_callbacks = [];
+		$this->listeners            = [];
+		$this->clients              = [];
+		$this->message_callbacks    = [];
+		$this->connect_callbacks    = [];
 		$this->disconnect_callbacks = [];
 	}
 
+	/**
+	 * Log a debugging message to the log handler.
+	 *
+	 * @param string $message The message to be logged.
+	 *
+	 * @return void
+	 */
 	private function debug(string $message) {
 		self::log($message, LOG_DEBUG);
 	}
 
+	/**
+	 * Log a warning message to the log file.
+	 *
+	 * @param string $message The warning message to be logged.
+	 *
+	 * @return void
+	 */
 	private function warn(string $message) {
 		self::log($message, LOG_WARNING);
 	}
 
+	/**
+	 * Log an error message to the log file. If the logging fails for any reason, it is silently ignored and no further action is taken.
+	 *
+	 * @param string $message The error message to be logged.
+	 *
+	 * @return void
+	 */
 	private function error(string $message) {
 		self::log($message, LOG_ERR);
 	}
 
+	/**
+	 * Logs information level message to the log handler.
+	 *
+	 * @param string $message The message to be logged.
+	 *
+	 * @return void
+	 */
 	private function info(string $message) {
 		self::log($message, LOG_INFO);
 	}
 
 	/**
 	 * Starts server: accepts new clients, reads frames, and broadcasts messages.
+	 *
 	 * @returns int A non-zero indicates an abnormal termination
 	 */
 	public function run(): int {
@@ -143,8 +182,8 @@ class websocket_server {
 
 		while ($this->running) {
 			$listeners = array_column($this->listeners, 0);
-			$read = array_merge([$this->server_socket], $listeners, $this->clients);
-			$write = $except = [];
+			$read      = array_merge([$this->server_socket], $listeners, $this->clients);
+			$write     = $except = [];
 			// Server connection issue
 			if (false === stream_select($read, $write, $except, null)) {
 				$this->running = false;
@@ -194,12 +233,15 @@ class websocket_server {
 				$this->trigger_message($client_socket, $message);
 			}
 		}
+		return 0;
 	}
 
 	/**
 	 * Add a non-blocking socket to listen for traffic on
+	 *
 	 * @param resource $socket
 	 * @param callable $on_data_ready_callback Callable function to call when data arrives on the socket
+	 *
 	 * @throws \InvalidArgumentException
 	 */
 	public function add_listener($socket, callable $on_data_ready_callback) {
@@ -211,6 +253,7 @@ class websocket_server {
 
 	/**
 	 * Returns true if there are connected web socket clients.
+	 *
 	 * @return bool
 	 */
 	public function has_clients(): bool {
@@ -220,7 +263,9 @@ class websocket_server {
 	/**
 	 * When a web socket message is received the $on_message_callback function is called.
 	 * Multiple on_message functions can be specified.
+	 *
 	 * @param callable $on_message_callback Callable function to call when data arrives on the socket
+	 *
 	 * @throws InvalidArgumentException
 	 */
 	public function on_message(callable $on_message_callback) {
@@ -232,8 +277,10 @@ class websocket_server {
 
 	/**
 	 * Calls all the on_message functions
+	 *
 	 * @param resource $socket
-	 * @param string $message
+	 * @param string   $message
+	 *
 	 * @return void
 	 */
 	private function trigger_message($socket, string $message) {
@@ -249,7 +296,9 @@ class websocket_server {
 	/**
 	 * When a web socket handshake has completed, the $on_connect_callback function is called.
 	 * Multiple on_connect functions can be specified.
+	 *
 	 * @param callable $on_connect_callback Callable function to call when a new connection occurs.
+	 *
 	 * @throws InvalidArgumentException
 	 */
 	public function on_connect(callable $on_connect_callback) {
@@ -261,7 +310,10 @@ class websocket_server {
 
 	/**
 	 * Calls all the on_connect functions
+	 *
 	 * @param resource $socket
+	 *
+	 * @throws \socket_disconnected_exception
 	 */
 	private function trigger_connect($socket) {
 		foreach ($this->connect_callbacks as $callback) {
@@ -275,7 +327,11 @@ class websocket_server {
 	/**
 	 * When a web socket has disconnected, the $on_disconnect_callback function is called.
 	 * Multiple functions can be specified with subsequent calls
-	 * @param string|callable $on_disconnect_callback Callable function to call when a socket disconnects. The function must accept a single parameter for the socket that was disconnected.
+	 *
+	 * @param string|callable $on_disconnect_callback Callable function to call when a socket disconnects. The function
+	 *                                                must accept a single parameter for the socket that was
+	 *                                                disconnected.
+	 *
 	 * @throws InvalidArgumentException
 	 */
 	public function on_disconnect($on_disconnect_callback) {
@@ -287,7 +343,8 @@ class websocket_server {
 
 	/**
 	 * Calls all the on_disconnect_callback functions
-	 * @param type $socket
+	 *
+	 * @param resource $socket
 	 */
 	private function trigger_disconnect($socket) {
 		foreach ($this->disconnect_callbacks as $callback) {
@@ -297,6 +354,7 @@ class websocket_server {
 
 	/**
 	 * Returns the socket used in the server connection
+	 *
 	 * @return resource
 	 */
 	public function get_socket() {
@@ -304,15 +362,19 @@ class websocket_server {
 	}
 
 	/**
-	 * Remove a client socket on disconnect.
-	 * @return bool Returns true on client disconnect and false when the client is not found in the tracking array
+	 * Disconnect a client from the server.
+	 *
+	 * @param resource    $resource The socket or resource id of the client to disconnect.
+	 * @param string|null $error    A custom error message to send to the client, if any.
+	 *
+	 * @return bool True if the client was successfully disconnected, false otherwise.
 	 */
-	protected function disconnect_client($socket, $error = null): bool {
+	protected function disconnect_client($resource, $error = null): bool {
 		$index = array_search($resource, $this->clients, true);
 		if ($index !== false) {
 			self::disconnect($resource);
 			unset($this->clients[$index]);
-			$this->trigger_disconnect($socket);
+			$this->trigger_disconnect($resource);
 			return true;
 		}
 		return false;
@@ -320,7 +382,8 @@ class websocket_server {
 
 	/**
 	 * Sends a disconnect frame with no payload
-	 * @param type $resource
+	 *
+	 * @param resource $resource
 	 */
 	public static function disconnect($resource) {
 		if (is_resource($resource)) {
@@ -332,7 +395,8 @@ class websocket_server {
 
 	/**
 	 * Performs web socket handshake on new connection.
-	 * @param type $socket Socket to perform the handshake on.
+	 *
+	 * @param resource $socket Socket to perform the handshake on.
 	 */
 	protected function handshake($socket) {
 		// ensure blocking to read full header
@@ -347,21 +411,23 @@ class websocket_server {
 		if (!preg_match("/Sec-WebSocket-Key: (.*)\r\n/", $request_header, $matches)) {
 			throw new \invalid_handshake_exception($socket, "Invalid WebSocket handshake");
 		}
-		$key = trim($matches[1]);
-		$accept_key = base64_encode(
-				sha1($key . "258EAFA5-E914-47DA-95CA-C5AB0DC85B11", true)
+		$key             = trim($matches[1]);
+		$accept_key      = base64_encode(
+			sha1($key . "258EAFA5-E914-47DA-95CA-C5AB0DC85B11", true)
 		);
 		$response_header = "HTTP/1.1 101 Switching Protocols\r\n"
-				. "Upgrade: websocket\r\n"
-				. "Connection: Upgrade\r\n"
-				. "Sec-WebSocket-Accept: {$accept_key}\r\n\r\n";
+			. "Upgrade: websocket\r\n"
+			. "Connection: Upgrade\r\n"
+			. "Sec-WebSocket-Accept: {$accept_key}\r\n\r\n";
 		fwrite($socket, $response_header);
 	}
 
 	/**
 	 * Read specific number of bytes from a web socket
+	 *
 	 * @param resource $socket
-	 * @param int $length
+	 * @param int      $length
+	 *
 	 * @return string
 	 */
 	private function read_bytes($socket, int $length): string {
@@ -379,15 +445,17 @@ class websocket_server {
 
 	/**
 	 * Reads a web socket data frame and converts it to a regular string
+	 *
 	 * @param resource $socket
-	 * @return string
+	 *
+	 * @return string|null
 	 */
-	private function receive_frame($socket): string {
+	private function receive_frame($socket): ?string {
 		if (!is_resource($socket)) {
 			throw new \RuntimeException("Not connected");
 		}
 
-		$final_frame = false;
+		$final_frame  = false;
 		$payload_data = '';
 
 		while (!$final_frame) {
@@ -399,8 +467,8 @@ class websocket_server {
 			$byte2 = ord($header[1]);
 
 			$final_frame = ($byte1 >> 7) & 1;
-			$opcode = $byte1 & 0x0F;
-			$masked = ($byte2 >> 7) & 1;
+			$opcode      = $byte1 & 0x0F;
+			$masked      = ($byte2 >> 7) & 1;
 			$payload_len = $byte2 & 0x7F;
 
 			// Extended payload length
@@ -480,8 +548,11 @@ class websocket_server {
 	/**
 	 * Send text frame to client. If the socket connection is not a valid resource, the send
 	 * method will fail silently and return false.
-	 * @param resource $resource The socket or resource id to communicate on.
-	 * @param string|null $payload The message to send to the clients. Sending null as the message sends a close frame packet.
+	 *
+	 * @param resource    $resource The socket or resource id to communicate on.
+	 * @param string|null $payload  The message to send to the clients. Sending null as the message sends a close frame
+	 *                              packet.
+	 *
 	 * @return bool True if message was sent on the provided resource or false if there was an error.
 	 */
 	public static function send($resource, ?string $payload): bool {
@@ -496,20 +567,20 @@ class websocket_server {
 			return true;
 		}
 
-		$chunk_size = 4096; // 4 KB
+		$chunk_size  = 4096; // 4 KB
 		$payload_len = strlen($payload);
-		$offset = 0;
-		$first = true;
+		$offset      = 0;
+		$first       = true;
 
 		while ($offset < $payload_len) {
 			$remaining = $payload_len - $offset;
-			$chunk = substr($payload, $offset, min($chunk_size, $remaining));
+			$chunk     = substr($payload, $offset, min($chunk_size, $remaining));
 			$chunk_len = strlen($chunk);
 
 			// Determine FIN bit and opcode
-			$fin = ($offset + $chunk_size >= $payload_len) ? 0x80 : 0x00; // 0x80 if final
+			$fin    = ($offset + $chunk_size >= $payload_len) ? 0x80 : 0x00; // 0x80 if final
 			$opcode = $first ? 0x1 : 0x0; // text for first frame, continuation for rest
-			$first = false;
+			$first  = false;
 
 			// Build header
 			$header = chr($fin | $opcode);
@@ -542,7 +613,9 @@ class websocket_server {
 
 	/**
 	 * Get the IP and port of the connected remote system.
+	 *
 	 * @param socket $socket The socket stream of the connection
+	 *
 	 * @return array An associative array of remote_ip and remote_port
 	 */
 	public static function get_remote_info($socket): array {
@@ -552,9 +625,10 @@ class websocket_server {
 
 	/**
 	 * Print socket information
+	 *
 	 * @param resource $resource
-	 * @param bool $return If you would like to capture the output of print_r(), use the return parameter. When this
-	 * parameter is set to true, print_r() will return the information rather than print it.
+	 * @param bool     $return If you would like to capture the output of print_r(), use the return parameter. When this
+	 *                         parameter is set to true, print_r() will return the information rather than print it.
 	 */
 	public static function print_stream_info($resource, $return = false) {
 		if (is_resource($resource)) {

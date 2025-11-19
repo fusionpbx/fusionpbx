@@ -25,193 +25,216 @@
 */
 
 //define the permission class
-	class permission {
+class permission {
 
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'groups';
-		const app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
+	/**
+	 * declare constant variables
+	 */
+	const app_name = 'groups';
+	const app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 
-		/**
-		 * declare private variables
-		 */
+	/**
+	 * declare private variables
+	 */
 
-		private $database;
-		private $database_group_permissions;
+	private $database;
+	private $database_group_permissions;
 
-		/**
-		 * called when the object is created
-		 */
-		public function __construct(array $setting_array = []) {
-			//set objects
-			$this->database = $setting_array['database'] ?? database::new();
+	/**
+	 * Constructor for the class.
+	 *
+	 * This method initializes the object with setting_array and session data.
+	 *
+	 * @param array $setting_array An optional array of settings to override default values. Defaults to [].
+	 */
+	public function __construct(array $setting_array = []) {
+		//set objects
+		$this->database = $setting_array['database'] ?? database::new();
+	}
+
+	//delete the permissions
+
+	/**
+	 * Deletes unprotected group permissions from the database.
+	 *
+	 * This method retrieves a list of apps and their associated permissions, then deletes any permissions that are not protected.
+	 *
+	 * @return void
+	 */
+	function delete() {
+
+		//get the $apps array from the installed apps from the core and mod directories
+		$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+		$x           = 0;
+		foreach ($config_list as $config_path) {
+			include($config_path);
+			$x++;
 		}
 
-		//delete the permissions
-			function delete() {
+		//initialize array
+		$group_name_array = [];
 
-				//get the $apps array from the installed apps from the core and mod directories
-					$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
-					$x = 0;
-					foreach ($config_list as $config_path) {
-						include($config_path);
-						$x++;
+		//restore default permissions
+		$x = 0;
+		foreach ($apps as $row) {
+			if (!empty($row['permissions']) && is_array($row['permissions']) && @sizeof($row['permissions']) != 0) {
+				foreach ($row['permissions'] as $permission) {
+					if (!empty($permission['groups']) && is_array($permission['groups'])) {
+						foreach ($permission['groups'] as $group_name) {
+							if (is_array($group_name_array) || !in_array($group_name, $group_name_array)) {
+								$group_name_array[] = $group_name;
+							}
+						}
 					}
+				}
+			}
+		}
+		$group_names = "'" . implode("','", $group_name_array) . "'";
 
-				//initialize array
-					$group_name_array = array();
+		//delete unprotected permissions
+		$sql    = "delete from v_group_permissions as p ";
+		$sql    .= "where group_name in ( ";
+		$sql    .= "	select group_name ";
+		$sql    .= "	from v_groups ";
+		$sql    .= "	where group_protected <> true ";
+		$sql    .= "	and group_name in (" . $group_names . ") ";
+		$sql    .= ")";
+		$sql    .= "and (permission_protected <> 'true' or permission_protected is null)";
+		$result = $this->database->select($sql);
 
-				//restore default permissions
-					$x = 0;
-					foreach ($apps as $row) {
-						if (!empty($row['permissions']) && is_array($row['permissions']) && @sizeof($row['permissions']) != 0) {
-							foreach ($row['permissions'] as $permission) {
-								if (!empty($permission['groups']) && is_array($permission['groups'])) {
-									foreach ($permission['groups'] as $group_name) {
-										if (is_array($group_name_array) || !in_array($group_name, $group_name_array)) {
-											$group_name_array[] = $group_name;
+		//get the group_permissons
+		/*
+		$sql = "select * from v_group_permissions as p ";
+		$sql .= "where group_name in ( ";
+		$sql .= "	select group_name ";
+		$sql .= "	from v_groups ";
+		$sql .= "	where group_protected <> true ";
+		$sql .= "	and group_name in (".$group_names.") ";
+		$sql .= ");";
+		$group_permissions = $this->database->select($sql, null, 'all');
+		*/
+
+		//delete unprotected group permissions
+		/*
+		if (is_array($group_permissions) && sizeof($group_permissions) > 0) {
+			$x = 0;
+			foreach ($group_permissions as $row) {
+				//build delete array
+					$array['group_permissions'][$x]['group_permission_uuid'] = $row['group_permission_uuid'];
+					$array['group_permissions'][$x]['domain_uuid'] = ($row['domain_uuid'] != '') ? $row['domain_uuid'] : null;
+					$x++;
+			}
+			if (is_array($array) && @sizeof($array) != 0) {
+				//grant temporary permissions
+					$p = permissions::new();
+					$p->add('group_permission_delete', 'temp');
+				//execute delete
+					$this->database->delete($array);
+					unset($array);
+				//revoke temporary permissions
+					$p->delete('group_permission_delete', 'temp');
+			}
+		}
+		*/
+	}
+
+	//restore the permissions
+
+	/**
+	 * Restore default group and permission settings.
+	 *
+	 * This method restores the default groups and permissions by deleting existing unprotected permissions,
+	 * adding default groups if none exist, retrieving remaining permissions from installed apps,
+	 * and inserting default permissions into the database.
+	 *
+	 * @return void
+	 * @see permission::delete()
+	 */
+	function restore() {
+
+		//if the are no groups add the default groups
+		$sql    = "select * from v_groups ";
+		$sql    .= "where domain_uuid is null ";
+		$groups = $this->database->select($sql, null, 'all');
+
+		//delete the group permissions
+		$this->delete();
+
+		//get the remaining group permissions
+		$sql                              = "select permission_name, group_name from v_group_permissions ";
+		$this->database_group_permissions = $this->database->select($sql, null, 'all');
+
+		//get the $apps array from the installed apps from the core and mod directories
+		$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+		$x           = 0;
+		foreach ($config_list as $config_path) {
+			include($config_path);
+			$x++;
+		}
+
+		//restore default permissions
+		$x = 0;
+		foreach ($apps as $row) {
+			if (!empty($row['permissions']) && is_array($row['permissions']) && @sizeof($row['permissions']) != 0) {
+				foreach ($row['permissions'] as $permission) {
+					//set the variables
+					if (!empty($permission['groups'])) {
+						foreach ($permission['groups'] as $group_name) {
+							//check group protection
+							$group_uuid      = null;
+							$group_protected = false;
+							if (is_array($groups)) {
+								foreach ($groups as $group) {
+									if ($group['group_name'] == $group_name) {
+										$group_uuid      = $group['group_uuid'];
+										$group_protected = $group['group_protected'];
+										break;
+									}
+								}
+							}
+							if (!$group_protected) {
+								// check if the item is not currently in the database
+								$exists = false;
+								foreach ($this->database_group_permissions as $i => $group_permission) {
+									if ($group_permission['permission_name'] == $permission['name']) {
+										if ($group_permission['group_name'] == $group_name) {
+											$exists = true;
+											break;
 										}
 									}
+								}
+								if (!$exists) {
+									//build default permissions insert array
+									$array['group_permissions'][$x]['group_permission_uuid'] = uuid();
+									$array['group_permissions'][$x]['permission_name']       = $permission['name'];
+									$array['group_permissions'][$x]['permission_protected']  = 'false';
+									$array['group_permissions'][$x]['permission_assigned']   = 'true';
+									$array['group_permissions'][$x]['group_name']            = $group_name;
+									$array['group_permissions'][$x]['group_uuid']            = $group_uuid;
+									$x++;
 								}
 							}
 						}
 					}
-					$group_names = "'".implode("','", $group_name_array)."'";
-
-				//delete unprotected permissions
-					$sql = "delete from v_group_permissions as p ";
-					$sql .= "where group_name in ( ";
-					$sql .= "	select group_name ";
-					$sql .= "	from v_groups ";
-					$sql .= "	where group_protected <> true ";
-					$sql .= "	and group_name in (".$group_names.") ";
-					$sql .= ")";
-					$sql .= "and (permission_protected <> 'true' or permission_protected is null)";
-					$result = $this->database->select($sql);
-
-				//get the group_permissons
-					/*
-					$sql = "select * from v_group_permissions as p ";
-					$sql .= "where group_name in ( ";
-					$sql .= "	select group_name ";
-					$sql .= "	from v_groups ";
-					$sql .= "	where group_protected <> true ";
-					$sql .= "	and group_name in (".$group_names.") ";
-					$sql .= ");";
-					$group_permissions = $this->database->select($sql, null, 'all');
-					*/
-
-				//delete unprotected group permissions
-					/*
-					if (is_array($group_permissions) && sizeof($group_permissions) > 0) {
-						$x = 0;
-						foreach ($group_permissions as $row) {
-							//build delete array
-								$array['group_permissions'][$x]['group_permission_uuid'] = $row['group_permission_uuid'];
-								$array['group_permissions'][$x]['domain_uuid'] = ($row['domain_uuid'] != '') ? $row['domain_uuid'] : null;
-								$x++;
-						}
-						if (is_array($array) && @sizeof($array) != 0) {
-							//grant temporary permissions
-								$p = permissions::new();
-								$p->add('group_permission_delete', 'temp');
-							//execute delete
-								$this->database->delete($array);
-								unset($array);
-							//revoke temporary permissions
-								$p->delete('group_permission_delete', 'temp');
-						}
-					}
-					*/
+				}
 			}
+		}
 
-		//restore the permissions
-			function restore() {
+		if (is_array($array) && @sizeof($array)) {
+			//grant temporary permissions
+			$p = permissions::new();
+			$p->add('group_permission_add', 'temp');
 
-				//if the are no groups add the default groups
-					$sql = "select * from v_groups ";
-					$sql .= "where domain_uuid is null ";
-					$groups = $this->database->select($sql, null, 'all');
+			//execute insert
+			$this->database->save($array);
+			unset($array);
 
-				//delete the group permissions
-					$this->delete();
-
-				//get the remaining group permissions
-					$sql = "select permission_name, group_name from v_group_permissions ";
-					$this->database_group_permissions = $this->database->select($sql, null, 'all');
-
-				//get the $apps array from the installed apps from the core and mod directories
-					$config_list = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/*/*/app_config.php");
-					$x = 0;
-					foreach ($config_list as $config_path) {
-						include($config_path);
-						$x++;
-					}
-
-				//restore default permissions
-					$x = 0;
-					foreach ($apps as $row) {
-						if (!empty($row['permissions']) && is_array($row['permissions']) && @sizeof($row['permissions']) != 0) {
-							foreach ($row['permissions'] as $permission) {
-								//set the variables
-								if (!empty($permission['groups'])) {
-									foreach ($permission['groups'] as $group_name) {
-										//check group protection
-										$group_uuid = null;
-										$group_protected = false;
-										if (is_array($groups)) {
-											foreach ($groups as $group) {
-												if ($group['group_name'] == $group_name) {
-													$group_uuid = $group['group_uuid'];
-													$group_protected = $group['group_protected'];
-													break;
-												}
-											}
-										}
-										if (!$group_protected) {
-											// check if the item is not currently in the database
-											$exists = false;
-											foreach ($this->database_group_permissions as $i => $group_permission) {
-												if ($group_permission['permission_name'] == $permission['name']) {
-													if ($group_permission['group_name'] == $group_name) {
-														$exists = true;
-														break;
-													}
-												}
-											}
-											if (!$exists) {
-												//build default permissions insert array
-												$array['group_permissions'][$x]['group_permission_uuid'] = uuid();
-												$array['group_permissions'][$x]['permission_name'] = $permission['name'];
-												$array['group_permissions'][$x]['permission_protected'] = 'false';
-												$array['group_permissions'][$x]['permission_assigned'] = 'true';
-												$array['group_permissions'][$x]['group_name'] = $group_name;
-												$array['group_permissions'][$x]['group_uuid'] = $group_uuid;
-												$x++;
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-
-					if (is_array($array) && @sizeof($array)) {
-						//grant temporary permissions
-							$p = permissions::new();
-							$p->add('group_permission_add', 'temp');
-
-						//execute insert
-							$this->database->save($array);
-							unset($array);
-
-						//revoke temporary permissions
-							$p->delete('group_permission_add', 'temp');
-					}
-
-			}
+			//revoke temporary permissions
+			$p->delete('group_permission_add', 'temp');
+		}
 
 	}
+
+}
 
 ?>
