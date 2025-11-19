@@ -25,8 +25,16 @@
 */
 
 	if (!function_exists('save_ivr_menu_xml')) {
+		/**
+		 * Saves IVR menu XML configuration files.
+		 *
+		 * This function deletes all existing dialplan .xml files in the ivr_menus directory,
+		 * then creates new IVR menu XML files based on the database records for the current domain.
+		 *
+		 * @return void
+		 */
 		function save_ivr_menu_xml() {
-			global $domain_uuid;
+			global $domain_uuid, $settings;
 
 			//prepare for dialplan .xml files to be written. delete all dialplan files that are prefixed with dialplan_ and have a file extension of .xml
 			if (count($_SESSION["domains"]) > 1) {

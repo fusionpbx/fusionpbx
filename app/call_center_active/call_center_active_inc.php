@@ -60,6 +60,15 @@
 	}
 
 //convert the string to a named array
+	/**
+	 * Converts a string into a named array based on the specified delimiter.
+	 *
+	 * @param string $tmp_str       The input string to be converted.
+	 * @param string $tmp_delimiter The delimiter used to split the string and field values.
+	 *
+	 * @return array A 2D array where each inner array represents a row in the original string,
+	 *               with keys corresponding to the field names from the first line of the string.
+	 */
 	function str_to_named_array($tmp_str, $tmp_delimiter) {
 		$tmp_array = explode ("\n", $tmp_str);
 		$result = array();

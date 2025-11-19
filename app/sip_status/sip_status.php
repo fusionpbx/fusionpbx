@@ -88,6 +88,14 @@
 			}
 
 			//sort the array
+			/**
+			 * Compares two XML elements based on their names and sorts them in a natural order.
+			 *
+			 * @param object $a The first XML element to compare.
+			 * @param object $b The second XML element to compare.
+			 *
+			 * @return int A negative integer, zero, or a positive integer if $a's name is less than, equal to, or greater than $b's name respectively.
+			 */
 			function sort_xml($a, $b) {
 				return strnatcmp($a->name, $b->name);
 			}

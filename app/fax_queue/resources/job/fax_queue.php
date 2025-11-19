@@ -34,6 +34,13 @@
 	//echo "pid_file: ".$pid_file."\n";
 
 //function to check if the process exists
+	/**
+	 * Checks if a process is running.
+	 *
+	 * @param string $file The path to the file containing the process ID, or false for no check.
+	 *
+	 * @return bool True if the process is running, false otherwise.
+	 */
 	function process_exists($file = false) {
 
 		//set the default exists to false

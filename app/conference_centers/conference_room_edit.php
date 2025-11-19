@@ -110,7 +110,14 @@
 //set the default
 	if (empty($profile)) { $profile = "default"; }
 
-//define fucntion get_conference_pin - used to find a unique pin number
+	/**
+	 * Generates a unique pin number for a conference room.
+	 *
+	 * @param int    $length               The length of the pin number to be generated.
+	 * @param string $conference_room_uuid The UUID of the conference room.
+	 *
+	 * @return string A unique pin number if available, or generates another one recursively until an available one is found.
+	 */
 	function get_conference_pin($length, $conference_room_uuid) {
 		//set the variable as global
 		global $database;

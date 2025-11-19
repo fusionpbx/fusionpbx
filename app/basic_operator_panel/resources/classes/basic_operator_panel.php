@@ -66,7 +66,9 @@
 		private $domain_name;
 
 		/**
-		 * Called when the object is created
+		 * Initializes the object with domain and user UUIDs, domain name, and database objects.
+		 *
+		 * @param array $setting_array An optional array containing settings for this object. Defaults to an empty array.
 		 */
 		public function __construct(array $setting_array = []) {
 			//set domain and user UUIDs
@@ -83,7 +85,10 @@
 		}
 
 		/**
-		 * Get the call activity
+		 * Handles the call activity by retrieving extensions and their user status,
+		 * sending a command to retrieve active calls, and building a response array.
+		 *
+		 * @return mixed The response array containing extension details and active call information.
 		 */
 		public function call_activity() {
 

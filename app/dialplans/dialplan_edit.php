@@ -44,8 +44,10 @@
 //declared functions
 	/**
 	 * Checks if a dialplan detail record is marked for deletion
+	 *
 	 * @param string $uuid UUID of the dialplan detail record
-	 * @param array $deleted_details array of dialplan detail records marked for deletion
+	 * @param array  $deleted_details array of dialplan detail records marked for deletion
+	 *
 	 * @return bool Returns true if user has permission and dialplan detail is marked for deletion
 	 */
 	function marked_for_deletion(string $uuid, array $deleted_details): bool {

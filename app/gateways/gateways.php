@@ -91,6 +91,18 @@
 
 //gateway status function
 	if (!function_exists('switch_gateway_status')) {
+		/**
+		 * Switches the status of a gateway.
+		 *
+		 * This function sends an API request to retrieve the status of a gateway.
+		 * If the first request fails, it attempts to send the same request with the
+		 * gateway UUID in uppercase.
+		 *
+		 * @param string $gateway_uuid The unique identifier of the gateway.
+		 * @param string $result_type  The type of response expected (default: 'xml').
+		 *
+		 * @return string The status of the gateway, or an error message if the request fails.
+		 */
 		function switch_gateway_status($gateway_uuid, $result_type = 'xml') {
 			global $esl;
 			if ($esl->is_connected()) {

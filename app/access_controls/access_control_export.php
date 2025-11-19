@@ -54,6 +54,13 @@
 	}
 
 //define the functions
+	/**
+	 * Converts an array to a CSV string.
+	 *
+	 * @param array &$array The input array. It should be a multidimensional array where the first level keys are column headers and the second level arrays are rows.
+	 *
+	 * @return string|null The CSV string representation of the input array, or null if the input array is empty.
+	 */
 	function array2csv(array &$array) {
 		if (count($array) == 0) {
 			return null;
@@ -69,7 +76,14 @@
 	}
 
 //send download headers
-	function download_send_headers($filename) {
+/**
+ * Sends HTTP headers to force a file download.
+ *
+ * @param string $filename The name of the file to be downloaded, excluding the path.
+ *
+ * @return void
+ */
+function download_send_headers($filename) {
 		// disable caching
 		$now = gmdate("D, d M Y H:i:s");
 		header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");

@@ -51,6 +51,13 @@
 	$available_columns[] = 'description';
 
 //define the functions
+	/**
+	 * Converts a multi-dimensional PHP array into a CSV string.
+	 *
+	 * @param array &$array The input data to be converted. It is expected to have at least one row and one column.
+	 *
+	 * @return string|null The CSV representation of the input data, or null if the input array is empty.
+	 */
 	function array2csv(array &$array) {
 		if (count($array) == 0) {
 			return null;
@@ -65,6 +72,13 @@
 		return ob_get_clean();
 	}
 
+	/**
+	 * Sends HTTP headers for a file download.
+	 *
+	 * @param string $filename The name of the file to be downloaded.
+	 *
+	 * @return void
+	 */
 	function download_send_headers($filename) {
 		// disable caching
 		$now = gmdate("D, d M Y H:i:s");

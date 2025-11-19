@@ -456,6 +456,17 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "	".$text['label-action']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
+	/**
+	 * Select a call block action.
+	 *
+	 * This function generates an HTML select element for selecting a call block
+	 * action. It includes options for rejecting, busy, holding, and other actions,
+	 * as well as options for extensions, IVRs, ring groups, and voicemail.
+	 *
+	 * @param bool $label Whether to include the label option or not.
+	 *
+	 * @return void The function does not return any value.
+	 */
 	function call_block_action_select($label = false) {
 		global $select_margin, $text, $call_block_app, $call_block_data, $extensions, $ivrs, $voicemails, $ring_groups;
 		echo "<select class='formfld' style='".$select_margin."' name='call_block_action'>\n";

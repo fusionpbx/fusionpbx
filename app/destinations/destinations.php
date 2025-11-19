@@ -79,6 +79,14 @@
 	$destination_array = $destination->all('dialplan');
 
 //function to return the action names in the order defined
+	/**
+	 * Returns a list of actions based on the provided destination array and actions.
+	 *
+	 * @param array $destination_array   The array containing the data to process.
+	 * @param array $destination_actions The array of actions to apply to the destination array.
+	 *
+	 * @return array A list of actions resulting from the processing of the destination array and actions.
+	 */
 	function action_name($destination_array, $destination_actions) {
 		global $settings;
 		$actions = [];
@@ -175,8 +183,8 @@
 		$page = $_GET['page'];
 	}
 	if (!isset($page)) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	[$paging_controls, $rows_per_page] = paging($num_rows, $param, $rows_per_page);
+	[$paging_controls_mini, $rows_per_page] = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list

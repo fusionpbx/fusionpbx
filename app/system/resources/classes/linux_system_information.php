@@ -31,6 +31,13 @@
  */
 class linux_system_information extends system_information {
 
+	/**
+	 * Returns the number of CPU cores available on the system.
+	 *
+	 * This method executes a shell command to parse the /proc/cpuinfo file and counts the number of processor entries found.
+	 *
+	 * @return int The total number of CPU cores
+	 */
 	public function get_cpu_cores(): int {
 		$result = @trim(shell_exec("grep -P '^processor' /proc/cpuinfo"));
 		$cpu_cores = count(explode("\n", $result));
@@ -38,6 +45,16 @@ class linux_system_information extends system_information {
 	}
 
 	//get the CPU details
+
+	/**
+	 * Returns the current CPU usage as a percentage.
+	 *
+	 * This method reads the CPU statistics from /proc/stat and calculates
+	 * the CPU usage by comparing the total and idle time of each core.
+	 * The result is rounded to two decimal places.
+	 *
+	 * @return float The current CPU usage in percent.
+	 */
 	public function get_cpu_percent(): float {
 		$stat1 = file_get_contents('/proc/stat');
 		usleep(500000);
@@ -73,10 +90,27 @@ class linux_system_information extends system_information {
 		return round($percent_cpu / $core_count, 2);
 	}
 
+	/**
+	 * Returns the current system uptime as reported by the 'uptime' command.
+	 *
+	 * This method executes the 'uptime' command and returns its output.
+	 *
+	 * @return string The current system uptime.
+	 */
 	public function get_uptime() {
 		return shell_exec('uptime');
 	}
 
+	/**
+	 * Returns the current CPU usage as a percentage per core.
+	 *
+	 * This method reads the CPU statistics from /proc/stat and calculates
+	 * the CPU usage by comparing the total and idle time of each core.
+	 * The result is rounded to two decimal places.
+	 *
+	 * @return array An array where the keys are the core numbers (starting at 0)
+	 *               and the values are the current CPU usage for each core in percent.
+	 */
 	public function get_cpu_percent_per_core(): array {
 		static $last = [];
 
@@ -107,6 +141,16 @@ class linux_system_information extends system_information {
 		return $results;
 	}
 
+	/**
+	 * Returns the current network speed for the specified interface.
+	 *
+	 * This method reads the network statistics from /proc/net/dev and calculates
+	 * the network speed by comparing the received and transmitted bytes between two measurements.
+	 *
+	 * @param string $interface The network interface to read stats from. Defaults to 'eth0'.
+	 *
+	 * @return array An array containing the current receive (rx_bps) and transmit (tx_bps) speeds in bits per second.
+	 */
 	public function get_network_speed(string $interface = 'eth0'): array {
 		static $last = [];
 

@@ -36,7 +36,9 @@ class database_transactions {
 	/**
 	 * Removes old entries for in the database database_transactions table
 	 * see {@link https://github.com/fusionpbx/fusionpbx-app-maintenance/} FusionPBX Maintenance App
+	 *
 	 * @param settings $settings Settings object
+	 *
 	 * @return void
 	 */
 	public static function database_maintenance(settings $settings): void {

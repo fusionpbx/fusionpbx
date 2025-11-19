@@ -167,6 +167,11 @@
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
+	/**
+	 * Writes the header for a list of modules.
+	 *
+	 * @param string $modifier The modifier to use in the checkbox ID and other attributes.
+	 */
 	function write_header($modifier) {
 		global $text, $modules, $list_row_edit_button;
 		$modifier = str_replace('/', '', $modifier);

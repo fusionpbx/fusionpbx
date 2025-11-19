@@ -105,8 +105,8 @@
 	$param = $search ? "&search=".$search : null;
 	$param = $order_by ? "&order_by=".$order_by."&order=".$order : null;
 	$page = empty($_GET['page']) ? $page = 0 : $page = $_GET['page'];
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	[$paging_controls, $rows_per_page] = paging($num_rows, $param, $rows_per_page);
+	[$paging_controls_mini, $rows_per_page] = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
@@ -191,6 +191,13 @@
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
+	/**
+	 * Writes the header for a list of variables.
+	 *
+	 * @param string $modifier The modifier to be used in the header, with slashes and extra spaces removed.
+	 *
+	 * @return void
+	 */
 	function write_header($modifier) {
 		global $text, $order_by, $order, $vars, $list_row_edit_button;
 		$modifier = str_replace('/', '', $modifier);

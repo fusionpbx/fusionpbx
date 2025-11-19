@@ -25,1423 +25,1557 @@
 */
 
 //define the device class
-	class device {
+class device {
 
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'devices';
-		const app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
+	/**
+	 * declare constant variables
+	 */
+	const app_name = 'devices';
+	const app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 
-		/**
-		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		public $domain_uuid;
+	/**
+	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set
+	 * in the session global array
+	 *
+	 * @var string
+	 */
+	public $domain_uuid;
 
-		/**
-		 * declare public variables
-		 */
-		public $template_dir;
-		public $device_uuid;
-		public $device_vendor_uuid;
-		public $device_profile_uuid;
+	/**
+	 * declare public variables
+	 */
+	public $template_dir;
+	public $device_uuid;
+	public $device_vendor_uuid;
+	public $device_profile_uuid;
 
-		/**
-		 * Set in the constructor. Must be a database object and cannot be null.
-		 * @var database Database Object
-		 */
-		private $database;
+	/**
+	 * Set in the constructor. Must be a database object and cannot be null.
+	 *
+	 * @var database Database Object
+	 */
+	private $database;
 
-		/**
-		 * Settings object set in the constructor. Must be a settings object and cannot be null.
-		 * @var settings Settings Object
-		 */
-		private $settings;
+	/**
+	 * Settings object set in the constructor. Must be a settings object and cannot be null.
+	 *
+	 * @var settings Settings Object
+	 */
+	private $settings;
 
-		/**
-		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		private $user_uuid;
+	/**
+	 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in
+	 * the session global array
+	 *
+	 * @var string
+	 */
+	private $user_uuid;
 
-		/**
-		 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		private $username;
+	/**
+	 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in
+	 * the session global array
+	 *
+	 * @var string
+	 */
+	private $username;
 
-		/**
-		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		private $domain_name;
+	/**
+	 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set
+	 * in the session global array
+	 *
+	 * @var string
+	 */
+	private $domain_name;
 
-		/**
-		 * declare private variables
-		 */
-		private $permission_prefix;
-		private $list_page;
-		private $table;
-		private $uuid_prefix;
-		private $toggle_field;
-		private $toggle_values;
-		private $tables;
+	/**
+	 * declare private variables
+	 */
+	private $permission_prefix;
+	private $list_page;
+	private $table;
+	private $uuid_prefix;
+	private $toggle_field;
+	private $toggle_values;
+	private $tables;
 
-		/**
-		 * Create a settings object using key/value pairs in the $setting_array.
-		 *
-		 * Valid values are: database.
-		 * @param array setting_array
-		 * @depends database::new()
-		 * @access public
-		 */
-		public function __construct(array $setting_array = []) {
-			//set domain and user UUIDs
-			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
-			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+	/**
+	 * Initializes the object with setting array.
+	 *
+	 * @param array $setting_array An array containing settings for domain, user, and database connections. Defaults to
+	 *                             an empty array.
+	 *
+	 * @return void
+	 */
+	public function __construct(array $setting_array = []) {
+		//set domain and user UUIDs
+		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
-			//set objects
-			$this->database = $setting_array['database'] ?? database::new();
-			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+		//set objects
+		$this->database = $setting_array['database'] ?? database::new();
+		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+	}
+
+	/**
+	 * Retrieves the domain UUID.
+	 *
+	 * @return string The domain UUID.
+	 */
+	public function get_domain_uuid() {
+		return $this->domain_uuid;
+	}
+
+	/**
+	 * Retrieves the device vendor from a given MAC address.
+	 *
+	 * @param string $mac The MAC address to retrieve the vendor for.
+	 *
+	 * @return string The device vendor, or an empty string if the MAC address is invalid.
+	 */
+	public static function get_vendor($mac) {
+		//return if the mac address is empty
+		if (empty($mac)) {
+			return '';
 		}
 
-		public function get_domain_uuid() {
-			return $this->domain_uuid;
+		//use the mac address to find the vendor
+		$mac = preg_replace('#[^a-fA-F0-9./]#', '', $mac);
+		$mac = strtolower($mac);
+		switch (substr($mac, 0, 6)) {
+			case "00085d":
+				$device_vendor = "aastra";
+				break;
+			case "00040d":
+				$device_vendor = "avaya";
+				break;
+			case "001b4f":
+				$device_vendor = "avaya";
+				break;
+			case "00549f":
+				$device_vendor = "avaya";
+				break;
+			case "048a15":
+				$device_vendor = "avaya";
+				break;
+			case "10cdae":
+				$device_vendor = "avaya";
+				break;
+			case "14612f":
+				$device_vendor = "avaya";
+				break;
+			case "24b209":
+				$device_vendor = "avaya";
+				break;
+			case "24d921":
+				$device_vendor = "avaya";
+				break;
+			case "2cf4c5":
+				$device_vendor = "avaya";
+				break;
+			case "3475c7":
+				$device_vendor = "avaya";
+				break;
+			case "38bb3c":
+				$device_vendor = "avaya";
+				break;
+			case "3c3a73":
+				$device_vendor = "avaya";
+				break;
+			case "3cb15b":
+				$device_vendor = "avaya";
+				break;
+			case "44322a":
+				$device_vendor = "avaya";
+				break;
+			case "506184":
+				$device_vendor = "avaya";
+				break;
+			case "50cd22":
+				$device_vendor = "avaya";
+				break;
+			case "581626":
+				$device_vendor = "avaya";
+				break;
+			case "6049c1":
+				$device_vendor = "avaya";
+				break;
+			case "646a52":
+				$device_vendor = "avaya";
+				break;
+			case "64a7dd":
+				$device_vendor = "avaya";
+				break;
+			case "64c354":
+				$device_vendor = "avaya";
+				break;
+			case "6ca849":
+				$device_vendor = "avaya";
+				break;
+			case "6cfa58":
+				$device_vendor = "avaya";
+				break;
+			case "703018":
+				$device_vendor = "avaya";
+				break;
+			case "7038ee":
+				$device_vendor = "avaya";
+				break;
+			case "7052c5":
+				$device_vendor = "avaya";
+				break;
+			case "707c69":
+				$device_vendor = "avaya";
+				break;
+			case "801daa":
+				$device_vendor = "avaya";
+				break;
+			case "848371":
+				$device_vendor = "avaya";
+				break;
+			case "90fb5b":
+				$device_vendor = "avaya";
+				break;
+			case "a009ed":
+				$device_vendor = "avaya";
+				break;
+			case "a01290":
+				$device_vendor = "avaya";
+				break;
+			case "a051c6":
+				$device_vendor = "avaya";
+				break;
+			case "a4251b":
+				$device_vendor = "avaya";
+				break;
+			case "a47886":
+				$device_vendor = "avaya";
+				break;
+			case "b0adaa":
+				$device_vendor = "avaya";
+				break;
+			case "b4475e":
+				$device_vendor = "avaya";
+				break;
+			case "b4a95a":
+				$device_vendor = "avaya";
+				break;
+			case "b4b017":
+				$device_vendor = "avaya";
+				break;
+			case "bcadab":
+				$device_vendor = "avaya";
+				break;
+			case "c057bc":
+				$device_vendor = "avaya";
+				break;
+			case "c4bed4":
+				$device_vendor = "avaya";
+				break;
+			case "c81fea":
+				$device_vendor = "avaya";
+				break;
+			case "c8f406":
+				$device_vendor = "avaya";
+				break;
+			case "ccf954":
+				$device_vendor = "avaya";
+				break;
+			case "d47856":
+				$device_vendor = "avaya";
+				break;
+			case "d4ea0e":
+				$device_vendor = "avaya";
+				break;
+			case "e45d52":
+				$device_vendor = "avaya";
+				break;
+			case "f81547":
+				$device_vendor = "avaya";
+				break;
+			case "f873a2":
+				$device_vendor = "avaya";
+				break;
+			case "fc8399":
+				$device_vendor = "avaya";
+				break;
+			case "fca841":
+				$device_vendor = "avaya";
+				break;
+			case "001873":
+				$device_vendor = "cisco";
+				break;
+			case "a44c11":
+				$device_vendor = "cisco";
+				break;
+			case "0021A0":
+				$device_vendor = "cisco";
+				break;
+			case "30e4db":
+				$device_vendor = "cisco";
+				break;
+			case "002155":
+				$device_vendor = "cisco";
+				break;
+			case "68efbd":
+				$device_vendor = "cisco";
+				break;
+			case "000b82":
+				$device_vendor = "grandstream";
+				break;
+			case "00177d":
+				$device_vendor = "konftel";
+				break;
+			case "00045a":
+				$device_vendor = "linksys";
+				break;
+			case "000625":
+				$device_vendor = "linksys";
+				break;
+			case "000e08":
+				$device_vendor = "linksys";
+				break;
+			case "08000f":
+				$device_vendor = "mitel";
+				break;
+			case "0080f0":
+				$device_vendor = "panasonic";
+				break;
+			case "0004f2":
+				$device_vendor = "polycom";
+				break;
+			case "00907a":
+				$device_vendor = "polycom";
+				break;
+			case "64167f":
+				$device_vendor = "polycom";
+				break;
+			case "482567":
+				$device_vendor = "polycom";
+				break;
+			case "000413":
+				$device_vendor = "snom";
+				break;
+			case "001565":
+				$device_vendor = "yealink";
+				break;
+			case "805ec0":
+				$device_vendor = "yealink";
+				break;
+			case "00268B":
+				$device_vendor = "escene";
+				break;
+			case "001fc1":
+				$device_vendor = "htek";
+				break;
+			case "0C383E":
+				$device_vendor = "fanvil";
+				break;
+			case "7c2f80":
+				$device_vendor = "gigaset";
+				break;
+			case "14b370":
+				$device_vendor = "gigaset";
+				break;
+			case "002104":
+				$device_vendor = "gigaset";
+				break;
+			case "bcc342":
+				$device_vendor = "panasonic";
+				break;
+			case "080023":
+				$device_vendor = "panasonic";
+				break;
+			case "0080f0":
+				$device_vendor = "panasonic";
+				break;
+			case "0021f2":
+				$device_vendor = "flyingvoice";
+				break;
+			case "f00786":
+				$device_vendor = "bittel";
+				break;
+			default:
+				$device_vendor = "";
+		}
+		return $device_vendor;
+	}
+
+	/**
+	 * Returns the vendor of a given user agent string.
+	 *
+	 * @param string $agent The user agent string to determine the vendor from.
+	 *
+	 * @return string The identified vendor, or an empty string if no match is found.
+	 */
+	public static function get_vendor_by_agent($agent) {
+		if ($agent) {
+			//set the user agent string to lower case
+			$agent = strtolower($agent);
+			//get the vendor
+			if (preg_replace('/^.*?(aastra).*$/i', '$1', $agent) == "aastra") {
+				return "aastra";
+			}
+			if (preg_replace('/^.*?(algo).*$/i', '$1', $agent) == "algo") {
+				return "algo";
+			}
+			if (preg_replace('/^.*?(cisco\/spa).*$/i', '$1', $agent) == "cisco/spa") {
+				return "cisco-spa";
+			}
+			if (preg_replace('/^.*?(cisco).*$/i', '$1', $agent) == "cisco") {
+				return "cisco";
+			}
+			if (preg_replace('/^.*?(digium).*$/i', '$1', $agent) == "digium") {
+				return "digium";
+			}
+			if (preg_replace('/^.*?(grandstream).*$/i', '$1', $agent) == "grandstream") {
+				return "grandstream";
+			}
+			if (preg_replace('/^.*?(linksys).*$/i', '$1', $agent) == "linksys") {
+				return "linksys";
+			}
+			if (preg_replace('/^.*?(polycom).*$/i', '$1', $agent) == "polycom") {
+				return "polycom";
+			}
+			if (preg_replace('/^.*?(poly).*$/i', '$1', $agent) == "poly") {
+				return "poly";
+			}
+			if (preg_replace('/^.*?(yealink).*$/i', '$1', $agent) == "yealink") {
+				return "yealink";
+			}
+			if (preg_replace('/^.*?(vp530p).*$/i', '$1', $agent) == "vp530p") {
+				return "yealink";
+			}
+			if (preg_replace('/^.*?(snom).*$/i', '$1', $agent) == "snom") {
+				return "snom";
+			}
+			if (preg_match('/^.*?addpac.*$/i', $agent)) {
+				return "addpac";
+			}
+			/*Escene use User-Agent string like `ES320VN2 v4.0 ...  or `ES206 v1.0 ...` */
+			if (preg_match('/^es\d\d\d.*$/i', $agent)) {
+				return "escene";
+			}
+			if (preg_match('/^.*?panasonic.*$/i', $agent)) {
+				return "panasonic";
+			}
+			if (preg_replace('/^.*?(N510).*$/i', '$1', $agent) == "n510") {
+				return "gigaset";
+			}
+			if (preg_match('/^.*?htek.*$/i', $agent)) {
+				return "htek";
+			}
+			if (preg_replace('/^.*?(fanvil).*$/i', '$1', $agent) == "fanvil") {
+				return "fanvil";
+			}
+			if (preg_replace('/^.*?(flyingvoice).*$/i', '$1', $agent) == "flyingvoice") {
+				return "flyingvoice";
+			}
+			if (preg_replace('/^.*?(avaya).*$/i', '$1', $agent) == "avaya") {
+				return "avaya";
+			}
+			if (preg_replace('/^.*?(BITTEL).*$/i', '$1', $agent) == "bittel") {
+				return "bittel";
+			}
+			// unknown vendor
+			return "";
+		}
+	}
+
+	/**
+	 * Returns the directory where FusionPBX templates are stored.
+	 *
+	 * This method checks various locations on different operating systems to find the default template directory.
+	 * If a domain name subdirectory exists in the selected template directory, it will be used instead.
+	 *
+	 * @return string The path to the template directory.
+	 */
+	public function get_template_dir() {
+		//set the default template directory
+		if (PHP_OS == "Linux") {
+			//set the default template dir
+			if (empty($this->template_dir)) {
+				if (file_exists('/usr/share/fusionpbx/templates/provision')) {
+					$this->template_dir = '/usr/share/fusionpbx/templates/provision';
+				} elseif (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+					$this->template_dir = '/etc/fusionpbx/resources/templates/provision';
+				} else {
+					$this->template_dir = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/resources/templates/provision';
+				}
+			}
+		} elseif (PHP_OS == "FreeBSD") {
+			//if the FreeBSD port is installed use the following paths by default.
+			if (empty($this->template_dir)) {
+				if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+					$this->template_dir = '/usr/local/share/fusionpbx/templates/provision';
+				} elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
+					$this->template_dir = '/usr/local/etc/fusionpbx/resources/templates/provision';
+				} else {
+					$this->template_dir = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/resources/templates/provision';
+				}
+			}
+		} elseif (PHP_OS == "NetBSD") {
+			//set the default template_dir
+			if (empty($this->template_dir)) {
+				$this->template_dir = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/resources/templates/provision';
+			}
+		} elseif (PHP_OS == "OpenBSD") {
+			//set the default template_dir
+			if (empty($this->template_dir)) {
+				$this->template_dir = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/resources/templates/provision';
+			}
+		} else {
+			//set the default template_dir
+			if (empty($this->template_dir)) {
+				$this->template_dir = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/resources/templates/provision';
+			}
 		}
 
-		public static function get_vendor($mac) {
-			//return if the mac address is empty
-				if(empty($mac)) {
-					return '';
+		//check to see if the domain name sub directory exists
+		if (is_dir($this->template_dir . "/" . $this->domain_name)) {
+			$this->template_dir = $this->template_dir . "/" . $this->domain_name;
+		}
+
+		//return the template directory
+		return $this->template_dir;
+	}
+
+	/**
+	 * Deletes one or more records.
+	 *
+	 * @param array $records An array of record IDs to delete, where each ID is an associative array
+	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                       whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function delete($records) {
+
+		//assign private variables
+		$this->permission_prefix = 'device_';
+		$this->list_page         = 'devices.php';
+		$this->table             = 'devices';
+		$this->uuid_prefix       = 'device_';
+
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//build the delete array
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$sql                                 = "update v_devices set device_uuid_alternate = null where device_uuid_alternate = :device_uuid_alternate; ";
+						$parameters['device_uuid_alternate'] = $record['uuid'];
+						$this->database->execute($sql, $parameters);
+						unset($sql, $parameters);
+
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+						$array['device_settings'][$x]['device_uuid']          = $record['uuid'];
+						$array['device_lines'][$x]['device_uuid']             = $record['uuid'];
+						$array['device_keys'][$x]['device_uuid']              = $record['uuid'];
+					}
 				}
 
-			//use the mac address to find the vendor
-				$mac = preg_replace('#[^a-fA-F0-9./]#', '', $mac);
-				$mac = strtolower($mac);
-				switch (substr($mac, 0, 6)) {
-				case "00085d":
-					$device_vendor = "aastra";
-					break;
-				case "00040d":
-					$device_vendor = "avaya";
-					break;
-				case "001b4f":
-					$device_vendor = "avaya";
-					break;
-				case "00549f":
-					$device_vendor = "avaya";
-					break;
-				case "048a15":
-					$device_vendor = "avaya";
-					break;
-				case "10cdae":
-					$device_vendor = "avaya";
-					break;
-				case "14612f":
-					$device_vendor = "avaya";
-					break;
-				case "24b209":
-					$device_vendor = "avaya";
-					break;
-				case "24d921":
-					$device_vendor = "avaya";
-					break;
-				case "2cf4c5":
-					$device_vendor = "avaya";
-					break;
-				case "3475c7":
-					$device_vendor = "avaya";
-					break;
-				case "38bb3c":
-					$device_vendor = "avaya";
-					break;
-				case "3c3a73":
-					$device_vendor = "avaya";
-					break;
-				case "3cb15b":
-					$device_vendor = "avaya";
-					break;
-				case "44322a":
-					$device_vendor = "avaya";
-					break;
-				case "506184":
-					$device_vendor = "avaya";
-					break;
-				case "50cd22":
-					$device_vendor = "avaya";
-					break;
-				case "581626":
-					$device_vendor = "avaya";
-					break;
-				case "6049c1":
-					$device_vendor = "avaya";
-					break;
-				case "646a52":
-					$device_vendor = "avaya";
-					break;
-				case "64a7dd":
-					$device_vendor = "avaya";
-					break;
-				case "64c354":
-					$device_vendor = "avaya";
-					break;
-				case "6ca849":
-					$device_vendor = "avaya";
-					break;
-				case "6cfa58":
-					$device_vendor = "avaya";
-					break;
-				case "703018":
-					$device_vendor = "avaya";
-					break;
-				case "7038ee":
-					$device_vendor = "avaya";
-					break;
-				case "7052c5":
-					$device_vendor = "avaya";
-					break;
-				case "707c69":
-					$device_vendor = "avaya";
-					break;
-				case "801daa":
-					$device_vendor = "avaya";
-					break;
-				case "848371":
-					$device_vendor = "avaya";
-					break;
-				case "90fb5b":
-					$device_vendor = "avaya";
-					break;
-				case "a009ed":
-					$device_vendor = "avaya";
-					break;
-				case "a01290":
-					$device_vendor = "avaya";
-					break;
-				case "a051c6":
-					$device_vendor = "avaya";
-					break;
-				case "a4251b":
-					$device_vendor = "avaya";
-					break;
-				case "a47886":
-					$device_vendor = "avaya";
-					break;
-				case "b0adaa":
-					$device_vendor = "avaya";
-					break;
-				case "b4475e":
-					$device_vendor = "avaya";
-					break;
-				case "b4a95a":
-					$device_vendor = "avaya";
-					break;
-				case "b4b017":
-					$device_vendor = "avaya";
-					break;
-				case "bcadab":
-					$device_vendor = "avaya";
-					break;
-				case "c057bc":
-					$device_vendor = "avaya";
-					break;
-				case "c4bed4":
-					$device_vendor = "avaya";
-					break;
-				case "c81fea":
-					$device_vendor = "avaya";
-					break;
-				case "c8f406":
-					$device_vendor = "avaya";
-					break;
-				case "ccf954":
-					$device_vendor = "avaya";
-					break;
-				case "d47856":
-					$device_vendor = "avaya";
-					break;
-				case "d4ea0e":
-					$device_vendor = "avaya";
-					break;
-				case "e45d52":
-					$device_vendor = "avaya";
-					break;
-				case "f81547":
-					$device_vendor = "avaya";
-					break;
-				case "f873a2":
-					$device_vendor = "avaya";
-					break;
-				case "fc8399":
-					$device_vendor = "avaya";
-					break;
-				case "fca841":
-					$device_vendor = "avaya";
-					break;
-				case "001873":
-					$device_vendor = "cisco";
-					break;
-				case "a44c11":
-					$device_vendor = "cisco";
-					break;
-				case "0021A0":
-					$device_vendor = "cisco";
-					break;
-				case "30e4db":
-					$device_vendor = "cisco";
-					break;
-				case "002155":
-					$device_vendor = "cisco";
-					break;
-				case "68efbd":
-					$device_vendor = "cisco";
-					break;
-				case "000b82":
-					$device_vendor = "grandstream";
-					break;
-				case "00177d":
-					$device_vendor = "konftel";
-					break;
-				case "00045a":
-					$device_vendor = "linksys";
-					break;
-				case "000625":
-					$device_vendor = "linksys";
-					break;
-				case "000e08":
-					$device_vendor = "linksys";
-					break;
-				case "08000f":
-					$device_vendor = "mitel";
-					break;
-				case "0080f0":
-					$device_vendor = "panasonic";
-					break;
-				case "0004f2":
-					$device_vendor = "polycom";
-					break;
-				case "00907a":
-					$device_vendor = "polycom";
-					break;
-				case "64167f":
-					$device_vendor = "polycom";
-					break;
-				case "482567":
-					$device_vendor = "polycom";
-					break;
-				case "000413":
-					$device_vendor = "snom";
-					break;
-				case "001565":
-					$device_vendor = "yealink";
-					break;
-				case "805ec0":
-					$device_vendor = "yealink";
-					break;
-				case "00268B":
-					$device_vendor = "escene";
-					break;
-				case "001fc1":
-					$device_vendor = "htek";
-					break;
-				case "0C383E":
-					$device_vendor = "fanvil";
-					break;
-				case "7c2f80":
-					$device_vendor = "gigaset";
-					break;
-				case "14b370":
-					$device_vendor = "gigaset";
-					break;
-				case "002104":
-					$device_vendor = "gigaset";
-					break;
-				case "bcc342":
-					$device_vendor = "panasonic";
-					break;
-				case "080023":
-					$device_vendor = "panasonic";
-					break;
-				case "0080f0":
-					$device_vendor = "panasonic";
-					break;
-				case "0021f2":
-					$device_vendor = "flyingvoice";
-					break;
-				case "f00786":
-					$device_vendor = "bittel";
-					break;
-				default:
-					$device_vendor = "";
-				}
-				return $device_vendor;
-		}
+				//delete the checked rows
+				if (is_array($array) && @sizeof($array) != 0) {
 
-		public static function get_vendor_by_agent($agent){
-			if ($agent) {
-				//set the user agent string to lower case
-					$agent = strtolower($agent);
-				//get the vendor
-					if (preg_replace('/^.*?(aastra).*$/i', '$1', $agent) == "aastra") {
-						return "aastra";
-					}
-					if (preg_replace('/^.*?(algo).*$/i', '$1', $agent) == "algo") {
-						return "algo";
-					}
-					if (preg_replace('/^.*?(cisco\/spa).*$/i', '$1', $agent) == "cisco/spa") {
-						return "cisco-spa";
-					}
-					if (preg_replace('/^.*?(cisco).*$/i', '$1', $agent) == "cisco") {
-						return "cisco";
-					}
-					if (preg_replace('/^.*?(digium).*$/i', '$1', $agent) == "digium") {
-						return "digium";
-					}
-					if (preg_replace('/^.*?(grandstream).*$/i', '$1', $agent) == "grandstream") {
-						return "grandstream";
-					}
-					if (preg_replace('/^.*?(linksys).*$/i', '$1', $agent) == "linksys") {
-						return "linksys";
-					}
-					if (preg_replace('/^.*?(polycom).*$/i', '$1', $agent) == "polycom") {
-						return "polycom";
-					}
-					if (preg_replace('/^.*?(poly).*$/i', '$1', $agent) == "poly") {
-						return "poly";
-					}
-					if (preg_replace('/^.*?(yealink).*$/i', '$1', $agent) == "yealink") {
-						return "yealink";
-					}
-					if (preg_replace('/^.*?(vp530p).*$/i', '$1', $agent) == "vp530p") {
-						return "yealink";
-					}
-					if (preg_replace('/^.*?(snom).*$/i', '$1', $agent) == "snom") {
-						return "snom";
-					}
-					if (preg_match('/^.*?addpac.*$/i', $agent)) {
-						return "addpac";
-					}
-					/*Escene use User-Agent string like `ES320VN2 v4.0 ...  or `ES206 v1.0 ...` */
-					if (preg_match('/^es\d\d\d.*$/i', $agent)) {
-						return "escene";
-					}
-					if (preg_match('/^.*?panasonic.*$/i', $agent)) {
-						return "panasonic";
-					}
-					if (preg_replace('/^.*?(N510).*$/i', '$1', $agent) == "n510") {
-						return "gigaset";
-					}
-					if (preg_match('/^.*?htek.*$/i', $agent)) {
-						return "htek";
-					}
-					if (preg_replace('/^.*?(fanvil).*$/i', '$1', $agent) == "fanvil") {
-						return "fanvil";
-					}
-					if (preg_replace('/^.*?(flyingvoice).*$/i', '$1', $agent) == "flyingvoice") {
-						return "flyingvoice";
-					}
-					if (preg_replace('/^.*?(avaya).*$/i', '$1', $agent) == "avaya") {
-						return "avaya";
-					}
-					if (preg_replace('/^.*?(BITTEL).*$/i', '$1', $agent) == "bittel") {
-						return "bittel";
-					}
-					// unknown vendor
-					return "";
-				}
-		}
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('device_setting_delete', 'temp');
+					$p->add('device_line_delete', 'temp');
+					$p->add('device_key_delete', 'temp');
 
-		public function get_template_dir() {
-			//set the default template directory
-				if (PHP_OS == "Linux") {
-					//set the default template dir
-						if (empty($this->template_dir)) {
-							if (file_exists('/usr/share/fusionpbx/templates/provision')) {
-								$this->template_dir = '/usr/share/fusionpbx/templates/provision';
-							}
-							elseif (file_exists('/etc/fusionpbx/resources/templates/provision')) {
-								$this->template_dir = '/etc/fusionpbx/resources/templates/provision';
-							}
-							else {
-								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
-							}
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('device_setting_delete', 'temp');
+					$p->delete('device_line_delete', 'temp');
+					$p->delete('device_key_delete', 'temp');
+
+					//write the provision files
+					if (!empty($this->settings->get('provision', 'path'))) {
+						$prov              = new provision;
+						$prov->domain_uuid = $this->domain_uuid;
+						$response          = $prov->write();
+					}
+
+					//set message
+					message::add($text['message-delete']);
+
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
+	 * Deletes one or more device lines from the database.
+	 *
+	 * @param array $records A list of records to be deleted, where each record is an associative array containing
+	 *                       'uuid' and optionally 'device_uuid'.
+	 *
+	 * @return void
+	 */
+	public function delete_lines($records) {
+		//assign private variables
+		$this->permission_prefix = 'device_line_';
+		$this->table             = 'device_lines';
+		$this->uuid_prefix       = 'device_line_';
+
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//filter out unchecked device lines, build delete array
+				$x = 0;
+				foreach ($records as $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+						$array[$this->table][$x]['device_uuid']               = $this->device_uuid;
+						$x++;
+					}
+				}
+
+				//delete the checked rows
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
+	 * Deletes multiple device key records.
+	 *
+	 * @param array $records An array of device key records to delete, where each record is an associative array
+	 *                       containing the uuid and checked status.
+	 *
+	 * @return void
+	 */
+	public function delete_keys($records) {
+		//assign private variables
+		$this->permission_prefix = 'device_key_';
+		$this->table             = 'device_keys';
+		$this->uuid_prefix       = 'device_key_';
+
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//filter out unchecked device keys, build delete array
+				$x = 0;
+				foreach ($records as $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+						$array[$this->table][$x]['device_uuid']               = $this->device_uuid;
+						$x++;
+					}
+				}
+
+				//delete the checked rows
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
+	 * Deletes multiple device settings records.
+	 *
+	 * This method checks if the user has permission to delete device settings and validates the token.
+	 * It then filters out unchecked device settings, builds a delete array, and executes the deletion.
+	 *
+	 * @param array $records An array of device setting records to be deleted, where each record contains 'uuid' and
+	 *                       'checked' keys.
+	 *
+	 * @return void
+	 */
+	public function delete_settings($records) {
+		//assign private variables
+		$this->permission_prefix = 'device_setting_';
+		$this->table             = 'device_settings';
+		$this->uuid_prefix       = 'device_setting_';
+
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//filter out unchecked device settings, build delete array
+				$x = 0;
+				foreach ($records as $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+						$array[$this->table][$x]['device_uuid']               = $this->device_uuid;
+						$x++;
+					}
+				}
+
+				//delete the checked rows
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
+	 * Deletes the specified vendors.
+	 *
+	 * @param array $records The list of vendor records to delete, where each record is an associative array containing
+	 *                       the vendor's UUID and a 'checked' flag indicating whether the vendor should be deleted.
+	 *
+	 * @return void
+	 */
+	public function delete_vendors($records) {
+
+		//assign private variables
+		$this->permission_prefix = 'device_vendor_';
+		$this->list_page         = 'device_vendors.php';
+		$this->tables[]          = 'device_vendors';
+		$this->tables[]          = 'device_vendor_functions';
+		$this->tables[]          = 'device_vendor_function_groups';
+		$this->uuid_prefix       = 'device_vendor_';
+
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//build the delete array
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						foreach ($this->tables as $table) {
+							$array[$table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
 						}
+					}
 				}
-				elseif (PHP_OS == "FreeBSD") {
-					//if the FreeBSD port is installed use the following paths by default.
-						if (empty($this->template_dir)) {
-							if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
-								$this->template_dir = '/usr/local/share/fusionpbx/templates/provision';
-							}
-							elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
-								$this->template_dir = '/usr/local/etc/fusionpbx/resources/templates/provision';
-							}
-							else {
-								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
-							}
+
+				//delete the checked rows
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('device_vendor_function_delete', 'temp');
+					$p->add('device_vendor_function_group_delete', 'temp');
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('device_vendor_function_delete', 'temp');
+					$p->delete('device_vendor_function_group_delete', 'temp');
+
+					//set message
+					message::add($text['message-delete']);
+
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
+	 * Deletes vendor functions based on the provided records.
+	 *
+	 * @param array $records An array of records containing information about the rows to delete,
+	 *                       where each record is an associative array with 'checked' and 'uuid' keys.
+	 *
+	 * @return void
+	 */
+	public function delete_vendor_functions($records) {
+
+		//assign private variables
+		$this->permission_prefix = 'device_vendor_function_';
+		$this->list_page         = 'device_vendor_edit.php';
+		$this->tables[]          = 'device_vendor_functions';
+		$this->tables[]          = 'device_vendor_function_groups';
+		$this->uuid_prefix       = 'device_vendor_function_';
+
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate('/app/devices/device_vendor_functions.php')) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page . '?id=' . $this->device_vendor_uuid);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//build the delete array
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						foreach ($this->tables as $table) {
+							$array[$table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
 						}
+					}
 				}
-				elseif (PHP_OS == "NetBSD") {
-					//set the default template_dir
-						if (empty($this->template_dir)) {
-							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+
+				//delete the checked rows
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('device_vendor_function_group_delete', 'temp');
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('device_vendor_function_group_delete', 'temp');
+
+					//set message
+					message::add($text['message-delete']);
+
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
+	 * Deletes multiple device profiles.
+	 *
+	 * @param array $records The list of records to delete, where each record is an associative array containing the
+	 *                       UUID and a 'checked' key indicating whether the profile should be deleted.
+	 *
+	 * @return void
+	 */
+	public function delete_profiles($records) {
+
+		//assign private variables
+		$this->permission_prefix = 'device_profile_';
+		$this->list_page         = 'device_profiles.php';
+		$this->tables[]          = 'device_profiles';
+		$this->tables[]          = 'device_profile_keys';
+		$this->tables[]          = 'device_profile_settings';
+		$this->uuid_prefix       = 'device_profile_';
+
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//build the delete array
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						foreach ($this->tables as $table) {
+							$array[$table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
 						}
+					}
 				}
-				elseif (PHP_OS == "OpenBSD") {
-					//set the default template_dir
-						if (empty($this->template_dir)) {
-							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+
+				//delete the checked rows
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('device_profile_key_delete', 'temp');
+					$p->add('device_profile_setting_delete', 'temp');
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('device_profile_key_delete', 'temp');
+					$p->delete('device_profile_setting_delete', 'temp');
+
+					//set message
+					message::add($text['message-delete']);
+
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
+	 * Deletes multiple records from the device profile keys table.
+	 *
+	 * @param array $records The list of records to delete, where each record is an associative array containing 'uuid'
+	 *                       and/or 'checked' key(s).
+	 *
+	 * @return bool True if all records were successfully deleted, false otherwise.
+	 */
+	public function delete_profile_keys($records) {
+
+		//assign private variables
+		$this->permission_prefix = 'device_profile_key_';
+		$this->list_page         = 'device_profile_edit.php?id=' . $this->device_profile_uuid;
+		$this->table             = 'device_profile_keys';
+		$this->uuid_prefix       = 'device_profile_key_';
+
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//build the delete array
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+					}
+				}
+
+				//execute delete
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+					$this->database->delete($array);
+					unset($array);
+				}
+				unset($records);
+
+			}
+		}
+	}
+
+	/**
+	 * Deletes multiple profile settings.
+	 *
+	 * @param array $records An array of profile settings to delete, with each setting's 'uuid' key as the identifier.
+	 */
+	public function delete_profile_settings($records) {
+
+		//assign private variables
+		$this->permission_prefix = 'device_profile_setting_';
+		$this->list_page         = 'device_profile_edit.php?id=' . $this->device_profile_uuid;
+		$this->table             = 'device_profile_settings';
+		$this->uuid_prefix       = 'device_profile_setting_';
+
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//build the delete array
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+					}
+				}
+
+				//execute delete
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+					$this->database->delete($array);
+					unset($array);
+				}
+				unset($records);
+
+			}
+		}
+	}
+
+	/**
+	 * Toggles the state of one or more records.
+	 *
+	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
+	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                        whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function toggle($records) {
+
+		//assign private variables
+		$this->permission_prefix = 'device_';
+		$this->list_page         = 'devices.php';
+		$this->table             = 'devices';
+		$this->uuid_prefix       = 'device_';
+		$this->toggle_field      = 'device_enabled';
+		$this->toggle_values     = ['true', 'false'];
+
+		if (permission_exists($this->permission_prefix . 'edit')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//toggle the checked records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//get current toggle state
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
+					}
+				}
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows                      = $this->database->select($sql, $parameters, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							$states[$row['uuid']] = $row['toggle'];
 						}
+					}
+					unset($sql, $parameters, $rows, $row);
 				}
-				else {
-					//set the default template_dir
-						if (empty($this->template_dir)) {
-							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+
+				//build update array
+				$x = 0;
+				foreach ($states as $uuid => $state) {
+					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
+					$array[$this->table][$x][$this->toggle_field]         = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$x++;
+				}
+
+				//save the changes
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+
+					//save the array
+
+					$this->database->save($array);
+					unset($array);
+
+					//write the provision files
+					if (!empty($this->settings->get('provision', 'path'))) {
+						$prov              = new provision;
+						$prov->domain_uuid = $this->domain_uuid;
+						$response          = $prov->write();
+					}
+
+					//set message
+					message::add($text['message-toggle']);
+				}
+				unset($records, $states);
+			}
+
+		}
+	}
+
+	/**
+	 * Toggles the enabled state of one or more vendors.
+	 *
+	 * @param array $records An array of records containing vendor information, where each record
+	 *                       has a 'checked' property indicating whether to toggle the vendor's state.
+	 *
+	 * @return void
+	 */
+	public function toggle_vendors($records) {
+
+		//assign private variables
+		$this->permission_prefix = 'device_vendor_';
+		$this->list_page         = 'device_vendors.php';
+		$this->table             = 'device_vendors';
+		$this->uuid_prefix       = 'device_vendor_';
+		$this->toggle_field      = 'enabled';
+		$this->toggle_values     = ['true', 'false'];
+
+		if (permission_exists($this->permission_prefix . 'edit')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//toggle the checked records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//get current toggle state
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
+					}
+				}
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql  = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql  .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$rows = $this->database->select($sql, $parameters ?? null, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							$states[$row['uuid']] = $row['toggle'];
 						}
+					}
+					unset($sql, $parameters, $rows, $row);
 				}
 
-			//check to see if the domain name sub directory exists
-				if (is_dir($this->template_dir."/".$this->domain_name)) {
-					$this->template_dir = $this->template_dir."/".$this->domain_name;
+				//build update array
+				$x = 0;
+				foreach ($states as $uuid => $state) {
+					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
+					$array[$this->table][$x][$this->toggle_field]         = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$x++;
 				}
 
-			//return the template directory
-				return $this->template_dir;
+				//save the changes
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+
+					//save the array
+
+					$this->database->save($array);
+					unset($array);
+
+					//set message
+					message::add($text['message-toggle']);
+				}
+				unset($records, $states);
+			}
+
 		}
+	}
 
-		/**
-		 * delete records
-		 */
-		public function delete($records) {
+	/**
+	 * Toggles the enabled state of one or more vendor functions.
+	 *
+	 * @param array $records An array of records containing vendor function information, where each record has a 'checked' property indicating whether to toggle the function's state.
+	 *
+	 * @return void
+	 */
+	public function toggle_vendor_functions($records) {
 
-			//assign private variables
-				$this->permission_prefix = 'device_';
-				$this->list_page = 'devices.php';
-				$this->table = 'devices';
-				$this->uuid_prefix = 'device_';
+		//assign private variables
+		$this->permission_prefix = 'device_vendor_function_';
+		$this->list_page         = 'device_vendor_edit.php';
+		$this->table             = 'device_vendor_functions';
+		$this->uuid_prefix       = 'device_vendor_function_';
+		$this->toggle_field      = 'enabled';
+		$this->toggle_values     = ['true', 'false'];
 
-			if (permission_exists($this->permission_prefix.'delete')) {
+		if (permission_exists($this->permission_prefix . 'edit')) {
 
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
 
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
+			//validate the token
+			$token = new token;
+			if (!$token->validate('/app/devices/device_vendor_functions.php')) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page . '?id=' . $this->device_vendor_uuid);
+				exit;
+			}
+
+			//toggle the checked records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//get current toggle state
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
 					}
+				}
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql  = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql  .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$rows = $this->database->select($sql, $parameters ?? null, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							$states[$row['uuid']] = $row['toggle'];
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
+				}
 
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
+				//build update array
+				$x = 0;
+				foreach ($states as $uuid => $state) {
+					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
+					$array[$this->table][$x][$this->toggle_field]         = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$x++;
+				}
 
-						//build the delete array
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$sql = "update v_devices set device_uuid_alternate = null where device_uuid_alternate = :device_uuid_alternate; ";
-									$parameters['device_uuid_alternate'] = $record['uuid'];
-									$this->database->execute($sql, $parameters);
-									unset($sql, $parameters);
+				//save the changes
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									$array['device_settings'][$x]['device_uuid'] = $record['uuid'];
-									$array['device_lines'][$x]['device_uuid'] = $record['uuid'];
-									$array['device_keys'][$x]['device_uuid'] = $record['uuid'];
+					//save the array
+
+					$this->database->save($array);
+					unset($array);
+
+					//set message
+					message::add($text['message-toggle']);
+				}
+				unset($records, $states);
+			}
+
+		}
+	}
+
+	/**
+	 * Toggle the state of checked device profiles.
+	 *
+	 * @param array $records An array containing the records to toggle, where each record is an associative array
+	 *                       with a 'checked' key indicating whether the profile should be toggled, and a 'uuid'
+	 *                       key containing the UUID of the profile.
+	 *
+	 * @return void
+	 */
+	public function toggle_profiles($records) {
+
+		//assign private variables
+		$this->permission_prefix = 'device_profile_';
+		$this->list_page         = 'device_profiles.php';
+		$this->table             = 'device_profiles';
+		$this->uuid_prefix       = 'device_profile_';
+		$this->toggle_field      = 'device_profile_enabled';
+		$this->toggle_values     = ['true', 'false'];
+
+		if (permission_exists($this->permission_prefix . 'edit')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//toggle the checked records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//get current toggle state
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
+					}
+				}
+				if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql  = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql  .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$rows = $this->database->select($sql, $parameters ?? null, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							$states[$row['uuid']] = $row['toggle'];
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
+				}
+
+				//build update array
+				$x = 0;
+				if (!empty($states) && is_array($states) && @sizeof($states) != 0) {
+					foreach ($states as $uuid => $state) {
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
+						$array[$this->table][$x][$this->toggle_field]         = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+						$x++;
+					}
+				}
+
+				//save the changes
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+
+					//save the array
+
+					$this->database->save($array);
+					unset($array);
+
+					//set message
+					message::add($text['message-toggle']);
+				}
+				unset($records, $states);
+			}
+
+		}
+	}
+
+	/**
+	 * Copy the specified device profiles.
+	 *
+	 * @param array $records An array containing the records to copy, where each record is an associative array
+	 *                       with a 'checked' key indicating whether the profile should be copied, and a 'uuid'
+	 *                       key containing the UUID of the profile.
+	 *
+	 * @return void
+	 */
+	public function copy_profiles($records) {
+
+		//assign private variables
+		$this->permission_prefix = 'device_profile_';
+		$this->list_page         = 'device_profiles.php';
+		$this->table             = 'device_profiles';
+		$this->uuid_prefix       = 'device_profile_';
+
+		if (permission_exists($this->permission_prefix . 'add')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//copy the checked records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//get checked records
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
+					}
+				}
+
+				//create insert array from existing data
+				if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql                       = "select * from v_" . $this->table . " ";
+					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows                      = $this->database->select($sql, $parameters, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						$y = $z = 0;
+						foreach ($rows as $x => $row) {
+							$primary_uuid = uuid();
+
+							//convert boolean values to a string
+							foreach ($row as $key => $value) {
+								if (gettype($value) == 'boolean') {
+									$value     = $value ? 'true' : 'false';
+									$row[$key] = $value;
 								}
 							}
 
-						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
+							//copy data
+							$array[$this->table][$x] = $row;
 
-								//grant temporary permissions
-									$p = permissions::new();
-									$p->add('device_setting_delete', 'temp');
-									$p->add('device_line_delete', 'temp');
-									$p->add('device_key_delete', 'temp');
+							//overwrite
+							$array[$this->table][$x][$this->uuid_prefix . 'uuid']  = $primary_uuid;
+							$array[$this->table][$x]['device_profile_description'] = trim($row['device_profile_description'] . ' (' . $text['label-copy'] . ')');
 
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
+							//keys sub table
+							$sql_2                               = "select * from v_device_profile_keys ";
+							$sql_2                               .= "where device_profile_uuid = :device_profile_uuid ";
+							$sql_2                               .= "order by ";
+							$sql_2                               .= "case profile_key_category ";
+							$sql_2                               .= "when 'line' then 1 ";
+							$sql_2                               .= "when 'memort' then 2 ";
+							$sql_2                               .= "when 'programmable' then 3 ";
+							$sql_2                               .= "when 'expansion' then 4 ";
+							$sql_2                               .= "else 100 end, ";
+							$sql_2                               .= "profile_key_id asc ";
+							$parameters_2['device_profile_uuid'] = $row['device_profile_uuid'];
+							$rows_2                              = $this->database->select($sql_2, $parameters_2, 'all');
+							if (is_array($rows_2) && @sizeof($rows_2) != 0) {
+								foreach ($rows_2 as $row_2) {
 
-								//revoke temporary permissions
-									$p->delete('device_setting_delete', 'temp');
-									$p->delete('device_line_delete', 'temp');
-									$p->delete('device_key_delete', 'temp');
-
-								//write the provision files
-									if (!empty($this->settings->get('provision', 'path'))) {
-										$prov = new provision;
-										$prov->domain_uuid = $this->domain_uuid;
-										$response = $prov->write();
+									//convert boolean values to a string
+									foreach ($row_2 as $key => $value) {
+										if (gettype($value) == 'boolean') {
+											$value       = $value ? 'true' : 'false';
+											$row_2[$key] = $value;
+										}
 									}
 
-								//set message
-									message::add($text['message-delete']);
+									//copy data
+									$array['device_profile_keys'][$y] = $row_2;
 
-							}
-							unset($records);
-					}
-			}
-		}
+									//overwrite
+									$array['device_profile_keys'][$y]['device_profile_key_uuid'] = uuid();
+									$array['device_profile_keys'][$y]['device_profile_uuid']     = $primary_uuid;
 
-		public function delete_lines($records) {
-			//assign private variables
-				$this->permission_prefix = 'device_line_';
-				$this->table = 'device_lines';
-				$this->uuid_prefix = 'device_line_';
+									//increment
+									$y++;
 
-			if (permission_exists($this->permission_prefix.'delete')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//filter out unchecked device lines, build delete array
-							$x = 0;
-							foreach ($records as $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									$array[$this->table][$x]['device_uuid'] = $this->device_uuid;
-									$x++;
 								}
 							}
-
-						//delete the checked rows
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
-							}
-							unset($records);
-					}
-			}
-		}
-
-		public function delete_keys($records) {
-			//assign private variables
-				$this->permission_prefix = 'device_key_';
-				$this->table = 'device_keys';
-				$this->uuid_prefix = 'device_key_';
-
-			if (permission_exists($this->permission_prefix.'delete')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//filter out unchecked device keys, build delete array
-							$x = 0;
-							foreach ($records as $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									$array[$this->table][$x]['device_uuid'] = $this->device_uuid;
-									$x++;
-								}
-							}
-
-						//delete the checked rows
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
-							}
-							unset($records);
-					}
-			}
-		}
-
-		public function delete_settings($records) {
-			//assign private variables
-				$this->permission_prefix = 'device_setting_';
-				$this->table = 'device_settings';
-				$this->uuid_prefix = 'device_setting_';
-
-			if (permission_exists($this->permission_prefix.'delete')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//filter out unchecked device settings, build delete array
-							$x = 0;
-							foreach ($records as $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									$array[$this->table][$x]['device_uuid'] = $this->device_uuid;
-									$x++;
-								}
-							}
-
-						//delete the checked rows
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
-							}
-							unset($records);
-					}
-			}
-		}
-
-		public function delete_vendors($records) {
-
-			//assign private variables
-				$this->permission_prefix = 'device_vendor_';
-				$this->list_page = 'device_vendors.php';
-				$this->tables[] = 'device_vendors';
-				$this->tables[] = 'device_vendor_functions';
-				$this->tables[] = 'device_vendor_function_groups';
-				$this->uuid_prefix = 'device_vendor_';
-
-			if (permission_exists($this->permission_prefix.'delete')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//build the delete array
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									foreach ($this->tables as $table) {
-										$array[$table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									}
-								}
-							}
-
-						//delete the checked rows
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = permissions::new();
-									$p->add('device_vendor_function_delete', 'temp');
-									$p->add('device_vendor_function_group_delete', 'temp');
-
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
-
-								//revoke temporary permissions
-									$p->delete('device_vendor_function_delete', 'temp');
-									$p->delete('device_vendor_function_group_delete', 'temp');
-
-								//set message
-									message::add($text['message-delete']);
-
-							}
-							unset($records);
-					}
-			}
-		}
-
-		public function delete_vendor_functions($records) {
-
-			//assign private variables
-				$this->permission_prefix = 'device_vendor_function_';
-				$this->list_page = 'device_vendor_edit.php';
-				$this->tables[] = 'device_vendor_functions';
-				$this->tables[] = 'device_vendor_function_groups';
-				$this->uuid_prefix = 'device_vendor_function_';
-
-			if (permission_exists($this->permission_prefix.'delete')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate('/app/devices/device_vendor_functions.php')) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page.'?id='.$this->device_vendor_uuid);
-						exit;
-					}
-
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//build the delete array
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									foreach ($this->tables as $table) {
-										$array[$table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									}
-								}
-							}
-
-						//delete the checked rows
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = permissions::new();
-									$p->add('device_vendor_function_group_delete', 'temp');
-
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
-
-								//revoke temporary permissions
-									$p->delete('device_vendor_function_group_delete', 'temp');
-
-								//set message
-									message::add($text['message-delete']);
-
-							}
-							unset($records);
-					}
-			}
-		}
-
-		public function delete_profiles($records) {
-
-			//assign private variables
-				$this->permission_prefix = 'device_profile_';
-				$this->list_page = 'device_profiles.php';
-				$this->tables[] = 'device_profiles';
-				$this->tables[] = 'device_profile_keys';
-				$this->tables[] = 'device_profile_settings';
-				$this->uuid_prefix = 'device_profile_';
-
-			if (permission_exists($this->permission_prefix.'delete')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//build the delete array
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									foreach ($this->tables as $table) {
-										$array[$table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									}
-								}
-							}
-
-						//delete the checked rows
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = permissions::new();
-									$p->add('device_profile_key_delete', 'temp');
-									$p->add('device_profile_setting_delete', 'temp');
-
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
-
-								//revoke temporary permissions
-									$p->delete('device_profile_key_delete', 'temp');
-									$p->delete('device_profile_setting_delete', 'temp');
-
-								//set message
-									message::add($text['message-delete']);
-
-							}
-							unset($records);
-					}
-			}
-		}
-
-		public function delete_profile_keys($records) {
-
-			//assign private variables
-				$this->permission_prefix = 'device_profile_key_';
-				$this->list_page = 'device_profile_edit.php?id='.$this->device_profile_uuid;
-				$this->table = 'device_profile_keys';
-				$this->uuid_prefix = 'device_profile_key_';
-
-			if (permission_exists($this->permission_prefix.'delete')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//build the delete array
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-								}
-							}
-
-						//execute delete
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-								$this->database->delete($array);
-								unset($array);
-							}
-							unset($records);
-
-					}
-			}
-		}
-
-		public function delete_profile_settings($records) {
-
-			//assign private variables
-				$this->permission_prefix = 'device_profile_setting_';
-				$this->list_page = 'device_profile_edit.php?id='.$this->device_profile_uuid;
-				$this->table = 'device_profile_settings';
-				$this->uuid_prefix = 'device_profile_setting_';
-
-			if (permission_exists($this->permission_prefix.'delete')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//build the delete array
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-								}
-							}
-
-						//execute delete
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-								$this->database->delete($array);
-								unset($array);
-							}
-							unset($records);
-
-					}
-			}
-		}
-
-		/**
-		 * toggle records
-		 */
-		public function toggle($records) {
-
-			//assign private variables
-				$this->permission_prefix = 'device_';
-				$this->list_page = 'devices.php';
-				$this->table = 'devices';
-				$this->uuid_prefix = 'device_';
-				$this->toggle_field = 'device_enabled';
-				$this->toggle_values = ['true','false'];
-
-			if (permission_exists($this->permission_prefix.'edit')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//toggle the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//get current toggle state
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
-							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
-								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $this->domain_uuid;
-								$rows = $this->database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									foreach ($rows as $row) {
-										$states[$row['uuid']] = $row['toggle'];
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-							}
-
-						//build update array
-							$x = 0;
-							foreach ($states as $uuid => $state) {
-								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-								$x++;
-							}
-
-						//save the changes
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-
-								//save the array
-
-									$this->database->save($array);
-									unset($array);
-
-								//write the provision files
-									if (!empty($this->settings->get('provision', 'path'))) {
-										$prov = new provision;
-										$prov->domain_uuid = $this->domain_uuid;
-										$response = $prov->write();
+							unset($sql_2, $parameters_2, $rows_2, $row_2);
+
+							//settings sub table
+							$sql_3                               = "select * from v_device_profile_settings where device_profile_uuid = :device_profile_uuid";
+							$parameters_3['device_profile_uuid'] = $row['device_profile_uuid'];
+							$rows_3                              = $this->database->select($sql_3, $parameters_3, 'all');
+							if (is_array($rows_3) && @sizeof($rows_3) != 0) {
+								foreach ($rows_3 as $row_3) {
+
+									//convert boolean values to a string
+									foreach ($row_3 as $key => $value) {
+										if (gettype($value) == 'boolean') {
+											$value       = $value ? 'true' : 'false';
+											$row_3[$key] = $value;
+										}
 									}
 
-								//set message
-									message::add($text['message-toggle']);
-							}
-							unset($records, $states);
-					}
+									//copy data
+									$array['device_profile_settings'][$z] = $row_3;
 
+									//overwrite
+									$array['device_profile_settings'][$z]['device_profile_setting_uuid'] = uuid();
+									$array['device_profile_settings'][$z]['device_profile_uuid']         = $primary_uuid;
+
+									//increment
+									$z++;
+
+								}
+							}
+							unset($sql_3, $parameters_3, $rows_3, $row_3);
+
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
+				}
+
+				//save the changes and set the message
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('device_profile_key_add', 'temp');
+					$p->add('device_profile_setting_add', 'temp');
+
+					//save the array
+
+					$this->database->save($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('device_profile_key_add', 'temp');
+					$p->delete('device_profile_setting_add', 'temp');
+
+					//set message
+					message::add($text['message-copy']);
+
+				}
+				unset($records);
 			}
+
 		}
 
-		public function toggle_vendors($records) {
+	} //method
 
-			//assign private variables
-				$this->permission_prefix = 'device_vendor_';
-				$this->list_page = 'device_vendors.php';
-				$this->table = 'device_vendors';
-				$this->uuid_prefix = 'device_vendor_';
-				$this->toggle_field = 'enabled';
-				$this->toggle_values = ['true','false'];
+} //class
 
-			if (permission_exists($this->permission_prefix.'edit')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//toggle the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//get current toggle state
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
-							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
-								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->database->select($sql, $parameters ?? null, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									foreach ($rows as $row) {
-										$states[$row['uuid']] = $row['toggle'];
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-							}
-
-						//build update array
-							$x = 0;
-							foreach ($states as $uuid => $state) {
-								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-								$x++;
-							}
-
-						//save the changes
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-
-								//save the array
-
-									$this->database->save($array);
-									unset($array);
-
-								//set message
-									message::add($text['message-toggle']);
-							}
-							unset($records, $states);
-					}
-
-			}
-		}
-
-		public function toggle_vendor_functions($records) {
-
-			//assign private variables
-				$this->permission_prefix = 'device_vendor_function_';
-				$this->list_page = 'device_vendor_edit.php';
-				$this->table = 'device_vendor_functions';
-				$this->uuid_prefix = 'device_vendor_function_';
-				$this->toggle_field = 'enabled';
-				$this->toggle_values = ['true','false'];
-
-			if (permission_exists($this->permission_prefix.'edit')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate('/app/devices/device_vendor_functions.php')) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page.'?id='.$this->device_vendor_uuid);
-						exit;
-					}
-
-				//toggle the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//get current toggle state
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
-							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
-								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->database->select($sql, $parameters ?? null, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									foreach ($rows as $row) {
-										$states[$row['uuid']] = $row['toggle'];
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-							}
-
-						//build update array
-							$x = 0;
-							foreach ($states as $uuid => $state) {
-								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-								$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-								$x++;
-							}
-
-						//save the changes
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-
-								//save the array
-
-									$this->database->save($array);
-									unset($array);
-
-								//set message
-									message::add($text['message-toggle']);
-							}
-							unset($records, $states);
-					}
-
-			}
-		}
-
-		public function toggle_profiles($records) {
-
-			//assign private variables
-				$this->permission_prefix = 'device_profile_';
-				$this->list_page = 'device_profiles.php';
-				$this->table = 'device_profiles';
-				$this->uuid_prefix = 'device_profile_';
-				$this->toggle_field = 'device_profile_enabled';
-				$this->toggle_values = ['true','false'];
-
-			if (permission_exists($this->permission_prefix.'edit')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//toggle the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//get current toggle state
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
-							}
-							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
-								$sql .= "where ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->database->select($sql, $parameters ?? null, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									foreach ($rows as $row) {
-										$states[$row['uuid']] = $row['toggle'];
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-							}
-
-						//build update array
-							$x = 0;
-							if (!empty($states) && is_array($states) && @sizeof($states) != 0) {
-								foreach ($states as $uuid => $state) {
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-									$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-									$x++;
-								}
-							}
-
-						//save the changes
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-
-								//save the array
-
-									$this->database->save($array);
-									unset($array);
-
-								//set message
-									message::add($text['message-toggle']);
-							}
-							unset($records, $states);
-					}
-
-			}
-		}
-
-		/**
-		 * copy records
-		 */
-		public function copy_profiles($records) {
-
-			//assign private variables
-				$this->permission_prefix = 'device_profile_';
-				$this->list_page = 'device_profiles.php';
-				$this->table = 'device_profiles';
-				$this->uuid_prefix = 'device_profile_';
-
-			if (permission_exists($this->permission_prefix.'add')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//copy the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//get checked records
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
-							}
-
-						//create insert array from existing data
-							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select * from v_".$this->table." ";
-								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $this->domain_uuid;
-								$rows = $this->database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									$y = $z = 0;
-									foreach ($rows as $x => $row) {
-										$primary_uuid = uuid();
-
-										//convert boolean values to a string
-											foreach($row as $key => $value) {
-												if (gettype($value) == 'boolean') {
-													$value = $value ? 'true' : 'false';
-													$row[$key] = $value;
-												}
-											}
-
-										//copy data
-											$array[$this->table][$x] = $row;
-
-										//overwrite
-											$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $primary_uuid;
-											$array[$this->table][$x]['device_profile_description'] = trim($row['device_profile_description'].' ('.$text['label-copy'].')');
-
-										//keys sub table
-											$sql_2 = "select * from v_device_profile_keys ";
-											$sql_2 .= "where device_profile_uuid = :device_profile_uuid ";
-											$sql_2 .= "order by ";
-											$sql_2 .= "case profile_key_category ";
-											$sql_2 .= "when 'line' then 1 ";
-											$sql_2 .= "when 'memort' then 2 ";
-											$sql_2 .= "when 'programmable' then 3 ";
-											$sql_2 .= "when 'expansion' then 4 ";
-											$sql_2 .= "else 100 end, ";
-											$sql_2 .= "profile_key_id asc ";
-											$parameters_2['device_profile_uuid'] = $row['device_profile_uuid'];
-											$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
-											if (is_array($rows_2) && @sizeof($rows_2) != 0) {
-												foreach ($rows_2 as $row_2) {
-
-													//convert boolean values to a string
-														foreach($row_2 as $key => $value) {
-															if (gettype($value) == 'boolean') {
-																$value = $value ? 'true' : 'false';
-																$row_2[$key] = $value;
-															}
-														}
-
-													//copy data
-														$array['device_profile_keys'][$y] = $row_2;
-
-													//overwrite
-														$array['device_profile_keys'][$y]['device_profile_key_uuid'] = uuid();
-														$array['device_profile_keys'][$y]['device_profile_uuid'] = $primary_uuid;
-
-													//increment
-														$y++;
-
-												}
-											}
-											unset($sql_2, $parameters_2, $rows_2, $row_2);
-
-										//settings sub table
-											$sql_3 = "select * from v_device_profile_settings where device_profile_uuid = :device_profile_uuid";
-											$parameters_3['device_profile_uuid'] = $row['device_profile_uuid'];
-											$rows_3 = $this->database->select($sql_3, $parameters_3, 'all');
-											if (is_array($rows_3) && @sizeof($rows_3) != 0) {
-												foreach ($rows_3 as $row_3) {
-
-													//convert boolean values to a string
-														foreach($row_3 as $key => $value) {
-															if (gettype($value) == 'boolean') {
-																$value = $value ? 'true' : 'false';
-																$row_3[$key] = $value;
-															}
-														}
-
-													//copy data
-														$array['device_profile_settings'][$z] = $row_3;
-
-													//overwrite
-														$array['device_profile_settings'][$z]['device_profile_setting_uuid'] = uuid();
-														$array['device_profile_settings'][$z]['device_profile_uuid'] = $primary_uuid;
-
-													//increment
-														$z++;
-
-												}
-											}
-											unset($sql_3, $parameters_3, $rows_3, $row_3);
-
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-							}
-
-						//save the changes and set the message
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = permissions::new();
-									$p->add('device_profile_key_add', 'temp');
-									$p->add('device_profile_setting_add', 'temp');
-
-								//save the array
-
-									$this->database->save($array);
-									unset($array);
-
-								//revoke temporary permissions
-									$p->delete('device_profile_key_add', 'temp');
-									$p->delete('device_profile_setting_add', 'temp');
-
-								//set message
-									message::add($text['message-copy']);
-
-							}
-							unset($records);
-					}
-
-			}
-
-		} //method
-
-	} //class
-
-?>

@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Parse attachments from a given email message.
+ *
+ * @param imap connection object $connection The IMAP connection to use for fetching the email message.
+ * @param int    $message_number The number of the email message to parse attachments from.
+ * @param string $option         Optional flag to pass to the imap_fetchstructure function.
+ *
+ * @return array An array of attachment details, where each element is an associative array containing
+ *               'filename', 'name', and 'attachment' keys. The return value will be a reindexed array,
+ *               with keys starting from 0.
+ */
 function parse_attachments($connection, $message_number, $option = '') {
 	$attachments = array();
 	$structure = imap_fetchstructure($connection, $message_number, $option);

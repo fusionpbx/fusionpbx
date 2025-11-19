@@ -72,6 +72,13 @@
 	}
 
 //send http error
+	/**
+	 * Displays a custom HTTP error page with the specified error code and message.
+	 *
+	 * @param int $error The HTTP error code (e.g., 400, 401, etc.)
+	 *
+	 * @return void The script exits after displaying the error page
+	 */
 	function http_error($error) {
 		//$error_int_val = intval($error);
 		$http_errors = [
@@ -272,6 +279,13 @@
 	if (!empty($provision["http_auth_username"]) && empty($provision["http_auth_type"])) { $provision["http_auth_type"] = "digest"; }
 	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "digest" && !empty($provision["http_auth_enabled"]) && $provision["http_auth_enabled"]) {
 		//function to parse the http auth header
+			/**
+			 * Parses the specified HTTP Digest authentication text and extracts relevant data.
+			 *
+			 * @param string $txt The HTTP Digest authentication text to parse
+			 *
+			 * @return array|false An array of extracted data if successful, or false if data is incomplete
+			 */
 			function http_digest_parse($txt) {
 				//protect against missing data
 				$needed_parts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
@@ -286,6 +300,13 @@
 			}
 
 		//function to request digest authentication
+			/**
+			 * Sends an HTTP Digest authentication request with the specified realm.
+			 *
+			 * @param string $realm The name of the protected resource's realm
+			 *
+			 * @return void The script exits after sending the authentication request
+			 */
 			function http_digest_request($realm) {
 				header('HTTP/1.1 401 Authorization Required');
 				header('WWW-Authenticate: Digest realm="'.$realm.'", qop="auth", nonce="'.uniqid().'", opaque="'.md5($realm).'"');
@@ -447,8 +468,8 @@
 	$file_size = strlen($file_contents);
 	if (isset($_SERVER['HTTP_RANGE'])) {
 		$ranges = $_SERVER['HTTP_RANGE'];
-		list($unit, $range) = explode('=', $ranges, 2);
-		list($start, $end) = explode('-', $range, 2);
+		[$unit, $range] = explode('=', $ranges, 2);
+		[$start, $end] = explode('-', $range, 2);
 
 		$start = empty($start) ? 0 : (int)$start;
 		$end = empty($end) ? $file_size - 1 : min((int)$end, $file_size - 1);

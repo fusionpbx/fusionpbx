@@ -46,7 +46,12 @@
 		private $toggle_values;
 
 		/**
-		 * called when the object is created
+		 * Initializes the object with setting array.
+		 *
+		 * @param array $setting_array An array containing settings for domain, user, and database connections. Defaults to
+		 *                             an empty array.
+		 *
+		 * @return void
 		 */
 		public function __construct(array $setting_array = []) {
 			//set objects
@@ -62,7 +67,13 @@
 		}
 
 		/**
-		 * delete records
+		 * Deletes one or more records.
+		 *
+		 * @param array $records An array of record IDs to delete, where each ID is an associative array
+		 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+		 *                       whether the corresponding checkbox was checked for deletion.
+		 *
+		 * @return void No return value; this method modifies the database state and sets a message.
 		 */
 		public function delete($records) {
 			if (permission_exists($this->permission_prefix.'delete')) {
@@ -111,7 +122,13 @@
 		}
 
 		/**
-		 * toggle records
+		 * Toggles the state of one or more records.
+		 *
+		 * @param array $records  An array of record IDs to delete, where each ID is an associative array
+		 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
+		 *                        whether the corresponding checkbox was checked for deletion.
+		 *
+		 * @return void No return value; this method modifies the database state and sets a message.
 		 */
 		public function toggle($records) {
 			if (permission_exists($this->permission_prefix.'edit')) {
@@ -181,7 +198,13 @@
 		}
 
 		/**
-		 * copy records
+		 * Copies one or more records
+		 *
+		 * @param array $records  An array of record IDs to delete, where each ID is an associative array
+		 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
+		 *                        whether the corresponding checkbox was checked for deletion.
+		 *
+		 * @return void No return value; this method modifies the database state and sets a message.
 		 */
 		public function copy($records) {
 			if (permission_exists($this->permission_prefix.'add')) {

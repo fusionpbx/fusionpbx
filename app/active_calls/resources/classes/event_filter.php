@@ -35,10 +35,28 @@ class event_filter implements filter {
 
 	private $event_names;
 
+	/**
+	 * Initializes the object with the event names to filter on.
+	 *
+	 * @param array $event_names Array of event names to initialize the object with
+	 */
 	public function __construct(array $event_names) {
 		$this->add_event_names($event_names);
 	}
 
+	/**
+	 * Invokes this method to filter events.
+	 *
+	 * @param string $key   The key name that will be used for filtering, currently only
+	 *                      supports the "event_name" key.
+	 * @param mixed  $value The value associated with the provided key.
+	 *
+	 * @return bool|null Returns true if the invocation is valid and the event name
+	 *         filter has not been applied yet. If the invocation has an "event_name"
+	 *         key and its corresponding value, this method will return a boolean
+	 *         indicating whether the event name already exists in the list of allowed
+	 *         names or not. Otherwise returns null.
+	 */
 	public function __invoke(string $key, $value): ?bool {
 		if ($key !== 'event_name') {
 			return true;
@@ -69,17 +87,20 @@ class event_filter implements filter {
 		}
 	}
 
+	/**
+	 * Checks if an event with the given name is present in the filters.
+	 *
+	 * @param string $name The name of the event to check for.
+	 *
+	 * @return bool|null True if the event is found, otherwise null. Returns null
+	 *                  when the event is not allowed due to permissions constraints.
+	 */
 	public function has_event_name(string $name): ?bool {
-		if (isset($this->event_names[$name]))
+		if (isset($this->event_names[$name])) {
 			return true;
-		//
-		// If the event name is not allowed by the permissions given in
-		// this object, then the entire event must be dropped. I could
-		// not figure out a better way to do this except to throw an
-		// exception so that the caller can drop the message.
-		//
-		// TODO: Find another way not so expensive to reject the payload
-		//
+		}
+
+		//reject the payload
 		return null;
 	}
 }

@@ -49,6 +49,15 @@
 	$text = $language->get();
 
 //define the destination_select function
+	/**
+	 * Displays a select input element with options for destinations.
+	 *
+	 * @param string $select_name    The name attribute of the select input element.
+	 * @param int    $select_value   The value to be selected in the select input element.
+	 * @param int    $select_default The default value if select_value is empty.
+	 *
+	 * @return void
+	 */
 	function destination_select($select_name, $select_value, $select_default) {
 		if (empty($select_value)) { $select_value = $select_default; }
 		echo "	<select class='formfld' style='width: 55px;' name='$select_name'>\n";

@@ -37,6 +37,13 @@
 	$pid_file = "/var/run/fusionpbx/".basename( $argv[0], ".php") .".pid";
 
 //function to check if the process exists
+	/**
+	 * Checks if a process with the specified PID file exists and is currently running.
+	 *
+	 * @param string $file The path to the PID file. Defaults to false, in which case the function will return whether any process exists.
+	 *
+	 * @return bool True if the process is running, false otherwise.
+	 */
 	function process_exists($file = false) {
 
 		//set the default exists to false

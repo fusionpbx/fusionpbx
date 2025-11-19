@@ -25,536 +25,573 @@
 */
 
 //define the ring groups class
-	class ring_groups {
-
-		/**
-		 * declare constant variables
-		 */
-		const app_name = 'ring_groups';
-		const app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
-
-		/**
-		 * Ring group primary key
-		 * @var uuid
-		 */
-		public $ring_group_uuid;
-
-		/**
-		 * Set in the constructor. Must be a database object and cannot be null.
-		 * @var database Database Object
-		 */
-		private $database;
-
-		/**
-		 * Settings object set in the constructor. Must be a settings object and cannot be null.
-		 * @var settings Settings Object
-		 */
-		private $settings;
-
-		/**
-		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		private $user_uuid;
-
-		/**
-		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
-		 * @var string
-		 */
-		private $domain_uuid;
-
-		/**
-		 * declare private variables
-		 */
-		private $permission_prefix;
-		private $list_page;
-		private $table;
-		private $uuid_prefix;
-		private $toggle_field;
-		private $toggle_values;
-
-		/**
-		 * called when the object is created
-		 */
-		public function __construct(array $setting_array = []) {
-			//set domain and user UUIDs
-			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
-
-			//set objects
-			$this->database = $setting_array['database'] ?? database::new();
-
-			//assign private variables
-			$this->permission_prefix = 'ring_group_';
-			$this->list_page = 'ring_groups.php';
-			$this->table = 'ring_groups';
-			$this->uuid_prefix = 'ring_group_';
-			$this->toggle_field = 'ring_group_enabled';
-			$this->toggle_values = ['true','false'];
-		}
-
-		/**
-		 * delete records
-		 */
-		public function delete($records) {
-			if (permission_exists($this->permission_prefix.'delete')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//filter out unchecked ring groups, build where clause for below
-							foreach ($records as $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
-							}
-
-						//get necessary ring group details
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, dialplan_uuid, ring_group_context from v_".$this->table." ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $this->domain_uuid;
-								$rows = $this->database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									foreach ($rows as $row) {
-										$ring_groups[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
-										$ring_group_contexts[] = $row['ring_group_context'];
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-							}
-
-						//build the delete array
-							$x = 0;
-							foreach ($ring_groups as $ring_group_uuid => $ring_group) {
-								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $ring_group_uuid;
-								$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
-								$array['ring_group_users'][$x][$this->uuid_prefix.'uuid'] = $ring_group_uuid;
-								$array['ring_group_users'][$x]['domain_uuid'] = $this->domain_uuid;
-								$array['ring_group_destinations'][$x][$this->uuid_prefix.'uuid'] = $ring_group_uuid;
-								$array['ring_group_destinations'][$x]['domain_uuid'] = $this->domain_uuid;
-								$array['dialplans'][$x]['dialplan_uuid'] = $ring_group['dialplan_uuid'];
-								$array['dialplan_details'][$x]['dialplan_uuid'] = $ring_group['dialplan_uuid'];
-								$x++;
-							}
-
-						//delete the checked rows
-							if (is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = permissions::new();
-									$p->add('ring_group_user_delete', 'temp');
-									$p->add('ring_group_destination_delete', 'temp');
-									$p->add('dialplan_delete', 'temp');
-									$p->add('dialplan_detail_delete', 'temp');
-
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
-
-								//revoke temporary permissions
-									$p->delete('ring_group_user_delete', 'temp');
-									$p->delete('ring_group_destination_delete', 'temp');
-									$p->delete('dialplan_delete', 'temp');
-									$p->delete('dialplan_detail_delete', 'temp');
-
-								//apply settings reminder
-									$_SESSION["reload_xml"] = true;
-
-								//clear the cache
-									if (is_array($ring_group_contexts) && @sizeof($ring_group_contexts) != 0) {
-										$ring_group_contexts = array_unique($ring_group_contexts);
-										$cache = new cache;
-										foreach ($ring_group_contexts as $ring_group_context) {
-											$cache->delete("dialplan:".$ring_group_context);
-										}
-									}
-
-								//clear the destinations session array
-									if (isset($_SESSION['destinations']['array'])) {
-										unset($_SESSION['destinations']['array']);
-									}
-
-								//set message
-									message::add($text['message-delete']);
-							}
-							unset($records);
-					}
-			}
-		}
-
-		public function delete_destinations($records) {
-
-			//assign private variables
-				$this->permission_prefix = 'ring_group_destination_';
-				$this->table = 'ring_group_destinations';
-				$this->uuid_prefix = 'ring_group_destination_';
-
-			if (permission_exists($this->permission_prefix.'delete')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('L$ring_group_uuidocation: '.$this->list_page);
-						exit;
-					}
-
-				//delete multiple records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//filter out unchecked ring groups, build where clause for below
-							foreach ($records as $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = $record['uuid'];
-								}
-							}
-
-						//get ring group context
-							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ring_group_context from v_ring_groups ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and ring_group_uuid = :ring_group_uuid ";
-								$parameters['domain_uuid'] = $this->domain_uuid;
-								$parameters['ring_group_uuid'] = $this->ring_group_uuid;
-								$ring_group_context = $this->database->select($sql, $parameters, 'column');
-								unset($sql, $parameters);
-							}
-
-						//build the delete array
-							if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
-								$x = 0;
-								foreach ($uuids as $uuid) {
-									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
-									$x++;
-								}
-							}
-
-						//delete the checked rows
-							if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-
-								//execute delete
-									$this->database->delete($array);
-									unset($array);
-
-								//apply settings reminder
-									$_SESSION["reload_xml"] = true;
-
-								//clear the cache
-									if ($ring_group_context) {
-										$cache = new cache;
-										$cache->delete("dialplan:".$ring_group_context);
-									}
-
-							}
-							unset($records);
-					}
-			}
-		}
-
-		/**
-		 * toggle records
-		 */
-		public function toggle($records) {
-			if (permission_exists($this->permission_prefix.'edit')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//toggle the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//get current toggle state
-							foreach ($records as $x => $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
-							}
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle, dialplan_uuid, ring_group_context from v_".$this->table." ";
-								$sql .= "where domain_uuid = :domain_uuid ";
-								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $this->domain_uuid;
-								$rows = $this->database->select($sql, $parameters, 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									foreach ($rows as $row) {
-										$ring_groups[$row['uuid']]['state'] = $row['toggle'];
-										$ring_groups[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
-										$ring_group_contexts[] = $row['ring_group_context'];
-									}
-								}
-								unset($sql, $parameters, $rows, $row);
-							}
-
-						//build update array
-							$x = 0;
-							foreach ($ring_groups as $uuid => $ring_group) {
-								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
-								$array[$this->table][$x][$this->toggle_field] = $ring_group['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-								$array['dialplans'][$x]['dialplan_uuid'] = $ring_group['dialplan_uuid'];
-								$array['dialplans'][$x]['dialplan_enabled'] = $ring_group['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-								$x++;
-							}
-
-						//save the changes
-							if (is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = permissions::new();
-									$p->add('dialplan_edit', 'temp');
-
-								//save the array
-
-									$this->database->save($array);
-									unset($array);
-
-								//revoke temporary permissions
-									$p->delete('dialplan_edit', 'temp');
-
-								//apply settings reminder
-									$_SESSION["reload_xml"] = true;
-
-								//clear the cache
-									if (is_array($ring_group_contexts) && @sizeof($ring_group_contexts) != 0) {
-										$ring_group_contexts = array_unique($ring_group_contexts);
-										$cache = new cache;
-										foreach ($ring_group_contexts as $ring_group_context) {
-											$cache->delete("dialplan:".$ring_group_context);
-										}
-									}
-
-								//clear the destinations session array
-									if (isset($_SESSION['destinations']['array'])) {
-										unset($_SESSION['destinations']['array']);
-									}
-
-								//set message
-									message::add($text['message-toggle']);
-							}
-							unset($records, $states);
-					}
-
-			}
-		}
-
-		/**
-		 * copy records
-		 */
-		public function copy($records) {
-			if (permission_exists($this->permission_prefix.'add')) {
-
-				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
-
-				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->list_page);
-						exit;
-					}
-
-				//copy the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
-
-						//get checked records
-							foreach ($records as $record) {
-								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
-							}
-
-						//create insert array from existing data
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-
-								//primary table
-									$sql = "select * from v_".$this->table." ";
-									$sql .= "where domain_uuid = :domain_uuid ";
-									$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-									$parameters['domain_uuid'] = $this->domain_uuid;
-									$rows = $this->database->select($sql, $parameters, 'all');
-									if (is_array($rows) && @sizeof($rows) != 0) {
-										$y = $z = 0;
-										foreach ($rows as $x => $row) {
-											$new_ring_group_uuid = uuid();
-											$new_dialplan_uuid = uuid();
-
-											//convert boolean values to a string
-												foreach($row as $key => $value) {
-													if (gettype($value) == 'boolean') {
-														$value = $value ? 'true' : 'false';
-														$row[$key] = $value;
-													}
-												}
-
-											//copy data
-												$array[$this->table][$x] = $row;
-
-											//overwrite
-												$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $new_ring_group_uuid;
-												$array[$this->table][$x]['dialplan_uuid'] = $new_dialplan_uuid;
-												$array[$this->table][$x]['ring_group_description'] = trim($row['ring_group_description'].' ('.$text['label-copy'].')');
-
-											//users sub table
-												$sql_2 = "select * from v_ring_group_users where ring_group_uuid = :ring_group_uuid";
-												$parameters_2['ring_group_uuid'] = $row['ring_group_uuid'];
-												$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
-												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
-													foreach ($rows_2 as $row_2) {
-
-														//convert boolean values to a string
-															foreach($row_2 as $key => $value) {
-																if (gettype($value) == 'boolean') {
-																	$value = $value ? 'true' : 'false';
-																	$row_2[$key] = $value;
-																}
-															}
-
-														//copy data
-															$array['ring_group_users'][$y] = $row_2;
-
-														//overwrite
-															$array['ring_group_users'][$y]['ring_group_user_uuid'] = uuid();
-															$array['ring_group_users'][$y]['ring_group_uuid'] = $new_ring_group_uuid;
-
-														//increment
-															$y++;
-
-													}
-												}
-												unset($sql_2, $parameters_2, $rows_2, $row_2);
-
-											//destinations sub table
-												$sql_3 = "select * from v_ring_group_destinations where ring_group_uuid = :ring_group_uuid";
-												$parameters_3['ring_group_uuid'] = $row['ring_group_uuid'];
-												$rows_3 = $this->database->select($sql_3, $parameters_3, 'all');
-												if (is_array($rows_3) && @sizeof($rows_3) != 0) {
-													foreach ($rows_3 as $row_3) {
-
-														//convert boolean values to a string
-															foreach($row_3 as $key => $value) {
-																if (gettype($value) == 'boolean') {
-																	$value = $value ? 'true' : 'false';
-																	$row_3[$key] = $value;
-																}
-															}
-
-														//copy data
-															$array['ring_group_destinations'][$z] = $row_3;
-
-														//overwrite
-															$array['ring_group_destinations'][$z]['ring_group_destination_uuid'] = uuid();
-															$array['ring_group_destinations'][$z]['ring_group_uuid'] = $new_ring_group_uuid;
-
-														//increment
-															$z++;
-
-													}
-												}
-												unset($sql_3, $parameters_3, $rows_3, $row_3);
-
-											//ring group dialplan record
-												$sql_4 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
-												$parameters_4['dialplan_uuid'] = $row['dialplan_uuid'];
-												$dialplan = $this->database->select($sql_4, $parameters_4, 'row');
-												if (is_array($dialplan) && @sizeof($dialplan) != 0) {
-
-													//convert boolean values to a string
-														foreach($dialplan as $key => $value) {
-															if (gettype($value) == 'boolean') {
-																$value = $value ? 'true' : 'false';
-																$dialplan[$key] = $value;
-															}
-														}
-
-													//copy data
-														$array['dialplans'][$x] = $dialplan;
-
-													//overwrite
-														$array['dialplans'][$x]['dialplan_uuid'] = $new_dialplan_uuid;
-														$dialplan_xml = $dialplan['dialplan_xml'];
-														$dialplan_xml = str_replace($row['ring_group_uuid'], $new_ring_group_uuid, $dialplan_xml); //replace source ring_group_uuid with new
-														$dialplan_xml = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
-														$array['dialplans'][$x]['dialplan_xml'] = $dialplan_xml;
-														$array['dialplans'][$x]['dialplan_description'] = trim($dialplan['dialplan_description'].' ('.$text['label-copy'].')');
-
-												}
-												unset($sql_4, $parameters_4, $dialplan);
-
-											//create ring group context array
-												$ring_group_contexts = $row['ring_group_context'];
-										}
-									}
-									unset($sql, $parameters, $rows, $row);
-							}
-
-						//save the changes and set the message
-							if (is_array($array) && @sizeof($array) != 0) {
-
-								//grant temporary permissions
-									$p = permissions::new();
-									$p->add('ring_group_user_add', 'temp');
-									$p->add('ring_group_destination_add', 'temp');
-									$p->add("dialplan_add", "temp");
-
-								//save the array
-
-									$this->database->save($array);
-									unset($array);
-
-								//revoke temporary permissions
-									$p->delete('ring_group_user_add', 'temp');
-									$p->delete('ring_group_destination_add', 'temp');
-									$p->delete("dialplan_add", "temp");
-
-								//apply settings reminder
-									$_SESSION["reload_xml"] = true;
-
-								//clear the cache
-									if (is_array($ring_group_contexts) && @sizeof($ring_group_contexts) != 0) {
-										$ring_group_contexts = array_unique($ring_group_contexts);
-										$cache = new cache;
-										foreach ($ring_group_contexts as $ring_group_context) {
-											$cache->delete("dialplan:".$ring_group_context);
-										}
-									}
-
-								//set message
-									message::add($text['message-copy']);
-
-							}
-							unset($records);
-					}
-
-			}
-		}
-
+class ring_groups {
+
+	/**
+	 * declare constant variables
+	 */
+	const app_name = 'ring_groups';
+	const app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
+
+	/**
+	 * Ring group primary key
+	 *
+	 * @var uuid
+	 */
+	public $ring_group_uuid;
+
+	/**
+	 * Set in the constructor. Must be a database object and cannot be null.
+	 *
+	 * @var database Database Object
+	 */
+	private $database;
+
+	/**
+	 * Settings object set in the constructor. Must be a settings object and cannot be null.
+	 *
+	 * @var settings Settings Object
+	 */
+	private $settings;
+
+	/**
+	 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in
+	 * the session global array
+	 *
+	 * @var string
+	 */
+	private $user_uuid;
+
+	/**
+	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set
+	 * in the session global array
+	 *
+	 * @var string
+	 */
+	private $domain_uuid;
+
+	/**
+	 * declare private variables
+	 */
+	private $permission_prefix;
+	private $list_page;
+	private $table;
+	private $uuid_prefix;
+	private $toggle_field;
+	private $toggle_values;
+
+	/**
+	 * Initializes the object with setting array.
+	 *
+	 * @param array $setting_array An array containing settings for domain, user, and database connections. Defaults to
+	 *                             an empty array.
+	 *
+	 * @return void
+	 */
+	public function __construct(array $setting_array = []) {
+		//set domain and user UUIDs
+		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+		//set objects
+		$this->database = $setting_array['database'] ?? database::new();
+
+		//assign private variables
+		$this->permission_prefix = 'ring_group_';
+		$this->list_page         = 'ring_groups.php';
+		$this->table             = 'ring_groups';
+		$this->uuid_prefix       = 'ring_group_';
+		$this->toggle_field      = 'ring_group_enabled';
+		$this->toggle_values     = ['true', 'false'];
 	}
+
+	/**
+	 * Deletes one or more records.
+	 *
+	 * @param array $records An array of record IDs to delete, where each ID is an associative array
+	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                       whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function delete($records) {
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//filter out unchecked ring groups, build where clause for below
+				foreach ($records as $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
+					}
+				}
+
+				//get necessary ring group details
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, dialplan_uuid, ring_group_context from v_" . $this->table . " ";
+					$sql                       .= "where domain_uuid = :domain_uuid ";
+					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows                      = $this->database->select($sql, $parameters, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							$ring_groups[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
+							$ring_group_contexts[]                      = $row['ring_group_context'];
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
+				}
+
+				//build the delete array
+				$x = 0;
+				foreach ($ring_groups as $ring_group_uuid => $ring_group) {
+					$array[$this->table][$x][$this->uuid_prefix . 'uuid']              = $ring_group_uuid;
+					$array[$this->table][$x]['domain_uuid']                            = $this->domain_uuid;
+					$array['ring_group_users'][$x][$this->uuid_prefix . 'uuid']        = $ring_group_uuid;
+					$array['ring_group_users'][$x]['domain_uuid']                      = $this->domain_uuid;
+					$array['ring_group_destinations'][$x][$this->uuid_prefix . 'uuid'] = $ring_group_uuid;
+					$array['ring_group_destinations'][$x]['domain_uuid']               = $this->domain_uuid;
+					$array['dialplans'][$x]['dialplan_uuid']                           = $ring_group['dialplan_uuid'];
+					$array['dialplan_details'][$x]['dialplan_uuid']                    = $ring_group['dialplan_uuid'];
+					$x++;
+				}
+
+				//delete the checked rows
+				if (is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('ring_group_user_delete', 'temp');
+					$p->add('ring_group_destination_delete', 'temp');
+					$p->add('dialplan_delete', 'temp');
+					$p->add('dialplan_detail_delete', 'temp');
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('ring_group_user_delete', 'temp');
+					$p->delete('ring_group_destination_delete', 'temp');
+					$p->delete('dialplan_delete', 'temp');
+					$p->delete('dialplan_detail_delete', 'temp');
+
+					//apply settings reminder
+					$_SESSION["reload_xml"] = true;
+
+					//clear the cache
+					if (is_array($ring_group_contexts) && @sizeof($ring_group_contexts) != 0) {
+						$ring_group_contexts = array_unique($ring_group_contexts);
+						$cache               = new cache;
+						foreach ($ring_group_contexts as $ring_group_context) {
+							$cache->delete("dialplan:" . $ring_group_context);
+						}
+					}
+
+					//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
+					}
+
+					//set message
+					message::add($text['message-delete']);
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
+	 * Deletes multiple destination records from the database.
+	 *
+	 * @param array $records An array of destination records to delete, where each record contains 'uuid' and 'checked' keys.
+	 *
+	 * @return void
+	 */
+	public function delete_destinations($records) {
+
+		//assign private variables
+		$this->permission_prefix = 'ring_group_destination_';
+		$this->table             = 'ring_group_destinations';
+		$this->uuid_prefix       = 'ring_group_destination_';
+
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('L$ring_group_uuidocation: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//filter out unchecked ring groups, build where clause for below
+				foreach ($records as $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = $record['uuid'];
+					}
+				}
+
+				//get ring group context
+				if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql                           = "select ring_group_context from v_ring_groups ";
+					$sql                           .= "where domain_uuid = :domain_uuid ";
+					$sql                           .= "and ring_group_uuid = :ring_group_uuid ";
+					$parameters['domain_uuid']     = $this->domain_uuid;
+					$parameters['ring_group_uuid'] = $this->ring_group_uuid;
+					$ring_group_context            = $this->database->select($sql, $parameters, 'column');
+					unset($sql, $parameters);
+				}
+
+				//build the delete array
+				if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
+					$x = 0;
+					foreach ($uuids as $uuid) {
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
+						$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
+						$x++;
+					}
+				}
+
+				//delete the checked rows
+				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//apply settings reminder
+					$_SESSION["reload_xml"] = true;
+
+					//clear the cache
+					if ($ring_group_context) {
+						$cache = new cache;
+						$cache->delete("dialplan:" . $ring_group_context);
+					}
+
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
+	 * Toggles the state of one or more records.
+	 *
+	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
+	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                        whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function toggle($records) {
+		if (permission_exists($this->permission_prefix . 'edit')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//toggle the checked records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//get current toggle state
+				foreach ($records as $x => $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
+					}
+				}
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, dialplan_uuid, ring_group_context from v_" . $this->table . " ";
+					$sql                       .= "where domain_uuid = :domain_uuid ";
+					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows                      = $this->database->select($sql, $parameters, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							$ring_groups[$row['uuid']]['state']         = $row['toggle'];
+							$ring_groups[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
+							$ring_group_contexts[]                      = $row['ring_group_context'];
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
+				}
+
+				//build update array
+				$x = 0;
+				foreach ($ring_groups as $uuid => $ring_group) {
+					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
+					$array[$this->table][$x][$this->toggle_field]         = $ring_group['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array['dialplans'][$x]['dialplan_uuid']              = $ring_group['dialplan_uuid'];
+					$array['dialplans'][$x]['dialplan_enabled']           = $ring_group['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$x++;
+				}
+
+				//save the changes
+				if (is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('dialplan_edit', 'temp');
+
+					//save the array
+
+					$this->database->save($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('dialplan_edit', 'temp');
+
+					//apply settings reminder
+					$_SESSION["reload_xml"] = true;
+
+					//clear the cache
+					if (is_array($ring_group_contexts) && @sizeof($ring_group_contexts) != 0) {
+						$ring_group_contexts = array_unique($ring_group_contexts);
+						$cache               = new cache;
+						foreach ($ring_group_contexts as $ring_group_context) {
+							$cache->delete("dialplan:" . $ring_group_context);
+						}
+					}
+
+					//clear the destinations session array
+					if (isset($_SESSION['destinations']['array'])) {
+						unset($_SESSION['destinations']['array']);
+					}
+
+					//set message
+					message::add($text['message-toggle']);
+				}
+				unset($records, $states);
+			}
+
+		}
+	}
+
+	/**
+	 * Copies one or more records
+	 *
+	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
+	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                        whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function copy($records) {
+		if (permission_exists($this->permission_prefix . 'add')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text     = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//copy the checked records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//get checked records
+				foreach ($records as $record) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$uuids[] = "'" . $record['uuid'] . "'";
+					}
+				}
+
+				//create insert array from existing data
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+
+					//primary table
+					$sql                       = "select * from v_" . $this->table . " ";
+					$sql                       .= "where domain_uuid = :domain_uuid ";
+					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows                      = $this->database->select($sql, $parameters, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						$y = $z = 0;
+						foreach ($rows as $x => $row) {
+							$new_ring_group_uuid = uuid();
+							$new_dialplan_uuid   = uuid();
+
+							//convert boolean values to a string
+							foreach ($row as $key => $value) {
+								if (gettype($value) == 'boolean') {
+									$value     = $value ? 'true' : 'false';
+									$row[$key] = $value;
+								}
+							}
+
+							//copy data
+							$array[$this->table][$x] = $row;
+
+							//overwrite
+							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $new_ring_group_uuid;
+							$array[$this->table][$x]['dialplan_uuid']             = $new_dialplan_uuid;
+							$array[$this->table][$x]['ring_group_description']    = trim($row['ring_group_description'] . ' (' . $text['label-copy'] . ')');
+
+							//users sub table
+							$sql_2                           = "select * from v_ring_group_users where ring_group_uuid = :ring_group_uuid";
+							$parameters_2['ring_group_uuid'] = $row['ring_group_uuid'];
+							$rows_2                          = $this->database->select($sql_2, $parameters_2, 'all');
+							if (is_array($rows_2) && @sizeof($rows_2) != 0) {
+								foreach ($rows_2 as $row_2) {
+
+									//convert boolean values to a string
+									foreach ($row_2 as $key => $value) {
+										if (gettype($value) == 'boolean') {
+											$value       = $value ? 'true' : 'false';
+											$row_2[$key] = $value;
+										}
+									}
+
+									//copy data
+									$array['ring_group_users'][$y] = $row_2;
+
+									//overwrite
+									$array['ring_group_users'][$y]['ring_group_user_uuid'] = uuid();
+									$array['ring_group_users'][$y]['ring_group_uuid']      = $new_ring_group_uuid;
+
+									//increment
+									$y++;
+
+								}
+							}
+							unset($sql_2, $parameters_2, $rows_2, $row_2);
+
+							//destinations sub table
+							$sql_3                           = "select * from v_ring_group_destinations where ring_group_uuid = :ring_group_uuid";
+							$parameters_3['ring_group_uuid'] = $row['ring_group_uuid'];
+							$rows_3                          = $this->database->select($sql_3, $parameters_3, 'all');
+							if (is_array($rows_3) && @sizeof($rows_3) != 0) {
+								foreach ($rows_3 as $row_3) {
+
+									//convert boolean values to a string
+									foreach ($row_3 as $key => $value) {
+										if (gettype($value) == 'boolean') {
+											$value       = $value ? 'true' : 'false';
+											$row_3[$key] = $value;
+										}
+									}
+
+									//copy data
+									$array['ring_group_destinations'][$z] = $row_3;
+
+									//overwrite
+									$array['ring_group_destinations'][$z]['ring_group_destination_uuid'] = uuid();
+									$array['ring_group_destinations'][$z]['ring_group_uuid']             = $new_ring_group_uuid;
+
+									//increment
+									$z++;
+
+								}
+							}
+							unset($sql_3, $parameters_3, $rows_3, $row_3);
+
+							//ring group dialplan record
+							$sql_4                         = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
+							$parameters_4['dialplan_uuid'] = $row['dialplan_uuid'];
+							$dialplan                      = $this->database->select($sql_4, $parameters_4, 'row');
+							if (is_array($dialplan) && @sizeof($dialplan) != 0) {
+
+								//convert boolean values to a string
+								foreach ($dialplan as $key => $value) {
+									if (gettype($value) == 'boolean') {
+										$value          = $value ? 'true' : 'false';
+										$dialplan[$key] = $value;
+									}
+								}
+
+								//copy data
+								$array['dialplans'][$x] = $dialplan;
+
+								//overwrite
+								$array['dialplans'][$x]['dialplan_uuid']        = $new_dialplan_uuid;
+								$dialplan_xml                                   = $dialplan['dialplan_xml'];
+								$dialplan_xml                                   = str_replace($row['ring_group_uuid'], $new_ring_group_uuid, $dialplan_xml); //replace source ring_group_uuid with new
+								$dialplan_xml                                   = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
+								$array['dialplans'][$x]['dialplan_xml']         = $dialplan_xml;
+								$array['dialplans'][$x]['dialplan_description'] = trim($dialplan['dialplan_description'] . ' (' . $text['label-copy'] . ')');
+
+							}
+							unset($sql_4, $parameters_4, $dialplan);
+
+							//create ring group context array
+							$ring_group_contexts = $row['ring_group_context'];
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
+				}
+
+				//save the changes and set the message
+				if (is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('ring_group_user_add', 'temp');
+					$p->add('ring_group_destination_add', 'temp');
+					$p->add("dialplan_add", "temp");
+
+					//save the array
+
+					$this->database->save($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('ring_group_user_add', 'temp');
+					$p->delete('ring_group_destination_add', 'temp');
+					$p->delete("dialplan_add", "temp");
+
+					//apply settings reminder
+					$_SESSION["reload_xml"] = true;
+
+					//clear the cache
+					if (is_array($ring_group_contexts) && @sizeof($ring_group_contexts) != 0) {
+						$ring_group_contexts = array_unique($ring_group_contexts);
+						$cache               = new cache;
+						foreach ($ring_group_contexts as $ring_group_context) {
+							$cache->delete("dialplan:" . $ring_group_context);
+						}
+					}
+
+					//set message
+					message::add($text['message-copy']);
+
+				}
+				unset($records);
+			}
+
+		}
+	}
+
+}

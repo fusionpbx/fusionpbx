@@ -46,6 +46,11 @@ class event_message implements filterable_payload {
 	 * @var array
 	 */
 	private $event;
+
+	/**
+	 * Body of the SIP MESSAGE used in SMS
+	 * @var string
+	 */
 	private $body;
 
 	/**
@@ -102,6 +107,11 @@ class event_message implements filterable_payload {
 		return $this->event[$name] ?? '';
 	}
 
+	/**
+	 * Return an array representation of this object.
+	 *
+	 * @return array
+	 */
 	public function __toArray(): array {
 		$array = [];
 		foreach ($this->event as $key => $value) {
@@ -110,10 +120,22 @@ class event_message implements filterable_payload {
 		return $array;
 	}
 
+	/**
+	 * Convert the current object into an array representation.
+	 *
+	 * @return array
+	 */
 	public function to_array(): array {
 		return $this->__toArray();
 	}
 
+	/**
+	 * Apply a filter to the event collection.
+	 *
+	 * @param filter $filter The filter function to apply
+	 *
+	 * @return self This object for method chaining
+	 */
 	public function apply_filter(filter $filter) {
 		foreach ($this->event as $key => $value) {
 			$result = ($filter)($key, $value);
@@ -126,6 +148,16 @@ class event_message implements filterable_payload {
 		return $this;
 	}
 
+	/**
+	 * Parse an active calls JSON string and return a list of event messages.
+	 *
+	 * This method expects a JSON string where each row represents an active call, and returns
+	 * a list of event_message objects populated with the relevant details for each call.
+	 *
+	 * @param string $json_string The JSON string to parse.
+	 *
+	 * @return array A list of event_message objects.
+	 */
 	public static function parse_active_calls($json_string): array {
 		$calls = [];
 		$json_array = json_decode($json_string, true);
@@ -181,6 +213,15 @@ class event_message implements filterable_payload {
 		return null;
 	}
 
+	/**
+	 * Creates a new instance from a switch event.
+	 *
+	 * @param array|string $raw_event The raw event data.
+	 * @param filter|null  $filter    Optional filter to be applied on the created object.
+	 * @param int          $flags     Flags controlling the creation process (see EVENT_SWAP_API and EVENT_USE_SUBCLASS).
+	 *
+	 * @return self
+	 */
 	public static function create_from_switch_event($raw_event, filter $filter = null, $flags = 3): self {
 
 		// Set the options from the flags passed
@@ -264,6 +305,14 @@ class event_message implements filterable_payload {
 		return $this->body;
 	}
 
+	/**
+	 * Convert the event object to an array representation.
+	 *
+	 * This method iterates over the event properties and includes them in the returned array.
+	 * If the body is not null, it will be included as a separate key-value pair in the resulting array.
+	 *
+	 * @return array
+	 */
 	public function event_to_array(): array {
 		$array = [];
 		foreach ($this->event as $key => $value) {
@@ -275,15 +324,39 @@ class event_message implements filterable_payload {
 		return $array;
 	}
 
+	/**
+	 * Return an iterator for this object.
+	 *
+	 * This method allows iteration over the event data as a Traversable object.
+	 *
+	 * @return \Traversable
+	 */
 	public function getIterator(): \Traversable {
 		yield from $this->event_to_array();
 	}
 
+	/**
+	 * Check if a specific event key exists in this object.
+	 *
+	 * @param mixed $offset The key of the event to check for existence
+	 *
+	 * @return bool True if the event key exists, false otherwise
+	 */
 	public function offsetExists(mixed $offset): bool {
 		self::sanitize_event_key($offset);
 		return isset($this->event[$offset]);
 	}
 
+	/**
+	 * Return the value associated with the given key from this event object.
+	 *
+	 * If the key is 'body', returns the event body. Otherwise, returns the value
+	 * stored in the 'event' array for the given key.
+	 *
+	 * @param mixed $offset The key to retrieve the value for.
+	 *
+	 * @return mixed The value associated with the given key.
+	 */
 	public function offsetGet(mixed $offset): mixed {
 		self::sanitize_event_key($offset);
 		if ($offset === self::BODY_ARRAY_KEY) {
@@ -292,6 +365,16 @@ class event_message implements filterable_payload {
 		return $this->event[$offset];
 	}
 
+	/**
+	 * Set the value for a given offset in this object.
+	 *
+	 * @param mixed $offset The key or index to set the value for. If it is
+	 *                      {@link self::BODY_ARRAY_KEY}, this method will replace the
+	 *                      entire body of the event with the provided value.
+	 * @param mixed $value  The new value to be associated with the offset.
+	 *
+	 * @return void
+	 */
 	public function offsetSet(mixed $offset, mixed $value): void {
 		self::sanitize_event_key($offset);
 		if ($offset === self::BODY_ARRAY_KEY) {
@@ -301,6 +384,15 @@ class event_message implements filterable_payload {
 		}
 	}
 
+	/**
+	 * Unsets a property from the event array.
+	 *
+	 * This method first sanitizes the provided offset using the sanitize_event_key method to prevent potential security vulnerabilities.
+	 * If the sanitized offset is equal to the BODY_ARRAY_KEY, it sets the body property of this object to null.
+	 * Otherwise, it removes the specified key from the event array.
+	 *
+	 * @param mixed $offset The index or key to be unset from the event array.
+	 */
 	public function offsetUnset(mixed $offset): void {
 		self::sanitize_event_key($offset);
 		if ($offset === self::BODY_ARRAY_KEY) {

@@ -35,12 +35,29 @@ class caller_context_filter implements filter {
 
 	private $domains;
 
+	/**
+	 * Initializes the object with an array of domain names.
+	 *
+	 * @param array $domain_names Array of domain names to initialize the object with.
+	 *
+	 * @return void
+	 */
 	public function __construct(array $domain_names) {
 		foreach ($domain_names as $name) {
 			$this->domains[$name] = true;
 		}
 	}
 
+	/**
+	 * Invokes this method as a callable.
+	 *
+	 * @param string $key   The event key, which is used for validation and filtering.
+	 * @param mixed  $value The value associated with the event key, used to determine
+	 *                      whether the filter chain should drop the payload.
+	 *
+	 * @return bool|null Returns true if the key is not 'caller_context' or the value exists in the domains,
+	 *                   otherwise returns null to drop the payload.
+	 */
 	public function __invoke(string $key, $value): ?bool {
 		// return true when not on the event key caller_context to validate
 		if ($key !== 'caller_context') {

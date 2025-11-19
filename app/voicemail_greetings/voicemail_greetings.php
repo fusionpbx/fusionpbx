@@ -62,6 +62,13 @@
 	}
 
 //used (above) to search the array to determine if an extension is assigned to the user
+	/**
+	 * Checks if the given extension number is assigned to the user.
+	 *
+	 * @param string $number The extension number to check.
+	 *
+	 * @return bool True if the extension number is assigned, False otherwise.
+	 */
 	function extension_assigned($number) {
 		foreach ($_SESSION['user']['extension'] as $row) {
 			if ((is_numeric($row['number_alias']) && $row['number_alias'] == $number) || $row['user'] == $number) {
@@ -506,6 +513,11 @@
 	require_once "resources/footer.php";
 
 //define the download function (helps safari play audio sources)
+	/**
+	 * Handles a range download request for the given file.
+	 *
+	 * @param string $file The path to the file being downloaded.
+	 */
 	function range_download($file) {
 		$fp = @fopen($file, 'rb');
 
@@ -534,7 +546,7 @@
 			$c_start = $start;
 			$c_end   = $end;
 			// Extract the range string
-			list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+			[, $range] = explode('=', $_SERVER['HTTP_RANGE'], 2);
 			// Make sure the client hasn't sent us a multibyte range
 			if (strpos($range, ',') !== false) {
 				// (?) Shoud this be issued here, or should the first

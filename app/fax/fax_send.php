@@ -127,6 +127,13 @@
 
 //define function correct_path
 if (!function_exists('correct_path')) {
+	/**
+	 * Corrects a file path to match the current operating system's conventions.
+	 *
+	 * @param string $p The file path to correct
+	 *
+	 * @return string The corrected file path
+	 */
 	function correct_path($p) {
 		global $IS_WINDOWS;
 		if ($IS_WINDOWS) {
@@ -138,6 +145,17 @@ if (!function_exists('correct_path')) {
 
 //define function gs_cmd
 if (!function_exists('gs_cmd')) {
+	/**
+	 * Generates a command to execute Ghostscript.
+	 *
+	 * The command is constructed based on the value of $IS_WINDOWS, which indicates
+	 * whether the script is running under Windows. If it is, the command includes
+	 * the 'gswin32c' executable, otherwise it uses 'gs'.
+	 *
+	 * @param string $args Command line arguments to be passed to Ghostscript.
+	 *
+	 * @return string The constructed command as a string.
+	 */
 	function gs_cmd($args) {
 		global $IS_WINDOWS;
 		if ($IS_WINDOWS) {
@@ -149,7 +167,17 @@ if (!function_exists('gs_cmd')) {
 
 //define function fax_split dtmf
 if (!function_exists('fax_split_dtmf')) {
-	function fax_split_dtmf(&$fax_number, &$fax_dtmf){
+	/**
+	 * Splits a fax number string into its numeric and DTMF (Dual-Tone Multi-Frequency) parts.
+	 *
+	 * If the input fax number is in the format '12345678 (DTMF_digits)', this function
+	 * extracts the numeric part and stores it in $fax_number, while storing the DTMF digits
+	 * in $fax_dtmf.
+	 *
+	 * @param string &$fax_number The fax number to be split. Modified to contain only the numeric part.
+	 * @param string &$fax_dtmf   The extracted DTMF digits from the input fax number.
+	 */
+	function fax_split_dtmf(&$fax_number, &$fax_dtmf) {
 		$tmp = array();
 		$fax_dtmf = '';
 		if (preg_match('/^\s*(.*?)\s*\((.*)\)\s*$/', $fax_number, $tmp)){
