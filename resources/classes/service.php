@@ -816,7 +816,7 @@ abstract class service {
 	 * @return int The index where the option was appended.
 	 */
 	public static function append_command_option(command_option $option): int {
-		$index                                   = count(self::$available_command_options);
+		$index = count(self::$available_command_options);
 		self::$available_command_options[$index] = $option->to_array();
 		return $index;
 	}
