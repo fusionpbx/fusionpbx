@@ -413,6 +413,8 @@ class schema {
 
 												} elseif ($db_field_type == "character" && strtolower($field_type) == "char") {
 
+												} elseif ($db_field_type == "json" && strtolower($field_type) == "jsonb") {
+
 												} //field type has changed
 												else {
 													switch ($field_type) {
