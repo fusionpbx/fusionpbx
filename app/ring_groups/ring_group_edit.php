@@ -983,8 +983,8 @@
 			echo "				<span class='switch'>\n";
 		}
 		echo "					<select class='formfld' id='ring_group_destinations_".$x."_destination_enabled' name='ring_group_destinations[".$x."][destination_enabled]'>\n";
-		echo "						<option value='true' ".($row['destination_enabled'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "						<option value='false' ".($row['destination_enabled'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "						<option value='true' ".($row['destination_enabled'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "						<option value='false' ".($row['destination_enabled'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "					</select>\n";
 		if ($input_toggle_style_switch) {
 			echo "					<span class='slider'></span>\n";
@@ -1164,8 +1164,8 @@
 			echo "	<span class='switch'>\n";
 		}
 		echo "	<select class='formfld' id='ring_group_call_screen_enabled' name='ring_group_call_screen_enabled'>\n";
-		echo "		<option value='true' ".($ring_group_call_screen_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($ring_group_call_screen_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($ring_group_call_screen_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($ring_group_call_screen_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 		if ($input_toggle_style_switch) {
 			echo "		<span class='slider'></span>\n";
@@ -1187,8 +1187,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='ring_group_call_forward_enabled' name='ring_group_call_forward_enabled'>\n";
-	echo "		<option value='true' ".($ring_group_call_forward_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($ring_group_call_forward_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($ring_group_call_forward_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($ring_group_call_forward_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
@@ -1209,8 +1209,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='ring_group_follow_me_enabled' name='ring_group_follow_me_enabled'>\n";
-	echo "		<option value='true' ".($ring_group_follow_me_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($ring_group_follow_me_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($ring_group_follow_me_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($ring_group_follow_me_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
@@ -1252,8 +1252,8 @@
 			echo "	<span class='switch'>\n";
 		}
 		echo "	<select class='formfld' id='ring_group_forward_enabled' name='ring_group_forward_enabled' onchange=\"(this.selectedIndex == 1) ? document.getElementById('ring_group_forward_destination').focus() : null;\">\n";
-		echo "		<option value='true' ".($ring_group_forward_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($ring_group_forward_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".($ring_group_forward_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($ring_group_forward_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "	</select>\n";
 		if ($input_toggle_style_switch) {
 			echo "		<span class='slider'></span>\n";
@@ -1302,8 +1302,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='ring_group_enabled' name='ring_group_enabled'>\n";
-	echo "		<option value='true' ".($ring_group_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($ring_group_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($ring_group_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($ring_group_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

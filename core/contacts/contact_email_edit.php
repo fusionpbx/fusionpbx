@@ -287,8 +287,8 @@ if (!empty($_GET["contact_uuid"]) && is_uuid($_GET["contact_uuid"])) {
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='email_primary' name='email_primary'>\n";
-	echo "			<option value='false' ".($email_primary === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-	echo "			<option value='true' ".($email_primary === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($email_primary == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($email_primary == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

@@ -1084,8 +1084,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='widget_label_enabled' name='widget_label_enabled'>\n";
-	echo "			<option value='true' ".($widget_label_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "			<option value='false' ".($widget_label_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($widget_label_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($widget_label_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
@@ -1407,8 +1407,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='widget_enabled' name='widget_enabled'>\n";
-	echo "			<option value='true' ".($widget_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "			<option value='false' ".($widget_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($widget_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($widget_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

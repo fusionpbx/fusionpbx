@@ -759,8 +759,8 @@
 				echo "	<span class='switch'>\n";
 			}
 			echo "		<select class='formfld' id='follow_me_ignore_busy' name='follow_me_ignore_busy'>\n";
-			echo "			<option value='true' ".($follow_me_ignore_busy === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "			<option value='false' ".($follow_me_ignore_busy === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "			<option value='true' ".($follow_me_ignore_busy == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "			<option value='false' ".($follow_me_ignore_busy == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 			echo "		</select>\n";
 			if ($input_toggle_style_switch) {
 				echo "		<span class='slider'></span>\n";
@@ -821,8 +821,8 @@
 		echo "	<span class='switch' onclick='changed_do_not_disturb(this);'>\n";
 	}
 	echo "		<select class='formfld' id='do_not_disturb' name='do_not_disturb' onchange='changed_do_not_disturb();'>\n";
-	echo "			<option value='true' ".($do_not_disturb === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "			<option value='false' ".($do_not_disturb === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($do_not_disturb == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($do_not_disturb == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

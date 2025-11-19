@@ -339,8 +339,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='number_translation_enabled' name='number_translation_enabled'>\n";
-	echo "		<option value='true' ".($number_translation_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($number_translation_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($number_translation_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($number_translation_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

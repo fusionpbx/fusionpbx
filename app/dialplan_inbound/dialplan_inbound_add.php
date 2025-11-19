@@ -775,8 +775,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
-	echo "		<option value='true' ".($dialplan_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($dialplan_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($dialplan_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($dialplan_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

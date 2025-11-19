@@ -638,8 +638,8 @@
 				echo "	<span class='switch'>\n";
 			}
 			echo "	<select class='formfld' id='profile_key_protected' name='device_profile_keys[$x][profile_key_protected]'>\n";
-			echo "		<option value='true' ".($row['profile_key_protected'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($row['profile_key_protected'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		<option value='true' ".($row['profile_key_protected'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($row['profile_key_protected'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 			echo "	</select>\n";
 			if ($input_toggle_style_switch) {
 				echo "		<span class='slider'></span>\n";
@@ -717,8 +717,8 @@
 				echo "	<span class='switch'>\n";
 			}
 			echo "	<select class='formfld' id='profile_setting_enabled' name='device_profile_settings[".$x."][profile_setting_enabled]'>\n";
-			echo "		<option value='true' ".($row['profile_setting_enabled'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($row['profile_setting_enabled'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		<option value='true' ".($row['profile_setting_enabled'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($row['profile_setting_enabled'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 			echo "	</select>\n";
 			if ($input_toggle_style_switch) {
 				echo "		<span class='slider'></span>\n";
@@ -776,8 +776,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='device_profile_enabled' name='device_profile_enabled'>\n";
-	echo "		<option value='true' ".($device_profile_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($device_profile_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($device_profile_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($device_profile_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

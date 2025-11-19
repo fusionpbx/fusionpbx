@@ -636,8 +636,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='sip_profile_enabled' name='sip_profile_enabled'>\n";
-	echo "		<option value='true' ".($sip_profile_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($sip_profile_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($sip_profile_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($sip_profile_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

@@ -1207,8 +1207,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='queue_tier_rules_apply' name='queue_tier_rules_apply'>\n";
-	echo "			<option value='true' ".($queue_tier_rules_apply === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "			<option value='false' ".($queue_tier_rules_apply === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($queue_tier_rules_apply == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($queue_tier_rules_apply == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
@@ -1239,8 +1239,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='queue_tier_rule_wait_multiply_level' name='queue_tier_rule_wait_multiply_level'>\n";
-	echo "			<option value='true' ".($queue_tier_rule_wait_multiply_level === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "			<option value='false' ".($queue_tier_rule_wait_multiply_level === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($queue_tier_rule_wait_multiply_level == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($queue_tier_rule_wait_multiply_level == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
@@ -1260,8 +1260,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='queue_tier_rule_no_agent_no_wait' name='queue_tier_rule_no_agent_no_wait'>\n";
-	echo "			<option value='true' ".($queue_tier_rule_no_agent_no_wait === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "			<option value='false' ".($queue_tier_rule_no_agent_no_wait === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($queue_tier_rule_no_agent_no_wait == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($queue_tier_rule_no_agent_no_wait == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
@@ -1292,8 +1292,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='queue_abandoned_resume_allowed' name='queue_abandoned_resume_allowed'>\n";
-	echo "			<option value='true' ".($queue_abandoned_resume_allowed === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "			<option value='false' ".($queue_abandoned_resume_allowed === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($queue_abandoned_resume_allowed == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($queue_abandoned_resume_allowed == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

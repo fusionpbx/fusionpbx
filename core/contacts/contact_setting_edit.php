@@ -308,8 +308,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='contact_setting_enabled' name='contact_setting_enabled'>\n";
-	echo "			<option value='true' ".($contact_setting_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "			<option value='false' ".($contact_setting_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($contact_setting_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($contact_setting_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
