@@ -95,6 +95,13 @@
 	}
 
 //define the download function (helps safari play audio sources)
+	/**
+	 * Downloads a specified range of bytes from the given file.
+	 *
+	 * @param string $file The path to the file to download.
+	 *
+	 * @return void
+	 */
 	function range_download($file) {
 		$fp = @fopen($file, 'rb');
 
@@ -123,7 +130,7 @@
 			$c_start = $start;
 			$c_end   = $end;
 			// Extract the range string
-			list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+			[, $range] = explode('=', $_SERVER['HTTP_RANGE'], 2);
 			// Make sure the client hasn't sent us a multibyte range
 			if (strpos($range, ',') !== false) {
 				// (?) Shoud this be issued here, or should the first

@@ -236,6 +236,20 @@
 
 //define the array _difference function
 	//this adds old and new values to the array
+	/**
+	 * Calculates the difference between two arrays.
+	 *
+	 * This function recursively iterates through both input arrays, comparing each key-value pair. If a value in $array2 is not present in $array1,
+	 * it is marked as 'new' in the returned array. If a value in $array1 is not present in $array2, it is also included in the returned array with a marker
+	 * indicating its origin.
+	 *
+	 * The function handles nested arrays by recursively calling itself for matching keys.
+	 *
+	 * @param mixed[] $array1 The first input array to compare.
+	 * @param mixed[] $array2 The second input array to compare.
+	 *
+	 * @return mixed[] An array containing the differences between the two input arrays, with added markers indicating origin.
+	 */
 	function array_difference($array1, $array2) {
 		$array = array();
 		if (is_array($array1)) {

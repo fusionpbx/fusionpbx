@@ -61,7 +61,15 @@
 	$broadcast_toll_allow = '';
 
 //function to Upload CSV/TXT file
-	function upload_file($sql, $broadcast_phone_numbers) {
+/**
+ * Uploads a file and prepares the SQL query for broadcasting phone numbers.
+ *
+ * @param string $sql                     The initial SQL query.
+ * @param mixed  $broadcast_phone_numbers The phone numbers to broadcast, or an empty value if not applicable.
+ *
+ * @return array An array containing the result code ('code') and the prepared SQL query ('sql').
+ */
+function upload_file($sql, $broadcast_phone_numbers) {
 		$upload_csv = $sql = '';
 		if (isset($_FILES['broadcast_phone_numbers_file']) && !empty($_FILES['broadcast_phone_numbers_file']) && $_FILES['broadcast_phone_numbers_file']['size'] > 0) {
 			$filename=$_FILES["broadcast_phone_numbers_file"]["tmp_name"];

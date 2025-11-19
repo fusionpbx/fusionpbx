@@ -73,6 +73,17 @@
 	$available_columns[] = 'destination_order';
 
 //define the functions
+	/**
+	 * Converts an associative or numerical array into a CSV string.
+	 *
+	 * This function takes an array and returns its contents as a properly formatted
+	 * CSV string. If the input array is empty, it will return null.
+	 *
+	 * @param array $array  The array to be converted into a CSV string.
+	 *                      It can be either an associative or numerical array.
+	 *
+	 * @return string A CSV string representation of the input array, or null if the array is empty.
+	 */
 	function array2csv(array &$array) {
 		if (count($array) == 0) {
 			return null;
@@ -87,6 +98,17 @@
 		return ob_get_clean();
 	}
 
+	/**
+	 * Sends HTTP headers for a file download.
+	 *
+	 * This function sends the necessary HTTP headers to force the browser to download
+	 * a file instead of displaying it in the browser. The filename specified should be
+	 * a path to the file on the server, not a URL.
+	 *
+	 * @param string $filename The name and path to the file that will be downloaded by the client.
+	 *
+	 * @return void This function does not return anything.
+	 */
 	function download_send_headers($filename) {
 		// disable caching
 		$now = gmdate("D, d M Y H:i:s");

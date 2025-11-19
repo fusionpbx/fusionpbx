@@ -38,6 +38,13 @@
 
 //function to parse a FusionPBX service from a .service file
 	if (!function_exists('get_classname')) {
+		/**
+		 * Retrieves the name of a PHP class from an ExecStart directive in a service file.
+		 *
+		 * @param string $file Path to the service file.
+		 *
+		 * @return string The name of the PHP class, or empty string if not found.
+		 */
 		function get_classname(string $file) {
 			if (!file_exists($file)) {
 				return '';
@@ -55,6 +62,14 @@
 
 //function to check for running process: returns [running, pid, etime]
 	if (!function_exists('is_running')) {
+		/**
+		 * Checks if a process with the given name is currently running.
+		 *
+		 * @param string $name The name of the process to check for.
+		 *
+		 * @return array An array containing information about the process's status,
+		 *               including whether it's running, its PID, and how long it's been running.
+		 */
 		function is_running(string $name) {
 			$name = escapeshellarg($name);
 			$pid = trim(shell_exec("ps -aux | grep $name | grep -v grep | awk '{print \$2}' | head -n 1") ?? '');
@@ -68,6 +83,21 @@
 
 //function to format etime into friendly display
 	if (!function_exists('format_etime')) {
+		/**
+		 * Formats a time duration string into a human-readable format.
+		 *
+		 * The input string can be in one of the following formats:
+		 * - dd-hh:mm:ss
+		 * - hh:mm:ss
+		 * - mm:ss
+		 * - seconds (no units)
+		 *
+		 * If the input string is empty or invalid, an empty string will be returned.
+		 *
+		 * @param string $etime Time duration string to format.
+		 *
+		 * @return string Formatted time duration string in human-readable format.
+		 */
 		function format_etime($etime) {
 			// Format: [[dd-]hh:]mm:ss
 			if (empty($etime)) return '-';
