@@ -1,18 +1,20 @@
 <?php
 
+/**
+ * xml class
+ */
+class xml {
+
 	/**
-	 * xml class
+	 * Sanitizes a string by removing any PHP-style placeholders and encoding special characters.
+	 *
+	 * @param string $string The input string to be sanitized.
+	 *
+	 * @return string The sanitized string with special characters encoded.
 	 */
-	class xml {
-
-		/**
-		 * Escapes xml special characters to html entities and sanitze switch special chars.
-		 * @param  mixed $string
-		 * @return void
-		 */
-		static function sanitize($string) {
-			$string = preg_replace('/\$\{[^}]+\}/', '', $string);
-			return htmlspecialchars($string, ENT_XML1);
-		}
-
+	static function sanitize($string) {
+		$string = preg_replace('/\$\{[^}]+\}/', '', $string);
+		return htmlspecialchars($string, ENT_XML1);
 	}
+
+}
