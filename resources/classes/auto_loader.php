@@ -102,7 +102,7 @@ class auto_loader {
 			$this->update_cache();
 		}
 		//register this object to load any unknown classes
-		spl_autoload_register([$this, 'loader']);
+		spl_autoload_register(array($this, 'loader'));
 	}
 
 	/**
