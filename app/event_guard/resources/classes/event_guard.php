@@ -85,17 +85,17 @@ class event_guard {
 	public function __construct(array $setting_array = []) {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
 
 		//assign the variables
-		$this->name          = 'event_guard_log';
-		$this->table         = 'event_guard_logs';
-		$this->toggle_field  = '';
+		$this->name = 'event_guard_log';
+		$this->table = 'event_guard_logs';
+		$this->toggle_field = '';
 		$this->toggle_values = ['block', 'pending'];
-		$this->location      = 'event_guard_logs.php';
+		$this->location = 'event_guard_logs.php';
 	}
 
 	/**
@@ -112,7 +112,7 @@ class event_guard {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -162,7 +162,7 @@ class event_guard {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -180,7 +180,7 @@ class event_guard {
 					//add to the array
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
 						$array[$this->table][$x]['event_guard_log_uuid'] = $record['event_guard_log_uuid'];
-						$array[$this->table][$x]['log_status']           = 'pending';
+						$array[$this->table][$x]['log_status'] = 'pending';
 					}
 
 					//increment the id
@@ -197,10 +197,10 @@ class event_guard {
 					$setting = new settings(["category" => 'switch']);
 
 					//send unblock event
-					$cmd           = "sendevent CUSTOM\n";
-					$cmd           .= "Event-Name: CUSTOM\n";
-					$cmd           .= "Event-Subclass: event_guard:unblock\n";
-					$esl           = event_socket::create();
+					$cmd = "sendevent CUSTOM\n";
+					$cmd .= "Event-Name: CUSTOM\n";
+					$cmd .= "Event-Subclass: event_guard:unblock\n";
+					$esl = event_socket::create();
 					$switch_result = event_socket::command($cmd);
 
 					//set message
@@ -225,7 +225,7 @@ class event_guard {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -244,8 +244,8 @@ class event_guard {
 					}
 				}
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql  = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql  .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
 					$rows = $this->database->select($sql, null, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
@@ -260,7 +260,7 @@ class event_guard {
 				foreach ($states as $uuid => $state) {
 					//create the array
 					$array[$this->table][$x][$this->name . '_uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]   = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 
 					//increment the id
 					$x++;
@@ -295,7 +295,7 @@ class event_guard {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -317,8 +317,8 @@ class event_guard {
 
 				//create the array from existing data
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql  = "select * from v_" . $this->table . " ";
-					$sql  .= "where event_guard_log_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where event_guard_log_uuid in (" . implode(', ', $uuids) . ") ";
 					$rows = $this->database->select($sql, null, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$x = 0;
@@ -326,7 +326,7 @@ class event_guard {
 							//convert boolean values to a string
 							foreach ($row as $key => $value) {
 								if (gettype($value) == 'boolean') {
-									$value     = $value ? 'true' : 'false';
+									$value = $value ? 'true' : 'false';
 									$row[$key] = $value;
 								}
 							}

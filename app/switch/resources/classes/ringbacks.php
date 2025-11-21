@@ -105,20 +105,20 @@ class ringbacks {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
 		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
-		$this->username    = $setting_array['username'] ?? $_SESSION['username'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->username = $setting_array['username'] ?? $_SESSION['username'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
 
 		//add multi-lingual support
 		$language = new text;
-		$text     = $language->get();
+		$text = $language->get();
 
 		//get the ringtones
-		$sql       = "select * from v_vars ";
-		$sql       .= "where var_category = 'Ringtones' ";
-		$sql       .= "order by var_name asc ";
+		$sql = "select * from v_vars ";
+		$sql .= "where var_category = 'Ringtones' ";
+		$sql .= "order by var_name asc ";
 		$ringtones = $this->database->select($sql, null, 'all');
 		if (!empty($ringtones)) {
 			foreach ($ringtones as $ringtone) {
@@ -151,29 +151,117 @@ class ringbacks {
 		*/
 
 		//get the tones
-		$tones            = new tones;
+		$tones = new tones;
 		$this->tones_list = $tones->tones_list();
 
 		//get music on hold	and recordings
 		if (is_dir($_SERVER["PROJECT_ROOT"] . '/app/music_on_hold')) {
-			$music            = new switch_music_on_hold;
+			$music = new switch_music_on_hold;
 			$this->music_list = $music->get();
 		}
 		if (is_dir($_SERVER["PROJECT_ROOT"] . '/app/recordings')) {
-			$recordings            = new switch_recordings;
+			$recordings = new switch_recordings;
 			$this->recordings_list = $recordings->list_recordings();
 		}
 
 		if (is_dir($_SERVER["PROJECT_ROOT"] . '/app/streams')) {
-			$sql                       = "select * from v_streams ";
-			$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-			$sql                       .= "and stream_enabled = 'true' ";
-			$sql                       .= "order by stream_name asc ";
+			$sql = "select * from v_streams ";
+			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$sql .= "and stream_enabled = 'true' ";
+			$sql .= "order by stream_name asc ";
 			$parameters['domain_uuid'] = $this->domain_uuid;
-			$streams                   = $this->database->select($sql, $parameters, 'all');
-			$this->streams             = $streams;
+			$streams = $this->database->select($sql, $parameters, 'all');
+			$this->streams = $streams;
 			unset($sql, $parameters, $streams, $row);
 		}
+	}
+
+	/**
+	 * Generates a HTML <select> element based on given name and selected value.
+	 *
+	 * @param string $name     The name of the select element
+	 * @param mixed  $selected The currently selected value for the select element
+	 *
+	 * @return string A fully formed HTML <select> element with options populated from various lists (music,
+	 *                recordings, streams, ringtones, tones)
+	 */
+	public function select($name, $selected) {
+		//add multi-lingual support
+		$language = new text;
+		$text = $language->get();
+
+		//start the select
+		$select = "<select class='formfld' name='" . $name . "' id='" . $name . "' style='width: auto;'>\n";
+		$select .= "		<option value=''></option>\n";
+
+		//music list
+		if (!empty($this->music_list)) {
+			$select .= "	<optgroup label='" . $text['label-music_on_hold'] . "'>\n";
+			$previous_name = '';
+			foreach ($this->music_list as $row) {
+				if ($previous_name != $row['music_on_hold_name']) {
+					$name = '';
+					if (!empty($row['domain_uuid'])) {
+						$name = $row['domain_name'] . '/';
+					}
+					$name .= $row['music_on_hold_name'];
+					$select .= "		<option value='local_stream://" . $name . "' " . (($selected == "local_stream://" . $name) ? 'selected="selected"' : null) . ">" . $row['music_on_hold_name'] . "</option>\n";
+				}
+				$previous_name = $row['music_on_hold_name'];
+			}
+			$select .= "	</optgroup>\n";
+		}
+
+		//recordings
+		if (!empty($this->recordings_list)) {
+			$select .= "	<optgroup label='" . $text['label-recordings'] . "'>";
+			foreach ($this->recordings_list as $recording_value => $recording_name) {
+				$select .= "		<option value='" . $recording_value . "' " . (($selected == $recording_value) ? 'selected="selected"' : null) . ">" . $recording_name . "</option>\n";
+			}
+			$select .= "	</optgroup>\n";
+		}
+
+		//streams
+		if (!empty($this->streams)) {
+			$select .= "	<optgroup label='" . $text['label-streams'] . "'>";
+			foreach ($this->streams as $row) {
+				$select .= "		<option value='" . $row['stream_location'] . "' " . (($selected == $row['stream_location']) ? 'selected="selected"' : null) . ">" . $row['stream_name'] . "</option>\n";
+			}
+			$select .= "	</optgroup>\n";
+		}
+
+		//ringtones
+		if (!empty($this->ringtones_list)) {
+			$selected_ringtone = $selected;
+			$selected_ringtone = preg_replace('/\A\${/', "", $selected_ringtone ?? '');
+			$selected_ringtone = preg_replace('/}\z/', "", $selected_ringtone);
+			$select .= "	<optgroup label='" . $text['label-ringtones'] . "'>";
+			//$select .= "		<option value='default_ringtones'".(($selected == "default_ringback") ? ' selected="selected"' : '').">".$text['label-default']." (".$this->default_ringtone_label.")</option>\n";
+			foreach ($this->ringtones_list as $ringtone_value => $ringtone_name) {
+				$select .= "		<option value='\${" . $ringtone_value . "}'" . (($selected_ringtone == $ringtone_value) ? ' selected="selected"' : null) . ">" . $ringtone_name . "</option>\n";
+			}
+			//add silence option
+			$select .= "		<option value='silence'>Silence</option>\n";
+			$select .= "	</optgroup>\n";
+			unset($selected_ringtone);
+		}
+
+		//tones
+		if (!empty($this->tones_list)) {
+			$selected_tone = $selected;
+			$selected_tone = preg_replace('/\A\${/', "", $selected_tone ?? '');
+			$selected_tone = preg_replace('/}\z/', "", $selected_tone);
+			$select .= "	<optgroup label='" . $text['label-tones'] . "'>";
+			foreach ($this->tones_list as $tone_value => $tone_name) {
+				$select .= "		<option value='\${" . $tone_value . "}'" . (($selected_tone == $tone_value) ? ' selected="selected"' : null) . ">" . $tone_name . "</option>\n";
+			}
+			$select .= "	</optgroup>\n";
+			unset($selected_tone);
+		}
+
+		//end the select and return it
+		$select .= "</select>\n";
+		return $select;
 	}
 
 	/**
@@ -220,92 +308,5 @@ class ringbacks {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Generates a HTML <select> element based on given name and selected value.
-	 *
-	 * @param string $name     The name of the select element
-	 * @param mixed  $selected The currently selected value for the select element
-	 *
-	 * @return string A fully formed HTML <select> element with options populated from various lists (music, recordings, streams, ringtones, tones)
-	 */
-	public function select($name, $selected) {
-		//add multi-lingual support
-		$language = new text;
-		$text     = $language->get();
-
-		//start the select
-		$select = "<select class='formfld' name='" . $name . "' id='" . $name . "' style='width: auto;'>\n";
-		$select .= "		<option value=''></option>\n";
-
-		//music list
-		if (!empty($this->music_list)) {
-			$select        .= "	<optgroup label='" . $text['label-music_on_hold'] . "'>\n";
-			$previous_name = '';
-			foreach ($this->music_list as $row) {
-				if ($previous_name != $row['music_on_hold_name']) {
-					$name = '';
-					if (!empty($row['domain_uuid'])) {
-						$name = $row['domain_name'] . '/';
-					}
-					$name   .= $row['music_on_hold_name'];
-					$select .= "		<option value='local_stream://" . $name . "' " . (($selected == "local_stream://" . $name) ? 'selected="selected"' : null) . ">" . $row['music_on_hold_name'] . "</option>\n";
-				}
-				$previous_name = $row['music_on_hold_name'];
-			}
-			$select .= "	</optgroup>\n";
-		}
-
-		//recordings
-		if (!empty($this->recordings_list)) {
-			$select .= "	<optgroup label='" . $text['label-recordings'] . "'>";
-			foreach ($this->recordings_list as $recording_value => $recording_name) {
-				$select .= "		<option value='" . $recording_value . "' " . (($selected == $recording_value) ? 'selected="selected"' : null) . ">" . $recording_name . "</option>\n";
-			}
-			$select .= "	</optgroup>\n";
-		}
-
-		//streams
-		if (!empty($this->streams)) {
-			$select .= "	<optgroup label='" . $text['label-streams'] . "'>";
-			foreach ($this->streams as $row) {
-				$select .= "		<option value='" . $row['stream_location'] . "' " . (($selected == $row['stream_location']) ? 'selected="selected"' : null) . ">" . $row['stream_name'] . "</option>\n";
-			}
-			$select .= "	</optgroup>\n";
-		}
-
-		//ringtones
-		if (!empty($this->ringtones_list)) {
-			$selected_ringtone = $selected;
-			$selected_ringtone = preg_replace('/\A\${/', "", $selected_ringtone ?? '');
-			$selected_ringtone = preg_replace('/}\z/', "", $selected_ringtone);
-			$select            .= "	<optgroup label='" . $text['label-ringtones'] . "'>";
-			//$select .= "		<option value='default_ringtones'".(($selected == "default_ringback") ? ' selected="selected"' : '').">".$text['label-default']." (".$this->default_ringtone_label.")</option>\n";
-			foreach ($this->ringtones_list as $ringtone_value => $ringtone_name) {
-				$select .= "		<option value='\${" . $ringtone_value . "}'" . (($selected_ringtone == $ringtone_value) ? ' selected="selected"' : null) . ">" . $ringtone_name . "</option>\n";
-			}
-			//add silence option
-			$select .= "		<option value='silence'>Silence</option>\n";
-			$select .= "	</optgroup>\n";
-			unset($selected_ringtone);
-		}
-
-		//tones
-		if (!empty($this->tones_list)) {
-			$selected_tone = $selected;
-			$selected_tone = preg_replace('/\A\${/', "", $selected_tone ?? '');
-			$selected_tone = preg_replace('/}\z/', "", $selected_tone);
-			$select        .= "	<optgroup label='" . $text['label-tones'] . "'>";
-			foreach ($this->tones_list as $tone_value => $tone_name) {
-				$select .= "		<option value='\${" . $tone_value . "}'" . (($selected_tone == $tone_value) ? ' selected="selected"' : null) . ">" . $tone_name . "</option>\n";
-			}
-			$select .= "	</optgroup>\n";
-			unset($selected_tone);
-		}
-
-		//end the select and return it
-		$select .= "</select>\n";
-		return $select;
 	}
 }

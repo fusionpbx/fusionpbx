@@ -77,16 +77,16 @@ class call_broadcast {
 	public function __construct(array $setting_array = []) {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
 
 		//assign private variables
 		$this->permission_prefix = 'call_broadcast_';
-		$this->list_page         = 'call_broadcast.php';
-		$this->table             = 'call_broadcasts';
-		$this->uuid_prefix       = 'call_broadcast_';
+		$this->list_page = 'call_broadcast.php';
+		$this->table = 'call_broadcasts';
+		$this->uuid_prefix = 'call_broadcast_';
 	}
 
 	/**
@@ -103,7 +103,7 @@ class call_broadcast {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -120,7 +120,7 @@ class call_broadcast {
 				foreach ($records as $x => $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
+						$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 					}
 				}
 
@@ -153,7 +153,7 @@ class call_broadcast {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -175,11 +175,11 @@ class call_broadcast {
 
 				//create insert array from existing data
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select * from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $x => $row) {
 
@@ -188,7 +188,7 @@ class call_broadcast {
 
 							//overwrite
 							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = uuid();
-							$array[$this->table][$x]['broadcast_description']     = trim($row['broadcast_description'] . ' (' . $text['label-copy'] . ')');
+							$array[$this->table][$x]['broadcast_description'] = trim($row['broadcast_description'] . ' (' . $text['label-copy'] . ')');
 
 						}
 					}

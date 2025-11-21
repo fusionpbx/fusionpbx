@@ -115,7 +115,7 @@ class conference_centers {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
 		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
@@ -139,17 +139,17 @@ class conference_centers {
 		}
 		$sql .= "where r.domain_uuid = :domain_uuid ";
 		if ($not_admin) {
-			$sql                     .= "and r.conference_room_uuid = u.conference_room_uuid ";
-			$sql                     .= "and u.user_uuid = :user_uuid ";
+			$sql .= "and r.conference_room_uuid = u.conference_room_uuid ";
+			$sql .= "and u.user_uuid = :user_uuid ";
 			$parameters['user_uuid'] = $this->user_uuid;
 		}
 		if (isset($this->conference_room_uuid)) {
-			$sql                                .= "and r.conference_room_uuid = :conference_room_uuid ";
+			$sql .= "and r.conference_room_uuid = :conference_room_uuid ";
 			$parameters['conference_room_uuid'] = $this->conference_room_uuid;
 		}
 
 		if (isset($this->created_by)) {
-			$sql                      .= "and created_by = :created_by ";
+			$sql .= "and created_by = :created_by ";
 			$parameters['created_by'] = $this->created_by;
 		}
 		$parameters['domain_uuid'] = $this->domain_uuid;
@@ -159,12 +159,13 @@ class conference_centers {
 	/**
 	 * Retrieves a list of conference rooms based on filtering and sorting criteria.
 	 *
-	 * @return array|null A multidimensional array containing information about each room, or null if no rooms are found.
+	 * @return array|null A multidimensional array containing information about each room, or null if no rooms are
+	 *                    found.
 	 */
 	public function rooms() {
 		//get variables used to control the order
 		$order_by = $this->order_by;
-		$order    = $this->order;
+		$order = $this->order;
 
 		//validate order by
 		if (!empty($order_by)) {
@@ -199,23 +200,23 @@ class conference_centers {
 		}
 		$sql .= "where r.domain_uuid = :domain_uuid ";
 		if ($not_admin) {
-			$sql                     .= "and r.conference_room_uuid = u.conference_room_uuid ";
-			$sql                     .= "and u.user_uuid = :user_uuid ";
+			$sql .= "and r.conference_room_uuid = u.conference_room_uuid ";
+			$sql .= "and u.user_uuid = :user_uuid ";
 			$parameters['user_uuid'] = $this->user_uuid;
 		}
 		if (!empty($this->search)) {
-			$sql                       .= "and (";
-			$sql                       .= "lower(r.conference_room_name) like :search or ";
-			$sql                       .= "lower(r.moderator_pin) like :search or ";
-			$sql                       .= "lower(r.participant_pin) like :search or ";
-			$sql                       .= "lower(r.account_code) like :search or ";
-			$sql                       .= "lower(r.description) like :search ";
-			$sql                       .= ") ";
-			$parameters['search']      = '%' . strtolower($this->search) . '%';
+			$sql .= "and (";
+			$sql .= "lower(r.conference_room_name) like :search or ";
+			$sql .= "lower(r.moderator_pin) like :search or ";
+			$sql .= "lower(r.participant_pin) like :search or ";
+			$sql .= "lower(r.account_code) like :search or ";
+			$sql .= "lower(r.description) like :search ";
+			$sql .= ") ";
+			$parameters['search'] = '%' . strtolower($this->search) . '%';
 			$parameters['domain_uuid'] = $this->domain_uuid;
 		}
 		if (isset($this->created_by)) {
-			$sql                      .= "and r.created_by = :created_by ";
+			$sql .= "and r.created_by = :created_by ";
 			$parameters['created_by'] = $this->created_by;
 		}
 		if (empty($this->order_by)) {
@@ -223,11 +224,11 @@ class conference_centers {
 		} else {
 			$sql .= "order by $order_by $order ";
 		}
-		$sql                         .= "limit :rows_per_page offset :offset ";
-		$parameters['domain_uuid']   = $this->domain_uuid;
+		$sql .= "limit :rows_per_page offset :offset ";
+		$parameters['domain_uuid'] = $this->domain_uuid;
 		$parameters['rows_per_page'] = $this->rows_per_page;
-		$parameters['offset']        = $this->offset;
-		$conference_rooms            = $this->database->select($sql, $parameters, 'all');
+		$parameters['offset'] = $this->offset;
+		$conference_rooms = $this->database->select($sql, $parameters, 'all');
 
 		if (!empty($conference_rooms)) {
 			$x = 0;
@@ -237,28 +238,28 @@ class conference_centers {
 					$x++;
 				}
 				//build the array
-				$result[$x]["domain_uuid"]            = $row["domain_uuid"];
-				$result[$x]["conference_room_uuid"]   = $row["conference_room_uuid"];
+				$result[$x]["domain_uuid"] = $row["domain_uuid"];
+				$result[$x]["conference_room_uuid"] = $row["conference_room_uuid"];
 				$result[$x]["conference_center_uuid"] = $row["conference_center_uuid"];
 				//$result[$x]["meeting_uuid"] = $row["meeting_uuid"];
-				$result[$x]["conference_room_name"]      = $row["conference_room_name"];
-				$result[$x]["max_members"]               = $row["max_members"];
-				$result[$x]["wait_mod"]                  = $row["wait_mod"];
-				$result[$x]["announce_name"]             = $row["announce_name"];
-				$result[$x]["announce_count"]            = $row["announce_count"];
-				$result[$x]["announce_recording"]        = $row["announce_recording"];
-				$result[$x]["mute"]                      = $row["mute"];
-				$result[$x]["record"]                    = $row["record"];
-				$result[$x]["sounds"]                    = $row["sounds"];
-				$result[$x]["profile"]                   = $row["profile"];
+				$result[$x]["conference_room_name"] = $row["conference_room_name"];
+				$result[$x]["max_members"] = $row["max_members"];
+				$result[$x]["wait_mod"] = $row["wait_mod"];
+				$result[$x]["announce_name"] = $row["announce_name"];
+				$result[$x]["announce_count"] = $row["announce_count"];
+				$result[$x]["announce_recording"] = $row["announce_recording"];
+				$result[$x]["mute"] = $row["mute"];
+				$result[$x]["record"] = $row["record"];
+				$result[$x]["sounds"] = $row["sounds"];
+				$result[$x]["profile"] = $row["profile"];
 				$result[$x]["conference_room_user_uuid"] = $row["conference_room_user_uuid"] ?? null;
-				$result[$x]["user_uuid"]                 = $row["user_uuid"] ?? null;
-				$result[$x]["moderator_pin"]             = $row["moderator_pin"];
-				$result[$x]["participant_pin"]           = $row["participant_pin"];
-				$result[$x]["created"]                   = $row["created"];
-				$result[$x]["created_by"]                = $row["created_by"];
-				$result[$x]["enabled"]                   = $row["enabled"];
-				$result[$x]["description"]               = $row["description"];
+				$result[$x]["user_uuid"] = $row["user_uuid"] ?? null;
+				$result[$x]["moderator_pin"] = $row["moderator_pin"];
+				$result[$x]["participant_pin"] = $row["participant_pin"];
+				$result[$x]["created"] = $row["created"];
+				$result[$x]["created_by"] = $row["created_by"];
+				$result[$x]["enabled"] = $row["enabled"];
+				$result[$x]["description"] = $row["description"];
 				//set the previous uuid
 				$previous = $row["conference_room_uuid"];
 			}
@@ -281,8 +282,8 @@ class conference_centers {
 			//get call recording from database
 			if (is_uuid($_GET['id'])) {
 				$conference_session_uuid = $_GET['id'];
-				$sql                     = "select recording from v_conference_sessions ";
-				$sql                     .= "where conference_session_uuid = :conference_session_uuid ";
+				$sql = "select recording from v_conference_sessions ";
+				$sql .= "where conference_session_uuid = :conference_session_uuid ";
 				//$sql .= "and domain_uuid = :domain_uuid ";
 				$parameters['conference_session_uuid'] = $conference_session_uuid;
 				//$parameters['domain_uuid'] = $domain_uuid;
@@ -352,8 +353,9 @@ class conference_centers {
 	/**
 	 * Deletes multiple conference center records.
 	 *
-	 * @param array $records An array of records to delete, where each record is an associative array containing the UUID of
-	 *                       the conference center and a 'checked' key indicating whether the record should be deleted.
+	 * @param array $records An array of records to delete, where each record is an associative array containing the
+	 *                       UUID of the conference center and a 'checked' key indicating whether the record should be
+	 *                       deleted.
 	 *
 	 * @return void
 	 */
@@ -361,15 +363,15 @@ class conference_centers {
 
 		//assign private variables
 		$this->permission_prefix = 'conference_center_';
-		$this->list_page         = 'conference_centers.php';
-		$this->table             = 'conference_centers';
-		$this->uuid_prefix       = 'conference_center_';
+		$this->list_page = 'conference_centers.php';
+		$this->table = 'conference_centers';
+		$this->uuid_prefix = 'conference_center_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -387,21 +389,21 @@ class conference_centers {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 						//get the dialplan uuid
-						$sql                                  = "select dialplan_uuid from v_conference_centers ";
-						$sql                                  .= "where domain_uuid = :domain_uuid ";
-						$sql                                  .= "and conference_center_uuid = :conference_center_uuid ";
-						$parameters['domain_uuid']            = $this->domain_uuid;
+						$sql = "select dialplan_uuid from v_conference_centers ";
+						$sql .= "where domain_uuid = :domain_uuid ";
+						$sql .= "and conference_center_uuid = :conference_center_uuid ";
+						$parameters['domain_uuid'] = $this->domain_uuid;
 						$parameters['conference_center_uuid'] = $record['uuid'];
-						$dialplan_uuid                        = $this->database->select($sql, $parameters, 'column');
+						$dialplan_uuid = $this->database->select($sql, $parameters, 'column');
 						unset($sql, $parameters);
 
 						//create array
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
-						$array['dialplan_details'][$x]['dialplan_uuid']       = $dialplan_uuid;
-						$array['dialplan_details'][$x]['domain_uuid']         = $this->domain_uuid;
-						$array['dialplans'][$x]['dialplan_uuid']              = $dialplan_uuid;
-						$array['dialplans'][$x]['domain_uuid']                = $this->domain_uuid;
+						$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
+						$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+						$array['dialplan_details'][$x]['domain_uuid'] = $this->domain_uuid;
+						$array['dialplans'][$x]['dialplan_uuid'] = $dialplan_uuid;
+						$array['dialplans'][$x]['domain_uuid'] = $this->domain_uuid;
 					}
 				}
 
@@ -452,15 +454,15 @@ class conference_centers {
 
 		//assign private variables
 		$this->permission_prefix = 'conference_room_';
-		$this->list_page         = 'conference_rooms.php';
-		$this->table             = 'conference_rooms';
-		$this->uuid_prefix       = 'conference_room_';
+		$this->list_page = 'conference_rooms.php';
+		$this->table = 'conference_rooms';
+		$this->uuid_prefix = 'conference_room_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -478,10 +480,10 @@ class conference_centers {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 						//create array
-						$array[$this->table][$x][$this->uuid_prefix . 'uuid']       = $record['uuid'];
-						$array[$this->table][$x]['domain_uuid']                     = $this->domain_uuid;
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+						$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 						$array['conference_room_users'][$x]['conference_room_uuid'] = $record['uuid'];
-						$array['conference_room_users'][$x]['domain_uuid']          = $this->domain_uuid;
+						$array['conference_room_users'][$x]['domain_uuid'] = $this->domain_uuid;
 					}
 				}
 
@@ -512,8 +514,9 @@ class conference_centers {
 	/**
 	 * Deletes multiple conference sessions.
 	 *
-	 * @param array $records  An array of records to delete, where each record is an associative array with a 'uuid' key and a 'checked' key.
-	 *                        The 'uuid' value must be a valid UUID, and the 'checked' value should be set to 'true' for the session to be deleted.
+	 * @param array $records  An array of records to delete, where each record is an associative array with a 'uuid'
+	 *                        key and a 'checked' key. The 'uuid' value must be a valid UUID, and the 'checked' value
+	 *                        should be set to 'true' for the session to be deleted.
 	 *
 	 * @return void
 	 */
@@ -521,15 +524,15 @@ class conference_centers {
 
 		//assign private variables
 		$this->permission_prefix = 'conference_session_';
-		$this->list_page         = 'conference_sessions.php?id=' . $this->conference_room_uuid;
-		$this->table             = 'conference_sessions';
-		$this->uuid_prefix       = 'conference_session_';
+		$this->list_page = 'conference_sessions.php?id=' . $this->conference_room_uuid;
+		$this->table = 'conference_sessions';
+		$this->uuid_prefix = 'conference_session_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -547,10 +550,10 @@ class conference_centers {
 					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 						//create array
-						$array[$this->table][$x][$this->uuid_prefix . 'uuid']                 = $record['uuid'];
-						$array[$this->table][$x]['domain_uuid']                               = $this->domain_uuid;
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+						$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 						$array['conference_session_details'][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array['conference_session_details'][$x]['domain_uuid']               = $this->domain_uuid;
+						$array['conference_session_details'][$x]['domain_uuid'] = $this->domain_uuid;
 					}
 				}
 
@@ -581,8 +584,9 @@ class conference_centers {
 	/**
 	 * Toggles the state of multiple conference centers.
 	 *
-	 * @param array $records  An array of records to toggle, where each record is an associative array with a 'uuid' key and a 'checked' key.
-	 *                        The 'uuid' value must be a valid UUID, and the 'checked' value should be set to 'true' for the center to be toggled.
+	 * @param array $records  An array of records to toggle, where each record is an associative array with a 'uuid'
+	 *                        key and a 'checked' key. The 'uuid' value must be a valid UUID, and the 'checked' value
+	 *                        should be set to 'true' for the center to be toggled.
 	 *
 	 * @return void
 	 */
@@ -590,17 +594,17 @@ class conference_centers {
 
 		//assign private variables
 		$this->permission_prefix = 'conference_center_';
-		$this->list_page         = 'conference_centers.php';
-		$this->table             = 'conference_centers';
-		$this->uuid_prefix       = 'conference_center_';
-		$this->toggle_field      = 'conference_center_enabled';
-		$this->toggle_values     = ['true', 'false'];
+		$this->list_page = 'conference_centers.php';
+		$this->table = 'conference_centers';
+		$this->uuid_prefix = 'conference_center_';
+		$this->toggle_field = 'conference_center_enabled';
+		$this->toggle_values = ['true', 'false'];
 
 		if (permission_exists($this->permission_prefix . 'edit')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -620,14 +624,14 @@ class conference_centers {
 					}
 				}
 				if (!empty($uuids)) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, dialplan_uuid from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, dialplan_uuid from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (!empty($rows)) {
 						foreach ($rows as $row) {
-							$conference_centers[$row['uuid']]['state']         = $row['toggle'];
+							$conference_centers[$row['uuid']]['state'] = $row['toggle'];
 							$conference_centers[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
 						}
 					}
@@ -638,9 +642,9 @@ class conference_centers {
 				$x = 0;
 				foreach ($conference_centers as $uuid => $conference_center) {
 					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]         = $conference_center['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
-					$array['dialplans'][$x]['dialplan_uuid']              = $conference_center['dialplan_uuid'];
-					$array['dialplans'][$x]['dialplan_enabled']           = $conference_center['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $conference_center['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array['dialplans'][$x]['dialplan_uuid'] = $conference_center['dialplan_uuid'];
+					$array['dialplans'][$x]['dialplan_enabled'] = $conference_center['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 					$x++;
 				}
 
@@ -684,8 +688,9 @@ class conference_centers {
 	/**
 	 * Toggles the state of multiple conference rooms.
 	 *
-	 * @param array $records  An array of records to toggle, where each record is an associative array with a 'uuid' key and a 'checked' key.
-	 *                        The 'uuid' value must be a valid UUID, and the 'checked' value should be set to 'true' for the room to be toggled.
+	 * @param array $records  An array of records to toggle, where each record is an associative array with a 'uuid'
+	 *                        key and a 'checked' key. The 'uuid' value must be a valid UUID, and the 'checked' value
+	 *                        should be set to 'true' for the room to be toggled.
 	 *
 	 * @return void
 	 */
@@ -693,16 +698,16 @@ class conference_centers {
 
 		//assign private variables
 		$this->permission_prefix = 'conference_room_';
-		$this->list_page         = 'conference_rooms.php';
-		$this->table             = 'conference_rooms';
-		$this->uuid_prefix       = 'conference_room_';
-		$this->toggle_values     = ['true', 'false'];
+		$this->list_page = 'conference_rooms.php';
+		$this->table = 'conference_rooms';
+		$this->uuid_prefix = 'conference_room_';
+		$this->toggle_values = ['true', 'false'];
 
 		if (permission_exists($this->permission_prefix . 'edit')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -731,11 +736,11 @@ class conference_centers {
 					}
 				}
 				if (!empty($uuids)) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (!empty($rows)) {
 						foreach ($rows as $row) {
 							$states[$row['uuid']] = $row['toggle'];
@@ -748,7 +753,7 @@ class conference_centers {
 				$x = 0;
 				foreach ($states as $uuid => $state) {
 					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]         = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 
 					/*
 													//if toggling to true, start recording

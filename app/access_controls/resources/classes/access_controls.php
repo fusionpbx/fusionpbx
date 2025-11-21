@@ -55,84 +55,14 @@ class access_controls {
 	public function __construct(array $setting_array = []) {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
-		$config         = $setting_array['config'] ?? config::load();
+		$config = $setting_array['config'] ?? config::load();
 		$this->database = $setting_array['database'] ?? database::new(['config' => $config]);
 
 		//assign private variables
 		$this->list_page = 'access_controls.php';
-	}
-
-	/**
-	 * Deletes one or multiple records from the access controls table.
-	 *
-	 * @param array $records An array of record IDs to delete, where each ID is an associative array
-	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
-	 *                       whether the corresponding checkbox was checked for deletion.
-	 *
-	 * @return void No return value; this method modifies the database state and sets a message.
-	 */
-	public function delete($records) {
-
-		//assign private variables
-		$this->permission_prefix = 'access_control_';
-		$this->table             = 'access_controls';
-		$this->uuid_prefix       = 'access_control_';
-
-		if (permission_exists($this->permission_prefix . 'delete')) {
-
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get();
-
-			//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'], 'negative');
-				header('Location: ' . $this->list_page);
-				exit;
-			}
-
-			//delete multiple records
-			if (is_array($records) && @sizeof($records) != 0) {
-
-				//build the delete array
-				foreach ($records as $x => $record) {
-					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-						$array[$this->table][$x][$this->uuid_prefix . 'uuid']           = $record['uuid'];
-						$array['access_control_nodes'][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-					}
-				}
-
-				//delete the checked rows
-				if (is_array($array) && @sizeof($array) != 0) {
-
-					//grant temporary permissions
-					$p = permissions::new();
-					$p->add('access_control_node_delete', 'temp');
-
-					//execute delete
-					$this->database->delete($array);
-					unset($array);
-
-					//revoke temporary permissions
-					$p->delete('access_control_node_delete', 'temp');
-
-					//clear the cache
-					$cache = new cache;
-					$cache->delete("configuration:acl.conf");
-
-					//create the event socket connection
-					event_socket::async("reloadacl");
-
-					//set message
-					message::add($text['message-delete']);
-				}
-				unset($records);
-			}
-		}
 	}
 
 	/**
@@ -147,14 +77,14 @@ class access_controls {
 
 		//assign private variables
 		$this->permission_prefix = 'access_control_node_';
-		$this->table             = 'access_control_nodes';
-		$this->uuid_prefix       = 'access_control_node_';
+		$this->table = 'access_control_nodes';
+		$this->uuid_prefix = 'access_control_node_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -197,6 +127,76 @@ class access_controls {
 	}
 
 	/**
+	 * Deletes one or multiple records from the access controls table.
+	 *
+	 * @param array $records An array of record IDs to delete, where each ID is an associative array
+	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                       whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function delete($records) {
+
+		//assign private variables
+		$this->permission_prefix = 'access_control_';
+		$this->table = 'access_controls';
+		$this->uuid_prefix = 'access_control_';
+
+		if (permission_exists($this->permission_prefix . 'delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+
+				//build the delete array
+				foreach ($records as $x => $record) {
+					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+						$array['access_control_nodes'][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+					}
+				}
+
+				//delete the checked rows
+				if (is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('access_control_node_delete', 'temp');
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('access_control_node_delete', 'temp');
+
+					//clear the cache
+					$cache = new cache;
+					$cache->delete("configuration:acl.conf");
+
+					//create the event socket connection
+					event_socket::async("reloadacl");
+
+					//set message
+					message::add($text['message-delete']);
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
 	 * Copy access controls and their nodes.
 	 *
 	 * @param array $records An array of records to copy. Each record should contain a 'checked' key with value 'true'
@@ -208,14 +208,14 @@ class access_controls {
 
 		//assign private variables
 		$this->permission_prefix = 'access_control_';
-		$this->table             = 'access_controls';
-		$this->uuid_prefix       = 'access_control_';
+		$this->table = 'access_controls';
+		$this->uuid_prefix = 'access_control_';
 
 		if (permission_exists($this->permission_prefix . 'add')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -239,8 +239,8 @@ class access_controls {
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
 
 					//primary table
-					$sql  = "select * from v_" . $this->table . " ";
-					$sql  .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$rows = $this->database->select($sql, null, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$y = 0;
@@ -250,7 +250,7 @@ class access_controls {
 							//convert boolean values to a string
 							foreach ($row as $key => $value) {
 								if (gettype($value) == 'boolean') {
-									$value     = $value ? 'true' : 'false';
+									$value = $value ? 'true' : 'false';
 									$row[$key] = $value;
 								}
 							}
@@ -259,13 +259,13 @@ class access_controls {
 							$array[$this->table][$x] = $row;
 
 							//overwrite
-							$array[$this->table][$x][$this->uuid_prefix . 'uuid']  = $primary_uuid;
+							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $primary_uuid;
 							$array[$this->table][$x]['access_control_description'] = trim($row['access_control_description'] . ' (' . $text['label-copy'] . ')');
 
 							//nodes sub table
-							$sql_2                               = "select * from v_access_control_nodes where access_control_uuid = :access_control_uuid";
+							$sql_2 = "select * from v_access_control_nodes where access_control_uuid = :access_control_uuid";
 							$parameters_2['access_control_uuid'] = $row['access_control_uuid'];
-							$rows_2                              = $this->database->select($sql_2, $parameters_2, 'all');
+							$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 							if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 								foreach ($rows_2 as $row_2) {
 
@@ -274,7 +274,7 @@ class access_controls {
 
 									//overwrite
 									$array['access_control_nodes'][$y]['access_control_node_uuid'] = uuid();
-									$array['access_control_nodes'][$y]['access_control_uuid']      = $primary_uuid;
+									$array['access_control_nodes'][$y]['access_control_uuid'] = $primary_uuid;
 
 									//increment
 									$y++;

@@ -107,14 +107,14 @@ class call_forward {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
 		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
 		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 		//assign private variables
-		$this->toggle_field  = 'forward_all_enabled';
+		$this->toggle_field = 'forward_all_enabled';
 		$this->toggle_values = ['true', 'false'];
 	}
 
@@ -126,24 +126,24 @@ class call_forward {
 	public function set() {
 
 		//determine whether to update the dial string
-		$sql                          = "select * from v_extensions ";
-		$sql                          .= "where domain_uuid = :domain_uuid ";
-		$sql                          .= "and extension_uuid = :extension_uuid ";
-		$parameters['domain_uuid']    = $this->domain_uuid;
+		$sql = "select * from v_extensions ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and extension_uuid = :extension_uuid ";
+		$parameters['domain_uuid'] = $this->domain_uuid;
 		$parameters['extension_uuid'] = $this->extension_uuid;
-		$row                          = $this->database->select($sql, $parameters, 'row');
+		$row = $this->database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
-			$this->extension                 = $row["extension"];
-			$this->number_alias              = $row["number_alias"];
-			$this->accountcode               = $row["accountcode"];
-			$this->toll_allow                = $row["toll_allow"];
-			$this->outbound_caller_id_name   = $row["outbound_caller_id_name"];
+			$this->extension = $row["extension"];
+			$this->number_alias = $row["number_alias"];
+			$this->accountcode = $row["accountcode"];
+			$this->toll_allow = $row["toll_allow"];
+			$this->outbound_caller_id_name = $row["outbound_caller_id_name"];
 			$this->outbound_caller_id_number = $row["outbound_caller_id_number"];
 		}
 		unset($sql, $parameters, $row);
 
 		//build extension update array
-		$array['extensions'][0]['extension_uuid']          = $this->extension_uuid;
+		$array['extensions'][0]['extension_uuid'] = $this->extension_uuid;
 		$array['extensions'][0]['forward_all_destination'] = strlen($this->forward_all_destination) != 0 ? $this->forward_all_destination : null;
 		if (empty($this->forward_all_destination) || $this->forward_all_enabled == "false") {
 			$array['extensions'][0]['forward_all_enabled'] = 'false';
@@ -183,7 +183,7 @@ class call_forward {
 
 		//add multi-lingual support
 		$language = new text;
-		$text     = $language->get();
+		$text = $language->get();
 
 		//validate the token
 		$token = new token;
@@ -200,7 +200,7 @@ class call_forward {
 		if (permission_exists('call_forward')) {
 
 			// initialize an empty array
-			$uuids      = [];
+			$uuids = [];
 			$extensions = [];
 
 			//get current toggle state
@@ -212,31 +212,31 @@ class call_forward {
 
 			//toggle the checked records
 			if (count($uuids) > 0) {
-				$sql                       = "select extension_uuid as uuid, extension, number_alias, ";
-				$sql                       .= "call_timeout, do_not_disturb, ";
-				$sql                       .= "forward_all_enabled, forward_all_destination, ";
-				$sql                       .= "forward_busy_enabled, forward_busy_destination, ";
-				$sql                       .= "forward_no_answer_enabled, forward_no_answer_destination, ";
-				$sql                       .= $this->toggle_field . " as toggle, follow_me_uuid ";
-				$sql                       .= "from v_extensions ";
-				$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-				$sql                       .= "and extension_uuid in (" . implode(', ', $uuids) . ") ";
+				$sql = "select extension_uuid as uuid, extension, number_alias, ";
+				$sql .= "call_timeout, do_not_disturb, ";
+				$sql .= "forward_all_enabled, forward_all_destination, ";
+				$sql .= "forward_busy_enabled, forward_busy_destination, ";
+				$sql .= "forward_no_answer_enabled, forward_no_answer_destination, ";
+				$sql .= $this->toggle_field . " as toggle, follow_me_uuid ";
+				$sql .= "from v_extensions ";
+				$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+				$sql .= "and extension_uuid in (" . implode(', ', $uuids) . ") ";
 				$parameters['domain_uuid'] = $this->domain_uuid;
-				$rows                      = $this->database->select($sql, $parameters, 'all');
+				$rows = $this->database->select($sql, $parameters, 'all');
 				if (is_array($rows) && @sizeof($rows) != 0) {
 					foreach ($rows as $row) {
-						$extensions[$row['uuid']]['extension']                     = $row['extension'];
-						$extensions[$row['uuid']]['number_alias']                  = $row['number_alias'];
-						$extensions[$row['uuid']]['call_timeout']                  = $row['call_timeout'];
-						$extensions[$row['uuid']]['do_not_disturb']                = $row['do_not_disturb'];
-						$extensions[$row['uuid']]['forward_all_enabled']           = $row['forward_all_enabled'];
-						$extensions[$row['uuid']]['forward_all_destination']       = $row['forward_all_destination'];
-						$extensions[$row['uuid']]['forward_busy_enabled']          = $row['forward_busy_enabled'];
-						$extensions[$row['uuid']]['forward_busy_destination']      = $row['forward_busy_destination'];
-						$extensions[$row['uuid']]['forward_no_answer_enabled']     = $row['forward_no_answer_enabled'];
+						$extensions[$row['uuid']]['extension'] = $row['extension'];
+						$extensions[$row['uuid']]['number_alias'] = $row['number_alias'];
+						$extensions[$row['uuid']]['call_timeout'] = $row['call_timeout'];
+						$extensions[$row['uuid']]['do_not_disturb'] = $row['do_not_disturb'];
+						$extensions[$row['uuid']]['forward_all_enabled'] = $row['forward_all_enabled'];
+						$extensions[$row['uuid']]['forward_all_destination'] = $row['forward_all_destination'];
+						$extensions[$row['uuid']]['forward_busy_enabled'] = $row['forward_busy_enabled'];
+						$extensions[$row['uuid']]['forward_busy_destination'] = $row['forward_busy_destination'];
+						$extensions[$row['uuid']]['forward_no_answer_enabled'] = $row['forward_no_answer_enabled'];
 						$extensions[$row['uuid']]['forward_no_answer_destination'] = $row['forward_no_answer_destination'];
-						$extensions[$row['uuid']]['state']                         = $row['toggle'];
-						$extensions[$row['uuid']]['follow_me_uuid']                = $row['follow_me_uuid'];
+						$extensions[$row['uuid']]['state'] = $row['toggle'];
+						$extensions[$row['uuid']]['follow_me_uuid'] = $row['follow_me_uuid'];
 					}
 				}
 				unset($sql, $parameters, $rows, $row);
@@ -254,16 +254,16 @@ class call_forward {
 
 				//toggle feature
 				if ($new_state != $extension['state']) {
-					$array['extensions'][$x]['extension_uuid']    = $uuid;
+					$array['extensions'][$x]['extension_uuid'] = $uuid;
 					$array['extensions'][$x][$this->toggle_field] = $new_state;
 				}
 
 				//disable other features
 				if ($new_state == $this->toggle_values[0]) { //true
-					$array['extensions'][$x]['do_not_disturb']    = $this->toggle_values[1]; //false
+					$array['extensions'][$x]['do_not_disturb'] = $this->toggle_values[1]; //false
 					$array['extensions'][$x]['follow_me_enabled'] = $this->toggle_values[1]; //false
 					if (is_uuid($extension['follow_me_uuid'])) {
-						$array['follow_me'][$x]['follow_me_uuid']    = $extension['follow_me_uuid'];
+						$array['follow_me'][$x]['follow_me_uuid'] = $extension['follow_me_uuid'];
 						$array['follow_me'][$x]['follow_me_enabled'] = $this->toggle_values[1]; //false
 					}
 				}
@@ -289,17 +289,17 @@ class call_forward {
 				//send feature event notify to the phone
 				if ($this->settings->get('device', 'feature_sync', false)) {
 					foreach ($extensions as $uuid => $extension) {
-						$feature_event_notify                            = new feature_event_notify;
-						$feature_event_notify->domain_name               = $this->domain_name;
-						$feature_event_notify->extension                 = $extension['extension'];
-						$feature_event_notify->do_not_disturb            = $extension['do_not_disturb'];
-						$feature_event_notify->ring_count                = ceil($extension['call_timeout'] / 6);
-						$feature_event_notify->forward_all_enabled       = $extension['forward_all_enabled'];
-						$feature_event_notify->forward_busy_enabled      = $extension['forward_busy_enabled'];
+						$feature_event_notify = new feature_event_notify;
+						$feature_event_notify->domain_name = $this->domain_name;
+						$feature_event_notify->extension = $extension['extension'];
+						$feature_event_notify->do_not_disturb = $extension['do_not_disturb'];
+						$feature_event_notify->ring_count = ceil($extension['call_timeout'] / 6);
+						$feature_event_notify->forward_all_enabled = $extension['forward_all_enabled'];
+						$feature_event_notify->forward_busy_enabled = $extension['forward_busy_enabled'];
 						$feature_event_notify->forward_no_answer_enabled = $extension['forward_no_answer_enabled'];
 						//workarounds: send 0 as freeswitch doesn't send NOTIFY when destination values are nil
-						$feature_event_notify->forward_all_destination       = $extension['forward_all_destination'] != '' ? $extension['forward_all_destination'] : '0';
-						$feature_event_notify->forward_busy_destination      = $extension['forward_busy_destination'] != '' ? $extension['forward_busy_destination'] : '0';
+						$feature_event_notify->forward_all_destination = $extension['forward_all_destination'] != '' ? $extension['forward_all_destination'] : '0';
+						$feature_event_notify->forward_busy_destination = $extension['forward_busy_destination'] != '' ? $extension['forward_busy_destination'] : '0';
 						$feature_event_notify->forward_no_answer_destination = $extension['forward_no_answer_destination'] != '' ? $extension['forward_no_answer_destination'] : '0';
 						$feature_event_notify->send_notify();
 						unset($feature_event_notify);

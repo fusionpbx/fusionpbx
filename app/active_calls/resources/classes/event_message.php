@@ -42,26 +42,31 @@ class event_message implements filterable_payload {
 	public static $keys = [];
 
 	/**
-	 * Associative array to store the event with the key name always lowercase and the hyphen replaced with an underscore
+	 * Associative array to store the event with the key name always lowercase and the hyphen replaced with an
+	 * underscore
+	 *
 	 * @var array
 	 */
 	private $event;
 
 	/**
 	 * Body of the SIP MESSAGE used in SMS
+	 *
 	 * @var string
 	 */
 	private $body;
 
 	/**
 	 * Only permitted keys on this list are allowed to be inserted in to the event_message object
+	 *
 	 * @var filter
 	 */
 	private $event_filter;
 
 	/**
 	 * Creates an event message
-	 * @param array $event_array
+	 *
+	 * @param array  $event_array
 	 * @param filter $filter
 	 */
 	public function __construct(array $event_array, ?filter $filter = null) {
@@ -79,73 +84,6 @@ class event_message implements filterable_payload {
 			$this->__set($name, $value);
 		}
 
-	}
-
-	/**
-	 * Sanitizes the key name and then stores the value in the event property as an associative array
-	 * @param string $name
-	 * @param string $value
-	 * @return void
-	 */
-	public function __set(string $name, $value) {
-		self::sanitize_event_key($name);
-
-		// Use the filter chain to ensure the key is allowed
-		if ($this->event_filter === null || ($this->event_filter)($name, $value)) {
-			$this->event[$name] = $value;
-		}
-	}
-
-	/**
-	 * Sanitizes the key name and then returns the value stored in the event property
-	 * @param string $name Name of the event key
-	 * @return string Returns the stored value or an empty string
-	 */
-	public function __get(string $name) {
-		self::sanitize_event_key($name);
-		if ($name === 'name') $name = 'event_name';
-		return $this->event[$name] ?? '';
-	}
-
-	/**
-	 * Return an array representation of this object.
-	 *
-	 * @return array
-	 */
-	public function __toArray(): array {
-		$array = [];
-		foreach ($this->event as $key => $value) {
-			$array[$key] = $value;
-		}
-		return $array;
-	}
-
-	/**
-	 * Convert the current object into an array representation.
-	 *
-	 * @return array
-	 */
-	public function to_array(): array {
-		return $this->__toArray();
-	}
-
-	/**
-	 * Apply a filter to the event collection.
-	 *
-	 * @param filter $filter The filter function to apply
-	 *
-	 * @return self This object for method chaining
-	 */
-	public function apply_filter(filter $filter) {
-		foreach ($this->event as $key => $value) {
-			$result = ($filter)($key, $value);
-			if ($result === null) {
-				$this->event = [];
-			} elseif (!$result) {
-				unset($this->event[$key]);
-			}
-		}
-		return $this;
 	}
 
 	/**
@@ -198,7 +136,9 @@ class event_message implements filterable_payload {
 
 	/**
 	 * Creates a websocket_message_event object from a json string
+	 *
 	 * @param type $json_string
+	 *
 	 * @return self|null
 	 */
 	public static function create_from_json($json_string) {
@@ -218,7 +158,8 @@ class event_message implements filterable_payload {
 	 *
 	 * @param array|string $raw_event The raw event data.
 	 * @param filter|null  $filter    Optional filter to be applied on the created object.
-	 * @param int          $flags     Flags controlling the creation process (see EVENT_SWAP_API and EVENT_USE_SUBCLASS).
+	 * @param int          $flags     Flags controlling the creation process (see EVENT_SWAP_API and
+	 *                                EVENT_USE_SUBCLASS).
 	 *
 	 * @return self
 	 */
@@ -256,7 +197,7 @@ class event_message implements filterable_payload {
 
 		//check for body
 		if (!empty($event_array['Content-Length'])) {
-			$event_array['_body'] = substr($raw_event, -1*$event_array['Content-Length']);
+			$event_array['_body'] = substr($raw_event, -1 * $event_array['Content-Length']);
 		}
 
 		// Instead of using 'CUSTOM' for the Event-Name we use the actual API-Command when it is available instead
@@ -276,7 +217,70 @@ class event_message implements filterable_payload {
 	}
 
 	/**
+	 * Sanitizes the key name and then returns the value stored in the event property
+	 *
+	 * @param string $name Name of the event key
+	 *
+	 * @return string Returns the stored value or an empty string
+	 */
+	public function __get(string $name) {
+		self::sanitize_event_key($name);
+		if ($name === 'name') $name = 'event_name';
+		return $this->event[$name] ?? '';
+	}
+
+	/**
+	 * Sanitizes the key name and then stores the value in the event property as an associative array
+	 *
+	 * @param string $name
+	 * @param string $value
+	 *
+	 * @return void
+	 */
+	public function __set(string $name, $value) {
+		self::sanitize_event_key($name);
+
+		// Use the filter chain to ensure the key is allowed
+		if ($this->event_filter === null || ($this->event_filter)($name, $value)) {
+			$this->event[$name] = $value;
+		}
+	}
+
+	/**
+	 * Sanitizes key by replacing '-' with '_', converts to lowercase, and only allows digits 0-9 and letters a-z
+	 *
+	 * @param string $key
+	 *
+	 * @return string
+	 */
+	public static function sanitize_event_key(string &$key) /* : never */ {
+		$key = preg_replace('/[^a-z0-9_]/', '', str_replace('-', '_', strtolower($key)));
+		//rewrite 'name' to 'event_name'
+		if ($key === 'name') $key = 'event_name';
+	}
+
+	/**
+	 * Apply a filter to the event collection.
+	 *
+	 * @param filter $filter The filter function to apply
+	 *
+	 * @return self This object for method chaining
+	 */
+	public function apply_filter(filter $filter) {
+		foreach ($this->event as $key => $value) {
+			$result = ($filter)($key, $value);
+			if ($result === null) {
+				$this->event = [];
+			} elseif (!$result) {
+				unset($this->event[$key]);
+			}
+		}
+		return $this;
+	}
+
+	/**
 	 * Return a Json representation for this object when the object is echoed or printed
+	 *
 	 * @return string
 	 * @override websocket_message
 	 */
@@ -285,8 +289,32 @@ class event_message implements filterable_payload {
 	}
 
 	/**
+	 * Convert the current object into an array representation.
+	 *
+	 * @return array
+	 */
+	public function to_array(): array {
+		return $this->__toArray();
+	}
+
+	/**
+	 * Return an array representation of this object.
+	 *
+	 * @return array
+	 */
+	public function __toArray(): array {
+		$array = [];
+		foreach ($this->event as $key => $value) {
+			$array[$key] = $value;
+		}
+		return $array;
+	}
+
+	/**
 	 * Set or Get the body
+	 *
 	 * @param null|string $body
+	 *
 	 * @return self|string
 	 */
 	public function body(?string $body = null) {
@@ -306,6 +334,17 @@ class event_message implements filterable_payload {
 	}
 
 	/**
+	 * Return an iterator for this object.
+	 *
+	 * This method allows iteration over the event data as a Traversable object.
+	 *
+	 * @return \Traversable
+	 */
+	public function getIterator(): Traversable {
+		yield from $this->event_to_array();
+	}
+
+	/**
 	 * Convert the event object to an array representation.
 	 *
 	 * This method iterates over the event properties and includes them in the returned array.
@@ -322,17 +361,6 @@ class event_message implements filterable_payload {
 			$array[self::BODY_ARRAY_KEY] = $this->body;
 		}
 		return $array;
-	}
-
-	/**
-	 * Return an iterator for this object.
-	 *
-	 * This method allows iteration over the event data as a Traversable object.
-	 *
-	 * @return \Traversable
-	 */
-	public function getIterator(): \Traversable {
-		yield from $this->event_to_array();
 	}
 
 	/**
@@ -387,9 +415,9 @@ class event_message implements filterable_payload {
 	/**
 	 * Unsets a property from the event array.
 	 *
-	 * This method first sanitizes the provided offset using the sanitize_event_key method to prevent potential security vulnerabilities.
-	 * If the sanitized offset is equal to the BODY_ARRAY_KEY, it sets the body property of this object to null.
-	 * Otherwise, it removes the specified key from the event array.
+	 * This method first sanitizes the provided offset using the sanitize_event_key method to prevent potential
+	 * security vulnerabilities. If the sanitized offset is equal to the BODY_ARRAY_KEY, it sets the body property of
+	 * this object to null. Otherwise, it removes the specified key from the event array.
 	 *
 	 * @param mixed $offset The index or key to be unset from the event array.
 	 */
@@ -400,16 +428,5 @@ class event_message implements filterable_payload {
 		} else {
 			unset($this->event[$offset]);
 		}
-	}
-
-	/**
-	 * Sanitizes key by replacing '-' with '_', converts to lowercase, and only allows digits 0-9 and letters a-z
-	 * @param string $key
-	 * @return string
-	 */
-	public static function sanitize_event_key(string &$key) /* : never */ {
-		$key = preg_replace('/[^a-z0-9_]/', '', str_replace('-', '_', strtolower($key)));
-		//rewrite 'name' to 'event_name'
-		if ($key === 'name') $key = 'event_name';
 	}
 }

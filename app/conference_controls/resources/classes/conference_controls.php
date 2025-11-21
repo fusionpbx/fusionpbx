@@ -34,7 +34,10 @@ class conference_controls {
 	 */
 	const app_name = 'conference_controls';
 	const app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
-
+	/**
+	 * declare public variables
+	 */
+	public $conference_control_uuid;
 	/**
 	 * declare private variables
 	 */
@@ -46,11 +49,6 @@ class conference_controls {
 	private $toggle_values;
 	private $description_field;
 	private $location;
-
-	/**
-	 * declare public variables
-	 */
-	public $conference_control_uuid;
 
 	/**
 	 * Initializes the object with setting array.
@@ -66,91 +64,25 @@ class conference_controls {
 	}
 
 	/**
-	 * Deletes one or more records.
-	 *
-	 * @param array $records An array of record IDs to delete, where each ID is an associative array
-	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
-	 *                       whether the corresponding checkbox was checked for deletion.
-	 *
-	 * @return void No return value; this method modifies the database state and sets a message.
-	 */
-	public function delete($records) {
-
-		//assign the variables
-		$this->name     = 'conference_control';
-		$this->table    = 'conference_controls';
-		$this->location = 'conference_controls.php';
-
-		if (permission_exists($this->name . '_delete')) {
-
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get();
-
-			//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'], 'negative');
-				header('Location: ' . $this->location);
-				exit;
-			}
-
-			//delete multiple records
-			if (is_array($records) && @sizeof($records) != 0) {
-				//build the delete array
-				$x = 0;
-				foreach ($records as $record) {
-					//add to the array
-					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-						$array[$this->table][$x][$this->name . '_uuid']                 = $record['uuid'];
-						$array['conference_control_details'][$x][$this->name . '_uuid'] = $record['uuid'];
-					}
-
-					//increment the id
-					$x++;
-				}
-
-				//delete the checked rows
-				if (is_array($array) && @sizeof($array) != 0) {
-
-					//grant temporary permissions
-					$p = permissions::new();
-					$p->add('conference_control_detail_delete', 'temp');
-
-					//execute delete
-					$this->database->delete($array);
-					unset($array);
-
-					//revoke temporary permissions
-					$p->delete('conference_control_detail_delete', 'temp');
-
-					//set message
-					message::add($text['message-delete']);
-				}
-				unset($records);
-			}
-		}
-	}
-
-	/**
 	 * Deletes conference control details.
 	 *
-	 * @param array $records An array of records to delete, where each record contains a 'checked' key with value 'true'.
+	 * @param array $records An array of records to delete, where each record contains a 'checked' key with value
+	 *                       'true'.
 	 *
 	 * @return void
 	 */
 	public function delete_details($records) {
 
 		//assign the variables
-		$this->name     = 'conference_control_detail';
-		$this->table    = 'conference_control_details';
+		$this->name = 'conference_control_detail';
+		$this->table = 'conference_control_details';
 		$this->location = 'conference_control_edit.php?id=' . $this->conference_control_uuid;
 
 		if (permission_exists($this->name . '_delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -192,6 +124,73 @@ class conference_controls {
 	}
 
 	/**
+	 * Deletes one or more records.
+	 *
+	 * @param array $records An array of record IDs to delete, where each ID is an associative array
+	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                       whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function delete($records) {
+
+		//assign the variables
+		$this->name = 'conference_control';
+		$this->table = 'conference_controls';
+		$this->location = 'conference_controls.php';
+
+		if (permission_exists($this->name . '_delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->location);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+				//build the delete array
+				$x = 0;
+				foreach ($records as $record) {
+					//add to the array
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						$array[$this->table][$x][$this->name . '_uuid'] = $record['uuid'];
+						$array['conference_control_details'][$x][$this->name . '_uuid'] = $record['uuid'];
+					}
+
+					//increment the id
+					$x++;
+				}
+
+				//delete the checked rows
+				if (is_array($array) && @sizeof($array) != 0) {
+
+					//grant temporary permissions
+					$p = permissions::new();
+					$p->add('conference_control_detail_delete', 'temp');
+
+					//execute delete
+					$this->database->delete($array);
+					unset($array);
+
+					//revoke temporary permissions
+					$p->delete('conference_control_detail_delete', 'temp');
+
+					//set message
+					message::add($text['message-delete']);
+				}
+				unset($records);
+			}
+		}
+	}
+
+	/**
 	 * Toggles the state of one or more records.
 	 *
 	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
@@ -203,17 +202,17 @@ class conference_controls {
 	public function toggle($records) {
 
 		//assign the variables
-		$this->name          = 'conference_control';
-		$this->table         = 'conference_controls';
-		$this->toggle_field  = 'control_enabled';
+		$this->name = 'conference_control';
+		$this->table = 'conference_controls';
+		$this->toggle_field = 'control_enabled';
 		$this->toggle_values = ['true', 'false'];
-		$this->location      = 'conference_controls.php';
+		$this->location = 'conference_controls.php';
 
 		if (permission_exists($this->name . '_edit')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -232,8 +231,8 @@ class conference_controls {
 					}
 				}
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql  = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql  .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
 					$rows = $this->database->select($sql, $parameters ?? null, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
@@ -248,7 +247,7 @@ class conference_controls {
 				foreach ($states as $uuid => $state) {
 					//create the array
 					$array[$this->table][$x][$this->name . '_uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]   = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 
 					//increment the id
 					$x++;
@@ -281,17 +280,17 @@ class conference_controls {
 	public function toggle_details($records) {
 
 		//assign the variables
-		$this->name          = 'conference_control_detail';
-		$this->table         = 'conference_control_details';
-		$this->toggle_field  = 'control_enabled';
+		$this->name = 'conference_control_detail';
+		$this->table = 'conference_control_details';
+		$this->toggle_field = 'control_enabled';
 		$this->toggle_values = ['true', 'false'];
-		$this->location      = 'conference_control_edit.php?id=' . $this->conference_control_uuid;
+		$this->location = 'conference_control_edit.php?id=' . $this->conference_control_uuid;
 
 		if (permission_exists($this->name . '_edit')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -310,8 +309,8 @@ class conference_controls {
 					}
 				}
 				if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql  = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql  .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
 					$rows = $this->database->select($sql, $parameters ?? null, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
@@ -327,7 +326,7 @@ class conference_controls {
 					foreach ($states as $uuid => $state) {
 						//create the array
 						$array[$this->table][$x][$this->name . '_uuid'] = $uuid;
-						$array[$this->table][$x][$this->toggle_field]   = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+						$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 
 						//increment the id
 						$x++;
@@ -361,16 +360,16 @@ class conference_controls {
 	public function copy($records) {
 
 		//assign the variables
-		$this->name              = 'conference_control';
-		$this->table             = 'conference_controls';
+		$this->name = 'conference_control';
+		$this->table = 'conference_controls';
 		$this->description_field = 'control_description';
-		$this->location          = 'conference_controls.php';
+		$this->location = 'conference_controls.php';
 
 		if (permission_exists($this->name . '_add')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -394,8 +393,8 @@ class conference_controls {
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
 
 					//primary table
-					$sql  = "select * from v_" . $this->table . " ";
-					$sql  .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
 					$rows = $this->database->select($sql, $parameters ?? null, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$y = 0;
@@ -405,7 +404,7 @@ class conference_controls {
 							//convert boolean values to a string
 							foreach ($row as $key => $value) {
 								if (gettype($value) == 'boolean') {
-									$value     = $value ? 'true' : 'false';
+									$value = $value ? 'true' : 'false';
 									$row[$key] = $value;
 								}
 							}
@@ -414,20 +413,20 @@ class conference_controls {
 							$array[$this->table][$x] = $row;
 
 							//add copy to the description
-							$array[$this->table][$x][$this->name . '_uuid']    = $primary_uuid;
+							$array[$this->table][$x][$this->name . '_uuid'] = $primary_uuid;
 							$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field] ?? '') . ' (' . $text['label-copy'] . ')';
 
 							//details sub table
-							$sql_2                                   = "select * from v_conference_control_details where conference_control_uuid = :conference_control_uuid";
+							$sql_2 = "select * from v_conference_control_details where conference_control_uuid = :conference_control_uuid";
 							$parameters_2['conference_control_uuid'] = $row['conference_control_uuid'];
-							$rows_2                                  = $this->database->select($sql_2, $parameters_2, 'all');
+							$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 							if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 								foreach ($rows_2 as $row_2) {
 
 									//convert boolean values to a string
 									foreach ($row_2 as $key => $value) {
 										if (gettype($value) == 'boolean') {
-											$value       = $value ? 'true' : 'false';
+											$value = $value ? 'true' : 'false';
 											$row_2[$key] = $value;
 										}
 									}
@@ -437,7 +436,7 @@ class conference_controls {
 
 									//overwrite
 									$array['conference_control_details'][$y]['conference_control_detail_uuid'] = uuid();
-									$array['conference_control_details'][$y]['conference_control_uuid']        = $primary_uuid;
+									$array['conference_control_details'][$y]['conference_control_uuid'] = $primary_uuid;
 
 									//increment
 									$y++;

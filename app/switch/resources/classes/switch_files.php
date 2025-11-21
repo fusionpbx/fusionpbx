@@ -45,28 +45,6 @@ class switch_files {
 	}
 
 	/**
-	 * Converts the given path to a platform-agnostic format.
-	 *
-	 * @param string $path The path to be converted.
-	 *
-	 * @return string The converted path. If running on Windows, backslashes are replaced with forward slashes.
-	 */
-	private function correct_path($path) {
-		global $IS_WINDOWS;
-		if ($IS_WINDOWS == null) {
-			if (stristr(PHP_OS, 'WIN')) {
-				$IS_WINDOWS = true;
-			} else {
-				$IS_WINDOWS = false;
-			}
-		}
-		if ($IS_WINDOWS) {
-			return str_replace('\\', '/', $path);
-		}
-		return $path;
-	}
-
-	/**
 	 * Copy the switch scripts to the switch directory
 	 *
 	 * The function attempts to find the source and destination directories by checking various system locations. If
@@ -154,6 +132,28 @@ class switch_files {
 		chmod($destination_directory, 0775);
 		unset($destination_directory);
 
+	}
+
+	/**
+	 * Converts the given path to a platform-agnostic format.
+	 *
+	 * @param string $path The path to be converted.
+	 *
+	 * @return string The converted path. If running on Windows, backslashes are replaced with forward slashes.
+	 */
+	private function correct_path($path) {
+		global $IS_WINDOWS;
+		if ($IS_WINDOWS == null) {
+			if (stristr(PHP_OS, 'WIN')) {
+				$IS_WINDOWS = true;
+			} else {
+				$IS_WINDOWS = false;
+			}
+		}
+		if ($IS_WINDOWS) {
+			return str_replace('\\', '/', $path);
+		}
+		return $path;
 	}
 
 }

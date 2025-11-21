@@ -45,6 +45,31 @@ class event_filter implements filter {
 	}
 
 	/**
+	 * Adds the array list to the filters.
+	 *
+	 * @param array $event_names
+	 */
+	public function add_event_names(array $event_names) {
+		// Add all event key filters passed
+		foreach ($event_names as $event_name) {
+			if (is_array($event_name)) {
+				$this->add_event_names($event_name);
+			} else {
+				$this->add_event_name($event_name);
+			}
+		}
+	}
+
+	/**
+	 * Adds a single event name filter
+	 *
+	 * @param string $name
+	 */
+	public function add_event_name(string $name) {
+		$this->event_names[$name] = $name;
+	}
+
+	/**
 	 * Invokes this method to filter events.
 	 *
 	 * @param string $key   The key name that will be used for filtering, currently only
@@ -62,29 +87,6 @@ class event_filter implements filter {
 			return true;
 		}
 		return $this->has_event_name($value);
-	}
-
-	/**
-	 * Adds a single event name filter
-	 * @param string $name
-	 */
-	public function add_event_name(string $name) {
-		$this->event_names[$name] = $name;
-	}
-
-	/**
-	 * Adds the array list to the filters.
-	 * @param array $event_names
-	 */
-	public function add_event_names(array $event_names) {
-		// Add all event key filters passed
-		foreach ($event_names as $event_name) {
-			if (is_array($event_name)) {
-				$this->add_event_names($event_name);
-			} else {
-				$this->add_event_name($event_name);
-			}
-		}
 	}
 
 	/**

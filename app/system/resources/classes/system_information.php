@@ -31,21 +31,6 @@
  */
 abstract class system_information {
 
-	abstract public function get_cpu_cores(): int;
-	abstract public function get_uptime();
-	abstract public function get_cpu_percent(): float;
-	abstract public function get_cpu_percent_per_core(): array;
-	abstract public function get_network_speed(string $interface = 'eth0'): array;
-
-	/**
-	 * Returns the system load average.
-	 *
-	 * @return array Three most recent one-minute load averages.
-	 */
-	public function get_load_average() {
-		return sys_getloadavg();
-	}
-
 	/**
 	 * Returns a system information object based on the underlying operating system.
 	 *
@@ -59,5 +44,24 @@ abstract class system_information {
 			return new linux_system_information();
 		}
 		return null;
+	}
+
+	abstract public function get_cpu_cores(): int;
+
+	abstract public function get_uptime();
+
+	abstract public function get_cpu_percent(): float;
+
+	abstract public function get_cpu_percent_per_core(): array;
+
+	abstract public function get_network_speed(string $interface = 'eth0'): array;
+
+	/**
+	 * Returns the system load average.
+	 *
+	 * @return array Three most recent one-minute load averages.
+	 */
+	public function get_load_average() {
+		return sys_getloadavg();
 	}
 }

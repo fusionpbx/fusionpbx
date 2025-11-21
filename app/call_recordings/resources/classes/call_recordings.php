@@ -34,21 +34,20 @@ class call_recordings {
 	 */
 	const app_name = 'follow_me';
 	const app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
-
+	public $recording_uuid;
+	public $binary;
 	/**
 	 * Set in the constructor. Must be a database object and cannot be null.
 	 *
 	 * @var database Database Object
 	 */
 	private $database;
-
 	/**
 	 * Settings object set in the constructor. Must be a settings object and cannot be null.
 	 *
 	 * @var settings Settings Object
 	 */
 	private $settings;
-
 	/**
 	 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in
 	 * the session global array
@@ -56,7 +55,6 @@ class call_recordings {
 	 * @var string
 	 */
 	private $user_uuid;
-
 	/**
 	 * Username set in the constructor. This can be passed in through the $settings_array associative array or set in
 	 * the session global array
@@ -64,7 +62,6 @@ class call_recordings {
 	 * @var string
 	 */
 	private $username;
-
 	/**
 	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set
 	 * in the session global array
@@ -72,7 +69,6 @@ class call_recordings {
 	 * @var string
 	 */
 	private $domain_uuid;
-
 	/**
 	 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set
 	 * in the session global array
@@ -80,7 +76,6 @@ class call_recordings {
 	 * @var string
 	 */
 	private $domain_name;
-
 	/**
 	 * declare the variables
 	 */
@@ -88,8 +83,6 @@ class call_recordings {
 	private $table;
 	private $description_field;
 	private $location;
-	public $recording_uuid;
-	public $binary;
 
 	/**
 	 * Initializes the object with setting array.
@@ -102,98 +95,76 @@ class call_recordings {
 	public function __construct(array $setting_array = []) {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
 		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 		//assign the variables
-		$this->name              = 'call_recording';
-		$this->table             = 'call_recordings';
+		$this->name = 'call_recording';
+		$this->table = 'call_recordings';
 		$this->description_field = 'call_recording_description';
-		$this->location          = 'call_recordings.php';
+		$this->location = 'call_recordings.php';
 
 	}
 
 	/**
-	 * Deletes one or more records.
+	 * Called by the maintenance service to clean out old call recordings
 	 *
-	 * @param array $records An array of record IDs to delete, where each ID is an associative array
-	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
-	 *                       whether the corresponding checkbox was checked for deletion.
+	 * @param settings $settings
 	 *
-	 * @return void No return value; this method modifies the database state and sets a message.
+	 * @return void
 	 */
-	public function delete($records) {
-		if (permission_exists($this->name . '_delete')) {
+	public static function filesystem_maintenance(settings $settings): void {
+		//get the database connection object
+		$database = $settings->database();
 
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get();
+		//get an associative array of domain_uuid => domain_names
+		$domains = maintenance::get_domains($database);
 
-			//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'], 'negative');
-				header('Location: ' . $this->location);
-				exit;
-			}
+		//loop over each domain
+		foreach ($domains as $domain_uuid => $domain_name) {
+			//get the settings for this domain
+			$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
-			//delete multiple records
-			if (is_array($records) && @sizeof($records) != 0) {
-				//build the delete array
-				$x = 0;
-				foreach ($records as $record) {
-					//add to the array
-					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-						//get the information to delete
-						$sql                               = "select call_recording_name, call_recording_path ";
-						$sql                               .= "from view_call_recordings ";
-						$sql                               .= "where call_recording_uuid = :call_recording_uuid ";
-						$parameters['call_recording_uuid'] = $record['uuid'];
-						$field                             = $this->database->select($sql, $parameters, 'row');
-						if (is_array($field) && @sizeof($field) != 0) {
-							//delete the file on the file system
-							if (file_exists($field['call_recording_path'] . '/' . $field['call_recording_name'])) {
-								unlink($field['call_recording_path'] . '/' . $field['call_recording_name']);
-							}
+			//get the recording location for this domain
+			$call_recording_location = $domain_settings->get('switch', 'recordings', '/var/lib/freeswitch/recordings');
 
-							//build call recording delete array
-							$array['xml_cdr'][$x]['xml_cdr_uuid']  = $record['uuid'];
-							$array['xml_cdr'][$x]['record_path']   = null;
-							$array['xml_cdr'][$x]['record_name']   = null;
-							$array['xml_cdr'][$x]['record_length'] = null;
+			//get the retention days for this domain
+			$retention_days = $domain_settings->get('call_recordings', 'filesystem_retention_days', '');
 
-							//increment the id
-							$x++;
+			//ensure retention days are not empty
+			if (!empty($retention_days) && is_numeric($retention_days)) {
+				$retention_days = intval($retention_days);
+
+				//get list of mp3 and wav files
+				$mp3_files = glob("$call_recording_location/$domain_name/archive/*/*/*/*.mp3");
+				$wav_files = glob("$call_recording_location/$domain_name/archive/*/*/*/*.wav");
+
+				//combine to single array
+				$domain_call_recording_files = array_merge($mp3_files, $wav_files);
+
+				//loop over each call recording mp3 or wav file
+				foreach ($domain_call_recording_files as $file) {
+
+					//use the maintenance service class helper function to get the modified date and see if it is older
+					if (maintenance_service::days_since_modified($file) > $retention_days) {
+						//remove the file when it is older
+						if (unlink($file)) {
+							//log success
+							maintenance_service::log_write(self::class, "Removed $file from call_recordings older than $retention_days days", $domain_uuid);
+						} else {
+							//log failure
+							maintenance_service::log_write(self::class, "Unable to remove $file", $domain_uuid, maintenance_service::LOG_ERROR);
 						}
-						unset($sql, $parameters, $field);
+					} else {
+						//file is not older - do nothing
 					}
 				}
-
-				//delete the checked rows
-				if (is_array($array) && @sizeof($array) != 0) {
-
-					//add temporary permissions
-					$p = permissions::new();
-					$p->add('xml_cdr_edit', 'temp');
-
-					//remove record_path, record_name and record_length
-					$this->database->app_name = 'xml_cdr';
-					$this->database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
-					$this->database->save($array, false);
-					$message = $this->database->message;
-					unset($array);
-
-					//remove the temporary permissions
-					$p->delete('xml_cdr_edit', 'temp');
-
-					//set message
-					message::add($text['message-delete']);
-
-				}
-				unset($records);
+			} else {
+				//report the retention days is not set correctly
+				maintenance_service::log_write(self::class, "Retention days not set or not a valid number", $domain_uuid, maintenance_service::LOG_ERROR);
 			}
 		}
 	}
@@ -209,7 +180,7 @@ class call_recordings {
 		if (permission_exists($this->name . '_view')) {
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -221,7 +192,7 @@ class call_recordings {
 
 			//add the settings object
 			$transcribe_enabled = $this->settings->get('transcribe', 'enabled', false);
-			$transcribe_engine  = $this->settings->get('transcribe', 'engine', '');
+			$transcribe_engine = $this->settings->get('transcribe', 'engine', '');
 
 			//transcribe multiple recordings
 			if ($transcribe_enabled && !empty($transcribe_engine) && is_array($records) && @sizeof($records) != 0) {
@@ -235,25 +206,25 @@ class call_recordings {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 						//get the call recording file name and path
-						$sql                               = "select call_recording_name, call_recording_path ";
-						$sql                               .= "from view_call_recordings ";
-						$sql                               .= "where call_recording_uuid = :call_recording_uuid ";
-						$sql                               .= "and call_recording_transcription is null ";
+						$sql = "select call_recording_name, call_recording_path ";
+						$sql .= "from view_call_recordings ";
+						$sql .= "where call_recording_uuid = :call_recording_uuid ";
+						$sql .= "and call_recording_transcription is null ";
 						$parameters['call_recording_uuid'] = $record['uuid'];
-						$field                             = $this->database->select($sql, $parameters, 'row');
+						$field = $this->database->select($sql, $parameters, 'row');
 						if (
 							is_array($field) &&
 							@sizeof($field) != 0 &&
 							file_exists($field['call_recording_path'] . '/' . $field['call_recording_name'])
 						) {
 							//audio to text - get the transcription from the audio file
-							$transcribe->audio_path     = $field['call_recording_path'];
+							$transcribe->audio_path = $field['call_recording_path'];
 							$transcribe->audio_filename = $field['call_recording_name'];
-							$record_transcription       = $transcribe->transcribe();
+							$record_transcription = $transcribe->transcribe();
 
 							//build call recording data array
 							if (!empty($record_transcription)) {
-								$array['xml_cdr'][$x]['xml_cdr_uuid']         = $record['uuid'];
+								$array['xml_cdr'][$x]['xml_cdr_uuid'] = $record['uuid'];
 								$array['xml_cdr'][$x]['record_transcription'] = $record_transcription;
 							}
 
@@ -291,10 +262,97 @@ class call_recordings {
 		}
 	}
 
-	/**
+		/**
+	 * Deletes one or more records.
+	 *
+	 * @param array $records An array of record IDs to delete, where each ID is an associative array
+	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *                       whether the corresponding checkbox was checked for deletion.
+	 *
+	 * @return void No return value; this method modifies the database state and sets a message.
+	 */
+	public function delete($records) {
+		if (permission_exists($this->name . '_delete')) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text = $language->get();
+
+			//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: ' . $this->location);
+				exit;
+			}
+
+			//delete multiple records
+			if (is_array($records) && @sizeof($records) != 0) {
+				//build the delete array
+				$x = 0;
+				foreach ($records as $record) {
+					//add to the array
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
+						//get the information to delete
+						$sql = "select call_recording_name, call_recording_path ";
+						$sql .= "from view_call_recordings ";
+						$sql .= "where call_recording_uuid = :call_recording_uuid ";
+						$parameters['call_recording_uuid'] = $record['uuid'];
+						$field = $this->database->select($sql, $parameters, 'row');
+						if (is_array($field) && @sizeof($field) != 0) {
+							//delete the file on the file system
+							if (file_exists($field['call_recording_path'] . '/' . $field['call_recording_name'])) {
+								unlink($field['call_recording_path'] . '/' . $field['call_recording_name']);
+							}
+
+							//build call recording delete array
+							$array['xml_cdr'][$x]['xml_cdr_uuid'] = $record['uuid'];
+							$array['xml_cdr'][$x]['record_path'] = null;
+							$array['xml_cdr'][$x]['record_name'] = null;
+							$array['xml_cdr'][$x]['record_length'] = null;
+
+							//increment the id
+							$x++;
+						}
+						unset($sql, $parameters, $field);
+					}
+				}
+
+				//delete the checked rows
+				if (is_array($array) && @sizeof($array) != 0) {
+
+					//add temporary permissions
+					$p = permissions::new();
+					$p->add('xml_cdr_edit', 'temp');
+
+					//remove record_path, record_name and record_length
+					$this->database->app_name = 'xml_cdr';
+					$this->database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
+					$this->database->save($array, false);
+					$message = $this->database->message;
+					unset($array);
+
+					//remove the temporary permissions
+					$p->delete('xml_cdr_edit', 'temp');
+
+					//set message
+					message::add($text['message-delete']);
+
+				}
+				unset($records);
+			}
+		}
+	} //method
+
+	/*
+	 * range download method (helps safari play audio sources)
+	 */
+
+/**
 	 * Downloads one or multiple call recordings.
 	 *
-	 * @param array $records An optional array of recording UUIDs to download. If null, the method will attempt to download a single recording based on the current object's recording_uuid property.
+	 * @param array $records An optional array of recording UUIDs to download. If null, the method will attempt to
+	 *                       download a single recording based on the current object's recording_uuid property.
 	 *
 	 * @return void
 	 */
@@ -302,9 +360,9 @@ class call_recordings {
 		if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 
 			//get the settings
-			$record_name  = $this->settings->get('call_recordings', 'record_name', '');
+			$record_name = $this->settings->get('call_recordings', 'record_name', '');
 			$storage_type = $this->settings->get('call_recordings', 'storage_type', '');
-			$time_zone    = $this->settings->get('domain', 'time_zone', '');
+			$time_zone = $this->settings->get('domain', 'time_zone', '');
 
 			//set the time zone
 			if (!empty($time_zone)) {
@@ -341,29 +399,29 @@ class call_recordings {
 					if (!empty($storage_type) && $storage_type == 'base64' && !empty($row['call_recording_base64'])) {
 						$sql .= ", call_recording_base64 ";
 					}
-					$sql                               .= "from view_call_recordings ";
-					$sql                               .= "where call_recording_uuid = :call_recording_uuid ";
+					$sql .= "from view_call_recordings ";
+					$sql .= "where call_recording_uuid = :call_recording_uuid ";
 					$parameters['call_recording_uuid'] = $this->recording_uuid;
-					$parameters['time_zone']           = $time_zone;
-					$row                               = $this->database->select($sql, $parameters, 'row');
+					$parameters['time_zone'] = $time_zone;
+					$row = $this->database->select($sql, $parameters, 'row');
 					if (is_array($row) && @sizeof($row) != 0) {
-						$call_recording_uuid           = $row['call_recording_uuid'];
-						$caller_id_name                = $row['caller_id_name'];
-						$caller_id_number              = $row['caller_id_number'];
-						$caller_destination            = $row['caller_destination'];
-						$destination_number            = $row['destination_number'];
-						$call_recording_name           = $row['call_recording_name'];
-						$call_recording_path           = $row['call_recording_path'];
-						$call_recording_date           = $row['call_recording_date'];
-						$call_direction                = $row['call_direction'];
-						$call_recording_year           = $row['call_recording_year'];
-						$call_recording_month_name     = $row['call_recording_month_name'];
-						$call_recording_month_number   = $row['call_recording_month_number'];
-						$call_recording_day            = $row['call_recording_day'];
-						$call_recording_time           = $row['call_recording_time'];
+						$call_recording_uuid = $row['call_recording_uuid'];
+						$caller_id_name = $row['caller_id_name'];
+						$caller_id_number = $row['caller_id_number'];
+						$caller_destination = $row['caller_destination'];
+						$destination_number = $row['destination_number'];
+						$call_recording_name = $row['call_recording_name'];
+						$call_recording_path = $row['call_recording_path'];
+						$call_recording_date = $row['call_recording_date'];
+						$call_direction = $row['call_direction'];
+						$call_recording_year = $row['call_recording_year'];
+						$call_recording_month_name = $row['call_recording_month_name'];
+						$call_recording_month_number = $row['call_recording_month_number'];
+						$call_recording_day = $row['call_recording_day'];
+						$call_recording_time = $row['call_recording_time'];
 						$call_recording_date_formatted = $row['call_recording_date_formatted'];
 						$call_recording_time_formatted = $row['call_recording_time_formatted'];
-						$call_recording_base64         = $row['call_recording_base64'];
+						$call_recording_base64 = $row['call_recording_base64'];
 						if (!empty($storage_type) && $storage_type == 'base64' && !empty($row['call_recording_base64'])) {
 							file_put_contents($call_recording_path . '/' . $call_recording_name, base64_decode($row['call_recording_base64']));
 						}
@@ -440,7 +498,7 @@ class call_recordings {
 
 				//add multi-lingual support
 				$language = new text;
-				$text     = $language->get();
+				$text = $language->get();
 
 				//validate the token
 				$token = new token;
@@ -483,26 +541,26 @@ class call_recordings {
 					if (!empty($storage_type) && $storage_type == 'base64') {
 						$sql .= ", call_recording_base64 ";
 					}
-					$sql                     .= "from view_call_recordings ";
-					$sql                     .= "where call_recording_uuid in ('" . implode("','", $uuids) . "') ";
+					$sql .= "from view_call_recordings ";
+					$sql .= "where call_recording_uuid in ('" . implode("','", $uuids) . "') ";
 					$parameters['time_zone'] = $time_zone;
-					$rows                    = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (!empty($rows) && is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
-							$call_recording_uuid           = $row['call_recording_uuid'];
-							$caller_id_name                = $row['caller_id_name'];
-							$caller_id_number              = $row['caller_id_number'];
-							$caller_destination            = $row['caller_destination'];
-							$destination_number            = $row['destination_number'];
-							$call_recording_name           = $row['call_recording_name'];
-							$call_recording_path           = $row['call_recording_path'];
-							$call_recording_date           = $row['call_recording_date'];
-							$call_direction                = $row['call_direction'];
-							$call_recording_year           = $row['call_recording_year'];
-							$call_recording_month_name     = $row['call_recording_month_name'];
-							$call_recording_month_number   = $row['call_recording_month_number'];
-							$call_recording_day            = $row['call_recording_day'];
-							$call_recording_time           = $row['call_recording_time'];
+							$call_recording_uuid = $row['call_recording_uuid'];
+							$caller_id_name = $row['caller_id_name'];
+							$caller_id_number = $row['caller_id_number'];
+							$caller_destination = $row['caller_destination'];
+							$destination_number = $row['destination_number'];
+							$call_recording_name = $row['call_recording_name'];
+							$call_recording_path = $row['call_recording_path'];
+							$call_recording_date = $row['call_recording_date'];
+							$call_direction = $row['call_direction'];
+							$call_recording_year = $row['call_recording_year'];
+							$call_recording_month_name = $row['call_recording_month_name'];
+							$call_recording_month_number = $row['call_recording_month_number'];
+							$call_recording_day = $row['call_recording_day'];
+							$call_recording_time = $row['call_recording_time'];
 							$call_recording_date_formatted = $row['call_recording_date_formatted'];
 							$call_recording_time_formatted = $row['call_recording_time_formatted'];
 							if (!empty($storage_type) && $storage_type == 'base64' && !empty($row['call_recording_base64'])) {
@@ -575,18 +633,15 @@ class call_recordings {
 
 		}
 
-	} //method
+	}
 
-	/*
-	 * range download method (helps safari play audio sources)
-	 */
 	private function range_download($file) {
 		$fp = @fopen($file, 'rb');
 
-		$size   = filesize($file); // File size
+		$size = filesize($file); // File size
 		$length = $size;           // Content length
-		$start  = 0;               // Start byte
-		$end    = $size - 1;       // End byte
+		$start = 0;               // Start byte
+		$end = $size - 1;       // End byte
 		// Now that we've gotten so far without errors we send the accept range header
 		/* At the moment we only support single ranges.
 		* Multiple ranges requires some more work to ensure it works correctly
@@ -606,7 +661,7 @@ class call_recordings {
 		if (isset($_SERVER['HTTP_RANGE'])) {
 
 			$c_start = $start;
-			$c_end   = $end;
+			$c_end = $end;
 			// Extract the range string
 			[, $range] = explode('=', $_SERVER['HTTP_RANGE'], 2);
 			// Make sure the client hasn't sent us a multibyte range
@@ -626,9 +681,9 @@ class call_recordings {
 				// The n-number of the last bytes is requested
 				$c_start = $size - substr($range, 1);
 			} else {
-				$range   = explode('-', $range);
+				$range = explode('-', $range);
 				$c_start = $range[0];
-				$c_end   = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $size;
+				$c_end = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $size;
 			}
 			/* Check the range and make sure it's treated according to the specs.
 			* http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
@@ -643,8 +698,8 @@ class call_recordings {
 				// (?) Echo some info to the client?
 				exit;
 			}
-			$start  = $c_start;
-			$end    = $c_end;
+			$start = $c_start;
+			$end = $c_end;
 			$length = $end - $start + 1; // Calculate new content length
 			fseek($fp, $start);
 			header('HTTP/1.1 206 Partial Content');
@@ -667,66 +722,6 @@ class call_recordings {
 		}
 
 		fclose($fp);
-	}
-
-	/**
-	 * Called by the maintenance service to clean out old call recordings
-	 *
-	 * @param settings $settings
-	 *
-	 * @return void
-	 */
-	public static function filesystem_maintenance(settings $settings): void {
-		//get the database connection object
-		$database = $settings->database();
-
-		//get an associative array of domain_uuid => domain_names
-		$domains = maintenance::get_domains($database);
-
-		//loop over each domain
-		foreach ($domains as $domain_uuid => $domain_name) {
-			//get the settings for this domain
-			$domain_settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
-
-			//get the recording location for this domain
-			$call_recording_location = $domain_settings->get('switch', 'recordings', '/var/lib/freeswitch/recordings');
-
-			//get the retention days for this domain
-			$retention_days = $domain_settings->get('call_recordings', 'filesystem_retention_days', '');
-
-			//ensure retention days are not empty
-			if (!empty($retention_days) && is_numeric($retention_days)) {
-				$retention_days = intval($retention_days);
-
-				//get list of mp3 and wav files
-				$mp3_files = glob("$call_recording_location/$domain_name/archive/*/*/*/*.mp3");
-				$wav_files = glob("$call_recording_location/$domain_name/archive/*/*/*/*.wav");
-
-				//combine to single array
-				$domain_call_recording_files = array_merge($mp3_files, $wav_files);
-
-				//loop over each call recording mp3 or wav file
-				foreach ($domain_call_recording_files as $file) {
-
-					//use the maintenance service class helper function to get the modified date and see if it is older
-					if (maintenance_service::days_since_modified($file) > $retention_days) {
-						//remove the file when it is older
-						if (unlink($file)) {
-							//log success
-							maintenance_service::log_write(self::class, "Removed $file from call_recordings older than $retention_days days", $domain_uuid);
-						} else {
-							//log failure
-							maintenance_service::log_write(self::class, "Unable to remove $file", $domain_uuid, maintenance_service::LOG_ERROR);
-						}
-					} else {
-						//file is not older - do nothing
-					}
-				}
-			} else {
-				//report the retention days is not set correctly
-				maintenance_service::log_write(self::class, "Retention days not set or not a valid number", $domain_uuid, maintenance_service::LOG_ERROR);
-			}
-		}
 	}
 
 } //class

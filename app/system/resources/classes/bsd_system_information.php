@@ -72,7 +72,8 @@ class bsd_system_information extends system_information {
 	/**
 	 * Returns the current CPU usage percentage per core.
 	 *
-	 * @return array An associative array where keys are core indices and values are their respective CPU usage percentages.
+	 * @return array An associative array where keys are core indices and values are their respective CPU usage
+	 *               percentages.
 	 */
 	public function get_cpu_percent_per_core(): array {
 		static $last = [];
@@ -134,8 +135,8 @@ class bsd_system_information extends system_information {
 			return ['rx_bps' => 0, 'tx_bps' => 0];
 
 		$cols = preg_split('/\s+/', $lines[1]);
-		$rx_bytes = (int) $cols[6]; // Ibytes
-		$tx_bytes = (int) $cols[9]; // Obytes
+		$rx_bytes = (int)$cols[6]; // Ibytes
+		$tx_bytes = (int)$cols[9]; // Obytes
 		$now = microtime(true);
 
 		if (!isset($last[$interface])) {
@@ -151,7 +152,7 @@ class bsd_system_information extends system_information {
 
 		return [
 			'rx_bps' => $delta_rx / $delta_time,
-			'tx_bps' => $delta_tx / $delta_time
+			'tx_bps' => $delta_tx / $delta_time,
 		];
 	}
 }
