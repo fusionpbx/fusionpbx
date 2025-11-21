@@ -498,8 +498,8 @@
 <Display_Name_1_ ua="na">{$account.1.display_name}</Display_Name_1_>
 <User_ID_1_ ua="na">{$account.1.user_id}</User_ID_1_>
 <Password_1_ ua="na">{$account.1.password}</Password_1_>
-<Auth_ID_1_ ua="na"/>
-<Reversed_Auth_Realm_1_ ua="na"/>
+<Auth_ID_1_ ua="na">{$account.1.user_id}</Auth_ID_1_>
+<Reversed_Auth_Realm_1_ ua="na">{$account.1.server_address}</Reversed_Auth_Realm_1_>
 <SIP_URI_1_ ua="na"/>
 <!-- Audio Configuration -->
 <Preferred_Codec_1_ ua="na">G711u</Preferred_Codec_1_>
@@ -592,8 +592,8 @@
 <Display_Name_2_ ua="na">{$account.2.display_name}</Display_Name_2_>
 <User_ID_2_ ua="na">{$account.2.user_id}</User_ID_2_>
 <Password_2_ ua="na">{$account.2.password}</Password_2_>
-<Auth_ID_2_ ua="na"/>
-<Reversed_Auth_Realm_2_ ua="na"/>
+<Auth_ID_2_ ua="na">{$account.2.user_id}</Auth_ID_2_>
+<Reversed_Auth_Realm_2_ ua="na">{$account.2.server_address}</Reversed_Auth_Realm_2_>
 <SIP_URI_2_ ua="na"/>
 <!-- Audio Configuration -->
 <Preferred_Codec_2_ ua="na">G711u</Preferred_Codec_2_>
@@ -686,8 +686,8 @@
 <Display_Name_3_ ua="na">{$account.3.display_name}</Display_Name_3_>
 <User_ID_3_ ua="na">{$account.3.user_id}</User_ID_3_>
 <Password_3_ ua="na">{$account.3.password}</Password_3_>
-<Auth_ID_3_ ua="na"/>
-<Reversed_Auth_Realm_3_ ua="na"/>
+<Auth_ID_3_ ua="na">{$account.3.user_id}</Auth_ID_3_>
+<Reversed_Auth_Realm_3_ ua="na">{$account.3.server_address}</Reversed_Auth_Realm_3_>
 <SIP_URI_3_ ua="na"/>
 <!-- Audio Configuration -->
 <Preferred_Codec_3_ ua="na">G711u</Preferred_Codec_3_>
@@ -780,9 +780,8 @@
 <Display_Name_4_ ua="na">{$account.4.display_name}</Display_Name_4_>
 <User_ID_4_ ua="na">{$account.4.user_id}</User_ID_4_>
 <Password_4_ ua="na">{$account.4.password}</Password_4_>
-
-<Auth_ID_4_ ua="na"/>
-<Reversed_Auth_Realm_4_ ua="na"/>
+<Auth_ID_4_ ua="na">{$account.4.user_id}</Auth_ID_4_>
+<Reversed_Auth_Realm_4_ ua="na">{$account.4.server_address}</Reversed_Auth_Realm_4_>
 <SIP_URI_4_ ua="na"/>
 <!-- Audio Configuration -->
 <Preferred_Codec_4_ ua="na">G711u</Preferred_Codec_4_>
@@ -875,8 +874,8 @@
 <Display_Name_5_ ua="na">{$account.5.display_name}</Display_Name_5_>
 <User_ID_5_ ua="na">{$account.5.user_id}</User_ID_5_>
 <Password_5_ ua="na">{$account.5.user_password}</Password_5_>
-<Auth_ID_5_ ua="na"/>
-<Reversed_Auth_Realm_5_ ua="na"/>
+<Auth_ID_5_ ua="na">{$account.5.user_id}</Auth_ID_5_>
+<Reversed_Auth_Realm_5_ ua="na">{$account.5.server_address}</Reversed_Auth_Realm_5_>
 <SIP_URI_5_ ua="na"/>
 <!-- Audio Configuration -->
 <Preferred_Codec_5_ ua="na">G711u</Preferred_Codec_5_>
@@ -969,8 +968,8 @@
 <Display_Name_6_ ua="na">{$account.6.display_name}</Display_Name_6_>
 <User_ID_6_ ua="na">{$account.6.user_id}</User_ID_6_>
 <Password_6_ ua="na">{$account.6.password}</Password_6_>
-<Auth_ID_6_ ua="na"/>
-<Reversed_Auth_Realm_6_ ua="na"/>
+<Auth_ID_6_ ua="na">{$account.6.user_id}</Auth_ID_6_>
+<Reversed_Auth_Realm_6_ ua="na">{$account.6.server_address}</Reversed_Auth_Realm_6_>
 <SIP_URI_6_ ua="na"/>
 <!-- Audio Configuration -->
 <Preferred_Codec_6_ ua="na">G711u</Preferred_Codec_6_>
@@ -1062,8 +1061,8 @@
 <Display_Name_7_ ua="na">{$account.7.display_name}</Display_Name_7_>
 <User_ID_7_ ua="na">{$account.7.user_id}</User_ID_7_>
 <Password_7_ ua="na">{$account.7.password}</Password_7_>
-<Auth_ID_7_ ua="na"/>
-<Reversed_Auth_Realm_7_ ua="na"/>
+<Auth_ID_7_ ua="na">{$account.7.user_id}</Auth_ID_7_>
+<Reversed_Auth_Realm_7_ ua="na">{$account.7.server_address}</Reversed_Auth_Realm_7_>
 <SIP_URI_7_ ua="na"/>
 <!-- Audio Configuration -->
 <Preferred_Codec_7_ ua="na">G711u</Preferred_Codec_7_>
@@ -1156,8 +1155,8 @@
 <Display_Name_8_ ua="na">{$account.8.display_name}</Display_Name_8_>
 <User_ID_8_ ua="na">{$account.8.user_id}</User_ID_8_>
 <Password_8_ ua="na">{$account.8.password}</Password_8_>
-<Auth_ID_8_ ua="na"/>
-<Reversed_Auth_Realm_8_ ua="na"/>
+<Auth_ID_8_ ua="na">{$account.8.user_id}</Auth_ID_8_>
+<Reversed_Auth_Realm_8_ ua="na">{$account.8.server_address}</Reversed_Auth_Realm_8_>
 <SIP_URI_8_ ua="na"/>
 <!-- Audio Configuration -->
 <Preferred_Codec_8_ ua="na">G711u</Preferred_Codec_8_>
@@ -1250,8 +1249,8 @@
 <Display_Name_9_ ua="na">{$account.9.display_name}</Display_Name_9_>
 <User_ID_9_ ua="na">{$account.9.user_id}</User_ID_9_>
 <Password_9_ ua="na">{$account.9.password}</Password_9_>
-<Auth_ID_9_ ua="na"/>
-<Reversed_Auth_Realm_9_ ua="na"/>
+<Auth_ID_9_ ua="na">{$account.9.user_id}</Auth_ID_9_>
+<Reversed_Auth_Realm_9_ ua="na">{$account.9.server_address}</Reversed_Auth_Realm_9_>
 <SIP_URI_9_ ua="na"/>
 <!-- Audio Configuration -->
 <Preferred_Codec_9_ ua="na">G711u</Preferred_Codec_9_>
@@ -1344,8 +1343,8 @@
 <Display_Name_10_ ua="na">{$account.10.display_name}</Display_Name_10_>
 <User_ID_10_ ua="na">{$account.10.user_id}</User_ID_10_>
 <Password_10_ ua="na">{$account.10.password}</Password_10_>
-<Auth_ID_10_ ua="na"/>
-<Reversed_Auth_Realm_10_ ua="na"/>
+<Auth_ID_10_ ua="na">{$account.10.user_id}</Auth_ID_10_>
+<Reversed_Auth_Realm_10_ ua="na">{$account.10.server_address}</Reversed_Auth_Realm_10_>
 <SIP_URI_10_ ua="na"/>
 <!-- Audio Configuration -->
 <Preferred_Codec_10_ ua="na">G711u</Preferred_Codec_10_>
