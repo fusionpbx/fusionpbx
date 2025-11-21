@@ -768,7 +768,7 @@
 										$select_label = str_replace("\${".$key."}", ($data[$key] ?? ''), $select_label);
 									}
 									else {
-										$select_label = str_replace("\${".$key."}", $text2['option-'.$label], $select_label);
+										$select_label = str_replace("\${".$key."}", ($text2['option-'.$label] ?? ''), $select_label);
 									}
 								}
 								//application: hangup
