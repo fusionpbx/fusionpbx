@@ -74,8 +74,8 @@
 
 //get status
 	try {
-		$cmd = "sofia xmlstatus";
-		$xml_response = trim(event_socket::api($cmd));
+		$cmd = "api sofia xmlstatus";
+		$xml_response = trim($esl->request($cmd));
 		if ($xml_response) {
 			//read the xml string into an xml object
 			$xml = new SimpleXMLElement($xml_response);
@@ -117,8 +117,8 @@
 		message::add($message, 'negative', 5000);
 	}
 	try {
-		$cmd = "sofia xmlstatus gateway";
-		$xml_response = trim(event_socket::api($cmd));
+		$cmd = "api sofia xmlstatus gateway";
+		$xml_response = trim($esl->request($cmd));
 		if ($xml_response) {
 			$xml_gateways = new SimpleXMLElement($xml_response);
 		}
@@ -255,7 +255,7 @@
 //sofia status profile
 	if ($esl && permission_exists('system_status_sofia_status_profile')) {
 		foreach ($sip_profiles as $sip_profile_name => $sip_profile_uuid) {
-			$xml_response = trim(event_socket::api("sofia xmlstatus profile $sip_profile_name"));
+			$xml_response = trim($esl->request("sofia xmlstatus profile $sip_profile_name"));
 			if ($xml_response == "Invalid Profile!") {
 				$xml_response = "<error_msg>Invalid Profile!</error_msg>";
 				$profile_state = 'stopped';
@@ -343,7 +343,7 @@
 
 //status
 	if ($esl->is_connected() && permission_exists('sip_status_switch_status')) {
-		$response = event_socket::api("status");
+		$response = $esl->request("status");
 		echo "<b><a href='javascript:void(0);' onclick=\"$('#status').slideToggle();\">".$text['title-status']."</a></b>\n";
 		echo "<div id='status' style='margin-top: 20px; font-size: 9pt;'>";
 		echo "<div class='card'>\n";
@@ -356,5 +356,3 @@
 
 //include the footer
 	require_once "resources/footer.php";
-
-?>
