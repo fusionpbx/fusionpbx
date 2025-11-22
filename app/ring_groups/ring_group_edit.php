@@ -43,6 +43,9 @@
 	$language = new text;
 	$text = $language->get();
 
+//initialize the destinations object
+	$destination = new destinations;
+
 //set the defaults
 	$ring_group_strategy = '';
 	$ring_group_name = '';
@@ -56,6 +59,7 @@
 	$ring_group_forward_toll_allow = '';
 	$ring_group_description = '';
 	$onkeyup = '';
+	$total_ring_groups = '0';
 	$ring_group_ringback = $settings->get('ring_group', 'default_ringback', '');
 	$ring_group_call_screen_enabled = $settings->get('ring_group', 'call_screen_enabled', false);
 	$ring_group_call_forward_enabled = $settings->get('ring_group', 'call_forward_enabled', false);
@@ -63,8 +67,9 @@
 	$destination_delay_max = $settings->get('ring_group', 'destination_delay_max', '');
 	$destination_timeout_max = $settings->get('ring_group', 'destination_timeout_max', '');
 
-//initialize the destinations object
-	$destination = new destinations;
+//get the domain_uuid
+	$domain_uuid = $_SESSION['domain_uuid'];
+	$domain_name = $_SESSION['domain_name'];
 
 //get total domain ring group count
 	$sql = "select count(*) from v_ring_groups ";
@@ -72,10 +77,6 @@
 	$parameters['domain_uuid'] = $domain_uuid;
 	$total_ring_groups = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
-
-//get the domain_uuid
-	$domain_uuid = $_SESSION['domain_uuid'];
-	$domain_name = $_SESSION['domain_name'];
 
 //action add or update
 	if (!empty($_REQUEST["id"]) || !empty($_REQUEST["ring_group_uuid"])) {
