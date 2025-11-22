@@ -205,7 +205,7 @@
 	$sql .= "d.device_provisioned_agent, ";
 	$sql .= "d.device_location, ";
 	$sql .= "d.device_serial_number, ";
-	$sql .= "cast(d.device_enabled as text), ";
+	$sql .= "d.device_enabled, ";
 	$sql .= "d2.device_label as alternate_label, ";
 	$sql .= "to_char(timezone(:time_zone, d.device_provisioned_date), 'DD Mon YYYY') as provisioned_date_formatted, \n";
 	$sql .= "to_char(timezone(:time_zone, d.device_provisioned_date), 'HH12:MI:SS am') as provisioned_time_formatted \n";
@@ -460,11 +460,11 @@
 			echo "	<td>".escape($device_profile_name)."&nbsp;</td>\n";
 			if (permission_exists('device_edit')) {
 				echo "	<td class='no-link center'>";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['device_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.(!empty($row['device_enabled']) ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			}
 			else {
 				echo "	<td class='center'>";
-				echo $text['label-'.$row['device_enabled']];
+				echo $text['label-'.(!empty($row['device_enabled']) ? 'true' : 'false')];
 			}
 			echo "	</td>\n";
 			echo "	<td class='no-link'><a title='".escape($row['device_provisioned_agent'])."' href='javascript:void(0)'>".escape($row['provisioned_date_formatted'])." ".escape($row['provisioned_time_formatted'])."</a> &nbsp; ".escape($device_provisioned_method)." &nbsp; <a href='".escape($device_provisioned_method)."://".escape($row['device_provisioned_ip'])."' target='_blank'>".escape($row['device_provisioned_ip'])."</a>&nbsp;</td>\n";
