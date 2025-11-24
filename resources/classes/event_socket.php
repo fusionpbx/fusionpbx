@@ -78,6 +78,7 @@ class event_socket {
 	 * @param string $api_cmd
 	 *
 	 * @return string|false Response from server or false if failed
+	 * @static
 	 */
 	public static function api(string $api_cmd) {
 		return self::command('api ' . $api_cmd);
@@ -89,6 +90,7 @@ class event_socket {
 	 * @param string $cmd
 	 *
 	 * @return string|false Response from server or false if failed
+	 * @static
 	 */
 	public static function command(string $cmd) {
 		return self::create()->request($cmd);
@@ -188,6 +190,7 @@ class event_socket {
 	 *
 	 * @return self
 	 * @global array $conf                 Global configuration used in config.conf
+	 * @static
 	 */
 	public static function create($host = null, $port = null, $password = null, $timeout_microseconds = 30000): self {
 		//create the event socket object
@@ -265,6 +268,7 @@ class event_socket {
 	 * @param string $cmd API command to send
 	 *
 	 * @returns string $job_id the Job ID for tracking completion status
+	 * @static
 	 */
 	public static function async(string $cmd) {
 		return self::command('bgapi ' . $cmd);
