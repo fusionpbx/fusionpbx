@@ -49,7 +49,6 @@
 	$bridge_uuid = '';
 	$bridge_name = '';
 	$bridge_destination = '';
-	$bridge_enabled = '';
 	$bridge_description = '';
 
 //get http post variables and set them to php variables
@@ -349,6 +348,9 @@
 	$sql .= "order by sip_profile_name asc ";
 	$sip_profiles = $database->select($sql, null, 'all');
 	unset($sql);
+
+//set the defaults
+	$bridge_enabled = $bridge_enabled ?? true;
 
 //create token
 	$object = new token;
