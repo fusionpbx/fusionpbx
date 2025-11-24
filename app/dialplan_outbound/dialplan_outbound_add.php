@@ -1297,10 +1297,17 @@ function type_onchange(dialplan_detail_type) {
 		echo "	".$text['label-pin_numbers']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
+		}
 		echo "	<select class='formfld' name='pin_numbers_enabled'>\n";
 		echo "		<option value='true'>".$text['label-true']."</option>\n";
 		echo "		<option value='false' selected='true'>".$text['label-false']."</option>\n";
 		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
+		}
 		echo "<br />\n";
 		//echo $text['description-enable-pin_numbers']."\n";
 		echo "</td>\n";
