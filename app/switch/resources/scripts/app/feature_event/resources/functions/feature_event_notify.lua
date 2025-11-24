@@ -174,11 +174,9 @@ function feature_event_notify.init(user, host, sip_profiles, forward_immediate_e
 		event:addHeader("forward_immediate", forward_immediate_destination);
 		event:addHeader("forward_busy", forward_busy_destination)
 		event:addHeader("forward_busy_enabled", forward_busy_enabled)
-		event:addHeader("Feature-Event", "ForwardingEvent")
 		event:addHeader("forward_no_answer", forward_no_answer_destination)
 		event:addHeader("forward_no_answer_enabled", forward_no_answer_enabled)
 		event:addHeader("ringCount", ring_count)		
-		event:addHeader("Feature-Event", "DoNotDisturbEvent")
 		event:addHeader("doNotDisturbOn", do_not_disturb)
 		freeswitch.msleep(300);
 		event:fire()
