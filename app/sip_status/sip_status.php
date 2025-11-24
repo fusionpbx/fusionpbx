@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -40,8 +40,8 @@
 	$text = $language->get();
 
 //create event socket
-	$esl = event_socket::create();
-	if (!$esl->is_connected()) {
+	$event_socket = event_socket::create();
+	if (!$event_socket->is_connected()) {
 		message::add($text['error-event-socket'], 'negative', 5000);
 	}
 
@@ -75,7 +75,7 @@
 //get status
 	try {
 		$cmd = "api sofia xmlstatus";
-		$xml_response = trim($esl->request($cmd));
+		$xml_response = trim($event_socket->request($cmd));
 		if ($xml_response) {
 			//read the xml string into an xml object
 			$xml = new SimpleXMLElement($xml_response);
@@ -118,7 +118,7 @@
 	}
 	try {
 		$cmd = "api sofia xmlstatus gateway";
-		$xml_response = trim($esl->request($cmd));
+		$xml_response = trim($event_socket->request($cmd));
 		if ($xml_response) {
 			$xml_gateways = new SimpleXMLElement($xml_response);
 		}
@@ -253,9 +253,10 @@
 	}
 
 //sofia status profile
-	if ($esl && permission_exists('system_status_sofia_status_profile')) {
+	if ($event_socket && permission_exists('system_status_sofia_status_profile')) {
 		foreach ($sip_profiles as $sip_profile_name => $sip_profile_uuid) {
-			$xml_response = trim($esl->request("sofia xmlstatus profile $sip_profile_name"));
+			$xml_response = trim($event_socket->request("api sofia xmlstatus profile ".$sip_profile_name));
+
 			if ($xml_response == "Invalid Profile!") {
 				$xml_response = "<error_msg>Invalid Profile!</error_msg>";
 				$profile_state = 'stopped';
@@ -342,8 +343,8 @@
 	}
 
 //status
-	if ($esl->is_connected() && permission_exists('sip_status_switch_status')) {
-		$response = $esl->request("status");
+	if ($event_socket->is_connected() && permission_exists('sip_status_switch_status')) {
+		$response = $event_socket->request("api status");
 		echo "<b><a href='javascript:void(0);' onclick=\"$('#status').slideToggle();\">".$text['title-status']."</a></b>\n";
 		echo "<div id='status' style='margin-top: 20px; font-size: 9pt;'>";
 		echo "<div class='card'>\n";
