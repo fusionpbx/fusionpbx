@@ -701,7 +701,7 @@
 	$queue_max_wait_time_with_no_agent_time_reached = $queue_max_wait_time_with_no_agent_time_reached ?? "30";
 	$queue_tier_rule_wait_second = $queue_tier_rule_wait_second ?? "30";
 	$queue_discard_abandoned_after = $queue_discard_abandoned_after ?? "900";
-	$queue_record_enabled = $queue_record_template ? true : false;
+	$queue_record_enabled = !empty($queue_record_template) ? true : false;
 	$queue_tier_rules_apply = $queue_tier_rules_apply ?? false;
 	$queue_tier_rule_wait_multiply_level = $queue_tier_rule_wait_multiply_level ?? true;
 	$queue_tier_rule_no_agent_no_wait = $queue_tier_rule_no_agent_no_wait ?? true;
