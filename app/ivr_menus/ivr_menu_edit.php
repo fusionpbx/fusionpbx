@@ -1064,8 +1064,8 @@
 				echo "	<span class='switch'>\n";
 			}
 			echo "	<select class='formfld' id='ivr_menu_options_".$x."_ivr_menu_option_enabled' name='ivr_menu_options[".$x."][ivr_menu_option_enabled]'>\n";
-			echo "		<option value='false' ".($field['ivr_menu_option_enabled'] === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-			echo "		<option value='true' ".($field['ivr_menu_option_enabled'] === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($field['ivr_menu_option_enabled'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		<option value='true' ".($field['ivr_menu_option_enabled'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 			echo "	</select>\n";
 			if ($input_toggle_style_switch) {
 				echo "		<span class='slider'></span>\n";
@@ -1169,8 +1169,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='ivr_menu_direct_dial' name='ivr_menu_direct_dial'>\n";
-	echo "		<option value='true' ".($ivr_menu_direct_dial === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($ivr_menu_direct_dial === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($ivr_menu_direct_dial == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($ivr_menu_direct_dial == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
@@ -1528,8 +1528,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='ivr_menu_enabled' name='ivr_menu_enabled'>\n";
-	echo "		<option value='true' ".($ivr_menu_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($ivr_menu_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($ivr_menu_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($ivr_menu_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

@@ -208,8 +208,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='profile_param_enabled' name='profile_param_enabled'>\n";
-	echo "			<option value='true' ".($profile_param_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "			<option value='false' ".($profile_param_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($profile_param_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($profile_param_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

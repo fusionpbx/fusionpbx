@@ -2116,7 +2116,7 @@ class xml_cdr {
 		$sql .= "filter ( \n";
 		$sql .= " where c.extension_uuid = e.extension_uuid \n";
 		$sql .= " and status = 'answered' \n";
-		if (!$this->include_internal) {
+		if (empty($this->include_internal) || $this->include_internal == 'false') {
 			$sql .= "and (direction = 'inbound' or direction = 'outbound') \n";
 		}
 		$sql .= ") \n";
@@ -2128,7 +2128,7 @@ class xml_cdr {
 		$sql .= " where c.extension_uuid = e.extension_uuid \n";
 		$sql .= " and status = 'missed' \n";
 		$sql .= " and (cc_side is null or cc_side != 'agent') \n";
-		if (!$this->include_internal) {
+		if (empty($this->include_internal) || $this->include_internal == 'false') {
 			$sql .= "and (direction = 'inbound' or direction = 'outbound') \n";
 		}
 		$sql .= ") \n";
@@ -2139,7 +2139,7 @@ class xml_cdr {
 		$sql .= "filter ( \n";
 		$sql .= " where c.extension_uuid = e.extension_uuid \n";
 		$sql .= " and status = 'voicemail' \n";
-		if (!$this->include_internal) {
+		if (empty($this->include_internal) || $this->include_internal == 'false') {
 			$sql .= "and (direction = 'inbound' or direction = 'outbound') \n";
 		}
 		$sql .= ") \n";
@@ -2151,10 +2151,10 @@ class xml_cdr {
 		$sql .= " where c.extension_uuid = e.extension_uuid \n";
 		$sql .= " and status = 'no_answer'\n";
 		$sql .= " and (cc_side IS NOT NULL or cc_side ='agent')";
-		if ($this->include_internal) {
-			$sql .= " and (direction = 'inbound' or direction = 'local') \n";
-		} else {
+		if (empty($this->include_internal) || $this->include_internal == 'false') {
 			$sql .= "and direction = 'inbound' \n";
+		} else {
+			$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 		}
 		$sql .= ") \n";
 		$sql .= "as no_answer, \n";
@@ -2164,10 +2164,10 @@ class xml_cdr {
 		$sql .= "filter ( \n";
 		$sql .= " where c.extension_uuid = e.extension_uuid \n";
 		$sql .= " and status = 'busy'\n";
-		if ($this->include_internal) {
-			$sql .= " and (direction = 'inbound' or direction = 'local') \n";
-		} else {
+		if (empty($this->include_internal) || $this->include_internal == 'false') {
 			$sql .= " and direction = 'inbound' \n";
+		} else {
+			$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 		}
 		$sql .= ") \n";
 		$sql .= "as busy, \n";
@@ -2176,14 +2176,14 @@ class xml_cdr {
 		$sql .= "sum(c.billsec) \n";
 		$sql .= "filter ( \n";
 		$sql .= " where c.extension_uuid = e.extension_uuid \n";
-		if (!$this->include_internal) {
+		if (empty($this->include_internal) || $this->include_internal == 'false') {
 			$sql .= " and (direction = 'inbound' or direction = 'outbound') \n";
 		}
 		$sql .= " ) / \n";
 		$sql .= "count(*) \n";
 		$sql .= "filter ( \n";
 		$sql .= " where c.extension_uuid = e.extension_uuid \n";
-		if (!$this->include_internal) {
+		if (empty($this->include_internal) || $this->include_internal == 'false') {
 			$sql .= " and (direction = 'inbound' or direction = 'outbound') \n";
 		}
 		$sql .= ") \n";
@@ -2199,10 +2199,10 @@ class xml_cdr {
 			$sql .= " and hangup_cause <> 'LOSE_RACE' \n";
 		}
 		$sql .= " and (cc_side is null or cc_side != 'agent') \n";
-		if ($this->include_internal) {
-			$sql .= " and (direction = 'inbound' or direction = 'local') \n";
-		} else {
+		if (empty($this->include_internal) || $this->include_internal == 'false') {
 			$sql .= " and direction = 'inbound' \n";
+		} else {
+			$sql .= " and (direction = 'inbound' or direction = 'local') \n";
 		}
 		$sql .= ") \n";
 		$sql .= "as inbound_calls, \n";
@@ -2211,10 +2211,10 @@ class xml_cdr {
 		$sql .= "sum(c.billsec) \n";
 		$sql .= "filter ( \n";
 		$sql .= " where c.extension_uuid = e.extension_uuid \n";
-		if ($this->include_internal) {
-			$sql .= " and (direction = 'inbound' or direction = 'local')) \n";
-		} else {
+		if (empty($this->include_internal) || $this->include_internal == 'false') {
 			$sql .= " and direction = 'inbound') \n";
+		} else {
+			$sql .= " and (direction = 'inbound' or direction = 'local')) \n";
 		}
 		$sql .= "as inbound_duration, \n";
 
@@ -2261,7 +2261,7 @@ class xml_cdr {
 		}
 		$sql .= "and leg = 'a' ";
 		$sql .= "and extension_uuid is not null ";
-		$sql .= $sql_date_range;
+		$sql .= $sql_date_range ?? '';
 		$sql .= ") as c \n";
 
 		$sql .= "where \n";

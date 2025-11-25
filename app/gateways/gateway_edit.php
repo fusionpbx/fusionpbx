@@ -480,8 +480,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='register' name='register'>\n";
-	echo "		<option value='true' ".($register === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($register === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($register == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($register == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
@@ -530,8 +530,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='distinct_to' name='distinct_to'>\n";
-	echo "		<option value='true' ".($distinct_to === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($distinct_to === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($distinct_to == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($distinct_to == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
@@ -637,8 +637,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='caller_id_in_from' name='caller_id_in_from'>\n";
-	echo "		<option value='true' ".($caller_id_in_from === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($caller_id_in_from === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($caller_id_in_from == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($caller_id_in_from == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
@@ -658,8 +658,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='supress_cng' name='supress_cng'>\n";
-	echo "		<option value='true' ".($supress_cng === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($supress_cng === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($supress_cng == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($supress_cng == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
@@ -759,8 +759,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='contact_in_ping' name='contact_in_ping'>\n";
-	echo "		<option value='true' ".($contact_in_ping === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($contact_in_ping === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($contact_in_ping == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($contact_in_ping == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
@@ -872,8 +872,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='enabled' name='enabled'>\n";
-	echo "		<option value='true' ".($enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

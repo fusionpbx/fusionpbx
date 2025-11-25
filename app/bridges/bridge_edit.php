@@ -49,7 +49,6 @@
 	$bridge_uuid = '';
 	$bridge_name = '';
 	$bridge_destination = '';
-	$bridge_enabled = '';
 	$bridge_description = '';
 
 //get http post variables and set them to php variables
@@ -350,6 +349,9 @@
 	$sip_profiles = $database->select($sql, null, 'all');
 	unset($sql);
 
+//set the defaults
+	$bridge_enabled = $bridge_enabled ?? true;
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -566,8 +568,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='bridge_enabled' name='bridge_enabled'>\n";
-	echo "			<option value='true' ".($bridge_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "			<option value='false' ".($bridge_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($bridge_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($bridge_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

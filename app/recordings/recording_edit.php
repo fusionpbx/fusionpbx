@@ -435,8 +435,8 @@
 				echo "	<span class='switch'>\n";
 			}
 			echo "	<select class='formfld' id='translate' name='translate'>\n";
-			echo "		<option value='true' ".($translate === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($translate === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		<option value='true' ".($translate == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($translate == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 			echo "	</select>\n";
 			if ($input_toggle_style_switch) {
 				echo "		<span class='slider'></span>\n";
@@ -469,8 +469,8 @@
 				echo "	<span class='switch'>\n";
 			}
 			echo "	<select class='formfld' id='create_recording' name='create_recording'>\n";
-			echo "		<option value='false' ".($create_recording === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-			echo "		<option value='true' ".($create_recording === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($create_recording == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		<option value='true' ".($create_recording == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 			echo "	</select>\n";
 			if ($input_toggle_style_switch) {
 				echo "		<span class='slider'></span>\n";

@@ -44,10 +44,10 @@
 
 //retrieve submitted data
 	if (!empty($_REQUEST)) {
-		$quick_select = $_REQUEST['quick_select'];
-		$start_stamp_begin = $_REQUEST['start_stamp_begin'];
-		$start_stamp_end = $_REQUEST['start_stamp_end'];
-		$include_internal = $_REQUEST['include_internal'];
+		$quick_select = $_REQUEST['quick_select'] ?? null;
+		$start_stamp_begin = $_REQUEST['start_stamp_begin'] ?? null;
+		$start_stamp_end = $_REQUEST['start_stamp_end'] ?? null;
+		$include_internal = $_REQUEST['include_internal'] ?? null;
 	}
 	else {
 		$quick_select = 3; //set default

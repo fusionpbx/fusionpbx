@@ -608,12 +608,18 @@ class destinations {
 										}
 									}
 								}
-							} else {
-								$select_value = str_replace("\${" . $key . "}", ($data[$key] ?? ''), $select_value);
-								if (empty($data['label'])) {
-									$select_label = str_replace("\${" . $key . "}", ($data[$key] ?? ''), $select_label);
-								} else {
-									$select_label = str_replace("\${" . $key . "}", $text2['option-' . $label], $select_label);
+								else {
+									$select_value = str_replace("\${".$key."}", ($data[$key] ?? ''), $select_value);
+									if (empty($data['label'])) {
+										$select_label = str_replace("\${".$key."}", ($data[$key] ?? ''), $select_label);
+									}
+									else {
+										$select_label = str_replace("\${".$key."}", ($text2['option-'.$label] ?? ''), $select_label);
+									}
+								}
+								//application: hangup
+								if (!empty($data['application'])) {
+									$select_value = str_replace("transfer", $data['application'], $select_value);
 								}
 							}
 							//application: hangup

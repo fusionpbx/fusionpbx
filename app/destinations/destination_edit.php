@@ -1910,8 +1910,8 @@
 			echo "	<span class='switch'>\n";
 		}
 		echo "		<select class='formfld' id='destination_email' name='destination_email'>\n";
-		echo "			<option value='false' ".($destination_email === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "			<option value='true' ".($destination_email === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "			<option value='false' ".($destination_email == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "			<option value='true' ".($destination_email == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "		</select>\n";
 		if ($input_toggle_style_switch) {
 			echo "		<span class='slider'></span>\n";
@@ -1993,8 +1993,8 @@
 			echo "	<span class='switch'>\n";
 		}
 		echo "		<select class='formfld' id='destination_record' name='destination_record'>\n";
-		echo "			<option value='false' ".($destination_record === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "			<option value='true' ".($destination_record === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "			<option value='false' ".($destination_record == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "			<option value='true' ".($destination_record == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "		</select>\n";
 		if ($input_toggle_style_switch) {
 			echo "		<span class='slider'></span>\n";
@@ -2153,8 +2153,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "	<select class='formfld' id='destination_enabled' name='destination_enabled'>\n";
-	echo "		<option value='true' ".($destination_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($destination_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		<option value='true' ".($destination_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($destination_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";
