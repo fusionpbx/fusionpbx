@@ -1452,20 +1452,17 @@
 <BXfer_On_Speed_Dial_Enable ua="na">Yes</BXfer_On_Speed_Dial_Enable>
 <BLF_Label_Display_Mode ua="na">Name</BLF_Label_Display_Mode>
 <!-- Unit 1 -->
-{foreach $keys["expansion"] as $row}
-<Unit_1_Key_{$row.device_key_id} group="Attendant_Console/Unit_1">{$row.device_key_value}</Unit_1_Key_{$row.device_key_id}>
-{/foreach}
 {foreach $keys["expansion-1"] as $row}
-<Unit_1_Key_{$row.device_key_id} group="Attendant_Console/Unit_1">{$row.device_key_value}</Unit_1_Key_{$row.device_key_id}>
+<Unit_1_Key_{$row.device_key_id}_ ua="na" um="y">{$row.device_key_value};nme={$row.device_key_label}</Unit_1_Key_{$row.device_key_id}_>
 {/foreach}
-{foreach $keys["expansion-2"] as $row}
-<Unit_2_Key_{$row.device_key_id} group="Attendant_Console/Unit_2">{$row.device_key_value}</Unit_2_Key_{$row.device_key_id}>
-{/foreach}
-
 <!-- Unit 2 -->
-
+{foreach $keys["expansion-2"] as $row}
+<Unit_2_Key_{$row.device_key_id}_ ua="na" um="y">{$row.device_key_value};nme={$row.device_key_label}</Unit_2_Key_{$row.device_key_id}_>
+{/foreach}
 <!-- Unit 3 -->
-
+{foreach $keys["expansion-3"] as $row}
+<Unit_3_Key_{$row.device_key_id}_ ua="na" um="y">{$row.device_key_value};nme={$row.device_key_label}</Unit_3_Key_{$row.device_key_id}_>
+{/foreach}
 <!-- TR-069 -->
 <Enable_TR-069 ua="na">No</Enable_TR-069>
 <ACS_URL ua="na"/>
