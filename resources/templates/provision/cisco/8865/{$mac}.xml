@@ -1441,7 +1441,7 @@
 <!-- General -->
 <Subscribe_Expires ua="na">1800</Subscribe_Expires>
 <Subscribe_Retry_Interval ua="na">30</Subscribe_Retry_Interval>
-<Number_of_Units ua="na">0</Number_of_Units>
+<Number_of_Units ua="na">3</Number_of_Units>
 <Subscribe_Delay ua="na">1</Subscribe_Delay>
 <Server_Type ua="na">Broadsoft</Server_Type>
 <BLF_List_URI ua="na"/>
