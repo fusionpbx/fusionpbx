@@ -88,7 +88,7 @@ class access_controls {
 
 			//validate the token
 			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
+			if (!$token->validate('/app/access_controls/access_control_nodes.php')) {
 				message::add($text['message-invalid_token'], 'negative');
 				header('Location: ' . $this->list_page);
 				exit;
