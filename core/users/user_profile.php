@@ -64,7 +64,7 @@
 			$user_status = $_POST["user_status"] ?? '';
 			$user_language = $_POST["user_language"];
 			$user_time_zone = $_POST["user_time_zone"];
-			$contact_attachment_uuid = $_POST['contact_attachment_uuid'];
+			$contact_attachment_uuid = $_POST['contact_attachment_uuid'] ?? '';
 			$contact_attachment = $_FILES['contact_attachment'];
 
 		//get the totp secret
@@ -149,6 +149,9 @@
 		//set the contact_uuid
 			$contact_uuid = $_SESSION['user']['contact_uuid'] ?? uuid();
 
+		//set initial array indexes
+			$i = $n = $x = $y = $c = 0;
+
 		//save contact
 			$array['contacts'][$c]['contact_uuid'] = $contact_uuid;
 			$array['contacts'][$c]['domain_uuid'] = $domain_uuid;
@@ -201,6 +204,7 @@
 
 				$p->delete('contact_attachment_delete', 'temp');
 			}
+
 		//handle new profile photo
 			else if (is_array($contact_attachment) && sizeof($contact_attachment) != 0 && $contact_attachment['error'] === 0) {
 				$contact_attachment_extension = strtolower(pathinfo($contact_attachment['name'], PATHINFO_EXTENSION));
@@ -280,9 +284,6 @@
 			else {
 				persistent_form_values('clear');
 			}
-
-		//save the data
-			$i = $n = $x = $c = 0; //set initial array indexes
 
 		//check to see if user language is set
 			$sql = "select user_setting_uuid, user_setting_value from v_user_settings ";
