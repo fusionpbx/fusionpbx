@@ -9,7 +9,7 @@
 		 * version
 		 */
 		public static function version() {
-			return '5.4.8';
+			return '5.4.9';
 		}
 
 		/**
