@@ -49,7 +49,6 @@
 	$widget_content_text_align = '';
 	$widget_content_details = '';
 	$widget_groups = [];
-	$widget_label_enabled = '';
 	$widget_label_text_color = '';
 	$widget_label_text_color_hover = '';
 	$widget_label_background_color = '';
@@ -63,7 +62,6 @@
 	$widget_details_state = '';
 	$widget_parent_uuid = '';
 	$widget_order = '';
-	$widget_enabled = '';
 	$widget_description = '';
 
 //action add or update
@@ -473,6 +471,10 @@
 	$widget_groups[$x]['dashboard_widget_uuid'] = $widget_uuid;
 	$widget_groups[$x]['dashboard_widget_group_uuid'] = uuid();
 	$widget_groups[$x]['group_uuid'] = '';
+
+//set the defaults
+	$widget_label_enabled = $widget_label_enabled ?? true;
+	$widget_enabled = $widget_enabled ?? true;
 
 //create token
 	$object = new token;
