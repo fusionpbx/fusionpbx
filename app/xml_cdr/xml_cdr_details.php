@@ -84,47 +84,43 @@
 	unset($sql, $parameters, $row);
 
 //transcribe, if enabled
-	if (
-		!empty($_GET['action']) &&
-		$_GET['action'] == 'transcribe' &&
-		$transcribe_enabled &&
-		!empty($transcribe_engine) &&
-		empty($record_transcription) &&
-		!empty($record_path) &&
-		!empty($record_name) &&
-		file_exists($record_path.'/'.$record_name)
-		) {
-		//add the transcribe object
-			$transcribe = new transcribe($settings);
-		//audio to text - get the transcription from the audio file
-			$transcribe->audio_path = $record_path;
-			$transcribe->audio_filename = $record_name;
-			$record_transcription = $transcribe->transcribe();
-		//build call recording data array
-			if (!empty($record_transcription)) {
-				$array['xml_cdr'][0]['xml_cdr_uuid'] = $uuid;
-				$array['xml_cdr'][0]['record_transcription'] = $record_transcription;
-			}
-		//update the checked rows
-			if (is_array($array) && @sizeof($array) != 0) {
+	if (!empty($_GET['action']) && $_GET['action'] == 'transcribe' &&
+		$transcribe_enabled && !empty($transcribe_engine) &&
+		!empty($record_path) && !empty($record_name) &&
+		file_exists($record_path.'/'.$record_name)) {
 
+			//add the recording to the transcribe queue
+			$array['transcribe_queue'][$x]['transcribe_queue_uuid'] = uuid();
+			$array['transcribe_queue'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['transcribe_queue'][$x]['hostname'] = gethostname();
+			$array['transcribe_queue'][$x]['transcribe_status'] = 'pending';
+			$array['transcribe_queue'][$x]['transcribe_application_name'] = 'call_recordings';
+			$array['transcribe_queue'][$x]['transcribe_application_uuid'] = '56165644-598d-4ed8-be01-d960bcb8ffed';
+			$array['transcribe_queue'][$x]['transcribe_audio_path'] = $record_path;
+			$array['transcribe_queue'][$x]['transcribe_audio_name'] = $record_name;
+			$array['transcribe_queue'][$x]['transcribe_target_table'] = 'xml_cdr';
+			$array['transcribe_queue'][$x]['transcribe_target_key_name'] = 'xml_cdr_uuid';
+			$array['transcribe_queue'][$x]['transcribe_target_key_uuid'] = $uuid;
+			$array['transcribe_queue'][$x]['transcribe_target_column_name'] = 'record_transcription';
+
+			//add the checked rows
+			if (is_array($array) && @sizeof($array) != 0) {
 				//add temporary permissions
-					$p = permissions::new();
-					$p->add('xml_cdr_edit', 'temp');
+				$p = permissions::new();
+				$p->add('transcribe_queue_add', 'temp');
 
 				//remove record_path, record_name and record_length
-					$database->save($array, false);
-					//$message = $database->message;
-					unset($array);
+				$database->save($array, false);
+				unset($array);
 
 				//remove the temporary permissions
-					$p->delete('xml_cdr_edit', 'temp');
+				$p->delete('transcribe_queue_add', 'temp');
 
 				//set message
-					message::add($text['message-audio_transcribed']);
-
+				message::add($text['message-audio_transcribed']);
 			}
-		//redirect
+
+			//redirect
 			header('Location: '.$_SERVER['PHP_SELF'].'?id='.$uuid);
 			exit;
 	}
@@ -368,6 +364,28 @@
 		$summary_array['hangup_cause'] = escape($hangup_cause);
 	}
 
+//convert the transcription into a conversation
+	function conversational_html($transcription) {
+		$html = '';
+		$previous_speaker = '';
+		$i = 0;
+		foreach ($transcription as $segment) {
+			if ($previous_speaker != $segment['speaker']) {
+				if ($i > 0) { $html .= "</div>\n"; }
+				$speaker_class = $segment['speaker'] === 'A' ? 'message-bubble-em' : 'message-bubble-me';
+				$html .= "<div class='message-bubble {$speaker_class}'>";
+			}
+			//$html .= "	<span class='time'>[{$segment['start']} - {$segment['end']}]</span>";
+			$html .= "".escape(trim($segment['text']))." ";
+			if ($previous_speaker != $segment['speaker']) {
+				$previous_speaker = $segment['speaker'];
+			}
+			$i++;
+		}
+		$html .= "</div>\n";
+		return $html;
+	}
+
 //get the header
 	require_once "resources/header.php";
 
@@ -380,7 +398,7 @@
 	if (permission_exists('xml_cdr_call_log') && $call_log_enabled && isset($log_content) && !empty($log_content)) {
 		echo button::create(['type'=>'button','label'=>$text['button-call_log'],'icon'=>$settings->get('theme', 'button_icon_search'),'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$uuid]);
 	}
-	if ($transcribe_enabled && !empty($transcribe_engine) && empty($record_transcription) && !empty($record_path) && !empty($record_name) && file_exists($record_path.'/'.$record_name)) {
+	if ($transcribe_enabled && !empty($transcribe_engine) && !empty($record_path) && !empty($record_name) && file_exists($record_path.'/'.$record_name)) {
 		echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','collapse'=>'hide-xs','style'=>'margin-left: 15px;','onclick'=>"window.location.href='?id=".$uuid."&action=transcribe';"]);
 	}
 	echo "</td>\n";
@@ -583,7 +601,42 @@
 		echo "<script>recording_load('".escape($xml_cdr_uuid)."');</script>\n";
 	}
 
+//css styles
+	echo "<style>\n";
+
+	echo "	.message-bubble {\n";
+	echo "		display: table;\n";
+	echo "		padding: 10px;\n";
+	echo "		border: 1px solid;\n";
+	echo "		margin-bottom: 10px;\n";
+	echo "		clear: both;\n";
+	echo "		}\n";
+
+	echo "	.message-bubble-em {\n";
+	echo "		padding-right: 15px;\n";
+	echo "		border-radius: " . $settings->get('theme', 'message_bubble_em_border_radius', '0 20px 20px 20px') . ";\n";
+	echo "		border-color: " . $settings->get('theme', 'message_bubble_em_border_color', '#abefa0') . ";\n";
+	echo "		background: " . $settings->get('theme', 'message_bubble_em_background_color', '#daffd4') . ";\n";
+	echo "		background: linear-gradient(180deg, ".$settings->get('theme', 'message_bubble_em_border_color', '#abefa0') . " 0%, " . $settings->get('theme', 'message_bubble_em_background_color', '#daffd4') . " 15px);\n";
+	echo "		color: " . $settings->get('theme', 'message_bubble_em_text_color', '#000000') . ";\n";
+	echo "		}\n";
+
+	echo "	.message-bubble-me {\n";
+	echo "		float: right;\n";
+	echo "		padding-left: 15px;\n";
+	echo "		border-radius: " . $settings->get('theme', 'message_bubble_em_border_radius', '20px 20px 0 20px') . ";\n";
+	echo "		border-color: " . $settings->get('theme', 'message_bubble_me_border_color', '#a3e1fd') . ";\n";
+	echo "		background: " . $settings->get('theme', 'message_bubble_me_background_color', '#cbf0ff') . ";\n";
+	echo "		background: linear-gradient(180deg, " . $settings->get('theme', 'message_bubble_me_background_color', '#cbf0ff') . " calc(100% - 15px), ".$settings->get('theme', 'message_bubble_me_border_color', '#a3e1fd') . " 100%);\n";
+	echo "		color: " . $settings->get('theme', 'message_bubble_me_text_color', '#000000') . ";\n";
+	echo "		}\n";
+
+	echo "</style>\n";
+
 //transcription, if enabled
+	$transcription_array = json_decode($record_transcription, true);
+	$record_transcription = $transcription_array['segments'];
+	$record_transcription_html = conversational_html($record_transcription);
 	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($record_transcription)) {
 		echo "<b>".$text['label-transcription']."</b><br>\n";
 		echo "<div class='card'>\n";
@@ -592,7 +645,7 @@
 		echo "		<th>".$text['label-text']."</th>\n";
 		echo "	</tr>\n";
 		echo "	<tr >\n";
-		echo "		<td valign='top' class='".$row_style[0]."'>".escape($record_transcription)."</td>\n";
+		echo "		<td valign='top' class='".$row_style[0]."'><div style='width: 80%; min-width: 200px; max-width: 800px;'>".$record_transcription_html."</div></td>\n";
 		echo "	</tr>\n";
 		echo "	</table>";
 		echo "</div>\n";
