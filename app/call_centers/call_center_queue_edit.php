@@ -115,7 +115,7 @@
 			$queue_strategy = $_POST["queue_strategy"];
 			$call_center_tiers = $_POST["call_center_tiers"];
 			$queue_moh_sound = $_POST["queue_moh_sound"];
-			$queue_record_template = $_POST["queue_record_template"];
+			$queue_record_enabled = $_POST["queue_record_enabled"];
 			$queue_time_base_score = $_POST["queue_time_base_score"];
 			$queue_time_base_score_sec = $_POST["queue_time_base_score_sec"];
 			$queue_max_wait_time = $_POST["queue_max_wait_time"];
@@ -295,7 +295,7 @@
 				$_POST["dialplan_uuid"] = $dialplan_uuid;
 			}
 
-		//update the call centier tiers array
+		//update the call center tiers array
 			$x = 0;
 			if (!empty($_POST["call_center_tiers"])) {
 				foreach ($_POST["call_center_tiers"] as $row) {
@@ -328,6 +328,15 @@
 				}
 			}
 
+		//set the the record_template for mod call center
+			if ($queue_record_enabled == 'true') {
+				$record_template = $settings->get('switch','recordings', '')."/".$domain_name."/archive/";
+				$record_template .= $settings->get('call_center','record_name', "\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.\${record_ext}");
+			}
+			else {
+				$record_template = '';
+			}
+
 		//prepare the array
 			$array['call_center_queues'][0]['queue_name'] = $queue_name;
 			$array['call_center_queues'][0]['queue_extension'] = $queue_extension;
@@ -335,7 +344,7 @@
 			$array['call_center_queues'][0]['queue_language'] = $queue_language;
 			$array['call_center_queues'][0]['queue_strategy'] = $queue_strategy;
 			$array['call_center_queues'][0]['queue_moh_sound'] = $queue_moh_sound;
-			$array['call_center_queues'][0]['queue_record_template'] = $queue_record_template;
+			$array['call_center_queues'][0]['queue_record_template'] = $record_template;
 			$array['call_center_queues'][0]['queue_dialect'] = $queue_dialect;
 			$array['call_center_queues'][0]['queue_voice'] = $queue_voice;
 			$array['call_center_queues'][0]['queue_time_base_score'] = $queue_time_base_score;
@@ -539,7 +548,7 @@
 					}
 			}
 
-		//syncrhonize configuration
+		//synchronize configuration
 			save_call_center_xml();
 
 		//clear the cache
@@ -665,6 +674,7 @@
 	if (empty($queue_max_wait_time)) { $queue_max_wait_time = "0"; }
 	if (empty($queue_max_wait_time_with_no_agent)) { $queue_max_wait_time_with_no_agent = "90"; }
 	if (empty($queue_max_wait_time_with_no_agent_time_reached)) { $queue_max_wait_time_with_no_agent_time_reached = "30"; }
+	if (empty($queue_record_template)) { $queue_record_enabled = "false"; }
 	if (empty($queue_tier_rules_apply)) { $queue_tier_rules_apply = "false"; }
 	if (empty($queue_tier_rule_wait_second)) { $queue_tier_rule_wait_second = "30"; }
 	if (empty($queue_tier_rule_wait_multiply_level)) { $queue_tier_rule_wait_multiply_level = "true"; }
@@ -1076,14 +1086,14 @@
 	echo "	".$text['label-record_template']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='queue_record_template'>\n";
-	if (!empty($queue_record_template)) {
+	echo "	<select class='formfld' name='queue_record_enabled'>\n";
+	if (!empty($queue_record_enabled)) {
 		echo "	<option value='".escape($record_template)."' selected='selected' >".$text['option-true']."</option>\n";
 	}
 	else {
 		echo "	<option value='".escape($record_template)."'>".$text['option-true']."</option>\n";
 	}
-	if (empty($queue_record_template)) {
+	if (empty($queue_record_enabled)) {
 		echo "	<option value='' selected='selected' >".$text['option-false']."</option>\n";
 	}
 	else {
