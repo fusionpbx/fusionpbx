@@ -715,7 +715,7 @@ class database {
 			case 'count':
 				return $this->count();
 			default:
-				trigger_error('Object property not available', E_USER_ERROR);
+				trigger_error('Object property not available. Name: '.$name, E_USER_ERROR);
 		}
 	}
 
@@ -3600,6 +3600,114 @@ class database {
 			// return views array
 			return $views;
 		}
+	}
+
+	/**
+	 * Get a list of all the database indexes.
+	 *
+	 * @return array get the indexes from the database
+	 */
+	public function get_database_indexes() {
+		// predefine the array
+		$database_indexes = array();
+
+		// get the index from the database
+		if ($this->type == 'pgsql') {
+			$sql = "SELECT \n";
+			$sql .= "    schemaname AS schema, \n";
+			$sql .= "    tablename AS table, \n";
+			$sql .= "    indexname AS index_name, \n";
+			$sql .= "    indexdef AS definition \n";
+			$sql .= "FROM \n";
+			$sql .= "    pg_indexes \n";
+			$sql .= "WHERE \n";
+			$sql .= "    schemaname NOT IN ('pg_catalog', 'information_schema') \n";
+			$sql .= "ORDER BY schemaname, tablename, indexname; \n";
+			$prep_statement = $this->db->prepare($sql);
+			$prep_statement->execute();
+			$pg_indexes = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			$database_indexes = array();
+			foreach($pg_indexes as $row) {
+				$database_indexes[$row['table']][$row['index_name']] = $row['definition'];
+			}
+		}
+		return $database_indexes;
+	}
+
+	/**
+	 * Update missing indexes using the applications list
+	 *
+	 * @return array shows a list indexes that were added
+	 */
+	public function update_indexes() {
+		// get the $apps array from the installed apps from the core and mod directories
+		database::get_apps();
+
+		// build the list of tables
+		$tables = array();
+		foreach(self::$apps as $app) {
+			if (!empty($app['db'])) {
+				$tables = array_merge($tables, $app['db']);
+			}
+		}
+
+		// get a list of all the database indexes.
+		$database_indexes = $this->get_database_indexes();
+
+		// initialize the array
+		$array = array();
+
+		// loop through all of the tables
+		$i = 1;
+		foreach($tables as $table) {
+			// get the table name
+			if (is_array($table['table']['name'])) {
+				$table_name = $table['table']['name']['text'];
+			}
+			else {
+				$table_name = $table['table']['name'];
+			}
+
+			// skip deprecated tables
+			if (isset($table['table']['deprecated'])) {
+				continue;
+			}
+
+			// loop through all columns in the table
+			foreach ($table['fields'] as $column) {
+				// skip deprecated columns
+				if (isset($column['deprecated'])) {
+					continue;
+				}
+				if (!empty($column['key']['type'])) {
+					// get the key type
+					$key_type = $column['key']['type'];
+					if ($key_type == 'foreign') {
+						// get the column name
+						if (is_array($column['name'])) {
+							$column_name = $column['name']['text'];
+						}
+						else {
+							$column_name = $column['name'];
+						}
+
+						// create the database index - postgresql index name limited to 63 bytes
+						if ($this->type == 'pgsql' && !isset($database_indexes[$table_name][substr($table_name . "_" . $column_name . "_fkey", 0, 63)])) {
+							$sql = "CREATE INDEX " . $table_name . "_" . $column_name . "_fkey ON " . $table_name . " (" . $column_name . ");\n";
+							$prep_statement = $this->db->prepare($sql);
+							$prep_statement->execute();
+							$row['table_name'] = $table_name;
+							$row['column_name'] = $column_name;
+							$row['sql'] = $sql;
+							$array[] = $row;
+						}
+					}
+				}
+			}
+		}
+
+		//return the results
+		return $array;
 	}
 }  // class database
 
