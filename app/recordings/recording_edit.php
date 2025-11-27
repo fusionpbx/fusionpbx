@@ -247,7 +247,7 @@
 				if ($transcribe_enabled && empty($recording_message)) {
 					$transcribe->audio_path = $recording_path;
 					$transcribe->audio_filename = $recording_filename;
-					$recording_message = $transcribe->transcribe();
+					$recording_message = $transcribe->transcribe('text');
 				}
 
 				//build array

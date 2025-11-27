@@ -237,7 +237,7 @@
 						$transcribe->audio_filename = $email_attachment_name;
 						$transcribe->audio_mime_type = $email_attachment_mime_type;
 						$transcribe->audio_string = (!empty($field['email_attachment_base64'])) ? base64_decode($field['email_attachment_base64']) : '';
-						$transcribe_message = $transcribe->transcribe();
+						$transcribe_message = $transcribe->transcribe('text');
 					}
 				}
 				else {

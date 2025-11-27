@@ -1181,7 +1181,7 @@ class voicemail {
 			//transcribe the voicemail message file
 			$transcribe->audio_path     = $voicemail_message_path;
 			$transcribe->audio_filename = basename($voicemail_message_file);
-			$message_transcription      = $transcribe->transcribe();
+			$message_transcription      = $transcribe->transcribe('text');
 
 			//build voicemail message data array
 			if (!empty($message_transcription)) {
