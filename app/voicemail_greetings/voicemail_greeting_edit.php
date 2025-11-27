@@ -212,7 +212,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			if ($transcribe_enabled && empty($greeting_voice) && empty($greeting_message)) {
 				$transcribe->audio_path = $greeting_path;
 				$transcribe->audio_filename = $greeting_filename;
-				$greeting_message = $transcribe->transcribe();
+				$greeting_message = $transcribe->transcribe('text');
 			}
 
 			//if base64 is enabled base64
