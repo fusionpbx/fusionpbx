@@ -148,9 +148,20 @@
 
 		//load an array of the database schema and compare it with the active database
 		if (!empty($action["upgrade_schema"]) && permission_exists("upgrade_schema")) {
+			//update the database schema and types
 			$obj = new schema(['database' => $database]);
 			$_SESSION["response"]["schema"] = $obj->schema("html");
 			message::add($text['message-upgrade_schema'], null, $message_timeout);
+
+			//update database foreign key indexes
+			$response = $database->update_indexes();
+			if (!empty($response)) {
+				//echo "<table>\n";
+				foreach($response as $row) {
+					echo "        ".trim($row['sql'])."<br />\n";
+				}
+				//echo "</table>\n";
+			}
 		}
 
 		//process the apps defaults
