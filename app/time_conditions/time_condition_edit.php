@@ -657,6 +657,14 @@
 	$document['title'] = $text['title-time_condition'];
 	require_once "resources/header.php";
 
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH:mm';
+	}
+	else {
+		$time_format = 'hh:mm a';
+	}
+
 //debug
 // 	echo "<div style='overflow: auto; font-family: courier; width: 100%; height: 200px; border: 1px solid #ccc; padding: 20px;'>\n";
 // 	echo "<b>".'$dialplan_details'."</b>\n"; view_array($dialplan_details, false);
@@ -807,8 +815,7 @@
 
 					case 'hour': //hours of day
 						<?php
-						if ( $settings->get('domain', 'time_format') == "24h") {
-
+						if ($time_format == '24h') {
 							for ($h = 0; $h <= 23; $h++) {
 								echo "sel_start.options[sel_start.options.length] = new Option(".$h.", ".$h.");\n";
 								echo "sel_stop.options[sel_stop.options.length] = new Option(".$h.", ".$h.");\n";
@@ -826,8 +833,7 @@
 
 					case 'time-of-day': //time of day
 						<?php
-						if ( $settings->get('domain', 'time_format') == "24h") {
-
+						if ($time_format == '24h') {
 							for ($h = 0; $h <= 23; $h++) {
 								for ($m = 0; $m <= 59; $m++) {
 									echo "sel_start.options[sel_start.options.length] = new Option(('0'+'".$h."').slice(-2)+':'+('0'+'".$m."').slice(-2),pad('".$h."', 2)  + ':' + pad(".$m.", 2));\n";
@@ -841,7 +847,7 @@
 									echo "sel_start.options[sel_start.options.length] = new Option(((".$h." != 0) ? ((".$h." >= 12) ? ((".$h." == 12) ? ".$h." : (".$h." - 12)) + ':' + pad(".$m.", 2) + ' PM' : ".$h." + ':' + pad(".$m.", 2) + ' AM') : '12:' + pad(".$m.", 2) + ' AM'), pad(".$h.", 2) + ':' + pad(".$m.", 2));\n";
 									echo "sel_stop.options[sel_stop.options.length] = new Option(((".$h." != 0) ? ((".$h." >= 12) ? ((".$h." == 12) ? ".$h." : (".$h." - 12)) + ':' + pad(".$m.", 2) + ' PM' : ".$h." + ':' + pad(".$m.", 2) + ' AM') : '12:' + pad(".$m.", 2) + ' AM'), pad(".$h.", 2) + ':' + pad(".$m.", 2));\n";
 								}
-						}
+							}
 						}
 						//h = 23;
 						//m = 59;
@@ -876,14 +882,14 @@
 		tb.id = obj.id;
 		tb_id = obj.id;
 		tb.className = 'formfld datetimepicker';
-		tb.setAttribute('style', 'position: relative; width: 120px; min-width: 120px; max-width: 120px; text-align: center;');
+		tb.setAttribute('style', 'position: relative; width: 130px; min-width: 130px; max-width: 130px; text-align: center;');
 		tb.setAttribute('data-toggle', 'datetimepicker');
 		tb.setAttribute('data-target', '#' + tb.id);
 		tb.setAttribute('onblur', "$(this).datetimepicker('hide');");
 		obj.parentNode.insertBefore(tb, obj);
 		obj.parentNode.removeChild(obj);
 		$('#'+tb_id).wrap("<div style='position: relative; display: inline;'></div>"); //add parent div
-		$('#'+tb_id).datetimepicker({ format: 'YYYY-MM-DD HH:mm', });
+		$('#'+tb_id).datetimepicker({ format: 'YYYY-MM-DD <?php echo $time_format; ?>', });
 	}
 
 	function change_to_select(obj) {

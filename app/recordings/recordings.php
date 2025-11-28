@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -302,7 +302,6 @@
 
 //add the search term
 	$search = $_REQUEST["search"] ?? '';
-
 //get total recordings from the database
 	$sql = "select count(*) from v_recordings ";
 	$sql .= "where true ";
@@ -332,16 +331,6 @@
 	[$paging_controls_mini, $rows_per_page] = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
-//set the time zone
-	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
-	$parameters['time_zone'] = $time_zone;
-
-//set the sql time format
-	$sql_time_format = 'HH12:MI am';
-	if (!empty($settings->get('domain', 'time_format'))) {
-		$sql_time_format = $settings->get('domain', 'time_format') == '12h' ? "HH12:MI am" : "HH24:MI";
-	}
-
 //get the file size
 	if ($recording_storage_type == 'base64') {
 		switch ($db_type) {
@@ -350,12 +339,19 @@
 		}
 	}
 
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
+
 //get the recordings from the database
 	$sql = "select recording_uuid, domain_uuid, ";
 	if (!empty($sql_file_size)) { $sql .= $sql_file_size; }
 	$sql .= "to_char(timezone(:time_zone, COALESCE(update_date, insert_date)), 'DD Mon YYYY') as date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, COALESCE(update_date, insert_date)), '".$sql_time_format."') as time_formatted, \n";
-	
+	$sql .= "to_char(timezone(:time_zone, COALESCE(update_date, insert_date)), '".$time_format."') as time_formatted, \n";
 	$sql .= "recording_name, recording_filename, recording_description ";
 	$sql .= "from v_recordings ";
 	$sql .= "where true ";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -92,10 +92,7 @@
 		$search = strtolower($_GET["search"]);
 	}
 
-//set the time zone
-	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
-
-//prepare to page the results
+//get the count
 	$sql = "select count(*) from view_call_block ";
 	$sql .= "where true ";
 	if ($show == "all" && permission_exists('call_block_all')) {
@@ -147,21 +144,26 @@
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
+
 //get the list
 	$sql = "select domain_uuid, call_block_uuid, call_block_direction, extension_uuid, call_block_name, ";
 	$sql .= " call_block_country_code, call_block_number, extension, number_alias, call_block_count, ";
 	$sql .= " call_block_app, call_block_data, ";
 	$sql .= " to_char(timezone(:time_zone, insert_date), 'DD Mon YYYY') as date_formatted, \n";
-	if (date(!empty($settings->get('domain', 'time_format')) == '12h')) {
-		$sql .= " to_char(timezone(:time_zone, insert_date), 'HH12:MI:SS am') as time_formatted, \n";
-	}
-	else {
-		$sql .= " to_char(timezone(:time_zone, insert_date), 'HH24:MI:SS am') as time_formatted, \n";
-	}
+	$sql .= " to_char(timezone(:time_zone, insert_date), '".$time_format."') as time_formatted, \n";
 	$sql .= " cast(call_block_enabled as text), call_block_description, insert_date, insert_user, update_date, update_user ";
 	$sql .= "from view_call_block ";
 	$sql .= "where true ";
-	$parameters['time_zone'] = $time_zone;
 	if ($show == "all" && permission_exists('call_block_all')) {
 		//$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -199,6 +201,7 @@
 	}
 	$sql .= order_by($order_by, $order, ['domain_uuid','call_block_country_code','call_block_number']);
 	$sql .= limit_offset($rows_per_page, $offset);
+	$parameters['time_zone'] = $time_zone;
 	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

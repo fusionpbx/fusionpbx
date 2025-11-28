@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -547,13 +547,24 @@
 					echo "		</tr>";
 					unset($stream_icons, $icons);
 
+				//set the time zone
+					date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
+
+				//set the time format options: 12h, 24h
+					if ($settings->get('domain', 'time_format') == '24h') {
+						$time_format = 'H:i:s';
+					}
+					else {
+						$time_format = 'h:i:s a';
+					}
+
 				//list the stream files
 					if (!empty($stream_files)) {
 						foreach ($stream_files as $stream_file_path) {
 							$row_uuid = uuid();
 							$stream_file = pathinfo($stream_file_path, PATHINFO_BASENAME);
 							$stream_file_size = byte_convert(filesize($stream_file_path));
-							$stream_file_date = date("M d, Y H:i:s", filemtime($stream_file_path));
+							$stream_file_date = date("M d, Y ".$time_format, filemtime($stream_file_path));
 							$stream_file_ext = pathinfo($stream_file, PATHINFO_EXTENSION);
 							switch ($stream_file_ext) {
 								case "wav" : $stream_file_type = "audio/wav"; break;

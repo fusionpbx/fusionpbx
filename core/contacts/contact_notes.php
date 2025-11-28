@@ -39,6 +39,17 @@
 		$contact_uuid = $_GET['id'];
 	}
 
+//set the time zone
+	date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'H:i:s';
+	}
+	else {
+		$time_format = 'h:i:s a';
+	}
+
 //get the contact list
 	$sql = "select * from v_contact_notes ";
 	$sql .= "where domain_uuid = :domain_uuid ";
@@ -93,7 +104,7 @@
 						echo "	</td>\n";
 					}
 					echo "	<td class='overflow'>".$contact_note."</td>\n";
-					echo "	<td class='description no-wrap'><strong>".escape($row['last_mod_user'])."</strong>: ".date("j M Y @ H:i:s", strtotime($row['last_mod_date']))."</td>\n";
+					echo "	<td class='description no-wrap'><strong>".escape($row['last_mod_user'])."</strong>: ".date("j M Y @ ".$time_format, strtotime($row['last_mod_date']))."</td>\n";
 					if (permission_exists('contact_note_edit') && $list_row_edit_button == 'true') {
 						echo "	<td class='action-button'>\n";
 						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
@@ -112,4 +123,3 @@
 	}
 
 ?>
-

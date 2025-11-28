@@ -34,10 +34,15 @@
 //if also viewing system status, show more recent calls (more room avaialble)
 	$recent_limit = isset($selected_blocks) && is_array($selected_blocks) && in_array('counts', $selected_blocks) ? 10 : 5;
 
-//set the sql time format
-	$sql_time_format = 'DD Mon HH12:MI am';
-	if (!empty($settings->get('domain', 'time_format'))) {
-		$sql_time_format = $settings->get('domain', 'time_format') == '12h' ? "DD Mon HH12:MI am" : "DD Mon HH24:MI";
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'DD Mon HH24:MI';
+	}
+	else {
+		$time_format = 'DD Mon HH12:MI am';
 	}
 
 //get the recent calls from call detail records
@@ -46,7 +51,7 @@
 			status,
 			direction,
 			start_stamp,
-			to_char(timezone(:time_zone, start_stamp), '".$sql_time_format."') as start_date_time,
+			to_char(timezone(:time_zone, start_stamp), '".$time_format."') as start_date_time,
 			caller_id_name,
 			caller_id_number,
 			destination_number,
@@ -79,7 +84,7 @@
 	$sql .= "order by start_epoch desc ";
 	$sql .= "limit :recent_limit ";
 	$parameters['recent_limit'] = $recent_limit;
-	$parameters['time_zone'] = $settings->get('domain', 'time_zone', date_default_timezone_get());
+	$parameters['time_zone'] = $time_zone;
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$result = $database->select($sql, $parameters, 'all');
 	$num_rows = !empty($result) ? sizeof($result) : 0;

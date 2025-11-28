@@ -103,6 +103,8 @@
 		$view->assign('project_path', PROJECT_PATH);
 	//domain menu
 		$view->assign('domain_menu', escape($settings->get('domain', 'menu')));
+	//time format
+		$view->assign('time_format', escape($settings->get('domain', 'time_format')));
 	//domain json token
 		$view->assign('domain_json_token_name', $domain_json_token['name']);
 		$view->assign('domain_json_token_hash', $domain_json_token['hash']);

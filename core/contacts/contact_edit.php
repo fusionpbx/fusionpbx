@@ -594,6 +594,17 @@
 			}
 	}
 
+//set the time zone
+	date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'H:i:s';
+	}
+	else {
+		$time_format = 'h:i:s a';
+	}
+
 //pre-populate the form
 	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$sql = "select * from v_contacts ";
@@ -2635,14 +2646,14 @@ if (permission_exists('contact_time_view')) {
 		echo "		".$text['label-time_start']."\n";
 		echo "	</div>\n";
 		echo "	<div class='field no-wrap'>\n";
-		echo "		<input class='formfld datetimesecpicker' data-toggle='datetimepicker' data-target='#time_start' type='text' name='contact_times[$x][time_start]' id='time_start' style='min-width: 135px; width: 135px;' value='".escape($row["time_start"])."' onblur=\"$(this).datetimepicker('hide');\">\n";
+		echo "		<input class='formfld datetimesecpicker' data-toggle='datetimepicker' data-target='#time_start_$x' type='text' name='contact_times[$x][time_start]' id='time_start_$x' style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 125px; width: 125px;' : 'min-width: 145px; width: 145px;')."' value='".escape($row["time_start"])."' onblur=\"$(this).datetimepicker('hide');\">\n";
 		echo "	</div>\n";
 
 		echo "	<div class='label'>\n";
 		echo "		".$text['label-time_stop']."\n";
 		echo "	</div>\n";
 		echo "	<div class='field no-wrap'>\n";
-		echo "		<input class='formfld datetimesecpicker' data-toggle='datetimepicker' data-target='#time_stop' type='text' name='contact_times[$x][time_stop]' id='time_stop' style='min-width: 135px; width: 135px;' value='".escape($row["time_stop"])."' onblur=\"$(this).datetimepicker('hide');\">\n";
+		echo "		<input class='formfld datetimesecpicker' data-toggle='datetimepicker' data-target='#time_stop_$x' type='text' name='contact_times[$x][time_stop]' id='time_stop_$x' style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 125px; width: 125px;' : 'min-width: 145px; width: 145px;')."' value='".escape($row["time_stop"])."' onblur=\"$(this).datetimepicker('hide');\">\n";
 		echo "	</div>\n";
 
 		echo "	<div class='label'>\n";
@@ -2701,7 +2712,7 @@ if (permission_exists('contact_note_view')) {
 		echo "		".$text['label-note_user']."\n";
 		echo "	</div>\n";
 		echo "	<div class='field no-wrap' style='margin-top: 2px;'>\n";
-		echo "		<div class='description'><strong>".escape($row['last_mod_user'])."</strong>: ".date("j M Y @ H:i:s", strtotime($row['last_mod_date']))."</div>\n";
+		echo "		<div class='description'><strong>".escape($row['last_mod_user'])."</strong>: ".date("j M Y @ ".$time_format, strtotime($row['last_mod_date']))."</div>\n";
 		echo "	</div>\n";
 
 		echo "	<div class='label empty_row' style='grid-row: 4 / span 99;'>\n";
