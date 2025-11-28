@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -482,8 +482,15 @@
 			}
 			else {
 				if (file_exists($greeting_dir.'/'.$row['greeting_filename'])) {
+					date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
+					if ($settings->get('domain', 'time_format') == '24h') {
+						$time_format = 'H:i:s';
+					}
+					else {
+						$time_format = 'h:i:s a';
+					}
 					$file_size = byte_convert(filesize($greeting_dir.'/'.$row['greeting_filename']));
-					$file_date = date("M d, Y H:i:s", filemtime($greeting_dir.'/'.$row['greeting_filename']));
+					$file_date = date("M d, Y ".$time_format, filemtime($greeting_dir.'/'.$row['greeting_filename']));
 				} else {
 					$file_size = 0;
 					$file_date = '';
