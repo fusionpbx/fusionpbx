@@ -137,8 +137,9 @@
 			let cpu_history = Array.from({ length: num_cores }, () => new Array(max_points).fill(null));
 			let cpu_index = 0;
 
-			// Color palette (distinct and visually stacked)
-			const cpu_colors = ['#00bcd4', '#8bc34a', '#ffc107', '#e91e63'];
+			// Color palette (expandable for any number of cores)
+			const base_colors = ['#00bcd4', '#8bc34a', '#ffc107', '#e91e63', '#9c27b0', '#ff5722', '#607d8b', '#795548'];
+			const cpu_colors = Array.from({ length: num_cores }, (_, i) => base_colors[i % base_colors.length]);
 
 			window.system_cpu_status_chart = new Chart(
 				document.getElementById('system_cpu_status_chart').getContext('2d'),
@@ -149,19 +150,25 @@
 							label: `CPU ${i}`,
 							data: [],
 							fill: true,
-							borderColor: cpu_colors[i % cpu_colors.length],
-							backgroundColor: (cpu_colors[i % cpu_colors.length]) + '33', // light fill
+							borderColor: cpu_colors[i],
+							backgroundColor: cpu_colors[i] + '33', // light fill
 							tension: 0.3,
 							pointRadius: 0,
+							pointHoverRadius: 4,
+							pointHoverBackgroundColor: cpu_colors[i],
+							pointHoverBorderColor: '#fff',
+							pointHoverBorderWidth: 2,
 							spanGaps: true,
-							// enable stacking
-							stack: 'cpu',
 						}))
 					},
 					options: {
 						animation: false,
 						parsing: { xAxisKey: 'x', yAxisKey: 'y' },
 						maintainAspectRatio: false,
+						interaction: {
+							mode: 'index',
+							intersect: false
+						},
 						scales: {
 							x: {
 								type: 'realtime',
@@ -174,31 +181,43 @@
 								ticks: { display: false },
 								title: { display: false }
 							},
-							y: {
-								beginAtZero: true,
-								stacked: true,
-								min: 0,
-								max: num_cores * 100,
-								ticks: {
-									stepSize: 100,
-									autoSkip: true,
-									callback: (v) => v + '%'
-								}
+													y: {
+							beginAtZero: true,
+							stacked: false,
+							min: 0,
+							max: 100,
+							ticks: {
+								stepSize: 25,
+								autoSkip: true,
+								callback: (v) => v + '%'
 							}
+						}
 						},
 						plugins: {
 							legend: { display: false },
 							tooltip: {
+								enabled: true,
 								mode: 'index',
 								intersect: false,
 								callbacks: {
-									label: (ctx) => `${ctx.dataset.label}: ${Math.round(ctx.parsed.y)}%`
+									label: (ctx) => {
+										const value = ctx.parsed.y;
+										if (value === null || value === undefined) return null;
+										return `${ctx.dataset.label}: ${Math.round(value)}%`;
+									}
 								}
 							},
 						}
 					}
 				}
 			);
+
+			// Fix for chartjs-plugin-streaming tooltip compatibility issue
+			// The plugin tries to access tooltip._chart which doesn't exist in Chart.js v3+
+			// We need to provide the chart reference to the tooltip
+			if (window.system_cpu_status_chart.tooltip) {
+				window.system_cpu_status_chart.tooltip._chart = window.system_cpu_status_chart;
+			}
 
 			connect_cpu_status_websocket();
 		</script>
@@ -273,7 +292,7 @@
 				// Update the row data
 				const td_cpu_status = document.getElementById('td_system_cpu_status_chart');
 				if (!td_cpu_status) { return; }
-				td_cpu_status.textContent = `${payload.cpu_status}%`;
+				td_cpu_status.textContent = `${cpu_status}%`;
 			}
 
 			window.system_cpu_status_chart = new Chart(

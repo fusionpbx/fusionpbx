@@ -90,8 +90,8 @@ echo "</span>\n";
 		const rxColor = dashboard_network_usage_chart_main_color[0];
 		const txColor = dashboard_network_usage_chart_main_color[1];
 
-		// IMPORTANT: assign to window.system_network_status_chart
-		window.system_network_status_chart = new Chart(ctx, {
+		// IMPORTANT: assign to window.system_network_status_chart so that it is globally accessible
+		const chartConfig = {
 			type: 'line',
 			data: {
 				datasets: [
@@ -102,6 +102,10 @@ echo "</span>\n";
 						fill: true,
 						tension: 0.3,
 						pointRadius: 0,
+						pointHoverRadius: 4,
+						pointHoverBackgroundColor: rxColor,
+						pointHoverBorderColor: '#fff',
+						pointHoverBorderWidth: 2,
 						spanGaps: true,
 						data: []
 					},
@@ -112,16 +116,23 @@ echo "</span>\n";
 						fill: true,
 						tension: 0.3,
 						pointRadius: 0,
+						pointHoverRadius: 4,
+						pointHoverBackgroundColor: txColor,
+						pointHoverBorderColor: '#fff',
+						pointHoverBorderWidth: 2,
 						spanGaps: true,
 						data: []
 					}
 				]
 			},
 			options: {
-				// streaming usually looks best with animation off; tweak if you like a tiny slide
 				animation: false,
 				parsing: { xAxisKey: 'x', yAxisKey: 'y' },
 				maintainAspectRatio: false,
+				interaction: {
+					mode: 'index',
+					intersect: false
+				},
 				scales: {
 					x: {
 						type: 'realtime',
@@ -129,7 +140,6 @@ echo "</span>\n";
 							duration: 60000,   // last 60s
 							refresh: 1000,     // redraw every 1s
 							delay: 2000        // 2s render delay to handle late packets
-							// (no onRefresh: we push from your websocket callback)
 						},
 						grid: {drawOnChartArea: false},
 						ticks: {display: false},
@@ -143,13 +153,22 @@ echo "</span>\n";
 				plugins: {
 					legend: {display: false},
 					tooltip: {
+						enabled: true,
 						mode: 'index',
 						intersect: false,
-						callbacks: {label: (ctx) => `${ctx.dataset.label}: ${format_bitrate(ctx.parsed.y)}`}
+						callbacks: {
+							label: (ctx) => `${ctx.dataset.label}: ${format_bitrate(ctx.parsed.y)}`
+						}
 					}
 				}
 			}
-		});
+		};
+		
+		window.system_network_status_chart = new Chart(ctx, chartConfig);
+		
+		if (window.system_network_status_chart.tooltip) {
+			window.system_network_status_chart.tooltip._chart = window.system_network_status_chart;
+		}
 
 		function update_network_chart(payload) {
 			const chart = window.system_network_status_chart;
