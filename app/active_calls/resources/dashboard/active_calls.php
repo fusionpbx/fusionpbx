@@ -125,7 +125,6 @@ echo "<script src='/app/active_calls/resources/javascript/arrows.js?v=$version'>
         const active_calls_count = document.getElementById('active_calls_chart').getContext('2d');
         window.active_calls_chart = new Chart(active_calls_count, {
             type: 'line',
-            elements: { point: { radius: 0, hoverRadius: 6, hitRadius: 10 } },
             data: {
                 datasets: [
                     {
@@ -135,6 +134,8 @@ echo "<script src='/app/active_calls/resources/javascript/arrows.js?v=$version'>
                         fill: true,
                         tension: 0.3,
                         pointRadius: 0,
+                        pointHoverRadius: 6,
+                        pointHitRadius: 10,
                         spanGaps: true,
                         data: []
                     }
@@ -172,19 +173,60 @@ echo "<script src='/app/active_calls/resources/javascript/arrows.js?v=$version'>
                 plugins: {
                     legend: {display: false},
                     tooltip: {
-                        enabled: true,
-                        mode: 'nearest',
-                        intersect: false,
-                        callbacks: {
-                            label: (ctx) => {
-                                const y = ctx?.parsed?.y;
-                                return Number.isFinite(y) ? `count: ${y}` : '';
-                            }
-                        },
-                        filter: (ctx) => Number.isFinite(ctx.parsed?.y)
+                        enabled: false
                     }
                 }
             }
+        });
+        
+        // Create custom tooltip element
+        const tooltipEl = document.createElement('div');
+        tooltipEl.id = 'chartjs-tooltip';
+        tooltipEl.style.cssText = 'position: absolute; background: rgba(0, 0, 0, 0.8); color: white; padding: 6px 10px; border-radius: 4px; font-size: 12px; pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 1000;';
+        document.body.appendChild(tooltipEl);
+        
+        // Manual hover detection on canvas
+        const canvas = document.getElementById('active_calls_chart');
+        canvas.addEventListener('mousemove', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Get the chart's scale information
+            const chart = window.active_calls_chart;
+            const xScale = chart.scales.x;
+            const yScale = chart.scales.y;
+            
+            // Find closest data point
+            let closestPoint = null;
+            let minDistance = Infinity;
+            const threshold = 15; // pixels
+            
+            chart.data.datasets[0].data.forEach((point, index) => {
+                if (point && typeof point.x !== 'undefined' && typeof point.y !== 'undefined') {
+                    const pixelX = xScale.getPixelForValue(point.x);
+                    const pixelY = yScale.getPixelForValue(point.y);
+                    const distance = Math.sqrt(Math.pow(x - pixelX, 2) + Math.pow(y - pixelY, 2));
+                    
+                    if (distance < minDistance && distance < threshold) {
+                        minDistance = distance;
+                        closestPoint = point;
+                    }
+                }
+            });
+            
+            if (closestPoint && Number.isFinite(closestPoint.y)) {
+                tooltipEl.textContent = `Active Calls: ${closestPoint.y}`;
+                tooltipEl.style.opacity = '1';
+                tooltipEl.style.left = (e.pageX + 10) + 'px';
+                tooltipEl.style.top = (e.pageY - 30) + 'px';
+            } else {
+                tooltipEl.style.opacity = '0';
+            }
+        });
+        
+        canvas.addEventListener('mouseleave', function() {
+            tooltipEl.style.opacity = '0';
         });
     }
 <?php
