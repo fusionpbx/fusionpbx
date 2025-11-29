@@ -3693,7 +3693,7 @@ class database {
 
 						// create the database index - postgresql index name limited to 63 bytes
 						if ($this->type == 'pgsql' && !isset($database_indexes[$table_name][substr($table_name . "_" . $column_name . "_fkey", 0, 63)])) {
-							$sql = "CREATE INDEX " . $table_name . "_" . $column_name . "_fkey ON " . $table_name . " (" . $column_name . ");\n";
+							$sql = "CREATE INDEX IF NOT EXISTS " . $table_name . "_" . $column_name . "_fkey ON " . $table_name . " (" . $column_name . ");\n";
 							$prep_statement = $this->db->prepare($sql);
 							$prep_statement->execute();
 							$row['table_name'] = $table_name;
