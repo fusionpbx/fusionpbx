@@ -156,7 +156,9 @@ class usages {
 				'ivr_menu' AS typecode,
 				e.ivr_menu_uuid AS uuid,
 				e.ivr_menu_name|| ' (' || e.ivr_menu_extension || ')' AS name,
-				STRING_AGG(CASE WHEN es.ivr_menu_option_param IS NOT NULL THEN es.ivr_menu_option_param ELSE NULL END, ', ') || COALESCE(', ' || e.ivr_menu_exit_data, '') || CASE WHEN e.ivr_menu_greet_long IS NOT NULL THEN ', ' || e.ivr_menu_greet_long ELSE '' END ||
+				COALESCE(STRING_AGG(CASE WHEN es.ivr_menu_option_param IS NOT NULL THEN es.ivr_menu_option_param ELSE NULL END, ', '),'') || 
+				COALESCE(', ' || e.ivr_menu_exit_data, '') || 
+				CASE WHEN e.ivr_menu_greet_long IS NOT NULL THEN ', ' || e.ivr_menu_greet_long ELSE '' END ||
     			CASE WHEN e.ivr_menu_greet_short IS NOT NULL THEN ', ' || e.ivr_menu_greet_short ELSE '' END ||
     			CASE WHEN e.ivr_menu_invalid_sound IS NOT NULL THEN ', ' || e.ivr_menu_invalid_sound ELSE '' END ||
     			CASE WHEN e.ivr_menu_exit_sound IS NOT NULL THEN ', ' || e.ivr_menu_exit_sound ELSE '' END ||
@@ -175,10 +177,12 @@ class usages {
 				'ring_group' AS typecode,
 				e.ring_group_uuid AS uuid,
 				e.ring_group_name|| ' (' || e.ring_group_extension || ')' AS name,
-				STRING_AGG(es.destination_number || ' XML ' || dmns.domain_name, ', ') || COALESCE(', ' || e.ring_group_timeout_data, '') || CASE WHEN e.ring_group_greeting IS NOT NULL THEN ', ' || e.ring_group_greeting ELSE '' END ||
+				COALESCE(STRING_AGG(es.destination_number || ' XML ' || dmns.domain_name, ', '),'') ||
+				COALESCE(', ' || e.ring_group_timeout_data, '') || 
+				CASE WHEN e.ring_group_greeting IS NOT NULL THEN ', ' || e.ring_group_greeting ELSE '' END ||
     			CASE WHEN e.ring_group_forward_destination IS NOT NULL THEN ', ' || e.ring_group_forward_destination ELSE '' END ||
     			CASE WHEN e.ring_group_ringback IS NOT NULL THEN ', ' || e.ring_group_ringback ELSE '' END AS actions
-			FROM v_ring_groups AS e
+			FROM v_ring_groups AS e 
 			LEFT JOIN v_ring_group_destinations AS es ON e.ring_group_uuid = es.ring_group_uuid
 			LEFT JOIN v_domains AS dmns ON dmns.domain_uuid = e.domain_uuid ";
 		if ($this->show != "all" || !permission_exists('ring_group_all')) {
@@ -237,7 +241,7 @@ class usages {
 				'time_condition' AS typecode,
 				e.dialplan_uuid AS uuid,
 				e.dialplan_name || ' (' || e.dialplan_number || ')' AS name,
-				STRING_AGG(actions.application || ' ' || actions.data, ', ') AS actions
+				COALESCE(STRING_AGG(actions.application || ' ' || actions.data, ', '), '') AS actions
 			FROM v_dialplans AS e,
 				 XMLTABLE('//action' PASSING CAST(e.dialplan_xml AS XML) COLUMNS application TEXT PATH '@application', data TEXT PATH '@data') AS actions
 			WHERE e.app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
