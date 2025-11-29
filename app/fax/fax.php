@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('fax_extension_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('fax_extension_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -45,7 +42,7 @@
 //get posted data
 	if (!empty($_POST['fax_servers']) && is_array($_POST['fax_servers'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$fax_servers = $_POST['fax_servers'];
 	}
 
@@ -66,7 +63,7 @@
 				break;
 		}
 
-		header('Location: fax.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: fax.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -114,11 +111,10 @@
 		$sql .= "or lower(fax_description) like :search ";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare paging
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".urlencode($search);
 	if ($show == "all" && permission_exists('fax_extension_view_all')) {
 		$param .= "&show=all";
@@ -164,7 +160,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'fax_name', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -239,7 +234,7 @@
 	echo th_order_by('fax_email', $text['label-email'], $order_by, $order);
 	echo "	<th>".$text['label-tools']."</th>";
 	echo th_order_by('fax_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('fax_extension_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+	if (permission_exists('fax_extension_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -296,7 +291,7 @@
 			if (permission_exists('fax_log_view')) {
 				echo "		<a href='fax_logs.php?id=".urlencode($row['fax_uuid'])."'>".$text['label-log']."</a>&nbsp;&nbsp;";
 			}
-			if (file_exists(__DIR__ . '/fax_active.php') && permission_exists('fax_active_view') && isset($_SESSION['fax']['send_mode']['text']) && $_SESSION['fax']['send_mode']['text'] == 'queue') {
+			if (file_exists(__DIR__ . '/fax_active.php') && permission_exists('fax_active_view') && !empty($settings->get('fax', 'send_mode')) && $settings->get('fax', 'send_mode') == 'queue') {
 				echo "		<a href='fax_active.php?id=".urlencode($row['fax_uuid'])."'>".$text['label-active']."</a>&nbsp;&nbsp;";
 			}
 			if (permission_exists('fax_queue_view')) {
@@ -305,7 +300,7 @@
 
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['fax_description'])."&nbsp;</td>\n";
-			if (permission_exists('fax_extension_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+			if (permission_exists('fax_extension_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 				echo "	</td>\n";

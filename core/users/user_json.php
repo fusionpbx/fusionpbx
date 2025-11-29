@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('user_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('user_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -45,9 +42,6 @@
 	if (isset($_GET["search"])) {
 		$search =  strtolower($_GET["search"]);
 	}
-
-//connect to the database
-	$database = new database;
 
 //check to see if contact details are in the view
 	$sql = "select * from view_users ";

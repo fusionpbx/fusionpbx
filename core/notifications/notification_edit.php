@@ -30,15 +30,9 @@ Mark J Crane <markjcrane@fusionpbx.com>
 
 //check permissions
 	if (if_group('superadmin')) {
-		//access granted
-	}
-	else {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -146,13 +140,13 @@ Mark J Crane <markjcrane@fusionpbx.com>
 		}
 
 		// retrieve submitted values
-		$project_notifications = check_str($_POST["project_notifications"]);
-		$project_security = check_str($_POST["project_security"]);
-		$project_releases = check_str($_POST["project_releases"]);
-		$project_events = check_str($_POST["project_events"]);
-		$project_news = check_str($_POST["project_news"]);
-		$project_notification_method = check_str($_POST["project_notification_method"]);
-		$project_notification_recipient = check_str($_POST["project_notification_recipient"]);
+		$project_notifications = $_POST["project_notifications"] ?? '';
+		$project_security = $_POST["project_security"] ?? '';
+		$project_releases = $_POST["project_releases"] ?? '';
+		$project_events = $_POST["project_events"] ?? '';
+		$project_news = $_POST["project_news"] ?? '';
+		$project_notification_method = $_POST["project_notification_method"] ?? '';
+		$project_notification_recipient = $_POST["project_notification_recipient"] ?? '';
 
 		// get local project notification participation flag
 		$sql = "select project_notifications from v_notifications";

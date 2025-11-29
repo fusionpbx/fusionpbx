@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('group_permission_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('group_permission_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -41,9 +38,6 @@
 	if (!empty($_REQUEST["group_uuid"])) {
 		$group_uuid = $_GET['group_uuid'];
 	}
-
-//connect to the database
-	$database = new database;
 
 //get the group_name
 	if (isset($group_uuid) && is_uuid($group_uuid)) {
@@ -98,7 +92,7 @@
 
 			//set message and redirect
 				message::add($text['message-permissions_reloaded'],'positive');
-				header('Location: group_permissions.php?group_uuid='.urlencode($_GET['group_uuid']).($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : null));
+				header('Location: group_permissions.php?group_uuid='.urlencode($_GET['group_uuid']).($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : ''));
 				exit;
 		}
 	}
@@ -127,6 +121,7 @@
 	$parameters['group_name'] = $group_name;
 	$parameters['group_uuid'] = $group_uuid;
 	$group_permissions = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
 
 //process the user data and save it to the database
 	if (!empty($_POST) > 0 && empty($_POST["persistformvar"])) {
@@ -235,14 +230,12 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: group_permissions.php?group_uuid='.urlencode($group_uuid).($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : null));
+				header('Location: group_permissions.php?group_uuid='.urlencode($group_uuid).($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : ''));
 				exit;
 			}
 
 		//save the save array
 			if (!empty($array['save']) && is_array($array['save']) && @sizeof($array['save']) != 0) {
-				$database->app_name = 'groups';
-				$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 				$database->save($array['save']);
 				$message = $database->message;
 			}
@@ -250,8 +243,6 @@
 		//delete the delete array
 			if (!empty($array['delete']) && is_array($array['delete']) && @sizeof($array['delete']) != 0) {
 				if (permission_exists('group_permission_delete')) {
-					$database->app_name = 'groups';
-					$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 					$database->delete($array['delete']);
 				}
 			}
@@ -260,7 +251,7 @@
 			message::add($text['message-update']);
 
 		//redirect
-			header('Location: group_permissions.php?group_uuid='.urlencode($group_uuid).($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : null));
+			header('Location: group_permissions.php?group_uuid='.urlencode($group_uuid).($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : ''));
 			exit;
 	}
 
@@ -277,7 +268,7 @@
 	echo "	<div class='heading'><b>".$text['title-group_permissions']."</b><div class='count'>".escape($group_name)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','collapse'=>'hide-md-dn','link'=>'groups.php']);
-	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'collapse'=>'hide-md-dn','link'=>'?group_uuid='.urlencode($group_uuid).'&action=reload'.($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'collapse'=>'hide-md-dn','link'=>'?group_uuid='.urlencode($group_uuid).'&action=reload'.($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : '')]);
 	if (permission_exists('group_member_view')) {
 		echo button::create(['type'=>'button','label'=>$text['button-members'],'icon'=>'users','collapse'=>'hide-md-dn','link'=>'group_members.php?group_uuid='.urlencode($group_uuid)]);
 	}

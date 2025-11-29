@@ -175,6 +175,16 @@
 		end
 	end
 
+--poly
+	if (vendor == "poly") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync');
+		end
+		if (command == "check_sync") then
+			event:addHeader('event-string', 'check-sync');
+		end
+	end
+
 --snom
 	if (vendor == "snom") then
 		if (command == "reboot") then

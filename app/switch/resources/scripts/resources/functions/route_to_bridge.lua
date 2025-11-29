@@ -68,7 +68,7 @@ FROM v_dialplans as d, v_dialplan_details as s
 WHERE  (d.domain_uuid = :domain_uuid OR d.domain_uuid IS NULL)
 	AND (d.hostname = :hostname OR d.hostname IS NULL)
 	AND d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'
-	AND d.dialplan_enabled = 'true'
+	AND d.dialplan_enabled = true
 	AND d.dialplan_uuid = s.dialplan_uuid
 ORDER BY
 	d.dialplan_order ASC,
@@ -591,7 +591,7 @@ local function outbound_route_to_bridge(dbh, domain_uuid, fields, actions)
 				local n = #actions
 				extension_to_bridge(extension, actions, fields)
 				-- if we found bridge or add any action and there no continue flag
-				if actions.bridge or (n > #actions and route.dialplan_continue == 'false') then
+				if actions.bridge or (n > #actions and route.dialplan_continue == false) then
 					extension = nil
 					return 1
 				end

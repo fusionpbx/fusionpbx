@@ -37,6 +37,13 @@
 	$pid_file = "/var/run/fusionpbx/".basename( $argv[0], ".php") .".pid";
 
 //function to check if the process exists
+	/**
+	 * Checks if a process with the specified PID file exists and is currently running.
+	 *
+	 * @param string $file The path to the PID file. Defaults to false, in which case the function will return whether any process exists.
+	 *
+	 * @return bool True if the process is running, false otherwise.
+	 */
 	function process_exists($file = false) {
 
 		//set the default exists to false
@@ -110,29 +117,82 @@
 		file_put_contents($pid_file, getmypid());
 	}
 
+//make sure the database connection is available
+	while (!$database->is_connected()) {
+		//connect to the database
+		$database->connect();
+
+		//reload settings after connection to the database
+		$settings = new settings(['database' => $database]);
+
+		//sleep for a moment
+		sleep(3);
+	}
+
+//get the xml_cdr directory
+	$xml_cdr_dir = $settings->get('switch', 'log', '/var/log/freeswitch').'/xml_cdr';
+
+//rename the directory
+	if (file_exists($xml_cdr_dir.'/failed/invalid_xml')) {
+		rename($xml_cdr_dir.'/failed/invalid_xml', $xml_cdr_dir.'/failed/xml');
+	}
+
+//create the invalid xml directory
+	if (!file_exists($xml_cdr_dir.'/failed/xml')) {
+		mkdir($xml_cdr_dir.'/failed/xml', 0770, true);
+	}
+
+//create the invalid size directory
+	if (!file_exists($xml_cdr_dir.'/failed/size')) {
+		mkdir($xml_cdr_dir.'/failed/size', 0770, true);
+	}
+
+//create the invalid sql directory
+	if (!file_exists($xml_cdr_dir.'/failed/sql')) {
+		mkdir($xml_cdr_dir.'/failed/sql', 0770, true);
+	}
+
+//update permissions to correct systems with the wrong permissions
+	if (file_exists($xml_cdr_dir.'/failed')) {
+		exec('chmod 770 -R '.$xml_cdr_dir.'/failed');
+	}
+
 //import the call detail records from HTTP POST or file system
 	$cdr = new xml_cdr;
-
-//get the cdr record
-	$xml_cdr_dir = $settings->get('switch', 'log').'/xml_cdr';
 
 //service loop
 	while (true) {
 
-		//make sure the database connection is available
-		while (!$database->is_connected()) {
-			//connect to the database
-			$database->connect();
+		//get the list of call detail records, and limit the number of records
+		$xml_cdr_array = array_slice(glob($xml_cdr_dir . '/*.cdr.xml'), 0, 100);
 
-			//sleep for a moment
-			sleep(3);
-		}
-
-		//find and process cdr records
-		$xml_cdr_array = glob($xml_cdr_dir.'/*.cdr.xml');
+		//process the call detail records
 		if (!empty($xml_cdr_array)) {
-			$i = 0;
+			//make sure the database connection is available
+			while (!$database->is_connected()) {
+				//connect to the database
+				$database->connect();
+
+				//reload settings after connection to the database
+				$settings = new settings(['database' => $database]);
+
+				//sleep for a moment
+				sleep(3);
+			}
+
 			foreach ($xml_cdr_array as $xml_cdr_file) {
+				//move the files that are too large or zero file size to the failed size directory
+				if (filesize($xml_cdr_file) >= (3 * 1024 * 1024) || filesize($xml_cdr_file) == 0) {
+					//echo "WARNING: File too large or zero file size. Moving $file to failed\n";
+					if (!empty($xml_cdr_dir)) {
+						if (isset($debug) && $debug == true) {
+							echo "Move the file ".$xml_cdr_file." to ".$xml_cdr_dir."/failed/size\n";
+						}
+						rename($xml_cdr_file, $xml_cdr_dir.'/failed/size/'.basename($xml_cdr_file));
+					}
+					continue;
+				}
+
 				//add debug information
 				if (isset($debug) && $debug == true) {
 					echo $xml_cdr_file."\n";
@@ -162,18 +222,10 @@
 					//parse the xml and insert the data into the db
 					$cdr->xml_array($i, $leg, $call_details);
 				}
-
-				//limit the number of records process at one time
-				if ($i == 100) {
-					break;
-				}
-
-				//increment the value
-				$i++;
 			}
 		}
 
-		//sleep for a moment
+		//sleep for 100 ms
 		usleep(100000);
 
 		//debug info

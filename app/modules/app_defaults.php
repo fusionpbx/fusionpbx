@@ -48,8 +48,6 @@
 						$array['modules'][$index]['module_order'] = $mod['module_order'];
 				}
 				if (is_array($array) && @sizeof($array) != 0) {
-					$database->app_name = 'modules';
-					$database->app_uuid = '5eb9cba1-8cb6-5d21-e36a-775475f16b5e';
 					$database->save($array, false);
 					unset($array);
 				}

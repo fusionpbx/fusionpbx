@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('conference_profile_add') || permission_exists('conference_profile_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('conference_profile_add') || permission_exists('conference_profile_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -57,7 +54,7 @@
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$profile_name = $_POST["profile_name"];
-		$profile_enabled = $_POST["profile_enabled"] ?? 'false';
+		$profile_enabled = $_POST["profile_enabled"];
 		$profile_description = $_POST["profile_description"];
 	}
 //check to see if the http post exists
@@ -113,9 +110,6 @@
 				}
 
 				if (is_uuid($array['conference_profiles'][0]['conference_profile_uuid'])) {
-					$database = new database;
-					$database->app_name = 'conference_profiles';
-					$database->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
 					$database->save($array);
 					unset($array);
 				}
@@ -129,12 +123,15 @@
 //pre-populate the form
 	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$conference_profile_uuid = $_GET["id"];
-		$sql = "select * from v_conference_profiles ";
+		$sql = "select ";
+		$sql .= "profile_name, ";
+		$sql .= "profile_enabled, ";
+		$sql .= "profile_description ";
+		$sql .= "from v_conference_profiles ";
 		$sql .= "where conference_profile_uuid = :conference_profile_uuid ";
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		$parameters['conference_profile_uuid'] = $conference_profile_uuid;
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$profile_name = $row["profile_name"];
@@ -145,7 +142,7 @@
 	}
 
 //set the defaults
-	if (empty($profile_enabled)) { $profile_enabled = 'true'; }
+	$profile_enabled = $profile_enabled ?? true;
 
 //create token
 	$object = new token;
@@ -186,17 +183,16 @@
 	echo "	".$text['label-profile_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='profile_enabled' name='profile_enabled' value='true' ".($profile_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' name='profile_enabled'>\n";
-		echo "		<option value='true' ".($profile_enabled == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-		echo "		<option value='false' ".($profile_enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='profile_enabled' name='profile_enabled'>\n";
+	echo "			<option value='true' ".($profile_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($profile_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-profile_enabled']."\n";

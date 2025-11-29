@@ -47,23 +47,38 @@
 	$language = new text;
 	$text = $language->get();
 
-//connect to the database
-	$database = database::new();
-
 //set a default message_timeout
 	$message_timeout = 4*1000;
+
+//get the language
+	$language = $settings->get('domain', 'language', 'en-us');
 
 //find optional apps with repos
 	$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
 	if (!empty($updateable_repos) && is_array($updateable_repos) && @sizeof($updateable_repos) != 0) {
 		foreach ($updateable_repos as $app_path => $repo) {
+			//set the value
 			$x = 0;
+
+			//skip this application if the file doesn't exist
+			if (!file_exists($app_path.'/app_config.php')) {
+				continue;
+			}
+
+			//build the $apps array
 			include $app_path.'/app_config.php';
+
+			//skip this application if the name or uuid are empty
+			if (empty($apps[$x]['name']) || empty($apps[$x]['uuid'])) { continue; }
+
+			//build the updateable_repos array
 			$updateable_repos[$app_path]['app'] = $repo[0];
 			$updateable_repos[$app_path]['name'] = $apps[$x]['name'];
 			$updateable_repos[$app_path]['uuid'] = $apps[$x]['uuid'];
-			$updateable_repos[$app_path]['version'] = $apps[$x]['version'];
-			$updateable_repos[$app_path]['description'] = $apps[$x]['description'][$_SESSION['domain']['language']['code']];
+			$updateable_repos[$app_path]['version'] = $apps[$x]['version'] ?? '';
+			$updateable_repos[$app_path]['description'] = $apps[$x]['description'][$language] ?? '';
+
+			//unset the values
 			unset($apps, $updateable_repos[$app_path][0]);
 		}
 	}
@@ -133,10 +148,7 @@
 
 		//load an array of the database schema and compare it with the active database
 		if (!empty($action["upgrade_schema"]) && permission_exists("upgrade_schema")) {
-			$obj = new schema();
-			if (isset($action["data_types"]) && $action["data_types"] == 'true') {
-				$obj->data_types = true;
-			}
+			$obj = new schema(['database' => $database]);
 			$_SESSION["response"]["schema"] = $obj->schema("html");
 			message::add($text['message-upgrade_schema'], null, $message_timeout);
 		}
@@ -162,7 +174,7 @@
 				$autoload->reload_classes();
 				$autoload->update_cache();
 			}
-			$sel_menu = explode('|', check_str($_POST["sel_menu"]));
+			$sel_menu = explode('|', $_POST["sel_menu"] ?? '');
 			$menu_uuid = $sel_menu[0];
 			$menu_language = $sel_menu[1];
 			$included = true;
@@ -244,7 +256,7 @@
 
 //adjust color and initialize step counter
 	$step = 1;
-	$step_color = isset($_SESSION['theme']['upgrade_step_color']['text']) ? $_SESSION['theme']['upgrade_step_color']['text'] : color_adjust((!empty($_SESSION['theme']['form_table_label_background_color']['text']) ? $_SESSION['theme']['form_table_label_background_color']['text'] : '#e5e9f0'), -0.1);
+	$step_color = !empty($settings->get('theme', 'upgrade_step_color')) ? $settings->get('theme', 'upgrade_step_color') : color_adjust((!empty($settings->get('theme', 'form_table_label_background_color')) ? $settings->get('theme', 'form_table_label_background_color') : '#e5e9f0'), -0.1);
 	$step_container_style = "width: 30px; height: 30px; border: 2px solid ".$step_color."; border-radius: 50%; float: left; text-align: center; vertical-align: middle;";
 	$step_number_style = "font-size: 150%; font-weight: 600; color: ".$step_color.";";
 
@@ -300,7 +312,7 @@
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"if (document.getElementById('do_source')) { document.getElementById('do_source').checked = !document.getElementById('do_source').checked; if (document.getElementById('do_source').checked == false) { document.getElementById('view_source_code_options').checked = false; } }\">\n";
 		echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
-		echo "		".(isset($_SESSION['theme']['title']['text']) ? $_SESSION['theme']['title']['text'] : 'FusionPBX')."\n";
+		echo "		".$settings->get('theme', 'title', 'FusionPBX')."\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
 		echo "		<input type='checkbox' name='action[upgrade_source]' id='do_source' value='1' onclick=\"event.stopPropagation(); if (this.checked == false) { document.getElementById('view_source_code_options').checked = false; }\">\n";
@@ -317,7 +329,7 @@
 		}
 		if ($branch_return_value == 0 && $commit_return_value == 0) {
 			echo "	<a href='https://github.com/fusionpbx/fusionpbx/compare/".$git_current_commit."...".$git_current_branch."' target='_blank' title='".$git_current_commit."' onclick=\"event.stopPropagation();\"><i>".$git_current_branch."</i></a>";
-			echo "&nbsp;&nbsp;<button type='button' class='btn btn-link btn-xs' onclick=\"event.stopPropagation(); source_preview('core','".(isset($_SESSION['theme']['title']['text']) ? $_SESSION['theme']['title']['text'] : 'FusionPBX')."');\">".$text['button-preview']."</button>\n";
+			echo "&nbsp;&nbsp;<button type='button' class='btn btn-link btn-xs' onclick=\"event.stopPropagation(); source_preview('core','".$settings->get('theme', 'title', 'FusionPBX')."');\">".$text['button-preview']."</button>\n";
 		}
 		echo "	</td>\n";
 		echo "</tr>\n";
@@ -326,8 +338,8 @@
 		if (!empty($updateable_repos) && is_array($updateable_repos)) {
 			foreach ($updateable_repos as $app_path => $app) {
 				$repo_info = git_repo_info($app_path);
-				$pull_method = substr($repo_info['url'], 0, 4) == 'http' ? 'http' : 'ssh';
 				if (empty($repo_info)) { continue; }
+				$pull_method = substr($repo_info['url'], 0, 4) == 'http' ? 'http' : 'ssh';
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "<tr onclick=\"if (document.getElementById('do_".$app['app']."')) { document.getElementById('do_".$app['app']."').checked = !document.getElementById('do_".$app['app']."').checked; if (document.getElementById('do_".$app['app']."').checked == false) { document.getElementById('view_source_code_options').checked = false; } }\">\n";
 				echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
@@ -354,29 +366,16 @@
 
 	if (permission_exists("upgrade_schema")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr onclick=\"document.getElementById('do_schema').checked = !document.getElementById('do_schema').checked; (!document.getElementById('do_schema').checked ? $('#do_data_types').prop('checked', false) : null); $('#tr_data_types').slideToggle('fast');\">\n";
+		echo "<tr onclick=\"document.getElementById('do_schema').checked = !document.getElementById('do_schema').checked;\">\n";
 		echo "	<td width='30%' class='vncellreq' style='vertical-align: middle;'>\n";
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		<div class='mt-1'>".$text['label-upgrade_schema']."</div>\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
-		echo "		<input type='checkbox' name='action[upgrade_schema]' id='do_schema' value='1' onclick=\"event.stopPropagation(); $('#tr_data_types').slideToggle('fast'); (!document.getElementById('do_schema').checked ? $('#do_data_types').prop('checked', false) : null);\"> &nbsp;".$text['description-upgrade_schema']."\n";
+		echo "		<input type='checkbox' name='action[upgrade_schema]' id='do_schema' value='1' onclick=\"event.stopPropagation();\"> &nbsp;".$text['description-upgrade_schema']."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
-
-		echo "<div id='tr_data_types' style='display: none;'>\n";
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr onclick=\"document.getElementById('do_data_types').checked = !document.getElementById('do_data_types').checked;\">\n";
-		echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
-		echo "		".$text['label-upgrade_data_types'];
-		echo "	</td>\n";
-		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
-		echo "		<input type='checkbox' name='action[data_types]' id='do_data_types' value='true' onclick=\"event.stopPropagation();\"> &nbsp;".$text['description-upgrade_data_types']."\n";
-		echo "	</td>\n";
-		echo "</tr>\n";
-		echo "</table>\n";
-		echo "</div>\n";
 		$step++;
 	}
 

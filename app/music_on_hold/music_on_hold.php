@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('music_on_hold_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('music_on_hold_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -57,7 +54,6 @@
 		$sql .= "or domain_uuid is null ";
 	}
 	$sql .= "order by domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc";
-	$database = new database;
 	$streams = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -106,7 +102,7 @@
 			}
 
 		//replace the sounds_dir variable in the path
-			$stream_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
+			$stream_path = str_replace('$${sounds_dir}', $settings->get('switch', 'sounds'), $stream_path);
 			$stream_path = str_replace('..', '', $stream_path);
 
 		//get the file and sanitize it
@@ -237,7 +233,7 @@
 
 				//define default path
 					if ($action == "add") {
-						$stream_path = path_join($_SESSION['switch']['sounds']['dir'], 'music', $_SESSION['domain_name'], $stream_name, $path_rate);
+						$stream_path = path_join($settings->get('switch', 'sounds'), 'music', $_SESSION['domain_name'], $stream_name, $path_rate);
 						$stream_path = str_replace('.loc', '._loc', $stream_path); // 14.03.22 freeswitch bug
 					}
 
@@ -245,7 +241,7 @@
 					$stream_new_name = true;
 					if (!empty($streams) && @sizeof($streams) != 0) {
 						foreach ($streams as $row) {
-							$alternate_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']);
+							$alternate_path = str_replace('$${sounds_dir}', $settings->get('switch', 'sounds'), $row['music_on_hold_path']);
 							if ($stream_path == $row['music_on_hold_path'] || $stream_path == $alternate_path) {
 								$stream_new_name = false;
 								break;
@@ -254,7 +250,7 @@
 					}
 
 				//set the variables
-					$stream_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
+					$stream_path = str_replace('$${sounds_dir}', $settings->get('switch', 'sounds'), $stream_path);
 
 				//add new path
 					if ($stream_new_name) {
@@ -275,9 +271,6 @@
 						$p = permissions::new();
 						$p->add('music_on_hold_add', 'temp');
 
-						$database = new database;
-						$database->app_name = 'music_on_hold';
-						$database->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
 						$database->save($array);
 						unset($array);
 
@@ -529,7 +522,7 @@
 					}
 
 				//get the music on hold path and files
-					$stream_path = str_replace("\$\${sounds_dir}",$_SESSION['switch']['sounds']['dir'] ?? '', $row['music_on_hold_path']);
+					$stream_path = str_replace("\$\${sounds_dir}",$settings->get('switch', 'sounds') ?? '', $row['music_on_hold_path']);
 					if (file_exists($stream_path)) {
 						$stream_files = array_merge(glob($stream_path.'/*.wav'), glob($stream_path.'/*.mp3'), glob($stream_path.'/*.ogg'));
 					}
@@ -619,6 +612,16 @@
 	require_once "resources/footer.php";
 
 //define the download function (helps safari play audio sources)
+	/**
+	 * Downloads a file in chunks as requested by the client.
+	 *
+	 * This function is used to handle byte-range requests, allowing clients
+	 * to request specific parts of the file.
+	 *
+	 * @param string $file The path to the file being downloaded.
+	 *
+	 * @return void
+	 */
 	function range_download($file) {
 		$fp = @fopen($file, 'rb');
 
@@ -647,7 +650,7 @@
 			$c_start = $start;
 			$c_end   = $end;
 			// Extract the range string
-			list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+			[, $range] = explode('=', $_SERVER['HTTP_RANGE'], 2);
 			// Make sure the client hasn't sent us a multibyte range
 			if (strpos($range, ',') !== false) {
 				// (?) Shoud this be issued here, or should the first

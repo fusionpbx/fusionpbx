@@ -27,10 +27,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('stream_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('stream_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -48,7 +45,7 @@
 //get the http post data
 	if (!empty($_POST['streams'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$streams = $_POST['streams'];
 	}
 
@@ -75,7 +72,7 @@
 				break;
 		}
 
-		header('Location: streams.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: streams.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -111,12 +108,11 @@
 		$sql .= "and domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($parameters);
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".$search;
 	$param = ($show == 'all' && permission_exists('stream_all')) ? "&show=all" : null;
 	$page = isset($_GET['page']) ? $_GET['page'] : 0;
@@ -126,13 +122,16 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_streams ";
+	$sql = "select ";
+	$sql .= "stream_uuid, domain_uuid, stream_name, stream_location, ";
+	$sql .= "cast(stream_enabled as text), stream_description ";
+	$sql .= "from v_streams ";
 	$sql .= "where true ";
 	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	lower(stream_name) like :search ";
 		$sql .= "	or lower(stream_location) like :search ";
-		$sql .= "	or lower(stream_enabled) like :search ";
+		$sql .= "	or lower(cast(stream_enabled as text)) like :search ";
 		$sql .= "	or lower(stream_description) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.strtolower($search).'%';
@@ -150,7 +149,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'stream_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$streams = $database->select($sql, (!empty($parameters) && @sizeof($parameters) != 0 ? $parameters : null), 'all');
 	unset($sql, $parameters);
 
@@ -240,7 +238,7 @@
 	echo "	<th class='pct-60'>".$text['label-play']."</th>\n";
 	echo th_order_by('stream_enabled', $text['label-stream_enabled'], $order_by, $order, null, "class='center'");
 	echo th_order_by('stream_description', $text['label-stream_description'], $order_by, $order, null, "class='hide-sm-dn'");
-	if (permission_exists('stream_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+	if (permission_exists('stream_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -251,7 +249,7 @@
 			$list_row_url = '';
 			if (permission_exists('stream_edit')) {
 				$list_row_url = "stream_edit.php?id=".urlencode($row['stream_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}
@@ -297,7 +295,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['stream_description'])."&nbsp;</td>\n";
-			if (permission_exists('stream_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+			if (permission_exists('stream_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 				echo "	</td>\n";

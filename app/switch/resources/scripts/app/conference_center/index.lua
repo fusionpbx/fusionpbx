@@ -1,6 +1,6 @@
 --	conference_center/index.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2021 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2025 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -417,7 +417,8 @@
 		--conference center details
 			local sql = [[SELECT * FROM v_conference_centers
 				WHERE domain_uuid = :domain_uuid
-				AND conference_center_extension = :destination_number]];
+				AND conference_center_extension = :destination_number
+				AND conference_center_enabled = true]];
 			local params = {domain_uuid = domain_uuid, destination_number = destination_number};
 			dbh:query(sql, params, function(row)
 				conference_center_uuid = string.lower(row["conference_center_uuid"]);
@@ -498,7 +499,7 @@
 						local sql = [[SELECT * FROM v_conference_rooms 
 							WHERE domain_uuid = :domain_uuid
 							AND (moderator_pin = :pin_number or participant_pin = :pin_number)
-							AND enabled = 'true'
+							AND enabled = true
 							AND (
 									( start_datetime <> '' AND start_datetime is not null AND start_datetime <= :timestamp ) OR
 									( start_datetime = '' OR start_datetime is null )
@@ -542,11 +543,30 @@
 				pin_number = get_pin_number(domain_uuid, conference_center_greeting);
 			end
 			if (pin_number ~= nil) then
-				local sql = [[SELECT * FROM v_conference_rooms
+				local sql = [[SELECT 
+					 conference_room_uuid,
+					 conference_room_name,
+					 cast(record as text),
+					 profile,
+					 max_members,
+					 cast(wait_mod as text),
+					 cast(moderator_endconf as text),
+					 moderator_pin,
+					 participant_pin,
+					 cast(announce_name as text),
+					 cast(announce_count as text),
+					 cast(announce_recording as text),
+					 cast(mute as text),
+					 cast(sounds as text),
+					 created,
+					 created_by,
+					 cast(enabled as text),
+					 description
+					FROM v_conference_rooms
 					WHERE domain_uuid = :domain_uuid
 					AND conference_center_uuid = :conference_center_uuid
 					AND (moderator_pin = :pin_number or participant_pin = :pin_number)
-					AND enabled = 'true'
+					AND enabled = true
 				]];
 				local params = {
 					domain_uuid = domain_uuid;
@@ -559,8 +579,7 @@
 				dbh:query(sql, params, function(row)
 					conference_room_uuid = string.lower(row["conference_room_uuid"]);
 					conference_room_name = string.lower(row["conference_room_name"]);
-					--meeting_uuid = string.lower(row["meeting_uuid"]);
-					record = string.lower(row["record"]);
+					record = row["record"];
 					profile = string.lower(row["profile"]);
 					max_members = row["max_members"];
 					wait_mod = row["wait_mod"];

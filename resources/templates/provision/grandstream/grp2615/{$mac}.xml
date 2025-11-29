@@ -380,7 +380,11 @@
 		<!-- BLF Call-pickup  -->
 		<!-- Auto, Force, Disabled -->
 		<!-- Pvalue P6752 -->
-		<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">Auto</item>
+		{if isset($grandstream_blf_callpickup_force) }
+			<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">{$grandstream_blf_callpickup_force}</item>
+		{else}
+			<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">Auto</item>
+		{/if}
 
 		<!-- BLF Call-pickup Prefix -->
 		<!-- Pvalue P1347 -->
@@ -784,7 +788,7 @@
 
 		<!-- Matching Incoming Caller ID. Matching Rule 1 -->
 		<!-- Pvalue P1488 -->
-		<item name="account.{$row.line_number}.ring.match.1.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.1.callerId">{$grandstream_match_callerid_1}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P1489 -->
@@ -792,7 +796,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 2 -->
 		<!-- Pvalue P1490 -->
-		<item name="account.{$row.line_number}.ring.match.2.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.2.callerId">{$grandstream_match_callerid_2}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P1491 -->
@@ -800,7 +804,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 3 -->
 		<!-- Pvalue P1492 -->
-		<item name="account.{$row.line_number}.ring.match.3.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.3.callerId">{$grandstream_match_callerid_3}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P1493 -->
@@ -808,7 +812,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 4 -->
 		<!-- Pvalue P6716 -->
-		<item name="account.{$row.line_number}.ring.match.4.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.4.callerId">{$grandstream_match_callerid_4}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P6717 -->
@@ -816,7 +820,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 5 -->
 		<!-- Pvalue P6718 -->
-		<item name="account.{$row.line_number}.ring.match.5.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.5.callerId">{$grandstream_match_callerid_5}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P6719 -->
@@ -824,7 +828,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 6 -->
 		<!-- Pvalue P6720 -->
-		<item name="account.{$row.line_number}.ring.match.6.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.6.callerId">{$grandstream_match_callerid_6}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P6721 -->
@@ -832,7 +836,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 7 -->
 		<!-- Pvalue P26064 -->
-		<item name="account.{$row.line_number}.ring.match.7.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.7.callerId">{$grandstream_match_callerid_7}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P26065 -->
@@ -840,7 +844,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 8 -->
 		<!-- Pvalue P26066 -->
-		<item name="account.{$row.line_number}.ring.match.8.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.8.callerId">{$grandstream_match_callerid_8}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P26067 -->
@@ -848,7 +852,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 9 -->
 		<!-- Pvalue P26068 -->
-		<item name="account.{$row.line_number}.ring.match.9.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.9.callerId">{$grandstream_match_callerid_9}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P26069 -->
@@ -856,7 +860,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 10 -->
 		<!-- Pvalue P26096 -->
-		<item name="account.{$row.line_number}.ring.match.10.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.10.callerId">{$grandstream_match_callerid_10}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P26097 -->

@@ -37,6 +37,9 @@
 --create the api object
 	api = freeswitch.API();
 
+--get the hostname
+	local hostname = api:execute("hostname", "");
+
 --include config.lua
 	require "resources.functions.config";
 
@@ -89,7 +92,19 @@
 	end
 
 --determine whether to update the dial string
-	local sql = "select * from v_extensions ";
+	local sql = "select ";
+	sql = sql .. " extension_uuid, ";
+	sql = sql .. " extension, ";
+	sql = sql .. " number_alias, ";
+	sql = sql .. " accountcode, ";
+	sql = sql .. " cast(do_not_disturb as text), ";
+	sql = sql .. " cast(forward_all_enabled as text), ";
+	sql = sql .. " forward_all_destination, ";
+	sql = sql .. " toll_allow, ";
+	sql = sql .. " user_context, ";
+	sql = sql .. " outbound_caller_id_name, ";
+	sql = sql .. " outbound_caller_id_number ";
+	sql = sql .. "from v_extensions ";
 	sql = sql .. "where domain_uuid = :domain_uuid ";
 	sql = sql .. "and extension_uuid = :extension_uuid ";
 	local params = {domain_uuid = domain_uuid, extension_uuid = extension_uuid};
@@ -250,9 +265,9 @@
 
 --clear the cache
 	if extension and #extension > 0 and cache.support() then
-		cache.del("directory:"..extension.."@"..context);
+		cache.del(hostname..":directory:"..extension.."@"..context);
 		if #number_alias > 0 then
-			cache.del("directory:"..number_alias.."@"..context);
+			cache.del(hostname..":directory:"..number_alias.."@"..context);
 		end
 	end
 

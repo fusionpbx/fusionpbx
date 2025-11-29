@@ -77,8 +77,6 @@
 						$p = permissions::new();
 						$p->add('access_control_add', 'temp');
 
-						$database->app_name = 'access_controls';
-						$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 						$database->save($array, false);
 						unset($array);
 
@@ -109,8 +107,6 @@
 								$p = permissions::new();
 								$p->add('access_control_node_add', 'temp');
 
-								$database->app_name = 'access_controls';
-								$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 								$database->save($array, false);
 								unset($array);
 
@@ -148,7 +144,7 @@
 			//clear the cache
 			$cache = new cache;
 			$cache->delete("configuration:acl.conf");
-			$cache->delete("configuration:sofia.conf:".gethostname());
+			$cache->delete(gethostname().":configuration:sofia.conf");
 
 			//create the event socket connection
 			$esl = event_socket::create();
@@ -158,7 +154,7 @@
 
 			//rescan each sip profile
 			$sql = "select sip_profile_name from v_sip_profiles ";
-			$sql .= "where sip_profile_enabled = 'true'; ";
+			$sql .= "where sip_profile_enabled = true; ";
 			$sip_profiles = $database->select($sql, null, 'all');
 			if (is_array($sip_profiles)) {
 				foreach ($sip_profiles as $row) {

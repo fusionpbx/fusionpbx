@@ -45,7 +45,6 @@
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['contact_attachment_uuid'] = $contact_attachment_uuid;
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$attachment = $database->select($sql, $parameters ?? null, 'row');
 		unset($sql, $parameters);
 
@@ -53,7 +52,7 @@
 
 		//determine mime type
 		$content_type = 'application/octet-stream'; //set default
-		$allowed_attachment_types = json_decode($_SESSION['contact']['allowed_attachment_types']['text'] ?? '', true);
+		$allowed_attachment_types = json_decode($settings->get('contact', 'allowed_attachment_types') ?? '', true);
 		if (!empty($allowed_attachment_types)) {
 			if ($allowed_attachment_types[$attachment_type] != '') {
 				$content_type = $allowed_attachment_types[$attachment_type];

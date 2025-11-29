@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2019
+ Portions created by the Initial Developer are Copyright (C) 2008-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -28,10 +28,38 @@
 	class bridges {
 
 		/**
+		 * declare constant variables
+		 */
+		const app_name = 'bridges';
+		const app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
+
+		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_uuid;
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -40,24 +68,39 @@
 		private $toggle_values;
 
 		/**
-		 * called when the object is created
+		 * Initializes the object with settings and default values.
+		 *
+		 * @param array $setting_array Associative array of setting keys to their respective values (optional)
 		 */
-		public function __construct() {
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$config = $setting_array['config'] ?? config::load();
+			$this->database = $setting_array['database'] ?? database::new(['config' => $config]);
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 			//assign private variables
-				$this->app_name = 'bridges';
-				$this->app_uuid = 'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d';
-				$this->permission_prefix = 'bridge_';
-				$this->list_page = 'bridges.php';
-				$this->table = 'bridges';
-				$this->uuid_prefix = 'bridge_';
-				$this->toggle_field = 'bridge_enabled';
-				$this->toggle_values = ['true','false'];
+
+			$this->permission_prefix = 'bridge_';
+			$this->list_page = 'bridges.php';
+			$this->table = 'bridges';
+			$this->uuid_prefix = 'bridge_';
+			$this->toggle_field = 'bridge_enabled';
+			$this->toggle_values = ['true','false'];
 
 		}
 
 		/**
-		 * delete records
+		 * Deletes one or multiple records from the access controls table.
+		 *
+		 * @param array $records An array of record IDs to delete, where each ID is an associative array
+		 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+		 *                       whether the corresponding checkbox was checked for deletion.
+		 *
+		 * @return void No return value; this method modifies the database state and sets a message.
 		 */
 		public function delete($records) {
 			if (permission_exists($this->permission_prefix.'delete')) {
@@ -81,7 +124,7 @@
 							foreach ($records as $x => $record) {
 								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $record['uuid'];
-									$array[$this->table][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+									$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 								}
 							}
 
@@ -89,10 +132,7 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//clear the destinations session array
@@ -109,7 +149,13 @@
 		}
 
 		/**
-		 * toggle records
+		 * Toggles the state of the specified records.
+		 *
+		 * @param array $records An array of record IDs to delete, where each ID is an associative array
+		 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+		 *                       whether the corresponding checkbox was checked for deletion.
+		 *
+		 * @return void No return value; this method modifies the database state and sets a message.
 		 */
 		public function toggle($records) {
 			if (permission_exists($this->permission_prefix.'edit')) {
@@ -139,9 +185,8 @@
 								$sql = "select ".$this->uuid_prefix."uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$parameters['domain_uuid'] = $this->domain_uuid;
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -162,10 +207,8 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//clear the destinations session array
@@ -183,7 +226,12 @@
 		}
 
 		/**
-		 * copy records
+		 * Copies one or more records
+		 * @param array $records An array of record IDs to delete, where each ID is an associative array
+		 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
+		 *                       whether the corresponding checkbox was checked for deletion.
+		 *
+		 * @return void No return value; this method modifies the database state and sets a message.
 		 */
 		public function copy($records) {
 			if (permission_exists($this->permission_prefix.'add')) {
@@ -215,11 +263,18 @@
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$parameters['domain_uuid'] = $this->domain_uuid;
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $x => $row) {
+
+										//convert boolean values to a string
+											foreach($row as $key => $value) {
+												if (gettype($value) == 'boolean') {
+													$value = $value ? 'true' : 'false';
+													$row[$key] = $value;
+												}
+											}
 
 										//copy data
 											$array[$this->table][$x] = $row;
@@ -237,10 +292,8 @@
 							if (is_array($array) && @sizeof($array) != 0) {
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//set message

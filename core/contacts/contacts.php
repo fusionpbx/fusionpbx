@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('contact_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -51,7 +48,7 @@
 //get posted data
 	if (!empty($_POST['contacts'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$contacts = $_POST['contacts'];
 	}
 
@@ -66,7 +63,7 @@
 				break;
 		}
 
-		header('Location: contacts.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: contacts.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -115,8 +112,9 @@
 		$sql .= ") ";
 	}
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['group_uuid'] = $_SESSION['group_uuid'] ?? '';
-	$database = new database;
+	if (!empty($_SESSION['group_uuid'])) {
+		$parameters['group_uuid'] = $_SESSION['group_uuid'];
+	}
 	$result = $database->select($sql, $parameters, 'all');
 	if (!empty($result)) {
 		foreach($result as $row) {
@@ -126,11 +124,12 @@
 	unset($sql, $parameters, $result);
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = $_REQUEST["order_by"] ?? '';
+	$order = $_REQUEST["order"] ?? '';
 
 //add the search term
-	$search = strtolower(trim($_GET["search"]) ?? '');
+	$search = $_REQUEST["search"] ?? '';
+	$search = strtolower(trim($search ?? ''));
 	if (!empty($search)) {
 		if (is_numeric($search)) {
 			$sql_search = "and contact_uuid in ( ";
@@ -228,11 +227,10 @@
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
 	$sql .= $sql_search ?? '';
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".urlencode($search);
 	if ($show == "all" && permission_exists('contact_all')) {
 		$param .= "&show=all";
@@ -245,7 +243,7 @@
 
 //get the list
 	$sql = "select *, ";
-	$sql .= "(select a.contact_attachment_uuid from v_contact_attachments as a where a.contact_uuid = c.contact_uuid and a.attachment_primary = 1 limit 1) as contact_attachment_uuid ";
+	$sql .= "(select a.contact_attachment_uuid from v_contact_attachments as a where a.contact_uuid = c.contact_uuid and a.attachment_primary = true limit 1) as contact_attachment_uuid ";
 	$sql .= "from v_contacts as c ";
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('contact_all')) {
@@ -281,14 +279,13 @@
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
 	$sql .= $sql_search ?? '';
-	$database = new database;
 	if (!empty($order_by)) {
 		$sql .= order_by($order_by, $order);
 		$sql .= ", contact_organization asc ";
 	}
 	else {
-		$contact_default_sort_column = !empty($_SESSION['contacts']['default_sort_column']['text']) ? $_SESSION['contacts']['default_sort_column']['text'] : "last_mod_date";
-		$contact_default_sort_order = !empty($_SESSION['contacts']['default_sort_order']['text']) ? $_SESSION['contacts']['default_sort_order']['text'] : "desc";
+		$contact_default_sort_column = $settings->get('contact', 'default_sort_column', 'last_mod_date');
+		$contact_default_sort_order = $settings->get('contact', 'default_sort_order', 'desc');
 
 		$sql .= order_by($contact_default_sort_column, $contact_default_sort_order);
 		if ($db_type == "pgsql") {
@@ -296,7 +293,6 @@
 		}
 	}
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$contacts = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -472,5 +468,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
-

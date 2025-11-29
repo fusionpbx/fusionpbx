@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_url_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_url_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -49,7 +46,6 @@
 	$sql .= "order by url_primary desc, url_label asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_urls = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -73,7 +69,7 @@
 			echo "<th class='pct-15'>".$text['label-url_label']."</th>\n";
 			echo "<th>".$text['label-url_address']."</th>\n";
 			echo "<th class='hide-md-dn'>".$text['label-url_description']."</th>\n";
-			if (permission_exists('contact_url_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+			if (permission_exists('contact_url_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
@@ -98,7 +94,7 @@
 					echo "	<td>".escape($row['url_label'])." ".($row['url_primary'] ? "&nbsp;<i class='fas fa-star fa-xs' style='float: right; margin-top: 0.5em; margin-right: -0.5em;' title=\"".$text['label-primary']."\"></i>" : null)."</td>\n";
 					echo "	<td class='no-link overflow no-wrap'><a href='".escape($row['url_address'])."' target='_blank'>".str_replace("http://", "", str_replace("https://", "", escape($row['url_address'])))."</a></td>\n";
 					echo "	<td class='description overflow hide-md-dn'>".escape($row['url_description'])."&nbsp;</td>\n";
-					if (permission_exists('contact_url_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+					if (permission_exists('contact_url_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 						echo "	<td class='action-button'>\n";
 						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 						echo "	</td>\n";

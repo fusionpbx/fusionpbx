@@ -30,16 +30,10 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('call_recording_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('call_recording_view')) {
 		echo "access denied";
 		exit;
 	}
-
-//create the database connection
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -53,11 +47,12 @@
 //set additional variables
 	$search = $_GET["search"] ?? '';
 	$show = $_GET["show"] ?? '';
+	$result_count = 0;
 
 //get the http post data
 	if (!empty($_POST['call_recordings']) && is_array($_POST['call_recordings'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$call_recordings = $_POST['call_recordings'];
 	}
 
@@ -85,7 +80,7 @@
 		}
 
 		//redirect the user
-		header('Location: call_recordings.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: call_recordings.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -99,16 +94,11 @@
 	}
 
 //set the time zone
-	if (!empty($_SESSION['domain']['time_zone']['name'])) {
-		$time_zone = $_SESSION['domain']['time_zone']['name'];
-	}
-	else {
-		$time_zone = date_default_timezone_get();
-	}
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 	$parameters['time_zone'] = $time_zone;
 
 //prepare some of the paging values
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$page = $_GET['page'] ?? '';
 	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	$offset = $rows_per_page * $page;
@@ -148,13 +138,13 @@
 	if ($transcribe_enabled && !empty($transcribe_engine) && !empty($call_recordings) && is_array($call_recordings)) {
 		$transcriptions_exists = false;
 		foreach ($call_recordings as $row) {
-			if (!empty($row['call_recording_transcription'])) { $transcriptions_exists = true; }
+//			if (!empty($row['call_recording_transcription'])) { $transcriptions_exists = true; }
 		}
 	}
 
 //limit the number of results
-	if (!empty($_SESSION['cdr']['limit']['numeric']) && $_SESSION['cdr']['limit']['numeric'] > 0) {
-		$num_rows = $_SESSION['cdr']['limit']['numeric'];
+	if (!empty($settings->get('cdr', 'limit')) && $settings->get('cdr', 'limit') > 0) {
+		$num_rows = $settings->get('cdr', 'limit');
 	}
 
 //prepare to page the results
@@ -292,8 +282,8 @@
 					if (permission_exists('call_recording_download')) {
 						echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'link'=>'download.php?id='.urlencode($row['call_recording_uuid']).'&binary']);
 					}
-					if (permission_exists('call_recording_transcribe') && $transcribe_enabled && !empty($transcribe_engine) && $transcriptions_exists === true) {
-						echo button::create(['type'=>'button','title'=>$text['label-transcription'],'icon'=>'quote-right','style'=>(empty($row['call_recording_transcription']) ? 'visibility:hidden;' : null),'onclick'=>"document.getElementById('transcription_".$row['call_recording_uuid']."').style.display = document.getElementById('transcription_".$row['call_recording_uuid']."').style.display == 'none' ? 'table-row' : 'none'; this.blur(); return false;"]);
+					if (permission_exists('call_recording_transcribe') && $transcribe_enabled && !empty($transcribe_engine) && !empty($row['call_recording_transcription'])) {
+						echo button::create(['type'=>'button','title'=>$text['label-transcription'],'icon'=>'quote-right','style'=>'','link'=>PROJECT_PATH.'/app/xml_cdr/xml_cdr_details.php?id='.urlencode($row['call_recording_uuid'])]);
 					}
 				}
 				echo "	</td>\n";
@@ -307,15 +297,15 @@
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
-			if (permission_exists('call_recording_transcribe') && $transcribe_enabled && !empty($transcribe_engine) && !empty($row['call_recording_transcription'])) {
-				echo "<tr style='display: none;'><td></td></tr>\n"; // dummy row to maintain same background color for transcription row
-				echo "<tr id='transcription_".$row['call_recording_uuid']."' class='list-row' style='display: none;'>\n";
-				echo "	<td style='padding: 10px 20px 15px 20px;' colspan='".$col_count."'>\n";
-				echo "		<strong style='display: inline-block; font-size: 90%; margin-bottom: 10px;'>".$text['label-transcription']."...</strong><br />\n";
-				echo 		escape($row['call_recording_transcription'])."\n";
-				echo "	</td>\n";
-				echo "</tr>\n";
-			}
+			// if (permission_exists('call_recording_transcribe') && $transcribe_enabled && !empty($transcribe_engine) && !empty($row['call_recording_transcription'])) {
+			// 	echo "<tr style='display: none;'><td></td></tr>\n"; // dummy row to maintain same background color for transcription row
+			// 	echo "<tr id='transcription_".$row['call_recording_uuid']."' class='list-row' style='display: none;'>\n";
+			// 	echo "	<td style='padding: 10px 20px 15px 20px;' colspan='".$col_count."'>\n";
+			// 	echo "		<strong style='display: inline-block; font-size: 90%; margin-bottom: 10px;'>".$text['label-transcription']."...</strong><br />\n";
+			// 	echo 		escape($row['call_recording_transcription'])."\n";
+			// 	echo "	</td>\n";
+			// 	echo "</tr>\n";
+			// }
 			$x++;
 		}
 		unset($call_recordings);

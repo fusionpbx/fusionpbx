@@ -83,8 +83,16 @@
 	//
 
 //system information
+	/**
+	 * Retrieves system information.
+	 *
+	 * @return array An array containing various system information such as PHP and switch versions,
+	 *               git repository details, operating system name, version, uptime, kernel, and type,
+	 *               memory usage, CPU usage, and disk space. The keys of the returned array are
+	 *               'version', 'git', 'path', 'switch', 'php', 'os', 'mem', and 'cpu'.
+	 */
 	function system_information(): array {
-		global $db_type;
+		global $database, $db_type;
 		$system_information = [];
 		$esl = event_socket::create();
 
@@ -272,7 +280,6 @@
 
 				//database version
 				$sql = "select version(); ";
-				$database = new database;
 				$database_name = $database->select($sql, null, 'column');
 				$database_array = explode(' ', $database_name);
 

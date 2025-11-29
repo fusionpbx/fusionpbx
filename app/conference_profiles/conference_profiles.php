@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('conference_profile_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('conference_profile_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -50,7 +47,7 @@
 //get the http post data
 	if (!empty($_POST['conference_profiles'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$conference_profiles = $_POST['conference_profiles'];
 	}
 
@@ -77,7 +74,7 @@
 				break;
 		}
 
-		header('Location: conference_profiles.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: conference_profiles.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -100,14 +97,21 @@
 	if (isset($sql_search)) {
 		$sql .= "where ".$sql_search;
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
+	unset($sql);
 
 //get the list
-	$sql = str_replace('count(conference_profile_uuid)', '*', $sql);
+	$sql = "select ";
+	$sql .= "conference_profile_uuid, ";
+	$sql .= "profile_name, ";
+	$sql .= "cast(profile_enabled as text), ";
+	$sql .= "profile_description ";
+	$sql .= "from v_conference_profiles ";
+	if (!empty($sql_search)) {
+		$sql .= "where ".$sql_search;
+	}
 	$sql .= order_by($order_by, $order, 'profile_name', 'asc');
 	$sql .= limit_offset($rows_per_page ?? '', $offset ?? '');
-	$database = new database;
 	$conference_profiles = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

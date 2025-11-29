@@ -96,8 +96,6 @@ if ($domains_processed == 1) {
 							$p = permissions::new();
 							$p->add('music_on_hold_add', 'temp');
 
-							$database->app_name = 'app_name';
-							$database->app_uuid = 'app_uuid';
 							$database->save($array, false);
 							unset($array);
 

@@ -2,7 +2,11 @@
 Description=Active Calls Websocket Service
 
 [Service]
-ExecStart=/usr/bin/php /var/www/fusionpbx/app/active_calls/resources/service/active_calls.php --no-fork
+WorkingDirectory=/var/www/fusionpbx
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/active_calls/resources/service/active_calls.php
+RuntimeDirectory=fusionpbx
+RuntimeDirectoryMode=0755
+RuntimeDirectoryPreserve=yes
 User=www-data
 Group=www-data
 Restart=always

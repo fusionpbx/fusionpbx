@@ -40,9 +40,6 @@
 		exit;
 	}
 
-//connect to the database
-	$database = database::new();
-
 //set permissions
 	$permission = array();
 	$permission['xml_cdr_view'] = permission_exists('xml_cdr_view');
@@ -68,6 +65,7 @@
 	$permission['xml_cdr_search_caller_destination'] = permission_exists('xml_cdr_search_caller_destination');
 	$permission['xml_cdr_search_destination'] = permission_exists('xml_cdr_search_destination');
 	$permission['xml_cdr_codecs'] = permission_exists('xml_cdr_codecs');
+	$permission['xml_cdr_search_wait'] = permission_exists('xml_cdr_search_wait');
 	$permission['xml_cdr_search_tta'] = permission_exists('xml_cdr_search_tta');
 	$permission['xml_cdr_search_hangup_cause'] = permission_exists('xml_cdr_search_hangup_cause');
 	$permission['xml_cdr_search_recording'] = permission_exists('xml_cdr_search_recording');
@@ -78,6 +76,7 @@
 	$permission['xml_cdr_caller_destination'] = permission_exists('xml_cdr_caller_destination');
 	$permission['xml_cdr_destination'] = permission_exists('xml_cdr_destination');
 	$permission['xml_cdr_start'] = permission_exists('xml_cdr_start');
+	$permission['xml_cdr_wait'] = permission_exists('xml_cdr_wait');
 	$permission['xml_cdr_tta'] = permission_exists('xml_cdr_tta');
 	$permission['xml_cdr_duration'] = permission_exists('xml_cdr_duration');
 	$permission['xml_cdr_pdd'] = permission_exists('xml_cdr_pdd');
@@ -150,26 +149,29 @@
 		$sql .= "order by extension asc, number_alias asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$extensions = $database->select($sql, $parameters, 'all');
+		unset($parameters);
 	}
 
 //get the ring groups
 	if ($permission['xml_cdr_search_ring_groups']) {
 		$sql = "select ring_group_uuid, ring_group_name, ring_group_extension from v_ring_groups ";
 		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and ring_group_enabled = 'true' ";
+		$sql .= "and ring_group_enabled = true ";
 		$sql .= "order by ring_group_extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$ring_groups = $database->select($sql, $parameters, 'all');
+		unset($parameters);
 	}
 
 //get the ivr menus
 	if ($permission['xml_cdr_search_ivr_menus']) {
 		$sql = "select ivr_menu_uuid, ivr_menu_name, ivr_menu_extension from v_ivr_menus ";
 		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and ivr_menu_enabled = 'true' ";
+		$sql .= "and ivr_menu_enabled = true ";
 		$sql .= "order by ivr_menu_extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$ivr_menus = $database->select($sql, $parameters, 'all');
+		unset($parameters);
 	}
 
 //get the call center queues
@@ -179,6 +181,7 @@
 		$sql .= "order by queue_extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$call_center_queues = $database->select($sql, $parameters, 'all');
+		unset($parameters);
 	}
 
 //include the header
@@ -274,8 +277,13 @@
 	echo "		<input type='hidden' name='network_addr' value='".escape($network_addr ?? '')."'>\n";
 	echo "		<input type='hidden' name='bridge_uuid' value='".escape($bridge_uuid ?? '')."'>\n";
 	echo "		<input type='hidden' name='leg' value='".escape($leg ?? '')."'>\n";
+	echo "		<input type='hidden' name='wait_min' value='".escape($wait_min ?? '')."'>\n";
+	echo "		<input type='hidden' name='wait_max' value='".escape($wait_max ?? '')."'>\n";
 	echo "		<input type='hidden' name='tta_min' value='".escape($tta_min ?? '')."'>\n";
 	echo "		<input type='hidden' name='tta_max' value='".escape($tta_max ?? '')."'>\n";
+	echo "		<input type='hidden' name='call_center_queue_uuid' value='".escape($call_center_queue_uuid ?? '')."'>\n";
+	echo "		<input type='hidden' name='ring_group_uuid' value='".escape($ring_group_uuid ?? '')."'>\n";
+	echo "		<input type='hidden' name='recording' value='".escape($recording ?? '')."'>\n";
 	if ($permission['xml_cdr_all'] && $_REQUEST['show'] == 'all') {
 		echo "	<input type='hidden' name='show' value='all'>\n";
 	}
@@ -464,6 +472,17 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
+		if ($permission['xml_cdr_search_wait']) {
+			echo "	<div class='form_set'>\n";
+			echo "		<div class='label'>\n";
+			echo "			".$text['label-wait']." (".$text['label-seconds'].")\n";
+			echo "		</div>\n";
+			echo "		<div class='field no-wrap'>\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='wait_min' id='wait_min' value='".escape($wait_min)."' placeholder=\"".$text['label-minimum']."\">\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='wait_max' id='wait_max' value='".escape($wait_max)."' placeholder=\"".$text['label-maximum']."\">\n";
+			echo "		</div>\n";
+			echo "	</div>\n";
+		}
 		if ($permission['xml_cdr_search_tta']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
@@ -475,7 +494,6 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
-
 		if ($permission['xml_cdr_search_hangup_cause']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
@@ -567,6 +585,9 @@
 			}
 			if ($permission['xml_cdr_start']) {
 				echo "			<option value='start_stamp' ".($order_by == 'start_stamp' || $order_by == '' ? "selected='selected'" : null).">".$text['label-start']."</option>\n";
+			}
+			if ($permission['xml_cdr_wait']) {
+				echo "			<option value='wait' ".($order_by == 'wait' ? "selected='selected'" : null).">".$text['label-wait']."</option>\n";
 			}
 			if ($permission['xml_cdr_tta']) {
 				echo "			<option value='tta' ".($order_by == 'tta' ? "selected='selected'" : null).">".$text['label-tta']."</option>\n";
@@ -775,6 +796,10 @@
 		echo "<th class='center shrink hide-lg-dn'>".$text['label-codecs']."</th>\n";
 		$col_count++;
 	}
+	if ($permission['xml_cdr_wait']) {
+		echo "<th class='right hide-lg-dn'>".$text['label-wait']."</th>\n";
+		$col_count++;
+	}
 	if ($permission['xml_cdr_tta']) {
 		echo "<th class='right hide-lg-dn' title=\"".$text['description-tta']."\">".$text['label-tta']."</th>\n";
 		$col_count++;
@@ -808,7 +833,7 @@
 	if (is_array($result)) {
 
 		//determine if theme images exist
-			$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/";
+			$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/";
 			$theme_cdr_images_exist = (
 				file_exists($theme_image_path."icon_cdr_inbound_answered.png") &&
 				file_exists($theme_image_path."icon_cdr_inbound_no_answer.png") &&
@@ -945,7 +970,7 @@
 								}
 								$image_name .= ".png";
 								if (file_exists($theme_image_path.$image_name)) {
-									$content .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$status]. ($row['leg']=='b'?'(b)':'') . "'>\n";
+									$content .= "<img src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template', 'default')."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$status]. ($row['leg']=='b'?'(b)':'') . "'>\n";
 								}
 								else { $content .= "&nbsp;"; }
 							}
@@ -1048,13 +1073,17 @@
 					if ($permission['xml_cdr_codecs']) {
 						$content .= "	<td class='middle right hide-lg-dn no-wrap'>".($row['read_codec'] ?? '').' / '.($row['write_codec'] ?? '')."</td>\n";
 					}
+				//wait - total time caller waited
+					if ($permission['xml_cdr_wait']) {
+						$content .= "	<td class='middle right hide-lg-dn'>".(!empty($row['wait']) && $row['wait'] >= 0 ? gmdate("i:s", $row['wait']) : "&nbsp;")."</td>\n";
+					}
 				//tta (time to answer)
 					if ($permission['xml_cdr_tta']) {
-						$content .= "	<td class='middle right hide-lg-dn'>".(!empty($row['tta']) && $row['tta'] >= 0 ? $row['tta']."s" : "&nbsp;")."</td>\n";
+						$content .= "	<td class='middle right hide-lg-dn'>".(!empty($row['tta']) && $row['tta'] >= 0 ? $row['tta'] : "&nbsp;")."</td>\n";
 					}
 				//pdd (post dial delay)
 					if ($permission['xml_cdr_pdd']) {
-						$content .= "	<td class='middle right hide-lg-dn'>".number_format(escape($row['pdd_ms'])/1000,2)."s</td>\n";
+						$content .= "	<td class='middle right hide-lg-dn'>".number_format(escape($row['pdd_ms'])/1000,2)."</td>\n";
 					}
 				//mos (mean opinion score)
 					if ($permission['xml_cdr_mos']) {

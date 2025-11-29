@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2024
+	Portions created by the Initial Developer are Copyright (C) 2016-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('music_on_hold_add') || permission_exists('music_on_hold_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('music_on_hold_add') || permission_exists('music_on_hold_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -146,9 +143,6 @@
 						$array['music_on_hold'][0]['music_on_hold_chime_max'] = strlen($music_on_hold_chime_max) != 0 ? $music_on_hold_chime_max : null;
 
 					//execute
-						$database = new database;
-						$database->app_name = 'music_on_hold';
-						$database->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
 						$database->save($array);
 						unset($array);
 
@@ -180,7 +174,6 @@
 		$sql .= "and music_on_hold_uuid = :music_on_hold_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['music_on_hold_uuid'] = $music_on_hold_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
@@ -367,16 +360,15 @@
 		$tmp_selected = false;
 		$sql = "select recording_name, recording_filename from v_recordings where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$recordings = $database->select($sql, $parameters, 'all');
 		if (is_array($recordings) && @sizeof($recordings) != 0) {
 			echo "<optgroup label='Recordings'>\n";
 			foreach ($recordings as $row) {
 				$recording_name = $row["recording_name"];
 				$recording_filename = $row["recording_filename"];
-				if ($music_on_hold_chime_list == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$recording_filename && !empty($music_on_hold_chime_list)) {
+				if ($music_on_hold_chime_list == $settings->get('switch', 'recordings')."/".$_SESSION['domain_name']."/".$recording_filename && !empty($music_on_hold_chime_list)) {
 					$tmp_selected = true;
-					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
+					echo "	<option value='".escape($settings->get('switch', 'recordings'))."/".escape($_SESSION['domain_name'])."/".escape($recording_filename)."' selected='selected'>".escape($recording_name)."</option>\n";
 				}
 				else if ($music_on_hold_chime_list == $recording_filename && !empty($music_on_hold_chime_list)) {
 					$tmp_selected = true;
@@ -393,7 +385,6 @@
 	//phrases
 		$sql = "select * from v_phrases where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
 		if (is_array($result) && @sizeof($result) != 0) {
 			echo "<optgroup label='Phrases'>\n";
@@ -435,8 +426,8 @@
 		if (if_group("superadmin")) {
 			if (!$tmp_selected && !empty($music_on_hold_chime_list)) {
 				echo "<optgroup label='Selected'>\n";
-				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/".$music_on_hold_chime_list)) {
-					echo "	<option value='".escape($_SESSION['switch']['recordings']['dir'])."/".escape($_SESSION['domain_name'])."/".escape($music_on_hold_chime_list)."' selected='selected'>".escape($music_on_hold_chime_list)."</option>\n";
+				if (file_exists($settings->get('switch', 'recordings')."/".$_SESSION['domain_name']."/".$music_on_hold_chime_list)) {
+					echo "	<option value='".escape($settings->get('switch', 'recordings'))."/".escape($_SESSION['domain_name'])."/".escape($music_on_hold_chime_list)."' selected='selected'>".escape($music_on_hold_chime_list)."</option>\n";
 				}
 				else if (substr($music_on_hold_chime_list, -3) == "wav" || substr($music_on_hold_chime_list, -3) == "mp3") {
 					echo "	<option value='".escape($music_on_hold_chime_list)."' selected='selected'>".escape($music_on_hold_chime_list)."</option>\n";
@@ -446,6 +437,8 @@
 			unset($tmp_selected);
 		}
 	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-music_on_hold_chime_list']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

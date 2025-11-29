@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_active_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('call_active_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -51,7 +48,6 @@
 
 //load gateways into a session variable
 	$sql = "select gateway_uuid, domain_uuid, gateway from v_gateways where enabled = 'true' ";
-	$database = new database;
 	$gateways = $database->select($sql, $parameters ?? null, 'all');
 	foreach ($gateways as $row) {
 		$_SESSION['gateways'][$row['gateway_uuid']] = $row['gateway'];
@@ -211,7 +207,7 @@
 	}
 
 	function get_record_cmd(uuid, prefix, name) {
-		cmd = \"uuid_record \"+uuid+\" start ".$_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d")."/\"+uuid+\".wav\";
+		cmd = \"uuid_record \"+uuid+\" start ".$settings->get('switch', 'recordings')."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d")."/\"+uuid+\".wav\";
 		return escape(cmd);
 	}
 */

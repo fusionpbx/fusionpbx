@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-if (permission_exists('default_setting_view')) {
-	//access granted
-}
-else {
+if (!permission_exists('default_setting_view')) {
 	echo "access denied";
 	exit;
 }
@@ -45,8 +42,19 @@ $text = $language->get();
 $search = $_REQUEST['search'] ?? '';
 $domain_uuid = $_GET['id'] ?? null;
 
+//reload autoloader
+$autoload->update();
+
 //reload default settings
 settings::clear_cache();
+
+//reset others
+$classes_to_clear = array_filter($autoload->get_interface_list('clear_cache'), function ($class) { return $class !== 'settings'; });
+foreach ($classes_to_clear as $class_name) {
+	$class_name::clear_cache();
+}
+
+//reset domains
 $domain = new domains();
 $domain->set();
 

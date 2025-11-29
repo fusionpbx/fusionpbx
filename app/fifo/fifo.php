@@ -27,10 +27,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('fifo_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('fifo_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -48,7 +45,7 @@
 //get the http post data
 	if (!empty($_POST['fifo']) && is_array($_POST['fifo'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$fifo = $_POST['fifo'];
 	}
 
@@ -86,7 +83,7 @@
 		}
 
 		//redirect the user
-		header('Location: fifo.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: fifo.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -127,7 +124,6 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -172,7 +168,6 @@
 	$sql .= "and u.domain_uuid = d.domain_uuid ";
 	$sql .= order_by($order_by, $order, '', '');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$fifo = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

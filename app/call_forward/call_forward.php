@@ -34,17 +34,14 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('follow_me') || !permission_exists('call_forward') || permission_exists('do_not_disturb'))) {
 		echo "access denied";
 		exit;
 	}
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'app/call_forward');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/call_forward');
 
 //get posted data and set defaults
 	$action = $_POST['action'] ?? '';
@@ -123,12 +120,11 @@
 			$sql .= "and extension = 'disabled' ";
 		}
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($parameters);
 
 //prepare the paging
-	$rows_per_page = !empty($_SESSION['domain']['paging']['numeric']) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = !empty($settings->get('domain', 'paging')) ? $settings->get('domain', 'paging') : 50;
 
 	if ($search) {
 		$params[] = "search=" . $search;
@@ -190,7 +186,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'extension', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$extensions = $database->select($sql, $parameters ?? null, 'all');
 	unset($parameters);
 
@@ -305,7 +300,7 @@
 	if (!empty($extensions)) {
 		$x = 0;
 		foreach ($extensions as $row) {
-			$list_row_url = PROJECT_PATH . "/app/call_forward/call_forward_edit.php?id=" . $row['extension_uuid'] . "&return_url=" . urlencode($_SERVER['REQUEST_URI']);
+			$list_row_url = PROJECT_PATH . "/app/call_forward/call_forward_edit.php?id=".$row['extension_uuid'];
 			if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 				$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 			}
@@ -341,19 +336,18 @@
 				//----------------------------------
 
 				echo "	<td>\n";
-				echo $row['forward_all_enabled'] == 'true' ? escape(format_phone($row['forward_all_destination'])) : '&nbsp;';
+				echo $row['forward_all_enabled'] == true ? escape(format_phone($row['forward_all_destination'])) : '&nbsp;';
 				echo "	</td>\n";
 			}
 			if (permission_exists('follow_me')) {
 				//-- inline toggle -----------------
 				//get destination count
-				//if ($row['follow_me_enabled'] == 'true' && is_uuid($row['follow_me_uuid'])) {
+				//if ($row['follow_me_enabled'] == true && is_uuid($row['follow_me_uuid'])) {
 				//	$sql = "select count(*) from v_follow_me_destinations ";
 				//	$sql .= "where follow_me_uuid = :follow_me_uuid ";
 				//	$sql .= "and domain_uuid = :domain_uuid ";
 				//	$parameters['follow_me_uuid'] = $row['follow_me_uuid'];
 				//	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-				//	$database = new database;
 				//	$follow_me_destination_count = $database->select($sql, $parameters, 'column');
 				//	$button_label = $follow_me_destination_count ? $text['label-enabled'].' ('.$follow_me_destination_count.')' : $text['label-invalid'];
 				//	unset($sql, $parameters);
@@ -370,13 +364,12 @@
 				//----------------------------------
 				//get destination count
 				$follow_me_destination_count = 0;
-				if ($row['follow_me_enabled'] == 'true' && is_uuid($row['follow_me_uuid'])) {
+				if ($row['follow_me_enabled'] == true && is_uuid($row['follow_me_uuid'])) {
 					$sql = "select count(*) from v_follow_me_destinations ";
 					$sql .= "where follow_me_uuid = :follow_me_uuid ";
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['follow_me_uuid'] = $row['follow_me_uuid'];
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-					$database = new database;
 					$follow_me_destination_count = $database->select($sql, $parameters ?? null, 'column');
 					unset($sql, $parameters);
 				}

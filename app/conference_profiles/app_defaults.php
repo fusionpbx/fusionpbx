@@ -68,8 +68,6 @@
 						$p = permissions::new();
 						$p->add('conference_profile_add', 'temp');
 
-						$database->app_name = 'conference_profiles';
-						$database->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
 						$database->save($array, false);
 						unset($array);
 
@@ -81,7 +79,7 @@
 								//print_r($p);
 								$profile_param_name = $p['@attributes']['name'];
 								$profile_param_value = $p['@attributes']['value'];
-								$profile_param_enabled = 'true';
+								$profile_param_enabled = true;
 
 							//add the coference profile params
 								$conference_profile_param_uuid = uuid();
@@ -94,8 +92,6 @@
 								$p = permissions::new();
 								$p->add('conference_profile_param_add', 'temp');
 
-								$database->app_name = 'conference_profiles';
-								$database->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
 								$database->save($array, false);
 								unset($array);
 

@@ -33,6 +33,17 @@
  */
 class subscriber_exception extends \Exception {
 	public $subscriber_id;
+
+	/**
+	 * Initializes a new instance of the class.
+	 *
+	 * @param mixed          $subscriber_id The subscriber's ID.
+	 * @param string         $message       [optional] The exception message. Defaults to an empty string.
+	 * @param int            $code          [optional] The user-defined errorCode integer. Defaults to 0.
+	 * @param Throwable|null $previous      [optional] The previous throwable that caused this one, or null if none. Defaults to null.
+	 *
+	 * @return void
+	 */
 	public function __construct($subscriber_id, string $message = "", int $code = 0, ?\Throwable $previous = null) {
 		parent::__construct($message, $code, $previous);
 		$this->subscriber_id = $subscriber_id;

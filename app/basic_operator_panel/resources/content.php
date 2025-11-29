@@ -29,10 +29,7 @@ require_once dirname(__DIR__, 3) . "/resources/require.php";
 require_once "resources/check_auth.php";
 
 //check permissions
-if (permission_exists('operator_panel_view')) {
-	//access granted
-}
-else {
+if (!permission_exists('operator_panel_view')) {
 	echo "access denied";
 	exit;
 }
@@ -74,29 +71,29 @@ if ($valet_info !== false) {
 	}
 	//view_array($valet_matches, false);
 
-	//unset($_SESSION['valet']);
+	//unset($valet);
 	foreach($valet_matches as $row) {
-		if (!isset($_SESSION['valet']['uuid']['caller_id_name'])) {
-			$_SESSION['valet'][$row[1]]['caller_id_name'] = event_socket::api('uuid_getvar '.$row[1].' caller_id_name');
+		if (!isset($valet['uuid']['caller_id_name'])) {
+			$valet[$row[1]]['caller_id_name'] = event_socket::api('uuid_getvar '.$row[1].' caller_id_name');
 		}
-		if (!isset($_SESSION['valet']['uuid']['caller_id_number'])) {
-			$_SESSION['valet'][$row[1]]['caller_id_number'] = event_socket::api('uuid_getvar '.$row[1].' caller_id_number');
+		if (!isset($valet['uuid']['caller_id_number'])) {
+			$valet[$row[1]]['caller_id_number'] = event_socket::api('uuid_getvar '.$row[1].' caller_id_number');
 		}
 	}
 
 	//unset the array
-	//view_array($_SESSION['valet']);
+	//view_array($valet);
 
 	//reformat the array and add the caller ID name and numbers
 	$x = 0;
 	foreach($valet_matches as $row) {
 		$valet_array[$x]['uuid'] = $row[1];
 		$valet_array[$x]['extension'] = $row[2];
-		if (isset($_SESSION['valet'][$row[1]]['caller_id_name'])) {
-			$valet_array[$x]['caller_id_name'] = $_SESSION['valet'][$row[1]]['caller_id_name'];
+		if (isset($valet[$row[1]]['caller_id_name'])) {
+			$valet_array[$x]['caller_id_name'] = $valet[$row[1]]['caller_id_name'];
 		}
-		if (isset($_SESSION['valet'][$row[1]]['caller_id_number'])) {
-			$valet_array[$x]['caller_id_number'] = $_SESSION['valet'][$row[1]]['caller_id_number'];
+		if (isset($valet[$row[1]]['caller_id_number'])) {
+			$valet_array[$x]['caller_id_number'] = $valet[$row[1]]['caller_id_number'];
 		}
 		$x++;
 	}
@@ -353,7 +350,7 @@ if (is_array($activity)) {
 		}
 		else {
 			//unregistered extension
-			if (filter_var($_SESSION['operator_panel']['show_unregistered']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+			if ($settings->get('operator_panel', 'show_unregistered', false)) {
 				$css_class = "ur_ext";
 			}
 			else {
@@ -475,7 +472,7 @@ if (is_array($activity)) {
 			//record
 			if (permission_exists('operator_panel_record') && $ext_state == 'active') {
 				$call_identifier_record = $ext['call_uuid'];
-				$rec_file = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d")."/".escape($call_identifier_record).".wav";
+				$rec_file = $settings->get('switch', 'recordings')."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d")."/".escape($call_identifier_record).".wav";
 				if (file_exists($rec_file)) {
 					$block .= 		"<img src='resources/images/recording.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: help;' title=\"".$text['label-recording']."\" ".$onhover_pause_refresh.">\n";
 				}
@@ -551,7 +548,7 @@ if (is_array($activity)) {
 
 		if (in_array($extension, $_SESSION['user']['extensions'])) {
 			$user_extensions[] = $block;
-		} elseif (!empty($ext['call_group']) && filter_var($_SESSION['operator_panel']['group_extensions']['boolean'] ?? false, FILTER_VALIDATE_BOOLEAN)) {
+		} elseif (!empty($ext['call_group']) && $settings->get('operator_panel', 'group_extensions', false)) {
 			$grouped_extensions[$ext['call_group']][] = $block;
 		} else {
 			$other_extensions[] = $block;

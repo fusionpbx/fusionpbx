@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -81,7 +81,7 @@
 		}
 		$phrase_name = $_POST["phrase_name"];
 		$phrase_language = $_POST["phrase_language"];
-		$phrase_enabled = $_POST["phrase_enabled"] ?? 'false';
+		$phrase_enabled = $_POST["phrase_enabled"];
 		$phrase_description = $_POST["phrase_description"];
 		$phrase_details_delete = $_POST["phrase_details_delete"] ?? '';
 
@@ -92,7 +92,7 @@
 
 //process the changes from the http post
 	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
-	
+
 		//get the uuid
 			if ($action == "update") {
 				$phrase_uuid = $_POST["phrase_uuid"];
@@ -163,9 +163,6 @@
 						$p = permissions::new();
 						$p->add('phrase_detail_add', 'temp');
 
-						$database = new database;
-						$database->app_name = 'phrases';
-						$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 						$database->save($array);
 						unset($array);
 
@@ -227,9 +224,6 @@
 						$p = permissions::new();
 						$p->add('phrase_detail_add', 'temp');
 
-						$database = new database;
-						$database->app_name = 'phrases';
-						$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 						$database->save($array);
 						unset($array);
 
@@ -262,7 +256,7 @@
 				}
 
 			}
-	
+
 	}
 
 //pre-populate the form
@@ -276,7 +270,6 @@
 		$sql .= "and phrase_uuid = :phrase_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['phrase_uuid'] = $phrase_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$phrase_name = $row["phrase_name"];
@@ -287,9 +280,6 @@
 		unset($sql, $parameters, $row);
 	}
 
-//set the defaults
-	if (empty($phrase_enabled)) { $phrase_enabled = 'true'; }
-
 //get the phrase details
 	if (!empty($phrase_uuid)) {
 		$sql = "select * from v_phrase_details ";
@@ -298,7 +288,6 @@
 		$sql .= "order by phrase_detail_order asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['phrase_uuid'] = $phrase_uuid;
-		$database = new database;
 		$phrase_details = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -308,9 +297,11 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by recording_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$recordings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
+
+//set the defaults
+	$phrase_enabled = $phrase_enabled ?? true;
 
 //create token
 	$object = new token;
@@ -336,7 +327,7 @@
 	echo "			clear_action_options();\n";
 	echo "		}\n";
 	echo "	}\n";
-	if (if_group("superadmin")) {
+	if (permission_exists("phrase_execute")) {
 		echo "	else {\n";
 		echo "		document.getElementById('phrase_detail_data_switch').style.display='none';\n";
 		echo "		obj_action.setAttribute('style', 'width: 300px; min-width: 300px; max-width: 300px;');\n";
@@ -350,11 +341,11 @@
 			echo "var opt_group = document.createElement('optgroup');\n";
 			echo "opt_group.label = \"".$text['label-recordings']."\";\n";
 			foreach ($recordings as $row) {
-				if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64') {
+				if (!empty($settings->get('recordings', 'storage_type')) && $settings->get('recordings', 'storage_type') == 'base64') {
 					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"\${lua streamfile.lua ".$row["recording_filename"]."}\"));\n";
 				}
 				else {
-					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"".$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row["recording_filename"]."\"));\n";
+					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"".$settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/'.$row["recording_filename"]."\"));\n";
 				}
 			}
 			echo "obj_action.appendChild(opt_group);\n";
@@ -381,7 +372,7 @@
 		echo "	obj_action.options[obj_action.options.length] = new Option('".number_format($s, 1)."s', 'sleep(".($s * 1000).")');\n";
 	}
 	echo "	}\n";
-	if (if_group("superadmin")) {
+	if (permission_exists("phrase_execute")) {
 		echo "	else if (selected_index == 2) {\n"; //execute
 		echo "		action_to_input();\n";
 		echo "	}\n";
@@ -403,7 +394,7 @@
 	echo "	}\n";
 	echo "}\n";
 
-	if (if_group("superadmin")) {
+	if (permission_exists("phrase_execute")) {
 		echo "function action_to_input() {\n";
 		echo "	obj = document.getElementById('phrase_detail_data');\n";
 		echo "	tb = document.createElement('INPUT');\n";
@@ -523,7 +514,7 @@
 			}
 			else if ($field['phrase_detail_function'] == 'play-file') {
 				$phrase_detail_function = $text['label-play'];
-				$phrase_detail_data = str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/', '', $field['phrase_detail_data']);
+				$phrase_detail_data = str_replace($settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/', '', $field['phrase_detail_data']);
 			}
 			else {
 				$phrase_detail_function = $field['phrase_detail_function'];
@@ -548,14 +539,14 @@
 	echo "		<select name='phrase_detail_function' id='phrase_detail_function' class='formfld' onchange=\"load_action_options(this.selectedIndex);\">\n";
 	echo "			<option value='play-file'>".$text['label-play']."</option>\n";
 	echo "			<option value='execute'>".$text['label-pause']."</option>\n";
-	if (if_group("superadmin")) {
+	if (permission_exists("phrase_execute")) {
 		echo "			<option value='execute'>".$text['label-execute']."</option>\n";
 	}
 	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
-	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld' style='width: 300px; min-width: 300px; max-width: 300px;' ".((if_group("superadmin")) ? "onchange='action_to_input();'" : null)."></select>";
-	if (if_group("superadmin")) {
+	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld' style='width: 300px; min-width: 300px; max-width: 300px;' ".((permission_exists("phrase_execute")) ? "onchange='action_to_input();'" : null)."></select>";
+	if (permission_exists("phrase_execute")) {
 		echo "	<input id='phrase_detail_data_switch' type='button' class='btn' style='margin-left: 4px; display: none;' value='&#9665;' onclick=\"action_to_select(); load_action_options(document.getElementById('phrase_detail_function').selectedIndex);\">\n";
 	}
 	echo "		<script>load_action_options(0);</script>\n";
@@ -611,17 +602,16 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='phrase_enabled' name='phrase_enabled' value='true' ".($phrase_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='phrase_enabled' name='phrase_enabled'>\n";
-		echo "		<option value='true' ".($phrase_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($phrase_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='phrase_enabled' name='phrase_enabled'>\n";
+	echo "		<option value='true' ".($phrase_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($phrase_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "	<br />\n";
 	echo $text['description-enabled']."\n";

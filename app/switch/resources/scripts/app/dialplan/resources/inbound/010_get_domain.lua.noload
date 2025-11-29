@@ -62,7 +62,7 @@
 			--set the cache
 				domain = "domain_uuid=" .. domain_uuid .. "&domain_name=" .. domain_name;
 				if cache.support() then
-					local key = app:dialplan:inbound:get_domain:" .. destination_number .. " '"..domain.."' "..expire["get_domain"];
+					local key = "app:dialplan:inbound:get_domain:" .. destination_number .. " '"..domain.."' "..expire["get_domain"];
 					if debug['cache'] then
 						freeswitch.consoleLog("notice", "[dialplan][cache] set key: " .. key .. "\n")
 					end

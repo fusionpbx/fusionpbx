@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2021 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2025 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -42,7 +42,7 @@
 	--event_calling_function = params:getHeader("Event-Calling-Function");
 
 --set the variables as a string
-	vm_mailto = "";
+	vm_mailto = '';
 
 --include json library
 	local json
@@ -153,18 +153,22 @@
 		-- cleanup
 			XML_STRING = nil;
 
+		--get the caller hostname
+			hostname = trim(api:execute("hostname", ""));
+			--freeswitch.consoleLog("notice", "[xml_handler][directory] hostname is " .. hostname .. "\n");
+
 		-- get the cache. We can use cache only if we do not use `fs_path`
 		-- or we do not need dial-string. In other way we have to use database.
 			if (continue) and (not USE_FS_PATH) then
 				if (cache.support() and domain_name) then
-					local key, err = "directory:" .. (from_user or user) .. "@" .. domain_name
-					XML_STRING, err = cache.get(key);
+					local cache_key, err = hostname .. ":directory:" .. (from_user or user) .. "@" .. domain_name
+					XML_STRING, err = cache.get(cache_key);
 
 					if debug['cache'] then
 						if not XML_STRING then
-							freeswitch.consoleLog("notice", "[xml_handler][directory][cache] get key: " .. key .. " fail: " .. tostring(err) .. "\n")
+							freeswitch.consoleLog("notice", "[xml_handler][directory][cache] get key: " .. cache_key .. " fail: " .. tostring(err) .. "\n")
 						else
-							freeswitch.consoleLog("notice", "[xml_handler][directory][cache] get key: " .. key .. " pass!" .. "\n")
+							freeswitch.consoleLog("notice", "[xml_handler][directory][cache] get key: " .. cache_key .. " pass!" .. "\n")
 						end
 					end
 				end
@@ -236,9 +240,6 @@
 									end);
 								end
 
-							--get the caller hostname
-								local_hostname = trim(api:execute("switchname", ""));
-								--freeswitch.consoleLog("notice", "[xml_handler][directory] local_hostname is " .. local_hostname .. "\n");
 
 							--add the file_exists function
 								require "resources.functions.file_exists";
@@ -284,12 +285,72 @@
 
 				--get the extension from the database
 					if (continue) then
-						local sql = "SELECT e.*, random() FROM v_extensions as e, v_domains as d "
-							.. "WHERE e.domain_uuid = :domain_uuid "
-							.. "AND d.domain_uuid = :domain_uuid "
-							.. "AND d.domain_enabled = 'true' "
-							.. "AND (e.extension = :user or e.number_alias = :user) "
-							.. "AND e.enabled = 'true' ";
+						local sql = "SELECT "
+						sql = sql .. "e.extension_uuid, ";
+						sql = sql .. "e.domain_uuid, ";
+						sql = sql .. "e.extension, ";
+						sql = sql .. "e.number_alias, ";
+						sql = sql .. "e.password, ";
+						sql = sql .. "e.accountcode, ";
+						sql = sql .. "e.effective_caller_id_name, ";
+						sql = sql .. "e.effective_caller_id_number, ";
+						sql = sql .. "e.outbound_caller_id_name, ";
+						sql = sql .. "e.outbound_caller_id_number, ";
+						sql = sql .. "e.emergency_caller_id_name, ";
+						sql = sql .. "e.emergency_caller_id_number, ";
+						sql = sql .. "e.directory_first_name, ";
+						sql = sql .. "e.directory_last_name, ";
+						sql = sql .. "cast(e.directory_visible as text), ";
+						sql = sql .. "cast(e.directory_exten_visible as text), ";
+						sql = sql .. "e.limit_max, ";
+						sql = sql .. "e.limit_destination, ";
+						sql = sql .. "e.missed_call_app, ";
+						sql = sql .. "e.missed_call_data, ";
+						sql = sql .. "e.user_context, ";
+						sql = sql .. "e.toll_allow, ";
+						sql = sql .. "e.call_timeout, ";
+						sql = sql .. "e.call_group, ";
+						sql = sql .. "cast(e.call_screen_enabled as text), ";
+						sql = sql .. "e.user_record, ";
+						sql = sql .. "e.hold_music, ";
+						sql = sql .. "e.auth_acl, ";
+						sql = sql .. "e.cidr, ";
+						sql = sql .. "e.sip_force_contact, ";
+						sql = sql .. "e.nibble_account, ";
+						sql = sql .. "e.sip_force_expires, ";
+						sql = sql .. "e.mwi_account, ";
+						sql = sql .. "e.sip_bypass_media, ";
+						sql = sql .. "e.unique_id, ";
+						sql = sql .. "e.dial_string, ";
+						sql = sql .. "e.dial_user, ";
+						sql = sql .. "e.dial_domain, ";
+						sql = sql .. "cast(e.do_not_disturb as text), ";
+						sql = sql .. "e.forward_all_destination, ";
+						sql = sql .. "cast(e.forward_all_enabled as text), ";
+						sql = sql .. "e.forward_busy_destination, ";
+						sql = sql .. "cast(e.forward_busy_enabled as text), ";
+						sql = sql .. "e.forward_no_answer_destination, ";
+						sql = sql .. "cast(e.forward_no_answer_enabled as text), ";
+						sql = sql .. "e.forward_user_not_registered_destination, ";
+						sql = sql .. "cast(e.forward_user_not_registered_enabled as text), ";
+						sql = sql .. "e.follow_me_uuid, ";
+						sql = sql .. "cast(e.follow_me_enabled as text), ";
+						sql = sql .. "e.follow_me_destinations, ";
+						sql = sql .. "cast(e.enabled as text), ";
+						sql = sql .. "e.description, ";
+						sql = sql .. "e.absolute_codec_string, ";
+						sql = sql .. "cast(e.force_ping as text), ";
+						sql = sql .. "e.max_registrations, ";
+						sql = sql .. "e.extension_type, ";
+						sql = sql .. "e.extension_language, ";
+						sql = sql .. "e.extension_dialect, ";
+						sql = sql .. "e.extension_voice, ";
+						sql = sql .. "random() FROM v_extensions as e, v_domains as d "
+						sql = sql .. "WHERE e.domain_uuid = :domain_uuid "
+						sql = sql .. "AND d.domain_uuid = :domain_uuid "
+						sql = sql .. "AND d.domain_enabled = true "
+						sql = sql .. "AND (e.extension = :user or e.number_alias = :user) "
+						sql = sql .. "AND e.enabled = true ";
 						local params = {domain_uuid=domain_uuid, user=user};
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -302,11 +363,11 @@
 								extension_uuid = row.extension_uuid;
 								extension = row.extension;
 								cidr = "";
-								if (string.len(row.cidr) > 0) then
+								if (row.cidr ~= nil and string.len(row.cidr) > 0) then
 									cidr = row.cidr;
 								end
 								number_alias = ""
-								if (string.len(row.number_alias) > 0) then
+								if (row.number_alias ~= nil and string.len(row.number_alias) > 0) then
 									number_alias = row.number_alias;
 								end
 
@@ -367,10 +428,13 @@
 								forward_no_answer_destination = row.forward_no_answer_destination;
 								forward_user_not_registered_enabled = row.forward_user_not_registered_enabled;
 								forward_user_not_registered_destination = row.forward_user_not_registered_destination;
+								follow_me_uuid = row.follow_me_uuid;
+								follow_me_enabled = row.follow_me_enabled;
 								do_not_disturb = row.do_not_disturb;
 								extension_language = row.extension_language;
 								extension_dialect = row.extension_dialect;
 								extension_voice = row.extension_voice;
+								--dial_string = row.dial_string;
 
 							--if the extension is virtual set register to false
 								if (row.extension_type == 'virtual') then
@@ -378,12 +442,9 @@
 								end
 
 							-- get the follow me information
-								if (row.follow_me_uuid ~= nil and string.len(row.follow_me_uuid) > 0) then
-									follow_me_uuid = row.follow_me_uuid;
+								if (follow_me_uuid ~= nil and string.len(follow_me_uuid) > 0) then
 									if (do_not_disturb == "true" or forward_all_enabled == "true") then
 										follow_me_enabled = "false";
-									else
-										follow_me_enabled = row.follow_me_enabled;
 									end
 								end
 
@@ -396,15 +457,15 @@
 								elseif (string.len(row.dial_string) > 0) then
 									dial_string = row.dial_string;
 								else
-									--set the destintion
+									--set the destination
 										local destination = (DIAL_STRING_BASED_ON_USERID and sip_from_number or sip_from_user) .. "@" .. domain_name;
 									--set a default dial string
 										if (dial_string == null) then
 											dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. presence_id .. "}${sofia_contact(*/" .. destination .. ")}";
 										end
-									--set the an alternative dial string if the hostnames don't match
+									--set an alternative dial string if the hostnames don't match
 										if (USE_FS_PATH) then
-											if (local_hostname == database_hostname) then
+											if (hostname == database_hostname) then
 												freeswitch.consoleLog("notice", "[xml_handler][directory] local_host and database_host are the same\n");
 											else
 												contact = trim(api:execute("sofia_contact", destination));
@@ -420,9 +481,9 @@
 											--freeswitch.consoleLog("notice", "[xml_handler][directory] seems balancing is false??" .. tostring(USE_FS_PATH) .. "\n");
 										end
 
-									--show debug informationa
+									--show debug information
 										if (USE_FS_PATH) then
-											freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. local_hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
+											freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
 										end
 								end
 						end);
@@ -432,7 +493,7 @@
 					if (extension_uuid) then
 						local sql = "SELECT * FROM v_extension_settings "
 							.. "WHERE extension_uuid = :extension_uuid "
-							.. "and extension_setting_enabled = 'true' ";
+							.. "and extension_setting_enabled = true ";
 						local params = {extension_uuid=extension_uuid};
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -450,7 +511,16 @@
 				--get the voicemail from the database
 					if (continue) then
 						vm_enabled = "true";
-						local sql = "SELECT * FROM v_voicemails WHERE domain_uuid = :domain_uuid and voicemail_id = :voicemail_id ";
+						local sql = "SELECT ";
+						sql = sql .. " cast(voicemail_local_after_email as text), ";
+						sql = sql .. " cast(voicemail_enabled as text), ";
+						sql = sql .. " cast(voicemail_attach_file as text), ";
+						sql = sql .. " voicemail_password, ";
+						sql = sql .. " voicemail_mail_to, ";
+						sql = sql .. " voicemail_enabled ";
+						sql = sql .. "FROM v_voicemails ";
+						sql = sql .. "WHERE domain_uuid = :domain_uuid ";
+						sql = sql .. "and voicemail_id = :voicemail_id ";
 						local params = {domain_uuid = domain_uuid};
 						if number_alias and #number_alias > 0 then
 							params.voicemail_id = number_alias;
@@ -461,25 +531,13 @@
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
 						end
 						dbh:query(sql, params, function(row)
-							if (string.len(row.voicemail_enabled) > 0) then
-								vm_enabled = row.voicemail_enabled;
-							end
+							vm_keep_local_after_email = row.voicemail_local_after_email;
+							vm_enabled = row.voicemail_enabled;
+							vm_attach_file = row.voicemail_attach_file;
 							vm_password = row.voicemail_password;
-							vm_attach_file = "true";
-							if (string.len(row.voicemail_attach_file) > 0) then
-								vm_attach_file = row.voicemail_attach_file;
-							end
-							vm_keep_local_after_email = "true";
-							if (string.len(row.voicemail_local_after_email) > 0) then
-								vm_keep_local_after_email = row.voicemail_local_after_email;
-							end
-							if (string.len(row.voicemail_mail_to) > 0) then
-								vm_mailto = row.voicemail_mail_to;
-							else
-								vm_mailto = "";
-							end
+							vm_mailto = row.voicemail_mail_to;
 						end);
-				end
+					end
 
 				--if the extension does not exist set continue to false;
 					if (extension_uuid == nil) then
@@ -570,7 +628,7 @@
 							if (call_group ~= nil) and (string.len(call_group) > 0) then
 								xml:append([[								<variable name="call_group" value="]] ..  xml.sanitize(call_group) .. [["/>]]);
 							end
-							if (call_screen_enabled ~= nil) and (string.len(call_screen_enabled) > 0) then
+							if (call_screen_enabled ~= nil) and (call_screen_enabled == 'true') then
 								xml:append([[								<variable name="call_screen_enabled" value="]] ..  xml.sanitize(call_screen_enabled) .. [["/>]]);
 							end
 							if (user_record ~= nil) and (string.len(user_record) > 0) then
@@ -613,10 +671,10 @@
 							if (directory_full_name ~= nil) and (string.len(directory_full_name) > 0) then
 								xml:append([[								<variable name="directory_full_name" value="]] ..  xml.sanitize(directory_full_name) .. [["/>]]);
 							end
-							if (directory_visible ~= nil) and (string.len(directory_visible) > 0) then
+							if (directory_visible ~= nil) and (directory_visible == 'true') then
 								xml:append([[								<variable name="directory-visible" value="]] ..  xml.sanitize(directory_visible) .. [["/>]]);
 							end
-							if (directory_exten_visible ~= nil) and (string.len(directory_exten_visible) > 0) then
+							if (directory_exten_visible ~= nil) and (directory_exten_visible == 'true') then
 								xml:append([[								<variable name="directory-exten-visible" value="]] ..  xml.sanitize(directory_exten_visible) .. [["/>]]);
 							end
 							if (limit_max ~= nil) and (string.len(limit_max) > 0) then
@@ -639,7 +697,7 @@
 							if (absolute_codec_string ~= nil) and (string.len(absolute_codec_string) > 0) then
 								xml:append([[								<variable name="absolute_codec_string" value="]] ..  xml.sanitize(absolute_codec_string) .. [["/>]]);
 							end
-							if (force_ping ~= nil) and (string.len(force_ping) > 0) then
+							if (force_ping ~= nil) and (force_ping == 'true') then
 								xml:append([[								<variable name="force_ping" value="]] ..  xml.sanitize(force_ping) .. [["/>]]);
 							end
 							if (sip_bypass_media ~= nil) and (sip_bypass_media == "bypass-media") then
@@ -651,37 +709,37 @@
 							if (sip_bypass_media ~= nil) and (sip_bypass_media == "proxy-media") then
 								xml:append([[								<variable name="proxy_media" value="true"/>]]);
 							end
-							if (forward_all_enabled ~= nil) and (string.len(forward_all_enabled) > 0) then
+							if (forward_all_enabled ~= nil) and (forward_all_enabled == 'true') then
 								xml:append([[								<variable name="forward_all_enabled" value="]] ..  xml.sanitize(forward_all_enabled) .. [["/>]]);
 							end
 							if (forward_all_destination ~= nil) and (string.len(forward_all_destination) > 0) then
 								xml:append([[								<variable name="forward_all_destination" value="]] ..  xml.sanitize(forward_all_destination) .. [["/>]]);
 							end
-							if (forward_busy_enabled ~= nil) and (string.len(forward_busy_enabled) > 0) then
+							if (forward_busy_enabled ~= nil) and (forward_busy_enabled == 'true') then
 								xml:append([[								<variable name="forward_busy_enabled" value="]] ..  xml.sanitize(forward_busy_enabled) .. [["/>]]);
 							end
 							if (forward_busy_destination ~= nil) and (string.len(forward_busy_destination) > 0) then
 								xml:append([[								<variable name="forward_busy_destination" value="]] ..  xml.sanitize(forward_busy_destination) .. [["/>]]);
 							end
-							if (forward_no_answer_enabled ~= nil) and (string.len(forward_no_answer_enabled) > 0) then
+							if (forward_no_answer_enabled ~= nil) and (forward_no_answer_enabled == 'true') then
 								xml:append([[								<variable name="forward_no_answer_enabled" value="]] ..  xml.sanitize(forward_no_answer_enabled) .. [["/>]]);
 							end
 							if (forward_no_answer_destination ~= nil) and (string.len(forward_no_answer_destination) > 0) then
 								xml:append([[								<variable name="forward_no_answer_destination" value="]] ..  xml.sanitize(forward_no_answer_destination) .. [["/>]]);
 							end
-							if (forward_user_not_registered_enabled ~= nil) and (string.len(forward_user_not_registered_enabled) > 0) then
+							if (forward_user_not_registered_enabled ~= nil) and (forward_user_not_registered_enabled == 'true') then
 								xml:append([[								<variable name="forward_user_not_registered_enabled" value="]] ..  xml.sanitize(forward_user_not_registered_enabled) .. [["/>]]);
 							end
 							if (forward_user_not_registered_destination ~= nil) and (string.len(forward_user_not_registered_destination) > 0) then
 								xml:append([[								<variable name="forward_user_not_registered_destination" value="]] ..  xml.sanitize(forward_user_not_registered_destination) .. [["/>]]);
 							end
-							if (follow_me_enabled ~= nil) and (string.len(follow_me_enabled) > 0) then
+							if (follow_me_enabled ~= nil) and (follow_me_enabled == 'true') then
 								xml:append([[								<variable name="follow_me_enabled" value="]] ..  xml.sanitize(follow_me_enabled) .. [["/>]]);
 							end
 							--if (follow_me_destinations ~= nil) and (string.len(follow_me_destinations) > 0) then
 							--	xml:append([[								<variable name="follow_me_destinations" value="]] .. follow_me_destinations .. [["/>]]);
 							--end
-							if (do_not_disturb ~= nil) and (string.len(do_not_disturb) > 0) then
+							if (do_not_disturb ~= nil) and (do_not_disturb == 'true') then
 								xml:append([[								<variable name="do_not_disturb" value="]] .. xml.sanitize(do_not_disturb) .. [["/>]]);
 							end
 							if (extension_language ~= nil) and (string.len(extension_language) > 0) then
@@ -716,23 +774,23 @@
 
 						--set the cache
 							if cache.support() then
-								local key = "directory:" .. sip_from_number .. "@" .. domain_name
+								local cache_key = hostname .. ":directory:" .. sip_from_number .. "@" .. domain_name
 								if debug['cache'] then
-									freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. key .. "\n")
+									freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. cache_key .. "\n")
 								end
-								local ok, err = cache.set(key, XML_STRING, expire["directory"])
+								local ok, err = cache.set(cache_key, XML_STRING, expire["directory"])
 								if debug["cache"] and not ok then
-									freeswitch.consoleLog("warning", "[xml_handler][directory][cache] set key: " .. key .. " fail: " .. tostring(err) .. "\n");
+									freeswitch.consoleLog("warning", "[xml_handler][directory][cache] set key: " .. cache_key .. " fail: " .. tostring(err) .. "\n");
 								end
 
 								if sip_from_number ~= sip_from_user then
-									key = "directory:" .. sip_from_user .. "@" .. domain_name
+									cache_key = hostname .. ":directory:" .. sip_from_user .. "@" .. domain_name
 									if debug['cache'] then
-										freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. key .. "\n")
+										freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. cache_key .. "\n")
 									end
-									ok, err = cache.set(key, XML_STRING, expire["directory"])
+									ok, err = cache.set(cache_key, XML_STRING, expire["directory"])
 									if debug["cache"] and not ok then
-										freeswitch.consoleLog("warning", "[xml_handler][directory][cache] set key: " .. key .. " fail: " .. tostring(err) .. "\n");
+										freeswitch.consoleLog("warning", "[xml_handler][directory][cache] set key: " .. cache_key .. " fail: " .. tostring(err) .. "\n");
 									end
 								end
 							end
@@ -772,8 +830,8 @@
 				</section>
 			</document>]];
 		--set the cache
-			--local key = "directory:" .. user .. "@" .. domain_name;
-			--ok, err = cache.set(key, XML_STRING, expire["directory"]);
+			--local cache_key = "directory:" .. user .. "@" .. domain_name;
+			--ok, err = cache.set(cache_key, XML_STRING, expire["directory"]);
 			--freeswitch.consoleLog("notice", "[xml_handler] " .. user .. "@" .. domain_name .. "\n");
 	end
 

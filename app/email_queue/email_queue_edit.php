@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('email_queue_add') || permission_exists('email_queue_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('email_queue_add') || permission_exists('email_queue_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -84,20 +81,17 @@
 				switch ($_POST['action']) {
 					case 'copy':
 						if (permission_exists('email_queue_add')) {
-							$obj = new database;
-							$obj->copy($array);
+							$database->copy($array);
 						}
 						break;
 					case 'delete':
 						if (permission_exists('email_queue_delete')) {
-							$obj = new database;
-							$obj->delete($array);
+							$database->delete($array);
 						}
 						break;
 					case 'toggle':
 						if (permission_exists('email_queue_update')) {
-							$obj = new database;
-							$obj->toggle($array);
+							$database->toggle($array);
 						}
 						break;
 				}
@@ -190,9 +184,6 @@
 			$array['email_queue'][0]['email_response'] = $email_response;
 
 		//save the data
-			$database = new database;
-			$database->app_name = 'email queue';
-			$database->app_uuid = '5befdf60-a242-445f-91b3-2e9ee3e0ddf7';
 			$database->save($array);
 
 		//redirect the user
@@ -216,7 +207,6 @@
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['email_queue_uuid'] = $email_queue_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$email_date = $row["email_date"];
@@ -234,11 +224,11 @@
 	}
 
 //load editor preferences/defaults
-	$setting_size = !empty($_SESSION["editor"]["font_size"]["text"]) ? $_SESSION["editor"]["font_size"]["text"] : '12px';
-	$setting_theme = !empty($_SESSION["editor"]["theme"]["text"]) ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
-	$setting_invisibles = isset($_SESSION['editor']['invisibles']['text']) ? $_SESSION['editor']['invisibles']["text"] : 'false';
-	$setting_indenting = isset($_SESSION['editor']['indent_guides']['text']) ? $_SESSION['editor']['indent_guides']["text"]: 'false';
-	$setting_numbering = isset($_SESSION['editor']['line_numbers']['text']) ? $_SESSION['editor']['line_numbers']["text"] : 'true';
+	$setting_size = !empty($settings->get('editor', 'font_size')) ? $settings->get('editor', 'font_size') : '12px';
+	$setting_theme = !empty($settings->get('editor', 'theme')) ? $settings->get('editor', 'theme') : 'cobalt';
+	$setting_invisibles = $settings->get('editor', 'invisibles', 'false');
+	$setting_indenting = $settings->get('editor', 'indent_guides', 'false');
+	$setting_numbering = $settings->get('editor', 'line_numbers', 'true');
 
 //create token
 	$object = new token;

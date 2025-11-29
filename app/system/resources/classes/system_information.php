@@ -37,10 +37,20 @@ abstract class system_information {
 	abstract public function get_cpu_percent_per_core(): array;
 	abstract public function get_network_speed(string $interface = 'eth0'): array;
 
+	/**
+	 * Returns the system load average.
+	 *
+	 * @return array Three most recent one-minute load averages.
+	 */
 	public function get_load_average() {
 		return sys_getloadavg();
 	}
 
+	/**
+	 * Returns a system information object based on the underlying operating system.
+	 *
+	 * @return ?system_information The system information object for the current OS, or null if not supported.
+	 */
 	public static function new(): ?system_information {
 		if (stristr(PHP_OS, 'BSD')) {
 			return new bsd_system_information();

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -79,12 +79,11 @@
 		//unflag others as primary
 		$allowed_primary_attachment = false;
 		if ($attachment_primary && ($attachment_extension == 'jpg' || $attachment_extension == 'jpeg' || $attachment_extension == 'gif' || $attachment_extension == 'png')) {
-			$sql = "update v_contact_attachments set attachment_primary = 0 ";
+			$sql = "update v_contact_attachments set attachment_primary = false ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and contact_uuid = :contact_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['contact_uuid'] = $contact_uuid;
-			$database = new database;
 			$database->execute($sql, $parameters ?? null);
 			unset($sql, $parameters);
 
@@ -92,7 +91,7 @@
 		}
 
 		//get the allowed extensions
-		$allowed_extensions = array_keys(json_decode($_SESSION['contact']['allowed_attachment_types']['text'], true));
+		$allowed_extensions = array_keys(json_decode($settings->get('contact', 'allowed_attachment_types'), true));
 
 		//check the allowed extensions
 		if ($attachment['error'] == '0' && in_array($attachment_extension, $allowed_extensions)) {
@@ -157,9 +156,6 @@
 		}
 
 		//save data
-		$database = new database;
-		$database->app_name = 'contacts';
-		$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 		$database->save($array);
 		unset($array);
 
@@ -176,7 +172,6 @@
 		$sql .= "and contact_attachment_uuid = :contact_attachment_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_attachment_uuid'] = $contact_attachment_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$attachment_primary = $row["attachment_primary"];
@@ -186,6 +181,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	$attachment_primary = $attachment_primary ?? false;
 
 //create token
 	$object = new token;
@@ -238,7 +236,7 @@
 		}
 	}
 	else {
-		$allowed_attachment_types = json_decode($_SESSION['contact']['allowed_attachment_types']['text'], true);
+		$allowed_attachment_types = json_decode($settings->get('contact', 'allowed_attachment_types'), true);
 		echo "	<input type='file' class='formfld' name='attachment' id='attachment' accept='.".implode(',.',array_keys($allowed_attachment_types))."'>\n";
 		echo "	<span style='display: inline-block; margin-top: 5px; font-size: 80%;'>".strtoupper(implode(', ', array_keys($allowed_attachment_types)))."</span>";
 	}
@@ -261,10 +259,17 @@
 	echo "	".$text['label-primary']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='attachment_primary' id='attachment_primary'>\n";
-	echo "		<option value='0'>".$text['option-false']."</option>\n";
-	echo "		<option value='1' ".(!empty($attachment_primary) && $attachment_primary ? "selected" : null).">".$text['option-true']."</option>\n";
-	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "		<select class='formfld' id='attachment_primary' name='attachment_primary'>\n";
+	echo "			<option value='true' ".($attachment_primary == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($attachment_primary == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 

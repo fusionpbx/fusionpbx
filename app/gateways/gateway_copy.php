@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2018
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('gateway_add')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('gateway_add')) {
 		echo "access denied";
 		exit;
 	}
@@ -50,7 +47,6 @@
 			$sql = "select * from v_gateways ";
 			$sql .= "where gateway_uuid = :gateway_uuid ";
 			$parameters['gateway_uuid'] = $gateway_uuid;
-			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
 				$domain_uuid = $row["domain_uuid"];
@@ -65,16 +61,19 @@
 				$register_proxy = $row["register_proxy"];
 				$outbound_proxy = $row["outbound_proxy"];
 				$expire_seconds = $row["expire_seconds"];
-				$register = $row["register"];
+				$register = $row["register"] ?? false;
 				$register_transport = $row["register_transport"];
 				$contact_params = $row["contact_params"];
 				$retry_seconds = $row["retry_seconds"];
 				$extension = $row["extension"];
 				$codec_prefs = $row["codec_prefs"];
 				$ping = $row["ping"];
-				$channels = $row["channels"];
-				$caller_id_in_from = $row["caller_id_in_from"];
-				$supress_cng = $row["supress_cng"];
+				$ping_min = $row["ping_min"];
+				$ping_max = $row["ping_max"];
+				$contact_in_ping = $row["contact_in_ping"] ?? false;
+				// $channels = $row["channels"];
+				$caller_id_in_from = $row["caller_id_in_from"] ?? false;
+				$supress_cng = $row["supress_cng"] ?? false;
 				$sip_cid_type = $row["sip_cid_type"];
 				$extension_in_contact = $row["extension_in_contact"];
 				$effective_caller_id_name = $row["effective_caller_id_name"];
@@ -83,7 +82,7 @@
 				$outbound_caller_id_number = $row["outbound_caller_id_number"];
 				$context = $row["context"];
 				$profile = $row["profile"];
-				$enabled = $row["enabled"];
+				$enabled = $row["enabled"] ?? false;
 				$description = $row["description"]." (".$text['label-copy'].")";
 			}
 			unset($sql, $parameters, $row);
@@ -118,6 +117,9 @@
 			$array['gateways'][0]['extension'] = $extension;
 			$array['gateways'][0]['codec_prefs'] = $codec_prefs;
 			$array['gateways'][0]['ping'] = $ping;
+			$array['gateways'][0]['ping_min'] = $ping_min;
+			$array['gateways'][0]['ping_max'] = $ping_max;
+			$array['gateways'][0]['contact_in_ping'] = $contact_in_ping;
 			//$array['gateways'][0]['channels'] = $channels;
 			$array['gateways'][0]['caller_id_in_from'] = $caller_id_in_from;
 			$array['gateways'][0]['supress_cng'] = $supress_cng;
@@ -128,14 +130,11 @@
 			$array['gateways'][0]['enabled'] = $enabled;
 			$array['gateways'][0]['description'] = $description;
 
-			$database = new database;
-			$database->app_name = 'gateways';
-			$database->app_uuid = '297ab33e-2c2f-8196-552c-f3567d2caaf8';
 			$database->save($array);
 			unset($array);
 
 		//add new gateway to session variable
-			if ($enabled == 'true') {
+			if ($enabled == true) {
 				$_SESSION['gateways'][$gateway_uuid] = $gateway;
 			}
 
@@ -143,10 +142,8 @@
 			save_gateway_xml();
 
 		//clear the cache
-			$esl = event_socket::create();
-			$hostname = trim(event_socket::api('switchname'));
 			$cache = new cache;
-			$cache->delete("configuration:sofia.conf:".$hostname);
+			$cache->delete(gethostname().":configuration:sofia.conf");
 
 		//set message
 			message::add($text['message-copy']);

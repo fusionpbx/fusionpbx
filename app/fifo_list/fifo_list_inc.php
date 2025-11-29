@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('active_queue_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('active_queue_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -42,7 +39,7 @@
 	$text = $language->get();
 
 //include theme config for button images
-	include_once("themes/".$_SESSION['domain']['template']['name']."/config.php");
+	include_once("themes/".$settings->get('domain', 'template', 'default')."/config.php");
 
 //show the list
 	$switch_cmd = 'fifo list';

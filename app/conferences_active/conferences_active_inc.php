@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('conference_active_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('conference_active_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -100,7 +97,6 @@
 						$sql .= "left join v_conference_centers as cc on cr.conference_center_uuid = cc.conference_center_uuid ";
 						$sql .= "where cr.conference_room_uuid = :conference_room_uuid ";
 						$parameters['conference_room_uuid'] = $conference_uuid;
-						$database = new database;
 						$conference = $database->select($sql, $parameters, 'row');
 						$conference_name = $conference['conference_room_name'];
 						$conference_extension = $conference['conference_center_extension'];
@@ -120,7 +116,6 @@
 						$sql .= "and conference_extension = :conference_extension ";
 						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 						$parameters['conference_extension'] = $name_array[0];
-						$database = new database;
 						$conference = $database->select($sql, $parameters, 'row');
 						$conference_name = $conference['conference_name'];
 						$conference_extension = $conference['conference_extension'];
@@ -144,7 +139,7 @@
 					echo "	<td>".escape($conference_extension)."</td>\n";
 					echo "	<td>".escape($participant_pin)."</td>\n";
 					echo "	<td class='center'>".escape($member_count)."</td>\n";
-					if (permission_exists('conference_interactive_view') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+					if (permission_exists('conference_interactive_view') && $settings->get('theme', 'list_row_edit_button', false)) {
 						echo "	<td class='action-button'>";
 						echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$settings->get('theme', 'button_icon_view'),'link'=>$list_row_url]);
 						echo "	</td>\n";
@@ -159,3 +154,5 @@
 	}
 
 ?>
+
+																									

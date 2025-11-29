@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('device_add')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('device_add')) {
 		echo "access denied";
 		exit;
 	}
@@ -40,18 +37,6 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduct the functionality but requirs PHP 5.1.0 or higher
-	if (!function_exists('str_getcsv')) {
-		function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
-			$fp = fopen("php://memory", 'r+');
-			fputs($fp, $input);
-			rewind($fp);
-			$data = fgetcsv($fp, null, $delimiter, $enclosure, $escape);
-			fclose($fp);
-			return $data;
-		}
-	}
 
 //set the max php execution time
 	ini_set('max_execution_time',7200);
@@ -64,7 +49,7 @@
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
-		$file = $_SESSION['server']['temp']['dir']."/devices-".$_SESSION['domain_name'].".csv";
+		$file = $settings->get('server', 'temp')."/devices-".$_SESSION['domain_name'].".csv";
 		if (file_put_contents($file, $_POST['data'])) {
 			$_SESSION['file'] = $file;
 		}
@@ -74,7 +59,7 @@
 	//$_POST['submit'] == "Upload" &&
 	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('device_import')) {
 		if ($_POST['type'] == 'csv') {
-			$file = $_SESSION['server']['temp']['dir']."/devices-".$_SESSION['domain_name'].".csv";
+			$file = $settings->get('server', 'temp')."/devices-".$_SESSION['domain_name'].".csv";
 			if (move_uploaded_file($_FILES['ulfile']['tmp_name'], $file)) {
 				$_SESSION['file'] = $file;
 			}
@@ -228,7 +213,15 @@
 	}
 
 //get the parent table
-	function get_parent($schema,$table_name) {
+	/**
+	 * Retrieves the parent table name for a given table in the schema.
+	 *
+	 * @param array  $schema     An associative array of schema definitions
+	 * @param string $table_name The name of the table to retrieve the parent for
+	 *
+	 * @return string|null The parent table name if found, otherwise null
+	 */
+	function get_parent($schema, $table_name) {
 		foreach ($schema as $row) {
 			if ($row['table'] == $table_name) {
 				return $row['parent'];
@@ -252,11 +245,6 @@
 
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
-
-		//open the database
-			$database = new database;
-			$database->app_name = 'devices';
-			$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 
 		//get the users
 			$sql = "select * from v_users where domain_uuid = :domain_uuid ";
@@ -448,7 +436,7 @@
 						//view_array($message);
 					}
 
-					if (!empty($_SESSION['provision']['path']['text'])) {
+					if (!empty($settings->get('provision', 'path'))) {
 						$prov = new provision;
 						$prov->domain_uuid = $domain_uuid;
 						$response = $prov->write();

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2020-2024 All Rights Reserved.
+	Copyright (C) 2020-2025 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -25,13 +25,10 @@
 
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
-	if (permission_exists('device_profile_add') || permission_exists('device_profile_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('device_profile_add') || permission_exists('device_profile_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -76,7 +73,7 @@
 			$device_profile_name = $_POST["device_profile_name"];
 			$device_profile_keys = $_POST["device_profile_keys"];
 			$device_profile_settings = $_POST["device_profile_settings"];
-			$device_profile_enabled = $_POST["device_profile_enabled"] ?? 'false';
+			$device_profile_enabled = $_POST["device_profile_enabled"];
 			$device_profile_description = $_POST["device_profile_description"];
 			$device_profile_keys_delete = $_POST["device_profile_keys_delete"] ?? null;
 			$device_profile_settings_delete = $_POST["device_profile_settings_delete"] ?? null;
@@ -96,7 +93,6 @@
 					$sql = "select domain_uuid from v_device_profiles ";
 					$sql .= "where device_profile_uuid = :device_profile_uuid ";
 					$parameters['device_profile_uuid'] = $device_profile_uuid;
-					$database = new database;
 					$domain_uuid = $database->execute($sql, $parameters, 'column');
 				}
 			}
@@ -115,7 +111,6 @@
 			//if (empty($device_profile_keys)) { $msg .= $text['message-required']." ".$text['label-device_profile_keys']."<br>\n"; }
 			//if (empty($device_profile_settings)) { $msg .= $text['message-required']." ".$text['label-device_profile_settings']."<br>\n"; }
 			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-			if (empty($device_profile_enabled)) { $msg .= $text['message-required']." ".$text['label-device_profile_enabled']."<br>\n"; }
 			//if (empty($device_profile_description)) { $msg .= $text['message-required']." ".$text['label-device_profile_description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -165,7 +160,7 @@
 			$y = 0;
 			if (permission_exists("device_profile_setting_edit")) {
 				foreach ($device_profile_settings as $row) {
-					if (strlen($row['profile_setting_name']) > 0 && !empty($row['profile_setting_enabled'])) {
+					if (strlen($row['profile_setting_name']) > 0) {
 						$array['device_profiles'][0]['device_profile_settings'][$y]["domain_uuid"] = $domain_uuid;
 						$array['device_profiles'][0]['device_profile_settings'][$y]["device_profile_setting_uuid"] = $row["device_profile_setting_uuid"];
 						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_name"] = $row["profile_setting_name"];
@@ -178,9 +173,6 @@
 			}
 
 		//save to the data
-			$database = new database;
-			$database->app_name = 'Device Profiles';
-			$database->app_uuid = 'bb2531c3-97e6-428f-9a19-cbac1b96f5b7';
 			$database->save($array);
 
 		//remove checked keys
@@ -223,12 +215,17 @@
 //pre-populate the form
 	if (!empty($_GET) && is_array($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$device_profile_uuid = $_GET["id"];
-		$sql = "select * from v_device_profiles ";
+		$sql = "select ";
+		$sql .= "device_profile_uuid, ";
+		$sql .= "domain_uuid, ";
+		$sql .= "device_profile_name, ";
+		$sql .= "device_profile_enabled, ";
+		$sql .= "device_profile_description ";
+		$sql .= "from v_device_profiles ";
 		$sql .= "where device_profile_uuid = :device_profile_uuid ";
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['device_profile_uuid'] = $device_profile_uuid;
-		$database = new database;
 		$result = $database->execute($sql, $parameters, 'all');
 		foreach ($result as $row) {
 			$domain_uuid = $row["domain_uuid"];
@@ -240,9 +237,6 @@
 		}
 		unset ($sql, $parameters);
 	}
-
-//set the defaults
-	if (empty($device_profile_enabled)) { $device_profile_enabled = 'true'; }
 
 //get the child data
 	if (!empty($device_profile_uuid)) {
@@ -265,7 +259,6 @@
 		$sql .= "profile_key_id asc ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['device_profile_uuid'] = $device_profile_uuid;
-		$database = new database;
 		$device_profile_keys = $database->execute($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
@@ -295,9 +288,8 @@
 //get the vendors
 	$sql = "select * ";
 	$sql .= "from v_device_vendors as v ";
-	$sql .= "where enabled = 'true' ";
+	$sql .= "where enabled = true ";
 	$sql .= "order by name asc ";
-	$database = new database;
 	$vendors = $database->select($sql, null, 'all');
 	unset($sql);
 
@@ -305,10 +297,9 @@
 	$sql = "select v.name as vendor_name, f.type, f.subtype, f.value ";
 	$sql .= "from v_device_vendors as v, v_device_vendor_functions as f ";
 	$sql .= "where v.device_vendor_uuid = f.device_vendor_uuid ";
-	$sql .= "and v.enabled = 'true' ";
-	$sql .= "and f.enabled = 'true' ";
+	$sql .= "and v.enabled = true ";
+	$sql .= "and f.enabled = true ";
 	$sql .= "order by v.name asc, f.type asc ";
-	$database = new database;
 	$vendor_functions = $database->select($sql, null, 'all');
 	unset($sql);
 
@@ -319,11 +310,11 @@
 
 //add an empty row
 	if (empty($device_profile_keys) || !is_array($device_profile_keys) || count($device_profile_keys) == 0) {
-		$rows = $_SESSION['devices']['profile_key_add_rows']['numeric'];
+		$rows = $settings->get('devices', 'profile_key_add_rows');
 		$id = 0;
 	}
 	if (!empty($device_profile_keys) && is_array($device_profile_keys) && count($device_profile_keys) > 0) {
-		$rows = $_SESSION['devices']['profile_key_edit_rows']['numeric'];
+		$rows = $settings->get('devices', 'profile_key_edit_rows');
 		$id = count($device_profile_keys)+1;
 	}
 	for ($x = 0; $x < $rows; $x++) {
@@ -338,7 +329,7 @@
 		$device_profile_keys[$id]['profile_key_line'] = '';
 		$device_profile_keys[$id]['profile_key_value'] = '';
 		$device_profile_keys[$id]['profile_key_extension'] = '';
-		$device_profile_keys[$id]['profile_key_protected'] = '';
+		$device_profile_keys[$id]['profile_key_protected'] = false;
 		$device_profile_keys[$id]['profile_key_label'] = '';
 		$device_profile_keys[$id]['profile_key_icon'] = '';
 		$id++;
@@ -352,7 +343,6 @@
 		$sql .= "order by profile_setting_name asc";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['device_profile_uuid'] = $device_profile_uuid;
-		$database = new database;
 		$device_profile_settings = $database->execute($sql, $parameters, 'all');
 		unset ($sql, $parameters);
 	}
@@ -369,13 +359,16 @@
 	$device_profile_settings[$x]['device_profile_setting_uuid'] = '';
 	$device_profile_settings[$x]['profile_setting_name'] = '';
 	$device_profile_settings[$x]['profile_setting_value'] = '';
-	$device_profile_settings[$x]['profile_setting_enabled'] = '';
+	$device_profile_settings[$x]['profile_setting_enabled'] = true;
 	$device_profile_settings[$x]['profile_setting_description'] = '';
 
 //filter the uuid
 	if (empty($device_profile_uuid) || !is_uuid($device_profile_uuid)) {
 		$device_profile_uuid = null;
 	}
+
+//set the defaults
+	$device_profile_enabled = $device_profile_enabled ?? true;
 
 //create token
 	$object = new token;
@@ -632,20 +625,29 @@
 		echo "			<td class='formfld'>\n";
 		echo "				<input class='formfld' type='text' name='device_profile_keys[$x][profile_key_value]' maxlength='255' value=\"".escape($row["profile_key_value"])."\">\n";
 		echo "			</td>\n";
+
 		if (permission_exists('device_key_extension')) {
 			echo "			<td class='formfld'>\n";
 			echo "				<input class='formfld' type='text' name='device_profile_keys[$x][profile_key_extension]' maxlength='255' value=\"".escape($row["profile_key_extension"])."\">\n";
 			echo "			</td>\n";
 		}
+
 		if (permission_exists('device_key_protected')) {
 			echo "			<td>\n";
-			echo "				<select class='formfld' name='device_profile_keys[$x][profile_key_protected]'>\n";
-			echo "					<option value=''></option>\n";
-			echo "					<option value='true' ".($row['profile_key_protected'] == "true" ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-			echo "					<option value='false' ".($row['profile_key_protected'] == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-			echo "				</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
+			}
+			echo "	<select class='formfld' id='profile_key_protected' name='device_profile_keys[$x][profile_key_protected]'>\n";
+			echo "		<option value='true' ".($row['profile_key_protected'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($row['profile_key_protected'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
+			}
 			echo "			</td>\n";
 		}
+
 		echo "			<td class='formfld'>\n";
 		echo "				<input class='formfld' type='text' name='device_profile_keys[$x][profile_key_label]' maxlength='255' value=\"".escape($row["profile_key_label"])."\">\n";
 		echo "			</td>\n";
@@ -711,10 +713,17 @@
 			echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_value]' maxlength='255' value=\"".escape($row["profile_setting_value"])."\">\n";
 			echo "			</td>\n";
 			echo "			<td class='formfld'>\n";
-			echo "				<select class='formfld' name='device_profile_settings[$x][profile_setting_enabled]'>\n";
-			echo "					<option value='true'>".$text['label-true']."</option>\n";
-			echo "					<option value='false' ".($row['profile_setting_enabled'] == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-			echo "				</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
+			}
+			echo "	<select class='formfld' id='profile_setting_enabled' name='device_profile_settings[".$x."][profile_setting_enabled]'>\n";
+			echo "		<option value='true' ".($row['profile_setting_enabled'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($row['profile_setting_enabled'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
+			}
 			echo "			</td>\n";
 			echo "			<td class='formfld'>\n";
 			echo "				<input class='formfld' type='text' name='device_profile_settings[$x][profile_setting_description]' maxlength='255' value=\"".escape($row["profile_setting_description"])."\">\n";
@@ -763,17 +772,16 @@
 	echo "	".$text['label-device_profile_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='device_profile_enabled' name='device_profile_enabled' value='true' ".($device_profile_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='device_profile_enabled' name='device_profile_enabled'>\n";
-		echo "		<option value='true' ".($device_profile_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($device_profile_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='device_profile_enabled' name='device_profile_enabled'>\n";
+	echo "		<option value='true' ".($device_profile_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($device_profile_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo ($text['description-device_profile_enabled'] ?? '')."\n";

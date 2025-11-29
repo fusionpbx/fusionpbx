@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description of base_websocket_system_service 
+ * Description of base_websocket_system_service
  *
  * @author Tim Fry <tim@fusionpbx.com>
  */
@@ -12,43 +12,63 @@ abstract class base_websocket_system_service extends service implements websocke
 
 	/**
 	 * Sets a time to fire the on_timer function
+	 *
 	 * @var int|null
 	 */
 	protected $timer_expire_time = null;
 
 	/**
 	 * Websocket client
+	 *
 	 * @var websocket_client $ws_client
 	 */
 	protected $ws_client;
 
-	//abstract protected function reload_settings(): void;
+	private $timers;
 
+	/**
+	 * Array of topics and their callbacks
+	 *
+	 * @var array
+	 */
+	protected $topics;
+
+	/**
+	 * Array of listeners
+	 * Listener is an array of socket and callback used to listen for events on the socket. When a listener is added,
+	 * the socket is added to the array of listeners. When the socket is closed, the listener is removed from the
+	 * array of listeners. When an event is received on the respective socket, the provided callback is called.
+	 *
+	 * @var array
+	 */
+	protected $listeners;
+
+	/**
+	 * Outputs the version of the Service.
+	 *
+	 * @return void
+	 */
 	protected static function display_version(): void {
 		echo "System Dashboard Service 1.0\n";
 	}
 
 	/**
-	 * Set a timer to trigger the on_timer function every $seconds. To stop the timer, set the value to null
+	 * Set a timer to trigger the defined function every $seconds. To stop the timer, set the value to null
+	 *
 	 * @param int $seconds
+	 *
 	 * @return void
 	 * @see on_timer
 	 */
-	protected function set_timer(?int $seconds): void {
-		if ($seconds !== null) $this->timer_expire_time = time() + $seconds;
-		else $this->timer_expire_time = null;
+	protected function set_timer(int $seconds, callable $callable): void {
+		$this->timers[] = ['expire_time' => time() + $seconds, 'callable' => $callable];
 	}
 
 	/**
-	 * When the set_timer is used to set a timer, this function will run. Override
-	 * the function in the child class.
+	 * Append command options to set the websockets port and host address
+	 *
 	 * @return void
-	 * @see set_timer
 	 */
-	protected function on_timer(): void {
-		return;
-	}
-
 	protected static function set_command_options() {
 		parent::append_command_option(
 			command_option::new()
@@ -70,15 +90,48 @@ abstract class base_websocket_system_service extends service implements websocke
 		);
 	}
 
+	/**
+	 * Sets the port for the WebSocket connection.
+	 *
+	 * @param int $port The new port number to use for the WebSocket connection
+	 */
 	protected static function set_websockets_port($port): void {
 		self::$websocket_port = $port;
 	}
 
+	/**
+	 * Set the host address for websockets connections.
+	 *
+	 * @param string $host The host address to use for websockets connections
+	 */
 	protected static function set_websockets_host_address($host): void {
 		self::$websocket_host = $host;
 	}
 
+	/**
+	 * Add a socket listener
+	 *
+	 * @param          $socket
+	 * @param callable $callback
+	 *
+	 * @return void
+	 */
+	protected function add_listener($socket, callable $callback): void {
+		$this->listeners[] = [$socket, $callback];
+	}
+
+	/**
+	 * Main execution loop for handling WebSocket events and timers.
+	 *
+	 * @return int Exit code, indicating whether the process exited normally (0) or with an error (1).
+	 */
 	public function run(): int {
+		// set the timers property as an array
+		$this->timers = [];
+
+		// Set the listeners property as an array
+		$this->listeners = [];
+
 		// re-read the config file to get any possible changes
 		parent::$config->read();
 
@@ -100,7 +153,9 @@ abstract class base_websocket_system_service extends service implements websocke
 		$suppress_ws_message = false;
 
 		while ($this->running) {
-			$read = [];
+			// Get the array of sockets to read from
+			$listeners = array_column($this->listeners, 0);
+
 			// reconnect to websocket server
 			if ($this->ws_client === null || !$this->ws_client->is_connected()) {
 				// reconnect failed
@@ -111,7 +166,9 @@ abstract class base_websocket_system_service extends service implements websocke
 			}
 
 			if ($this->ws_client !== null && $this->ws_client->is_connected()) {
-				$read[] = $this->ws_client->socket();
+				// Combine the websocket client and the listeners into a single array
+				$read = array_merge($listeners, [$this->ws_client->socket()]);
+				// Reset the suppress message flag
 				$suppress_ws_message = false;
 			}
 
@@ -135,37 +192,45 @@ abstract class base_websocket_system_service extends service implements websocke
 							$this->handle_websocket_event($this->ws_client);
 							continue;
 						}
+						// Other listeners
+						foreach ($this->listeners as $listener) {
+							if ($resource === $listener[0]) {
+								// Call the callback function provided by the add_listener function
+								call_user_func($listener[1]);
+								continue;
+							}
+						}
 					}
 				}
 			}
 
 			// Timers can be set by child classes
-			if ($this->timer_expire_time !== null && time() >= $this->timer_expire_time) {
-				$this->on_timer();
+			if (!empty($this->timers)) {
+				// Check all timers
+				foreach ($this->timers as $key => $array) {
+					// Check if the timer should be run
+					if (time() >= $array['expire_time']) {
+						// Get the callback function
+						$callable = $array['callable'];
+						// Call the callback and see if it returns a value for the next timer
+						$next_timer = call_user_func($callable);
+						if (is_numeric($next_timer)) {
+							// Set the timer again when requested by called function returning a value
+							$this->set_timer($next_timer, $callable);
+						}
+						// Remove the expired timer from tracking list
+						unset($this->timers[$key]);
+					}
+				}
 			}
 		}
 		return 0;
 	}
 
-	protected function debug(string $message) {
-		self::log($message, LOG_DEBUG);
-	}
-
-	protected function warn(string $message) {
-		self::log($message, LOG_WARNING);
-	}
-
-	protected function error(string $message) {
-		self::log($message, LOG_ERR);
-	}
-
-	protected function info(string $message) {
-		self::log($message, LOG_INFO);
-	}
-
 	/**
 	 * Connects to the web socket server using a websocket_client object
-	 * @return bool
+	 *
+	 * @return bool True if connected and False if not able to connect
 	 */
 	protected function connect_to_ws_server(): bool {
 		if ($this->ws_client !== null && $this->ws_client->is_connected()) return true;
@@ -195,7 +260,7 @@ abstract class base_websocket_system_service extends service implements websocke
 
 	/**
 	 * Handles the message from the web socket client and triggers the appropriate requested topic event
-	 * @param resource $ws_client
+	 *
 	 * @return void
 	 */
 	private function handle_websocket_event() {
@@ -225,7 +290,8 @@ abstract class base_websocket_system_service extends service implements websocke
 
 	/**
 	 * Call each of the registered events for the websocket topic that has arrived
-	 * @param string $topic
+	 *
+	 * @param string            $topic
 	 * @param websocket_message $websocket_message
 	 */
 	private function trigger_topic(string $topic, websocket_message $websocket_message) {
@@ -240,6 +306,11 @@ abstract class base_websocket_system_service extends service implements websocke
 		}
 	}
 
+	/**
+	 * Authenticate with the websocket server using a service token
+	 *
+	 * @param websocket_message $websocket_message The incoming websocket message that triggered this event
+	 */
 	protected function on_authenticate(websocket_message $websocket_message) {
 		$this->info("Authenticating with websocket server");
 		// Create a service token
@@ -251,8 +322,9 @@ abstract class base_websocket_system_service extends service implements websocke
 
 	/**
 	 * Allows the service to register a callback so when the topic arrives the callable is called
-	 * @param type $topic
-	 * @param type $callable
+	 *
+	 * @param string   $topic
+	 * @param callable $callable
 	 */
 	protected function on_topic($topic, $callable) {
 		if (!isset($this->topics[$topic])) {
@@ -261,9 +333,19 @@ abstract class base_websocket_system_service extends service implements websocke
 		$this->topics[$topic][] = $callable;
 	}
 
+	/**
+	 * Send a websocket message to the client
+	 *
+	 * @param websocket_message $websocket_message The message to be sent
+	 */
 	protected function respond(websocket_message $websocket_message): void {
 		websocket_client::send($this->ws_client->socket(), $websocket_message);
 	}
 
+	/**
+	 * Register topics and associated callbacks.
+	 *
+	 * @return void
+	 */
 	abstract protected function register_topics(): void;
 }

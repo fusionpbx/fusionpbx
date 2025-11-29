@@ -82,7 +82,7 @@
 	}
 
 //get the command line parameters
-	$options = getopt(null, $long_options);
+	$options = getopt('', $long_options);
 
 //set the values from the command line parameters
 	foreach($options as $option_key => $option_value) {
@@ -148,7 +148,6 @@
 	$sql = "select domain_uuid from v_domains ";
 	$sql .= "where domain_name = :domain_name ";
 	$parameters['domain_name'] = $domain_name;
-	$database = new database;
 	$domain_uuid = $database->select($sql, $parameters, 'column');
 	unset($parameters);
 
@@ -197,7 +196,7 @@
 
 //get the email template from the database
 	$sql = "select template_subject, template_body from v_email_templates ";
-	$sql .= "where template_enabled = 'true' ";
+	$sql .= "where template_enabled = true ";
 	$sql .= "and template_language = :template_language ";
 	$sql .= "and template_category = :template_category ";
 	$sql .= "and template_subcategory = :template_subcategory ";
@@ -208,7 +207,6 @@
 	$parameters['template_category'] = $template_category;
 	$parameters['template_subcategory'] = $template_subcategory;
 	$parameters['template_type'] = $template_type;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row)) {
 		$email_subject = $row['template_subject'];

@@ -30,16 +30,10 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('user_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('user_view')) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -75,7 +69,7 @@
 				break;
 		}
 
-		header('Location: users.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: users.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

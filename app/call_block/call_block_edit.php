@@ -33,15 +33,13 @@
 
 //check permissions
 	if (!permission_exists('call_block_edit') && !permission_exists('call_block_add')) {
-		echo "access denied"; exit;
+		echo "access denied";
+		exit;
 	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//initialize the database object
-	$database = new database;
 
 //set the defaults
 	$call_block_name = '';
@@ -71,7 +69,7 @@
 		$call_block_name = $_POST["call_block_name"] ?? null;
 		$call_block_country_code = $_POST["call_block_country_code"] ?? null;
 		$call_block_number = $_POST["call_block_number"] ?? null;
-		$call_block_enabled = $_POST["call_block_enabled"] ?? 'false';
+		$call_block_enabled = $_POST["call_block_enabled"];
 		$call_block_description = $_POST["call_block_description"] ?? null;
 
 		//get the call block app and data
@@ -80,7 +78,7 @@
 		$call_block_data = $action_array[1] ?? null;
 
 		//sanitize the data
-		$extension_uuid = preg_replace("#[^a-fA-F0-9./]#", "", $extension_uuid);
+		$extension_uuid = (!empty($extension_uuid) && is_uuid($extension_uuid)) ? $extension_uuid : null;
 		$call_block_country_code = preg_replace('#[^0-9./]#', '', $call_block_country_code ?? '');
 		$call_block_number = preg_replace('#[^0-9./]#', '', $call_block_number ?? '');
 	}
@@ -154,7 +152,7 @@
 							$sql .= "and domain_uuid = :domain_uuid ";
 						}
 						$sql .= "and app_uuid = 'b1b31930-d0ee-4395-a891-04df94599f1f' ";
-						$sql .= "and dialplan_enabled <> 'true' ";
+						$sql .= "and dialplan_enabled <> true ";
 						if (!empty($domain_uuid) && is_uuid($domain_uuid)) {
 							$parameters['domain_uuid'] = $domain_uuid;
 						}
@@ -163,7 +161,7 @@
 						if (!empty($rows)) {
 							foreach ($rows as $index => $row) {
 								$array['dialplans'][$index]['dialplan_uuid'] = $row['dialplan_uuid'];
-								$array['dialplans'][$index]['dialplan_enabled'] = 'true';
+								$array['dialplans'][$index]['dialplan_enabled'] = true;
 							}
 
 							$p = permissions::new();
@@ -186,9 +184,7 @@
 						$array['call_block'][0]['call_block_uuid'] = uuid();
 						$array['call_block'][0]['domain_uuid'] = $domain_uuid;
 						$array['call_block'][0]['call_block_direction'] = $call_block_direction;
-						if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
-							$array['call_block'][0]['extension_uuid'] = $extension_uuid;
-						}
+						$array['call_block'][0]['extension_uuid'] = $extension_uuid;
 						$array['call_block'][0]['call_block_name'] = $call_block_name;
 						$array['call_block'][0]['call_block_country_code'] = $call_block_country_code;
 						$array['call_block'][0]['call_block_number'] = $call_block_number;
@@ -199,8 +195,6 @@
 						$array['call_block'][0]['date_added'] = time();
 						$array['call_block'][0]['call_block_description'] = $call_block_description;
 
-						$database->app_name = 'call_block';
-						$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
 						$database->save($array);
 						unset($array);
 
@@ -238,9 +232,7 @@
 						$array['call_block'][0]['call_block_uuid'] = $call_block_uuid;
 						$array['call_block'][0]['domain_uuid'] = $domain_uuid;
 						$array['call_block'][0]['call_block_direction'] = $call_block_direction;
-						if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
-							$array['call_block'][0]['extension_uuid'] = $extension_uuid;
-						}
+						$array['call_block'][0]['extension_uuid'] = $extension_uuid;
 						$array['call_block'][0]['call_block_name'] = $call_block_name;
 						$array['call_block'][0]['call_block_country_code'] = $call_block_country_code;
 						$array['call_block'][0]['call_block_number'] = $call_block_number;
@@ -250,8 +242,6 @@
 						$array['call_block'][0]['date_added'] = time();
 						$array['call_block'][0]['call_block_description'] = $call_block_description;
 
-						$database->app_name = 'call_block';
-						$database->app_uuid = '9ed63276-e085-4897-839c-4f2e36d92d6c';
 						$database->save($array);
 						unset($array);
 
@@ -292,7 +282,7 @@
 	}
 
 //set the defaults
-	if (empty($call_block_enabled)) { $call_block_enabled = 'true'; }
+	$call_block_enabled = $call_block_enabled ?? true;
 
 //get the extensions
 	if (permission_exists('call_block_all') || permission_exists('call_block_extension')) {
@@ -303,7 +293,7 @@
 			$sql .= "	or domain_uuid is null ";
 		}
 		$sql .= ") ";
-		$sql .= "and enabled = 'true' ";
+		$sql .= "and enabled = true ";
 		$sql .= "order by extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$extensions = $database->select($sql, $parameters);
@@ -352,6 +342,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	$sql .= "order by voicemail_id asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$voicemails = $database->select($sql, $parameters);
+	unset($sql, $parameters);
 
 //create token
 	$object = new token;
@@ -465,6 +456,17 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "	".$text['label-action']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
+	/**
+	 * Select a call block action.
+	 *
+	 * This function generates an HTML select element for selecting a call block
+	 * action. It includes options for rejecting, busy, holding, and other actions,
+	 * as well as options for extensions, IVRs, ring groups, and voicemail.
+	 *
+	 * @param bool $label Whether to include the label option or not.
+	 *
+	 * @return void The function does not return any value.
+	 */
 	function call_block_action_select($label = false) {
 		global $select_margin, $text, $call_block_app, $call_block_data, $extensions, $ivrs, $voicemails, $ring_groups;
 		echo "<select class='formfld' style='".$select_margin."' name='call_block_action'>\n";
@@ -561,17 +563,16 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='call_block_enabled' name='call_block_enabled' value='true' ".($call_block_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='call_block_enabled' name='call_block_enabled'>\n";
-		echo "		<option value='true' ".($call_block_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($call_block_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='call_block_enabled' name='call_block_enabled'>\n";
+	echo "			<option value='true' ".($call_block_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($call_block_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-enable']."\n";
@@ -629,7 +630,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 		$sql .= "and direction <> 'local' ";
 		$sql .= $sql_where ?? null;
 		$sql .= "order by start_stamp desc ";
-		$sql .= limit_offset($_SESSION['call_block']['recent_call_limit']['text']);
+		$sql .= limit_offset($settings->get('call_block', 'recent_call_limit'));
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$recent_calls = $database->select($sql, $parameters);
 		unset($sql, $parameters);
@@ -696,7 +697,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 						$list_row_onclick_uncheck = "if (!this.checked) { document.getElementById('checkbox_all_".$direction."').checked = false; }";
 						$list_row_onclick_toggle = "onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick_uncheck."\"";
 						if (strlen($row['caller_id_number']) >= 7) {
-							if (!empty($_SESSION['domain']['time_format']['text']) && $_SESSION['domain']['time_format']['text'] == '24h') {
+							if (!empty($settings->get('domain', 'time_format')) && $settings->get('domain', 'time_format') == '24h') {
 								$tmp_start_epoch = date('j M Y', $row['start_epoch'])." <span class='hide-sm-dn'>".date('H:i:s', $row['start_epoch']).'</span>';
 							}
 							else {
@@ -708,10 +709,10 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 							echo "		<input type='hidden' name='xml_cdrs[$x][uuid]' value='".escape($row['xml_cdr_uuid'])."' />\n";
 							echo "	</td>\n";
 							if (
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_voicemail.png") &&
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_answered.png") &&
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_failed.png") &&
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_answered.png")
+								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_inbound_voicemail.png") &&
+								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_inbound_answered.png") &&
+								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_outbound_failed.png") &&
+								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_outbound_answered.png")
 								) {
 								$title_mod = null;
 								echo "	<td class='center' ".$list_row_onclick_toggle.">";
@@ -724,7 +725,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 										else {
 											$file_mod = "_answered";
 										}
-										echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound".$file_mod.".png' style='border: none;' title='".$text['label-inbound'].$title_mod."'>\n";
+										echo "<img src='/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_inbound".$file_mod.".png' style='border: none;' title='".$text['label-inbound'].$title_mod."'>\n";
 										break;
 									case "outbound":
 										if ($row['billsec'] == 0) {
@@ -734,7 +735,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 										else {
 											$file_mod = "_answered";
 										}
-										echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound".$file_mod.".png' style='border: none;' title='".$text['label-outbound'].$title_mod."'>\n";
+										echo "<img src='/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_outbound".$file_mod.".png' style='border: none;' title='".$text['label-outbound'].$title_mod."'>\n";
 										break;
 								}
 								echo "	</td>\n";

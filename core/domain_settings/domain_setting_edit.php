@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2023
+ Portions created by the Initial Developer are Copyright (C) 2008-2025
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -29,16 +29,10 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('domain_setting_add') || permission_exists('domain_setting_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('domain_setting_add') || permission_exists('domain_setting_edit'))) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -84,7 +78,7 @@
 		$domain_setting_name = strtolower($_POST["domain_setting_name"]);
 		$domain_setting_value = $_POST["domain_setting_value"];
 		$domain_setting_order = $_POST["domain_setting_order"];
-		$domain_setting_enabled = strtolower($_POST["domain_setting_enabled"] ?? 'false');
+		$domain_setting_enabled = $_POST["domain_setting_enabled"];
 		$domain_setting_description = $_POST["domain_setting_description"];
 	}
 
@@ -116,7 +110,6 @@
 			if (empty($domain_setting_name)) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
 			//if (empty($domain_setting_value)) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
 			if (empty($domain_setting_order)) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-			if (empty($domain_setting_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 			//if (empty($domain_setting_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -180,8 +173,6 @@
 							}
 
 							if (!empty($array)) {
-								$database->app_name = 'domain_settings';
-								$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
 								$database->save($array);
 								unset($array);
 
@@ -227,8 +218,6 @@
 						$array['domain_settings'][0]['domain_setting_order'] = $domain_setting_order;
 						$array['domain_settings'][0]['domain_setting_enabled'] = $domain_setting_enabled;
 						$array['domain_settings'][0]['domain_setting_description'] = $domain_setting_description;
-						$database->app_name = 'domain_settings';
-						$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
 						$database->save($array);
 						unset($array);
 					}
@@ -300,8 +289,6 @@
 
 								//execute
 									if (!empty($array)) {
-										$database->app_name = 'domain_settings';
-										$database->app_uuid = 'b31e723a-bf70-670c-a49b-470d2a232f71';
 										$database->save($array);
 										unset($array);
 
@@ -330,7 +317,15 @@
 //pre-populate the form
 	if (empty($_POST["persistformvar"]) && !empty($_GET["id"]) && is_uuid($_GET["id"])) {
 		$domain_setting_uuid = $_GET["id"];
-		$sql = "select domain_setting_uuid, domain_setting_category, domain_setting_subcategory, domain_setting_name, domain_setting_value, domain_setting_order, cast(domain_setting_enabled as text), domain_setting_description ";
+		$sql = "select ";
+		$sql .= "domain_setting_uuid, ";
+		$sql .= "domain_setting_category, ";
+		$sql .= "domain_setting_subcategory, ";
+		$sql .= "domain_setting_name, ";
+		$sql .= "domain_setting_value, ";
+		$sql .= "domain_setting_order, ";
+		$sql .= "domain_setting_enabled, ";
+		$sql .= "domain_setting_description ";
 		$sql .= "from v_domain_settings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and domain_setting_uuid = :domain_setting_uuid ";
@@ -355,7 +350,7 @@
 	$domain_setting_name = $domain_setting_name ?? '';
 	$domain_setting_value = $domain_setting_value ?? '';
 	$domain_setting_order = $domain_setting_order ?? '';
-	$domain_setting_enabled = $domain_setting_enabled ?? 'true';
+	$domain_setting_enabled = $domain_setting_enabled ?? true;
 	$domain_setting_description = $domain_setting_description ?? '';
 
 //create token
@@ -718,7 +713,7 @@
 	}
 	elseif ($category == "theme" && $subcategory == "input_toggle_style" && $name == "text" ) {
 		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
-		echo "    	<option value='select'>".$text['option-select']."</option>\n";
+		echo "    	<option value='select'>".$text['option-select_box']."</option>\n";
 		echo "    	<option value='switch_round' ".(($row['domain_setting_value'] == "switch_round") ? "selected='selected'" : null).">".$text['option-switch_round']."</option>\n";
 		echo "    	<option value='switch_square' ".(($row['domain_setting_value'] == "switch_square") ? "selected='selected'" : null).">".$text['option-switch_square']."</option>\n";
 		echo "	</select>\n";
@@ -778,7 +773,7 @@
 		echo "	</select>\n";
 	}
 	else {
-		if (!empty($_SESSION['domain']['setting_value_input_type']) && $_SESSION['domain']['setting_value_input_type']['text'] == 'textarea') {
+		if (!empty($_SESSION['domain']['setting_value_input_type']) && $settings->get('domain', 'setting_value_input_type') == 'textarea') {
 			echo "	<textarea class='formfld' style='width: 185px; height: 80px;' id='domain_setting_value' name='domain_setting_value'>".($row['domain_setting_value'] ?? '')."</textarea>\n";
 		}
 		else {
@@ -830,17 +825,16 @@
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='domain_setting_enabled' name='domain_setting_enabled' value='true' ".($domain_setting_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='domain_setting_enabled' name='domain_setting_enabled'>\n";
-		echo "		<option value='true' ".($domain_setting_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($domain_setting_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='domain_setting_enabled' name='domain_setting_enabled'>\n";
+	echo "		<option value='true' ".($domain_setting_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($domain_setting_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-setting_enabled']."\n";

@@ -25,52 +25,70 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-	class modal {
+class modal {
 
-		static function create($array) {
+	/**
+	 * Creates a modal window.
+	 *
+	 * @param array $array           Array containing the modal's properties.
+	 *                               The following keys are supported:
+	 *                               - id: ID of the modal (optional).
+	 *                               - type: Type of the modal (optional, one of 'copy', 'toggle',
+	 *                               'delete' or 'unassign'). If not specified, a general
+	 *                               modal will be created. Defaults to 'general'.
+	 *                               - title: Title of the modal (optional). If not specified,
+	 *                               a default title will be used based on the type.
+	 *                               - message: Message of the modal (optional).
+	 *                               - actions: Actions of the modal (optional).
+	 *                               - onclose: Function to call when the modal is closed
+	 *                               (optional).
+	 *
+	 * @return string HTML string representing the modal window.
+	 */
+	static function create($array) {
 
-			//define as global
-			global $settings;
+		//define as global
+		global $settings;
 
-			//add multi-lingual support
-			$language = new text;
-			$text = $language->get();
+		//add multi-lingual support
+		$language = new text;
+		$text = $language->get();
 
-			$modal = "<div id='".(!empty($array['id']) ? $array['id'] : 'modal')."' class='modal-window'>\n";
-			$modal .= "	<div>\n";
-			$modal .= "		<span title=\"".$text['button-close']."\" class='modal-close' onclick=\"modal_close(); ".($array['onclose'] ?? '')."\">&times</span>\n";
-			if (!empty($array['type'])) {
-				//determine type
-					switch ($array['type']) {
-						case 'copy':
-							$array['title'] = $text['modal_title-confirmation'];
-							$array['message'] = $text['confirm-copy'];
-							break;
-						case 'toggle':
-							$array['title'] = $text['modal_title-confirmation'];
-							$array['message'] = $text['confirm-toggle'];
-							break;
-						case 'delete':
-							$array['title'] = $text['modal_title-confirmation'];
-							$array['message'] = $text['confirm-delete'];
-							break;
-						case 'unassign':
-							$array['title'] = $text['modal_title-confirmation'];
-							$array['message'] = $text['confirm-unassign'];
-						default: //general
-							$array['title'] = !empty($array['title']) ? $array['title'] : $text['modal_title-confirmation'];
-					}
-				//prefix cancel button to action
-					$array['actions'] = button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>$settings->get('theme', 'button_icon_cancel'),'collapse'=>'never','onclick'=>'modal_close(); '.($array['onclose'] ?? '')]).$array['actions'];
+		$modal = "<div id='" . (!empty($array['id']) ? $array['id'] : 'modal') . "' class='modal-window'>\n";
+		$modal .= "	<div>\n";
+		$modal .= "		<span title=\"" . $text['button-close'] . "\" class='modal-close' onclick=\"modal_close(); " . ($array['onclose'] ?? '') . "\">&times</span>\n";
+		if (!empty($array['type'])) {
+			//determine type
+			switch ($array['type']) {
+				case 'copy':
+					$array['title'] = $text['modal_title-confirmation'];
+					$array['message'] = $text['confirm-copy'];
+					break;
+				case 'toggle':
+					$array['title'] = $text['modal_title-confirmation'];
+					$array['message'] = $text['confirm-toggle'];
+					break;
+				case 'delete':
+					$array['title'] = $text['modal_title-confirmation'];
+					$array['message'] = $text['confirm-delete'];
+					break;
+				case 'unassign':
+					$array['title'] = $text['modal_title-confirmation'];
+					$array['message'] = $text['confirm-unassign'];
+				default: //general
+					$array['title'] = !empty($array['title']) ? $array['title'] : $text['modal_title-confirmation'];
 			}
-			$modal .= !empty($array['title']) ? "		<span class='modal-title'>".$array['title']."</span>\n" : null;
-			$modal .= !empty($array['message']) ? "		<span class='modal-message'>".$array['message']."</span>\n" : null;
-			$modal .= !empty($array['actions']) ? "		<span class='modal-actions'>".$array['actions']."</span>\n" : null;
-			$modal .= "	</div>\n";
-			$modal .= "</div>";
-
-			return $modal;
-
+			//prefix cancel button to action
+			$array['actions'] = button::create(['type' => 'button', 'label' => $text['button-cancel'], 'icon' => $settings->get('theme', 'button_icon_cancel'), 'collapse' => 'never', 'onclick' => 'modal_close(); ' . ($array['onclose'] ?? '')]) . $array['actions'];
 		}
+		$modal .= !empty($array['title']) ? "		<span class='modal-title'>" . $array['title'] . "</span>\n" : null;
+		$modal .= !empty($array['message']) ? "		<span class='modal-message'>" . $array['message'] . "</span>\n" : null;
+		$modal .= !empty($array['actions']) ? "		<span class='modal-actions'>" . $array['actions'] . "</span>\n" : null;
+		$modal .= "	</div>\n";
+		$modal .= "</div>";
+
+		return $modal;
 
 	}
+
+}

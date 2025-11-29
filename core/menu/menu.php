@@ -29,16 +29,10 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('menu_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('menu_view')) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -69,7 +63,7 @@
 				break;
 		}
 
-		header('Location: menu.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: menu.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -93,13 +87,13 @@
 	if (isset($sql_search)) {
 		$sql .= "where ".$sql_search;
 	}
-	$num_rows = $database->select($sql, $parameters ?? '', 'column');
+	$num_rows = $database->select($sql, $parameters ?? [], 'column');
 
 //get the list
 	$sql = str_replace('count(menu_uuid)', '*', $sql);
 	$sql .= order_by($order_by, $order, 'menu_name', 'asc');
 	$sql .= limit_offset($rows_per_page ?? '', $offset ?? '');
-	$menus = $database->select($sql, $parameters ?? '', 'all');
+	$menus = $database->select($sql, $parameters ?? [], 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -161,6 +155,7 @@
 
 	if (!empty($menus)) {
 		$x = 0;
+		$button_icon_edit = $settings->get('theme', 'button_icon_edit');
 		foreach ($menus as $row) {
 			if (permission_exists('menu_edit')) {
 				$list_row_url = "menu_edit.php?id=".urlencode($row['menu_uuid']);

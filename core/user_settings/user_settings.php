@@ -30,16 +30,10 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('user_setting_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('user_setting_view')) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -102,8 +96,6 @@
 		//update setting
 			$array['user_settings'][0]['user_setting_uuid'] = $user_setting_uuids[0];
 			$array['user_settings'][0]['user_setting_enabled'] = $enabled;
-			$database->app_name = 'user_settings';
-			$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 			$database->save($array);
 			unset($array);
 
@@ -142,7 +134,7 @@
 	unset($sql);
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 100;
+	$rows_per_page = (!empty($settings->get('domain', 'paging'))) ? $settings->get('domain', 'paging') : 100;
 	$param = '';
 	$paging_controls = '';
 	if (isset($_GET['page'])) {
@@ -336,7 +328,12 @@
 				echo "		".$text['option-'.$row['user_setting_value']]."\n";
 			}
 			else if ($category == 'theme' && $subcategory == 'input_toggle_style' && $name == 'text') {
-				echo "		".$text['option-'.$row['user_setting_value']]."\n";
+				if ($row['user_setting_value'] == 'select') {
+					echo "		".$text['option-select_box']."\n";
+				}
+				else {
+					echo "		".$text['option-'.$row['user_setting_value']]."\n";
+				}
 			}
 			else if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
 				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['user_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['user_setting_value'], -0.18)).'; padding: -1px;'));

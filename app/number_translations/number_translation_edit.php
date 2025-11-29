@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2023
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -26,10 +26,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('number_translation_add') || permission_exists('number_translation_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('number_translation_add') || permission_exists('number_translation_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -58,7 +55,7 @@
 	if (!empty($_POST)) {
 		$number_translation_name = $_POST["number_translation_name"];
 		$number_translation_details = $_POST["number_translation_details"];
-		$number_translation_enabled = $_POST["number_translation_enabled"] ?? 'false';
+		$number_translation_enabled = $_POST["number_translation_enabled"];
 		$number_translation_description = $_POST["number_translation_description"];
 	}
 
@@ -90,20 +87,17 @@
 				switch ($_POST['action']) {
 					case 'copy':
 						if (permission_exists('number_translation_add')) {
-							$obj = new database;
-							$obj->copy($array);
+							$database->copy($array);
 						}
 						break;
 					case 'delete':
 						if (permission_exists('number_translation_delete')) {
-							$obj = new database;
-							$obj->delete($array);
+							$database->delete($array);
 						}
 						break;
 					case 'toggle':
 						if (permission_exists('number_translation_update')) {
-							$obj = new database;
-							$obj->toggle($array);
+							$database->toggle($array);
 						}
 						break;
 				}
@@ -119,7 +113,7 @@
 			$msg = '';
 			if (empty($number_translation_name)) { $msg .= $text['message-required']." ".$text['label-number_translation_name']."<br>\n"; }
 			//if (empty($number_translation_details)) { $msg .= $text['message-required']." ".$text['label-number_translation_details']."<br>\n"; }
-			if (empty($number_translation_enabled)) { $msg .= $text['message-required']." ".$text['label-number_translation_enabled']."<br>\n"; }
+			//if (empty($number_translation_enabled)) { $msg .= $text['message-required']." ".$text['label-number_translation_enabled']."<br>\n"; }
 			//if (empty($number_translation_description)) { $msg .= $text['message-required']." ".$text['label-number_translation_description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -153,9 +147,6 @@
 			}
 
 		//save the data
-			$database = new database;
-			$database->app_name = 'number translations';
-			$database->app_uuid = '6ad54de6-4909-11e7-a919-92ebcb67fe33';
 			$database->save($array);
 
 		//redirect the user
@@ -177,7 +168,6 @@
 		$sql = "select * from v_number_translations ";
 		$sql .= "where number_translation_uuid = :number_translation_uuid ";
 		$parameters['number_translation_uuid'] = $number_translation_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$number_translation_name = $row["number_translation_name"];
@@ -189,11 +179,19 @@
 
 //get the child data
 	if (!empty($number_translation_uuid) && empty($_POST["persistformvar"])) {
-		$sql = "select * from v_number_translation_details ";
-		$sql .= "where number_translation_uuid = :number_translation_uuid ";
-		$sql .= "order by number_translation_detail_order asc";
+		$sql = "select ";
+		$sql .= "  number_translation_detail_uuid, ";
+		$sql .= "  number_translation_uuid, ";
+		$sql .= "  number_translation_detail_regex, ";
+		$sql .= "  number_translation_detail_replace, ";
+		$sql .= "  cast(number_translation_detail_order as integer) as number_translation_detail_order ";
+		$sql .= "from ";
+		$sql .= "  v_number_translation_details ";
+		$sql .= "where ";
+		$sql .= "  number_translation_uuid = :number_translation_uuid ";
+		$sql .= "order by";
+		$sql .= "  number_translation_detail_order asc";
 		$parameters['number_translation_uuid'] = $number_translation_uuid;
-		$database = new database;
 		$number_translation_details = $database->select($sql, $parameters ?? null, 'all');
 		unset ($sql, $parameters);
 	}
@@ -337,17 +335,16 @@
 	echo "	".$text['label-number_translation_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='number_translation_enabled' name='number_translation_enabled' value='true' ".($number_translation_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='number_translation_enabled' name='number_translation_enabled'>\n";
-		echo "		<option value='true' ".($number_translation_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($number_translation_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='number_translation_enabled' name='number_translation_enabled'>\n";
+	echo "		<option value='true' ".($number_translation_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($number_translation_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-number_translation_enabled']."\n";

@@ -29,16 +29,10 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('database_add') || permission_exists('database_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('database_add') || permission_exists('database_edit'))) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -91,8 +85,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 					$array[0]['checked'] = 'true';
 					$array[0]['uuid'] = $database_uuid;
 				//delete
-					$obj = new databases;
-					$obj->delete($array);
+					$database->delete($array);
 				//redirect
 					header('Location: databases.php');
 					exit;
@@ -148,8 +141,6 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 			//add new uuid
 				$array['databases'][0]['database_uuid'] = uuid();
 
-				$database->app_name = 'databases';
-				$database->app_uuid = '8d229b6d-1383-fcec-74c6-4ce1682479e2';
 				$database->save($array);
 				unset($array);
 
@@ -166,8 +157,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 			//add uuid to update
 				$array['databases'][0]['database_uuid'] = $database_uuid;
 
-				$database->app_name = 'databases';
-				$database->app_uuid = '8d229b6d-1383-fcec-74c6-4ce1682479e2';
+			//save to the database
 				$database->save($array);
 				unset($array);
 

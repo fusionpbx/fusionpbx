@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,19 +26,13 @@
 
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
-	if (permission_exists('conference_center_add') || permission_exists('conference_center_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('conference_center_add') || permission_exists('conference_center_edit'))) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -82,7 +76,7 @@
 			$conference_center_extension = $_POST["conference_center_extension"];
 			$conference_center_greeting = $_POST["conference_center_greeting"];
 			$conference_center_pin_length = $_POST["conference_center_pin_length"];
-			$conference_center_enabled = $_POST["conference_center_enabled"] ?? 'false';
+			$conference_center_enabled = $_POST["conference_center_enabled"];
 			$conference_center_description = $_POST["conference_center_description"];
 
 		//validate the token
@@ -169,10 +163,8 @@
 			$p->add("dialplan_edit", "temp");
 
 		//save to the data
-			$database->app_name = "conference_centers";
-			$database->app_uuid = "b81412e8-7253-91f4-e48e-42fc2c9a38d9";
 			$database->save($array);
-			$message = $database->message;
+			//$message = $database->message;
 			unset($array);
 
 		//remove the temporary permission
@@ -232,9 +224,9 @@
 		unset($sql, $parameters, $row);
 	}
 
-//set defaults
-	if (empty($conference_center_enabled)) { $conference_center_enabled = "true"; }
-	if (empty($conference_center_pin_length)) { $conference_center_pin_length = 9; }
+//set the defaults
+	$conference_center_pin_length = $conference_center_pin_length ?? 9;
+	$conference_center_enabled = $conference_center_enabled ?? true;
 
 //get the sounds
 	$sounds = new sounds;
@@ -358,7 +350,7 @@
 	echo "	".$text['label-conference_center_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='conference_center_extension' maxlength='255' value=\"".escape($conference_center_extension)."\" required='required' placeholder=\"".($_SESSION['conference_center']['extension_range']['text'] ?? '')."\">\n";
+	echo "	<input class='formfld' type='text' name='conference_center_extension' maxlength='255' value=\"".escape($conference_center_extension)."\" required='required' placeholder=\"".($settings->get('conference_center', 'extension_range') ?? '')."\">\n";
 	echo "<br />\n";
 	echo $text['description-conference_center_extension']."\n";
 	echo "</td>\n";
@@ -385,8 +377,8 @@
 				if ($key == 'recordings') {
 					if (
 						!empty($instance_value) &&
-						($instance_value == $row["value"] || $instance_value == $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
-						file_exists($_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
+						($instance_value == $row["value"] || $instance_value == $settings->get('switch', 'recordings')."/".$_SESSION['domain_name'].'/'.$row["value"]) &&
+						file_exists($settings->get('switch', 'recordings')."/".$_SESSION['domain_name'].'/'.pathinfo($row["value"], PATHINFO_BASENAME))
 						) {
 						$selected = "selected='selected'";
 						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.pathinfo($row["value"], PATHINFO_BASENAME);
@@ -453,17 +445,16 @@
 	echo "	".$text['label-conference_center_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='conference_center_enabled' name='conference_center_enabled' value='true' ".($conference_center_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='conference_center_enabled' name='conference_center_enabled'>\n";
-		echo "		<option value='true' ".($conference_center_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($conference_center_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='conference_center_enabled' name='conference_center_enabled'>\n";
+	echo "			<option value='true' ".($conference_center_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($conference_center_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-conference_center_enabled']."\n";

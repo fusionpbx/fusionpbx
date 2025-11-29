@@ -441,6 +441,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the voicemail password.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_tutorial";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "greeting_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select the greeting id.";
@@ -450,11 +454,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Used to provide an alternate id for the voicemail announcement.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_recording_instructions";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_recording_options";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_mail_to";
@@ -467,7 +471,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the sms did to send voicemail to.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_transcription_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "If voicemail transcription is enabled for this user";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_attach_file";
@@ -479,18 +483,17 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select a listening option to include with the email notification.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_local_after_email";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Choose to keep the voicemail file after sending the email.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_local_after_forward";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Choose to keep the voicemail file after sending to forward destinations.";
-		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select to enable or disable this voicemail.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_description";
@@ -499,10 +502,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_name_base64";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_tutorial";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
@@ -529,7 +528,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_voicemail_messages";
 		$apps[$x]['db'][$y]['table']['parent'] = "v_voicemails";

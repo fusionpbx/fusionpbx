@@ -112,6 +112,11 @@
 		$conf .= "php.dir = ".$php_dir."\n";
 		$conf .= "php.bin = php\n";
 		$conf .= "\n";
+		$conf .= "#session settings\n";
+		$conf .= "session.cookie_httponly = true\n";
+		$conf .= "session.cookie_secure = true\n";
+		$conf .= "session.cookie_samesite = Lax\n";
+		$conf .= "\n";
 		$conf .= "#cache settings\n";
 		$conf .= "cache.method = file\n";
 		$conf .= "cache.location = ".$cache_location."\n";
@@ -147,10 +152,7 @@
 	}
 	else {
 		require_once "resources/check_auth.php";
-		if (permission_exists('upgrade_schema') || permission_exists('upgrade_source') || if_group("superadmin")) {
-			//echo "access granted";
-		}
-		else {
+		if (!(permission_exists('upgrade_schema') || permission_exists('upgrade_source'))) {
 			echo "access denied";
 			exit;
 		}
@@ -166,6 +168,9 @@
 			$upgrade_type = $argv[1];
 		}
 	}
+
+//initiliaze the schema object
+	$schema = new schema(['database' => $database]);
 
 //use upgrade language file
 	$language = new text;
@@ -195,19 +200,18 @@
 		echo "  A terminal-based upgrade tool used to simplify or automate the upgrade.\n";
 		echo "\n";
 		echo "Options:\n";
-		echo "  -h --help                         Show this help message.\n";
-		echo "  -v --version                      Show the version.\n";
-		echo "  -n --main                         Update the main application.\n";
-		echo "  -o --optional                     Update the optional applications.\n";
-		echo "  -s --schema                       Check the table and field structure.\n";
-		echo "  -t --types                        Updates field data types as needed.\n";
-		echo "  -d --defaults                     Restore application defaults.\n";
-		echo "  -m --menu [default|list]          Restore menu default or show the menu list\n";
-		echo "  -p --permissions                  Restore default file and group permissions.\n";
-		echo "  -g --group                        Restore default group permissions.\n";
-		echo "  -f --file                         Update the file permissions.\n";
-		echo "  -u --service [update|restart]     Update and restart services.\n";
-		echo "  -i --interactive                  Show the interactive menu.\n";
+		echo "  -h --help                              Show this help message.\n";
+		echo "  -v --version                           Show the version.\n";
+		echo "  -n --main                              Update the main application.\n";
+		echo "  -o --optional                          Update the optional applications.\n";
+		echo "  -s --schema                            Update the database tables, columns and data types.\n";
+		echo "  -d --defaults                          Restore application defaults.\n";
+		echo "  -m --menu [default|list]               Restore menu default or show the menu list\n";
+		echo "  -p --permissions                       Restore default file and group permissions.\n";
+		echo "  -g --group                             Restore default group permissions.\n";
+		echo "  -f --file                              Update the file permissions.\n";
+		echo "  -u --service [update|stop|restart]     Update and restart services.\n";
+		echo "  -i --interactive                       Show the interactive menu.\n";
 		echo "\n";
 
 	}
@@ -217,7 +221,7 @@
 		echo software::version()."\n";
 	}
 
-//upgrade schema and/or data_types
+//upgrade the schema and data_types
 	if ($upgrade_type == 'schema' or $upgrade_type == '-s' or $upgrade_type == '--schema') {
 		//send a message to the console
 		if ($display_type === 'text') {
@@ -225,11 +229,7 @@
 		}
 
 		//get the database schema put it into an array then compare and update the database as needed.
-		$obj = new schema;
-		if (isset($argv[2]) && $argv[2] == 'data_types') {
-			$obj->data_types = true;
-		}
-		$response = $obj->schema($format ?? '');
+		$response = $schema->schema($format ?? '');
 		if ($display_type === 'text') {
 			foreach(explode("\n", $response) as $row) {
 				echo "        ".trim($row)."\n";
@@ -237,25 +237,8 @@
 		}
 	}
 
-//upgrade schema and/or data_types
-	if ($upgrade_type == 'data_types' or $upgrade_type == '-t' or $upgrade_type == '--types') {
-		//send a message to the console
-		if ($display_type === 'text') {
-			echo "[ Update ] Table, field structure and data types.\n";
-		}
 
-		//get the database schema put it into an array then compare and update the database as needed.
-		$obj = new schema;
-		$obj->data_types = true;
-		$response = $obj->schema($format ?? '');
-		if ($display_type === 'text') {
-			foreach(explode("\n", $response) as $row) {
-				echo "        ".trim($row)."\n";
-			}
-		}
-	}
-
-//run all application defaults - more about looking missing not defaults, this not a factory reset
+//run all application defaults - add missing defaults
 	if ($upgrade_type == 'defaults' or $upgrade_type == '-d' or $upgrade_type == '--defaults') {
 		//send a message to the console
 		if ($display_type === 'text') {
@@ -318,7 +301,6 @@
 
 		// upgrade application defaults
 		$domain = new domains;
-		$domain->display_type = $display_type;
 		$domain->upgrade();
 	}
 
@@ -434,8 +416,7 @@
 			}
 
 		//Update the table and field structure.
-			$obj = new schema;
-			$response = $obj->schema("text");
+			$response = $schema->schema("text");
 			if ($display_type === 'text') {
 				foreach(explode("\n", $response) as $row) {
 					echo "        ".trim($row)."\n";
@@ -487,17 +468,25 @@
 
 		if (empty($argv[2]) || $argv[2] == 'update') {
 			//send a message to the console
-			echo "[ Update ] Update all default services\n";
+			echo "[ Update ] Update default services\n";
 
-			//add or update the services
+			//add or update all the services
 			upgrade_services($text, $settings);
 		}
 
 		//send a message to the console
-		if (empty($argv[2]) || $argv[2] == 'restart') {
-			echo "[ Update ] Restart all services\n";
+		if (empty($argv[2]) || $argv[2] == 'stop') {
+			echo "[ Update ] Stop services\n";
 
-			//restart the services
+			//stop all the services
+			stop_services($text, $settings);
+		}
+
+		//send a message to the console
+		if (empty($argv[2]) || $argv[2] == 'restart') {
+			echo "[ Update ] Restart services\n";
+
+			//restart all the services
 			restart_services($text, $settings);
 		}
 
@@ -569,9 +558,15 @@
 
 	}
 
-
 /**
- * Update file system permissions
+ * Update file permissions for a FusionPBX installation.
+ *
+ * This function updates the permissions of various directories in a FusionPBX installation,
+ * specifically adjusting ownership to match the expected behavior. The changes are only applied
+ * when running as root, and an error message is displayed otherwise.
+ *
+ * @param array    $text     A translation dictionary containing the label for when not running as root.
+ * @param settings $settings The current application settings instance.
  */
 function update_file_permissions($text, settings $settings) {
 
@@ -619,7 +614,7 @@ function update_file_permissions($text, settings $settings) {
 
 			//skip /dev/shm directory
 			if (strpos($dir, '/dev/shm') !== false) {
-				continue; 
+				continue;
 			}
 
 			//execute
@@ -631,24 +626,60 @@ function update_file_permissions($text, settings $settings) {
 }
 
 /**
- * Upgrade services
+ * Upgrade services by copying and enabling them in systemd.
+ *
+ * This function iterates through all service files found in the application's
+ * core and app directories, copies each one to /etc/systemd/system, reloads
+ * the daemon, and enables the service.
+ *
+ * @param string   $text     Text containing the upgrade description (not used)
+ * @param settings $settings Application settings
  */
 function upgrade_services($text, settings $settings) {
 	//echo ($text['description-upgrade_services'] ?? "")."\n";
 	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.service");
 	$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.service");
 	$service_files = array_merge($core_files, $app_files);
-	foreach($service_files as $file) {
-		$service_name = find_service_name($file);
-		echo "	Name: ".$service_name."\n";
-		system("cp " . escapeshellarg($file) . " /etc/systemd/system/" . escapeshellarg($service_name) . ".service");
-		system("systemctl daemon-reload");
-		system("systemctl enable --now " . escapeshellarg($service_name));
+	if (stristr(PHP_OS, 'Linux')) {
+		foreach($service_files as $file) {
+			$service_name = find_service_name($file);
+			echo "	Name: ".$service_name."\n";
+			system("cp " . escapeshellarg($file) . " /etc/systemd/system/" . escapeshellarg($service_name) . ".service");
+			system("systemctl daemon-reload");
+			system("systemctl enable " . escapeshellarg($service_name));
+			system("systemctl start " . escapeshellarg($service_name));
+		}
 	}
 }
 
 /**
- * Restart services
+ * Stops running services by name.
+ *
+ * This function iterates over all service files, extracts the service names,
+ * and stops each service using systemctl.
+ *
+ * @param array    $text
+ * @param settings $settings
+ */
+function stop_services($text, settings $settings) {
+	//echo ($text['description-stop_services'] ?? "")."\n";
+	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.service");
+	$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.service");
+	$service_files = array_merge($core_files, $app_files);
+	foreach($service_files as $file) {
+		$service_name = find_service_name($file);
+		echo "	Name: ".$service_name."\n";
+		system("systemctl stop ".$service_name);
+	}
+}
+
+/**
+ * Restarts all services
+ *
+ * This function restarts all core and app services.
+ *
+ * @param array    $text     Array containing localized text
+ * @param settings $settings Settings object
  */
 function restart_services($text, settings $settings) {
 	//echo ($text['description-restart_services'] ?? "")."\n";
@@ -663,8 +694,11 @@ function restart_services($text, settings $settings) {
 }
 
 /**
- * Get the service name
- * @param string $file
+ * Finds the service name in an INI file from a given file.
+ *
+ * @param string $file The fully qualified path and file containing the ExecStart command.
+ *
+ * @return string|null The service name if found, otherwise an empty string.
  */
 function find_service_name(string $file) {
 	$parsed = parse_ini_file($file);
@@ -679,11 +713,10 @@ function find_service_name(string $file) {
 }
 
 /**
- * Checks if the current user has root privileges.
+ * Checks whether the current user is the root user or not.
  *
- * @return bool Returns true if the current user is the root user, false otherwise.
+ * @return bool True if the current user has root privileges, false otherwise.
  */
 function is_root(): bool {
 	return posix_getuid() === 0;
 }
-

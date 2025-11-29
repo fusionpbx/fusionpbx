@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('time_condition_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('time_condition_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -45,7 +42,7 @@
 //get the http post data
 	if (!empty($_POST['time_conditions']) && is_array($_POST['time_conditions'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$time_conditions = $_POST['time_conditions'];
 	}
 
@@ -72,7 +69,7 @@
 				break;
 		}
 
-		header('Location: time_conditions.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: time_conditions.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -100,15 +97,12 @@
 		$sql .= " 	lower(dialplan_context) like :search ";
 		$sql .= " 	or lower(dialplan_name) like :search ";
 		$sql .= " 	or lower(dialplan_number) like :search ";
-		$sql .= " 	or lower(dialplan_continue) like :search ";
-		$sql .= " 	or lower(dialplan_enabled) like :search ";
 		$sql .= " 	or lower(dialplan_description) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
 	$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
 	$sql .= $sql_search ?? null;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page data
@@ -126,7 +120,6 @@
 	$sql = str_replace('count(dialplan_uuid)', '*', $sql);
 	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$dialplans = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -210,7 +203,7 @@
 	echo th_order_by('dialplan_order', $text['label-order'], $order_by, $order, null, "class='center'", ($search != '' ? "search=".$search : null));
 	echo th_order_by('dialplan_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", ($search != '' ? "search=".$search : null));
 	echo th_order_by('dialplan_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'", ($search != '' ? "search=".$search : null));
-	if (permission_exists('time_condition_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+	if (permission_exists('time_condition_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -256,15 +249,15 @@
 			echo "	<td class='center'>".escape($row['dialplan_order'])."</td>\n";
 			if (permission_exists('time_condition_edit')) {
 				echo "	<td class='no-link center'>\n";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['dialplan_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.($row['dialplan_enabled'] ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			}
 			else {
 				echo "	<td class='center'>\n";
-				echo $text['label-'.$row['dialplan_enabled']];
+				echo $text['label-'.($row['dialplan_enabled'] ? 'true' : 'false')];
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".$row['dialplan_description']."&nbsp;</td>\n";
-			if (permission_exists('time_condition_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+			if (permission_exists('time_condition_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 				echo "	</td>\n";

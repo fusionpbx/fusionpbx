@@ -36,7 +36,6 @@
 	$file_count = 0;
 	$row_count = 0;
 	$device_template = '';
-	$database = database::new(); //use an existing connection if possible
 
 //define PHP variables from the HTTP values
 	if (isset($_REQUEST['address'])) {
@@ -73,6 +72,13 @@
 	}
 
 //send http error
+	/**
+	 * Displays a custom HTTP error page with the specified error code and message.
+	 *
+	 * @param int $error The HTTP error code (e.g., 400, 401, etc.)
+	 *
+	 * @return void The script exits after displaying the error page
+	 */
 	function http_error($error) {
 		//$error_int_val = intval($error);
 		$http_errors = [
@@ -181,6 +187,13 @@
 //get http_domain_filter from global settings only (can't be used per domain)
 	$domain_filter = (new settings(['database' => $database]))->get('provision', 'http_domain_filter', true);
 
+//check for domain name with a port number at the end
+	$domain_name = $_SERVER['HTTP_HOST'];
+	if (str_contains($domain_name, ':')) {
+		$domain_array = explode(":", $domain_name);
+		$domain_name = $domain_array[0];
+	}
+
 //get the domain_uuid, domain_name, device_name and device_vendor
 	$sql = "select d.device_uuid, d.domain_uuid, d.device_vendor, n.domain_name ";
 	$sql .= "from v_devices as d, v_domains as n ";
@@ -218,7 +231,7 @@
 
 //send a request to a remote server to validate the MAC address and secret
 	if (!empty($_SERVER['auth_server'])) {
-		$result = send_http_request($_SERVER['auth_server'], 'mac='.url_encode($_REQUEST['mac']).'&secret='.url_encode($_REQUEST['secret']));
+		$result = send_http_request($_SERVER['auth_server'], 'mac='.urlencode($_REQUEST['mac']).'&secret='.urlencode($_REQUEST['secret']));
 		if ($result == "false") {
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but the remote auth server said no for ".escape($_REQUEST['mac']));
 			http_error('404');
@@ -243,7 +256,7 @@
 	$provision = $settings->get('provision', null, []);
 
 //check for a valid match
-	if (empty($device_uuid) && $settings->get('provision', 'auto_insert_enabled', false)) {
+	if (empty($device_uuid) && !$settings->get('provision', 'auto_insert_enabled', false)) {
 		http_error(403);
 	}
 
@@ -266,6 +279,13 @@
 	if (!empty($provision["http_auth_username"]) && empty($provision["http_auth_type"])) { $provision["http_auth_type"] = "digest"; }
 	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "digest" && !empty($provision["http_auth_enabled"]) && $provision["http_auth_enabled"]) {
 		//function to parse the http auth header
+			/**
+			 * Parses the specified HTTP Digest authentication text and extracts relevant data.
+			 *
+			 * @param string $txt The HTTP Digest authentication text to parse
+			 *
+			 * @return array|false An array of extracted data if successful, or false if data is incomplete
+			 */
 			function http_digest_parse($txt) {
 				//protect against missing data
 				$needed_parts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
@@ -280,6 +300,13 @@
 			}
 
 		//function to request digest authentication
+			/**
+			 * Sends an HTTP Digest authentication request with the specified realm.
+			 *
+			 * @param string $realm The name of the protected resource's realm
+			 *
+			 * @return void The script exits after sending the authentication request
+			 */
 			function http_digest_request($realm) {
 				header('HTTP/1.1 401 Authorization Required');
 				header('WWW-Authenticate: Digest realm="'.$realm.'", qop="auth", nonce="'.uniqid().'", opaque="'.md5($realm).'"');
@@ -359,7 +386,7 @@
 
 			if (!$authorized) {
 				//access denied
-				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed http basic authentication for ".check_str($_REQUEST['mac']));
+				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed http basic authentication for ".$_REQUEST['mac']);
 				header('HTTP/1.0 401 Unauthorized');
 				header('WWW-Authenticate: Basic realm="'.$domain_name.'"');
 				unset($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
@@ -374,10 +401,10 @@
 //if the password was defined in the settings then require the password.
 	if (!empty($provision['password'])) {
 		//deny access if the password doesn't match
-		if ($provision['password'] != check_str($_REQUEST['password'])) {
+		if ($provision['password'] != $_REQUEST['password'] ?? '') {
 			//log the failed auth attempt to the system, to be available for fail2ban.
 			openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
-			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
+			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".($_REQUEST['mac'] ?? ''));
 			closelog();
 			echo "access denied";
 			return;
@@ -441,8 +468,8 @@
 	$file_size = strlen($file_contents);
 	if (isset($_SERVER['HTTP_RANGE'])) {
 		$ranges = $_SERVER['HTTP_RANGE'];
-		list($unit, $range) = explode('=', $ranges, 2);
-		list($start, $end) = explode('-', $range, 2);
+		[$unit, $range] = explode('=', $ranges, 2);
+		[$start, $end] = explode('-', $range, 2);
 
 		$start = empty($start) ? 0 : (int)$start;
 		$end = empty($end) ? $file_size - 1 : min((int)$end, $file_size - 1);

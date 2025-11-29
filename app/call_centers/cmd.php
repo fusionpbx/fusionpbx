@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_center_queue_add') || permission_exists('call_center_queue_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('call_center_queue_add') || permission_exists('call_center_queue_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -65,7 +62,6 @@
 		$sql .= "and call_center_queue_uuid = :call_center_queue_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['call_center_queue_uuid'] = $call_center_queue_uuid;
-		$database = new database;
 		$queue_extension = $database->select($sql, $parameters, 'column');
 		unset($sql, $parameters);
 	}

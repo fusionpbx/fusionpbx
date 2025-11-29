@@ -37,10 +37,16 @@ $sql .= "where fax_email_connection_host <> '' ";
 $sql .= "and f.domain_uuid = d.domain_uuid ";
 $sql .= "and fax_email_connection_host is not null ";
 $sql .= "and fax_email_outbound_subject_tag is not null ";
-$database = database::new();
 $result = $database->select($sql, null, 'all');
 unset($sql);
 
+/**
+ * Converts an array to a map where each unique value in the array is mapped to true.
+ *
+ * @param array &$arr The input array
+ *
+ * @return array|false A map where each unique value in the array is mapped to true, or false if the input array is empty.
+ */
 function arr_to_map(&$arr){
 	if (!empty($arr)){
 		$map = Array();

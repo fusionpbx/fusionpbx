@@ -246,6 +246,9 @@ $message_alert_background_color = $settings->get('theme', 'message_alert_backgro
 $operator_panel_border_color = $settings->get('theme', 'operator_panel_border_color', '#b9c5d8');
 $operator_panel_sub_background_color = $settings->get('theme', 'operator_panel_sub_background_color', '#e5eaf5');
 $operator_panel_main_background_color = $settings->get('theme', 'operator_panel_main_background_color', '#fff');
+$operator_panel_user_info = $settings->get('theme', 'operator_panel_user_info', '#444');
+$operator_panel_caller_info = $settings->get('theme', 'operator_panel_caller_info', '#444');
+$operator_panel_call_info = $settings->get('theme', 'operator_panel_call_info', '#444');
 $dashboard_background_color = $settings->get('theme', 'dashboard_background_color', '');
 $dashboard_background_gradient_style = $settings->get('theme', 'dashboard_background_gradient_style', '');
 $dashboard_background_gradient_angle = $settings->get('theme', 'dashboard_background_gradient_angle', '');
@@ -358,46 +361,46 @@ if (!empty($_SESSION['theme'])) {
 $background_images_enabled = false;
 if (!empty($_SESSION['username'])) {
 	//logged in - use standard background images
-	if ($settings->get('theme', 'background_image_enabled', false) && is_array($settings->get('theme', 'background_image', ''))) {
+	if ($settings->get('theme', 'background_image_enabled', false) && !empty($settings->get('theme', 'background_image', ''))) {
 		$background_images_enabled = true;
-		$background_images = $settings->get('theme', 'background_image', '');
+		$background_images = $settings->get('theme', 'background_image', array());
 	}
 
 	//logged in - use standard background colors
-	if ($settings->get('theme', 'background_color_enabled', true) && !empty($settings->get('theme', 'background_color')[0]) && !empty($settings->get('theme', 'background_color')[1])) {
+	if ($settings->get('theme', 'background_color_enabled', false) && !empty($settings->get('theme', 'background_color')[0]) && !empty($settings->get('theme', 'background_color')[1])) {
 		$background_colors[0] = $settings->get('theme', 'background_color')[0];
 		$background_colors[1] = $settings->get('theme', 'background_color')[1];
 	}
-	elseif ($settings->get('theme', 'background_color_enabled', true) && !empty($settings->get('theme', 'background_color')[0])) {
+	elseif ($settings->get('theme', 'background_color_enabled', false) && !empty($settings->get('theme', 'background_color')[0])) {
 		$background_colors[0] = $settings->get('theme', 'background_color')[0];
 	}
 }
 else {
 	//not logged in - try using login background images
-	if ($settings->get('theme', 'login_background_image_enabled', false) && is_array($settings->get('theme', 'login_background_image', ''))) {
+	if ($settings->get('theme', 'login_background_image_enabled', false) && !empty($settings->get('theme', 'login_background_image', ''))) {
 		$background_images_enabled = true;
-		$background_images = $settings->get('theme', 'login_background_image', '');
+		$background_images = $settings->get('theme', 'login_background_image', array());
 	}
 
 	//otherwise, use standard background images
-	if ($settings->get('theme', 'background_image_enabled', true) && is_array($settings->get('theme', 'background_image', ''))) {
+	if ($settings->get('theme', 'background_image_enabled', false) && !empty($settings->get('theme', 'background_image', ''))) {
 		$background_images_enabled = true;
-		$background_images = $settings->get('theme', 'background_image', '');
+		$background_images = $settings->get('theme', 'background_image', array());
 	}
 
 	//use standard background colors
-	if (!empty($settings->get('theme', 'login_background_color', '')) && !empty($settings->get('theme', 'login_background_color')[0]) && !empty($settings->get('theme', 'login_background_color')[1])) {
+	if ($settings->get('theme', 'login_background_color_enabled', false) && !empty($settings->get('theme', 'login_background_color', '')) && !empty($settings->get('theme', 'login_background_color')[0]) && !empty($settings->get('theme', 'login_background_color')[1])) {
 		$background_colors[0] = $settings->get('theme', 'login_background_color')[0];
 		$background_colors[1] = $settings->get('theme', 'login_background_color')[1];
 	}
-	elseif (!empty($settings->get('theme', 'login_background_color', '')) && !empty($settings->get('theme', 'login_background_color')[0])) {
+	elseif ($settings->get('theme', 'login_background_color_enabled', false) && !empty($settings->get('theme', 'login_background_color', '')) && !empty($settings->get('theme', 'login_background_color')[0])) {
 		$background_colors[0] = $settings->get('theme', 'login_background_color')[0];
 	}
-	elseif ($settings->get('theme', 'background_color_enabled', true) && !empty($settings->get('theme', 'background_color')[0]) && !empty($settings->get('theme', 'background_color')[1])) {
+	elseif (!$settings->get('theme', 'login_background_image_enabled', false) && $settings->get('theme', 'background_color_enabled', false) && !empty($settings->get('theme', 'background_color')[0]) && !empty($settings->get('theme', 'background_color')[1])) {
 		$background_colors[0] = $settings->get('theme', 'background_color')[0];
 		$background_colors[1] = $settings->get('theme', 'background_color')[1];
 	}
-	elseif ($settings->get('theme', 'background_color_enabled', true) && !empty($settings->get('theme', 'background_color')[0])) {
+	elseif (!$settings->get('theme', 'login_background_image_enabled', false) && $settings->get('theme', 'background_color_enabled', false) && !empty($settings->get('theme', 'background_color')[0])) {
 		$background_colors[0] = $settings->get('theme', 'background_color')[0];
 	}
 }
@@ -407,7 +410,7 @@ if ($background_images_enabled) {
 	//background image is enabled
 	$image_extensions = array('jpg','jpeg','png','gif');
 
-	if (count($background_images) > 0) {
+	if (is_array($background_images) && count($background_images) > 0) {
 
 		if ((!isset($_SESSION['background_image'])) or empty($_SESSION['background_image'])) {
 			$_SESSION['background_image'] = $background_images[array_rand($background_images)];
@@ -499,8 +502,6 @@ if (!empty($background_colors[0]) || !empty($background_colors[1])) { //backgrou
 else { //default: white
 	$background_color = "";
 }
-
-
 
 ?>
 
@@ -1729,7 +1730,7 @@ else { //default: white
 		else {
 			?>padding: 5px 10px 10px 10px;<?php
 		}
-		echo $body_top_style;
+		echo $body_top_style ?? '';
 		?>
 		text-align: left;
 		color: <?=$body_text_color?>;
@@ -2331,7 +2332,7 @@ else { //default: white
 		<?php unset($br); ?>
 		}
 
-	.switch > input {
+	.switch > select {
 		display: none;
 		}
 
@@ -2401,14 +2402,14 @@ else { //default: white
 		transition: all 0.25s ease;
 		}
 
-	input:checked + .slider { /* when enabled */
+	select:has(option[value="true"]:checked) + .slider { /* when enabled */
 		background: <?=$input_toggle_switch_background_color_true?>;
 		}
 
-	input:focus + .slider { /* when focused, required for switch movement */
+	select:focus + .slider { /* when focused, required for switch movement */
 		}
 
-	input:checked + .slider:before { /* distance switch moves horizontally */
+	select:has(option[value="true"]:checked) + .slider:before { /* distance switch moves horizontally */
 		<?php if ($input_toggle_switch_handle_symbol === 'true') { ?>
 			text-align: center;
 			<?php if ($input_toggle_style == 'switch_square') { ?>
@@ -2551,6 +2552,7 @@ else { //default: white
 		border-bottom: 1px solid <?=$form_table_field_border_color?>;
 		padding: <?=$form_table_field_padding?>;
 		text-align: left;
+		text-wrap: wrap;
 		vertical-align: middle;
 		color: <?=$form_table_field_text_color?>;
 		font-family: <?=$form_table_field_text_font?>;
@@ -2856,6 +2858,7 @@ else { //default: white
 		font-family: arial;
 		font-size: 10px;
 		display: inline-block;
+		color: <?=$operator_panel_user_info?>;
 		}
 
 	.op_user_info strong {
@@ -2867,6 +2870,7 @@ else { //default: white
 		margin-top: 4px;
 		font-family: arial;
 		font-size: 10px;
+		color: <?=$operator_panel_caller_info?>;
 		}
 
 	.op_call_info {
@@ -2874,6 +2878,7 @@ else { //default: white
 		padding: 0px;
 		font-family: arial;
 		font-size: 10px;
+		color: <?=$operator_panel_call_info?>;
 		}
 
 	#op_btn_status_available {
@@ -2992,11 +2997,13 @@ else { //default: white
 	div.widget div.hud_box:first-of-type {
 		<?php
 		echo "background: ".($dashboard_background_color[0] ?? '#ffffff').";\n";
-		if ($dashboard_background_gradient_style == 'mirror') {
-			echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_background_color[1]." 0%, ".$dashboard_background_color[0]." 30%, ".$dashboard_background_color[0]." 70%, ".$dashboard_background_color[1]." 100%);\n";
-		}
-		else { //simple
-			echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_background_color[0]." 0%, ".$dashboard_background_color[1]." 100%);\n";
+		if (!empty($dashboard_background_color) && is_array($dashboard_background_color) && sizeof($dashboard_background_color) > 1) {
+			if (!empty($dashboard_background_gradient_style) && $dashboard_background_gradient_style == 'mirror') {
+				echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_background_color[1]." 0%, ".$dashboard_background_color[0]." 30%, ".$dashboard_background_color[0]." 70%, ".$dashboard_background_color[1]." 100%);\n";
+			}
+			else { //simple
+				echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_background_color[0]." 0%, ".$dashboard_background_color[1]." 100%);\n";
+			}
 		}
 
 		if (!empty($dashboard_shadow_color)) {
@@ -3134,15 +3141,17 @@ else { //default: white
 
 	@media(min-width: 1200px) {
 		div.hud_details {
-			height: 350px;
+			height: 345.5px;
 			display: block;
 			<?php
 			echo "background: ".($dashboard_detail_background_color[0] ?? '#ffffff').";\n";
-			if ($dashboard_background_gradient_style == 'mirror') {
-				echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_detail_background_color[1]." 0%, ".$dashboard_detail_background_color[0]." 30%, ".$dashboard_detail_background_color[0]." 70%, ".$dashboard_detail_background_color[1]." 100%);\n";
-			}
-			else { //simple
-				echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_detail_background_color[0]." 0%, ".$dashboard_detail_background_color[1]." 100%);\n";
+			if (!empty($dashboard_detail_background_color) && is_array($dashboard_detail_background_color) && sizeof($dashboard_detail_background_color) > 1) {
+				if ($dashboard_background_gradient_style == 'mirror') {
+					echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_detail_background_color[1]." 0%, ".$dashboard_detail_background_color[0]." 30%, ".$dashboard_detail_background_color[0]." 70%, ".$dashboard_detail_background_color[1]." 100%);\n";
+				}
+				else { //simple
+					echo "background-image: linear-gradient(".(empty($dashboard_background_gradient_angle) ? '0deg' : $dashboard_background_gradient_angle.'deg').", ".$dashboard_detail_background_color[0]." 0%, ".$dashboard_detail_background_color[1]." 100%);\n";
+				}
 			}
 			?>
 			}
@@ -3190,10 +3199,10 @@ else { //default: white
 		display: block;
 		clear: both;
 		background: <?=$dashboard_footer_background_color?>;
-		padding: 4px 0;
+		padding: 6px 0;
 		text-align: center;
 		width: 100%;
-		height: 25px;
+		height: 26.5px;
 		font-size: 13px;
 		line-height: 5px;
 		color: <?=$dashboard_footer_dots_color?>;
@@ -3204,6 +3213,30 @@ else { //default: white
 		color: <?=$dashboard_footer_dots_color_hover?>;
 		background: <?=$dashboard_footer_background_color_hover?>;
 		cursor: pointer;
+		}
+
+/* DASHBOARD EDIT **********************************************************************/
+
+	.chart_type_button {
+		padding: 8px 16px;
+		border: 1px solid rgba(0,0,0,0.1);
+		border-radius: 5px;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		}
+
+	.chart_type_button:has(input:checked) {
+		background-color: rgba(142,172,249,0.15);
+		border-color: #8EACF9;
+		}
+
+	.chart_type_button:hover {
+		background-color: rgba(0,0,0,0.03);
+		}
+
+	.chart_type_button i {
+		font-size: 15pt;
 		}
 
 /* PLUGINS ********************************************************************/

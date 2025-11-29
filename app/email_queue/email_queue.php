@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('email_queue_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('email_queue_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -45,7 +42,7 @@
 //get the http post data
 	if (!empty($_POST['email_queue']) && is_array($_POST['email_queue'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$email_queue = $_POST['email_queue'];
 	}
 
@@ -73,44 +70,29 @@
 			$x++;
 		}
 
-		//prepare the database object
-		$database = new database;
-		$database->app_name = 'email_queue';
-		$database->app_uuid = '5befdf60-a242-445f-91b3-2e9ee3e0ddf7';
-
 		//send the array to the database class
 		switch ($action) {
-			case 'copy':
-				//if (permission_exists('email_queue_add')) {
-				//	$database->copy($array);
-				//}
-				break;
-			case 'toggle':
-				//if (permission_exists('email_queue_edit')) {
-				//	$database->toggle($array);
-				//}
+			case 'resend':
+				if (permission_exists('email_queue_edit')) {
+					$obj = new email_queue;
+					$obj->resend($array);
+				}
 				break;
 			case 'delete':
 				if (permission_exists('email_queue_delete')) {
 					$obj = new email_queue;
 					$obj->delete($array);
-					//$database->delete($array);
 				}
 				break;
 		}
 
 		//redirect the user
-		header('Location: email_queue.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: email_queue.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
 //set the time zone
-	if (isset($_SESSION['domain']['time_zone']['name'])) {
-		$time_zone = $_SESSION['domain']['time_zone']['name'];
-	}
-	else {
-		$time_zone = date_default_timezone_get();
-	}
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 
 //get order and order by
 	$order_by = $_GET["order_by"] ?? null;
@@ -143,7 +125,6 @@
 	//	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 	//	$parameters['domain_uuid'] = $domain_uuid;
 	//}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -191,7 +172,6 @@
 	$sql .= order_by($order_by, $order, 'email_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$parameters['time_zone'] = $time_zone;
-	$database = new database;
 	$email_queue = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -247,27 +227,21 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-email_queue']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
-	//if (permission_exists('email_queue_add')) {
-	//	echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'email_queue_edit.php']);
-	//}
-	//if (permission_exists('email_queue_add') && $email_queue) {
-	//	echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
-	//}
-	//if (permission_exists('email_queue_edit') && $email_queue) {
-	//	echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
-	//}
 	echo 		"<form id='form_test' class='inline' method='post' action='email_test.php' target='_blank'>\n";
-	echo button::create(['label'=>$text['button-test'],'icon'=>'tools','type'=>'button','id'=>'test_button','style'=>'margin-right: 15px;','onclick'=>"$(this).fadeOut(400, function(){ $('span#form_test').fadeIn(400); $('#to').trigger('focus'); });"]);
+	echo button::create(['label'=>$text['button-test'],'icon'=>'tools','type'=>'button','id'=>'test_button','onclick'=>"$(this).fadeOut(400, function(){ $('span#form_test').fadeIn(400); $('#to').trigger('focus'); });"]);
 	echo "		<span id='form_test' style='display: none;'>\n";
 	echo "			<input type='text' class='txt' style='width: 150px;' name='to' id='to' placeholder='recipient@domain.com'>";
-	echo button::create(['label'=>$text['button-send'],'icon'=>'envelope','type'=>'submit','id'=>'send_button','style'=>'margin-right: 15px;']);
+	echo button::create(['label'=>$text['button-send'],'icon'=>'envelope','type'=>'submit','id'=>'send_button']);
 	echo "		</span>\n";
 	echo "		</form>";
+	if (permission_exists('email_queue_edit') && $email_queue) {
+		echo button::create(['type'=>'button','label'=>$text['button-resend'],'icon'=>$settings->get('theme', 'button_icon_email'),'id'=>'btn_resend','name'=>'btn_resend','collapse'=>'hide-xs','style'=>'display: none; margin-left: 15px;','class'=>'+revealed','onclick'=>"modal_open('modal-resend','btn_resend');"]);
+	}
 	if (permission_exists('email_queue_delete') && $email_queue) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo "		<form id='form_search' class='inline' method='get'>\n";
-	echo "		<select class='formfld' name='email_status'>\n";
+	echo "		<select class='formfld' style='margin-left: 15px;' name='email_status'>\n";
     echo "			<option value='' selected='selected' disabled hidden>".$text['label-email_status']."...</option>";
 	echo "			<option value=''></option>\n";
 	echo "			<option value='waiting' ".(!empty($_GET["email_status"]) && $_GET["email_status"] == "waiting" ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
@@ -283,7 +257,7 @@
 	//		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
 	//	}
 	//}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" />";
+	echo 		"<input type='text' class='txt list-search' style='margin-left: 0;' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" />";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
@@ -293,11 +267,15 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (permission_exists('email_queue_add') && $email_queue) {
-		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('copy'); list_form_submit('form_list');"])]);
-	}
 	if (permission_exists('email_queue_edit') && $email_queue) {
-		echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
+		echo modal::create([
+			'id'=>'modal-resend',
+			'title'=>$text['modal_title-resend'],
+			'message'=>$text['modal_message-resend'],
+			'actions'=>
+				button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>$settings->get('theme', 'button_icon_cancel'),'collapse'=>'hide-xs','onclick'=>'modal_close();']).
+				button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','collapse'=>'never','style'=>'float: right;','onclick'=>"modal_close(); list_action_set('resend'); list_form_submit('form_list');"])
+			]);
 	}
 	if (permission_exists('email_queue_delete') && $email_queue) {
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
@@ -329,7 +307,7 @@
 	echo th_order_by('email_retry_count', $text['label-email_retry_count'], $order_by, $order);
 	//echo th_order_by('email_action_before', $text['label-email_action_before'], $order_by, $order);
 	echo "<th class='hide-md-dn'>".$text['label-email_action_after']."</th>\n";
-	if (permission_exists('email_queue_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+	if (permission_exists('email_queue_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -340,7 +318,7 @@
 			$list_row_url = '';
 			if (permission_exists('email_queue_edit')) {
 				$list_row_url = "email_queue_edit.php?id=".urlencode($row['email_queue_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}
@@ -367,13 +345,13 @@
 			echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
 			echo "	<td class='shrink hide-md-dn'>".escape($row['email_from'])."</td>\n";
 			echo "	<td class='overflow' style='width: 20%; max-width: 200px;'>".escape($row['email_to'])."</td>\n";
-			echo "	<td class='overflow' style='width: 30%; max-width: 200px;'>".iconv_mime_decode($row['email_subject'])."</td>\n";
+			echo "	<td class='overflow' style='width: 30%; max-width: 200px;'>".iconv_mime_decode($row['email_subject'] ?? '')."</td>\n";
 // 			echo "	<td class='hide-md-dn'>".escape($row['email_body'])."</td>\n";
 			echo "	<td>".ucwords($text['label-'.$row['email_status']])."</td>\n";
 			echo "	<td>".escape($row['email_retry_count'])."</td>\n";
 			//echo "	<td>".escape($row['email_action_before'])."</td>\n";
 			echo "	<td class='hide-md-dn'>".escape($row['email_action_after'])."</td>\n";
-			if (permission_exists('email_queue_edit') && filter_var($_SESSION['theme']['list_row_edit_button']['boolean'] ?? false, FILTER_VALIDATE_BOOL)) {
+			if (permission_exists('email_queue_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 				echo "	</td>\n";

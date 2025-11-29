@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2024
+	Portions created by the Initial Developer are Copyright (C) 2016-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,6 +26,13 @@
 
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
+	require_once "resources/check_auth.php";
+
+//check permissions
+	if (!(permission_exists('device_vendor_function_add') || permission_exists('device_vendor_function_edit'))) {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	$language = new text;
@@ -33,43 +40,6 @@
 
 //set the defaults
 	$device_vendor_function_uuid = '';
-
-//delete the group from the menu item
-	if (!empty($_REQUEST["a"]) && $_REQUEST["a"] == "delete" && permission_exists("device_vendor_function_delete") && !empty($_REQUEST["id"])) {
-		//get the id
-			$device_vendor_function_group_uuid = $_REQUEST["id"];
-			$device_vendor_function_uuid = $_REQUEST["device_vendor_function_uuid"];
-			$device_vendor_uuid = $_REQUEST["device_vendor_uuid"];
-
-		//delete the device vendor function group
-			$array['device_vendor_function_groups'][0]['device_vendor_function_group_uuid'] = $device_vendor_function_group_uuid;
-
-			$p = permissions::new();
-			$p->add('device_vendor_function_group_delete', 'temp');
-
-			$database = new database;
-			$database->app_name = 'devices';
-			$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
-			$database->delete($array);
-			unset($array);
-
-			$p->delete('device_vendor_function_group_delete', 'temp');
-
-		//redirect the browser
-			message::add($text['message-delete'] ?? '');
-			header("Location: device_vendor_function_edit.php?id=".escape($device_vendor_function_uuid) ."&device_vendor_uuid=".escape($device_vendor_uuid));
-			exit;
-	}
-
-//check permissions
-	require_once "resources/check_auth.php";
-	if (permission_exists('device_vendor_function_add') || permission_exists('device_vendor_function_edit')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
-	}
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -99,6 +69,30 @@
 		$description = $_POST["description"];
 	}
 
+//delete the group from the sub table
+	if (!empty($_POST["action"]) && $_POST["action"] === "delete" && permission_exists("device_vendor_function_group_delete") && is_uuid($_POST["device_vendor_function_group_uuid"])) {
+		//get the uuid
+			$device_vendor_function_group_uuid = $_POST["device_vendor_function_group_uuid"];
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: devices.php');
+				exit;
+			}
+
+		//delete the device vendor function group
+			$array['device_vendor_function_groups'][0]['device_vendor_function_group_uuid'] = $device_vendor_function_group_uuid;
+			$database->delete($array);
+			unset($array);
+
+		//redirect the user
+			message::add($text['message-delete'] ?? '');
+			header("Location: device_vendor_function_edit.php?id=".escape($device_vendor_function_uuid) ."&device_vendor_uuid=".escape($device_vendor_uuid));
+			exit;
+	}
+
 //process the http variables
 	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
@@ -120,7 +114,6 @@
 			//if (empty($label)) { $msg .= $text['message-required']." ".$text['label-label']."<br>\n"; }
 			if (empty($type)) { $msg .= $text['message-required']." ".$text['label-type']."<br>\n"; }
 			if (empty($value)) { $msg .= $text['message-required']." ".$text['label-value']."<br>\n"; }
-			if (empty($enabled)) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
 			//if (empty($description)) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -159,9 +152,6 @@
 						$array['device_vendor_functions'][0]['enabled'] = $enabled;
 						$array['device_vendor_functions'][0]['description'] = $description;
 
-						$database = new database;
-						$database->app_name = 'devices';
-						$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 						$database->save($array);
 						unset($array);
 					}
@@ -186,9 +176,6 @@
 								$p = permissions::new();
 								$p->add('device_vendor_function_group_add', 'temp');
 
-								$database = new database;
-								$database->app_name = 'devices';
-								$database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
 								$database->save($array);
 								unset($array);
 
@@ -206,13 +193,19 @@
 //pre-populate the form
 	if (!empty($_GET) && count($_GET) > 0 && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$device_vendor_function_uuid = $_GET["id"] ?? null;
-		$sql = "select * from v_device_vendor_functions ";
+		$sql = "select ";
+		$sql .= "device_vendor_function_uuid, ";
+		$sql .= "device_vendor_uuid, ";
+		$sql .= "type, ";
+		$sql .= "subtype, ";
+		$sql .= "value, ";
+		$sql .= "enabled, ";
+		$sql .= "description ";
+		$sql .= "from v_device_vendor_functions ";
 		$sql .= "where device_vendor_function_uuid = :device_vendor_function_uuid ";
 		$parameters['device_vendor_function_uuid'] = $device_vendor_function_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
-			//$label = $row["label"];
 			$type = $row["type"];
 			$subtype = $row["subtype"];
 			$value = $row["value"];
@@ -237,7 +230,6 @@
 	$sql .= "g.group_name asc ";
 	$parameters['device_vendor_uuid'] = $device_vendor_uuid;
 	$parameters['device_vendor_function_uuid'] = $device_vendor_function_uuid;
-	$database = new database;
 	$function_groups = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -251,7 +243,14 @@
 	}
 
 //get the groups
-	$sql = "select * from v_groups ";
+	$sql = "select ";
+	$sql .= "group_uuid, ";
+	$sql .= "domain_uuid, ";
+	$sql .= "group_name, ";
+	$sql .= "group_protected, ";
+	$sql .= "group_level, ";
+	$sql .= "group_description ";
+	$sql .= "from v_groups ";
 	if (!empty($assigned_groups) && is_array($assigned_groups) && @sizeof($assigned_groups) != 0) {
 		$sql .= "where ";
 		foreach ($assigned_groups as $index => $group_uuid) {
@@ -263,9 +262,11 @@
 		}
 	}
 	$sql .= "order by domain_uuid desc, group_name asc ";
-	$database = new database;
 	$groups = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters, $sql_where, $index);
+
+//set the defaults
+	$enabled = $enabled ?? true;
 
 //create token
 	$object = new token;
@@ -328,18 +329,25 @@
 	echo "		<td class='vtable'>";
 	if (is_array($function_groups) && @sizeof($function_groups) != 0) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
+		if (permission_exists('device_vendor_function_group_delete')) {
+			echo "	<input type='hidden' id='action' name='action' value=''>\n";
+			echo "	<input type='hidden' id='device_vendor_function_group_uuid' name='device_vendor_function_group_uuid' value=''>\n";
+		}
+		$x = 0;
 		foreach ($function_groups as $field) {
 			if (!empty($field['group_name'])) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
 				echo $field['group_name'].(($field['group_domain_uuid'] != '') ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
 				echo "	</td>\n";
-				if (permission_exists('group_member_delete') || if_group("superadmin")) {
+				if (permission_exists('device_vendor_function_group_delete')) {
 					echo "	<td class='list_control_icons' style='width: 25px;'>";
-					echo 		"<a href='device_vendor_function_edit.php?id=".$field['device_vendor_function_group_uuid']."&group_uuid=".$field['group_uuid']."&device_vendor_function_uuid=".$device_vendor_function_uuid."&device_vendor_uuid=".$device_vendor_uuid."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+					echo button::create(['type'=>'button','icon'=>'fas fa-minus','id'=>'btn_delete','class'=>'default list_control_icon','name'=>'btn_delete','onclick'=>"modal_open('modal-delete-group-$x','btn_delete');"]);
+					echo modal::create(['id'=>'modal-delete-group-'.$x,'type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); document.getElementById('device_vendor_function_group_uuid').value = '".escape($field['device_vendor_function_group_uuid'])."'; list_form_submit('frm');"])]);
 					echo "	</td>";
 				}
 				echo "</tr>\n";
+				$x++;
 			}
 		}
 		echo "</table>\n";
@@ -366,10 +374,17 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".(empty($enabled) || $enabled == "false" ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "	<select class='formfld' id='enabled' name='enabled'>\n";
+	echo "		<option value='true' ".($enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";

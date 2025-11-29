@@ -46,6 +46,17 @@
 	ini_set('max_execution_time',3600);
 
 //define the asynchronous command function
+	/**
+	 * Asynchronously executes a command.
+	 *
+	 * This method runs the given $cmd as an asynchronous process. On Windows, it uses
+	 * proc_open to create a new process with pipes for stdin, stdout, and stderr. On
+	 * Posix systems (e.g., Linux, macOS), it uses exec to run the command in the background.
+	 *
+	 * @param string $cmd The command to execute asynchronously.
+	 *
+	 * @return int|bool The return value of proc_close() on Windows or false on failure; null if not executed successfully.
+	 */
 	function cmd_async($cmd) {
 		//windows
 		if (stristr(PHP_OS, 'WIN')) {
@@ -77,7 +88,6 @@
 	$sql .= "and call_broadcast_uuid = :call_broadcast_uuid ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['call_broadcast_uuid'] = $call_broadcast_uuid;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row)) {
 		$broadcast_name = $row["broadcast_name"];
@@ -203,7 +213,7 @@
 							$response = event_socket::command($cmd);
 
 						//method 2
-							//cmd_async($_SESSION['switch']['bin']['dir']."/fs_cli -x \"".$cmd."\";");
+							//cmd_async($settings->get('switch', 'bin')."/fs_cli -x \"".$cmd."\";");
 
 						//spread the calls out so that they are scheduled with different times
 							if (strlen($broadcast_concurrent_limit) > 0 && !empty($broadcast_timeout)) {
@@ -231,7 +241,7 @@
 					echo "	<table width='100%'>\n";
 					echo "	<tr>\n";
 					echo "	<td align='center'>\n";
-					echo "		<a href='".PROJECT_PATH."/app/calls_active/calls_active.php'>".$text['label-view-calls']."</a>\n";
+					echo "		<a href='".PROJECT_PATH."/app/active_calls/active_calls.php'>".$text['label-view-calls']."</a>\n";
 					echo "	</td>\n";
 					echo "	</table>\n";
 				}
