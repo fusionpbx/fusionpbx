@@ -67,9 +67,6 @@
 		--get the variables
 			dsn = freeswitch.getGlobalVariable("dsn") or ''
 			dsn_callcenter = freeswitch.getGlobalVariable("dsn_callcenter") or ''
-			if #dsn_callcenter > 0 then
-				dsn_callcenter = freeswitch.getGlobalVariable("dsn_call_center") or ''
-			end
 
 		--start the xml array
 			local xml = Xml:new();
@@ -81,9 +78,9 @@
 			if #dsn_callcenter > 0 then
 				xml:append([[                            <param name="odbc-dsn" value="]] .. xml.sanitize(dsn_callcenter) .. [["/>]]);
 			elseif #dsn > 0 then
-				xml:append([[                            <param name="odbc-dsn" value="]] .. xml.sanitize(database["switch"]) .. [["/>]]);
+				xml:append([[                            <param name="odbc-dsn" value="]] .. xml.sanitize(dsn) .. [["/>]]);
 			end
-			xml:append([[                          <param name="cc-instance-id" value="]] .. xml.sanitize(hostname) .. [["/>]]);
+			xml:append([[                            <param name="cc-instance-id" value="]] .. xml.sanitize(hostname) .. [["/>]]);
 			-- xml:append([[                          <param name="dbname" value="]] .. xml.sanitize(database_dir) .. [[/call_center.db"/>]]);
 			xml:append([[                    </settings>]]);
 
