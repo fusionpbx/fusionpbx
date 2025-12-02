@@ -314,15 +314,15 @@ class provision {
 				$contact['contact_uuid']         = $row['contact_uuid'];
 				$contact['contact_type']         = $row['contact_type'];
 				$contact['contact_category']     = $row['contact_category'];
-				$contact['contact_organization'] = $row['contact_organization'];
-				$contact['contact_name_given']   = $row['contact_name_given'];
-				$contact['contact_name_family']  = $row['contact_name_family'];
+				$contact['contact_organization'] = xml::sanitize($row['contact_organization']);
+				$contact['contact_name_given']   = xml::sanitize($row['contact_name_given']);
+				$contact['contact_name_family']  = xml::sanitize($row['contact_name_family']);
 
 				$contact['numbers'] = [];
 				$numbers            = &$contact['numbers'];
 
 				if (($row['phone_primary'] == '1') || (!isset($contact['phone_number']))) {
-					$contact['phone_label']     = $phone_label;
+					$contact['phone_label']     = xml::sanitize($phone_label);
 					$contact['phone_number']    = $row['phone_number'];
 					$contact['phone_extension'] = $row['phone_extension'];
 				}
