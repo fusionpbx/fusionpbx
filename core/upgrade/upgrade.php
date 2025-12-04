@@ -329,14 +329,15 @@
 
 //restore the default menu
 	if ($upgrade_type == 'menu' or $upgrade_type == '-m' or $upgrade_type == '--menu') {
-		//get the menu uuid and language
+		//get the menu_uuid and language
 		$sql = "select menu_uuid, menu_name, menu_language ";
 		$sql .= "from v_menus ";
 		$menus = $database->select($sql, null, 'all');
 		foreach ($menus as $row) {
-			if ($row == 'default') {
+			if ($row['menu_name'] == 'default') {
 				$menu_uuid = $row["menu_uuid"];
 				$menu_language = $row["menu_language"];
+				break;
 			}
 		}
 		unset($sql, $row);
@@ -582,7 +583,6 @@
 
 	}
 
-
 /**
  * Update file system permissions
  */
@@ -632,7 +632,7 @@ function update_file_permissions($text, settings $settings) {
 
 			//skip /dev/shm directory
 			if (strpos($dir, '/dev/shm') !== false) {
-				continue; 
+				continue;
 			}
 
 			//execute
@@ -651,12 +651,15 @@ function upgrade_services($text, settings $settings) {
 	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.service");
 	$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.service");
 	$service_files = array_merge($core_files, $app_files);
-	foreach($service_files as $file) {
-		$service_name = find_service_name($file);
-		echo "	Name: ".$service_name."\n";
-		system("cp " . escapeshellarg($file) . " /etc/systemd/system/" . escapeshellarg($service_name) . ".service");
-		system("systemctl daemon-reload");
-		system("systemctl enable --now " . escapeshellarg($service_name));
+	if (stristr(PHP_OS, 'Linux')) {
+		foreach($service_files as $file) {
+			$service_name = find_service_name($file);
+			echo "	Name: ".$service_name."\n";
+			system("cp " . escapeshellarg($file) . " /etc/systemd/system/" . escapeshellarg($service_name) . ".service");
+			system("systemctl daemon-reload");
+			system("systemctl enable " . escapeshellarg($service_name));
+			system("systemctl start " . escapeshellarg($service_name));
+		}
 	}
 }
 
