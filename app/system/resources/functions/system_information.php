@@ -156,6 +156,7 @@
 			}
 
 			$system_information['php']['version'] = phpversion();
+			$system_information['php']['apcu'] = (function_exists('apcu_enabled') && apcu_enabled()) ? 'true' : 'false';
 
 			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 				$data = explode("\n", shell_exec('systeminfo /FO CSV 2> nul'));
@@ -188,6 +189,7 @@
 			$system_information['os']['version'] = 'permission denied';
 		}
 
+		$system_information['os']['hostname'] = gethostname();
 		$system_information['os']['date'] = date('r');
 		$system_information['os']['type'] = PHP_OS;
 
