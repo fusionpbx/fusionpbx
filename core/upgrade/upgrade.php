@@ -306,14 +306,15 @@
 
 //restore the default menu
 	if ($upgrade_type == 'menu' or $upgrade_type == '-m' or $upgrade_type == '--menu') {
-		//get the menu uuid and language
+		//get the menu_uuid and language
 		$sql = "select menu_uuid, menu_name, menu_language ";
 		$sql .= "from v_menus ";
 		$menus = $database->select($sql, null, 'all');
 		foreach ($menus as $row) {
-			if ($row == 'default') {
+			if ($row['menu_name'] == 'default') {
 				$menu_uuid = $row["menu_uuid"];
 				$menu_language = $row["menu_language"];
+				break;
 			}
 		}
 		unset($sql, $row);
