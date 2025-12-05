@@ -48,9 +48,9 @@ class number_translations {
 	private $uuid_prefix;
 	private $toggle_field;
 	private $toggle_values;
-	private $json;
-	private $xml;
-	private $display_type;
+	public $json;
+	public $xml;
+	public $display_type;
 
 	/**
 	 * Initializes the object with setting array.
