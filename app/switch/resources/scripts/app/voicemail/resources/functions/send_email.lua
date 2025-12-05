@@ -189,7 +189,7 @@ function send_email(id, uuid)
 				sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 				sql = sql .. "AND template_language = :template_language ";
 				sql = sql .. "AND template_category = 'voicemail' "
-				if (voicemail_transcription_enabled) then
+				if (voicemail_transcription_enabled == 'true') then
 					sql = sql .. "AND template_subcategory = 'transcription' "
 				else
 					sql = sql .. "AND template_subcategory = 'default' "
@@ -387,3 +387,4 @@ function send_email(id, uuid)
 		end
 
 end
+
