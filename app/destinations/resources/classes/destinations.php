@@ -319,8 +319,9 @@
 		* @var string $destination_type can be ivr, dialplan, call_center_contact or bridge
 		* @var string $destination_name - current name
 		* @var string $destination_value - current value
+		* @var string $placeholder - descriptive text
 		*/
-		public function select($destination_type, $destination_name, $destination_value) {
+		public function select($destination_type, $destination_name, $destination_value, $placeholder = null) {
 
 			//set the global variables
 			global $db_type;
@@ -396,7 +397,7 @@
 				$select_found = false;
 
 				$response .= "	<select name='".$destination_name."' id='".$destination_id."' class='formfld' style='".$select_style."' onchange=\"".$onchange."\">\n";
-				$response .= "			<option value=''></option>\n";
+				$response .= "		<option value='' ".(!empty($placeholder) ? "selected='selected' disabled='disabled'" : null).">".(!empty($placeholder) ? $placeholder : null)."</option>\n";
 				foreach ($this->destinations as $row) {
 
 					$name = $row['name'];
