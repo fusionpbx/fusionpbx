@@ -638,10 +638,11 @@ function update_file_permissions($text, settings $settings) {
  */
 function upgrade_services($text, settings $settings) {
 	//echo ($text['description-upgrade_services'] ?? "")."\n";
-	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.service");
-	$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.service");
-	$service_files = array_merge($core_files, $app_files);
-	if (stristr(PHP_OS, 'Linux')) {
+	if (file_exists("/usr/bin/systemctl")) {
+		// Linux distributions with systemd
+		$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.service");
+		$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.service");
+		$service_files = array_merge($core_files, $app_files);
 		foreach($service_files as $file) {
 			$service_name = find_service_name($file);
 			echo "	Name: ".$service_name."\n";
@@ -650,6 +651,22 @@ function upgrade_services($text, settings $settings) {
 			system("systemctl enable " . escapeshellarg($service_name));
 			system("systemctl start " . escapeshellarg($service_name));
 		}
+	} else if (file_exists("/etc/init.d") && file_exists("/usr/sbin/update-rc.d")) {
+		// Linux distributions with sysvinit
+		$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.sysvinit");
+		$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.sysvinit");
+		$init_files = array_merge($core_files, $app_files);
+		foreach ($init_files as $file) {
+			$last_slash_pos = strrpos($file, "/");
+			$last_dot_pos = strrpos($file, ".");
+			$service_name = substr($file, $last_slash_pos + 1, $last_dot_pos - $last_slash_pos - 1);
+			echo "	Name: " . $service_name . "\n";
+			system("cp " . escapeshellarg($file) . " /etc/init.d/" . escapeshellarg($service_name));
+			system("chmod +x /etc/init.d/" . escapeshellarg($service_name));
+			system("update-rc.d " . escapeshellarg($service_name) . " enable");
+		}
+	} else {
+		echo "Don't know how to upgrade services for your system. Please update " . __FILE__ . ".";
 	}
 }
 
@@ -657,20 +674,37 @@ function upgrade_services($text, settings $settings) {
  * Stops running services by name.
  *
  * This function iterates over all service files, extracts the service names,
- * and stops each service using systemctl.
+ * and stops each service.
  *
  * @param array    $text
  * @param settings $settings
  */
 function stop_services($text, settings $settings) {
 	//echo ($text['description-stop_services'] ?? "")."\n";
-	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.service");
-	$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.service");
-	$service_files = array_merge($core_files, $app_files);
-	foreach($service_files as $file) {
-		$service_name = find_service_name($file);
-		echo "	Name: ".$service_name."\n";
-		system("systemctl stop ".$service_name);
+	if (file_exists("/usr/bin/systemctl")) {
+		// Linux distributions with systemd
+		$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.service");
+		$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.service");
+		$service_files = array_merge($core_files, $app_files);
+		foreach($service_files as $file) {
+			$service_name = find_service_name($file);
+			echo "	Name: ".$service_name."\n";
+			system("systemctl stop ".$service_name);
+		}
+	} else if (file_exists("/etc/init.d") && file_exists("/usr/sbin/update-rc.d")) {
+		// Linux distributions with sysvinit
+		$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.sysvinit");
+		$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.sysvinit");
+		$init_files = array_merge($core_files, $app_files);
+		foreach ($init_files as $file) {
+			$last_slash_pos = strrpos($file, "/");
+			$last_dot_pos = strrpos($file, ".");
+			$service_name = substr($file, $last_slash_pos + 1, $last_dot_pos - $last_slash_pos - 1);
+			echo " " . $service_name . "\n";
+			system("service " . $service_name . " stop");
+		}
+	} else {
+		echo "Don't know how to stop services on your system. Please update " . __FILE__ . ".";
 	}
 }
 
@@ -684,13 +718,30 @@ function stop_services($text, settings $settings) {
  */
 function restart_services($text, settings $settings) {
 	//echo ($text['description-restart_services'] ?? "")."\n";
-	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.service");
-	$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.service");
-	$service_files = array_merge($core_files, $app_files);
-	foreach($service_files as $file) {
-		$service_name = find_service_name($file);
-		echo "	Name: ".$service_name."\n";
-		system("systemctl restart ".$service_name);
+	if (file_exists("/usr/bin/systemctl")) {
+		// Linux distributions with systemd
+		$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.service");
+		$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.service");
+		$service_files = array_merge($core_files, $app_files);
+		foreach($service_files as $file) {
+			$service_name = find_service_name($file);
+			echo "	Name: ".$service_name."\n";
+			system("systemctl restart ".$service_name);
+		}
+	} else if (file_exists("/etc/init.d") && file_exists("/usr/sbin/update-rc.d")) {
+		// Linux distributions with sysvinit
+		$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.sysvinit");
+		$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.sysvinit");
+		$init_files = array_merge($core_files, $app_files);
+		foreach ($init_files as $file) {
+			$last_slash_pos = strrpos($file, "/");
+			$last_dot_pos = strrpos($file, ".");
+			$service_name = substr($file, $last_slash_pos + 1, $last_dot_pos - $last_slash_pos - 1);
+			echo " " . $service_name . "\n";
+			system("service " . $service_name . " restart");
+		}
+	} else {
+		echo "Don't know how to restart services on your system. Please update " . __FILE__ . ".";
 	}
 }
 
