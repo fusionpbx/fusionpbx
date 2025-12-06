@@ -354,6 +354,9 @@ foreach ($widgets as $row) {
 	}
 	if (!empty($row['widget_background_color'])) {
 		$background_color = json_validate($row['widget_background_color']) ? json_decode($row['widget_background_color'], true) : $row['widget_background_color'];
+		if (!isset($background_color[1])) {
+			$background_color[1] = '';
+		}
 		echo "#".$widget_id." > .hud_box:first-of-type {\n";
 		echo "	background: ".$background_color[0].";\n";
 		if (empty($row['widget_background_gradient_style']) || $row['widget_background_gradient_style'] == 'mirror') {
@@ -366,6 +369,9 @@ foreach ($widgets as $row) {
 	}
 	if (!empty($row['widget_background_color_hover'])) {
 		$background_color_hover = json_validate($row['widget_background_color_hover']) ? json_decode($row['widget_background_color_hover'], true) : $row['widget_background_color_hover'];
+		if (!isset($background_color_hover[1])) {
+			$background_color_hover[1] = '';
+		}
 		echo "#".$widget_id.":hover > .hud_box:first-of-type {\n";
 		echo "	background: ".$background_color_hover[0].";\n";
 		if (empty($row['widget_background_gradient_style']) || $row['widget_background_gradient_style'] == 'mirror') {
@@ -378,6 +384,9 @@ foreach ($widgets as $row) {
 	}
 	if (!empty($row['widget_detail_background_color'])) {
 		$detail_background_color = json_validate($row['widget_detail_background_color']) ? json_decode($row['widget_detail_background_color'], true) : $row['widget_detail_background_color'];
+		if (!isset($detail_background_color[1])) {
+			$detail_background_color[1] = '';
+		}
 		echo "#".$widget_id." > .hud_box > .hud_details {\n";
 		echo "	background: ".$detail_background_color[0].";\n";
 		if (empty($row['widget_background_gradient_style']) || $row['widget_background_gradient_style'] == 'mirror') {
