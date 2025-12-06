@@ -19,8 +19,17 @@ SCRIPTNAME=/etc/init.d/$NAME
 WORKINGDIR=/var/www/fusionpbx
 USER=root
 
+create_run_dir()
+{
+    if [ ! -d "/run/fusionpbx" ]; then
+        mkdir /run/fusionpbx
+        chown www-data:www-data /run/fusionpbx
+    fi
+}
+
 do_start()
 {
+    create_run_dir
     sh -c "USER=$USER HOME=$WORKINGDIR start-stop-daemon --start --quiet --pidfile $PIDFILE --make-pidfile \\
         --background --output /var/log/$NAME.log --chdir $WORKINGDIR --chuid $USER \\
         --exec $DAEMON -- $DAEMON_ARGS"
