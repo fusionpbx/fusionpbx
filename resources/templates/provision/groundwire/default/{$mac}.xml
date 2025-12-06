@@ -10,9 +10,9 @@
         <proxy>{$row.server_address}:{$row.sip_port}</proxy>
         <transport>{$row.sip_transport}</transport>
         <extProvInterval>0</extProvInterval>
-        <voicemailNumber>*97</voicemailNumber>
+        <voiceMailNumber>{$voicemail_number}</voiceMailNumber>
         <subscribeForVoicemail>1</subscribeForVoicemail>
-        <wsContactsUrl>https://{$row.server_address}/app/provision/index.php?address={$mac}&file=directory.json</wsContactsUrl>
+        <wsContactsUrl>https://{$row.server_address}/app/provision/index.php?address={$mac}&amp;file=directory.json</wsContactsUrl>
 
       <rewriting>
     <rule>
