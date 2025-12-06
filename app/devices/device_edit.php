@@ -919,8 +919,17 @@
 		//build content for linphone
 		if ($device_template == "linphone/default") {
 			$auth_string = '';
-			if ($settings->get('provision', 'http_auth_enabled', true) && !empty($settings->get('provision', 'http_auth_username', '')) && !empty($settings->get('provision', 'http_auth_password', ''))) {
-				$auth_string = $settings->get('provision', 'http_auth_username', '').':'.$settings->get('provision', 'http_auth_password', '').'@';
+			
+			$http_auth_password = $settings->get('provision', 'http_auth_password', '');
+			
+			if (is_array($http_auth_password)) {
+				$http_auth_password = $http_auth_password[0];
+			}
+			
+			$http_auth_username = $settings->get('provision', 'http_auth_username', '');
+			
+			if ($settings->get('provision', 'http_auth_enabled', true) && !empty($http_auth_username) && !empty($http_auth_password)) {
+				$auth_string = $http_auth_username.':'.$http_auth_password.'@';
 			}
 			$content = "https://".$auth_string.$provision_domain_name.'/app/provision/index.php?address='.$device_address;
 		}
