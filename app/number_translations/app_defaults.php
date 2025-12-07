@@ -30,18 +30,19 @@
 		$num_rows = $database->select($sql, null, 'column');
 		unset($sql);
 
-		if ($num_rows == 0) {
+        if ($num_rows == 0) {
 			//get the array of xml files
-			$xml_list = glob($_SERVER["PROJECT_ROOT"] . "/*/*/resources/switch/conf/number_translation/*.xml");
-
-			//number_translation class
+			$dir = dirname(__DIR__, 2) . "/app/number_translations/resources/switch/conf/number_translation";
+            //number_translation class
 			$number_translation = new number_translations;
 
 			//process the xml files
+			$xml_list = array_diff(scandir($dir), array('..', '.'));
 			foreach ($xml_list as $xml_file) {
 				//get and parse the xml
-					$number_translation->xml = file_get_contents($xml_file);
-					$number_translation->import();
+				$file_content = file_get_contents($dir . '/' . $xml_file);
+				$number_translation->getxml($file_content);
+				$number_translation->import();
 			}
 
 			//check for existing configuration
