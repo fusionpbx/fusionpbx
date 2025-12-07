@@ -1,7 +1,7 @@
 <?php
 
 $view['name'] = "view_call_block";
-$view['version'] = "20250919";
+$view['version'] = "20251207";
 $view['description'] = "Show the call block details with extension information.";
 
 $view['sql']  = "SELECT \n";
