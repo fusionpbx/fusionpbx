@@ -26,14 +26,14 @@
 if ($domains_processed == 1) {
 
 	//set all lines to enabled (true) where null or empty string
-		$sql = "select device_line_uuid from v_device_lines ";
-		$sql .= "where enabled is null or enabled = '' ";
+		$sql = "select device_line_uuid ";
+		$sql .= "from v_device_lines ";
+		$sql .= "where enabled is null ";
 		$device_lines = $database->select($sql, null, 'all');
 		if (!empty($device_lines)) {
 			$sql = "update v_device_lines set ";
 			$sql .= "enabled = 'true' ";
 			$sql .= "where enabled is null ";
-			$sql .= "or enabled = '' ";
 			$database->execute($sql);
 			unset($sql);
 		}
