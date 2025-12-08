@@ -88,13 +88,14 @@ class number_translations {
 	}
     
 	/**
-	 *
      *  Load properly private property xml
-     *  @param string $file_content content of template files.
+	 * 
+     *  @param string $xml content of template files.
+	 * 
+	 * 	@return void
     */
-	public function getxml($file_content) {
-		$this->xml = $file_content;
-		return $this->xml;
+	public function get_xml($xml) {
+		$this->xml = $xml;
 	}
 
 	/**
