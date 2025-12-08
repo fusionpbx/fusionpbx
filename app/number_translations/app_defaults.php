@@ -30,7 +30,7 @@
 		$num_rows = $database->select($sql, null, 'column');
 		unset($sql);
 
-        if ($num_rows == 0) {
+		if ($num_rows == 0) {
 			//get the array of xml files
 			$dir = dirname(__DIR__, 2) . "/app/number_translations/resources/switch/conf/number_translation";
             //number_translation class
