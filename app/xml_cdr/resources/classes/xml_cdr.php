@@ -1584,7 +1584,7 @@ class xml_cdr {
 								|| '+' . ($value['destination_prefix'] ?? '') . ($value['destination_area_code'] ?? '') . $value['destination_number'] == $detail_action
 								|| ($value['destination_prefix'] ?? '') . ($value['destination_area_code'] ?? '') . $value['destination_number'] == $detail_action
 								|| ($value['destination_area_code'] ?? '') . $value['destination_number'] == $detail_action) {
-								if (file_exists($_SERVER["PROJECT_ROOT"] . "/app/" . $application . "/app_languages.php")) {
+								if (file_exists(dirname(__DIR__, 4) . "/app/" . $application . "/app_languages.php")) {
 									$value['application'] = $application;
 									return $value;
 								}
@@ -1593,7 +1593,7 @@ class xml_cdr {
 
 						//find all other matching actions
 						if (!empty($value['extension']) && $value['extension'] == $detail_action || preg_match('/^' . preg_quote($value['extension'] ?? '') . '$/', $detail_action)) {
-							if (file_exists($_SERVER["PROJECT_ROOT"] . "/app/" . $application . "/app_languages.php")) {
+							if (file_exists(dirname(__DIR__, 4) . "/app/" . $application . "/app_languages.php")) {
 								$value['application'] = $application;
 								return $value;
 							}

@@ -405,7 +405,7 @@
 					$destination = $row['field']['destination'] ?? '';
 
 					//add multi-lingual support
-					if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
+					if (file_exists(dirname(__DIR__, 4)."/app/".$name."/app_languages.php")) {
 						$text2 = $language2->get($this->language, 'app/'.$name);
 					}
 
@@ -540,7 +540,7 @@
 						$selected = (isset($destination_key) && $key == $destination_key) ? "selected='selected'" : '';
 
 						//add multi-lingual support
-						if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$key."/app_languages.php")) {
+						if (file_exists(dirname(__DIR__, 4)."/app/".$key."/app_languages.php")) {
 							$text2 = $language2->get($this->language, 'app/'.$key);
 							$found = 'true';
 						}
@@ -617,7 +617,7 @@
 				$destination = $row['field']['destination'] ?? '';
 
 				//add multi-lingual support
-				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
+				if (file_exists(dirname(__DIR__, 4)."/app/".$name."/app_languages.php")) {
 					$language2 = new text;
 					$text2 = $language2->get($this->language, 'app/'.$name);
 				}
@@ -729,7 +729,7 @@
 				$destination = $row['field']['destination'] ?? null;
 
 				//add multi-lingual support
-				if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$name."/app_languages.php")) {
+				if (file_exists(dirname(__DIR__, 4)."/app/".$name."/app_languages.php")) {
 					$language2 = new text;
 					$text2 = $language2->get($this->language, 'app/'.$name);
 				}

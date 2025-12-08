@@ -73,7 +73,7 @@
 
 //registration count
 	$registrations = '';
-	if (permission_exists('switch_registrations') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
+	if (permission_exists('switch_registrations') && file_exists(dirname(__DIR__, 4)."/app/registrations/")) {
 		$registration = new registrations;
 		if (permission_exists("registration_all")) {
 			$registration->show = 'all';

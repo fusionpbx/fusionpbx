@@ -340,8 +340,8 @@ class domains {
 		$config_path = $config->config_file;
 
 		//get the list of installed apps from the core and app directories (note: GLOB_BRACE doesn't work on some systems)
-		$config_list_1 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
-		$config_list_2 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_menu.php");
+		$config_list_1 = glob(dirname(__DIR__, 2) . "/*/*/app_config.php");
+		$config_list_2 = glob(dirname(__DIR__, 2) . "/*/*/app_menu.php");
 		$config_list = array_merge((array)$config_list_1, (array)$config_list_2);
 		unset($config_list_1, $config_list_2);
 		$x = 0;
@@ -358,7 +358,7 @@ class domains {
 		unset($sql);
 
 		//get the list of installed apps from the core and mod directories
-		$default_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_defaults.php");
+		$default_list = glob(dirname(__DIR__, 2) . "/*/*/app_defaults.php");
 
 		//loop through all domains
 		$domains_processed = 1;
@@ -408,7 +408,7 @@ class domains {
 		unset($sql);
 
 		//get the list of default settings
-		$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+		$config_list = glob(dirname(__DIR__, 2) . "/*/*/app_config.php");
 		$x = 0;
 		foreach ($config_list as $config_path) {
 			include($config_path);
@@ -517,7 +517,7 @@ class domains {
 						unset($result, $row);
 
 						//get the $apps array from the installed apps from the core and mod directories
-						$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+						$config_list = glob(dirname(__DIR__, 2) . "/*/*/app_config.php");
 						$x = 0;
 						if (isset($config_list)) foreach ($config_list as $config_path) {
 							include($config_path);

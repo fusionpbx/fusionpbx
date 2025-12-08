@@ -46,7 +46,7 @@
 
 				//validate the token
 					$token = new token;
-					if (!$token->validate($_SERVER["DOCUMENT_ROOT"].'/extensions/resources/dashboard/caller_id.php')) {
+					if (!$token->validate(dirname(__DIR__, 4).'/extensions/resources/dashboard/caller_id.php')) {
 						message::add($text['message-invalid_token'],'negative');
 						header('Location: /core/dashboard/');
 						exit;
@@ -166,7 +166,7 @@
 
 		//create token
 			$object = new token;
-			$token = $object->create($_SERVER["DOCUMENT_ROOT"].'/extensions/resources/dashboard/caller_id.php');
+			$token = $object->create(dirname(__DIR__, 4).'/extensions/resources/dashboard/caller_id.php');
 
 		//caller id
 			echo "<div class='hud_box'>\n";

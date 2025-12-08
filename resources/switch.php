@@ -834,7 +834,7 @@ if (!function_exists('save_call_center_xml')) {
 						$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 					}
 					else {
-						$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/switch/resources/conf";
+						$path = dirname(__DIR__, 1)."/app/switch/resources/conf";
 					}
 
 				//get the contents of the template
@@ -878,7 +878,7 @@ if (!function_exists('switch_conf_xml')) {
 				$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 			}
 			else {
-				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/switch/resources/conf";
+				$path = dirname(__DIR__, 1)."/app/switch/resources/conf";
 			}
 			$file_contents = file_get_contents($path."/autoload_configs/switch.conf.xml");
 
@@ -889,7 +889,7 @@ if (!function_exists('switch_conf_xml')) {
 					$php_bin = 'php.exe';
 				}
 
-				$secure_path = path_join($_SERVER["DOCUMENT_ROOT"], PROJECT_PATH, 'secure');
+				$secure_path = path_join(dirname(__DIR__, 1), PROJECT_PATH, 'secure');
 
 				$v_mail_bat = path_join($secure_path, 'mailto.bat');
 				$v_mail_cmd = '@' .
@@ -906,7 +906,7 @@ if (!function_exists('switch_conf_xml')) {
 			}
 			else {
 				if (file_exists(PHP_BINDIR.'/php')) { define("PHP_BIN", "php"); }
-				$v_mailer_app = PHP_BINDIR."/".PHP_BIN." ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/v_mailto.php";
+				$v_mailer_app = PHP_BINDIR."/".PHP_BIN." ".dirname(__DIR__, 1)."/secure/v_mailto.php";
 				$v_mailer_app_args = "-t";
 			}
 
@@ -939,7 +939,7 @@ if (!function_exists('xml_cdr_conf_xml')) {
 				$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 			}
 			else {
-				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/switch/resources/conf";
+				$path = dirname(__DIR__, 1)."/app/switch/resources/conf";
 			}
 			$file_contents = file_get_contents($path."/autoload_configs/xml_cdr.conf.xml");
 
@@ -1008,10 +1008,10 @@ if (!function_exists('save_sip_profile_xml')) {
 
 					//get the xml sip profile template
 						if ($sip_profile_name == "internal" || $sip_profile_name == "external" || $sip_profile_name == "internal-ipv6") {
-							$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/sip_profiles/resources/xml/sip_profiles/".$sip_profile_name.".xml");
+							$file_contents = file_get_contents(dirname(__DIR__, 1)."/app/sip_profiles/resources/xml/sip_profiles/".$sip_profile_name.".xml");
 						}
 						else {
-							$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/sip_profiles/resources/xml/sip_profiles/default.xml");
+							$file_contents = file_get_contents(dirname(__DIR__, 1)."/app/sip_profiles/resources/xml/sip_profiles/default.xml");
 						}
 
 					//get the sip profile settings
@@ -1063,33 +1063,33 @@ if (!function_exists('save_switch_xml')) {
 		global $settings;
 
 		if (is_readable($settings->get('switch', 'extensions'))) {
-			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/resources/classes/extension.php")) {
+			if (file_exists(dirname(__DIR__, 1)."/app/extensions/resources/classes/extension.php")) {
 				$extension = new extension;
 				$extension->xml();
 			}
 		}
 		if (is_readable($settings->get('switch', 'conf'))) {
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
+			if (file_exists(dirname(__DIR__, 1)."/app/settings/app_config.php")) {
 				save_setting_xml();
 			}
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/modules/app_config.php")) {
+			if (file_exists(dirname(__DIR__, 1)."/app/modules/app_config.php")) {
 				$module = new modules;
 				$module->xml();
 				//$msg = $module->msg;
 			}
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/vars/app_config.php")) {
+			if (file_exists(dirname(__DIR__, 1)."/app/vars/app_config.php")) {
 				save_var_xml();
 			}
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")) {
+			if (file_exists(dirname(__DIR__, 1)."/app/call_center/app_config.php")) {
 				save_call_center_xml();
 			}
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/gateways/app_config.php")) {
+			if (file_exists(dirname(__DIR__, 1)."/app/gateways/app_config.php")) {
 				save_gateway_xml();
 			}
-			//if (file_exists($_SERVER["PROJECT_ROOT"]."/app/ivr_menu/app_config.php")) {
+			//if (file_exists(dirname(__DIR__, 1)."/app/ivr_menu/app_config.php")) {
 			//	save_ivr_menu_xml();
 			//}
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/sip_profiles/app_config.php")) {
+			if (file_exists(dirname(__DIR__, 1)."/app/sip_profiles/app_config.php")) {
 				save_sip_profile_xml();
 			}
 		}

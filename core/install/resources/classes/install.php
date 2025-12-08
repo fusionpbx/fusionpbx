@@ -72,7 +72,7 @@ class install {
 				$system_drive  = getenv('SystemDrive');
 				$config_path   = $system_drive . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx';
 				$config_file   = $config_path . DIRECTORY_SEPARATOR . 'config.conf';
-				$document_root = $_SERVER["DOCUMENT_ROOT"];
+				$document_root = dirname(__DIR__, 4);
 
 				$conf_dir       = $_SERVER['ProgramFiles'] . DIRECTORY_SEPARATOR . 'freeswitch' . DIRECTORY_SEPARATOR . 'conf';
 				$sounds_dir     = $_SERVER['ProgramFiles'] . DIRECTORY_SEPARATOR . 'freeswitch' . DIRECTORY_SEPARATOR . 'sounds';
@@ -82,7 +82,7 @@ class install {
 				$voicemail_dir  = $_SERVER['ProgramFiles'] . DIRECTORY_SEPARATOR . 'freeswitch' . DIRECTORY_SEPARATOR . 'voicemail';
 				$scripts_dir    = $_SERVER['ProgramFiles'] . DIRECTORY_SEPARATOR . 'freeswitch' . DIRECTORY_SEPARATOR . 'scripts';
 				$php_dir        = dirname(PHP_BINARY);
-				$cache_location = dirname($_SERVER['DOCUMENT_ROOT']) . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'fusionpbx';
+				$cache_location = dirname(dirname(__DIR__, 4)) . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'fusionpbx';
 				break;
 		}
 

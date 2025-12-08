@@ -29,8 +29,8 @@ require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 //load icons
 $font_awesome_icons = [];
-if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/metadata/icons.json')) {
-	$icons_json = file_get_contents($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/metadata/icons.json');
+if (file_exists(dirname(__DIR__, 2).'/resources/fontawesome/metadata/icons.json')) {
+	$icons_json = file_get_contents(dirname(__DIR__, 2).'/resources/fontawesome/metadata/icons.json');
 	if (!empty($icons_json)) {
 		$icons_array = json_decode($icons_json, true);
 		if (!empty($icons_array) && is_array($icons_array)) {

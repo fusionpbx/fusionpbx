@@ -253,10 +253,10 @@
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-qr_code'],'icon'=>'qrcode','collapse'=>'hide-sm-dn','onclick'=>"$('#qr_code_container').fadeIn(400);"]);
 	echo button::create(['type'=>'button','label'=>$text['button-vcard'],'icon'=>'address-card','collapse'=>'hide-sm-dn','link'=>'contacts_vcard.php?id='.urlencode($contact_uuid).'&type=download']);
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/invoices')) {
+	if (is_dir(dirname(__DIR__, 2).'/app/invoices')) {
 		echo button::create(['type'=>'button','label'=>$text['button-invoices'],'icon'=>'file-invoice-dollar','collapse'=>'hide-sm-dn','link'=>'../invoices/invoices.php?id='.urlencode($contact_uuid)]);
 	}
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/certificates')) {
+	if (is_dir(dirname(__DIR__, 2).'/app/certificates')) {
 		echo button::create(['type'=>'button','label'=>$text['button-certificate'],'icon'=>'certificate','collapse'=>'hide-sm-dn','link'=>'../certificates/index.php?name='.urlencode($contact_name_given." ".$contact_name_family)]);
 	}
 	if (!empty($contact_user_uuid) && permission_exists('user_edit') && is_uuid($contact_user_uuid)) {

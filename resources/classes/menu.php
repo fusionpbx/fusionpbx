@@ -944,7 +944,7 @@ class menu {
 	public function restore_default() {
 
 		//get the $apps array from the installed apps from the core and mod directories
-		$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_menu.php");
+		$config_list = glob(dirname(__DIR__, 2) . "/*/*/app_menu.php");
 		$x = 0;
 		if (is_array($config_list)) {
 			foreach ($config_list as $config_path) {

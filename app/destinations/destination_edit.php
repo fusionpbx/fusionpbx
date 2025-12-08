@@ -2007,7 +2007,7 @@
 	}
 
 	//hold music
-	if (permission_exists("destination_hold_music") && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/music_on_hold')) {
+	if (permission_exists("destination_hold_music") && is_dir(dirname(__DIR__, 2).'/app/music_on_hold')) {
 		echo "<tr id='tr_hold_music'>\n";
 		echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_hold_music']."\n";

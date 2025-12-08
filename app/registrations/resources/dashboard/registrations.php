@@ -26,7 +26,7 @@
 
 //registration count
 	$active_registrations = 0;
-	if ($esl->is_connected() && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/registrations/")) {
+	if ($esl->is_connected() && file_exists(dirname(__DIR__, 4)."/app/registrations/")) {
 		$registration = new registrations;
 		if (permission_exists("registration_all")) {
 			$active_registrations = $registration->show = 'all';

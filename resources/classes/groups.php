@@ -530,7 +530,7 @@ class groups {
 		$num_rows = $this->database->select($sql, null, 'column');
 		if ($num_rows == 0) {
 			//build the apps array
-			$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+			$config_list = glob(dirname(__DIR__, 2) . "/*/*/app_config.php");
 			$x = 0;
 			foreach ($config_list as $config_path) {
 				include($config_path);

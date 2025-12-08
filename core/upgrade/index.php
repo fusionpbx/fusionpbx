@@ -54,7 +54,7 @@
 	$language = $settings->get('domain', 'language', 'en-us');
 
 //find optional apps with repos
-	$updateable_repos = git_find_repos($_SERVER["PROJECT_ROOT"]."/app");
+	$updateable_repos = git_find_repos(dirname(__DIR__, 2)."/app");
 	if (!empty($updateable_repos) && is_array($updateable_repos) && @sizeof($updateable_repos) != 0) {
 		foreach ($updateable_repos as $app_path => $repo) {
 			//set the value
@@ -97,7 +97,7 @@
 		//run source update
 		if (!empty($action["upgrade_source"]) && permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx")) {
 
-			$project_update_status = git_pull($_SERVER["PROJECT_ROOT"]);
+			$project_update_status = git_pull(dirname(__DIR__, 2));
 
 			$_SESSION["response"]["upgrade_source"] = $project_update_status['message'];
 
@@ -289,7 +289,7 @@
 	echo "<br /><br />";
 
 	echo "<div class='card'>\n";
-	if (permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx") && is_writeable($_SERVER["PROJECT_ROOT"]."/.git")) {
+	if (permission_exists("upgrade_source") && !is_dir("/usr/share/examples/fusionpbx") && is_writeable(dirname(__DIR__, 2)."/.git")) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr onclick=\"$('#tr_applications').slideToggle('fast');\">\n";
 		echo "	<td width='30%' class='vncellreq' style='vertical-align: middle;'>\n";
@@ -318,7 +318,7 @@
 		echo "		<input type='checkbox' name='action[upgrade_source]' id='do_source' value='1' onclick=\"event.stopPropagation(); if (this.checked == false) { document.getElementById('view_source_code_options').checked = false; }\">\n";
 		echo "		&nbsp;".$text['description-upgrade_source']."<br />\n";
 		//show current git version info
-		chdir($_SERVER["PROJECT_ROOT"]);
+		chdir(dirname(__DIR__, 2));
 		exec("git rev-parse --abbrev-ref HEAD 2>&1", $git_current_branch, $branch_return_value);
 		$git_current_branch = $git_current_branch[0];
 		exec("git log --pretty=format:'%H' -n 1 2>&1", $git_current_commit, $commit_return_value);

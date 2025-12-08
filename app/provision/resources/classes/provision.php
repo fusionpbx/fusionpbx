@@ -110,7 +110,7 @@ class provision {
 				} elseif (file_exists('/etc/fusionpbx/resources/templates/provision')) {
 					$this->template_dir = '/etc/fusionpbx/resources/templates/provision';
 				} else {
-					$this->template_dir = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/resources/templates/provision';
+					$this->template_dir = dirname(__DIR__, 4) . '/resources/templates/provision';
 				}
 			}
 		} elseif (PHP_OS == "FreeBSD") {
@@ -121,23 +121,23 @@ class provision {
 				} elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
 					$this->template_dir = '/usr/local/etc/fusionpbx/resources/templates/provision';
 				} else {
-					$this->template_dir = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/resources/templates/provision';
+					$this->template_dir = dirname(__DIR__, 4) . '/resources/templates/provision';
 				}
 			}
 		} elseif (PHP_OS == "NetBSD") {
 			//set the default template_dir
 			if (empty($this->template_dir)) {
-				$this->template_dir = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/resources/templates/provision';
+				$this->template_dir = dirname(__DIR__, 4) . '/resources/templates/provision';
 			}
 		} elseif (PHP_OS == "OpenBSD") {
 			//set the default template_dir
 			if (empty($this->template_dir)) {
-				$this->template_dir = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/resources/templates/provision';
+				$this->template_dir = dirname(__DIR__, 4) . '/resources/templates/provision';
 			}
 		} else {
 			//set the default template_dir
 			if (empty($this->template_dir)) {
-				$this->template_dir = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/resources/templates/provision';
+				$this->template_dir = dirname(__DIR__, 4) . '/resources/templates/provision';
 			}
 		}
 

@@ -178,7 +178,7 @@
 	unset($array);
 
 //get the source extension voicemail data
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
+	if (is_dir(dirname(__DIR__, 2).'/app/voicemails')) {
 
 		//get the voicemails
 			$sql = "select ";

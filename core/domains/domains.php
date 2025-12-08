@@ -30,7 +30,7 @@
 	require_once "resources/paging.php";
 
 //redirect admin to app instead
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php") && !permission_exists('domain_all') && !is_cli()) {
+	if (file_exists(dirname(__DIR__, 2)."/app/domains/app_config.php") && !permission_exists('domain_all') && !is_cli()) {
 		header("Location: ".PROJECT_PATH."/app/domains/domains.php");
 		exit;
 	}

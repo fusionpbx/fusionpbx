@@ -77,8 +77,8 @@
 
 //debug info
 	//echo "Include Path: ".get_include_path()."\n";
-	//echo "Document Root: ".$_SERVER["DOCUMENT_ROOT"]."\n";
-	//echo "Project Root: ".$_SERVER["PROJECT_ROOT"]."\n";
+	//echo "Document Root: ".dirname(__DIR__, 1)."\n";
+	//echo "Project Root: ".dirname(__DIR__, 1)."\n";
 
 
 //include global functions
@@ -130,7 +130,7 @@
 	if (!empty($_GET["domain_uuid"]) && is_uuid($_GET["domain_uuid"]) && !empty($_GET["domain_change"]) && $_GET["domain_change"] == "true" && permission_exists('domain_select')) {
 
 		//include domains
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php") && !permission_exists('domain_all')) {
+			if (file_exists(dirname(__DIR__, 1)."/app/domains/app_config.php") && !permission_exists('domain_all')) {
 				include_once "app/domains/domains.php";
 			}
 

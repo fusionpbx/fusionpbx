@@ -481,8 +481,8 @@
 		echo "		<select class='formfld' id='domain_setting_value' name='domain_setting_value' style=''>\n";
 		echo "		<option value=''></option>\n";
 		//add all the themes to the list
-		$theme_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
-		if ($handle = opendir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes')) {
+		$theme_dir = dirname(__DIR__, 2).'/themes';
+		if ($handle = opendir(dirname(__DIR__, 2).'/themes')) {
 			while (false !== ($dir_name = readdir($handle))) {
 				if ($dir_name != "." && $dir_name != ".." && $dir_name != ".svn" && $dir_name != ".git" && is_dir($theme_dir.'/'.$dir_name)) {
 					$dir_label = str_replace('_', ' ', $dir_name);
