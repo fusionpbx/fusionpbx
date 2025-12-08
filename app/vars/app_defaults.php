@@ -63,7 +63,7 @@ if ($domains_processed == 1) {
 					$xml_file = '/var/www/fusionpbx/app/switch/resources/conf/vars.xml';
 				}
 				else {
-					$xml_file = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'app/switch/resources/conf/vars.xml';
+					 $xml_file = dirname(__DIR__, 2) . '/app/switch/resources/conf/vars.xml';
 				}
 
 			//load the xml and save it into an array
