@@ -86,6 +86,16 @@ class number_translations {
 		$parameters['number_translation_name'] = $name;
 		return $this->database->select($sql, $parameters, 'column') != 0 ? true : false;
 	}
+    
+	/**
+	 *
+     *  Load properly private property xml
+     *  @param string $file_content content of template files.
+    */
+	public function getxml($file_content) {
+		$this->xml = $file_content;
+		return $this->xml;
+	}
 
 	/**
 	 * Imports a number translation from either XML or JSON format.
