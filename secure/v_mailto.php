@@ -77,8 +77,8 @@
 //includes
 	//require_once('resources/pop3/mime_parser.php');
 	//require_once('resources/pop3/rfc822_addresses.php');
-	//if (file_exists($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php")) {
-	//	require_once($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php");
+	//if (file_exists(dirname(__DIR__, 1)."/app/emails/email_transcription.php")) {
+	//	require_once(dirname(__DIR__, )."/app/emails/email_transcription.php");
 	//}
 
 //parse the email

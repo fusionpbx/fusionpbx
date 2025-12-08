@@ -54,7 +54,7 @@
 	}
 
 //set the template base directory path
-	$template_base_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
+	$template_base_path = dirname(__DIR__, 1).'/themes';
 
 //start the output buffer
 	include $template_base_path.'/'.$settings->get('domain', 'template', 'default').'/config.php';
@@ -111,7 +111,7 @@
 	ob_start();
 
 //for translate tool (if available)
-	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/translate/translate_header.php")) {
+	if (file_exists(dirname(__DIR__, 1)."/app/translate/translate_header.php")) {
 		require_once("app/translate/translate_header.php");
 	}
 

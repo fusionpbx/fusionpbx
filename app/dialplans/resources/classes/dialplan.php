@@ -169,7 +169,7 @@ class dialplan {
 		$x = 0;
 
 		//get the array of xml files
-		$xml_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/switch/conf/dialplan/*.xml");
+		$xml_list = glob(dirname(__DIR__, 4) . "/*/*/resources/switch/conf/dialplan/*.xml");
 
 		//add a band-aid for CLI editors with faulty syntax highlighting
 		/* **/
@@ -1052,7 +1052,7 @@ class dialplan {
 	public function defaults() {
 
 		//get the array of xml files and then process thm
-		$xml_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/switch/conf/dialplan/*.xml");
+		$xml_list = glob(dirname(__DIR__, 4) . "/*/*/resources/switch/conf/dialplan/*.xml");
 		foreach ($xml_list as $xml_file) {
 			//get and parse the xml
 			$xml_string = file_get_contents($xml_file);

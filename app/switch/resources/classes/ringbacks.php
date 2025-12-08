@@ -155,16 +155,16 @@ class ringbacks {
 		$this->tones_list = $tones->tones_list();
 
 		//get music on hold	and recordings
-		if (is_dir($_SERVER["PROJECT_ROOT"] . '/app/music_on_hold')) {
+		if (is_dir(dirname(__DIR__, 4) . '/app/music_on_hold')) {
 			$music            = new switch_music_on_hold;
 			$this->music_list = $music->get();
 		}
-		if (is_dir($_SERVER["PROJECT_ROOT"] . '/app/recordings')) {
+		if (is_dir(dirname(__DIR__, 4) . '/app/recordings')) {
 			$recordings            = new switch_recordings;
 			$this->recordings_list = $recordings->list_recordings();
 		}
 
-		if (is_dir($_SERVER["PROJECT_ROOT"] . '/app/streams')) {
+		if (is_dir(dirname(__DIR__, 4) . '/app/streams')) {
 			$sql                       = "select * from v_streams ";
 			$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 			$sql                       .= "and stream_enabled = 'true' ";

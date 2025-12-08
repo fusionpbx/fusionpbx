@@ -472,7 +472,7 @@
 							}
 
 						//if single-tenant and variables exist, update variables > domain value to match new domain
-							if (count($_SESSION['domains']) == 1 && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/vars/")) {
+							if (count($_SESSION['domains']) == 1 && file_exists(dirname(__DIR__, 2)."/app/vars/")) {
 								$sql = "update v_vars set ";
 								$sql .= "var_value = :var_value ";
 								$sql .= "where var_name = 'domain' ";

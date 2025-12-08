@@ -72,7 +72,7 @@ class plugin_ldap {
 				//initialize a template object
 					$view = new template();
 					$view->engine = 'smarty';
-					$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/authentication/resources/views/';
+					$view->template_dir = dirname(__DIR__, 5).'/core/authentication/resources/views/';
 					$view->cache_dir = sys_get_temp_dir();
 					$view->init();
 

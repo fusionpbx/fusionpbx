@@ -438,8 +438,8 @@ if (!function_exists('fax_split_dtmf')) {
 					$logo = $settings->get('fax','cover_logo');
 				}
 				else if (substr($settings->get('fax','cover_logo'), 0, 1) == '/') {
-					if (substr($settings->get('fax','cover_logo'), 0, strlen($_SERVER['DOCUMENT_ROOT'])) != $_SERVER['DOCUMENT_ROOT']) {
-						$logo = $_SERVER['DOCUMENT_ROOT'].$settings->get('fax','cover_logo');
+					if (substr($settings->get('fax','cover_logo'), 0, strlen(dirname(__DIR__, 2))) != dirname(__DIR__, 2)) {
+						$logo = dirname(__DIR__, 2).$settings->get('fax','cover_logo');
 					}
 					else {
 						$logo = $settings->get('fax','cover_logo');

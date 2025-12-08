@@ -279,12 +279,12 @@
 		$hud_stat = $stats[$scope]['domains']['total'] - $stats[$scope]['domains']['disabled'];
 		$hud_stat_title = $text['label-active_domains'];
 	}
-	else if (permission_exists('extension_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/")) {
+	else if (permission_exists('extension_view') && file_exists(dirname(__DIR__, 4)."/app/extensions/")) {
 		$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/extensions/extensions.php'\"";
 		$hud_stat = $stats[$scope]['extensions']['total'] - $stats[$scope]['extensions']['disabled'];
 		$hud_stat_title = $text['label-active_extensions'];
 	}
-	else if ((permission_exists('user_view') || if_group("superadmin")) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/users/")) {
+	else if ((permission_exists('user_view') || if_group("superadmin")) && file_exists(dirname(__DIR__, 4)."/core/users/")) {
 		$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/core/users/users.php'\"";
 		$hud_stat = $stats[$scope]['users']['total'] - $stats[$scope]['users']['disabled'];
 		$hud_stat_title = $text['label-active_users'];
@@ -381,7 +381,7 @@
 			}
 
 		//devices
-			if (permission_exists('device_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/devices/")) {
+			if (permission_exists('device_view') && file_exists(dirname(__DIR__, 4)."/app/devices/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/devices/devices.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-devices']."</a></td>\n";
@@ -392,7 +392,7 @@
 			}
 
 		//extensions
-			if (permission_exists('extension_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/")) {
+			if (permission_exists('extension_view') && file_exists(dirname(__DIR__, 4)."/app/extensions/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/extensions/extensions.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-extensions']."</a></td>\n";
@@ -403,7 +403,7 @@
 			}
 
 		//gateways
-			if (permission_exists('gateway_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/gateways/")) {
+			if (permission_exists('gateway_view') && file_exists(dirname(__DIR__, 4)."/app/gateways/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/gateways/gateways.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-gateways']."</a></td>\n";
@@ -414,7 +414,7 @@
 			}
 
 		//users
-			if ((permission_exists('user_view') || if_group("superadmin")) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/users/")) {
+			if ((permission_exists('user_view') || if_group("superadmin")) && file_exists(dirname(__DIR__, 4)."/core/users/")) {
 				$tr_link = "href='".PROJECT_PATH."/core/users/users.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-users']."</a></td>\n";
@@ -425,7 +425,7 @@
 			}
 
 		//destinations
-			if (permission_exists('destination_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/destinations/")) {
+			if (permission_exists('destination_view') && file_exists(dirname(__DIR__, 4)."/app/destinations/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/destinations/destinations.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-destinations']."</a></td>\n";
@@ -436,7 +436,7 @@
 			}
 
 		//call center queues
-			if (permission_exists('call_center_active_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/call_centers/")) {
+			if (permission_exists('call_center_active_view') && file_exists(dirname(__DIR__, 4)."/app/call_centers/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/call_centers/call_center_queues.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-call_center_queues']."</a></td>\n";
@@ -447,7 +447,7 @@
 			}
 
 		//ivr menus
-			if (permission_exists('ivr_menu_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ivr_menus/")) {
+			if (permission_exists('ivr_menu_view') && file_exists(dirname(__DIR__, 4)."/app/ivr_menus/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/ivr_menus/ivr_menus.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-ivr_menus']."</a></td>\n";
@@ -458,7 +458,7 @@
 			}
 
 		//ring groups
-			if (permission_exists('ring_group_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/")) {
+			if (permission_exists('ring_group_view') && file_exists(dirname(__DIR__, 4)."/app/ring_groups/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/ring_groups/ring_groups.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-ring_groups']."</a></td>\n";
@@ -469,7 +469,7 @@
 			}
 
 		//voicemails
-			if (permission_exists('voicemail_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
+			if (permission_exists('voicemail_view') && file_exists(dirname(__DIR__, 4)."/app/voicemails/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemails.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-voicemail']."</a></td>\n";
@@ -480,7 +480,7 @@
 			}
 
 		//messages
-			if (permission_exists('voicemail_message_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
+			if (permission_exists('voicemail_message_view') && file_exists(dirname(__DIR__, 4)."/app/voicemails/")) {
 				echo "<tr>\n";
 				echo "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
 				echo "<th class='hud_heading' width='50%' style='text-align: center; padding-left: 0; padding-right: 0;'>".$text['label-new']."</th>\n";

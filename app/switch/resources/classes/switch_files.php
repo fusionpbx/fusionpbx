@@ -84,7 +84,7 @@ class switch_files {
 		} elseif (file_exists('/var/www/fusionpbx/app/switch/resources/scripts')) {
 			$source_directory = '/var/www/fusionpbx/app/switch/resources/scripts';
 		} else {
-			$source_directory = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/app/switch/resources/scripts';
+			$source_directory = dirname(__DIR__, 4) . '/app/switch/resources/scripts';
 		}
 
 		//get the destination directory
@@ -103,7 +103,7 @@ class switch_files {
 			unset($source_directory);
 
 			//copy the app/*/resource/install/scripts
-			$app_scripts = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . 'app/*/resource/scripts');
+			$app_scripts = glob(dirname(__DIR__, 4) . 'app/*/resource/scripts');
 			foreach ($app_scripts as $app_script) {
 				recursive_copy($app_script, $destination_directory);
 			}
@@ -131,7 +131,7 @@ class switch_files {
 		} elseif (file_exists('/var/www/fusionpbx/app/switch/resources/conf/languages')) {
 			$source_directory = '/var/www/fusionpbx/app/switch/resources/conf/languages';
 		} else {
-			$source_directory = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/app/switch/resources/conf/languages';
+			$source_directory = dirname(__DIR__, 4) . '/app/switch/resources/conf/languages';
 		}
 
 		//get the destination directory

@@ -51,7 +51,7 @@ if ($domains_processed == 1) {
 			if ($num_rows == 0) {
 
 				//set the alternate directory
-					$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/app/switch/resources/conf/autoload_configs/local_stream.conf';
+					$xml_file_alt = dirname(__DIR__, 2).'/'.PROJECT_PATH.'/app/switch/resources/conf/autoload_configs/local_stream.conf';
 
 				//load the xml and save it into an array
 					if (file_exists($xml_file)) {

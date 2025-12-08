@@ -423,8 +423,8 @@
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-icon']."</td>";
 	echo "		<td class='vtable' style='vertical-align: bottom;'>";
-	if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fa_icons.php')) {
-		include $_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fa_icons.php';
+	if (file_exists(dirname(__DIR__, 2).'/resources/fontawesome/fa_icons.php')) {
+		include dirname(__DIR__, 2).'/resources/fontawesome/fa_icons.php';
 	}
 	if (!empty($font_awesome_icons) && is_array($font_awesome_icons)) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";

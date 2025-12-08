@@ -46,10 +46,10 @@
 	$body = ob_get_contents();
 	ob_end_clean(); //clean the buffer
 
-//set a default template
+//set the default template
 	if (empty($_SESSION["template_full_path"])) { //build template if session template has no length
 		//set the template base path
-		$template_base_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
+		$template_base_path = dirname(__DIR__, 1).'/themes';
 
 		//get the contents of the template and save it to the template variable
 		$template_full_path = $template_base_path.'/'.$settings->get('domain', 'template', 'default').'/template.php';
@@ -185,7 +185,7 @@
 		$authenticated = isset($_SESSION['username']) && !empty($_SESSION['username']) ? true : false;
 		$view->assign('authenticated', $authenticated);
 	//domains application path
-		$view->assign('domains_app_path', PROJECT_PATH.(file_exists($_SERVER['DOCUMENT_ROOT'].'/app/domains/domains.php') ? '/app/domains/domains.php' : '/core/domains/domains.php'));
+		$view->assign('domains_app_path', PROJECT_PATH.(file_exists(dirname(__DIR__, 1).'/app/domains/domains.php') ? '/app/domains/domains.php' : '/core/domains/domains.php'));
 	//domain count
 		$view->assign('domain_count', $domain_count);
 	//domain selector row background colors
@@ -289,7 +289,7 @@
 
 	//session timer
 		if ($authenticated &&
-			file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH.'/app/session_timer/session_timer.php') &&
+			file_exists(dirname(__DIR__, 1).'/app/session_timer/session_timer.php') &&
 			$settings->get('security', 'session_timer_enabled', false)
 			) {
 			include_once PROJECT_PATH.'app/session_timer/session_timer.php';

@@ -61,7 +61,7 @@ class sounds {
 			}
 		}
 		//recordings
-		if ((empty($this->sound_types) || (is_array($this->sound_types) && in_array('recordings', $this->sound_types))) && file_exists($_SERVER["PROJECT_ROOT"] . "/app/recordings/app_config.php")) {
+		if ((empty($this->sound_types) || (is_array($this->sound_types) && in_array('recordings', $this->sound_types))) && file_exists(dirname(__DIR__, 2) . "/app/recordings/app_config.php")) {
 			$sql = "select recording_name, recording_filename from v_recordings ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "order by recording_name asc ";
@@ -79,7 +79,7 @@ class sounds {
 			unset($sql, $parameters, $recordings, $row);
 		}
 		//phrases
-		if ((empty($this->sound_types) || (is_array($this->sound_types) && in_array('phrases', $this->sound_types))) && file_exists($_SERVER["PROJECT_ROOT"] . "/app/phrases/app_config.php")) {
+		if ((empty($this->sound_types) || (is_array($this->sound_types) && in_array('phrases', $this->sound_types))) && file_exists(dirname(__DIR__, 2) . "/app/phrases/app_config.php")) {
 			$sql = "select * from v_phrases ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
@@ -94,7 +94,7 @@ class sounds {
 			unset($sql, $parameters, $phrases, $row);
 		}
 		//sounds
-		if ((empty($this->sound_types) || (is_array($this->sound_types) && in_array('sounds', $this->sound_types))) && file_exists($_SERVER["PROJECT_ROOT"] . "/app/phrases/app_config.php")) {
+		if ((empty($this->sound_types) || (is_array($this->sound_types) && in_array('sounds', $this->sound_types))) && file_exists(dirname(__DIR__, 2) . "/app/phrases/app_config.php")) {
 			$file = new file;
 			$sound_files = $file->sounds();
 			if (is_array($sound_files) && @sizeof($sound_files) != 0) {

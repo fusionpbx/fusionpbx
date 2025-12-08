@@ -446,9 +446,9 @@ if ($background_images_enabled) {
 	}
 
 	if ($image_source == 'folder') {
-		if (file_exists($_SERVER["DOCUMENT_ROOT"].$source_path)) {
+		if (file_exists(dirname(__DIR__, 2).$source_path)) {
 			//retrieve a random background image
-			$dir_list = opendir($_SERVER["DOCUMENT_ROOT"].$source_path);
+			$dir_list = opendir(dirname(__DIR__, 2).$source_path);
 			$v_background_array = array();
 			$x = 0;
 			while (false !== ($file = readdir($dir_list))) {

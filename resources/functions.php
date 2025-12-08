@@ -2457,7 +2457,7 @@ if (!function_exists('import_fonts')) {
 		  correctly.
 		 */
 
-		$file = file_get_contents($_SERVER["DOCUMENT_ROOT"] . $file_to_parse);
+		$file = file_get_contents(dirname(__DIR__, 1) . $file_to_parse);
 		$lines = explode("\n", $file);
 
 		$style_counter = 0;

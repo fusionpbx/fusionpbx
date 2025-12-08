@@ -78,7 +78,7 @@
 			}
 
 		//if call center app is installed then update the user_status
-			if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_centers')) {
+			if (is_dir(dirname(__DIR__, 2).'/app/call_centers')) {
 				//get the call center agent uuid
 					$sql = "select call_center_agent_uuid from v_call_center_agents ";
 					$sql .= "where domain_uuid = :domain_uuid ";

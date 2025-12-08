@@ -124,7 +124,7 @@ function upload_file($sql, $broadcast_phone_numbers) {
 		if (if_group("superadmin")) {
 			$broadcast_accountcode = $_POST["broadcast_accountcode"];
 		}
-		else if (if_group("admin") && file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
+		else if (if_group("admin") && file_exists(dirname(__DIR__, 2)."/app/billing/app_config.php")){
 			$sql = "select count(*) ";
 			$sql .= "from v_billings ";
 			$sql .= "where domain_uuid = :domain_uuid ";

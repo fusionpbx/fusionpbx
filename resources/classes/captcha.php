@@ -66,7 +66,7 @@ class captcha {
 		$text = $this->code;
 
 		// Set the font path
-		$font_path = $_SERVER["DOCUMENT_ROOT"] . "/resources/captcha/fonts";
+		$font_path = dirname(__DIR__, 2) . "/resources/captcha/fonts";
 
 		// Array of fonts
 		//$fonts[] = 'ROUGD.TTF';

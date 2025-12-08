@@ -833,7 +833,7 @@
 	if (is_array($result)) {
 
 		//determine if theme images exist
-			$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/";
+			$theme_image_path = dirname(__DIR__, 2)."/themes/".$settings->get('domain', 'template', 'default')."/images/";
 			$theme_cdr_images_exist = (
 				file_exists($theme_image_path."icon_cdr_inbound_answered.png") &&
 				file_exists($theme_image_path."icon_cdr_inbound_no_answer.png") &&

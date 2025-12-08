@@ -113,7 +113,7 @@ class plugin_totp {
 			//initialize a template object
 			$view               = new template();
 			$view->engine       = 'smarty';
-			$view->template_dir = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/core/authentication/resources/views/';
+			$view->template_dir = dirname(__DIR__, 5) . '/core/authentication/resources/views/';
 			$view->cache_dir    = sys_get_temp_dir();
 			$view->init();
 
@@ -214,7 +214,7 @@ class plugin_totp {
 			//initialize a template object
 			$view               = new template();
 			$view->engine       = 'smarty';
-			$view->template_dir = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/core/authentication/resources/views/';
+			$view->template_dir = dirname(__DIR__, 5) . '/core/authentication/resources/views/';
 			$view->cache_dir    = sys_get_temp_dir();
 			$view->init();
 
@@ -347,7 +347,7 @@ class plugin_totp {
 			unset($_POST['authentication_code']);
 
 			//check if contacts app exists
-			$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/core/contacts/') ? true : false;
+			$contacts_exists = file_exists(dirname(__DIR__, 5) . '/core/contacts/') ? true : false;
 
 			//get the user details
 			if ($auth_valid) {

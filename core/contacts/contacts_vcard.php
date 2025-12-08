@@ -201,7 +201,7 @@ if (!empty($_GET)) {
 			}
 
 			//include
-				require_once $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/qr/qrcode.php";
+				require_once dirname(__DIR__, 2)."/resources/qr/qrcode.php";
 
 			//error correction level
 				//QR_ERROR_CORRECT_LEVEL_L : $e = 0;

@@ -523,7 +523,7 @@
 
 //build the $widget_tools array
 	$i = 0;
-	foreach(glob($_SERVER["DOCUMENT_ROOT"].'/*/*/resources/dashboard/*.php') as $value) {
+	foreach(glob(dirname(__DIR__, 2).'/*/*/resources/dashboard/*.php') as $value) {
 
 		//skip adding config.php to the array
 		if (basename($value) === 'config.php') {
@@ -534,14 +534,14 @@
 		$value = str_replace('\\', '/', $value);
 
 		//prepare the key
-		$key_replace[] = $_SERVER["DOCUMENT_ROOT"].'/core/';
-		$key_replace[] = $_SERVER["DOCUMENT_ROOT"].'/app/';
+		$key_replace[] = dirname(__DIR__, 2).'/core/';
+		$key_replace[] = dirname(__DIR__, 2).'/app/';
 		$key_replace[] = 'resources/dashboard/';
 		$key_replace[] = '.php';
 		$key = str_replace($key_replace, '', $value);
 
 		//prepare the value
-		$value_replace[] = $_SERVER["DOCUMENT_ROOT"].'/';
+		$value_replace[] = dirname(__DIR__, 2).'/';
 		$value = str_replace($value_replace, '', $value);
 
 		//build the array
@@ -847,8 +847,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	echo "	<tr id='tr_widget_icon' ".(!in_array('widget_icon', $widget_settings) ? "style='display: none;'" : null).">\n";
 	echo "		<td class='vncell'>".$text['label-icon']."</td>\n";
 	echo "		<td class='vtable' style='vertical-align: bottom;'>\n";
-	if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fa_icons.php')) {
-		include $_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fa_icons.php';
+	if (file_exists(dirname(__DIR__, 2).'/resources/fontawesome/fa_icons.php')) {
+		include dirname(__DIR__, 2).'/resources/fontawesome/fa_icons.php';
 	}
 	if (!empty($font_awesome_icons) && is_array($font_awesome_icons)) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";

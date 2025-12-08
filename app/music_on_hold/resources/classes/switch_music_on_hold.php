@@ -153,7 +153,7 @@ class switch_music_on_hold {
 			$select .= "	</optgroup>\n";
 		}
 		//recordings
-		if (is_dir($_SERVER["PROJECT_ROOT"] . '/app/recordings')) {
+		if (is_dir(dirname(__DIR__, 4) . '/app/recordings')) {
 			$recordings_c = new switch_recordings;
 			$recordings   = $recordings_c->list_recordings();
 			if (is_array($recordings) && sizeof($recordings) > 0) {
@@ -165,7 +165,7 @@ class switch_music_on_hold {
 			}
 		}
 		//streams
-		if (is_dir($_SERVER["PROJECT_ROOT"] . '/app/streams')) {
+		if (is_dir(dirname(__DIR__, 4) . '/app/streams')) {
 			$sql                       = "select * from v_streams ";
 			$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 			$sql                       .= "and stream_enabled = 'true' ";
@@ -246,7 +246,7 @@ class switch_music_on_hold {
 		if (file_exists('/usr/share/examples/fusionpbx')) {
 			$file_contents = file_get_contents("/usr/share/examples/fusionpbx/resources/templates/conf/autoload_configs/local_stream.conf.xml");
 		} else {
-			$file_contents = file_get_contents($_SERVER["PROJECT_ROOT"] . "/app/switch/resources/conf/autoload_configs/local_stream.conf.xml");
+			$file_contents = file_get_contents(dirname(__DIR__, 4) . "/app/switch/resources/conf/autoload_configs/local_stream.conf.xml");
 		}
 		//check where the default music is stored
 		$default_moh_prefix = 'music/default';

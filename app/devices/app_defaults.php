@@ -162,7 +162,7 @@ if ($domains_processed == 1) {
 		if ($num_rows == 0) {
 
 			//get the vendor array
-				require_once $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/app/devices/app_config.php';
+				require_once dirname(__DIR__, 2).'/'.PROJECT_PATH.'/app/devices/app_config.php';
 
 			//get the groups and create an array to use the name to get the uuid
 				$sql = "select * from v_groups ";

@@ -32,7 +32,7 @@
 		if (!empty($settings->get('login', 'destination'))) {
 			header("Location: ".$settings->get('login', 'destination'));
 		}
-		elseif (file_exists($_SERVER["PROJECT_ROOT"]."/core/dashboard/app_config.php")) {
+		elseif (file_exists(__DIR__."/core/dashboard/app_config.php")) {
 			header("Location: ".PROJECT_PATH."/core/dashboard/");
 		}
 		else {
@@ -42,7 +42,7 @@
 	}
 	else {
 		//use custom index, if present, otherwise use custom login, if present, otherwise use default login
-		if (file_exists($_SERVER["PROJECT_ROOT"]."/themes/".($settings->get('domain', 'template') ?? '')."/index.php")) {
+		if (file_exists(__DIR__."/themes/".($settings->get('domain', 'template') ?? '')."/index.php")) {
 			require_once "themes/".$settings->get('domain', 'template', 'default')."/index.php";
 		}
 		else {

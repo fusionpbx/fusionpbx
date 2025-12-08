@@ -74,7 +74,7 @@
 	}
 
 //get the domains
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php") && !is_cli()){
+	if (file_exists(dirname(__DIR__, 2)."/app/domains/app_config.php") && !is_cli()){
 		require_once "app/domains/resources/domains.php";
 	}
 

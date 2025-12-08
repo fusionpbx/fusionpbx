@@ -163,7 +163,7 @@ if ($domains_processed == 1) {
 		}
 
 	//insert default password reset email template
-		if (file_exists($_SERVER['DOCUMENT_ROOT'].'/app/email_templates')) {
+		if (file_exists(dirname(__DIR__, 2).'/app/email_templates')) {
 
 			//add the email templates to the database
 			$sql = "select count(*) as num_rows from v_email_templates ";

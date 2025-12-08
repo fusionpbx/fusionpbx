@@ -658,7 +658,7 @@ class extension {
 							}
 
 							//include ring group destinations, if exists
-							if (file_exists($_SERVER["PROJECT_ROOT"] . "/app/ring_groups/app_config.php")) {
+							if (file_exists(dirname(__DIR__, 4) . "/app/ring_groups/app_config.php")) {
 								$array['ring_group_destinations'][$x]['destination_number'] = $extensions[$x]['extension'];
 								$array['ring_group_destinations'][$x]['domain_uuid']        = $this->domain_uuid;
 								if (is_numeric($extensions[$x]['number_alias'])) {
@@ -669,7 +669,7 @@ class extension {
 							}
 
 							//include extension settings, if exists
-							if (file_exists($_SERVER["PROJECT_ROOT"] . "/app/extension_settings/app_config.php")) {
+							if (file_exists(dirname(__DIR__, 4) . "/app/extension_settings/app_config.php")) {
 								$array['extension_settings'][$x]['extension_uuid'] = $record['uuid'];
 								$array['extension_settings'][$x]['domain_uuid']    = $this->domain_uuid;
 							}
@@ -849,7 +849,7 @@ class extension {
 
 					//write the provision files
 					if (!empty($this->settings->get('provision', 'path'))) {
-						if (is_dir($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/app/provision')) {
+						if (is_dir(dirname(__DIR__, 4) . '/app/provision')) {
 							$prov              = new provision;
 							$prov->domain_uuid = $this->domain_uuid;
 							$response          = $prov->write();

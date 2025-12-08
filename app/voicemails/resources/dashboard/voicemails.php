@@ -24,7 +24,7 @@
 	$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //used for missed and recent calls
-	$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/";
+	$theme_image_path = dirname(__DIR__, 4)."/themes/".$settings->get('domain', 'template', 'default')."/images/";
 
 //voicemail
 	echo "<div class='hud_box'>\n";

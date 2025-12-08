@@ -106,7 +106,7 @@ class plugin_database {
 			//initialize a template object
 			$view               = new template();
 			$view->engine       = 'smarty';
-			$view->template_dir = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/core/authentication/resources/views/';
+			$view->template_dir = dirname(__DIR__, 5) . '/core/authentication/resources/views/';
 			$view->cache_dir    = sys_get_temp_dir();
 			$view->init();
 
@@ -210,7 +210,7 @@ class plugin_database {
 		$user_authorized = false;
 
 		//check if contacts app exists
-		$contacts_exists = file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . '/core/contacts/') ? true : false;
+		$contacts_exists = file_exists(dirname(__DIR__, 5) . '/core/contacts/') ? true : false;
 
 		//check the username and password if they don't match then redirect to the login
 		$sql = "select ";

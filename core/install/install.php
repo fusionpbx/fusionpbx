@@ -27,8 +27,8 @@
 //set the include path
 	$document_root = dirname(__DIR__, 2);
 	set_include_path($document_root);
-	$_SERVER["DOCUMENT_ROOT"] = $document_root;
-	$_SERVER["PROJECT_ROOT"] = $document_root;
+
+//defined for backwards compatibility
 	define("PROJECT_PATH", '');
 
 //includes files
@@ -172,7 +172,7 @@
 			sleep(1);
 
 			//add the database schema
-			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');
+			$output = shell_exec('cd '.dirname(__DIR__, 2).' && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');
 
 			//connect to the database
 			$database = new database;
@@ -222,7 +222,7 @@
 			$_SESSION['domain_name'] = $domain_name;
 
 			//app defaults
-			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
+			$output = shell_exec('cd '.dirname(__DIR__, 2).' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
 
 			//prepare the user settings
 			$admin_username = $_SESSION['install']['admin_username'];
@@ -306,7 +306,7 @@
 			}
 
 			#app defaults
-			$output = shell_exec('cd '.$_SERVER["DOCUMENT_ROOT"].' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
+			$output = shell_exec('cd '.dirname(__DIR__, 2).' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
 
 			//install completed - prompt the user to login
 			header("Location: /logout.php");
@@ -330,7 +330,7 @@
 //initialize a template object
 	$view = new template();
 	$view->engine = 'smarty';
-	$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/install/resources/views/';
+	$view->template_dir = dirname(__DIR__, 2).'/core/install/resources/views/';
 	$view->cache_dir = sys_get_temp_dir();
 	$view->init();
 

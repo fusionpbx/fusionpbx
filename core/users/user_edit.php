@@ -578,7 +578,7 @@
 			settings::clear_cache();
 
 		//if call center installed
-			if ($action == 'edit' && permission_exists('user_edit') && file_exists($_SERVER["PROJECT_ROOT"]."/app/call_centers/app_config.php")) {
+			if ($action == 'edit' && permission_exists('user_edit') && file_exists(dirname(__DIR__, 2)."/app/call_centers/app_config.php")) {
 				//get the call center agent uuid
 					$sql = "select call_center_agent_uuid from v_call_center_agents ";
 					$sql .= "where domain_uuid = :domain_uuid ";

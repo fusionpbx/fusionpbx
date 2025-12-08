@@ -174,7 +174,7 @@ if ($domains_processed == 1) {
 	unset($sql, $parameters);
 
 	//add the dashboards
-	$dashboard_config_file = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/core/dashboard/resources/dashboard/config.php');
+	$dashboard_config_file = glob(dirname(__DIR__, 2).'/core/dashboard/resources/dashboard/config.php');
 	$x = 0;
 	foreach($dashboard_config_file as $file) {
 		include ($file);
@@ -224,7 +224,7 @@ if ($domains_processed == 1) {
 	unset($sql, $parameters);
 
 	//add the dashboard widgets
-	$config_files = glob($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/*/*/resources/dashboard/config.php');
+	$config_files = glob(dirname(__DIR__, 2).'/*/*/resources/dashboard/config.php');
 	$x = 0;
 	foreach($config_files as $file) {
 		include ($file);

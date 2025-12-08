@@ -1651,7 +1651,7 @@ class database {
 		$transaction_type = 'delete';
 
 		//log the transaction results
-		if (file_exists($_SERVER["PROJECT_ROOT"] . "/app/database_transactions/app_config.php")) {
+		if (file_exists(dirname(__DIR__, 2) . "/app/database_transactions/app_config.php")) {
 			$sql = "insert into " . self::TABLE_PREFIX . "database_transactions ";
 			$sql .= "(";
 			$sql .= "database_transaction_uuid, ";
@@ -1792,7 +1792,7 @@ class database {
 		$applications = [$schema, self::singular($schema)];
 		foreach ($directories as $directory) {
 			foreach ($applications as $application) {
-				$path = $_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/$directory/$application/app_config.php";
+				$path = dirname(__DIR__, 2) . "/$directory/$application/app_config.php";
 				$app_config_files = glob($path);
 				if ($app_config_files !== false) {
 					$config_list = array_merge($config_list, $app_config_files);
@@ -3269,7 +3269,7 @@ class database {
 		}
 
 		//log the transaction results
-		if ($transaction_save && $database_updated && file_exists($_SERVER["PROJECT_ROOT"] . "/app/database_transactions/app_config.php")) {
+		if ($transaction_save && $database_updated && file_exists(dirname(__DIR__, 2) . "/app/database_transactions/app_config.php")) {
 			try {
 				//build the json string from the array
 				if (!empty($old_array)) {
@@ -3515,12 +3515,12 @@ class database {
 	 *
 	 * @return null Does not return any values
 	 * @uses     PROJECT_PATH Global variable
-	 * @uses     $_SERVER['DOCUMENT_ROOT'] Global variable
+	 * @uses     dirname(__DIR__, 2) Global variable
 	 * @internal Moved to class to conserve resources.
 	 */
 	public static function get_apps() {
 		//get the $apps array from the installed apps from the core and mod directories
-		$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+		$config_list = glob(dirname(__DIR__, 2) . "/*/*/app_config.php");
 		$x = 0;
 		if (is_array($config_list)) {
 			foreach ($config_list as $config_path) {

@@ -709,10 +709,10 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 							echo "		<input type='hidden' name='xml_cdrs[$x][uuid]' value='".escape($row['xml_cdr_uuid'])."' />\n";
 							echo "	</td>\n";
 							if (
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_inbound_voicemail.png") &&
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_inbound_answered.png") &&
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_outbound_failed.png") &&
-								file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_outbound_answered.png")
+								file_exists(dirname(__DIR__, 2)."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_inbound_voicemail.png") &&
+								file_exists(dirname(__DIR__, 2)."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_inbound_answered.png") &&
+								file_exists(dirname(__DIR__, 2)."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_outbound_failed.png") &&
+								file_exists(dirname(__DIR__, 2)."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_outbound_answered.png")
 								) {
 								$title_mod = null;
 								echo "	<td class='center' ".$list_row_onclick_toggle.">";

@@ -160,7 +160,7 @@
 		//process the messages
 		if (is_array($email_queue) && @sizeof($email_queue) != 0) {
 			foreach($email_queue as $row) {
-				$command = PHP_BINARY." ".$_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/jobs/email_send.php ";
+				$command = PHP_BINARY." ".dirname(__DIR__, 4)."/app/email_queue/resources/jobs/email_send.php ";
 				$command .= "'action=send&email_queue_uuid=".$row["email_queue_uuid"]."&hostname=".$hostname."'";
 				if (isset($debug)) {
 					//run process inline to see debug info
