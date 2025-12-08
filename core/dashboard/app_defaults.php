@@ -113,40 +113,43 @@ if ($domains_processed == 1) {
 		$database->execute("delete from v_dashboard;");
 	}
 
-	//get the dashboard widget groups
-	$sql = "select * from v_dashboard_widget_groups ";
-	$new_groups = $database->select($sql, null, 'all');
-	unset($sql, $parameters);
-
-	//get the dashboard groups
-	$sql = "select * from v_dashboard_groups ";
-	$old_groups = $database->select($sql, null, 'all');
-	unset($sql, $parameters);
-
-	//use the dashboard groups to add data into the dashboard widget groups
-	if (empty($new_groups) && !empty($old_groups)) {
-		$sql = "INSERT INTO v_dashboard_widget_groups ( ";
-		$sql .= "	dashboard_uuid, ";
-		$sql .= "	dashboard_widget_group_uuid, ";
-		$sql .= "	dashboard_widget_uuid, ";
-		$sql .= "	group_uuid, ";
-		$sql .= "	insert_date, ";
-		$sql .= "	insert_user, ";
-		$sql .= "	update_date, ";
-		$sql .= "	update_user ";
-		$sql .= ") ";
-		$sql .= "SELECT ";
-		$sql .= "	'3e2cbaa4-2bec-41b2-a626-999a59b8b19c', ";
-		$sql .= "	dashboard_group_uuid, ";
-		$sql .= "	dashboard_uuid, ";
-		$sql .= "	group_uuid, ";
-		$sql .= "	insert_date, ";
-		$sql .= "	insert_user, ";
-		$sql .= "	update_date, ";
-		$sql .= "	update_user ";
-		$sql .= "FROM v_dashboard_groups; ";
-		$database->execute($sql);
+	//migrate data from the dashboard_groups old table to the new dashboard_widget_groups table
+	if ($database->table_exists('v_dashboard_groups')) {
+		//get the dashboard widget groups
+		$sql = "select * from v_dashboard_widget_groups ";
+		$new_groups = $database->select($sql, null, 'all');
 		unset($sql, $parameters);
+
+		//get the dashboard groups
+		$sql = "select * from v_dashboard_groups ";
+		$old_groups = $database->select($sql, null, 'all');
+		unset($sql, $parameters);
+
+		//use the dashboard groups to add data into the dashboard widget groups
+		if (empty($new_groups) && !empty($old_groups)) {
+			$sql = "INSERT INTO v_dashboard_widget_groups ( ";
+			$sql .= "	dashboard_uuid, ";
+			$sql .= "	dashboard_widget_group_uuid, ";
+			$sql .= "	dashboard_widget_uuid, ";
+			$sql .= "	group_uuid, ";
+			$sql .= "	insert_date, ";
+			$sql .= "	insert_user, ";
+			$sql .= "	update_date, ";
+			$sql .= "	update_user ";
+			$sql .= ") ";
+			$sql .= "SELECT ";
+			$sql .= "	'3e2cbaa4-2bec-41b2-a626-999a59b8b19c', ";
+			$sql .= "	dashboard_group_uuid, ";
+			$sql .= "	dashboard_uuid, ";
+			$sql .= "	group_uuid, ";
+			$sql .= "	insert_date, ";
+			$sql .= "	insert_user, ";
+			$sql .= "	update_date, ";
+			$sql .= "	update_user ";
+			$sql .= "FROM v_dashboard_groups; ";
+			$database->execute($sql);
+			unset($sql, $parameters);
+		}
 	}
 
 	//make the default groups exist
