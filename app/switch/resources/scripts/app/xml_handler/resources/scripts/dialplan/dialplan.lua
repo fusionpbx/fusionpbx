@@ -174,26 +174,43 @@
 		--get the dialplan xml
 			if (context_name == 'public' and dialplan_mode == 'single') then
 				--get the single inbound destination dialplan xml  from the database
-				sql = "SELECT (SELECT domain_name FROM v_domains WHERE domain_uuid = p.domain_uuid) as domain_name, "
-				sql = sql .. "(SELECT cast(domain_enabled as text) FROM v_domains WHERE domain_uuid = p.domain_uuid) as domain_enabled, p.dialplan_xml ";
+				sql = "WITH p AS ("
+				sql = sql .. "SELECT (SELECT domain_name FROM v_domains WHERE domain_uuid = p.domain_uuid) AS domain_name, ";
+				sql = sql .. "(SELECT domain_enabled FROM v_domains WHERE domain_uuid = p.domain_uuid) AS domain_enabled, ";
+				sql = sql .. "p.dialplan_xml, ";
+				sql = sql .. "p.dialplan_order ";
 				sql = sql .. "FROM v_dialplans AS p ";
 				sql = sql .. "WHERE ( ";
 				sql = sql .. "	p.dialplan_uuid IN ( ";
 				sql = sql .. "		SELECT dialplan_uuid FROM v_destinations ";
 				sql = sql .. "		WHERE ( ";
-				sql = sql .. "			CONCAT(destination_prefix, destination_area_code, destination_number) = :destination_number ";
-				sql = sql .. "			OR CONCAT(destination_trunk_prefix, destination_area_code, destination_number) = :destination_number ";
-				sql = sql .. "			OR CONCAT(destination_prefix, destination_number) = :destination_number ";
-				sql = sql .. "			OR CONCAT('+', destination_prefix, destination_number) = :destination_number ";
-				sql = sql .. "			OR CONCAT('+', destination_prefix, destination_area_code, destination_number) = :destination_number ";
-				sql = sql .. "			OR CONCAT(destination_area_code, destination_number) = :destination_number ";
+				sql = sql .. "			(COALESCE(destination_prefix, '') || COALESCE(destination_area_code, '') || COALESCE(destination_number, '')) = :destination_number ";
+				sql = sql .. "			OR (COALESCE(destination_trunk_prefix, '') || COALESCE(destination_area_code, '') || COALESCE(destination_number, '')) = :destination_number ";
+				sql = sql .. "			OR (COALESCE(destination_prefix, '') || COALESCE(destination_number, '')) = :destination_number ";
+				sql = sql .. "			OR ('+' || COALESCE(destination_prefix, '') || COALESCE(destination_number, '')) = :destination_number ";
+				sql = sql .. "			OR ('+' || COALESCE(destination_prefix, '') || COALESCE(destination_area_code, '') || COALESCE(destination_number, '')) = :destination_number ";
+				sql = sql .. "			OR (COALESCE(destination_area_code, '') || COALESCE(destination_number, '')) = :destination_number ";
 				sql = sql .. "			OR destination_number = :destination_number ";
 				sql = sql .. "		) ";
 				sql = sql .. "	) ";
-				sql = sql .. "	or (p.dialplan_context like '%public%' and p.domain_uuid IS NULL) ";
 				sql = sql .. ") ";
 				sql = sql .. "AND (p.hostname = :hostname OR p.hostname IS NULL) ";
 				sql = sql .. "AND p.dialplan_enabled = true ";
+				sql = sql .. "UNION ";
+				sql = sql .. "SELECT ";
+				sql = sql .. "		(SELECT domain_name FROM v_domains WHERE domain_uuid = p.domain_uuid) AS domain_name, ";
+				sql = sql .. "		(SELECT domain_enabled FROM v_domains WHERE domain_uuid = p.domain_uuid) AS domain_enabled, ";
+				sql = sql .. "		p.dialplan_xml, ";
+				sql = sql .. "		p.dialplan_order ";
+				sql = sql .. "FROM v_dialplans p ";
+				sql = sql .. "WHERE ";
+				sql = sql .. "		p.dialplan_context LIKE '%public%' ";
+				sql = sql .. "		AND p.domain_uuid IS NULL ";
+				sql = sql .. "		AND (p.hostname = :hostname OR p.hostname IS NULL) ";
+				sql = sql .. "		AND p.dialplan_enabled = true ";
+				sql = sql .. ") ";
+				sql = sql .. "SELECT domain_name, domain_enabled, dialplan_xml ";
+				sql = sql .. "FROM p ";
 				sql = sql .. "ORDER BY p.dialplan_order ASC ";
 				local params = {destination_number = destination_number, hostname = hostname};
 				if (debug["sql"]) then
