@@ -92,6 +92,10 @@ class event_message implements filterable_payload {
 
 		// Use the filter chain to ensure the key is allowed
 		if ($this->event_filter === null || ($this->event_filter)($name, $value)) {
+			if ($name === self::BODY_ARRAY_KEY) {
+				$this->body = $value;
+				return;
+			}
 			$this->event[$name] = $value;
 		}
 	}
@@ -104,6 +108,9 @@ class event_message implements filterable_payload {
 	public function __get(string $name) {
 		self::sanitize_event_key($name);
 		if ($name === 'name') $name = 'event_name';
+		if ($name === self::BODY_ARRAY_KEY) {
+			return $this->body;
+		}
 		return $this->event[$name] ?? '';
 	}
 
