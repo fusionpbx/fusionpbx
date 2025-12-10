@@ -629,6 +629,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_break"] = 'never';
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 
 												//increment the dialplan detail order
@@ -683,6 +684,7 @@
 														$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = xml::sanitize($row['condition_data']);
 														$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 														$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+														$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 														$y++;
 
 													}
@@ -710,6 +712,7 @@
 										$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $destination_number_regex;
 										$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 										$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+										$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 
 										$y++;
 
@@ -727,6 +730,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 
 											//add hangup_after_bridge
@@ -738,6 +742,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 
 											//increment the dialplan detail order
@@ -752,6 +757,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+											$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 										}
 
@@ -768,6 +774,7 @@
 											$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 											$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 											$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+											$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 											$y++;
 
 											//increment the dialplan detail order
@@ -785,6 +792,7 @@
 											$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 											$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 											$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+											$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 											$y++;
 
 											//increment the dialplan detail order
@@ -799,6 +807,7 @@
 											$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 											$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 											$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+											$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 											$y++;
 
 											//increment the dialplan detail order
@@ -815,6 +824,7 @@
 											$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 											$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 											$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+											$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 											$y++;
 
 											//increment the dialplan detail order
@@ -831,6 +841,7 @@
 											$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 											$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 											$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+											$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 											$y++;
 
 											//increment the dialplan detail order
@@ -847,6 +858,7 @@
 											$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 											$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 											$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+											$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 											$y++;
 
 											//increment the dialplan detail order
@@ -863,6 +875,7 @@
 											$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 											$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 											$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+											$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 											$y++;
 
 											//increment the dialplan detail order
@@ -881,6 +894,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 
 											//add set tone detect_hits=1
@@ -892,6 +906,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 
 											//increment the dialplan detail order
@@ -906,6 +921,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 
 											//increment the dialplan detail order
@@ -919,6 +935,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "fax 1100 r +5000";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 
 											//increment the dialplan detail order
@@ -940,6 +957,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 
 											//increment the dialplan detail order
@@ -954,6 +972,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 
 											//increment the dialplan detail order
@@ -968,6 +987,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 
 											//increment the dialplan detail order
@@ -982,6 +1002,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 
 											//increment the dialplan detail order
@@ -996,6 +1017,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 
 											//increment the dialplan detail order
@@ -1010,6 +1032,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 
 											//increment the dialplan detail order
@@ -1024,6 +1047,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "false";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 
 											//increment the dialplan detail order
@@ -1046,6 +1070,7 @@
 														$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $action_data;
 														$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 														$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+														$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 
 														//set inline to true
 														if ($action_app == 'set' || $action_app == 'export') {
