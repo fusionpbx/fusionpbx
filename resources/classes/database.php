@@ -3570,8 +3570,11 @@ class database {
 					//$view_version = $row['version'];
 					//$view_description = $row['description'];
 
+					$sql = "DROP VIEW " . $view_name . "\n";
+					$this->execute($sql);
+
 					//create and run the view sql
-					$sql = "CREATE OR REPLACE VIEW " . $view_name . " AS (\n";
+					$sql = "CREATE VIEW " . $view_name . " AS (\n";
 					$sql .= $view_sql . "\n";
 					$sql .= ")\n";
 					$this->execute($sql);
