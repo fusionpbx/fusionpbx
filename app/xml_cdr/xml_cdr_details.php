@@ -89,19 +89,21 @@
 		!empty($record_path) && !empty($record_name) &&
 		file_exists($record_path.'/'.$record_name)) {
 
+			//prepare the params
+			$params['domain_uuid'] = $_SESSION['domain_uuid'];
+			$params['xml_cdr_uuid'] = $uuid;
+			$params['call_direction'] = $call_direction;
+
 			//add the recording to the transcribe queue
 			$array['transcribe_queue'][$x]['transcribe_queue_uuid'] = uuid();
 			$array['transcribe_queue'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 			$array['transcribe_queue'][$x]['hostname'] = gethostname();
 			$array['transcribe_queue'][$x]['transcribe_status'] = 'pending';
-			$array['transcribe_queue'][$x]['transcribe_application_name'] = 'call_recordings';
-			$array['transcribe_queue'][$x]['transcribe_application_uuid'] = '56165644-598d-4ed8-be01-d960bcb8ffed';
+			$array['transcribe_queue'][$x]['transcribe_app_class'] = 'call_recordings';
+			$array['transcribe_queue'][$x]['transcribe_app_method'] = 'transcribe';
+			$array['transcribe_queue'][$x]['transcribe_app_params'] = json_encode($params);
 			$array['transcribe_queue'][$x]['transcribe_audio_path'] = $record_path;
 			$array['transcribe_queue'][$x]['transcribe_audio_name'] = $record_name;
-			$array['transcribe_queue'][$x]['transcribe_target_table'] = 'xml_cdr';
-			$array['transcribe_queue'][$x]['transcribe_target_key_name'] = 'xml_cdr_uuid';
-			$array['transcribe_queue'][$x]['transcribe_target_key_uuid'] = $uuid;
-			$array['transcribe_queue'][$x]['transcribe_target_column_name'] = 'record_transcription';
 
 			//add the checked rows
 			if (is_array($array) && @sizeof($array) != 0) {
@@ -182,6 +184,25 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//get the cdr transcript from the database
+	//if (permission_exists('xml_cdr_call_log') && $call_log_enabled) {
+		$sql = "select * from v_xml_cdr_transcripts ";
+		if (permission_exists('xml_cdr_all')) {
+			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+		}
+		else {
+			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+		}
+		$parameters['xml_cdr_uuid'] = $uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
+			$transcript_json = trim($row["transcript_json"] ?? '');
+		}
+		unset($sql, $parameters, $row);
+	//}
 
 //get the format
 	if (!empty($xml_string)) {
@@ -372,7 +393,7 @@
 		foreach ($transcription as $segment) {
 			if ($previous_speaker != $segment['speaker']) {
 				if ($i > 0) { $html .= "</div>\n"; }
-				$speaker_class = $segment['speaker'] === 'A' ? 'message-bubble-em' : 'message-bubble-me';
+				$speaker_class = $segment['speaker'] === '0' ? 'message-bubble-em' : 'message-bubble-me';
 				$html .= "<div class='message-bubble {$speaker_class}'>";
 			}
 			//$html .= "	<span class='time'>[{$segment['start']} - {$segment['end']}]</span>";
@@ -634,7 +655,7 @@
 	echo "</style>\n";
 
 //transcription, if enabled
-	$transcription_array = json_decode($record_transcription, true);
+	$transcription_array = json_decode($transcript_json, true);
 	$record_transcription = $transcription_array['segments'];
 	$record_transcription_html = conversational_html($record_transcription);
 	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($record_transcription)) {
