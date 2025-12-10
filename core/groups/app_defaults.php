@@ -101,21 +101,6 @@ if ($domains_processed == 1) {
 		$database->execute($sql, $parameters);
 		unset($sql, $parameters);
 
-	//drop the view_groups
-		$database->execute("DROP VIEW view_groups;", null);
-
-	//add or update the view
-		$sql = "CREATE VIEW view_groups AS (";
-		$sql .= "	select domain_uuid, group_uuid, group_name, ";
-		$sql .= "	(select domain_name from v_domains where domain_uuid = g.domain_uuid) as domain_name, ";
-		$sql .= "	(select count(*) from v_group_permissions where group_uuid = g.group_uuid) as group_permissions, ";
-		$sql .= "	(select count(*) from v_user_groups where group_uuid = g.group_uuid) as group_members, ";
-		$sql .= "	group_level, group_protected, group_description ";
-		$sql .= "	from v_groups as g ";
-		$sql .= ");";
-		$database->execute($sql, null);
-		unset($sql);
-
 	//group permissions 
 		$database->execute("update v_group_permissions set permission_protected = 'false' where permission_protected is null;", null);
 		$database->execute("update v_group_permissions set permission_assigned = 'true' where permission_assigned is null;", null);
