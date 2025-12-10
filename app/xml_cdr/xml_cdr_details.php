@@ -100,7 +100,7 @@
 			$array['transcribe_queue'][$x]['hostname'] = gethostname();
 			$array['transcribe_queue'][$x]['transcribe_status'] = 'pending';
 			$array['transcribe_queue'][$x]['transcribe_app_class'] = 'call_recordings';
-			$array['transcribe_queue'][$x]['transcribe_app_method'] = 'transcribe';
+			$array['transcribe_queue'][$x]['transcribe_app_method'] = 'transcribe_queue';
 			$array['transcribe_queue'][$x]['transcribe_app_params'] = json_encode($params);
 			$array['transcribe_queue'][$x]['transcribe_audio_path'] = $record_path;
 			$array['transcribe_queue'][$x]['transcribe_audio_name'] = $record_name;
