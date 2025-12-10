@@ -199,7 +199,40 @@ class call_recordings {
 	}
 
 	/**
-	 * Transcribes multiple call recordings.
+	 * Add transcript to the xml_cdr_transcripts queue
+	 *
+	 * @param array $params contain domain_uuid, xml_cdr_uuid and call_direction, transcript_json, transcribe_summary
+	 *
+	 * @return void
+	 */
+	public function transcribe_queue($params) {
+		//set the global variables
+		global $database;
+
+		//define the array
+		$array = [];
+
+		//prepare the array with the transcript details
+		$array['xml_cdr_transcripts'][0]['xml_cdr_transcript_uuid'] = uuid();
+		$array['xml_cdr_transcripts'][0]['domain_uuid'] = $params['domain_uuid'];
+		$array['xml_cdr_transcripts'][0]['xml_cdr_uuid'] = $params['xml_cdr_uuid'];
+		$array['xml_cdr_transcripts'][0]['transcript_json'] = $params['transcribe_message'];
+
+		//add temporary permissions
+		$p = permissions::new();
+		$p->add('xml_cdr_transcript_add', 'temp');
+
+		//save the call recording transcript
+		$result = $this->database->save($array, false);
+		$result = $this->database->message;
+		unset($array);
+
+		//remove the temporary permissions
+		$p->delete('xml_cdr_transcript_add', 'temp');
+	}
+
+	/**
+	 * Add one or more calls recordings to the transcribe queue.
 	 *
 	 * @param array $records An array of records to transcribe.
 	 *
@@ -233,7 +266,7 @@ class call_recordings {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
 						//get the call recording file name and path
-						$sql = "select call_recording_name, call_recording_path ";
+						$sql = "select call_recording_name, call_recording_path, call_direction ";
 						$sql .= "from view_call_recordings ";
 						$sql .= "where call_recording_uuid = :call_recording_uuid ";
 						$sql .= "and call_recording_transcription is null ";
@@ -244,19 +277,21 @@ class call_recordings {
 							@sizeof($field) != 0 &&
 							file_exists($field['call_recording_path'] . '/' . $field['call_recording_name'])
 						) {
+							//prepare the paramaters
+							$params['domain_uuid'] = $_SESSION['domain_uuid'];
+							$params['xml_cdr_uuid'] = $record['uuid'];
+							$params['call_direction'] = $field['call_direction'];
+
 							//add the recording to the transcribe queue
-							$array['transcribe_queue'][$x]['transcribe_queue_uuid'] = uuid();
+							$array['transcribe_queue'][$x]['transcribe_queue_uuid'] = $record['uuid'];
 							$array['transcribe_queue'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 							$array['transcribe_queue'][$x]['hostname'] = gethostname();
 							$array['transcribe_queue'][$x]['transcribe_status'] = 'pending';
-							$array['transcribe_queue'][$x]['transcribe_application_name'] = 'call_recordings';
-							$array['transcribe_queue'][$x]['transcribe_application_uuid'] = '56165644-598d-4ed8-be01-d960bcb8ffed';
+							$array['transcribe_queue'][$x]['transcribe_app_class'] = 'call_recordings';
+							$array['transcribe_queue'][$x]['transcribe_app_method'] = 'transcribe_queue';
+							$array['transcribe_queue'][$x]['transcribe_app_params'] = json_encode($params);
 							$array['transcribe_queue'][$x]['transcribe_audio_path'] = $field['call_recording_path'];
 							$array['transcribe_queue'][$x]['transcribe_audio_name'] = $field['call_recording_name'];
-							$array['transcribe_queue'][$x]['transcribe_target_table'] = 'xml_cdr';
-							$array['transcribe_queue'][$x]['transcribe_target_key_name'] = 'xml_cdr_uuid';
-							$array['transcribe_queue'][$x]['transcribe_target_key_uuid'] = $record['uuid'];
-							$array['transcribe_queue'][$x]['transcribe_target_column_name'] = 'record_transcription';
 
 							//increment the id
 							$x++;
