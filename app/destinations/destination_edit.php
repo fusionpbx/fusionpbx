@@ -541,7 +541,7 @@
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_append=true\" inline=\"true\"/>\n";
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_in_progress=true\" inline=\"true\"/>\n";
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"recording_follow_transfer=true\" inline=\"true\"/>\n";
-									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_stereo_swap=true\" inline=\"true\"/>\n";
+									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_stereo=true\" inline=\"true\"/>\n";
 									$dialplan["dialplan_xml"] .= "		<action application=\"record_session\" data=\"\${record_path}/\${record_name}\" inline=\"false\"/>\n";
 								}
 								if (!empty($destination_hold_music)) {
@@ -1013,7 +1013,7 @@
 												$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-												$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "record_stereo_swap=true";
+												$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "record_stereo=true";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
