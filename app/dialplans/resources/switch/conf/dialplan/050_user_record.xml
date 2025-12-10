@@ -42,11 +42,11 @@
 	</condition>
 	<condition field="${record_session}" expression="^true$"/>
 	<condition field="${call_direction}" expression="^inbound" break="never">
-		<action application="set" data="record_stereo_swap=true" inline="true"/>
+		<action application="set" data="record_stereo=true" inline="true"/>
 	</condition>
 	<condition field="${record_session}" expression="^true$"/>
 	<condition field="${call_direction}" expression="^outbound$" break="never">
-		<action application="set" data="record_stereo=true" inline="true"/>
+		<action application="set" data="record_stereo_swap=true" inline="true"/>
 	</condition>
 	<condition field="${record_session}" expression="^true$"/>
 	<condition field="${call_direction}" expression="^local$" break="never">
