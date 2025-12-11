@@ -213,7 +213,7 @@ class call_recordings {
 		$array = [];
 
 		//prepare the array with the transcript details
-		$array['xml_cdr_transcripts'][0]['xml_cdr_transcript_uuid'] = uuid();
+		$array['xml_cdr_transcripts'][0]['xml_cdr_transcript_uuid'] = $params['xml_cdr_uuid'];
 		$array['xml_cdr_transcripts'][0]['domain_uuid'] = $params['domain_uuid'];
 		$array['xml_cdr_transcripts'][0]['xml_cdr_uuid'] = $params['xml_cdr_uuid'];
 		$array['xml_cdr_transcripts'][0]['transcript_json'] = $params['transcribe_message'];
@@ -221,6 +221,7 @@ class call_recordings {
 		//add temporary permissions
 		$p = permissions::new();
 		$p->add('xml_cdr_transcript_add', 'temp');
+		$p->add('xml_cdr_transcript_edit', 'temp');
 
 		//save the call recording transcript
 		$result = $this->database->save($array, false);
@@ -229,6 +230,7 @@ class call_recordings {
 
 		//remove the temporary permissions
 		$p->delete('xml_cdr_transcript_add', 'temp');
+		$p->delete('xml_cdr_transcript_edit', 'temp');
 	}
 
 	/**
