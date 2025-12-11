@@ -463,7 +463,8 @@ class authentication {
 		//remote port number from the domain name
 		$domain_array = explode(":", $this->domain_name);
 		if (count($domain_array) > 1) {
-			$domain_name = $domain_array[0];
+			// Write back after port is removed
+			$this->domain_name = $domain_array[0];
 		}
 
 		//if the username
