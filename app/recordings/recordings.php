@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-202%
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -303,6 +303,14 @@
 //add the search term
 	$search = $_REQUEST["search"] ?? '';
 
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
+
 //get total recordings from the database
 	$sql = "select count(*) from v_recordings ";
 	$sql .= "where true ";
@@ -331,14 +339,6 @@
 	[$paging_controls, $rows_per_page] = paging($num_rows, $param, $rows_per_page);
 	[$paging_controls_mini, $rows_per_page] = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
-
-//set the time format options: 12h, 24h
-	if ($settings->get('domain', 'time_format') == '24h') {
-		$time_format = 'HH24:MI:SS';
-	}
-	else {
-		$time_format = 'HH12:MI:SS am';
-	}
 
 //get the file size
 	if ($recording_storage_type == 'base64') {
