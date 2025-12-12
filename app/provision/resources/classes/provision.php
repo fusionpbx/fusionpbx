@@ -891,6 +891,23 @@
 				//get the extensions and add them to the contacts array
 					if (is_uuid($device_uuid) && is_uuid($domain_uuid) && $this->settings->get('provision','contact_extensions',false)) {
 
+						// get the contact array filter by
+						$contact_extensions_filter_by = $this->settings->get('provision', 'contact_extensions_filter_by', array());
+
+						// filter by call summary
+						if (in_array('call_group', $contact_extensions_filter_by)) {
+							// get the extensions call group using the device line 1
+							$sql = "select call_group ";
+							$sql .= "from v_extensions ";
+							$sql .= "where domain_uuid = :domain_uuid ";
+							$sql .= "and extension = :extension ";
+							$parameters['domain_uuid'] = $domain_uuid;
+							$parameters['extension'] = $lines[1]['user_id'];
+							$call_groups = $this->database->select($sql, $parameters, 'row');
+							$call_group = $call_groups['call_group'];
+							unset($sql, $parameters);
+						}
+
 						//get contacts from the database
 							$sql = "select extension_uuid as contact_uuid, directory_first_name, directory_last_name, ";
 							$sql .= "effective_caller_id_name, effective_caller_id_number, ";
