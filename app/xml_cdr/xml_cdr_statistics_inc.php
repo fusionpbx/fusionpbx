@@ -355,7 +355,6 @@
 
 //set the time zone
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
-	$parameters['time_zone'] = $time_zone;
 
 //set the time format options: 12h, 24h
 	if ($settings->get('domain', 'time_format') == '24h') {
@@ -583,6 +582,7 @@
 	$sql .= "	group by s.s_id, s.start_date, s.end_date, s.s_hour \n";
 	$sql .= "	order by s.s_id asc \n";
 	$sql .= ") as d; \n";
+	$parameters['time_zone'] = $time_zone;
 	$stats = $database->select($sql, $parameters, 'all');
 
 //set the hours
