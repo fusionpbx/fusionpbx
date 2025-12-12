@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-202%
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -352,7 +352,7 @@
 	$sql = "select recording_uuid, domain_uuid, ";
 	if (!empty($sql_file_size)) { $sql .= $sql_file_size; }
 	$sql .= "to_char(timezone(:time_zone, COALESCE(update_date, insert_date)), 'DD Mon YYYY') as date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, COALESCE(update_date, insert_date)), '".$sql_time_format."') as time_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, COALESCE(update_date, insert_date)), '".$time_format."') as time_formatted, \n";
 	$sql .= "recording_name, recording_filename, recording_description ";
 	$sql .= "from v_recordings ";
 	$sql .= "where true ";
