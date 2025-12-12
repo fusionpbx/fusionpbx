@@ -54,10 +54,6 @@
 		$devices = $_POST['devices'];
 	}
 
-//get the search
-	$search = strtolower($_REQUEST["search"] ?? '');
-	$fields = strtolower($_REQUEST["fields"] ?? '');
-
 //process the http post data by action
 	if (!empty($action) && !empty($devices) && is_array($devices) && @sizeof($devices) != 0) {
 		switch ($action) {
@@ -83,6 +79,21 @@
 	$order_by = $_GET["order_by"] ?? '';
 	$order = $_GET["order"] ?? '';
 
+//get the search
+	$search = strtolower($_REQUEST["search"] ?? '');
+	$fields = strtolower($_REQUEST["fields"] ?? '');
+
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
+
 //get total devices count from the database
 	$sql = "select count(*) from v_devices ";
 	$sql .= "where domain_uuid = :domain_uuid ";
@@ -105,7 +116,7 @@
 	$device_profiles = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//prepare to page the results
+//get the count
 	$sql = "select count(*) from v_devices as d ";
 	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		if (!empty($search)) {
@@ -176,17 +187,6 @@
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param ?? '', $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param ?? '', $rows_per_page, true);
 	$offset = $rows_per_page * $page;
-
-//set the time zone
-	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
-
-//set the time format options: 12h, 24h
-	if ($settings->get('domain', 'time_format') == '24h') {
-		$time_format = 'HH24:MI:SS';
-	}
-	else {
-		$time_format = 'HH12:MI:SS am';
-	}
 
 //get the list
 	$sql = "select ";
