@@ -49,7 +49,7 @@
 	$sql =	"select \n";
 	$sql .= "	status, \n";
 	$sql .=	"	direction, \n";
-	$sql .= "	to_char(timezone(:time_zone, start_stamp), '".$sql_time_format."') as start_date_time, \n";
+	$sql .= "	to_char(timezone(:time_zone, start_stamp), '".$time_format."') as start_date_time, \n";
 	$sql .=	"	caller_id_name, \n";
 	$sql .=	"	caller_id_number, \n";
 	$sql .=	"	answer_stamp \n";
