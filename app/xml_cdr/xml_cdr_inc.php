@@ -285,15 +285,6 @@
 //set the default paging
 	//$rows_per_page = $settings->get('domain', 'paging');
 
-//prepare to page the results
-	//$rows_per_page = $settings->get('domain', 'paging', 50); //set on the page that includes this page
-	if (empty($_GET['page']) || (!empty($_GET['page']) && !is_numeric($_GET['page']))) {
-		$_GET['page'] = 0;
-	}
-	//ensure page is within bounds of integer
-	$page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
-	$offset = $rows_per_page * $page;
-
 //set the time zone
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 
@@ -304,6 +295,15 @@
 	else {
 		$time_format = 'HH12:MI am';
 	}
+
+//prepare to page the results
+	//$rows_per_page = $settings->get('domain', 'paging', 50); //set on the page that includes this page
+	if (empty($_GET['page']) || (!empty($_GET['page']) && !is_numeric($_GET['page']))) {
+		$_GET['page'] = 0;
+	}
+	//ensure page is within bounds of integer
+	$page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
+	$offset = $rows_per_page * $page;
 
 //get the results from the db
 	$sql = "select \n";
