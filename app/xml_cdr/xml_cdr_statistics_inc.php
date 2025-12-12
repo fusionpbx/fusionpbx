@@ -357,11 +357,19 @@
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 	$parameters['time_zone'] = $time_zone;
 
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI';
+	}
+	else {
+		$time_format = 'HH12:MI am';
+	}
+
 //build the sql query for xml cdr statistics
 	$sql = "select ";
 	$sql .= "row_number() over() as hours, ";
 	$sql .= "to_char(start_date at time zone :time_zone, 'DD Mon') as date, \n";
-	$sql .= "to_char(start_date at time zone :time_zone, 'HH12:MI am') || ' - ' || to_char(end_date at time zone :time_zone, 'HH12:MI am') as time, \n";
+	$sql .= "to_char(start_date at time zone :time_zone, '".$time_format."') || ' - ' || to_char(end_date at time zone :time_zone, '".$time_format."') as time, \n";
 	$sql .= "extract(epoch from start_date) as start_epoch, ";
 	$sql .= "extract(epoch from end_date) as end_epoch, ";
 	$sql .= "s_hour, start_date, end_date, volume, answered, (round(d.seconds / 60, 1)) as minutes, \n";
