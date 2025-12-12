@@ -296,12 +296,13 @@
 
 //set the time zone
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
-	$parameters['time_zone'] = $time_zone;
 
-//set the sql time format
-	$sql_time_format = 'HH12:MI am';
-	if (!empty($settings->get('domain', 'time_format'))) {
-		$sql_time_format = $settings->get('domain', 'time_format') == '12h' ? "HH12:MI am" : "HH24:MI";
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI';
+	}
+	else {
+		$time_format = 'HH12:MI am';
 	}
 
 //get the results from the db
@@ -652,6 +653,7 @@
 		$database->username = $settings->get('cdr', 'archive_database_username');
 		$database->password = $settings->get('cdr', 'archive_database_password');
 	}
+	$parameters['time_zone'] = $time_zone;
 	$result = $database->select($sql, $parameters, 'all');
 	$result_count = is_array($result) ? sizeof($result) : 0;
 	unset($sql, $parameters);
