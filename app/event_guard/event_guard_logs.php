@@ -83,6 +83,17 @@
 		$search = $_GET["search"];
 	}
 
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
+
 //get the count
 	$sql = "select count(event_guard_log_uuid) ";
 	$sql .= "from v_event_guard_logs ";
@@ -113,17 +124,13 @@
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
-//set the time zone
-	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
-	$parameters['time_zone'] = $time_zone;
-
 //get the list
 	$sql = "select ";
 	$sql .= "event_guard_log_uuid, ";
 	$sql .= "hostname, ";
 	$sql .= "log_date, ";
 	$sql .= "to_char(timezone(:time_zone, log_date), 'DD Mon YYYY') as log_date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, log_date), 'HH12:MI:SS am') as log_time_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, log_date), '".$time_format."') as log_time_formatted, \n";
 	$sql .= "filter, ";
 	$sql .= "ip_address, ";
 	$sql .= "extension, ";
@@ -148,6 +155,7 @@
 	}
 	$sql .= order_by($order_by, $order, 'log_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
+	$parameters['time_zone'] = $time_zone;
 	$event_guard_logs = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

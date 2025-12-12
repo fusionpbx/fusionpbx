@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,6 +28,10 @@
 	require_once "resources/check_auth.php";
 	if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
 
+//set the defaults
+	$contact_time_uuid = '';
+	$time_description = '';
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -35,6 +39,9 @@
 //get contact uuid
 	$domain_uuid = $_REQUEST['domain_uuid'];
 	$contact_uuid = $_REQUEST['contact_uuid'];
+
+//set the time zone
+	date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
 
 //get posted variables & set time status
 	if (!empty($_POST)) {

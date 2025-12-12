@@ -285,6 +285,17 @@
 //set the default paging
 	//$rows_per_page = $settings->get('domain', 'paging');
 
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI';
+	}
+	else {
+		$time_format = 'HH12:MI am';
+	}
+
 //prepare to page the results
 	//$rows_per_page = $settings->get('domain', 'paging', 50); //set on the page that includes this page
 	if (empty($_GET['page']) || (!empty($_GET['page']) && !is_numeric($_GET['page']))) {
@@ -293,16 +304,6 @@
 	//ensure page is within bounds of integer
 	$page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT);
 	$offset = $rows_per_page * $page;
-
-//set the time zone
-	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
-	$parameters['time_zone'] = $time_zone;
-
-//set the sql time format
-	$sql_time_format = 'HH12:MI am';
-	if (!empty($settings->get('domain', 'time_format'))) {
-		$sql_time_format = $settings->get('domain', 'time_format') == '12h' ? "HH12:MI am" : "HH24:MI";
-	}
 
 //get the results from the db
 	$sql = "select \n";
@@ -313,7 +314,7 @@
 	$sql .= "c.start_stamp, \n";
 	$sql .= "c.end_stamp, \n";
 	$sql .= "to_char(timezone(:time_zone, start_stamp), 'DD Mon YYYY') as start_date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, start_stamp), '".$sql_time_format."') as start_time_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, start_stamp), '".$time_format."') as start_time_formatted, \n";
 	$sql .= "c.start_epoch, \n";
 	$sql .= "c.hangup_cause, \n";
 	$sql .= "c.billsec as duration, \n";
@@ -652,6 +653,7 @@
 		$database->username = $settings->get('cdr', 'archive_database_username');
 		$database->password = $settings->get('cdr', 'archive_database_password');
 	}
+	$parameters['time_zone'] = $time_zone;
 	$result = $database->select($sql, $parameters, 'all');
 	$result_count = is_array($result) ? sizeof($result) : 0;
 	unset($sql, $parameters);
