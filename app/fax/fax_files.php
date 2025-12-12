@@ -218,6 +218,17 @@
 			}
 	}
 
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
+
 //prepare to page the results
 	$sql = "select count(fax_file_uuid) ";
 	$sql .= "from v_fax_files ";
@@ -241,17 +252,6 @@
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
-
-//set the time zone
-	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
-
-//set the time format options: 12h, 24h
-	if ($settings->get('domain', 'time_format') == '24h') {
-		$time_format = 'HH24:MI:SS';
-	}
-	else {
-		$time_format = 'HH12:MI:SS am';
-	}
 
 //get the list
 	$sql = "select domain_uuid, fax_file_uuid, fax_uuid, fax_mode, \n";
