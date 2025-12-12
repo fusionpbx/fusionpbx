@@ -272,19 +272,6 @@
 	$outbound_caller_id_name = urldecode($array["variables"]["outbound_caller_id_name"] ?? '');
 	$outbound_caller_id_number = urldecode($array["variables"]["outbound_caller_id_number"] ?? '');
 
-//set the time zone
-	date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
-
-//format the date and time
-	if ($settings->get('domain', 'time_format') == '24h') {
-		$start_time = date("Y-m-d H:i:s", (int) $start_epoch);
-		$end_time= date("Y-m-d H:i:s", (int) $end_epoch);
-	}
-	else {
-		$start_time = date("Y-m-d g:i:s a", (int) $start_epoch);
-		$end_time = date("Y-m-d g:i:s a", (int) $end_epoch);
-	}
-
 //create the destinations object
 	$destinations = new destinations();
 
@@ -316,6 +303,19 @@
 			}
 			$i++;
 		}
+	}
+
+//set the time zone
+	date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
+
+//format the date and time
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$start_time = date("Y-m-d H:i:s", (int) $start_epoch);
+		$end_time= date("Y-m-d H:i:s", (int) $end_epoch);
+	}
+	else {
+		$start_time = date("Y-m-d g:i:s a", (int) $start_epoch);
+		$end_time = date("Y-m-d g:i:s a", (int) $end_epoch);
 	}
 
 //set the year, month and date
