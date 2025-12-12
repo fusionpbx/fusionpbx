@@ -567,9 +567,23 @@
 					});
 				//define formatting of individual classes
 					$('.datepicker').datetimepicker({ format: 'YYYY-MM-DD', });
-					$('.datetimepicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm', });
-					$('.datetimepicker-future').datetimepicker({ format: 'YYYY-MM-DD HH:mm', minDate: new Date(), });
-					$('.datetimesecpicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm:ss', });
+					{/literal}
+
+					{if !empty($time_format) && $time_format == '24h'}
+						{literal}
+						$(".datetimepicker").datetimepicker({ format: 'YYYY-MM-DD HH:mm', });
+						$(".datetimepicker-future").datetimepicker({ format: 'YYYY-MM-DD HH:mm', minDate: new Date(), });
+						$(".datetimesecpicker").datetimepicker({ format: 'YYYY-MM-DD HH:mm:ss', });
+						{/literal}
+					{else}
+						{literal}
+						$(".datetimepicker").datetimepicker({ format: 'YYYY-MM-DD hh:mm a', });
+						$(".datetimepicker-future").datetimepicker({ format: 'YYYY-MM-DD hh:mm a', minDate: new Date(), });
+						$(".datetimesecpicker").datetimepicker({ format: 'YYYY-MM-DD hh:mm:ss a', });
+						{/literal}
+					{/if}
+
+			{literal}
 			});
 			{/literal}
 
