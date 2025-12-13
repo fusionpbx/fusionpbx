@@ -320,7 +320,7 @@ class call_recordings {
 					$p->delete('transcribe_queue_add', 'temp');
 
 					//set message
-					message::add($text['message-audio_transcribed']);
+					message::add($text['message-added_to_queue']);
 
 				}
 				unset($records);
