@@ -125,13 +125,14 @@
 		//check for all required data
 			$msg = '';
 			if (empty($gateway)) { $msg .= $text['message-required']." ".$text['label-gateway']."<br>\n"; }
-			if ($register == 'true') {
-				if (empty($username)) { $msg .= $text['message-required']." ".$text['label-username']."<br>\n"; }
-				if (empty($password)) { $msg .= $text['message-required']." ".$text['label-password']."<br>\n"; }
-			}
+
 			if (empty($proxy)) { $msg .= $text['message-required']." ".$text['label-proxy']."<br>\n"; }
 			if (empty($expire_seconds)) { $msg .= $text['message-required']." ".$text['label-expire_seconds']."<br>\n"; }
 			if (empty($register)) { $msg .= $text['message-required']." ".$text['label-register']."<br>\n"; }
+			if ($register === 'true') {
+				if (empty($username)) { $msg .= $text['message-required']." ".$text['label-username']."<br>\n"; }
+				if (empty($password)) { $msg .= $text['message-required']." ".$text['label-password']."<br>\n"; }
+			}
 			if (empty($retry_seconds)) { $msg .= $text['message-required']." ".$text['label-retry_seconds']."<br>\n"; }
 			if (empty($channels)) {
 				//$msg .= $text['message-required']." ".$text['label-channels']."<br>\n";
@@ -326,7 +327,7 @@
 	$profile = $profile ?? '';
 	$hostname = $hostname ?? '';
 	$description = $description ?? '';
-	$register = $register ?? true;
+	$register = $register ?? false;
 	$distinct_to = $distinct_to ?? false;
 	$caller_id_in_from = $caller_id_in_from ?? false;
 	$supress_cng = $supress_cng ?? false;
