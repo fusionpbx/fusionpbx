@@ -177,6 +177,7 @@
 		accountcode = session:getVariable("accountcode");
 		local_ip_v4 = session:getVariable("local_ip_v4");
 		verto_enabled = session:getVariable("verto_enabled") or '';
+		sip_h_caller_destination = session:getVariable("sip_h_caller_destination") or '';
 	end
 
 --set caller id
@@ -459,7 +460,7 @@
 					subject = '';
 					body = '';
 
-				--get the templates			
+				--get the templates
 					local sql = "SELECT * FROM v_email_templates ";
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					sql = sql .. "AND template_language = :template_language ";
@@ -1088,6 +1089,9 @@
 							if (hold_music ~= nil) and (string.len(hold_music) > 0) then
 								dial_string_user = dial_string_user .. "hold_music=" .. hold_music .. ",";
 							end
+							if (sip_h_caller_destination ~= nil) then
+								dial_string_user = dial_string_user .. "sip_h_caller_destination=" .. sip_h_caller_destination .. ",";
+							end
 							dial_string_user = dial_string_user .. "presence_id=" .. row.destination_number .. "@"..domain_name..",";
 							dial_string_user = dial_string_user .. "extension_uuid="..extension_uuid..record_session.."]";
 							user_contact = api:executeString("sofia_contact */".. row.destination_number .."@" ..domain_name);
@@ -1138,6 +1142,13 @@
 									caller_id = caller_id .. ",origination_caller_id_number="..ring_group_caller_id_number..",";
 								end
 
+							--set the call_destination sip header
+								if (sip_h_caller_destination ~= nil) then
+									sip_h_caller_destination = "sip_h_caller_destination=" .. sip_h_caller_destination .. ",";
+								else
+									sip_h_caller_destination = '';
+								end
+
 							--set the diversion header
 								local diversion_enabled = settings:get('ring_group', 'diversion_enabled', 'boolean') or 'false';
 								if (diversion_enabled == 'true' and original_caller_id_number ~= nil) then
@@ -1147,7 +1158,7 @@
 								end
 
 							--set the destination dial string
-								dial_string = "["..diversion_header.."toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
+								dial_string = "["..diversion_header.."toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay..","..sip_h_caller_destination.."]"..route_bridge
 						end
 
 					--add a delimiter between destinations
