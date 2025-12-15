@@ -302,15 +302,6 @@
 
 //add the search term
 	$search = $_REQUEST["search"] ?? '';
-
-//set the time format options: 12h, 24h
-	if ($settings->get('domain', 'time_format') == '24h') {
-		$time_format = 'HH24:MI:SS';
-	}
-	else {
-		$time_format = 'HH12:MI:SS am';
-	}
-
 //get total recordings from the database
 	$sql = "select count(*) from v_recordings ";
 	$sql .= "where true ";
@@ -346,6 +337,14 @@
 			case 'pgsql': $sql_file_size = "length(decode(recording_base64,'base64')) as recording_size, "; break;
 			case 'mysql': $sql_file_size = "length(from_base64(recording_base64)) as recording_size, "; break;
 		}
+	}
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
 	}
 
 //get the recordings from the database
