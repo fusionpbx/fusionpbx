@@ -518,7 +518,13 @@ if (!function_exists('fax_split_dtmf')) {
 			$pdf->SetXY($x + 2.0, $y + 1.65);
 			if (defined('STDIN') || (!empty($_REQUEST['submit']) && $_REQUEST['submit'] != 'preview')) {
 				$date = new DateTime('now', new DateTimeZone( $settings->get('domain','time_zone', date_default_timezone_get() ) ));
-				$pdf->Write(0.3, $date->format('d M Y @ h:i:s A'));
+				if ($settings->get('domain', 'time_format') == '24h') {
+					$time_format = 'H:i:s';
+				}
+				else {
+					$time_format = 'h:i:s a';
+				}
+				$pdf->Write(0.3, $date->format('d M Y @ '.$time_format));
 			}
 			$pdf->SetXY($x + 2.0, $y + 1.95);
 			if (!empty($fax_recipient)) {
