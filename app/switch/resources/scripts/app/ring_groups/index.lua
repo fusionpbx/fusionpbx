@@ -455,7 +455,11 @@
 					if (not default_dialect) then default_dialect = 'us'; end
 					if (not default_voice) then default_voice = 'callie'; end
 
-				--get the templates
+				--predefine the variables
+					subject = '';
+					body = '';
+
+				--get the templates			
 					local sql = "SELECT * FROM v_email_templates ";
 					sql = sql .. "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					sql = sql .. "AND template_language = :template_language ";
