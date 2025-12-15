@@ -93,6 +93,12 @@
 		$search =  strtolower($_GET["search"]);
 	}
 
+//prepare some of the paging values
+	$rows_per_page = $settings->get('domain', 'paging', 50);
+	$page = $_GET['page'] ?? '';
+	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
+	$offset = $rows_per_page * $page;
+
 //set the time zone
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 
@@ -103,12 +109,6 @@
 	else {
 		$time_format = 'HH12:MI:SS am';
 	}
-
-//prepare some of the paging values
-	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$page = $_GET['page'] ?? '';
-	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
-	$offset = $rows_per_page * $page;
 
 //get the list
 	$sql = "select r.domain_uuid, d.domain_name, r.call_recording_uuid, r.call_direction, ";
