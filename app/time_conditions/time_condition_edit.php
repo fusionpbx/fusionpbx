@@ -63,14 +63,6 @@
 		$action = "add";
 	}
 
-//set the time format options: 12h, 24h
-	if ($settings->get('domain', 'time_format') == '24h') {
-		$time_format = 'HH:mm';
-	}
-	else {
-		$time_format = 'hh:mm a';
-	}
-
 //get the post variables
 	if (count($_POST) > 0) {
 		$domain_uuid = $_POST["domain_uuid"];
@@ -664,6 +656,14 @@
 //include the header
 	$document['title'] = $text['title-time_condition'];
 	require_once "resources/header.php";
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH:mm';
+	}
+	else {
+		$time_format = 'hh:mm a';
+	}
 
 //debug
 // 	echo "<div style='overflow: auto; font-family: courier; width: 100%; height: 200px; border: 1px solid #ccc; padding: 20px;'>\n";
