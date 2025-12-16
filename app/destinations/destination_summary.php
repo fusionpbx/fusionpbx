@@ -52,6 +52,14 @@
 		$quick_select = 3; //set default
 	}
 
+//convert time format to 24 hour
+	if (!empty($start_stamp_begin)) {
+		$start_stamp_begin_formatted = ($settings->get('domain', 'time_format') == '24h' ? $start_stamp_begin : DateTime::createFromFormat('Y-m-d h:i a', $start_stamp_begin)->format('Y-m-d H:i'));
+	}
+	if (!empty($start_stamp_end)) {
+		$start_stamp_end_formatted = ($settings->get('domain', 'time_format') == '24h' ? $start_stamp_end : DateTime::createFromFormat('Y-m-d h:i a', $start_stamp_end)->format('Y-m-d H:i'));
+	}
+
 //get the summary
 	$destination = new destinations;
 	$destination->domain_uuid = $_SESSION['domain_uuid'];
@@ -59,8 +67,8 @@
 		$destination->quick_select = $quick_select;
 	}
 	else {
-		$destination->start_stamp_begin = $start_stamp_begin ?? '';
-		$destination->start_stamp_end = $start_stamp_end ?? '';
+		$destination->start_stamp_begin = $start_stamp_begin_formatted ?? '';
+		$destination->start_stamp_end = $start_stamp_end_formatted ?? '';
 	}
 	//$destination->include_internal = $include_internal ?? null;
 	$summary = $destination->destination_summary();
