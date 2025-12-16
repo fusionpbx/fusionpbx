@@ -493,34 +493,46 @@
 			$parameters['start_stamp_end'] = $start_stamp_end_formatted.':59.999 '.$time_zone;
 		}
 	}
-	if (!empty($answer_stamp_begin) && !empty($answer_stamp_end)) {
+	if (!empty($answer_stamp_begin)) {
+		$answer_stamp_begin_formatted = ($settings->get('domain', 'time_format') == '24h' ? $answer_stamp_begin : DateTime::createFromFormat('Y-m-d h:i a', $answer_stamp_begin)->format('Y-m-d H:i'));
+	}
+	if (!empty($answer_stamp_end)) {
+		$answer_stamp_end_formatted = ($settings->get('domain', 'time_format') == '24h' ? $answer_stamp_end : DateTime::createFromFormat('Y-m-d h:i a', $answer_stamp_end)->format('Y-m-d H:i'));
+	}
+	if (!empty($answer_stamp_begin_formatted) && !empty($answer_stamp_end_formatted)) {
 		$sql .= "and answer_stamp between :answer_stamp_begin::timestamptz and :answer_stamp_end::timestamptz \n";
-		$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000 '.$time_zone;
-		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999 '.$time_zone;
+		$parameters['answer_stamp_begin'] = $answer_stamp_begin_formatted.':00.000 '.$time_zone;
+		$parameters['answer_stamp_end'] = $answer_stamp_end_formatted.':59.999 '.$time_zone;
 	}
 	else {
-		if (!empty($answer_stamp_begin)) {
+		if (!empty($answer_stamp_begin_formatted)) {
 			$sql .= "and answer_stamp >= :answer_stamp_begin \n";
-			$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000 '.$time_zone;;
+			$parameters['answer_stamp_begin'] = $answer_stamp_begin_formatted.':00.000 '.$time_zone;;
 		}
-		if (!empty($answer_stamp_end)) {
+		if (!empty($answer_stamp_end_formatted)) {
 			$sql .= "and answer_stamp <= :answer_stamp_end \n";
-			$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999 '.$time_zone;
+			$parameters['answer_stamp_end'] = $answer_stamp_end_formatted.':59.999 '.$time_zone;
 		}
 	}
-	if (!empty($end_stamp_begin) && !empty($end_stamp_end)) {
+	if (!empty($end_stamp_begin)) {
+		$end_stamp_begin_formatted = ($settings->get('domain', 'time_format') == '24h' ? $end_stamp_begin : DateTime::createFromFormat('Y-m-d h:i a', $end_stamp_begin)->format('Y-m-d H:i'));
+	}
+	if (!empty($end_stamp_end)) {
+		$end_stamp_end_formatted = ($settings->get('domain', 'time_format') == '24h' ? $end_stamp_end : DateTime::createFromFormat('Y-m-d h:i a', $end_stamp_end)->format('Y-m-d H:i'));
+	}
+	if (!empty($end_stamp_begin_formatted) && !empty($end_stamp_end_formatted)) {
 		$sql .= "and end_stamp between :end_stamp_begin::timestamptz and :end_stamp_end::timestamptz \n";
-		$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000 '.$time_zone;
-		$parameters['end_stamp_end'] = $end_stamp_end.':59.999 '.$time_zone;
+		$parameters['end_stamp_begin'] = $end_stamp_begin_formatted.':00.000 '.$time_zone;
+		$parameters['end_stamp_end'] = $end_stamp_end_formatted.':59.999 '.$time_zone;
 	}
 	else {
-		if (!empty($end_stamp_begin)) {
+		if (!empty($end_stamp_begin_formatted)) {
 			$sql .= "and end_stamp >= :end_stamp_begin \n";
-			$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000 '.$time_zone;
+			$parameters['end_stamp_begin'] = $end_stamp_begin_formatted.':00.000 '.$time_zone;
 		}
-		if (!empty($end_stamp_end)) {
+		if (!empty($end_stamp_end_formatted)) {
 			$sql .= "and end_stamp <= :end_stamp_end \n";
-			$parameters['end_stamp'] = $end_stamp_end.':59.999 '.$time_zone;
+			$parameters['end_stamp'] = $end_stamp_end_formatted.':59.999 '.$time_zone;
 		}
 	}
 	if (is_numeric($duration_min)) {
