@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -487,16 +487,16 @@
 	if (!empty($start_stamp_end)) {
 		$start_stamp_end_formatted = ($settings->get('domain', 'time_format') == '24h' ? $start_stamp_end : DateTime::createFromFormat('Y-m-d h:i a', $start_stamp_end)->format('Y-m-d H:i'));
 	}
-	if (!empty($start_stamp_begin) && !empty($start_stamp_end)) {
+	if (!empty($start_stamp_begin_formatted) && !empty($start_stamp_end_formatted)) {
 		$sql .= "and c.start_stamp between :start_stamp_begin and :start_stamp_end \n";
 		$parameters['start_stamp_begin'] = $start_stamp_begin_formatted.':00.000';
 		$parameters['start_stamp_end'] = $start_stamp_end_formatted.':59.999';
 	}
-	else if (!empty($start_stamp_begin)) {
+	else if (!empty($start_stamp_begin_formatted)) {
 		$sql .= "and c.start_stamp >= :start_stamp_begin \n";
 		$parameters['start_stamp_begin'] = $start_stamp_begin_formatted.':00.000';
 	}
-	else if (!empty($start_stamp_end)) {
+	else if (!empty($start_stamp_end_formatted)) {
 		$sql .= "and c.start_stamp <= :start_stamp_end \n";
 		$parameters['start_stamp_end'] = $start_stamp_end_formatted.':59.999';
 	}
