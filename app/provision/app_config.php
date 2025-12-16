@@ -300,9 +300,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "contact_extensions_filter_by";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "call_summary";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "call_group";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filter contact extensions by: call summary. Used in the phone book directory.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filter contact extensions by: call_group. Used in the phone book directory.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d157078e-b363-4f34-a6d4-8a86990a40b7";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
