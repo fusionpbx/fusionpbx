@@ -915,6 +915,10 @@
 							$sql .= "from v_extensions ";
 							$sql .= "where domain_uuid = :domain_uuid ";
 							$sql .= "and enabled = 'true' ";
+							if (in_array('call_group', $contact_extensions_filter_by)) {
+								$sql .= "and call_group = :call_group ";
+								$parameters['call_group'] = $call_group;
+							}
 							$sql .= "and directory_visible = 'true' ";
 							$sql .= "order by directory_first_name, effective_caller_id_name asc ";
 							$parameters['domain_uuid'] = $domain_uuid;
