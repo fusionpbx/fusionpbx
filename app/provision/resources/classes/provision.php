@@ -262,7 +262,7 @@
 					$contact['contact_category']		= $row['contact_category'];
 					$contact['contact_organization']	= $row['contact_organization'];
 					$contact['contact_name_given']		= $row['contact_name_given'];
-					$contact['contact_name_family']		= $row['contact_name_family']);
+					$contact['contact_name_family']		= $row['contact_name_family'];
 
 					$contact['numbers']					= array();
 					$numbers = &$contact['numbers'];
