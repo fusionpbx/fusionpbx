@@ -82,6 +82,13 @@ class provision {
 	private $user_uuid;
 
 	/**
+	 * Get the file type. Options: text, xml
+	 *
+	 * @var string
+	 */
+	private $file_type;
+
+	/**
 	 * Initializes the object with setting array.
 	 *
 	 * @param array $setting_array An array containing settings for domain, user, and database connections. Defaults to
@@ -299,9 +306,21 @@ class provision {
 		if (is_array($database_contacts)) {
 			$x = 0;
 			foreach ($database_contacts as $row) {
+				//get the values from the database
 				$uuid = $row['contact_uuid'];
 				$phone_label = strtolower($row['phone_label'] ?? '');
 				$contact_category = strtolower($row['contact_category'] ?? '');
+				$contact_organization = $row['contact_organization'] ?? '';
+				$contact_name_given = $row['contact_name_given'] ?? '';
+				$contact_name_family = $row['contact_name_family'] ?? '';
+
+				//prepare the values for file type xml
+				if ($this->file_type == 'xml') {
+					$contact_organization = xml::sanitize($contact_organization);
+					$contact_name_given = xml::sanitize($contact_name_given);
+					$contact_name_family = xml::sanitize($contact_name_family);
+					$phone_label = xml::sanitize($phone_label);
+				}
 
 				$contact = [];
 				$contacts[] = &$contact;
@@ -309,15 +328,15 @@ class provision {
 				$contact['contact_uuid'] = $row['contact_uuid'];
 				$contact['contact_type'] = $row['contact_type'];
 				$contact['contact_category'] = $row['contact_category'];
-				$contact['contact_organization'] = xml::sanitize($row['contact_organization']);
-				$contact['contact_name_given'] = xml::sanitize($row['contact_name_given']);
-				$contact['contact_name_family'] = xml::sanitize($row['contact_name_family']);
+				$contact['contact_organization'] = $contact_organization;
+				$contact['contact_name_given'] = $contact_name_given;
+				$contact['contact_name_family'] = $contact_name_family;
 
 				$contact['numbers'] = [];
 				$numbers = &$contact['numbers'];
 
 				if (($row['phone_primary'] == '1') || (!isset($contact['phone_number']))) {
-					$contact['phone_label'] = xml::sanitize($phone_label);
+					$contact['phone_label'] = $phone_label;
 					$contact['phone_number'] = $row['phone_number'];
 					$contact['phone_extension'] = $row['phone_extension'];
 				}
@@ -356,6 +375,9 @@ class provision {
 		$template_dir = $this->template_dir;
 		$device_address = $this->device_address;
 		$file = $this->file;
+
+		//get the file type
+		$this->file_type = strtolower(pathinfo($this->file ?? '', PATHINFO_EXTENSION));
 
 		// set the device address to lower case to be consistent with the database
 		$device_address = strtolower($device_address);
@@ -1053,6 +1075,13 @@ class provision {
 					} else {
 						$phone_extension = $row['number_alias'];
 					}
+
+					//prepare the values for file type xml
+					if ($this->file_type == 'xml') {
+						$contact_name_given = xml::sanitize($contact_name_given);
+						$contact_name_family = xml::sanitize($contact_name_family);
+					}
+
 					// save the contact array values
 					$contacts[$uuid]['category'] = 'extensions';
 					$contacts[$uuid]['contact_uuid'] = $row['contact_uuid'];
@@ -1061,6 +1090,7 @@ class provision {
 					$contacts[$uuid]['contact_name_family'] = $contact_name_family;
 					$contacts[$uuid]['phone_extension'] = $phone_extension;
 					$contacts[$uuid]['call_group'] = $row['call_group'];
+
 					// unset the variables
 					unset($name_array, $contact_name_given, $contact_name_family, $phone_extension);
 				}
