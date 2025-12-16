@@ -33,8 +33,10 @@
 		public $template_dir;
 		public $device_address;
 		public $device_template;
+		public $file;
 		private $settings;
 		private $database;
+		private $file_type;
 
 		public function __construct($params = []) {
 
@@ -240,6 +242,17 @@
 					$uuid = $row['contact_uuid'];
 					$phone_label = strtolower($row['phone_label'] ?? '');
 					$contact_category = strtolower($row['contact_category'] ?? '');
+					$contact_organization = $row['contact_organization'] ?? '';
+					$contact_name_given = $row['contact_name_given'] ?? '';
+					$contact_name_family = $row['contact_name_family'] ?? '';
+
+					//prepare the values for file type xml
+					if ($this->file_type == 'xml') {
+						$contact_organization = xml::sanitize($contact_organization);
+						$contact_name_given = xml::sanitize($contact_name_given);
+						$contact_name_family = xml::sanitize($contact_name_family);
+						$phone_label = xml::sanitize($phone_label);
+					}
 
 					$contact = array();
 					$contacts[] = &$contact;
@@ -247,15 +260,15 @@
 					$contact['contact_uuid']			= $row['contact_uuid'];
 					$contact['contact_type']			= $row['contact_type'];
 					$contact['contact_category']		= $row['contact_category'];
-					$contact['contact_organization']	= xml::sanitize($row['contact_organization']);
-					$contact['contact_name_given']		= xml::sanitize($row['contact_name_given']);
-					$contact['contact_name_family']		= xml::sanitize($row['contact_name_family']);
+					$contact['contact_organization']	= $row['contact_organization'];
+					$contact['contact_name_given']		= $row['contact_name_given'];
+					$contact['contact_name_family']		= $row['contact_name_family']);
 
 					$contact['numbers']					= array();
 					$numbers = &$contact['numbers'];
 
 					if (($row['phone_primary'] == '1') || (!isset($contact['phone_number']))) {
-						$contact['phone_label']			= xml::sanitize($phone_label);
+						$contact['phone_label']			= $phone_label;
 						$contact['phone_number']		= $row['phone_number'];
 						$contact['phone_extension']		= $row['phone_extension'];
 					}
@@ -287,6 +300,9 @@
 				$template_dir = $this->template_dir;
 				$device_address = $this->device_address;
 				$file = $this->file;
+
+			//get the file type
+				$this->file_type = strtolower(pathinfo($this->file ?? '', PATHINFO_EXTENSION));
 
 			//set the device address to lower case to be consistent with the database
 				$device_address = strtolower($device_address);
@@ -943,6 +959,13 @@
 										else {
 											$phone_extension = $row['number_alias'];
 										}
+
+									//prepare the values for file type xml
+										if ($this->file_type == 'xml') {
+											$contact_name_given = xml::sanitize($contact_name_given);
+											$contact_name_family = xml::sanitize($contact_name_family);
+										}
+
 									//save the contact array values
 										$contacts[$uuid]['category'] = 'extensions';
 										$contacts[$uuid]['contact_uuid'] = $row['contact_uuid'];
