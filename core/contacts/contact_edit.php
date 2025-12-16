@@ -2627,7 +2627,7 @@ if (permission_exists('contact_attachment_view')) {
 if (permission_exists('contact_time_view')) {
 	$x = 0;
 	foreach ($contact_times as $row) {
-		echo "<div class='form_set card' style='overflow: visible;'>\n";
+		echo "<div class='form_set card'>\n";
 		echo "	<div class='heading'>\n";
 		echo " 		<b style='float: left;'>".$text['header_contact_times']."</b>\n";
 		if (permission_exists('contact_time_delete')) {
