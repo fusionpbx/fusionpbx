@@ -522,7 +522,7 @@ if (!function_exists('fax_split_dtmf')) {
 					$time_format = 'H:i:s';
 				}
 				else {
-					$time_format = 'h:i:s a';
+					$time_format = 'h:i:s A';
 				}
 				$pdf->Write(0.3, $date->format('d M Y @ '.$time_format));
 			}
