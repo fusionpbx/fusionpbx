@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -93,22 +93,29 @@
 		$search =  strtolower($_GET["search"]);
 	}
 
-//set the time zone
-	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
-	$parameters['time_zone'] = $time_zone;
-
 //prepare some of the paging values
 	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$page = $_GET['page'] ?? '';
 	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 	$offset = $rows_per_page * $page;
 
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
+
 //get the list
 	$sql = "select r.domain_uuid, d.domain_name, r.call_recording_uuid, r.call_direction, ";
 	$sql .= "r.call_recording_name, r.call_recording_path, r.call_recording_transcription, r.call_recording_length, ";
 	$sql .= "r.caller_id_name, r.caller_id_number, r.caller_destination, r.destination_number, ";
 	$sql .= "to_char(timezone(:time_zone, r.call_recording_date), 'DD Mon YYYY') as call_recording_date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, r.call_recording_date), 'HH12:MI:SS am') as call_recording_time_formatted \n";
+	$sql .= "to_char(timezone(:time_zone, r.call_recording_date), '".$time_format."') as call_recording_time_formatted \n";
 	$sql .= "from view_call_recordings as r, v_domains as d ";
 	//$sql .= "from v_call_recordings as r, v_domains as d ";
 	$sql .= "where true ";
@@ -131,6 +138,7 @@
 	}
 	$sql .= order_by($order_by, $order, 'r.call_recording_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
+	$parameters['time_zone'] = $time_zone;
 	$call_recordings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

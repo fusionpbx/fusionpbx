@@ -2958,7 +2958,8 @@ else { //default: white
 		?>
 		}
 
-		div.card:has(.datetimepicker) {
+		div.card:has(.datetimepicker),
+		div.card:has(.datetimesecpicker) {
 			overflow-x: visible;
 		}
 

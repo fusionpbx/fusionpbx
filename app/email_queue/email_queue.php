@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022-2023
+	Portions created by the Initial Developer are Copyright (C) 2022-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -91,9 +91,6 @@
 		exit;
 	}
 
-//set the time zone
-	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
-
 //get order and order by
 	$order_by = $_GET["order_by"] ?? null;
 	$order = $_GET["order"] ?? null;
@@ -138,11 +135,22 @@
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
+
 //get the list
 	$sql = "select ";
 	$sql .= "email_date, ";
 	$sql .= "to_char(timezone(:time_zone, email_date), 'DD Mon YYYY') as email_date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, email_date), 'HH12:MI:SS am') as email_time_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, email_date), '".$time_format."') as email_time_formatted, \n";
 	$sql .= "email_queue_uuid, ";
 	$sql .= "hostname, ";
 	$sql .= "email_from, ";

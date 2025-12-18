@@ -42,6 +42,17 @@
 		$contact_uuid = $_GET['id'];
 	}
 
+//set the time zone
+	date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'H:i:s';
+	}
+	else {
+		$time_format = 'h:i:s a';
+	}
+
 //get the contact list
 	$sql = "select ct.*, u.username, u.domain_uuid as user_domain_uuid ";
 	$sql .= "from v_contact_times as ct, v_users as u ";
@@ -86,7 +97,7 @@
 					if (!empty($row["time_start"]) && !empty($row['time_stop'])) {
 						$time_start = strtotime($row["time_start"]);
 						$time_stop = strtotime($row['time_stop']);
-						$time = gmdate("H:i:s", ($time_stop - $time_start));
+						$time = gmdate($time_zone, ($time_stop - $time_start));
 					}
 					else {
 						unset($time);
