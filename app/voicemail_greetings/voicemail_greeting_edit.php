@@ -57,9 +57,10 @@
 	$language_enabled = false;
 
 //add the speech object and get the voices and languages arrays
-	if ($speech_enabled && !empty($speech_engine)) {
+	if (class_exists('speech') && $speech_enabled && !empty($speech_engine)) {
 		$speech = new speech($settings);
 		$voices = $speech->get_voices();
+		$greeting_format = $speech->get_format();
 		//$speech_models = $speech->get_models();
 		//$translate_enabled = $speech->get_translate_enabled();
 		//$language_enabled = $speech->get_language_enabled();
@@ -67,7 +68,7 @@
 	}
 
 //add the transcribe object and get the languages arrays
-	if ($transcribe_enabled && !empty($transcribe_engine)) {
+	if (class_exists('transcribe') && $transcribe_enabled && !empty($transcribe_engine)) {
 		$transcribe = new transcribe($settings);
 		//$transcribe_models = $transcribe->get_models();
 		//$translate_enabled = $transcribe->get_translate_enabled();
@@ -109,15 +110,17 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		if (permission_exists('voicemail_greeting_delete')) {
 			if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($voicemail_greeting_uuid)) {
 				//prepare
-					$array[0]['checked'] = 'true';
-					$array[0]['uuid'] = $voicemail_greeting_uuid;
+				$array[0]['checked'] = 'true';
+				$array[0]['uuid'] = $voicemail_greeting_uuid;
+
 				//delete
-					$obj = new voicemail_greetings;
-					$obj->voicemail_id = $voicemail_id;
-					$obj->delete($array);
+				$obj = new voicemail_greetings;
+				$obj->voicemail_id = $voicemail_id;
+				$obj->delete($array);
+
 				//redirect
-					header("Location: voicemail_greetings.php?id=".$voicemail_id);
-					exit;
+				header("Location: voicemail_greetings.php?id=".$voicemail_id);
+				exit;
 			}
 		}
 
@@ -237,12 +240,11 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 			//set message
 			message::add($text['message-'.($action == 'add' ? 'greeting_created' : 'update')]);
-
 		}
 
 		//redirect
-			header("Location: voicemail_greetings.php?id=".$voicemail_id);
-			exit;
+		header("Location: voicemail_greetings.php?id=".$voicemail_id);
+		exit;
 	}
 }
 
@@ -405,13 +407,12 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "    ".$text['label-message']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <textarea class='formfld' name='greeting_message' style='width: 300px; height: 150px;'>".escape($greeting_message ?? '')."</textarea>\n";
+		echo "    <textarea class='formfld' name='greeting_message' style='width: 300px; height: 150px;'>".escape_textarea($greeting_message ?? '')."</textarea>\n";
 		echo "<br />\n";
 		echo $text['description-message']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
-
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
