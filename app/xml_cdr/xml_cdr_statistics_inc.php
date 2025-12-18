@@ -200,45 +200,63 @@
 		$parameters['context'] = '%'.$context.'%';
 	}
 	/*
-	if (!empty($start_stamp_begin) && !empty($start_stamp_end)) {
+	if (!empty($start_stamp_begin)) {
+		$start_stamp_begin_formatted = ($settings->get('domain', 'time_format') == '24h' ? $start_stamp_begin : DateTime::createFromFormat('Y-m-d h:i a', $start_stamp_begin)->format('Y-m-d H:i'));
+	}
+	if (!empty($start_stamp_end)) {
+		$start_stamp_end_formatted = ($settings->get('domain', 'time_format') == '24h' ? $start_stamp_end : DateTime::createFromFormat('Y-m-d h:i a', $start_stamp_end)->format('Y-m-d H:i'));
+	}
+	if (!empty($start_stamp_begin_formatted) && !empty($start_stamp_end_formatted)) {
 		$sql_where_ands[] = "start_stamp between :start_stamp_begin and :start_stamp_end";
-		$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000';
-		$parameters['start_stamp_end'] = $start_stamp_end.':59.999';
+		$parameters['start_stamp_begin'] = $start_stamp_begin_formatted.':00.000';
+		$parameters['start_stamp_end'] = $start_stamp_end_formatted.':59.999';
 	}
-	else if (!empty($start_stamp_begin)) {
+	else if (!empty($start_stamp_begin_formatted)) {
 		$sql_where_ands[] = "start_stamp >= :start_stamp_begin";
-		$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000';
+		$parameters['start_stamp_begin'] = $start_stamp_begin_formatted.':00.000';
 	}
-	else if (!empty($start_stamp_end)) {
+	else if (!empty($start_stamp_end_formatted)) {
 		$sql_where_ands[] = "start_stamp <= :start_stamp_end";
-		$parameters['start_stamp_end'] = $start_stamp_end.':59.999';
+		$parameters['start_stamp_end'] = $start_stamp_end_formatted.':59.999';
 	}
 	*/
-	if (!empty($answer_stamp_begin) && !empty($answer_stamp_end)) {
+	if (!empty($answer_stamp_begin)) {
+		$answer_stamp_begin_formatted = ($settings->get('domain', 'time_format') == '24h' ? $answer_stamp_begin : DateTime::createFromFormat('Y-m-d h:i a', $answer_stamp_begin)->format('Y-m-d H:i'));
+	}
+	if (!empty($answer_stamp_end)) {
+		$answer_stamp_end_formatted = ($settings->get('domain', 'time_format') == '24h' ? $answer_stamp_end : DateTime::createFromFormat('Y-m-d h:i a', $answer_stamp_end)->format('Y-m-d H:i'));
+	}
+	if (!empty($answer_stamp_begin_formatted) && !empty($answer_stamp_end_formatted)) {
 		$sql_where_ands[] = "c.answer_stamp between :answer_stamp_begin and :answer_stamp_end";
-		$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000';
-		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999';
+		$parameters['answer_stamp_begin'] = $answer_stamp_begin_formatted.':00.000';
+		$parameters['answer_stamp_end'] = $answer_stamp_end_formatted.':59.999';
 	}
-	else if (!empty($answer_stamp_begin)) {
+	else if (!empty($answer_stamp_begin_formatted)) {
 		$sql_where_ands[] = "c.answer_stamp >= :answer_stamp_begin";
-		$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000';
+		$parameters['answer_stamp_begin'] = $answer_stamp_begin_formatted.':00.000';
 	}
-	else if (!empty($answer_stamp_end)) {
+	else if (!empty($answer_stamp_end_formatted)) {
 		$sql_where_ands[] = "c.answer_stamp <= :answer_stamp_end";
-		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999';
+		$parameters['answer_stamp_end'] = $answer_stamp_end_formatted.':59.999';
 	}
-	if (!empty($end_stamp_begin) && !empty($end_stamp_end)) {
+	if (!empty($end_stamp_begin)) {
+		$end_stamp_begin_formatted = ($settings->get('domain', 'time_format') == '24h' ? $end_stamp_begin : DateTime::createFromFormat('Y-m-d h:i a', $end_stamp_begin)->format('Y-m-d H:i'));
+	}
+	if (!empty($end_stamp_end)) {
+		$end_stamp_end_formatted = ($settings->get('domain', 'time_format') == '24h' ? $end_stamp_end : DateTime::createFromFormat('Y-m-d h:i a', $end_stamp_end)->format('Y-m-d H:i'));
+	}
+	if (!empty($end_stamp_begin_formatted) && !empty($end_stamp_end_formatted)) {
 		$sql_where_ands[] = "c.end_stamp between :end_stamp_begin and :end_stamp_end";
-		$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000';
-		$parameters['end_stamp_end'] = $end_stamp_end.':59.999';
+		$parameters['end_stamp_begin'] = $end_stamp_begin_formatted.':00.000';
+		$parameters['end_stamp_end'] = $end_stamp_end_formatted.':59.999';
 	}
-	else if (!empty($end_stamp_begin)) {
+	else if (!empty($end_stamp_begin_formatted)) {
 		$sql_where_ands[] = "c.end_stamp >= :end_stamp_begin";
-		$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000';
+		$parameters['end_stamp_begin'] = $end_stamp_begin_formatted.':00.000';
 	}
-	else if (!empty($end_stamp_end)) {
+	else if (!empty($end_stamp_end_formatted)) {
 		$sql_where_ands[] = "c.end_stamp <= :end_stamp_end";
-		$parameters['end_stamp_end'] = $end_stamp_end.':59.999';
+		$parameters['end_stamp_end'] = $end_stamp_end_formatted.':59.999';
 	}
 	if (!empty($duration)) {
 		$sql_where_ands[] = "c.duration like :duration";
@@ -355,13 +373,20 @@
 
 //set the time zone
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
-	$parameters['time_zone'] = $time_zone;
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI';
+	}
+	else {
+		$time_format = 'HH12:MI am';
+	}
 
 //build the sql query for xml cdr statistics
 	$sql = "select ";
 	$sql .= "row_number() over() as hours, ";
 	$sql .= "to_char(start_date at time zone :time_zone, 'DD Mon') as date, \n";
-	$sql .= "to_char(start_date at time zone :time_zone, 'HH12:MI am') || ' - ' || to_char(end_date at time zone :time_zone, 'HH12:MI am') as time, \n";
+	$sql .= "to_char(start_date at time zone :time_zone, '".$time_format."') || ' - ' || to_char(end_date at time zone :time_zone, '".$time_format."') as time, \n";
 	$sql .= "extract(epoch from start_date) as start_epoch, ";
 	$sql .= "extract(epoch from end_date) as end_epoch, ";
 	$sql .= "s_hour, start_date, end_date, volume, answered, (round(d.seconds / 60, 1)) as minutes, \n";
@@ -575,6 +600,7 @@
 	$sql .= "	group by s.s_id, s.start_date, s.end_date, s.s_hour \n";
 	$sql .= "	order by s.s_id asc \n";
 	$sql .= ") as d; \n";
+	$parameters['time_zone'] = $time_zone;
 	$stats = $database->select($sql, $parameters, 'all');
 
 //set the hours

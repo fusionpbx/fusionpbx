@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -244,16 +244,10 @@
 
 //set the time zone
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
-	$parameters['time_zone'] = $time_zone;
 
 //set the time format options: 12h, 24h
-	if (!empty($settings->get('domain', 'time_format'))) {
-		if ($settings->get('domain', 'time_format') == '12h') {
-			$time_format = 'HH12:MI:SS am';
-		}
-		elseif ($settings->get('domain', 'time_format') == '24h') {
-			$time_format = 'HH24:MI:SS';
-		}
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
 	}
 	else {
 		$time_format = 'HH12:MI:SS am';
@@ -279,6 +273,7 @@
 	$parameters['domain_uuid'] = $domain_uuid;
 	$sql .= order_by($order_by, $order, 'fax_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
+	$parameters['time_zone'] = $time_zone;
 	$fax_files = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

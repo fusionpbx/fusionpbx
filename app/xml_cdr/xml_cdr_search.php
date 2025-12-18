@@ -214,8 +214,8 @@
 		echo "		<td class='vtable'>";
 		echo "			<div class='row'>\n";
 		echo "				<div class='col-sm-12'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>";
 		echo "				</div>\n";
 		echo "			</div>\n";
 		echo "		</td>";
@@ -225,8 +225,8 @@
 		echo "		<td class='vtable'>";
 		echo "			<div class='row'>\n";
 		echo "				<div class='col-sm-12'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#answer_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='answer_stamp_begin' id='answer_stamp_begin' placeholder='".$text['label-from']."' value='".escape($answer_stamp_begin)."'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#answer_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='answer_stamp_end' id='answer_stamp_end' placeholder='".$text['label-to']."' value='".escape($answer_stamp_end)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#answer_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='answer_stamp_begin' id='answer_stamp_begin' placeholder='".$text['label-from']."' value='".escape($answer_stamp_begin)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#answer_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='answer_stamp_end' id='answer_stamp_end' placeholder='".$text['label-to']."' value='".escape($answer_stamp_end)."'>";
 		echo "				</div>\n";
 		echo "			</div>\n";
 		echo "		</td>";
@@ -236,8 +236,8 @@
 		echo "		<td class='vtable'>";
 		echo "			<div class='row'>\n";
 		echo "				<div class='col-sm-12'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#end_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='end_stamp_begin' id='end_stamp_begin' placeholder='".$text['label-from']."' value='".escape($end_stamp_begin)."'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#end_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='end_stamp_end' id='end_stamp_end' placeholder='".$text['label-to']."' value='".escape($end_stamp_end)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#end_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='end_stamp_begin' id='end_stamp_begin' placeholder='".$text['label-from']."' value='".escape($end_stamp_begin)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#end_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='end_stamp_end' id='end_stamp_end' placeholder='".$text['label-to']."' value='".escape($end_stamp_end)."'>";
 		echo "				</div>\n";
 		echo "			</div>\n";
 		echo "		</td>";

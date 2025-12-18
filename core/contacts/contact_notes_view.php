@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -32,6 +32,17 @@
 	if (!permission_exists('contact_note_view')) {
 		echo "access denied";
 		exit;
+	}
+
+//set the time zone
+	date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'H:i:s';
+	}
+	else {
+		$time_format = 'h:i:s a';
 	}
 
 //get the contact list
@@ -53,7 +64,7 @@
 			foreach ($contact_notes as $row) {
 				$contact_note = str_replace("\n","<br />",escape($row['contact_note']));
 				echo "<div class='box' style='padding-bottom: 15px;'>".$contact_note."</div>\n";
-				echo "<div class='box contact-details-label' style='padding-bottom: 15px; text-align: right;'><strong>".escape($row['last_mod_user'])."</strong>: ".date("j M Y @ H:i:s", strtotime($row['last_mod_date']))."</div>\n";
+				echo "<div class='box contact-details-label' style='padding-bottom: 15px; text-align: right;'><strong>".escape($row['last_mod_user'])."</strong>: ".date("j M Y @ ".$time_format, strtotime($row['last_mod_date']))."</div>\n";
 				$x++;
 			}
 			echo "</div>\n";

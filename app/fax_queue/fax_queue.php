@@ -93,9 +93,6 @@
 		exit;
 	}
 
-//set the time zone
-	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
-
 //get order and order by
 	$order_by = $_GET["order_by"] ?? null;
 	$order = $_GET["order"] ?? null;
@@ -152,6 +149,17 @@
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
+
 //get the list
 	$sql = "SELECT ";
 	$sql .= "d.domain_name, ";
@@ -160,7 +168,7 @@
 	$sql .= "q.fax_uuid, ";
 	$sql .= "q.fax_date, ";
 	$sql .= "to_char(timezone(:time_zone, q.fax_date), 'DD Mon YYYY') as fax_date_formatted, ";
-	$sql .= "to_char(timezone(:time_zone, q.fax_date), 'HH12:MI:SS am') as fax_time_formatted, ";
+	$sql .= "to_char(timezone(:time_zone, q.fax_date), '".$time_format."') as fax_time_formatted, ";
 	$sql .= "q.hostname, ";
 	$sql .= "q.fax_caller_id_name, ";
 	$sql .= "q.fax_caller_id_number, ";
@@ -172,10 +180,10 @@
 	$sql .= "q.fax_status, ";
 	$sql .= "q.fax_retry_date, ";
 	$sql .= "to_char(timezone(:time_zone, q.fax_retry_date), 'DD Mon YYYY') as fax_retry_date_formatted, ";
-	$sql .= "to_char(timezone(:time_zone, q.fax_retry_date), 'HH12:MI:SS am') as fax_retry_time_formatted, ";
+	$sql .= "to_char(timezone(:time_zone, q.fax_retry_date), '".$time_format."') as fax_retry_time_formatted, ";
 	$sql .= "q.fax_notify_date, ";
 	$sql .= "to_char(timezone(:time_zone, q.fax_notify_date), 'DD Mon YYYY') as fax_notify_date_formatted, ";
-	$sql .= "to_char(timezone(:time_zone, q.fax_notify_date), 'HH12:MI:SS am') as fax_notify_time_formatted, ";
+	$sql .= "to_char(timezone(:time_zone, q.fax_notify_date), '".$time_format."') as fax_notify_time_formatted, ";
 	$sql .= "q.fax_retry_count, ";
 	$sql .= "q.fax_accountcode, ";
 	$sql .= "q.fax_command ";

@@ -19,7 +19,7 @@
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-tempusdominus.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-colorpicker.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/fontawesome/css/all.min.css.php'>
-	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202509221124'>
+	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202512160230'>
 {*//link to custom css file *}
 	{if !empty($settings.theme.custom_css)}
 		<link rel='stylesheet' type='text/css' href='{$settings.theme.custom_css}'>
@@ -567,9 +567,23 @@
 					});
 				//define formatting of individual classes
 					$('.datepicker').datetimepicker({ format: 'YYYY-MM-DD', });
-					$('.datetimepicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm', });
-					$('.datetimepicker-future').datetimepicker({ format: 'YYYY-MM-DD HH:mm', minDate: new Date(), });
-					$('.datetimesecpicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm:ss', });
+					{/literal}
+
+					{if !empty($time_format) && $time_format == '24h'}
+						{literal}
+						$(".datetimepicker").datetimepicker({ format: 'YYYY-MM-DD HH:mm', });
+						$(".datetimepicker-future").datetimepicker({ format: 'YYYY-MM-DD HH:mm', minDate: new Date(), });
+						$(".datetimesecpicker").datetimepicker({ format: 'YYYY-MM-DD HH:mm:ss', });
+						{/literal}
+					{else}
+						{literal}
+						$(".datetimepicker").datetimepicker({ format: 'YYYY-MM-DD hh:mm a', });
+						$(".datetimepicker-future").datetimepicker({ format: 'YYYY-MM-DD hh:mm a', minDate: new Date(), });
+						$(".datetimesecpicker").datetimepicker({ format: 'YYYY-MM-DD hh:mm:ss a', });
+						{/literal}
+					{/if}
+
+			{literal}
 			});
 			{/literal}
 

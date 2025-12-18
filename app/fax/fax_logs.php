@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -81,7 +81,7 @@
 		$parameters['search'] = '%'.$search.'%';
 	}
 
-//prepare to page the results
+//get the count
 	$sql = "select count(fax_log_uuid) from v_fax_logs ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and fax_uuid = :fax_uuid ";
@@ -104,14 +104,19 @@
 //set the time zone
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 
-//set time format
-	$time_format = $settings->get('domain', 'time_format');
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
 
 //get the list
 	$sql = "select ";
 	$sql .= " fax_epoch, ";
 	$sql .= " to_char(timezone(:time_zone, to_timestamp(fax_epoch)), 'DD Mon YYYY') as fax_date_formatted, \n";
-	$sql .= " to_char(timezone(:time_zone, to_timestamp(fax_epoch)), 'HH12:MI:SS am') as fax_time_formatted, \n";
+	$sql .= " to_char(timezone(:time_zone, to_timestamp(fax_epoch)), '".$time_format."') as fax_time_formatted, \n";
 	$sql .= " fax_success, ";
 	$sql .= " fax_result_code, ";
 	$sql .= " fax_result_text, ";
