@@ -242,7 +242,8 @@
 				echo "	</td>\n";
 			}
 			if ($show == 'all' && permission_exists('group_all')) {
-echo "	<td>".escape($row['domain_name'])."</td>\n";
+				$domain_name = $row['domain_name'] ?? $text['label-global'];
+				echo "	<td>".escape($domain_name)."</td>\n";
 			}
 			echo "	<td>\n";
 			if (permission_exists('group_edit')) {
