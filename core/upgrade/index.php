@@ -154,14 +154,7 @@
 			message::add($text['message-upgrade_schema'], null, $message_timeout);
 
 			//update database foreign key indexes
-			$response = $database->update_indexes();
-			if (!empty($response)) {
-				//echo "<table>\n";
-				foreach($response as $row) {
-					echo "        ".trim($row['sql'])."<br />\n";
-				}
-				//echo "</table>\n";
-			}
+			$database->update_indexes();
 		}
 
 		//process the apps defaults

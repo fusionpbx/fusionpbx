@@ -237,12 +237,7 @@
 		}
 
 		//update database foreign key indexes
-		$response = $database->update_indexes();
-		if ($display_type === 'text') {
-			foreach($response as $row) {
-				echo "        ".trim($row['sql'])."\n";
-			}
-		}
+		$database->update_indexes();
 	}
 
 
