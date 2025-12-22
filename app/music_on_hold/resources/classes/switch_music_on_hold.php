@@ -397,11 +397,13 @@ class switch_music_on_hold {
 				if (is_array($moh) && @sizeof($moh) != 0) {
 
 					//get music on hold details
-					$sql                       = "select * from v_music_on_hold ";
-					$sql                       .= "where (domain_uuid = :domain_uuid " . (!permission_exists('music_on_hold_domain') ? "" : "or domain_uuid is null ") . ") ";
-					$sql                       .= "and music_on_hold_uuid in ('" . implode("','", array_keys($moh)) . "') ";
-					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$sql = "select * from v_music_on_hold ";
+					$sql .= "where music_on_hold_uuid in ('" . implode("','", array_keys($moh)) . "') ";
+					if (!permission_exists('music_on_hold_all')) {
+						$sql .= "and (domain_uuid = :domain_uuid " . (permission_exists('music_on_hold_global') ? "or domain_uuid is null " : null) . ") ";
+						$parameters['domain_uuid'] = $this->domain_uuid;
+					}
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$streams[$row['music_on_hold_uuid']] = $row;
