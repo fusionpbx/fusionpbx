@@ -362,7 +362,7 @@ class provision {
 	 * it retrieves the corresponding device information and template. If not, it
 	 * attempts to assign a default template based on the user agent.
 	 *
-	 * @return void
+	 * @return mixed Returns the rendered provision template
 	 */
 	public function render() {
 		// debug
@@ -644,13 +644,8 @@ class provision {
 					$p->add('device_edit', 'temp');
 
 					// save to the data
-					$this->database->app_name = 'devices';
-					$this->database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
-					if (!empty($device_uuid)) {
-						$this->database->uuid($device_uuid);
-					}
 					$this->database->save($array);
-					$message = $this->database->message;
+					//$message = $this->database->message;
 
 					// remove the temporary permission
 					$p->delete('device_add', 'temp');
