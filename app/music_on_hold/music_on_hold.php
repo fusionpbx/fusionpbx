@@ -583,7 +583,12 @@
 								echo "	</td>\n";
 							}
 							if ($show == 'all' && permission_exists('music_on_hold_all')) {
-								$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'] ?? $text['label-global'];
+								if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
+									$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+								}
+								else {
+									$domain = $text['label-global'];
+								}
 								echo "	<td>".escape($domain)."</td>\n";
 							}
 							echo "	<td class='overflow'>".escape($stream_file)."</td>\n";
