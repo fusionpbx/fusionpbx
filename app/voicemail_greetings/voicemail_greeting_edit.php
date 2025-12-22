@@ -167,17 +167,22 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		}
 		unset($sql, $parameters);
 
-		//set the recording format
-		$greeting_format = $greeting_format ?? 'wav';
-
 		//build the setting object and get the recording path
-		$greeting_path = $settings->get('switch', 'voicemail').'/default/'.$_SESSION['domain_name'].'/'.$voicemail_id.'/';
+		$greeting_path = $settings->get('switch', 'voicemail').'/default/'.$_SESSION['domain_name'].'/'.$voicemail_id;
+
+		//set the recording format
+		$greeting_files = glob($greeting_path.'/greeting_'.$greeting_id.'.*');
+		if (empty($greeting_format) && !empty($greeting_files)) {
+			$greeting_format = pathinfo($greeting_files[0], PATHINFO_EXTENSION);
+		} else {
+			$greeting_format = $greeting_format ?? 'wav';
+		}
 
 		if ($action == 'add') {
 			//find the next available greeting id
 			$greeting_id = 0;
 			for ($i = 1; $i <= 9; $i++) {
-				if (!in_array($i, $greeting_ids) && !file_exists($greeting_path.'greeting_'.$i.'.'.$greeting_format)) {
+				if (!in_array($i, $greeting_ids) && !file_exists($greeting_path.'/greeting_'.$i.'.'.$greeting_format)) {
 					$greeting_id = $i;
 					break;
 				}
@@ -203,9 +208,9 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 				//fix invalid riff & data header lengths in generated wave file
 				if ($speech_engine == 'openai') {
 					$greeting_filename_temp = str_replace('.'.$greeting_format, '.tmp.'.$greeting_format, $greeting_filename);
-					exec('sox --ignore-length '.$greeting_path.$greeting_filename.' '.$greeting_path.$greeting_filename_temp);
+					exec('sox --ignore-length '.$greeting_path.'/'.$greeting_filename.' '.$greeting_path.'/'.$greeting_filename_temp);
 					if (file_exists($greeting_path.$greeting_filename_temp)) {
-						exec('rm -f '.$greeting_path.$greeting_filename.' && mv '.$greeting_path.$greeting_filename_temp.' '.$greeting_path.$greeting_filename);
+						exec('rm -f '.$greeting_path.'/'.$greeting_filename.' && mv '.$greeting_path.'/'.$greeting_filename_temp.' '.$greeting_path.'/'.$greeting_filename);
 					}
 					unset($greeting_filename_temp);
 				}
