@@ -37,6 +37,19 @@
 	$row_count = 0;
 	$device_template = '';
 
+//check for domain name with username or port number
+	// user:pass@domain_name:port
+	// user:pass@domain_name
+	// domain_name:port
+	$domain_name = $_SERVER['HTTP_HOST'];
+	if (str_contains($domain_name, '@')) {
+		$domain_name = explode("@", $domain_name, 2)[1];
+	}
+	if (str_contains($domain_name, ':')) {
+		$domain_array = explode(":", $domain_name);
+		$domain_name = $domain_array[0];
+	}
+
 //define PHP variables from the HTTP values
 	if (isset($_REQUEST['address'])) {
 		$device_address = $_REQUEST['address'];
@@ -63,8 +76,6 @@
 	// The file name is fixed to `Account1_Extern.xml`.
 	// (Account1 is the first account you register)
 	if (empty($device_address) && !empty($ext)) {
-		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-		$domain_name = $domain_array[0];
 		$device = device_by_ext($ext, $domain_name);
 		if ($device !== false && ($device['device_vendor'] == 'escene' || $device['device_vendor'] == 'grandstream')) {
 			$device_address = $device['device_address'];
@@ -187,13 +198,6 @@
 //get http_domain_filter from global settings only (can't be used per domain)
 	$domain_filter = (new settings(['database' => $database]))->get('provision', 'http_domain_filter', true);
 
-//check for domain name with a port number at the end
-	$domain_name = $_SERVER['HTTP_HOST'];
-	if (str_contains($domain_name, ':')) {
-		$domain_array = explode(":", $domain_name);
-		$domain_name = $domain_array[0];
-	}
-
 //get the domain_uuid, domain_name, device_name and device_vendor
 	$sql = "select d.device_uuid, d.domain_uuid, d.device_vendor, n.domain_name ";
 	$sql .= "from v_devices as d, v_domains as n ";
@@ -202,7 +206,7 @@
 	$parameters['device_address'] = $device_address;
 	if ($domain_filter) {
 		$sql .= "and n.domain_name = :domain_name";
-		$parameters['domain_name'] = $_SERVER['HTTP_HOST'];
+		$parameters['domain_name'] = $domain_name;
 	}
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row)) {
@@ -217,16 +221,12 @@
 
 //get the domain_name and domain_uuid
 	if (empty($domain_uuid)) {
-		//get the domain_name
-			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-			$domain_name = $domain_array[0];
-
 		//get the domain_uuid
-			$sql = "select domain_uuid from v_domains ";
-			$sql .= "where lower(domain_name) = lower(:domain_name) ";
-			$parameters['domain_name'] = $domain_name;
-			$domain_uuid = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
+		$sql = "select domain_uuid from v_domains ";
+		$sql .= "where lower(domain_name) = lower(:domain_name) ";
+		$parameters['domain_name'] = $domain_name;
+		$domain_uuid = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
 	}
 
 //send a request to a remote server to validate the MAC address and secret
@@ -442,7 +442,7 @@
 			header('Expires: 0');
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			header('Pragma: public');
-			header('Content-Length: '.strlen($file_contents));
+			header('Content-Length: '.strlen($file_contents ?? ''));
 	}
 	else {
 		$cfg_ext = ".cfg";
@@ -453,7 +453,7 @@
 			header("Content-Type: text/plain");
 		}
 		else if ($device_vendor === "snom" && $device_template === "snom/m3") {
-			$file_contents = utf8_decode($file_contents);
+			$file_contents = utf8_decode($file_contents ?? '');
 			header("Content-Type: text/plain; charset=iso-8859-1");
 		}
 		elseif (!empty($file_contents) && is_xml($file_contents)) {
