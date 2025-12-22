@@ -467,7 +467,7 @@
 			foreach ($streams as $row) {
 
 				//hide global categories if not allowed
-					if (empty($row['domain_uuid']) && !permission_exists('music_on_hold_all')) { continue; }
+					if (empty($row['domain_uuid']) && !permission_exists('music_on_hold_global') && !($show == 'all' && permission_exists('music_on_hold_all'))) { continue; }
 
 				//set the variables
 					$music_on_hold_name = $row['music_on_hold_name'];
@@ -582,7 +582,7 @@
 								echo "		<input type='hidden' name='moh[".$row['music_on_hold_uuid']."][$x][file_name]' value=\"".escape($stream_file)."\" />\n";
 								echo "	</td>\n";
 							}
-							if ($show == "all" && permission_exists('music_on_hold_all')) {
+							if ($show == 'all' && permission_exists('music_on_hold_all')) {
 								if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 									$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 								}
