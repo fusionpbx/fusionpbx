@@ -357,9 +357,11 @@ if (!class_exists('switch_music_on_hold')) {
 
 								//get music on hold details
 									$sql = "select * from v_music_on_hold ";
-									$sql .= "where (domain_uuid = :domain_uuid ".(!permission_exists('music_on_hold_domain') ? "": "or domain_uuid is null ").") ";
-									$sql .= "and music_on_hold_uuid in ('".implode("','", array_keys($moh))."') ";
-									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$sql .= "where music_on_hold_uuid in ('" . implode("','", array_keys($moh)) . "') ";
+									if (!permission_exists('music_on_hold_all')) {
+										$sql .= "and (domain_uuid = :domain_uuid " . (permission_exists('music_on_hold_domain') ? "or domain_uuid is null " : null) . ") ";
+										$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									}
 									$database = new database;
 									$rows = $database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
