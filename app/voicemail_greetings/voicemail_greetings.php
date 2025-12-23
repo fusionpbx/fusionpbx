@@ -174,11 +174,32 @@
 		$file_ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
 		$file_name = $_FILES['file']['name'];
 
-		//check file extension
-		if ($file_ext == 'wav' || $file_ext == 'mp3' || $file_ext == 'ogg') {
+		//define the allowed file extensions
+		$allowed_extensions = ['wav', 'mp3', 'ogg'];
 
-			//get the next greeting id starting at 1
-			$greeting_id = count(glob($greeting_dir . '/greeting_*.*')) + 1;
+		//check file extension
+		if (in_array($file_ext, $allowed_extensions)) {
+
+			//find the next available greeting id starting at 1
+			$greeting_id = 1;
+			while (true) {
+				$found_existing_file = false;
+
+				//check for wav, mp3, and ogg files with the current greeting id
+				foreach ($allowed_extensions as $extension) {
+					$potential_file_name = "greeting_{$greeting_id}.{$extension}";
+					if (file_exists($greeting_dir . '/' . $potential_file_name)) {
+						$found_existing_file = true;
+						break;
+					}
+				}
+
+				if (!$found_existing_file) {
+					break;
+				}
+
+				$greeting_id++;
+			}
 
 			//set the greeting file name
 			$greeting_file_name = "greeting_{$greeting_id}.{$file_ext}";
