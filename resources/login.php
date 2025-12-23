@@ -140,7 +140,7 @@
 								$email_body = str_replace('${reset_button}', $reset_button, $email_body);
 								$email_body = str_replace('${logo_full}', $logo_full, $email_body);
 								$email_body = str_replace('${logo_shield}', $logo_shield, $email_body);
-								$email_body = str_replace('${domain}', $domain_name, $email_body);
+								$email_body = str_replace('${domain}', $password_reset_domain, $email_body);
 
 							//send reset link
 								if (send_email($email, $email_subject, $email_body, $eml_error)) {
