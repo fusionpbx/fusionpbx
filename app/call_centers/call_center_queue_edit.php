@@ -366,7 +366,9 @@
 			if (permission_exists('call_center_announce_sound')) {
 				$array['call_center_queues'][0]['queue_announce_sound'] = $queue_announce_sound;
 			}
-			$array['call_center_queues'][0]['queue_announce_frequency'] = $queue_announce_frequency;
+			if (permission_exists('call_center_announce_frequency')) {
+				$array['call_center_queues'][0]['queue_announce_frequency'] = $queue_announce_frequency;
+			}
 			$array['call_center_queues'][0]['queue_cc_exit_keys'] = $queue_cc_exit_keys;
 			if (permission_exists('call_center_email_address')) {
 				$array['call_center_queues'][0]['queue_email_address'] = $queue_email_address;
