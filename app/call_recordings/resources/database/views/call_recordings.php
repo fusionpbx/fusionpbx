@@ -12,5 +12,6 @@
 	$view['sql'] .= "	LEFT JOIN v_xml_cdr_transcripts as t ON c.xml_cdr_uuid = t.xml_cdr_uuid \n";
 	$view['sql'] .= "	WHERE record_name IS NOT NULL \n";
 	$view['sql'] .= "	AND record_path is not null \n";
+	$view['sql'] .= "	AND hangup_cause <> 'LOSE_RACE' \n";
 	$view['sql'] .= "	ORDER BY start_stamp desc \n";
 
