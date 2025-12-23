@@ -57,7 +57,7 @@ class provision {
 	public $template_dir;
 	public $device_address;
 	public $device_template;
-	public $file;
+	public $device_file;
 
 	/**
 	 * Set in the constructor. Must be a database object and cannot be null.
@@ -374,10 +374,6 @@ class provision {
 		$device_template = $this->device_template;
 		$template_dir = $this->template_dir;
 		$device_address = $this->device_address;
-		$file = $this->file;
-
-		//get the file type
-		$this->file_type = strtolower(pathinfo($this->file ?? '', PATHINFO_EXTENSION));
 
 		// set the device address to lower case to be consistent with the database
 		$device_address = strtolower($device_address);
@@ -392,7 +388,7 @@ class provision {
 
 		// remove ../ and slashes in the file name
 		$search = ['..', '/', '\\', '/./', '//'];
-		$file = str_replace($search, '', $file);
+		$this->device_file = str_replace($search, '', $this->device_file);
 
 		// get the domain_name
 		if (empty($domain_name)) {
@@ -739,6 +735,28 @@ class provision {
 		if (is_dir($template_dir . '/' . $domain_name)) {
 			$device_template = $domain_name . '/' . $device_template;
 		}
+
+		// get the default template file
+		if (empty($this->device_file)) {
+			if (file_exists($template_dir . '/' . $device_template . '/{$address}')) {
+				$this->device_file = '{$address}';
+			} elseif (file_exists($template_dir . '/' . $device_template . '/{$address}.xml')) {
+				$this->device_file = '{$address}.xml';
+			} elseif (file_exists($template_dir . '/' . $device_template . '/{$mac}')) {
+				$this->device_file = '{$mac}';
+			} elseif (file_exists($template_dir . '/' . $device_template . '/{$mac}.xml')) {
+				$this->device_file = '{$mac}.xml';
+			} elseif (file_exists($template_dir . '/' . $device_template . '/{$mac}.cfg')) {
+				$this->device_file = '{$mac}.cfg';
+			} else {
+				// the provisioning template was not found return an error
+				$this->http_error('404');
+				exit;
+			}
+		}
+
+		//set the template file type
+		$this->file_type = strtolower(pathinfo($this->device_file ?? '', PATHINFO_EXTENSION));
 
 		// initialize a template object
 		$view = new template();
@@ -1437,38 +1455,21 @@ class provision {
 			}
 		}
 
-		// if $file is not provided then look for a default file that exists
-		if (empty($file)) {
-			if (file_exists($template_dir . '/' . $device_template . '/{$address}')) {
-				$file = '{$address}';
-			} elseif (file_exists($template_dir . '/' . $device_template . '/{$address}.xml')) {
-				$file = '{$address}.xml';
-			} elseif (file_exists($template_dir . '/' . $device_template . '/{$mac}')) {
-				$file = '{$mac}';
-			} elseif (file_exists($template_dir . '/' . $device_template . '/{$mac}.xml')) {
-				$file = '{$mac}.xml';
-			} elseif (file_exists($template_dir . '/' . $device_template . '/{$mac}.cfg')) {
-				$file = '{$mac}.cfg';
-			} else {
-				$this->http_error('404');
-				exit;
+		// make sure the file exists
+		if (!file_exists($template_dir . '/' . $device_template . '/' . $this->device_file)) {
+			$this->http_error('404');
+			if ($this->settings->get('provision', 'debug', false)) {
+				echo ":$template_dir/$device_template/" . $this->device_file . "<br/>";
+				echo "template_dir: $template_dir<br/>";
+				echo "device_template: $device_template<br/>";
+				echo "file: $this->device_file";
 			}
-		} else {
-			// make sure the file exists
-			if (!file_exists($template_dir . '/' . $device_template . '/' . $file)) {
-				$this->http_error('404');
-				if ($this->settings->get('provision', 'debug', false)) {
-					echo ":$template_dir/$device_template/$file<br/>";
-					echo "template_dir: $template_dir<br/>";
-					echo "device_template: $device_template<br/>";
-					echo "file: $file";
-				}
-				exit;
-			}
+			exit;
 		}
 
+
 		// output template to string for header processing
-		$file_contents = $view->render($file);
+		$file_contents = $view->render($this->device_file);
 
 		// log file for testing
 		if ($this->settings->get('provision', 'debug', false)) {
@@ -1478,8 +1479,6 @@ class provision {
 			fwrite($fh, $tmp_string);
 			fclose($fh);
 		}
-
-		$this->file = $file;
 
 		// returned the rendered template
 		return $file_contents;
@@ -1587,7 +1586,7 @@ class provision {
 						// configure device object
 						$this->domain_uuid = $domain_uuid;
 						$this->device_address = $device_address;
-						$this->file = $file_name;
+						$this->device_file = $file_name;
 
 						// format the device address
 						$address_formatted = $this->format_address($device_address, $device_vendor);

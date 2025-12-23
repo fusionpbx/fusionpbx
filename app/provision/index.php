@@ -415,10 +415,9 @@
 	ob_start();
 
 //output template to string for header processing
-	$prov = new provision(['settings'=>$settings]);
-	$prov->domain_uuid = $domain_uuid;
+	$prov = new provision(['settings'=>$settings, 'domain_uuid'=>$domain_uuid, 'domain_name'=>$domain_name, 'user_uuid'=>$_SESSION['user_uuid']]);
 	$prov->device_address = $device_address;
-	$prov->file = $file;
+	$prov->device_file = $file;
 	$file_contents = $prov->render();
 
 //clean the output buffer
