@@ -96,15 +96,25 @@
 			$recording = $conference['recording'] === true;
 			$members = $conference['members'] ?? [];
 
-			//get mute_all
-			$mute_all = true;
+			//get mute_all - check if all non-moderators are muted
+			//assume not all are muted (show "Mute All" button by default)
+			$mute_all = false;
+			$found_unmuted = false;
+			$found_non_moderator = false;
 			foreach ($members as $member) {
 				$is_mod = $member['flags']['is_moderator'] ?? false;
-				$speaks = $member['flags']['can_speak'] ?? false;
-				if (!$is_mod && $speaks) {
-					$mute_all = false;
-					break;
+				if (!$is_mod) {
+					$found_non_moderator = true;
+					$speaks = $member['flags']['can_speak'] ?? true; //default to can speak if not set
+					if ($speaks) {
+						$found_unmuted = true;
+						break;
+					}
 				}
+			}
+			//if we found non-moderators and none of them can speak, all are muted
+			if ($found_non_moderator && !$found_unmuted) {
+				$mute_all = true;
 			}
 		}
 

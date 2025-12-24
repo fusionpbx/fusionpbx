@@ -131,6 +131,22 @@ class active_conferences_service extends base_websocket_system_service implement
 	protected $event_socket;
 
 	/**
+	 * Debug show permissions mode setting
+	 * Values: 'bytes' (minimal), 'full' (detailed), or 'off' (disabled)
+	 *
+	 * @var string
+	 */
+	protected string $debug_show_permissions_mode;
+
+	/**
+	 * Debug show switch event setting
+	 * When true, switch events are logged to debug output
+	 *
+	 * @var bool
+	 */
+	protected bool $debug_show_switch_event;
+
+	/**
 	 * Builds a filter for the subscriber
 	 * @param subscriber $subscriber
 	 * @return filter
@@ -177,6 +193,15 @@ class active_conferences_service extends base_websocket_system_service implement
 	protected function reload_settings(): void {
 		// Re-read the config file to get any possible changes
 		parent::$config->read();
+
+		// Load default settings from database
+		$database = database::new(['config' => parent::$config]);
+		$settings = new settings(['database' => $database]);
+		$this->debug_show_permissions_mode = $settings->get('active_conferences', 'debug_show_permissions_mode', 'off');
+		$this->debug_show_switch_event = $settings->get('active_conferences', 'debug_show_switch_event', false) === true;
+		$this->debug("Loaded debug_show_permissions_mode: " . $this->debug_show_permissions_mode);
+		$this->debug("Loaded debug_show_switch_event: " . ($this->debug_show_switch_event ? 'true' : 'false'));
+		unset($settings, $database);
 
 		// Re-connect to the websocket server
 		$this->connect_to_ws_server();
@@ -389,6 +414,16 @@ class active_conferences_service extends base_websocket_system_service implement
 		// Get permissions from the message (attached by websocket_service)
 		$permissions = $message->get_permissions();
 
+		// Debug permissions based on setting (loaded in reload_settings)
+		if ($this->debug_show_permissions_mode === 'full') {
+			$this->debug("Permission check - Action: $action, Required: " . (self::permission_map[$action] ?? 'unknown'));
+			$this->debug("User permissions: " . json_encode($permissions));
+		} elseif ($this->debug_show_permissions_mode === 'bytes') {
+			$perm_count = count($permissions);
+			$perm_bytes = strlen(json_encode($permissions));
+			$this->debug("Permissions: $perm_count items, $perm_bytes bytes");
+		}
+
 		// Validate action
 		if (!isset(self::permission_map[$action])) {
 			$this->send_action_response($message, false, 'Invalid action: ' . $action);
@@ -398,9 +433,16 @@ class active_conferences_service extends base_websocket_system_service implement
 		// Check permission
 		$required_permission = self::permission_map[$action];
 		if (!isset($permissions[$required_permission])) {
+			if ($this->debug_show_permissions_mode === 'full') {
+				$this->debug("Permission denied - Required: $required_permission, Has: " . implode(', ', array_keys($permissions)));
+			}
 			$this->warning("Permission denied: $required_permission for action: $action");
 			$this->send_action_response($message, false, 'Permission denied');
 			return;
+		}
+
+		if ($this->debug_show_permissions_mode === 'full') {
+			$this->debug("Permission granted: $required_permission for action: $action");
 		}
 
 		// Validate conference name (must include a domain - basic validation)
@@ -654,10 +696,11 @@ class active_conferences_service extends base_websocket_system_service implement
 	 * @return void
 	 */
 	private function on_conference_maintenance(event_message $event_message): void {
-		//$this->debug('Processing switch event conference::maintenance');
-
-		// Show json encoded message
-		//$this->debug('Event message: ' . $event_message);
+		// Show switch event if debug setting is enabled
+		if ($this->debug_show_switch_event) {
+			$this->debug('Processing switch event conference::maintenance');
+			$this->debug('Event message: ' . $event_message);
+		}
 
 		$action = $event_message->action ?? '';
 
