@@ -1066,8 +1066,14 @@ class xml_cdr {
 			//echo "record_length: ".$record_length."\n";
 			//exit;
 
-			//add the call record path, name and length to the database
+			//check if recording file exists
+			$record_exists = false;
 			if (isset($record_path) && isset($record_name) && file_exists($record_path . '/' . $record_name)) {
+				$record_exists = true;
+			}
+
+			//add the call record path, name and length to the database
+			if (isset($record_path) && isset($record_name) && $record_exists) {
 				$this->array[$key][0]['record_path'] = $record_path;
 				$this->array[$key][0]['record_name'] = $record_name;
 				if (isset($record_length)) {
@@ -1075,6 +1081,29 @@ class xml_cdr {
 				} else {
 					$this->array[$key][0]['record_length'] = urldecode($xml->variables->duration);
 				}
+			}
+
+			//if call recording transcribe is enabled then add the recording to the transcribe queue
+			if ($record_exists && $this->settings->get('call_recordings', 'transcribe_enabled', false)) {
+				//prepare the paramaters
+				$params['domain_uuid'] = $domain_uuid;
+				$params['xml_cdr_uuid'] = $uuid;
+				$params['call_direction'] = $call_direction;
+
+				//prepare the transcribe queue array
+				$app_sourcetranscribe_queue = array();
+				$transcribe_queue['transcribe_queue'][$x]['transcribe_queue_uuid'] = $uuid;
+				$transcribe_queue['transcribe_queue'][$x]['domain_uuid'] = $domain_uuid;
+				$transcribe_queue['transcribe_queue'][$x]['hostname'] = gethostname();
+				$transcribe_queue['transcribe_queue'][$x]['transcribe_status'] = 'pending';
+				$transcribe_queue['transcribe_queue'][$x]['transcribe_app_class'] = 'call_recordings';
+				$transcribe_queue['transcribe_queue'][$x]['transcribe_app_method'] = 'transcribe_queue';
+				$transcribe_queue['transcribe_queue'][$x]['transcribe_app_params'] = json_encode($params);
+				$transcribe_queue['transcribe_queue'][$x]['transcribe_audio_path'] = $field['call_recording_path'];
+				$transcribe_queue['transcribe_queue'][$x]['transcribe_audio_name'] = $field['call_recording_name'];
+
+				//save the data
+				$this->database->save($transcribe_queue);
 			}
 
 			//save the xml object to json
