@@ -159,21 +159,21 @@ class linux_system_information extends system_information {
 		foreach ($data as $line) {
 			if (strpos($line, $interface . ':') !== false) {
 				$parts = preg_split('/\s+/', trim(str_replace(':', ' ', $line)));
-				$rx_bytes = (int) $parts[1];
-				$tx_bytes = (int) $parts[9];
+				$rx_bits = ((int) $parts[1]) * 10;		// convert from bytes per second to bits per second.
+				$tx_bits = ((int) $parts[9]) * 10;		// convert from bytes per second to bits per second.
 
 				$now = microtime(true);
 
 				if (!isset($last[$interface])) {
-					$last[$interface] = ['rx' => $rx_bytes, 'tx' => $tx_bytes, 'time' => $now];
+					$last[$interface] = ['rx' => $rx_bits, 'tx' => $tx_bits, 'time' => $now];
 					return ['rx_bps' => 0, 'tx_bps' => 0];
 				}
 
 				$delta_time = $now - $last[$interface]['time'];
-				$delta_rx = $rx_bytes - $last[$interface]['rx'];
-				$delta_tx = $tx_bytes - $last[$interface]['tx'];
+				$delta_rx = $rx_bits - $last[$interface]['rx'];
+				$delta_tx = $tx_bits - $last[$interface]['tx'];
 
-				$last[$interface] = ['rx' => $rx_bytes, 'tx' => $tx_bytes, 'time' => $now];
+				$last[$interface] = ['rx' => $rx_bits, 'tx' => $tx_bits, 'time' => $now];
 
 				return [
 					'rx_bps' => $delta_rx / $delta_time,

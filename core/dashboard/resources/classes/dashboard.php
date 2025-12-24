@@ -30,30 +30,92 @@
 class dashboard {
 
 	/**
-	 * declare constant variables
+	 * Application name constant
+	 *
+	 * @var string
 	 */
 	const app_name = 'dashboard';
+
+	/**
+	 * Application UUID constant
+	 *
+	 * @var string
+	 */
 	const app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
 
 	/**
-	 * declare the variables
+	 * Database object instance
+	 *
+	 * @var database
 	 */
 	private $database;
+
+	/**
+	 * Name of the current entity
+	 *
+	 * @var string
+	 */
 	private $name;
+
+	/**
+	 * Current table name
+	 *
+	 * @var string
+	 */
 	private $table;
+
+	/**
+	 * Array of table names
+	 *
+	 * @var array
+	 */
 	private $tables;
+
+	/**
+	 * Field name for toggle operations
+	 *
+	 * @var string
+	 */
 	private $toggle_field;
+
+	/**
+	 * Valid toggle values
+	 *
+	 * @var array
+	 */
 	private $toggle_values;
+
+	/**
+	 * Field name for description
+	 *
+	 * @var string
+	 */
 	private $description_field;
+
+	/**
+	 * Location for redirects
+	 *
+	 * @var string
+	 */
 	private $location;
+
+	/**
+	 * UUID prefix for database operations
+	 *
+	 * @var string
+	 */
 	private $uuid_prefix;
 
 	/**
-	 * Constructor for the class.
+	 * Constructor for the dashboard class
 	 *
-	 * This method initializes the object with setting_array and session data.
+	 * Initializes the dashboard object with optional settings and sets up
+	 * default values for tables, toggle fields, and other properties.
 	 *
-	 * @param array $setting_array An optional array of settings to override default values. Defaults to [].
+	 * @param array $setting_array Optional configuration array, may contain:
+	 *                             - 'database': Database instance to use
+	 *
+	 * @return void
 	 */
 	public function __construct(array $setting_array = []) {
 		//set objects
@@ -71,13 +133,18 @@ class dashboard {
 	}
 
 	/**
-	 * Deletes one or multiple records.
+	 * Deletes one or multiple dashboard records
 	 *
-	 * @param array $records An array of record IDs to delete, where each ID is an associative array
-	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
-	 *                       whether the corresponding checkbox was checked for deletion.
+	 * This method deletes dashboard records and all related child records
+	 * (widgets, widget groups) from the database. It validates permissions
+	 * and token before performing the deletion.
 	 *
-	 * @return void No return value; this method modifies the database state and sets a message.
+	 * @param array $records An array of record IDs to delete, where each element is an
+	 *                       associative array containing:
+	 *                       - 'dashboard_uuid': The UUID of the dashboard to delete
+	 *                       - 'checked': Boolean string ('true'/'false') indicating if selected
+	 *
+	 * @return void Exits with redirect on token validation failure, otherwise returns nothing
 	 */
 	public function delete($records) {
 		//assign the variables
@@ -139,13 +206,18 @@ class dashboard {
 	}
 
 	/**
-	 * Toggles the state of one or more records.
+	 * Toggles the enabled/disabled state of one or more dashboard records
 	 *
-	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
-	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
-	 *                        whether the corresponding checkbox was checked for deletion.
+	 * This method toggles the dashboard_enabled field between 'true' and 'false'
+	 * for the specified records. It validates permissions and token before
+	 * performing the toggle operation.
 	 *
-	 * @return void No return value; this method modifies the database state and sets a message.
+	 * @param array $records An array of record IDs to toggle, where each element is an
+	 *                       associative array containing:
+	 *                       - 'dashboard_uuid': The UUID of the dashboard to toggle
+	 *                       - 'checked': Boolean string ('true'/'false') indicating if selected
+	 *
+	 * @return void Exits with redirect on token validation failure, otherwise returns nothing
 	 */
 	public function toggle($records) {
 		//assign the variables
@@ -213,13 +285,19 @@ class dashboard {
 	}
 
 	/**
-	 * Copies one or more records
+	 * Copies one or more dashboard records and their associated widgets
 	 *
-	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
-	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
-	 *                        whether the corresponding checkbox was checked for deletion.
+	 * This method creates duplicate copies of dashboard records along with all
+	 * associated widgets and widget groups. It handles parent-child widget
+	 * relationships and appends '(copy)' to the description field. It validates
+	 * permissions and token before performing the copy operation.
 	 *
-	 * @return void No return value; this method modifies the database state and sets a message.
+	 * @param array $records An array of record IDs to copy, where each element is an
+	 *                       associative array containing:
+	 *                       - 'dashboard_uuid': The UUID of the dashboard to copy
+	 *                       - 'checked': Boolean string ('true'/'false') indicating if selected
+	 *
+	 * @return void Exits with redirect on token validation failure, otherwise returns nothing
 	 */
 	public function copy($records) {
 		//assign the variables
@@ -346,11 +424,18 @@ class dashboard {
 	}
 
 	/**
-	 * Delete one or multiple dashboard widgets.
+	 * Delete one or multiple dashboard widgets
 	 *
-	 * This method deletes the specified dashboard widgets based on their UUIDs and user permissions.
+	 * This method deletes the specified dashboard widgets and their associated
+	 * widget group assignments based on their UUIDs. It validates permissions
+	 * and token before performing the deletion.
 	 *
-	 * @param array $records An array of records to delete, where each record contains a 'dashboard_widget_uuid' key.
+	 * @param array $records An array of records to delete, where each element is an
+	 *                       associative array containing:
+	 *                       - 'dashboard_widget_uuid': The UUID of the widget to delete
+	 *                       - 'checked': Boolean string ('true'/'false') indicating if selected
+	 *
+	 * @return bool Returns false if permission is denied, otherwise void
 	 */
 	public function delete_widgets($records) {
 		//assign the variables
@@ -403,11 +488,18 @@ class dashboard {
 	}
 
 	/**
-	 * Toggle the enabled state of dashboard widgets.
+	 * Toggle the enabled state of dashboard widgets
 	 *
-	 * This method updates the database with new toggle states for the specified records.
+	 * This method toggles the widget_enabled field between 'true' and 'false'
+	 * for the specified widget records. It validates permissions and token
+	 * before performing the toggle operation.
 	 *
-	 * @param array $records An array of records to update.
+	 * @param array $records An array of records to toggle, where each element is an
+	 *                       associative array containing:
+	 *                       - 'dashboard_widget_uuid': The UUID of the widget to toggle
+	 *                       - 'checked': Boolean string ('true'/'false') indicating if selected
+	 *
+	 * @return bool Returns false if permission is denied, otherwise void
 	 */
 	public function toggle_widgets($records) {
 		//assign the variables
@@ -478,13 +570,21 @@ class dashboard {
 	}
 
 	/**
-	 * Assign dashboard widgets.
+	 * Assign dashboard widgets to a group
 	 *
-	 * This method assigns multiple records to a group in the database.
+	 * This method assigns multiple widget records to a specific group within
+	 * a dashboard. It creates widget group associations and filters out any
+	 * existing assignments to avoid duplicates. It validates permissions and
+	 * token before performing the assignment.
 	 *
-	 * @param array  $records        The list of dashboard widget records to assign.
-	 * @param string $dashboard_uuid The UUID of the dashboard.
-	 * @param string $group_uuid     The UUID of the group.
+	 * @param array  $records        An array of widget records to assign, where each element
+	 *                               is an associative array containing:
+	 *                               - 'dashboard_widget_uuid': The UUID of the widget to assign
+	 *                               - 'checked': Boolean string ('true'/'false') indicating if selected
+	 * @param string $dashboard_uuid The UUID of the dashboard to assign widgets to
+	 * @param string $group_uuid     The UUID of the group to assign widgets to
+	 *
+	 * @return bool Returns false if permission is denied, otherwise void
 	 */
 	public function assign_widgets($records, $dashboard_uuid, $group_uuid) {
 		//assign the variables
@@ -566,14 +666,21 @@ class dashboard {
 	}
 
 	/**
-	 * Unassign widgets from a dashboard.
+	 * Unassign widgets from a dashboard group
 	 *
-	 * This method removes the specified widgets from the dashboard and its groups.
+	 * This method removes the specified widgets and their child widgets from
+	 * a specific group within a dashboard. It deletes the widget group associations
+	 * while leaving the actual widgets intact. It validates permissions and token
+	 * before performing the unassignment.
 	 *
-	 * @param array  $records        An array of records to unassign, where each record contains
-	 *                               the 'dashboard_widget_uuid' key.
-	 * @param string $dashboard_uuid The UUID of the dashboard from which to unassign the widgets.
-	 * @param string $group_uuid     The UUID of the group from which to unassign the widgets.
+	 * @param array  $records        An array of widget records to unassign, where each element
+	 *                               is an associative array containing:
+	 *                               - 'dashboard_widget_uuid': The UUID of the widget to unassign
+	 *                               - 'checked': Boolean string ('true'/'false') indicating if selected
+	 * @param string $dashboard_uuid The UUID of the dashboard to unassign widgets from
+	 * @param string $group_uuid     The UUID of the group to unassign widgets from
+	 *
+	 * @return bool Returns false if permission is denied, otherwise void
 	 */
 	public function unassign_widgets($records, $dashboard_uuid, $group_uuid) {
 		//assign the variables
