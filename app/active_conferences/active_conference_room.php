@@ -112,11 +112,24 @@ $user_permissions = [
 	'video' => permission_exists('conference_interactive_video'),
 ];
 
+//get websocket settings from default settings
+$ws_settings = [
+	'reconnect_delay' => (int)$settings->get('active_conferences', 'reconnect_delay', 2000),
+	'ping_interval' => (int)$settings->get('active_conferences', 'ping_interval', 30000),
+	'auth_timeout' => (int)$settings->get('active_conferences', 'auth_timeout', 10000),
+	'pong_timeout' => (int)$settings->get('active_conferences', 'pong_timeout', 10000),
+	'refresh_interval' => (int)$settings->get('active_conferences', 'refresh_interval', 0),
+	'max_reconnect_delay' => (int)$settings->get('active_conferences', 'max_reconnect_delay', 30000),
+];
+
 ?>
 
 <script type="text/javascript">
 //user permissions for client-side checks
 const user_permissions = <?= json_encode($user_permissions) ?>;
+
+//websocket configuration from server settings
+const ws_config = <?= json_encode($ws_settings) ?>;
 
 //send action via WebSocket
 function send_action(action, options = {}, skip_refresh = false) {
@@ -247,16 +260,15 @@ const conference_id = <?= json_encode($conference_id) ?>;
 
 let ws = null;
 let reconnect_attempts = 0;
-const max_reconnect_delay = 30000;
-const base_reconnect_delay = 1000;
 
 // Track member timers - keyed by member_id
 let member_timers = {};
 let timer_interval = null;
-let ping_interval = null;
+let ping_interval_timer = null;
 let last_pong_time = Date.now();
 let ping_timeout = null;
 let auth_timeout = null;
+let refresh_interval_timer = null;
 
 function update_connection_status(status, connected) {
 	const el = document.getElementById('connection_status');
@@ -381,12 +393,12 @@ function connect_websocket() {
 			reconnect_attempts = 0;
 			update_connection_status('Authenticating...', false);
 
-			// Set authentication timeout - if not authenticated within 10 seconds, session may have expired
+			// Set authentication timeout - if not authenticated in time, session may have expired
 			auth_timeout = setTimeout(() => {
 				console.error('Authentication timeout - session may have expired');
 				update_connection_status('Session expired - redirecting...', false);
 				window.location.href = '<?= PROJECT_PATH ?>/?path=' + encodeURIComponent(window.location.pathname);
-			}, 10000);
+			}, ws_config.auth_timeout);
 		});
 
 		ws.ws.addEventListener("close", (event) => {
@@ -418,20 +430,26 @@ function connect_websocket() {
 			update_connection_status('Disconnected - Reloading...', false);
 
 			// Clear the ping interval and timeout
-			if (ping_interval) {
-				clearInterval(ping_interval);
-				ping_interval = null;
+			if (ping_interval_timer) {
+				clearInterval(ping_interval_timer);
+				ping_interval_timer = null;
 			}
 			if (ping_timeout) {
 				clearTimeout(ping_timeout);
 				ping_timeout = null;
 			}
 
+			// Clear refresh interval if set
+			if (refresh_interval_timer) {
+				clearInterval(refresh_interval_timer);
+				refresh_interval_timer = null;
+			}
+
 			// The token is consumed on first connection, so we must reload
 			// the page to get a fresh token for reconnection
 			setTimeout(() => {
 				window.location.reload();
-			}, 2000);
+			}, ws_config.reconnect_delay);
 		});
 
 		ws.ws.addEventListener("error", (error) => {
@@ -454,21 +472,21 @@ function authenticated(message) {
 		auth_timeout = null;
 	}
 
-	// Start ping interval to keep connection alive (every 30 seconds)
-	if (ping_interval) {
-		clearInterval(ping_interval);
+	// Start ping interval to keep connection alive
+	if (ping_interval_timer) {
+		clearInterval(ping_interval_timer);
 	}
-	ping_interval = setInterval(() => {
+	ping_interval_timer = setInterval(() => {
 		if (ws && ws.ws && ws.ws.readyState === WebSocket.OPEN) {
 			// Send a ping request to keep the connection alive
 			console.log('Sending keepalive ping');
 
-			// Set a timeout - if no pong received within 10 seconds, reload
+			// Set a timeout - if no pong received in time, reload
 			ping_timeout = setTimeout(() => {
 				console.error('No pong response received - service may be down, reloading...');
 				update_connection_status('Service not responding - Reloading...', false);
 				window.location.reload();
-			}, 10000);
+			}, ws_config.pong_timeout);
 
 			ws.request('active.conferences', 'ping', {})
 				.then(response => {
@@ -484,7 +502,17 @@ function authenticated(message) {
 					console.error('Ping failed:', err);
 				});
 		}
-	}, 30000);
+	}, ws_config.ping_interval);
+
+	// Start optional refresh interval if configured
+	if (ws_config.refresh_interval > 0) {
+		if (refresh_interval_timer) {
+			clearInterval(refresh_interval_timer);
+		}
+		refresh_interval_timer = setInterval(() => {
+			load_conference_data();
+		}, ws_config.refresh_interval);
+	}
 
 	// Register event handlers for conference events
 	ws.on_event('*', handle_conference_event);
