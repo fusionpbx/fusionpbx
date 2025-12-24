@@ -150,6 +150,9 @@ abstract class base_websocket_system_service extends service implements websocke
 		// Register the authenticate request
 		$this->on_topic('authenticate', [$this, 'on_authenticate']);
 
+		// Register the authenticated response handler
+		$this->on_topic('authenticated', [$this, 'handle_ws_authenticated']);
+
 		// Track the WebSocket Server Error Message so it doesn't flood the system logs
 		$suppress_ws_message = false;
 
@@ -252,7 +255,7 @@ abstract class base_websocket_system_service extends service implements websocke
 			$this->ws_client->set_blocking(false);
 
 			// Call the on connected event function
-			$this->on_ws_connected();
+			$this->handle_ws_connected();
 		} catch (\RuntimeException $re) {
 			//unable to connect
 			return false;
@@ -260,9 +263,32 @@ abstract class base_websocket_system_service extends service implements websocke
 		return true;
 	}
 
+	private function handle_ws_connected(): void {
+		$this->info("Websocket connection established to server");
+		$this->debug(static::class . " RESOURCE ID: " . $this->ws_client->socket());
+		$this->on_ws_connected();
+	}
+
+	/**
+	 * This is called when the web socket is first connected
+	 *
+	 * @return void
+	 */
 	protected function on_ws_connected(): void {
 		// Override in child class if needed
-		$this->debug(static::class . " RESOURCE ID: " . $this->ws_client->socket());
+	}
+
+	private function handle_ws_authenticated(websocket_message $websocket_message): void {
+		$this->info("Successfully authenticated with websocket server");
+		$this->on_ws_authenticated();
+	}
+
+	/**
+	 * Called when the service has successfully authenticated with the websocket server.
+	 * Override in child class to perform actions after authentication.
+	 */
+	protected function on_ws_authenticated(): void {
+		// Override in child class if needed
 	}
 
 	/**
@@ -280,7 +306,7 @@ abstract class base_websocket_system_service extends service implements websocke
 			return;
 		}
 
-		$this->debug("Received message on websocket: $json_string (" . strlen($json_string) . " bytes)");
+		//$this->debug("Received message on websocket: $json_string (" . strlen($json_string) . " bytes)");
 
 		// Get the web socket message as an object
 		$message = websocket_message::create_from_json_message($json_string);
