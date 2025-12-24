@@ -1,10 +1,10 @@
 class ws_client {
 	constructor(url, token) {
 		this.ws = new WebSocket(url);
-		this.ws.addEventListener('message', this._onMessage.bind(this));
-		this._nextId = 1;
+		this.ws.addEventListener('message', this._on_message.bind(this));
+		this._next_id = 1;
 		this._pending = new Map();
-		this._eventHandlers = new Map();
+		this._event_handlers = new Map();
 		// The token is submitted on every request
 		this.token = token;
 	}
@@ -26,7 +26,7 @@ class ws_client {
 	}
 
 	// internal message handler called when event occurs on the socket
-	_onMessage(ev) {
+	_on_message(ev) {
 		let message;
 		let switch_event;
 		try {
@@ -41,7 +41,7 @@ class ws_client {
 			switch_event = message.payload;
 			if (message.topic === 'authenticated') {
 				console.log('Authenticated');
-				this._dispatchEvent('active.conferences', {event_name: 'authenticated'});
+				this._dispatch_event('active.conferences', {event_name: 'authenticated'});
 				return; // Don't process further after authenticated
 			}
 			//console.log('envelope received: ',env);
@@ -73,10 +73,10 @@ class ws_client {
 				resolve({service_name, topic, payload, code, message});
 				// Also dispatch as an event so handlers get notified
 				// Use topic from message as event_name if payload doesn't have one
-				const eventData = (typeof switch_event === 'object' && switch_event !== null)
+				const event_data = (typeof switch_event === 'object' && switch_event !== null)
 					? { ...switch_event, event_name: switch_event.event_name || topic }
 					: { event_name: topic, data: switch_event };
-				this._dispatchEvent(service_name, eventData);
+				this._dispatch_event(service_name, event_data);
 			} else {
 				const err = new Error(message || `Error ${code}`);
 				err.code = code;
@@ -89,21 +89,21 @@ class ws_client {
 		// Otherwise it's a server‑pushed event…
 		// e.g. env.service === 'event' or env.topic is your event name
 		console.log('Server-pushed event - service_name:', message.service_name, 'service:', message.service, 'topic:', message.topic, 'payload:', switch_event);
-		
+
 		// Use service_name, or fall back to service, or default to 'active.conferences'
 		const service = message.service_name || message.service || 'active.conferences';
-		
+
 		// Ensure event has event_name set from topic if not in payload
-		const eventData = (typeof switch_event === 'object' && switch_event !== null)
+		const event_data = (typeof switch_event === 'object' && switch_event !== null)
 			? { ...switch_event, event_name: switch_event.event_name || message.topic }
 			: { event_name: message.topic, data: switch_event };
-		
-		this._dispatchEvent(service, eventData);
+
+		this._dispatch_event(service, event_data);
 	}
 
 	// Send a request to the websocket server using JSON string
 	request(service, topic = null, payload = {}) {
-		const request_id = String(this._nextId++);
+		const request_id = String(this._next_id++);
 		const env = {
 			request_id: request_id,
 			service,
@@ -128,27 +128,27 @@ class ws_client {
 	}
 
 	// register a callback for server-pushes
-	onEvent(topic, handler) {
+	on_event(topic, handler) {
 		console.log('registering event listener for ' + topic);
-		if (!this._eventHandlers.has(topic)) {
-			this._eventHandlers.set(topic, []);
+		if (!this._event_handlers.has(topic)) {
+			this._event_handlers.set(topic, []);
 		}
-		this._eventHandlers.get(topic).push(handler);
+		this._event_handlers.get(topic).push(handler);
 	}
 	/**
 	 * Dispatch a server‑push event envelope to all registered handlers.
 	 * @param {object} env
 	 */
-	_dispatchEvent(service, env) {
-		console.log('_dispatchEvent called with service:', service, 'env:', env);
-		
+	_dispatch_event(service, env) {
+		console.log('_dispatch_event called with service:', service, 'env:', env);
+
 		// if service==='event', topic carries the real event name:
 		  let event = (typeof env === 'string')
 			? JSON.parse(env)
 			: env;
 
 		console.log('Parsed event:', event);
-		console.log('Registered handlers:', Array.from(this._eventHandlers.keys()));
+		console.log('Registered handlers:', Array.from(this._event_handlers.keys()));
 
 		// dispatch event handlers
 		if (service === 'active.conferences') {
@@ -156,12 +156,12 @@ class ws_client {
 			console.log('Looking for handlers for topic:', topic);
 
 			// Get specific handlers for this topic
-			const handlers = this._eventHandlers.get(topic) || [];
+			const handlers = this._event_handlers.get(topic) || [];
 			// Always get wildcard handlers too
-			const wildcardHandlers = this._eventHandlers.get('*') || [];
-			
-			console.log('Found handlers:', handlers.length, 'wildcard:', wildcardHandlers.length);
-			
+			const wildcard_handlers = this._event_handlers.get('*') || [];
+
+			console.log('Found handlers:', handlers.length, 'wildcard:', wildcard_handlers.length);
+
 			// Call specific handlers
 			for (const fn of handlers) {
 				try {
@@ -171,7 +171,7 @@ class ws_client {
 				}
 			}
 			// Always call wildcard handlers for all events
-			for (const fn of wildcardHandlers) {
+			for (const fn of wildcard_handlers) {
 				try {
 					fn(event);
 				} catch (err) {
@@ -179,7 +179,7 @@ class ws_client {
 				}
 			}
 		} else {
-			const handlers = this._eventHandlers.get(service) || [];
+			const handlers = this._event_handlers.get(service) || [];
 			for (const fn of handlers) {
 				try {
 					if (fn === '*') {

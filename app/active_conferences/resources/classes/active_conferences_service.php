@@ -35,13 +35,13 @@ class active_conferences_service extends base_websocket_system_service implement
 	/**
 	 * Direct mapping of switch events using Key => Value pair
 	 */
-	const SWITCH_EVENTS = [
+	const switch_events = [
 		['API-Command' => 'conference'],
 		['Event-Name' => 'HEARTBEAT'],
 		['Event-Subclass' => 'conference::maintenance'],
 	];
 
-	const EVENT_KEYS = [
+	const event_keys = [
 		// Event name: CHANNEL_EXECUTE, CHANNEL_DESTROY, NEW_CALL...
 		'event_name',
 		// Unique Call Identifier to determine new/existing calls
@@ -102,6 +102,23 @@ class active_conferences_service extends base_websocket_system_service implement
 		'api_command_argument',
 	];
 
+	// Map actions to required permissions
+	const permission_map = [
+			'lock' => 'conference_interactive_lock',
+			'unlock' => 'conference_interactive_lock',
+			'mute' => 'conference_interactive_mute',
+			'unmute' => 'conference_interactive_mute',
+			'mute_all' => 'conference_interactive_mute',
+			'unmute_all' => 'conference_interactive_mute',
+			'deaf' => 'conference_interactive_deaf',
+			'undeaf' => 'conference_interactive_deaf',
+			'kick' => 'conference_interactive_kick',
+			'kick_all' => 'conference_interactive_kick',
+			'energy' => 'conference_interactive_energy',
+			'volume_in' => 'conference_interactive_volume',
+			'volume_out' => 'conference_interactive_gain',
+		];
+
 	protected $event_filter;
 
 	protected $switch_socket;
@@ -127,7 +144,7 @@ class active_conferences_service extends base_websocket_system_service implement
 		}
 
 		// No special filtering for conferences, they are domain-specific by design
-		return filter_chain::or_link(self::EVENT_KEYS);
+		return filter_chain::or_link(self::event_keys);
 	}
 
 	/**
@@ -207,9 +224,9 @@ class active_conferences_service extends base_websocket_system_service implement
 		//		'API',			// Event-Name is swapped with API-Command
 		//	];
 		// Merge API and CUSTOM with the events listening
-		//	$events = array_merge(ws_active_conference_service::SWITCH_EVENTS, $event_filter);
+		//	$events = array_merge(ws_active_conference_service::switch_events, $event_filter);
 		// Add filters for active conference events only
-		foreach (self::SWITCH_EVENTS as $events) {
+		foreach (self::switch_events as $events) {
 			foreach ($events as $event_key => $event_name) {
 				$this->debug("Requesting event filter for [$event_key]=[$event_name]");
 				$response = $this->event_socket->request("filter $event_key $event_name");
@@ -226,11 +243,11 @@ class active_conferences_service extends base_websocket_system_service implement
 			}
 		}
 
-		// Create the filter to remove extra array entries in the event 
+		// Create the filter to remove extra array entries in the event
 		// because we don't need for this event on the switch.
 		// This allows us to less data on websockets when an event occurs.
 		$this->event_filter = filter_chain::and_link([
-			new event_key_filter(self::EVENT_KEYS)
+			new event_key_filter(self::event_keys)
 		]);
 
 		return;
@@ -280,7 +297,7 @@ class active_conferences_service extends base_websocket_system_service implement
 	protected function handle_switch_events(): void {
 		$event = $this->event_socket->read_event();
 		$event_message = event_message::create_from_switch_event($event, $this->event_filter);
-		
+
 		// Set the event message topic as the event name
 		$topic = $event_message->topic = $event_message->event_name;
 
@@ -294,7 +311,7 @@ class active_conferences_service extends base_websocket_system_service implement
 				break;
 			default:
 				break;
-			
+
 		}
 		return;
 	}
@@ -329,7 +346,7 @@ class active_conferences_service extends base_websocket_system_service implement
 	 */
 	protected function handle_ping(websocket_message $message): void {
 		$this->debug('Ping received from client');
-		
+
 		// Create a pong response
 		$response = new websocket_message();
 		$response
@@ -348,7 +365,7 @@ class active_conferences_service extends base_websocket_system_service implement
 
 	/**
 	 * Handle conference action requests from clients
-	 * 
+	 *
 	 * Actions: lock, unlock, mute, unmute, deaf, undeaf, kick, kick_all,
 	 *          mute_all, unmute_all, energy, volume_in, volume_out
 	 *
@@ -363,59 +380,42 @@ class active_conferences_service extends base_websocket_system_service implement
 		$uuid = $payload['uuid'] ?? '';
 		$direction = $payload['direction'] ?? '';
 		$domain_name = $payload['domain_name'] ?? '';
-		
+
 		// Decode any URL or HTML entity encoding
 		$conference_name = html_entity_decode(urldecode($conference_name));
-		
+
 		$this->debug("Action request: $action for conference: $conference_name member: $member_id");
-		
+
 		// Get permissions from the message (attached by websocket_service)
 		$permissions = $message->get_permissions();
-		
-		// Map actions to required permissions
-		$permission_map = [
-			'lock' => 'conference_interactive_lock',
-			'unlock' => 'conference_interactive_lock',
-			'mute' => 'conference_interactive_mute',
-			'unmute' => 'conference_interactive_mute',
-			'mute_all' => 'conference_interactive_mute',
-			'unmute_all' => 'conference_interactive_mute',
-			'deaf' => 'conference_interactive_deaf',
-			'undeaf' => 'conference_interactive_deaf',
-			'kick' => 'conference_interactive_kick',
-			'kick_all' => 'conference_interactive_kick',
-			'energy' => 'conference_interactive_energy',
-			'volume_in' => 'conference_interactive_volume',
-			'volume_out' => 'conference_interactive_gain',
-		];
-		
+
 		// Validate action
-		if (!isset($permission_map[$action])) {
+		if (!isset(self::permission_map[$action])) {
 			$this->send_action_response($message, false, 'Invalid action: ' . $action);
 			return;
 		}
-		
+
 		// Check permission
-		$required_permission = $permission_map[$action];
+		$required_permission = self::permission_map[$action];
 		if (!isset($permissions[$required_permission])) {
 			$this->warning("Permission denied: $required_permission for action: $action");
 			$this->send_action_response($message, false, 'Permission denied');
 			return;
 		}
-		
+
 		// Validate conference name (must include a domain - basic validation)
 		if (empty($conference_name) || strpos($conference_name, '@') === false) {
 			$this->warning("Invalid conference name: $conference_name");
 			$this->send_action_response($message, false, 'Invalid conference name');
 			return;
 		}
-		
+
 		// Execute the action
 		$result = $this->execute_conference_action($action, $conference_name, $member_id, $uuid, $direction);
-		
+
 		$this->send_action_response($message, $result['success'], $result['message']);
 	}
-	
+
 	/**
 	 * Execute a conference action via event socket
 	 *
@@ -428,7 +428,7 @@ class active_conferences_service extends base_websocket_system_service implement
 	 */
 	private function execute_conference_action(string $action, string $conference_name, string $member_id, string $uuid, string $direction): array {
 		$this->debug("Executing action: $action on $conference_name");
-		
+
 		try {
 			switch ($action) {
 				case 'lock':
@@ -436,7 +436,7 @@ class active_conferences_service extends base_websocket_system_service implement
 					$cmd = "conference '$conference_name' $action";
 					event_socket::api($cmd);
 					break;
-					
+
 				case 'mute':
 				case 'unmute':
 					if (empty($member_id)) {
@@ -449,21 +449,21 @@ class active_conferences_service extends base_websocket_system_service implement
 						event_socket::api("uuid_setvar $uuid hand_raised false");
 					}
 					break;
-					
+
 				case 'mute_all':
 					$cmd = "conference '$conference_name' mute non_moderator";
 					$this->debug("Executing command: $cmd");
 					$result = event_socket::api($cmd);
 					$this->debug("Command result: " . print_r($result, true));
 					break;
-					
+
 				case 'unmute_all':
 					$cmd = "conference '$conference_name' unmute non_moderator";
 					$this->debug("Executing command: $cmd");
 					$result = event_socket::api($cmd);
 					$this->debug("Command result: " . print_r($result, true));
 					break;
-					
+
 				case 'deaf':
 				case 'undeaf':
 					if (empty($member_id)) {
@@ -472,18 +472,18 @@ class active_conferences_service extends base_websocket_system_service implement
 					$cmd = "conference '$conference_name' $action $member_id";
 					event_socket::api($cmd);
 					break;
-					
+
 				case 'kick':
 					if (empty($uuid)) {
 						return ['success' => false, 'message' => 'UUID required'];
 					}
 					event_socket::api("uuid_kill $uuid");
 					break;
-					
+
 				case 'kick_all':
 					$this->kick_all_members($conference_name);
 					break;
-					
+
 				case 'energy':
 					if (empty($member_id) || empty($direction)) {
 						return ['success' => false, 'message' => 'Member ID and direction required'];
@@ -496,7 +496,7 @@ class active_conferences_service extends base_websocket_system_service implement
 						event_socket::api("conference '$conference_name' energy $member_id $value");
 					}
 					break;
-					
+
 				case 'volume_in':
 					if (empty($member_id) || empty($direction)) {
 						return ['success' => false, 'message' => 'Member ID and direction required'];
@@ -509,7 +509,7 @@ class active_conferences_service extends base_websocket_system_service implement
 						event_socket::api("conference '$conference_name' volume_in $member_id $value");
 					}
 					break;
-					
+
 				case 'volume_out':
 					if (empty($member_id) || empty($direction)) {
 						return ['success' => false, 'message' => 'Member ID and direction required'];
@@ -522,19 +522,19 @@ class active_conferences_service extends base_websocket_system_service implement
 						event_socket::api("conference '$conference_name' volume_out $member_id $value");
 					}
 					break;
-					
+
 				default:
 					return ['success' => false, 'message' => 'Unknown action'];
 			}
-			
+
 			return ['success' => true, 'message' => 'Action executed'];
-			
+
 		} catch (\Exception $e) {
 			$this->error("Action failed: " . $e->getMessage());
 			return ['success' => false, 'message' => $e->getMessage()];
 		}
 	}
-	
+
 	/**
 	 * Kick all members from a conference
 	 *
@@ -545,14 +545,14 @@ class active_conferences_service extends base_websocket_system_service implement
 		// Get conference member list
 		$json_str = event_socket::api("conference '$conference_name' json_list");
 		$conferences = json_decode($json_str, true);
-		
+
 		if (!is_array($conferences) || empty($conferences)) {
 			return;
 		}
-		
+
 		$conference = $conferences[0];
 		$members = $conference['members'] ?? [];
-		
+
 		$first = true;
 		foreach ($members as $member) {
 			$member_uuid = $member['uuid'] ?? '';
@@ -567,7 +567,7 @@ class active_conferences_service extends base_websocket_system_service implement
 			}
 		}
 	}
-	
+
 	/**
 	 * Send action response back to client
 	 *
@@ -599,7 +599,7 @@ class active_conferences_service extends base_websocket_system_service implement
 	 */
 	protected function subscribe_all(websocket_message $message): void {
 		$this->debug('Wildcard subscription requested - subscribing to all events');
-		
+
 		// Forward to websocket server to register this subscriber for all events from this service
 		$response = new websocket_message();
 		$response
@@ -658,7 +658,7 @@ class active_conferences_service extends base_websocket_system_service implement
 
 		// Show json encoded message
 		//$this->debug('Event message: ' . $event_message);
-		
+
 		$action = $event_message->action ?? '';
 
 		// Replace - with _ for action names
@@ -716,7 +716,7 @@ class active_conferences_service extends base_websocket_system_service implement
 			->topic($action)
 			->payload($event_message->to_array())
 		;
-		
+
 		websocket_client::send($this->ws_client->socket(), $message);
 	}
 

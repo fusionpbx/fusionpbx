@@ -78,7 +78,7 @@
 		$json_str = trim(event_socket::api($switch_cmd));
 		$conference = null;
 		$valid_json = false;
-		
+
 		if (!empty($json_str) && substr($json_str, -9) !== "not found") {
 			$conferences = json_decode($json_str, true);
 			// json_list returns an array of conferences, get the first one (should only be one when querying by name)
@@ -87,7 +87,7 @@
 				$valid_json = true;
 			}
 		}
-		
+
 		if ($valid_json) {
 			// conference_uuid is the session UUID, not uuid
 			$session_uuid = $conference['conference_uuid'] ?? '';
@@ -127,22 +127,22 @@
 
 		if (permission_exists('conference_interactive_lock')) {
 			if ($locked) {
-				echo button::create(['type'=>'button','label'=>$text['label-unlock'],'icon'=>'unlock','collapse'=>'hide-xs','onclick'=>"conferenceAction('unlock');"]);
+				echo button::create(['type'=>'button','label'=>$text['label-unlock'],'icon'=>'unlock','collapse'=>'hide-xs','onclick'=>"conference_action('unlock');"]);
 			}
 			else {
-				echo button::create(['type'=>'button','label'=>$text['label-lock'],'icon'=>'lock','collapse'=>'hide-xs','onclick'=>"conferenceAction('lock');"]);
+				echo button::create(['type'=>'button','label'=>$text['label-lock'],'icon'=>'lock','collapse'=>'hide-xs','onclick'=>"conference_action('lock');"]);
 			}
 		}
 		if (permission_exists('conference_interactive_mute')) {
 			if ($mute_all) {
-				echo button::create(['type'=>'button','label'=>$text['label-unmute-all'],'icon'=>'microphone','collapse'=>'hide-xs','onclick'=>"conferenceAction('unmute_all');"]);
+				echo button::create(['type'=>'button','label'=>$text['label-unmute-all'],'icon'=>'microphone','collapse'=>'hide-xs','onclick'=>"conference_action('unmute_all');"]);
 			}
 			else {
-				echo button::create(['type'=>'button','label'=>$text['label-mute-all'],'icon'=>'microphone-slash','collapse'=>'hide-xs','onclick'=>"conferenceAction('mute_all');"]);
+				echo button::create(['type'=>'button','label'=>$text['label-mute-all'],'icon'=>'microphone-slash','collapse'=>'hide-xs','onclick'=>"conference_action('mute_all');"]);
 			}
 		}
 		if (permission_exists('conference_interactive_kick')) {
-			echo button::create(['type'=>'button','label'=>$text['label-end-conference'],'icon'=>'stop','collapse'=>'hide-xs','onclick'=>"conferenceAction('kick_all');"]);
+			echo button::create(['type'=>'button','label'=>$text['label-end-conference'],'icon'=>'stop','collapse'=>'hide-xs','onclick'=>"conference_action('kick_all');"]);
 		}
 
 		echo "</div>\n";
@@ -179,7 +179,7 @@
 				$uuid = $member['uuid'] ?? '';
 				$caller_id_name = urldecode($member['caller_id_name'] ?? '');
 				$caller_id_number = $member['caller_id_number'] ?? '';
-				
+
 				// Flags are actual booleans in JSON response
 				$flags = $member['flags'] ?? [];
 				$flag_can_hear = $flags['can_hear'] ?? false;
@@ -188,15 +188,15 @@
 				$flag_has_video = $flags['has_video'] ?? false;
 				$flag_has_floor = $flags['has_floor'] ?? false;
 				$is_moderator = $flags['is_moderator'] ?? false;
-				
+
 				// Time values
 				$last_talking = (int)($member['last_talking'] ?? 0);
 				$join_time = (int)($member['join_time'] ?? 0);
-				
+
 				// Get hand raised status
 				$switch_cmd = "uuid_getvar ".$uuid." hand_raised";
 				$hand_raised = (trim(event_socket::api($switch_cmd)) == "true");
-				
+
 				// Format time values
 				$join_time_formatted = sprintf('%02d:%02d:%02d', floor($join_time / 3600), floor(floor($join_time / 60) % 60), $join_time % 60);
 				$last_talking_formatted = sprintf('%02d:%02d:%02d', floor($last_talking / 3600), floor(floor($last_talking / 60) % 60), $last_talking % 60);
@@ -204,7 +204,7 @@
 				if (empty($record_path)) {
 					if (permission_exists('conference_interactive_mute')) {
 						$action_mute = $flag_can_speak ? 'mute' : 'unmute';
-						$list_row_onclick = "onclick=\"conferenceAction('".$action_mute."', '".escape($id)."', '".escape($uuid)."');\"";
+						$list_row_onclick = "onclick=\"conference_action('".$action_mute."', '".escape($id)."', '".escape($uuid)."');\"";
 						$list_row_title = "title=\"".$text['message-click_to_'.$action_mute]."\"";
 					}
 					// Add data attributes for JavaScript to identify and update rows
@@ -235,46 +235,46 @@
 					//energy
 						if (permission_exists('conference_interactive_energy')) {
 							echo "<td class='button center'>\n";
-							echo button::create(['type'=>'button','title'=>$text['label-energy'],'icon'=>'plus','onclick'=>"conferenceAction('energy', '".escape($id)."', '', 'up');"]);
-							echo button::create(['type'=>'button','title'=>$text['label-energy'],'icon'=>'minus','onclick'=>"conferenceAction('energy', '".escape($id)."', '', 'down');"]);
+							echo button::create(['type'=>'button','title'=>$text['label-energy'],'icon'=>'plus','onclick'=>"conference_action('energy', '".escape($id)."', '', 'up');"]);
+							echo button::create(['type'=>'button','title'=>$text['label-energy'],'icon'=>'minus','onclick'=>"conference_action('energy', '".escape($id)."', '', 'down');"]);
 							echo "</td>\n";
 						}
 					//volume
 						if (permission_exists('conference_interactive_volume')) {
 							echo "<td class='button center'>\n";
-							echo button::create(['type'=>'button','title'=>$text['label-volume'],'icon'=>'volume-down','onclick'=>"conferenceAction('volume_in', '".escape($id)."', '', 'down');"]);
-							echo button::create(['type'=>'button','title'=>$text['label-volume'],'icon'=>'volume-up','onclick'=>"conferenceAction('volume_in', '".escape($id)."', '', 'up');"]);
+							echo button::create(['type'=>'button','title'=>$text['label-volume'],'icon'=>'volume-down','onclick'=>"conference_action('volume_in', '".escape($id)."', '', 'down');"]);
+							echo button::create(['type'=>'button','title'=>$text['label-volume'],'icon'=>'volume-up','onclick'=>"conference_action('volume_in', '".escape($id)."', '', 'up');"]);
 							echo "</td>\n";
 						}
 					//gain
 						if (permission_exists('conference_interactive_gain')) {
 							echo "<td class='button center'>\n";
-							echo button::create(['type'=>'button','title'=>$text['label-volume'],'icon'=>'sort-amount-down','onclick'=>"conferenceAction('volume_out', '".escape($id)."', '', 'down');"]);
-							echo button::create(['type'=>'button','title'=>$text['label-volume'],'icon'=>'sort-amount-up','onclick'=>"conferenceAction('volume_out', '".escape($id)."', '', 'up');"]);
+							echo button::create(['type'=>'button','title'=>$text['label-volume'],'icon'=>'sort-amount-down','onclick'=>"conference_action('volume_out', '".escape($id)."', '', 'down');"]);
+							echo button::create(['type'=>'button','title'=>$text['label-volume'],'icon'=>'sort-amount-up','onclick'=>"conference_action('volume_out', '".escape($id)."', '', 'up');"]);
 							echo "</td>\n";
 						}
 					echo "<td class='button right' style='padding-right: 0;'>\n";
 					//mute and unmute
 						if (permission_exists('conference_interactive_mute')) {
 							if ($action_mute == "mute") { //mute
-								echo button::create(['type'=>'button','label'=>$text['label-mute'],'icon'=>'microphone-slash','onclick'=>"conferenceAction('mute', '".escape($id)."', '".escape($uuid)."');"]);
+								echo button::create(['type'=>'button','label'=>$text['label-mute'],'icon'=>'microphone-slash','onclick'=>"conference_action('mute', '".escape($id)."', '".escape($uuid)."');"]);
 							}
 							else { //unmute
-								echo button::create(['type'=>'button','label'=>$text['label-unmute'],'icon'=>'microphone','onclick'=>"conferenceAction('unmute', '".escape($id)."', '".escape($uuid)."');"]);
+								echo button::create(['type'=>'button','label'=>$text['label-unmute'],'icon'=>'microphone','onclick'=>"conference_action('unmute', '".escape($id)."', '".escape($uuid)."');"]);
 							}
 						}
 					//deaf and undeaf
 						if (permission_exists('conference_interactive_deaf')) {
 							if ($flag_can_hear) { //deaf
-								echo button::create(['type'=>'button','label'=>$text['label-deaf'],'icon'=>'deaf','onclick'=>"conferenceAction('deaf', '".escape($id)."');"]);
+								echo button::create(['type'=>'button','label'=>$text['label-deaf'],'icon'=>'deaf','onclick'=>"conference_action('deaf', '".escape($id)."');"]);
 							}
 							else { //undeaf
-								echo button::create(['type'=>'button','label'=>$text['label-undeaf'],'icon'=>'headphones','onclick'=>"conferenceAction('undeaf', '".escape($id)."');"]);
+								echo button::create(['type'=>'button','label'=>$text['label-undeaf'],'icon'=>'headphones','onclick'=>"conference_action('undeaf', '".escape($id)."');"]);
 							}
 						}
 					//kick someone from the conference
 						if (permission_exists('conference_interactive_kick')) {
-							echo button::create(['type'=>'button','label'=>$text['label-kick'],'icon'=>'ban','onclick'=>"conferenceAction('kick', '".escape($id)."', '".escape($uuid)."');"]);
+							echo button::create(['type'=>'button','label'=>$text['label-kick'],'icon'=>'ban','onclick'=>"conference_action('kick', '".escape($id)."', '".escape($uuid)."');"]);
 						}
 					echo "</td>\n";
 					echo "</tr>\n";
@@ -285,5 +285,3 @@
 		echo "</div>\n";
 		echo "<br /><br />";
 	}
-
-?>

@@ -31,26 +31,36 @@ require_once "resources/check_auth.php";
 
 //check permissions
 if (!permission_exists('conference_interactive_view')) {
-echo "access denied";
-exit;
+	echo "access denied";
+	exit;
 }
 
+//show intended global variables
 global $domain_uuid, $user_uuid, $settings, $database, $config;
 
+//get the domain uuid
 if (empty($domain_uuid)) {
-$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
 }
 
+//get the user uuid
 if (empty($user_uuid)) {
-$user_uuid = $_SESSION['user_uuid'] ?? '';
+	$user_uuid = $_SESSION['user_uuid'] ?? '';
 }
 
+//load the config
 if (!($config instanceof config)) {
-$config = config::load();
+	$config = config::load();
 }
 
+//load the database
+if (!($database instanceof database)) {
+	$database = new database;
+}
+
+//load the settings
 if (!($settings instanceof settings)) {
-$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
+	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 }
 
 //add multi-lingual support
@@ -59,14 +69,14 @@ $text = $language->get();
 
 //get the http get or post and set it as php variables
 if (!empty($_REQUEST["c"]) && is_numeric($_REQUEST["c"])) {
-$conference_id = $_REQUEST["c"];
+	$conference_id = $_REQUEST["c"];
 }
 elseif (!empty($_REQUEST["c"]) && is_uuid($_REQUEST["c"])) {
-$conference_id = $_REQUEST["c"];
+	$conference_id = $_REQUEST["c"];
 }
 else {
-//exit if the conference id is invalid
-exit;
+	//exit if the conference id is invalid
+	exit;
 }
 
 //replace the space with underscore
@@ -76,6 +86,7 @@ $conference_name = $conference_id.'@'.$_SESSION['domain_name'];
 $conference_display_name = str_replace("-", " ", $conference_id);
 $conference_display_name = str_replace("_", " ", $conference_display_name);
 
+//create token
 $token = (new token())->create($_SERVER['PHP_SELF']);
 
 // Pass the token to the subscriber class so that when this subscriber makes a websocket
@@ -89,7 +100,7 @@ require_once dirname(__DIR__, 2) . "/resources/header.php";
 //break the caching
 $version = md5(file_get_contents(__DIR__ . '/resources/javascript/websocket_client.js'));
 
-// Build permissions object for client-side checks
+//build permissions object for client-side checks
 $user_permissions = [
 	'lock' => permission_exists('conference_interactive_lock'),
 	'mute' => permission_exists('conference_interactive_mute'),
@@ -104,25 +115,25 @@ $user_permissions = [
 ?>
 
 <script type="text/javascript">
-// User permissions for client-side checks
-const userPermissions = <?= json_encode($user_permissions) ?>;
+//user permissions for client-side checks
+const user_permissions = <?= json_encode($user_permissions) ?>;
 
-// Send action via WebSocket
-function sendAction(action, options = {}, skipRefresh = false) {
+//send action via WebSocket
+function send_action(action, options = {}, skip_refresh = false) {
 	if (!ws || !ws.ws || ws.ws.readyState !== WebSocket.OPEN) {
 		console.error('WebSocket not connected');
 		return Promise.reject('Not connected');
 	}
-	
+
 	const payload = {
 		action: action,
-		conference_name: conferenceName,
+		conference_name: conference_name,
 		domain_name: '<?= $_SESSION['domain_name'] ?>',
 		...options
 	};
-	
+
 	console.log('Sending action:', action, payload);
-	
+
 	return ws.request('active.conferences', 'action', payload)
 		.then(response => {
 			console.log('Action response:', response);
@@ -130,9 +141,9 @@ function sendAction(action, options = {}, skipRefresh = false) {
 			if (!result.success) {
 				console.error('Action failed:', result.message);
 			}
-			// Refresh data after action (unless skipRefresh is true)
-			if (!skipRefresh) {
-				loadConferenceData();
+			// Refresh data after action (unless skip_refresh is true)
+			if (!skip_refresh) {
+				load_conference_data();
 			}
 			return result;
 		})
@@ -142,59 +153,59 @@ function sendAction(action, options = {}, skipRefresh = false) {
 		});
 }
 
-// Conference control functions
-function conferenceAction(action, memberId, uuid, direction) {
+//conference control functions
+function conference_action(action, member_id, uuid, direction) {
 	// Handle mute_all and unmute_all by iterating over members
 	if (action === 'mute_all' || action === 'unmute_all') {
-		return muteAllMembers(action === 'mute_all');
+		return mute_all_members(action === 'mute_all');
 	}
-	
-	return sendAction(action, {
-		member_id: memberId || '',
+
+	return send_action(action, {
+		member_id: member_id || '',
 		uuid: uuid || '',
 		direction: direction || ''
 	});
 }
 
-// Mute or unmute all non-moderator members by iterating over them
-async function muteAllMembers(mute) {
+//mute or unmute all non-moderator members by iterating over them
+async function mute_all_members(mute) {
 	const action = mute ? 'mute' : 'unmute';
 	const rows = document.querySelectorAll('tr[data-member-id]');
-	
+
 	console.log(`${action}_all: Found ${rows.length} member rows`);
-	
+
 	const promises = [];
-	
+
 	for (const row of rows) {
-		const memberId = row.getAttribute('data-member-id');
+		const member_id = row.getAttribute('data-member-id');
 		const uuid = row.getAttribute('data-uuid');
-		
+
 		// Check if this is a moderator (has fa-user-tie icon)
-		const isModerator = row.querySelector('.fa-user-tie') !== null;
-		
-		if (isModerator) {
-			console.log(`Skipping moderator member ${memberId}`);
+		const is_moderator = row.querySelector('.fa-user-tie') !== null;
+
+		if (is_moderator) {
+			console.log(`Skipping moderator member ${member_id}`);
 			continue;
 		}
-		
-		console.log(`${action} member ${memberId} (uuid: ${uuid})`);
-		
-		// Send the action for this member (skipRefresh = true)
+
+		console.log(`${action} member ${member_id} (uuid: ${uuid})`);
+
+		// Send the action for this member (skip_refresh = true)
 		promises.push(
-			sendAction(action, {
-				member_id: memberId,
+			send_action(action, {
+				member_id: member_id,
 				uuid: uuid
 			}, true).catch(err => {
-				console.error(`Failed to ${action} member ${memberId}:`, err);
+				console.error(`Failed to ${action} member ${member_id}:`, err);
 			})
 		);
 	}
-	
+
 	// Wait for all actions to complete
 	await Promise.all(promises);
-	
+
 	// Refresh the display once at the end
-	loadConferenceData();
+	load_conference_data();
 }
 
 var record_count = 0;
@@ -220,7 +231,7 @@ echo $text['description-interactive']."\n";
 echo "<br /><br />\n";
 
 //show the content
-echo "<div id='ajax_reponse'></div>\n";
+echo "<div id='ajax_response'></div>\n";
 echo "<br /><br />\n";
 
 ?>
@@ -231,28 +242,29 @@ const token = {
 	hash: '<?= $token['hash'] ?>'
 };
 
-const conferenceName = <?= json_encode($conference_name) ?>;
-const conferenceId = <?= json_encode($conference_id) ?>;
+const conference_name = <?= json_encode($conference_name) ?>;
+const conference_id = <?= json_encode($conference_id) ?>;
 
 let ws = null;
-let reconnectAttempts = 0;
-const maxReconnectDelay = 30000;
-const baseReconnectDelay = 1000;
+let reconnect_attempts = 0;
+const max_reconnect_delay = 30000;
+const base_reconnect_delay = 1000;
 
 // Track member timers - keyed by member_id
-let memberTimers = {};
-let timerInterval = null;
-let pingInterval = null;
-let lastPongTime = Date.now();
-let pingTimeout = null;
+let member_timers = {};
+let timer_interval = null;
+let ping_interval = null;
+let last_pong_time = Date.now();
+let ping_timeout = null;
+let auth_timeout = null;
 
-function updateConnectionStatus(status, connected) {
+function update_connection_status(status, connected) {
 	const el = document.getElementById('connection_status');
 	el.innerHTML = '(' + status + ')';
 	el.style.color = connected ? '#28a745' : '#999';
 }
 
-function formatTime(seconds) {
+function format_time(seconds) {
 	// Handle NaN, undefined, null, or negative values
 	if (!Number.isFinite(seconds) || seconds < 0) {
 		seconds = 0;
@@ -263,111 +275,131 @@ function formatTime(seconds) {
 	return String(hrs).padStart(2, '0') + ':' + String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
 }
 
-function initializeTimers() {
+function initialize_timers() {
 	// Clear existing timers
-	memberTimers = {};
-	
+	member_timers = {};
+
 	// Find all member rows and initialize their timers
 	const rows = document.querySelectorAll('tr[data-member-id]');
 	console.log('Initializing timers for', rows.length, 'members');
 	rows.forEach(row => {
-		const memberId = row.getAttribute('data-member-id');
+		const member_id = row.getAttribute('data-member-id');
 		const uuid = row.getAttribute('data-uuid');
-		const joinTime = parseInt(row.getAttribute('data-join-time'), 10) || 0;
-		const lastTalking = parseInt(row.getAttribute('data-last-talking'), 10) || 0;
-		
-		console.log('Member:', memberId, 'joinTime:', joinTime, 'lastTalking:', lastTalking);
-		
-		memberTimers[memberId] = {
+		const join_time = parseInt(row.getAttribute('data-join-time'), 10) || 0;
+		const last_talking = parseInt(row.getAttribute('data-last-talking'), 10) || 0;
+
+		console.log('Member:', member_id, 'join_time:', join_time, 'last_talking:', last_talking);
+
+		member_timers[member_id] = {
 			uuid: uuid,
-			joinTime: joinTime,
-			lastTalking: lastTalking,
-			isTalking: false
+			join_time: join_time,
+			last_talking: last_talking,
+			is_talking: false
 		};
 	});
-	
+
 	// Start the interval timer if not already running
-	if (!timerInterval) {
-		timerInterval = setInterval(updateTimerDisplays, 1000);
+	if (!timer_interval) {
+		timer_interval = setInterval(update_timer_displays, 1000);
 	}
 }
 
-function updateTimerDisplays() {
+function update_timer_displays() {
 	const rows = document.querySelectorAll('tr[data-member-id]');
 	rows.forEach(row => {
-		const memberId = row.getAttribute('data-member-id');
-		const timer = memberTimers[memberId];
-		
+		const member_id = row.getAttribute('data-member-id');
+		const timer = member_timers[member_id];
+
 		if (timer) {
 			// Increment join time
-			timer.joinTime++;
-			
+			timer.join_time++;
+
 			// Increment quiet time only if not talking
-			if (!timer.isTalking) {
-				timer.lastTalking++;
+			if (!timer.is_talking) {
+				timer.last_talking++;
 			}
-			
+
 			// Update the display
-			const joinTimeCell = row.querySelector('.join-time');
-			const quietTimeCell = row.querySelector('.quiet-time');
-			
-			if (joinTimeCell) {
-				joinTimeCell.textContent = formatTime(timer.joinTime);
+			const join_time_cell = row.querySelector('.join-time');
+			const quiet_time_cell = row.querySelector('.quiet-time');
+
+			if (join_time_cell) {
+				join_time_cell.textContent = format_time(timer.join_time);
 			}
-			if (quietTimeCell) {
-				quietTimeCell.textContent = formatTime(timer.lastTalking);
+			if (quiet_time_cell) {
+				quiet_time_cell.textContent = format_time(timer.last_talking);
 			}
 		}
 	});
 }
 
-function handleTalkingEvent(memberId, isTalking) {
-	console.log('handleTalkingEvent called - memberId:', memberId, 'isTalking:', isTalking);
-	console.log('Available timers:', Object.keys(memberTimers));
-	
-	const timer = memberTimers[memberId];
+function handle_talking_event(member_id, is_talking) {
+	console.log('handle_talking_event called - member_id:', member_id, 'is_talking:', is_talking);
+	console.log('Available timers:', Object.keys(member_timers));
+
+	const timer = member_timers[member_id];
 	if (timer) {
-		timer.isTalking = isTalking;
-		if (isTalking) {
+		timer.is_talking = is_talking;
+		if (is_talking) {
 			// Reset quiet time when they start talking
-			timer.lastTalking = 0;
-			console.log('Reset quiet time to 0 for member:', memberId);
+			timer.last_talking = 0;
+			console.log('Reset quiet time to 0 for member:', member_id);
 		}
 	} else {
-		console.warn('No timer found for member:', memberId);
+		console.warn('No timer found for member:', member_id);
 	}
-	
+
 	// Update the talking icon
-	const row = document.querySelector(`tr[data-member-id="${memberId}"]`);
-	console.log('Found row for member:', memberId, row ? 'yes' : 'no');
+	const row = document.querySelector(`tr[data-member-id="${member_id}"]`);
+	console.log('Found row for member:', member_id, row ? 'yes' : 'no');
 	if (row) {
-		const talkingIcon = row.querySelector('.talking-icon');
-		if (talkingIcon) {
-			talkingIcon.style.visibility = isTalking ? 'visible' : 'hidden';
-			console.log('Updated talking icon visibility to:', isTalking ? 'visible' : 'hidden');
+		const talking_icon = row.querySelector('.talking-icon');
+		if (talking_icon) {
+			talking_icon.style.visibility = is_talking ? 'visible' : 'hidden';
+			console.log('Updated talking icon visibility to:', is_talking ? 'visible' : 'hidden');
 		}
 	}
 }
 
-function connectWebSocket() {
-	const wsUrl = `wss://${window.location.hostname}/websockets/`;
+function connect_websocket() {
+	const ws_url = `wss://${window.location.hostname}/websockets/`;
 
 	try {
-		ws = new ws_client(wsUrl, token);
+		ws = new ws_client(ws_url, token);
 
-		ws.onEvent('authenticated', authenticated);
+		ws.on_event('authenticated', authenticated);
+
+		// Handle authentication failure (session expired)
+		ws.on_event('authentication_failed', function(event) {
+			console.error('WebSocket authentication failed - session may have expired');
+			update_connection_status('Session expired - redirecting...', false);
+			window.location.href = '<?= PROJECT_PATH ?>/?path=' + encodeURIComponent(window.location.pathname);
+		});
 
 		ws.ws.addEventListener("open", () => {
 			console.log('WebSocket connection opened');
-			reconnectAttempts = 0;
-			updateConnectionStatus('Connecting...', false);
+			reconnect_attempts = 0;
+			update_connection_status('Authenticating...', false);
+
+			// Set authentication timeout - if not authenticated within 10 seconds, session may have expired
+			auth_timeout = setTimeout(() => {
+				console.error('Authentication timeout - session may have expired');
+				update_connection_status('Session expired - redirecting...', false);
+				window.location.href = '<?= PROJECT_PATH ?>/?path=' + encodeURIComponent(window.location.pathname);
+			}, 10000);
 		});
 
 		ws.ws.addEventListener("close", (event) => {
 			console.warn('WebSocket disconnected - code:', event.code, 'reason:', event.reason, 'wasClean:', event.wasClean);
-			
+
+			// Clear auth timeout if connection closes
+			if (auth_timeout) {
+				clearTimeout(auth_timeout);
+				auth_timeout = null;
+			}
+
 			// Log the close code meaning
-			const closeCodes = {
+			const close_codes = {
 				1000: 'Normal closure',
 				1001: 'Going away (page navigation)',
 				1002: 'Protocol error',
@@ -381,18 +413,18 @@ function connectWebSocket() {
 				1011: 'Internal server error',
 				1015: 'TLS handshake failure'
 			};
-			console.warn('Close code meaning:', closeCodes[event.code] || 'Unknown');
-			
-			updateConnectionStatus('Disconnected - Reloading...', false);
+			console.warn('Close code meaning:', close_codes[event.code] || 'Unknown');
+
+			update_connection_status('Disconnected - Reloading...', false);
 
 			// Clear the ping interval and timeout
-			if (pingInterval) {
-				clearInterval(pingInterval);
-				pingInterval = null;
+			if (ping_interval) {
+				clearInterval(ping_interval);
+				ping_interval = null;
 			}
-			if (pingTimeout) {
-				clearTimeout(pingTimeout);
-				pingTimeout = null;
+			if (ping_timeout) {
+				clearTimeout(ping_timeout);
+				ping_timeout = null;
 			}
 
 			// The token is consumed on first connection, so we must reload
@@ -408,38 +440,44 @@ function connectWebSocket() {
 
 	} catch (error) {
 		console.error('Failed to connect to WebSocket:', error);
-		updateConnectionStatus('Connection Failed', false);
+		update_connection_status('Connection Failed', false);
 	}
 }
 
 function authenticated(message) {
 	console.log('WebSocket authenticated');
-	updateConnectionStatus('Connected', true);
+	update_connection_status('Connected', true);
+
+	// Clear the authentication timeout since we're now authenticated
+	if (auth_timeout) {
+		clearTimeout(auth_timeout);
+		auth_timeout = null;
+	}
 
 	// Start ping interval to keep connection alive (every 30 seconds)
-	if (pingInterval) {
-		clearInterval(pingInterval);
+	if (ping_interval) {
+		clearInterval(ping_interval);
 	}
-	pingInterval = setInterval(() => {
+	ping_interval = setInterval(() => {
 		if (ws && ws.ws && ws.ws.readyState === WebSocket.OPEN) {
 			// Send a ping request to keep the connection alive
 			console.log('Sending keepalive ping');
-			
+
 			// Set a timeout - if no pong received within 10 seconds, reload
-			pingTimeout = setTimeout(() => {
+			ping_timeout = setTimeout(() => {
 				console.error('No pong response received - service may be down, reloading...');
-				updateConnectionStatus('Service not responding - Reloading...', false);
+				update_connection_status('Service not responding - Reloading...', false);
 				window.location.reload();
 			}, 10000);
-			
+
 			ws.request('active.conferences', 'ping', {})
 				.then(response => {
 					// Pong received - clear the timeout and update last pong time
-					if (pingTimeout) {
-						clearTimeout(pingTimeout);
-						pingTimeout = null;
+					if (ping_timeout) {
+						clearTimeout(ping_timeout);
+						ping_timeout = null;
 					}
-					lastPongTime = Date.now();
+					last_pong_time = Date.now();
 					console.log('Pong received from service');
 				})
 				.catch(err => {
@@ -449,41 +487,41 @@ function authenticated(message) {
 	}, 30000);
 
 	// Register event handlers for conference events
-	ws.onEvent('*', handleConferenceEvent);
+	ws.on_event('*', handle_conference_event);
 
 	// Subscribe to all events
 	ws.subscribe('*');
 
 	// Load initial conference data
-	loadConferenceData();
+	load_conference_data();
 }
 
-function handleConferenceEvent(event) {
+function handle_conference_event(event) {
 	console.log('Conference event:', event);
 
 	// Get the action from payload or event
 	const payload = event.payload || event;
 	const action = payload.action || event.action || event.event_name;
 	// FreeSWITCH uses Member-ID which may come through as member_id or member-id
-	const memberId = payload.member_id || payload['member-id'] || event.member_id || event['member-id'];
+	const member_id = payload.member_id || payload['member-id'] || event.member_id || event['member-id'];
 
-	console.log('Parsed action:', action, 'memberId:', memberId);
+	console.log('Parsed action:', action, 'member_id:', member_id);
 
 	// Handle talking events without full refresh
 	// FreeSWITCH uses hyphenated actions: start-talking, stop-talking
-	if ((action === 'start-talking' || action === 'start_talking') && memberId) {
-		console.log('Start talking event for member:', memberId);
-		handleTalkingEvent(memberId, true);
+	if ((action === 'start-talking' || action === 'start_talking') && member_id) {
+		console.log('Start talking event for member:', member_id);
+		handle_talking_event(member_id, true);
 		return;
 	}
-	if ((action === 'stop-talking' || action === 'stop_talking') && memberId) {
-		console.log('Stop talking event for member:', memberId);
-		handleTalkingEvent(memberId, false);
+	if ((action === 'stop-talking' || action === 'stop_talking') && member_id) {
+		console.log('Stop talking event for member:', member_id);
+		handle_talking_event(member_id, false);
 		return;
 	}
 
 	// Refresh the conference data on other relevant events
-	const refreshEvents = [
+	const refresh_events = [
 		'add-member', 'del-member', 'mute-member', 'unmute-member',
 		'deaf-member', 'undeaf-member', 'kick-member',
 		'floor-change', 'lock', 'unlock', 'conference-create',
@@ -494,29 +532,57 @@ function handleConferenceEvent(event) {
 		'floor_change', 'conference_create', 'conference_destroy'
 	];
 
-	if (refreshEvents.includes(action)) {
-		loadConferenceData();
+	if (refresh_events.includes(action)) {
+		load_conference_data();
 	}
 }
 
-function loadConferenceData() {
+function load_conference_data() {
 	// Use AJAX to get current conference state
-	fetch('conference_interactive_inc.php?c=' + encodeURIComponent(conferenceId))
-		.then(response => response.text())
+	fetch('conference_interactive_inc.php?c=' + encodeURIComponent(conference_id))
+		.then(response => {
+			// Check if we were redirected to login page (session expired)
+			if (response.redirected) {
+				window.location.href = response.url;
+				return null;
+			}
+			return response.text();
+		})
 		.then(html => {
-			document.getElementById('ajax_reponse').innerHTML = html;
+			if (html === null) return;
+
+			// Check if the response contains a login form (session expired)
+			// Look for common indicators of the login page
+			if (html.includes('id="login_form"') ||
+				html.includes('name="username"') && html.includes('name="password"') ||
+				html.includes('authentication_failed') ||
+				html.includes('id="login"')) {
+				// Session expired - redirect to login page
+				console.log('Session expired - redirecting to login');
+				window.location.href = '<?= PROJECT_PATH ?>/?path=' + encodeURIComponent(window.location.pathname);
+				return;
+			}
+
+			// Check for access denied
+			if (html.trim() === 'access denied') {
+				console.log('Access denied - redirecting to login');
+				window.location.href = '<?= PROJECT_PATH ?>/';
+				return;
+			}
+
+			document.getElementById('ajax_response').innerHTML = html;
 			// Re-initialize timers after loading new data
-			initializeTimers();
+			initialize_timers();
 		})
 		.catch(err => console.error('Error loading conference data:', err));
 }
 
 // Start websocket connection
-connectWebSocket();
+connect_websocket();
 
 // Initial load
 document.addEventListener('DOMContentLoaded', function() {
-	loadConferenceData();
+	load_conference_data();
 });
 </script>
 
