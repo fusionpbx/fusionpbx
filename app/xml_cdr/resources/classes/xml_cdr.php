@@ -1099,8 +1099,8 @@ class xml_cdr {
 				$transcribe_queue['transcribe_queue'][$x]['transcribe_app_class'] = 'call_recordings';
 				$transcribe_queue['transcribe_queue'][$x]['transcribe_app_method'] = 'transcribe_queue';
 				$transcribe_queue['transcribe_queue'][$x]['transcribe_app_params'] = json_encode($params);
-				$transcribe_queue['transcribe_queue'][$x]['transcribe_audio_path'] = $field['call_recording_path'];
-				$transcribe_queue['transcribe_queue'][$x]['transcribe_audio_name'] = $field['call_recording_name'];
+				$transcribe_queue['transcribe_queue'][$x]['transcribe_audio_path'] = $record_path;
+				$transcribe_queue['transcribe_queue'][$x]['transcribe_audio_name'] = $record_name;
 
 				//save the data
 				$this->database->save($transcribe_queue);
