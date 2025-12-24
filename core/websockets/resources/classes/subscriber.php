@@ -650,7 +650,7 @@ class subscriber {
 	 */
 	public function set_domain(string $uuid, string $name): self {
 		if (is_uuid($uuid)) {
-			$this->uuid = $uuid;
+			$this->domain_uuid = $uuid;
 		} else {
 			throw new invalid_uuid_exception("UUID is not valid");
 		}

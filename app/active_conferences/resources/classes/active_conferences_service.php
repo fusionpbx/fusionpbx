@@ -1,0 +1,477 @@
+<?php
+
+/*
+ * FusionPBX
+ * Version: MPL 1.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is FusionPBX
+ *
+ * The Initial Developer of the Original Code is
+ * Mark J Crane <markjcrane@fusionpbx.com>
+ * Portions created by the Initial Developer are Copyright (C) 2008-2025
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ * Mark J Crane <markjcrane@fusionpbx.com>
+ * Tim Fry <tim@fusionpbx.com>
+ */
+
+/**
+ * Description of active_conferences_service
+ */
+
+class active_conferences_service extends base_websocket_system_service implements websocket_service_interface {
+
+	/**
+	 * Direct mapping of switch events using Key => Value pair
+	 */
+	const SWITCH_EVENTS = [
+		['API-Command' => 'conference'],
+		['Event-Name' => 'HEARTBEAT'],
+		['Event-Subclass' => 'conference::maintenance'],
+	];
+
+	const EVENT_KEYS = [
+		// Event name: CHANNEL_EXECUTE, CHANNEL_DESTROY, NEW_CALL...
+		'event_name',
+		// Unique Call Identifier to determine new/existing calls
+		'unique_id',
+		// Domain
+		'caller_context',
+		'channel_presence_id',
+		// Ringing, Hangup, Answered
+		'answer_state',
+		'channel_call_state',
+		// Time stamp
+		'caller_channel_created_time',
+		// Codecs
+		'channel_read_codec_name',
+		'channel_write_codec_name',
+		'channel_read_codec_rate',
+		'channel_write_codec_rate',
+		'caller_channel_name',
+		// Caller/Callee ID
+		'caller_caller_id_name',
+		'caller_caller_id_number',
+		'caller_destination_number',
+		// Encrypted
+		'secure',
+		// Application
+		'application',
+		'application_data',
+		'variable_current_application',
+		'playback_file_path',
+		// Valet parking info
+		'valet_extension',
+		'action',
+		'variable_referred_by_user',
+		'variable_pre_transfer_caller_id_name',
+		'variable_valet_parking_timeout',
+		// Direction
+		'call_direction',
+		'variable_call_direction',
+		'other_leg_rdnis',
+		'other_leg_unique_id',
+		'content_type',
+		// Conference specific
+		'action',	// start-talking, stop-talking, start-voicemail, stop-voicemail, start-record, stop-record, start-dtmf, stop-dtmf, start-music-on-hold, stop-music-on-hold, start-transfer, stop-transfer, start-call-progress, stop-call-progress, start-conference, stop-conference, start-park, stop-park, start-unpark, stop-unpark, start
+		'floor',
+		'video',
+		'hear',
+		'see',
+		'speak',
+		'talking',
+		'mute-detect',
+		'hold',
+		'member_id',
+		'member_type',
+		'member_ghost',
+		'energy_level',
+		'current_energy',
+		'new_id',
+		'api_command_argument',
+	];
+
+	protected $event_filter;
+
+	protected $switch_socket;
+
+	/**
+	 * Switch Event Socket
+	 *
+	 * @var event_socket
+	 */
+	protected $event_socket;
+
+	/**
+	 * Builds a filter for the subscriber
+	 * @param subscriber $subscriber
+	 * @return filter
+	 */
+	public static function create_filter_chain_for(subscriber $subscriber): filter {
+		// Domain filtering for conferences
+		if ($subscriber->has_permission('conference_active_view')) {
+			return filter_chain::and_link([
+				new caller_context_filter([$subscriber->get_domain_name()]),
+			]);
+		}
+
+		// No special filtering for conferences, they are domain-specific by design
+		return filter_chain::or_link(self::EVENT_KEYS);
+	}
+
+	/**
+	 * Returns the service name for this service that is used when the web browser clients subscriber
+	 * to this service for updates
+	 * @return string
+	 */
+	public static function get_service_name(): string {
+		return "active.conferences";
+	}
+
+	/**
+	 * Returns a string used to execute a conference command
+	 * @param string $name
+	 * @return string
+	 */
+	public static function get_conference_command(string $uuid = '', string $domain_name = ''): string {
+		if (!empty($uuid) && !empty($domain_name)) {
+			$name = "$uuid@$domain_name";
+		} else {
+			$name = "";
+		}
+		return "api conference " . ($name ? $name . " " : "") . "json_list";
+	}
+
+	/**
+	 * Reloads the settings for the service so the service does not have to be restarted
+	 * @return void
+	 */
+	protected function reload_settings(): void {
+		// Re-read the config file to get any possible changes
+		parent::$config->read();
+
+		// Re-connect to the websocket server
+		$this->connect_to_ws_server();
+
+		// Re-connect to the switch server
+		if ($this->connect_to_switch_server()) {
+			$this->register_event_socket_filters();
+		}
+
+		// Add the switch event socket to the base websocket listener
+		$this->add_listener($this->switch_socket, [$this, 'handle_switch_events']);
+
+	}
+
+	/**
+	 * Called when the websocket connection is established
+	 *
+	 * @return void
+	 */
+	protected function on_ws_connected(): void {
+		// Call the parent on connected function
+		parent::on_ws_connected();
+
+		// Show the registered service name
+		if ($this->ws_client->is_connected()) {
+			$this->info('Registered: ' . $this->get_service_name());
+		}
+	}
+
+	/**
+	 * Registers the switch events needed for active conferences
+	 */
+	protected function register_event_socket_filters() {
+		$this->event_socket->request('event plain all');
+
+		//
+		// CUSTOM and API are required to handle events such as:
+		//   - 'conference::maintenance'
+		//   - 'SMS::SEND_MESSAGE'
+		//   - 'cache::flush'
+		//   - 'sofia::register'
+		//
+		//	$event_filter = [
+		//		'CUSTOM',		// Event-Name is swapped with Event-Subclass
+		//		'API',			// Event-Name is swapped with API-Command
+		//	];
+		// Merge API and CUSTOM with the events listening
+		//	$events = array_merge(ws_active_conference_service::SWITCH_EVENTS, $event_filter);
+		// Add filters for active conference events only
+		foreach (self::SWITCH_EVENTS as $events) {
+			foreach ($events as $event_key => $event_name) {
+				$this->debug("Requesting event filter for [$event_key]=[$event_name]");
+				$response = $this->event_socket->request("filter $event_key $event_name");
+				while (!is_array($response)) {
+					$response = $this->event_socket->read_event();
+				}
+				if (is_array($response)) {
+					while (($response = array_pop($response)) !== "+OK filter added. [$event_key]=[$event_name]") {
+						$response = $this->event_socket->read_event();
+						usleep(1000);
+					}
+				}
+				$this->info("Response: " . $response);
+			}
+		}
+
+		// Create the filter to remove extra array entries in the event 
+		// because we don't need for this event on the switch.
+		// This allows us to less data on websockets when an event occurs.
+		$this->event_filter = filter_chain::and_link([
+			new event_key_filter(self::EVENT_KEYS)
+		]);
+
+		return;
+	}
+
+	protected function connect_to_switch_server(): bool {
+		// Get configuration data from the config.conf file
+		$host = parent::$config->get('switch.event_socket.host', '127.0.0.1');
+		$port = intval(parent::$config->get('switch.event_socket.port', 8021));
+		$password = parent::$config->get('switch.event_socket.password', 'ClueCon');
+
+		// Create a new switch server connection object
+		try {
+			$this->switch_socket = stream_socket_client("tcp://$host:$port", $errno, $errstr, 5);
+		} catch (\RuntimeException $re) {
+			$this->warning('Unable to connect to event socket');
+		}
+
+		if (!$this->switch_socket) {
+			return false;
+		}
+
+		// Block (wait) for responses so we can authenticate
+		stream_set_blocking($this->switch_socket, true);
+
+		// Create the event_socket object using the connected socket
+		$this->event_socket = new event_socket($this->switch_socket);
+
+		// The host and port are already provided when we connect the socket so just provide password
+		$this->event_socket->connect(null, null, $password);
+
+		// No longer need to wait for events
+		stream_set_blocking($this->switch_socket, false);
+
+		return $this->event_socket->is_connected();
+	}
+
+	/**
+	 * Displays the version of the active conferences service in the console
+	 * @return void
+	 * @override base_websocket_system_service
+	 */
+	protected static function display_version(): void {
+		echo "Active Conferences Service 1.0\n";
+	}
+
+	protected function handle_switch_events(): void {
+		$event = $this->event_socket->read_event();
+		$event_message = event_message::create_from_switch_event($event, $this->event_filter);
+		
+		// Set the event message topic as the event name
+		$topic = $event_message->topic = $event_message->event_name;
+
+		switch ($topic) {
+			case 'conference':
+			case 'conference::maintenance':
+				$this->on_conference_maintenance($event_message);
+				break;
+			case 'heartbeat':
+				$this->on_heartbeat($event_message);
+				break;
+			default:
+				break;
+			
+		}
+		return;
+	}
+
+	protected function on_heartbeat($event_message): void {
+		$this->debug('HEARTBEAT');
+	}
+
+	/**
+	 * Registers the topics that this service will respond to from websockets
+	 *
+	 * This method only runs once when the service starts.
+	 *
+	 * @return void
+	 * @throws Exception
+	 */
+	protected function register_topics(): void {
+		$this->on_topic('in_progress', [$this, 'request_in_progress']);
+		$this->on_topic('room', [$this, 'subscribe_room']);
+		$this->on_topic('ping', [$this, 'handle_ping']);
+		$this->on_topic('*', [$this, 'subscribe_all']);
+
+		$this->reload_settings();
+	}
+
+	/**
+	 * Handle ping requests to keep the connection alive
+	 *
+	 * @param websocket_message $message
+	 * @return void
+	 */
+	protected function handle_ping(websocket_message $message): void {
+		$this->debug('Ping received from client');
+		
+		// Create a pong response
+		$response = new websocket_message();
+		$response
+			->payload(['pong' => time()])
+			->service_name(self::get_service_name())
+			->topic('pong')
+			->status_string('ok')
+			->status_code(200)
+			->request_id($message->request_id())
+			->resource_id($message->resource_id())
+		;
+
+		// Send the response back to the client
+		websocket_client::send($this->ws_client->socket(), $response);
+	}
+
+	/**
+	 * Subscribe to all events (wildcard) - useful for debugging
+	 *
+	 * @param websocket_message $message
+	 * @return void
+	 */
+	protected function subscribe_all(websocket_message $message): void {
+		$this->debug('Wildcard subscription requested - subscribing to all events');
+		
+		// Forward to websocket server to register this subscriber for all events from this service
+		$response = new websocket_message();
+		$response
+			->payload(['subscribed' => '*'])
+			->service_name(self::get_service_name())
+			->topic('*')
+			->status_string('ok')
+			->status_code(200)
+			->request_id($message->request_id())
+			->resource_id($message->resource_id())
+		;
+
+		// Send the response back to the client
+		websocket_client::send($this->ws_client->socket(), $response);
+	}
+
+	protected function request_in_progress(websocket_message $message): void {
+		$this->debug('Conferences in progress requested by websocket client');
+
+		// Get required parameters from the message
+		$domain_name = $message->domain_name ?? '';
+		$uuid = $message->payload()['uuid'] ?? '';
+
+		// Get the list of active conferences
+		$command = self::get_conference_command($uuid, $domain_name);
+
+		// Use a dedicated event socket for API command so we don't get any the wrong events
+		$conferences = event_socket::command($command);
+
+		// Create a response message
+		$response = new websocket_message();
+		$response
+			->payload($conferences)
+			->service_name(self::get_service_name())
+			->topic('in_progress')
+			->request_id($message->request_id())
+			->resource_id($message->resource_id())
+		;
+
+		// Send the response back to the client
+		websocket_client::send($this->ws_client->socket(), $response);
+	}
+
+	/**
+	 * Handles the conference maintenance event
+	 *
+	 * This method is triggered when a conference maintenance event occurs.
+	 * It processes the event message and performs necessary maintenance operations
+	 * for the active conference.
+	 *
+	 * @param event_message $event_message The event message object containing conference maintenance data
+	 * @return void
+	 */
+	private function on_conference_maintenance(event_message $event_message): void {
+		//$this->debug('Processing switch event conference::maintenance');
+
+		// Show json encoded message
+		//$this->debug('Event message: ' . $event_message);
+		
+		$action = $event_message->action ?? '';
+
+		// Replace - with _ for action names
+		$action = str_replace('-', '_', $action);
+
+		switch ($action) {
+			case 'start_talking':
+				$this->debug('start_talking event');
+				// Broadcast event to clients
+				$this->broadcast_event($event_message, $action);
+				break;
+			case 'stop_talking':
+			case 'conference_create':
+			case 'conference_destroy':
+			case 'add_member':
+			case 'mute_member':
+			case 'unmute_member':
+			case 'deaf_member':
+			case 'undeaf_member':
+			case 'lock':
+			case 'unlock':
+			case 'kick_member':
+			case 'play_file':
+			case 'play_file_done':
+			case 'floor_change':
+			case 'gain_level':
+			case 'volume_level':
+			case 'play_file_member_done':
+			case 'energy_level':
+			case 'execute_app':
+			case 'del_member':
+				$this->debug("$action event");
+				// Broadcast event to clients
+				$this->broadcast_event($event_message, $action);
+				break;
+			default:
+				$this->debug("Unknown conference event: $event_message");
+				break;
+		}
+	}
+
+	/**
+	 * Broadcast an event to all subscribed clients
+	 *
+	 * @param event_message $event_message The event data to broadcast
+	 * @param string $action The action/topic name for the event
+	 * @return void
+	 */
+	private function broadcast_event(event_message $event_message, string $action): void {
+		// Create a websocket message with the service_name so the websocket server
+		// knows which subscribers to broadcast to
+		$message = new websocket_message();
+		$message
+			->service_name(self::get_service_name())
+			->topic($action)
+			->payload($event_message->to_array())
+		;
+		
+		websocket_client::send($this->ws_client->socket(), $message);
+	}
+
+}
