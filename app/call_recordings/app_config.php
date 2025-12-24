@@ -61,3 +61,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "\${year}\${month_number}\${day}.\${time}.\${caller_id_number}.\${uuid}.mp3";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call recording download template. Options: \${uuid}, \${caller_id_name}, \${caller_id_number}, \${caller_destination}, \${destination_number}, \${date}, \${call_direction}, \${year}, \${month_name}, \${month_number}, \${day}, \${time}";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a21c3dab-36e3-4d7f-8356-9d9fd3eec0a3";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_recordings";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "transcribe_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call recordings set to auto transcribe. Options: true, false";
+		$y++;
