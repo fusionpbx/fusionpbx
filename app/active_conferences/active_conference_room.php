@@ -206,57 +206,11 @@ function send_action(action, options = {}, skip_refresh = false) {
 
 //conference control functions
 function conference_action(action, member_id, uuid, direction) {
-	// Handle mute_all and unmute_all by iterating over members
-	if (action === 'mute_all' || action === 'unmute_all') {
-		return mute_all_members(action === 'mute_all');
-	}
-
 	return send_action(action, {
 		member_id: member_id || '',
 		uuid: uuid || '',
 		direction: direction || ''
 	});
-}
-
-//mute or unmute all non-moderator members by iterating over them
-async function mute_all_members(mute) {
-	const action = mute ? 'mute' : 'unmute';
-	const rows = document.querySelectorAll('tr[data-member-id]');
-
-	console.log(`${action}_all: Found ${rows.length} member rows`);
-
-	const promises = [];
-
-	for (const row of rows) {
-		const member_id = row.getAttribute('data-member-id');
-		const uuid = row.getAttribute('data-uuid');
-
-		// Check if this is a moderator (has fa-user-tie icon)
-		const is_moderator = row.querySelector('.fa-user-tie') !== null;
-
-		if (is_moderator) {
-			console.log(`Skipping moderator member ${member_id}`);
-			continue;
-		}
-
-		console.log(`${action} member ${member_id} (uuid: ${uuid})`);
-
-		// Send the action for this member (skip_refresh = true)
-		promises.push(
-			send_action(action, {
-				member_id: member_id,
-				uuid: uuid
-			}, true).catch(err => {
-				console.error(`Failed to ${action} member ${member_id}:`, err);
-			})
-		);
-	}
-
-	// Wait for all actions to complete
-	await Promise.all(promises);
-
-	// Refresh the display once at the end
-	load_conference_data();
 }
 
 var record_count = 0;

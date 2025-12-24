@@ -475,7 +475,7 @@ class active_conferences_service extends base_websocket_system_service implement
 			switch ($action) {
 				case 'lock':
 				case 'unlock':
-					$cmd = "conference '$conference_name' $action";
+					$cmd = "conference $conference_name $action";
 					event_socket::api($cmd);
 					break;
 
@@ -484,7 +484,7 @@ class active_conferences_service extends base_websocket_system_service implement
 					if (empty($member_id)) {
 						return ['success' => false, 'message' => 'Member ID required'];
 					}
-					$cmd = "conference '$conference_name' $action $member_id";
+					$cmd = "conference $conference_name $action $member_id";
 					event_socket::api($cmd);
 					// Clear hand raised flag on mute/unmute
 					if (!empty($uuid)) {
@@ -493,14 +493,14 @@ class active_conferences_service extends base_websocket_system_service implement
 					break;
 
 				case 'mute_all':
-					$cmd = "conference '$conference_name' mute non_moderator";
+					$cmd = "conference $conference_name mute non_moderator";
 					$this->debug("Executing command: $cmd");
 					$result = event_socket::api($cmd);
 					$this->debug("Command result: " . print_r($result, true));
 					break;
 
 				case 'unmute_all':
-					$cmd = "conference '$conference_name' unmute non_moderator";
+					$cmd = "conference $conference_name unmute non_moderator";
 					$this->debug("Executing command: $cmd");
 					$result = event_socket::api($cmd);
 					$this->debug("Command result: " . print_r($result, true));
@@ -511,7 +511,7 @@ class active_conferences_service extends base_websocket_system_service implement
 					if (empty($member_id)) {
 						return ['success' => false, 'message' => 'Member ID required'];
 					}
-					$cmd = "conference '$conference_name' $action $member_id";
+					$cmd = "conference $conference_name $action $member_id";
 					event_socket::api($cmd);
 					break;
 
@@ -530,12 +530,12 @@ class active_conferences_service extends base_websocket_system_service implement
 					if (empty($member_id) || empty($direction)) {
 						return ['success' => false, 'message' => 'Member ID and direction required'];
 					}
-					$current = event_socket::api("conference '$conference_name' energy $member_id");
+					$current = event_socket::api("conference $conference_name energy $member_id");
 					$current = trim($current);
 					if (preg_match('/=(\d+)/', $current, $matches)) {
 						$value = (int)$matches[1];
 						$value = ($direction === 'up') ? $value + 100 : $value - 100;
-						event_socket::api("conference '$conference_name' energy $member_id $value");
+						event_socket::api("conference $conference_name energy $member_id $value");
 					}
 					break;
 
@@ -543,12 +543,12 @@ class active_conferences_service extends base_websocket_system_service implement
 					if (empty($member_id) || empty($direction)) {
 						return ['success' => false, 'message' => 'Member ID and direction required'];
 					}
-					$current = event_socket::api("conference '$conference_name' volume_in $member_id");
+					$current = event_socket::api("conference $conference_name volume_in $member_id");
 					$current = trim($current);
 					if (preg_match('/=(-?\d+)/', $current, $matches)) {
 						$value = (int)$matches[1];
 						$value = ($direction === 'up') ? $value + 1 : $value - 1;
-						event_socket::api("conference '$conference_name' volume_in $member_id $value");
+						event_socket::api("conference $conference_name volume_in $member_id $value");
 					}
 					break;
 
@@ -556,12 +556,12 @@ class active_conferences_service extends base_websocket_system_service implement
 					if (empty($member_id) || empty($direction)) {
 						return ['success' => false, 'message' => 'Member ID and direction required'];
 					}
-					$current = event_socket::api("conference '$conference_name' volume_out $member_id");
+					$current = event_socket::api("conference $conference_name volume_out $member_id");
 					$current = trim($current);
 					if (preg_match('/=(-?\d+)/', $current, $matches)) {
 						$value = (int)$matches[1];
 						$value = ($direction === 'up') ? $value + 1 : $value - 1;
-						event_socket::api("conference '$conference_name' volume_out $member_id $value");
+						event_socket::api("conference $conference_name volume_out $member_id $value");
 					}
 					break;
 
