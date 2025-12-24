@@ -345,7 +345,7 @@ class active_conferences_service extends base_websocket_system_service implement
 	 * @return void
 	 */
 	protected function handle_ping(websocket_message $message): void {
-		$this->debug('Ping received from client');
+		$this->debug('Ping received from client. Sending pong response.');
 
 		// Create a pong response
 		$response = new websocket_message();

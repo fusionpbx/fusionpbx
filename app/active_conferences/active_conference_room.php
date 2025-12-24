@@ -120,6 +120,32 @@ $ws_settings = [
 	'pong_timeout' => (int)$settings->get('active_conferences', 'pong_timeout', 10000),
 	'refresh_interval' => (int)$settings->get('active_conferences', 'refresh_interval', 0),
 	'max_reconnect_delay' => (int)$settings->get('active_conferences', 'max_reconnect_delay', 30000),
+	'pong_timeout_max_retries' => (int)$settings->get('active_conferences', 'pong_timeout_max_retries', 3),
+];
+
+//get theme colors for status indicator
+$status_colors = [
+	'connected' => $settings->get('theme', 'active_conference_status_connected', '#28a745'),
+	'warning' => $settings->get('theme', 'active_conference_status_warning', '#ffc107'),
+	'disconnected' => $settings->get('theme', 'active_conference_status_disconnected', '#dc3545'),
+	'connecting' => $settings->get('theme', 'active_conference_status_connecting', '#6c757d'),
+];
+
+//get status indicator mode and icons
+$status_indicator_mode = $settings->get('active_conferences', 'status_indicator_mode', 'color');
+$status_icons = [
+	'connected' => $settings->get('active_conferences', 'status_icon_connected', 'fa-solid fa-plug-circle-check'),
+	'warning' => $settings->get('active_conferences', 'status_icon_warning', 'fa-solid fa-plug-circle-exclamation'),
+	'disconnected' => $settings->get('active_conferences', 'status_icon_disconnected', 'fa-solid fa-plug-circle-xmark'),
+	'connecting' => $settings->get('active_conferences', 'status_icon_connecting', 'fa-solid fa-plug fa-fade'),
+];
+
+//get status tooltips from translations
+$status_tooltips = [
+	'connected' => $text['status-connected'],
+	'warning' => $text['status-warning'],
+	'disconnected' => $text['status-disconnected'],
+	'connecting' => $text['status-connecting'],
 ];
 
 ?>
@@ -130,6 +156,18 @@ const user_permissions = <?= json_encode($user_permissions) ?>;
 
 //websocket configuration from server settings
 const ws_config = <?= json_encode($ws_settings) ?>;
+
+//status indicator colors from theme settings
+const status_colors = <?= json_encode($status_colors) ?>;
+
+//status indicator icons from settings
+const status_icons = <?= json_encode($status_icons) ?>;
+
+//status tooltips from translations
+const status_tooltips = <?= json_encode($status_tooltips) ?>;
+
+//status indicator mode: 'color' or 'icon'
+const status_indicator_mode = <?= json_encode($status_indicator_mode) ?>;
 
 //send action via WebSocket
 function send_action(action, options = {}, skip_refresh = false) {
@@ -234,7 +272,13 @@ $ws_client_hash = file_exists($ws_client_file) ? md5_file($ws_client_file) : $ve
 
 //page header
 echo "<div class='action_bar' id='action_bar'>\n";
-echo "<div class='heading'><b>".$text['label-interactive']."</b>&nbsp;<span id='connection_status' style='font-size: 12px; color: #999;'>(Connecting...)</span></div>\n";
+echo "<div class='heading'><b>".$text['label-interactive']."</b>&nbsp;";
+if ($status_indicator_mode === 'icon') {
+	echo "<span id='connection_status' class='".$status_icons['connecting']."' style='color: ".$status_colors['connecting'].";' title='".$status_tooltips['connecting']."'></span>";
+} else {
+	echo "<div id='connection_status' class='count' style='display: inline-block; min-width: 12px; height: 12px; vertical-align: middle; background: ".$status_colors['connecting'].";' title='".$status_tooltips['connecting']."'></div>";
+}
+echo "</div>\n";
 echo "<div class='actions'>\n";
 echo "</div>\n";
 echo "<div style='clear: both;'></div>\n";
@@ -269,11 +313,64 @@ let last_pong_time = Date.now();
 let ping_timeout = null;
 let auth_timeout = null;
 let refresh_interval_timer = null;
+let pong_failure_count = 0;
 
-function update_connection_status(status, connected) {
+function update_connection_status(state) {
 	const el = document.getElementById('connection_status');
-	el.innerHTML = '(' + status + ')';
-	el.style.color = connected ? '#28a745' : '#999';
+	const color = status_colors[state] || status_colors.connecting;
+	const tooltip = status_tooltips[state] || status_tooltips.connecting;
+
+	// Update tooltip for accessibility
+	el.title = tooltip;
+
+	if (status_indicator_mode === 'icon') {
+		// Update icon class and color
+		const icon = status_icons[state] || status_icons.connecting;
+		el.className = icon;
+		el.style.color = color;
+	} else {
+		// Update background color for color mode
+		el.style.backgroundColor = color;
+	}
+}
+
+function send_ping() {
+	if (!ws || !ws.ws || ws.ws.readyState !== WebSocket.OPEN) {
+		return;
+	}
+
+	console.log('Sending keepalive ping');
+
+	// Set a timeout - if no pong received in time, handle retry or reload
+	ping_timeout = setTimeout(() => {
+		pong_failure_count++;
+		console.warn('No pong response received - failure count:', pong_failure_count, 'of', ws_config.pong_timeout_max_retries);
+
+		if (pong_failure_count >= ws_config.pong_timeout_max_retries) {
+			console.error('Max pong failures reached - reloading page');
+			update_connection_status('disconnected');
+			window.location.reload();
+		} else {
+			// Show warning state - still trying
+			update_connection_status('warning');
+		}
+	}, ws_config.pong_timeout);
+
+	ws.request('active.conferences', 'ping', {})
+		.then(response => {
+			// Pong received - clear the timeout, reset failure count, update status
+			if (ping_timeout) {
+				clearTimeout(ping_timeout);
+				ping_timeout = null;
+			}
+			pong_failure_count = 0;
+			last_pong_time = Date.now();
+			update_connection_status('connected');
+			console.log('Pong received from service');
+		})
+		.catch(err => {
+			console.error('Ping failed:', err);
+		});
 }
 
 function format_time(seconds) {
@@ -384,19 +481,19 @@ function connect_websocket() {
 		// Handle authentication failure (session expired)
 		ws.on_event('authentication_failed', function(event) {
 			console.error('WebSocket authentication failed - session may have expired');
-			update_connection_status('Session expired - redirecting...', false);
+			update_connection_status('disconnected');
 			window.location.href = '<?= PROJECT_PATH ?>/?path=' + encodeURIComponent(window.location.pathname);
 		});
 
 		ws.ws.addEventListener("open", () => {
 			console.log('WebSocket connection opened');
 			reconnect_attempts = 0;
-			update_connection_status('Authenticating...', false);
+			update_connection_status('connecting');
 
 			// Set authentication timeout - if not authenticated in time, session may have expired
 			auth_timeout = setTimeout(() => {
 				console.error('Authentication timeout - session may have expired');
-				update_connection_status('Session expired - redirecting...', false);
+				update_connection_status('disconnected');
 				window.location.href = '<?= PROJECT_PATH ?>/?path=' + encodeURIComponent(window.location.pathname);
 			}, ws_config.auth_timeout);
 		});
@@ -427,7 +524,7 @@ function connect_websocket() {
 			};
 			console.warn('Close code meaning:', close_codes[event.code] || 'Unknown');
 
-			update_connection_status('Disconnected - Reloading...', false);
+			update_connection_status('disconnected');
 
 			// Clear the ping interval and timeout
 			if (ping_interval_timer) {
@@ -458,13 +555,15 @@ function connect_websocket() {
 
 	} catch (error) {
 		console.error('Failed to connect to WebSocket:', error);
-		update_connection_status('Connection Failed', false);
+		update_connection_status('disconnected');
 	}
 }
 
 function authenticated(message) {
 	console.log('WebSocket authenticated');
-	update_connection_status('Connected', true);
+	pong_failure_count = 0;
+	// Show warning until first pong confirms service is responding
+	update_connection_status('warning');
 
 	// Clear the authentication timeout since we're now authenticated
 	if (auth_timeout) {
@@ -472,36 +571,15 @@ function authenticated(message) {
 		auth_timeout = null;
 	}
 
+	// Send immediate ping to verify service is responding
+	send_ping();
+
 	// Start ping interval to keep connection alive
 	if (ping_interval_timer) {
 		clearInterval(ping_interval_timer);
 	}
 	ping_interval_timer = setInterval(() => {
-		if (ws && ws.ws && ws.ws.readyState === WebSocket.OPEN) {
-			// Send a ping request to keep the connection alive
-			console.log('Sending keepalive ping');
-
-			// Set a timeout - if no pong received in time, reload
-			ping_timeout = setTimeout(() => {
-				console.error('No pong response received - service may be down, reloading...');
-				update_connection_status('Service not responding - Reloading...', false);
-				window.location.reload();
-			}, ws_config.pong_timeout);
-
-			ws.request('active.conferences', 'ping', {})
-				.then(response => {
-					// Pong received - clear the timeout and update last pong time
-					if (ping_timeout) {
-						clearTimeout(ping_timeout);
-						ping_timeout = null;
-					}
-					last_pong_time = Date.now();
-					console.log('Pong received from service');
-				})
-				.catch(err => {
-					console.error('Ping failed:', err);
-				});
-		}
+		send_ping();
 	}, ws_config.ping_interval);
 
 	// Start optional refresh interval if configured
