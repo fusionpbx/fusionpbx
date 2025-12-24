@@ -397,6 +397,8 @@
 
 //convert the transcription into a conversation
 	function conversational_html($transcription) {
+		global $text;
+
 		$html = '';
 		$previous_speaker = '';
 		$i = 0;
@@ -405,8 +407,9 @@
 				if ($i > 0) { $html .= "</div>\n"; }
 				$speaker_class = $segment['speaker'] === '0' ? 'message-bubble-em' : 'message-bubble-me';
 				$html .= "<div class='message-bubble {$speaker_class}'>";
+				$html .= "<div ><strong>" . $text['label-speaker'] . " " . $segment['speaker'] . "</strong></div>\n";
 			}
-			//$html .= "	<span class='time'>[{$segment['start']} - {$segment['end']}]</span>";
+			//$html .= "	<span class='time'>".round($segment['start'])."</span>";
 			$html .= "".escape(trim($segment['text']))." ";
 			if ($previous_speaker != $segment['speaker']) {
 				$previous_speaker = $segment['speaker'];
@@ -639,13 +642,18 @@
 	echo "		display: table;\n";
 	echo "		padding: 10px;\n";
 	echo "		border: 1px solid;\n";
+
+	echo "		border-radius: " . $settings->get('theme', 'message_bubble_border_radius', '10px 10px 10px 10px') . ";\n";
+	echo "		border-color: " . $settings->get('theme', 'message_bubble_em_border_color', '#abefa0') . ";\n";
+	echo "		background: " . $settings->get('theme', 'message_bubble_em_background_color', '#daffd4') . ";\n";
+	echo "		color: " . $settings->get('theme', 'message_bubble_em_text_color', '#000000') . ";\n";
 	echo "		margin-bottom: 10px;\n";
 	echo "		clear: both;\n";
 	echo "		}\n";
 
 	echo "	.message-bubble-em {\n";
-	echo "		padding-right: 15px;\n";
-	echo "		border-radius: " . $settings->get('theme', 'message_bubble_em_border_radius', '0 20px 20px 20px') . ";\n";
+	//echo "		padding-right: 15px;\n";
+	//echo "		border-radius: " . $settings->get('theme', 'message_bubble_em_border_radius', '0 20px 20px 20px') . ";\n";
 	echo "		border-color: " . $settings->get('theme', 'message_bubble_em_border_color', '#abefa0') . ";\n";
 	echo "		background: " . $settings->get('theme', 'message_bubble_em_background_color', '#daffd4') . ";\n";
 	echo "		background: linear-gradient(180deg, ".$settings->get('theme', 'message_bubble_em_border_color', '#abefa0') . " 0%, " . $settings->get('theme', 'message_bubble_em_background_color', '#daffd4') . " 15px);\n";
@@ -653,9 +661,9 @@
 	echo "		}\n";
 
 	echo "	.message-bubble-me {\n";
-	echo "		float: right;\n";
-	echo "		padding-left: 15px;\n";
-	echo "		border-radius: " . $settings->get('theme', 'message_bubble_em_border_radius', '20px 20px 0 20px') . ";\n";
+	//echo "		float: right;\n";
+	//echo "		padding-left: 15px;\n";
+	//echo "		border-radius: " . $settings->get('theme', 'message_bubble_em_border_radius', '20px 20px 0 20px') . ";\n";
 	echo "		border-color: " . $settings->get('theme', 'message_bubble_me_border_color', '#a3e1fd') . ";\n";
 	echo "		background: " . $settings->get('theme', 'message_bubble_me_background_color', '#cbf0ff') . ";\n";
 	echo "		background: linear-gradient(180deg, " . $settings->get('theme', 'message_bubble_me_background_color', '#cbf0ff') . " calc(100% - 15px), ".$settings->get('theme', 'message_bubble_me_border_color', '#a3e1fd') . " 100%);\n";
@@ -672,9 +680,6 @@
 		echo "<b>".$text['label-transcription']."</b><br>\n";
 		echo "<div class='card'>\n";
 		echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "	<tr>\n";
-		echo "		<th>".$text['label-text']."</th>\n";
-		echo "	</tr>\n";
 		echo "	<tr >\n";
 		echo "		<td valign='top' class='".$row_style[0]."'><div style='width: 80%; min-width: 200px; max-width: 800px;'>".$record_transcription_html."</div></td>\n";
 		echo "	</tr>\n";
