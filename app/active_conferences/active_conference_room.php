@@ -89,24 +89,112 @@ require_once dirname(__DIR__, 2) . "/resources/header.php";
 //break the caching
 $version = md5(file_get_contents(__DIR__ . '/resources/javascript/websocket_client.js'));
 
+// Build permissions object for client-side checks
+$user_permissions = [
+	'lock' => permission_exists('conference_interactive_lock'),
+	'mute' => permission_exists('conference_interactive_mute'),
+	'deaf' => permission_exists('conference_interactive_deaf'),
+	'kick' => permission_exists('conference_interactive_kick'),
+	'energy' => permission_exists('conference_interactive_energy'),
+	'volume' => permission_exists('conference_interactive_volume'),
+	'gain' => permission_exists('conference_interactive_gain'),
+	'video' => permission_exists('conference_interactive_video'),
+];
+
 ?>
 
 <script type="text/javascript">
-// Action commands use AJAX
-function send_cmd(url) {
-if (window.XMLHttpRequest) {
-xmlhttp = new XMLHttpRequest();
+// User permissions for client-side checks
+const userPermissions = <?= json_encode($user_permissions) ?>;
+
+// Send action via WebSocket
+function sendAction(action, options = {}, skipRefresh = false) {
+	if (!ws || !ws.ws || ws.ws.readyState !== WebSocket.OPEN) {
+		console.error('WebSocket not connected');
+		return Promise.reject('Not connected');
+	}
+	
+	const payload = {
+		action: action,
+		conference_name: conferenceName,
+		domain_name: '<?= $_SESSION['domain_name'] ?>',
+		...options
+	};
+	
+	console.log('Sending action:', action, payload);
+	
+	return ws.request('active.conferences', 'action', payload)
+		.then(response => {
+			console.log('Action response:', response);
+			const result = response.payload || response;
+			if (!result.success) {
+				console.error('Action failed:', result.message);
+			}
+			// Refresh data after action (unless skipRefresh is true)
+			if (!skipRefresh) {
+				loadConferenceData();
+			}
+			return result;
+		})
+		.catch(err => {
+			console.error('Action error:', err);
+			throw err;
+		});
 }
-else {
-xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+
+// Conference control functions
+function conferenceAction(action, memberId, uuid, direction) {
+	// Handle mute_all and unmute_all by iterating over members
+	if (action === 'mute_all' || action === 'unmute_all') {
+		return muteAllMembers(action === 'mute_all');
+	}
+	
+	return sendAction(action, {
+		member_id: memberId || '',
+		uuid: uuid || '',
+		direction: direction || ''
+	});
 }
-xmlhttp.open("GET", url, true);
-xmlhttp.onreadystatechange = function() {
-if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-document.getElementById('cmd_reponse').innerHTML = xmlhttp.responseText;
-}
-};
-xmlhttp.send(null);
+
+// Mute or unmute all non-moderator members by iterating over them
+async function muteAllMembers(mute) {
+	const action = mute ? 'mute' : 'unmute';
+	const rows = document.querySelectorAll('tr[data-member-id]');
+	
+	console.log(`${action}_all: Found ${rows.length} member rows`);
+	
+	const promises = [];
+	
+	for (const row of rows) {
+		const memberId = row.getAttribute('data-member-id');
+		const uuid = row.getAttribute('data-uuid');
+		
+		// Check if this is a moderator (has fa-user-tie icon)
+		const isModerator = row.querySelector('.fa-user-tie') !== null;
+		
+		if (isModerator) {
+			console.log(`Skipping moderator member ${memberId}`);
+			continue;
+		}
+		
+		console.log(`${action} member ${memberId} (uuid: ${uuid})`);
+		
+		// Send the action for this member (skipRefresh = true)
+		promises.push(
+			sendAction(action, {
+				member_id: memberId,
+				uuid: uuid
+			}, true).catch(err => {
+				console.error(`Failed to ${action} member ${memberId}:`, err);
+			})
+		);
+	}
+	
+	// Wait for all actions to complete
+	await Promise.all(promises);
+	
+	// Refresh the display once at the end
+	loadConferenceData();
 }
 
 var record_count = 0;
@@ -143,8 +231,8 @@ const token = {
 	hash: '<?= $token['hash'] ?>'
 };
 
-const conferenceName = "<?= escape($conference_name) ?>";
-const conferenceId = "<?= escape($conference_id) ?>";
+const conferenceName = <?= json_encode($conference_name) ?>;
+const conferenceId = <?= json_encode($conference_id) ?>;
 
 let ws = null;
 let reconnectAttempts = 0;
@@ -165,6 +253,10 @@ function updateConnectionStatus(status, connected) {
 }
 
 function formatTime(seconds) {
+	// Handle NaN, undefined, null, or negative values
+	if (!Number.isFinite(seconds) || seconds < 0) {
+		seconds = 0;
+	}
 	const hrs = Math.floor(seconds / 3600);
 	const mins = Math.floor((seconds % 3600) / 60);
 	const secs = Math.floor(seconds % 60);
@@ -181,8 +273,8 @@ function initializeTimers() {
 	rows.forEach(row => {
 		const memberId = row.getAttribute('data-member-id');
 		const uuid = row.getAttribute('data-uuid');
-		const joinTime = parseInt(row.getAttribute('data-join-time') || '0');
-		const lastTalking = parseInt(row.getAttribute('data-last-talking') || '0');
+		const joinTime = parseInt(row.getAttribute('data-join-time'), 10) || 0;
+		const lastTalking = parseInt(row.getAttribute('data-last-talking'), 10) || 0;
 		
 		console.log('Member:', memberId, 'joinTime:', joinTime, 'lastTalking:', lastTalking);
 		

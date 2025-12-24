@@ -315,6 +315,7 @@ class active_conferences_service extends base_websocket_system_service implement
 		$this->on_topic('in_progress', [$this, 'request_in_progress']);
 		$this->on_topic('room', [$this, 'subscribe_room']);
 		$this->on_topic('ping', [$this, 'handle_ping']);
+		$this->on_topic('action', [$this, 'handle_action']);
 		$this->on_topic('*', [$this, 'subscribe_all']);
 
 		$this->reload_settings();
@@ -342,6 +343,251 @@ class active_conferences_service extends base_websocket_system_service implement
 		;
 
 		// Send the response back to the client
+		websocket_client::send($this->ws_client->socket(), $response);
+	}
+
+	/**
+	 * Handle conference action requests from clients
+	 * 
+	 * Actions: lock, unlock, mute, unmute, deaf, undeaf, kick, kick_all,
+	 *          mute_all, unmute_all, energy, volume_in, volume_out
+	 *
+	 * @param websocket_message $message
+	 * @return void
+	 */
+	protected function handle_action(websocket_message $message): void {
+		$payload = $message->payload();
+		$action = $payload['action'] ?? '';
+		$conference_name = $payload['conference_name'] ?? '';
+		$member_id = $payload['member_id'] ?? '';
+		$uuid = $payload['uuid'] ?? '';
+		$direction = $payload['direction'] ?? '';
+		$domain_name = $payload['domain_name'] ?? '';
+		
+		// Decode any URL or HTML entity encoding
+		$conference_name = html_entity_decode(urldecode($conference_name));
+		
+		$this->debug("Action request: $action for conference: $conference_name member: $member_id");
+		
+		// Get permissions from the message (attached by websocket_service)
+		$permissions = $message->get_permissions();
+		
+		// Map actions to required permissions
+		$permission_map = [
+			'lock' => 'conference_interactive_lock',
+			'unlock' => 'conference_interactive_lock',
+			'mute' => 'conference_interactive_mute',
+			'unmute' => 'conference_interactive_mute',
+			'mute_all' => 'conference_interactive_mute',
+			'unmute_all' => 'conference_interactive_mute',
+			'deaf' => 'conference_interactive_deaf',
+			'undeaf' => 'conference_interactive_deaf',
+			'kick' => 'conference_interactive_kick',
+			'kick_all' => 'conference_interactive_kick',
+			'energy' => 'conference_interactive_energy',
+			'volume_in' => 'conference_interactive_volume',
+			'volume_out' => 'conference_interactive_gain',
+		];
+		
+		// Validate action
+		if (!isset($permission_map[$action])) {
+			$this->send_action_response($message, false, 'Invalid action: ' . $action);
+			return;
+		}
+		
+		// Check permission
+		$required_permission = $permission_map[$action];
+		if (!isset($permissions[$required_permission])) {
+			$this->warning("Permission denied: $required_permission for action: $action");
+			$this->send_action_response($message, false, 'Permission denied');
+			return;
+		}
+		
+		// Validate conference name (must include a domain - basic validation)
+		if (empty($conference_name) || strpos($conference_name, '@') === false) {
+			$this->warning("Invalid conference name: $conference_name");
+			$this->send_action_response($message, false, 'Invalid conference name');
+			return;
+		}
+		
+		// Execute the action
+		$result = $this->execute_conference_action($action, $conference_name, $member_id, $uuid, $direction);
+		
+		$this->send_action_response($message, $result['success'], $result['message']);
+	}
+	
+	/**
+	 * Execute a conference action via event socket
+	 *
+	 * @param string $action The action to execute
+	 * @param string $conference_name The conference name
+	 * @param string $member_id The member ID (optional)
+	 * @param string $uuid The call UUID (optional)
+	 * @param string $direction Direction for energy/volume (up/down)
+	 * @return array ['success' => bool, 'message' => string]
+	 */
+	private function execute_conference_action(string $action, string $conference_name, string $member_id, string $uuid, string $direction): array {
+		$this->debug("Executing action: $action on $conference_name");
+		
+		try {
+			switch ($action) {
+				case 'lock':
+				case 'unlock':
+					$cmd = "conference '$conference_name' $action";
+					event_socket::api($cmd);
+					break;
+					
+				case 'mute':
+				case 'unmute':
+					if (empty($member_id)) {
+						return ['success' => false, 'message' => 'Member ID required'];
+					}
+					$cmd = "conference '$conference_name' $action $member_id";
+					event_socket::api($cmd);
+					// Clear hand raised flag on mute/unmute
+					if (!empty($uuid)) {
+						event_socket::api("uuid_setvar $uuid hand_raised false");
+					}
+					break;
+					
+				case 'mute_all':
+					$cmd = "conference '$conference_name' mute non_moderator";
+					$this->debug("Executing command: $cmd");
+					$result = event_socket::api($cmd);
+					$this->debug("Command result: " . print_r($result, true));
+					break;
+					
+				case 'unmute_all':
+					$cmd = "conference '$conference_name' unmute non_moderator";
+					$this->debug("Executing command: $cmd");
+					$result = event_socket::api($cmd);
+					$this->debug("Command result: " . print_r($result, true));
+					break;
+					
+				case 'deaf':
+				case 'undeaf':
+					if (empty($member_id)) {
+						return ['success' => false, 'message' => 'Member ID required'];
+					}
+					$cmd = "conference '$conference_name' $action $member_id";
+					event_socket::api($cmd);
+					break;
+					
+				case 'kick':
+					if (empty($uuid)) {
+						return ['success' => false, 'message' => 'UUID required'];
+					}
+					event_socket::api("uuid_kill $uuid");
+					break;
+					
+				case 'kick_all':
+					$this->kick_all_members($conference_name);
+					break;
+					
+				case 'energy':
+					if (empty($member_id) || empty($direction)) {
+						return ['success' => false, 'message' => 'Member ID and direction required'];
+					}
+					$current = event_socket::api("conference '$conference_name' energy $member_id");
+					$current = trim($current);
+					if (preg_match('/=(\d+)/', $current, $matches)) {
+						$value = (int)$matches[1];
+						$value = ($direction === 'up') ? $value + 100 : $value - 100;
+						event_socket::api("conference '$conference_name' energy $member_id $value");
+					}
+					break;
+					
+				case 'volume_in':
+					if (empty($member_id) || empty($direction)) {
+						return ['success' => false, 'message' => 'Member ID and direction required'];
+					}
+					$current = event_socket::api("conference '$conference_name' volume_in $member_id");
+					$current = trim($current);
+					if (preg_match('/=(-?\d+)/', $current, $matches)) {
+						$value = (int)$matches[1];
+						$value = ($direction === 'up') ? $value + 1 : $value - 1;
+						event_socket::api("conference '$conference_name' volume_in $member_id $value");
+					}
+					break;
+					
+				case 'volume_out':
+					if (empty($member_id) || empty($direction)) {
+						return ['success' => false, 'message' => 'Member ID and direction required'];
+					}
+					$current = event_socket::api("conference '$conference_name' volume_out $member_id");
+					$current = trim($current);
+					if (preg_match('/=(-?\d+)/', $current, $matches)) {
+						$value = (int)$matches[1];
+						$value = ($direction === 'up') ? $value + 1 : $value - 1;
+						event_socket::api("conference '$conference_name' volume_out $member_id $value");
+					}
+					break;
+					
+				default:
+					return ['success' => false, 'message' => 'Unknown action'];
+			}
+			
+			return ['success' => true, 'message' => 'Action executed'];
+			
+		} catch (\Exception $e) {
+			$this->error("Action failed: " . $e->getMessage());
+			return ['success' => false, 'message' => $e->getMessage()];
+		}
+	}
+	
+	/**
+	 * Kick all members from a conference
+	 *
+	 * @param string $conference_name
+	 * @return void
+	 */
+	private function kick_all_members(string $conference_name): void {
+		// Get conference member list
+		$json_str = event_socket::api("conference '$conference_name' json_list");
+		$conferences = json_decode($json_str, true);
+		
+		if (!is_array($conferences) || empty($conferences)) {
+			return;
+		}
+		
+		$conference = $conferences[0];
+		$members = $conference['members'] ?? [];
+		
+		$first = true;
+		foreach ($members as $member) {
+			$member_uuid = $member['uuid'] ?? '';
+			if (!empty($member_uuid)) {
+				event_socket::api("uuid_kill $member_uuid");
+				if ($first) {
+					usleep(500000); // 0.5 seconds for first member
+					$first = false;
+				} else {
+					usleep(10000); // 0.01 seconds for others
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Send action response back to client
+	 *
+	 * @param websocket_message $message Original message
+	 * @param bool $success Whether action succeeded
+	 * @param string $status_message Status message
+	 * @return void
+	 */
+	private function send_action_response(websocket_message $message, bool $success, string $status_message): void {
+		$response = new websocket_message();
+		$response
+			->payload(['success' => $success, 'message' => $status_message])
+			->service_name(self::get_service_name())
+			->topic('action_response')
+			->status_string($success ? 'ok' : 'error')
+			->status_code($success ? 200 : 400)
+			->request_id($message->request_id())
+			->resource_id($message->resource_id())
+		;
+
 		websocket_client::send($this->ws_client->socket(), $response);
 	}
 
