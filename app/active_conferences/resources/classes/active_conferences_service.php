@@ -148,7 +148,7 @@ class active_conferences_service extends base_websocket_system_service implement
 	 *
 	 * @var string
 	 */
-	protected string $debug_show_permissions_mode;
+	protected $debug_show_permissions_mode;
 
 	/**
 	 * Debug show switch event setting
@@ -156,7 +156,7 @@ class active_conferences_service extends base_websocket_system_service implement
 	 *
 	 * @var bool
 	 */
-	protected bool $debug_show_switch_event;
+	protected $debug_show_switch_event;
 
 	/**
 	 * Builds a filter for the subscriber
