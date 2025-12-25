@@ -119,14 +119,24 @@ class active_conferences_service extends base_websocket_system_service implement
 			'volume_out' => 'conference_interactive_gain',
 		];
 
+	/**
+	 * Event filter used to filter conference events
+	 *
+	 * @var mixed
+	 */
 	protected $event_filter;
 
+	/**
+	 * @var mixed $switch_socket The socket connection to the FreeSWITCH server
+	 *                           Used for communicating with the switch to manage
+	 *                           active conference sessions
+	 */
 	protected $switch_socket;
 
 	/**
-	 * Switch Event Socket
-	 *
-	 * @var event_socket
+	 * @var mixed $event_socket The event socket connection used to receive events
+	 *                          from the FreeSWITCH server
+	 * @access protected
 	 */
 	protected $event_socket;
 
@@ -201,7 +211,6 @@ class active_conferences_service extends base_websocket_system_service implement
 		$this->debug_show_switch_event = $settings->get('active_conferences', 'debug_show_switch_event', false) === true;
 		$this->debug("Loaded debug_show_permissions_mode: " . $this->debug_show_permissions_mode);
 		$this->debug("Loaded debug_show_switch_event: " . ($this->debug_show_switch_event ? 'true' : 'false'));
-		unset($settings, $database);
 
 		// Re-connect to the websocket server
 		$this->connect_to_ws_server();
@@ -213,7 +222,6 @@ class active_conferences_service extends base_websocket_system_service implement
 
 		// Add the switch event socket to the base websocket listener
 		$this->add_listener($this->switch_socket, [$this, 'handle_switch_events']);
-
 	}
 
 	/**
