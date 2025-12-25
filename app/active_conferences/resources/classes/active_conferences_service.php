@@ -235,6 +235,44 @@ class active_conferences_service extends base_websocket_system_service implement
 	}
 
 	/**
+	 * Handles incoming FreeSWITCH events from the event socket
+	 *
+	 * @return void
+	 */
+	protected function handle_switch_events(): void {
+		$event = $this->event_socket->read_event();
+		$event_message = event_message::create_from_switch_event($event, $this->event_filter);
+
+		// Set the event message topic as the event name
+		$topic = $event_message->topic = $event_message->event_name;
+
+		switch ($topic) {
+			case 'conference':
+			case 'conference::maintenance':
+				$this->on_conference_maintenance($event_message);
+				break;
+			case 'heartbeat':
+				$this->on_heartbeat($event_message);
+				break;
+			default:
+				break;
+
+		}
+		return;
+	}
+
+	/**
+	 * Called when a HEARTBEAT event is received from the switch
+	 *
+	 * @param event_message $event_message The event message object
+	 *
+	 * @return void
+	 */
+	protected function on_heartbeat($event_message): void {
+		$this->debug('HEARTBEAT');
+	}
+
+	/**
 	 * Called when the websocket connection is established
 	 *
 	 * @return void
