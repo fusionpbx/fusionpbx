@@ -1,39 +1,28 @@
 <?php
 
-/*
- * FusionPBX
- * Version: MPL 1.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- *
- * The Original Code is FusionPBX
- *
- * The Initial Developer of the Original Code is
- * Mark J Crane <markjcrane@fusionpbx.com>
- * Portions created by the Initial Developer are Copyright (C) 2008-2025
- * the Initial Developer. All Rights Reserved.
- *
- * Contributor(s):
- * Mark J Crane <markjcrane@fusionpbx.com>
- * Tim Fry <tim@fusionpbx.com>
- */
-
 /**
- * Description of active_conferences_service
+ * Handles WebSocket connections for the central system.
+ *
+ * This service builds on the shared functionality provided by {@see base_websocket_system_service}
+ * to manage WebSocket sessions in a uniform way across the application.  It exposes a
+ * single entry point for the central system to create, update, and terminate connections.
+ *
+ * In addition to the standard channel sockets, the service implements *event sockets*.
+ * These sockets are specifically wired to the switch‑event pipeline, allowing the
+ * service to push real‑time event payloads (e.g. switch state changes, alerts) back
+ * to the client without requiring a separate WebSocket implementation.
+ *
+ * @author Tim Fry <tim@fusionpbx.com>
+ * @version 1.0.0
  */
-
 class active_conferences_service extends base_websocket_system_service implements websocket_service_interface {
 
 	/**
 	 * Direct mapping of switch events using Key => Value pair
+	 *
+	 * This is used to only subscribe to specific events from the switch
+	 * that are relevant to active conferences.
+	 * @var array
 	 */
 	const switch_events = [
 		['API-Command' => 'conference'],
@@ -41,6 +30,13 @@ class active_conferences_service extends base_websocket_system_service implement
 		['Event-Subclass' => 'conference::maintenance'],
 	];
 
+	/**
+	 * Keys to include in the switch event payload sent to clients
+	 *
+	 * This is used to filter the switch event data sent to clients
+	 * to only include relevant information about the conference events.
+	 * @var array
+	 */
 	const event_keys = [
 		// Event name: CHANNEL_EXECUTE, CHANNEL_DESTROY, NEW_CALL...
 		'event_name',
@@ -102,22 +98,28 @@ class active_conferences_service extends base_websocket_system_service implement
 		'api_command_argument',
 	];
 
-	// Map actions to required permissions
+	/**
+	 * Map of conference actions to required permissions
+	 *
+	 * This is used to check if a user has the necessary permissions
+	 * to perform a specific action on a conference.
+	 * @var array
+	 */
 	const permission_map = [
-			'lock' => 'conference_interactive_lock',
-			'unlock' => 'conference_interactive_lock',
-			'mute' => 'conference_interactive_mute',
-			'unmute' => 'conference_interactive_mute',
-			'mute_all' => 'conference_interactive_mute',
-			'unmute_all' => 'conference_interactive_mute',
-			'deaf' => 'conference_interactive_deaf',
-			'undeaf' => 'conference_interactive_deaf',
-			'kick' => 'conference_interactive_kick',
-			'kick_all' => 'conference_interactive_kick',
-			'energy' => 'conference_interactive_energy',
-			'volume_in' => 'conference_interactive_volume',
-			'volume_out' => 'conference_interactive_gain',
-		];
+		'lock'       => 'conference_interactive_lock',
+		'unlock'     => 'conference_interactive_lock',
+		'mute'       => 'conference_interactive_mute',
+		'unmute'     => 'conference_interactive_mute',
+		'mute_all'   => 'conference_interactive_mute',
+		'unmute_all' => 'conference_interactive_mute',
+		'deaf'       => 'conference_interactive_deaf',
+		'undeaf'     => 'conference_interactive_deaf',
+		'kick'       => 'conference_interactive_kick',
+		'kick_all'   => 'conference_interactive_kick',
+		'energy'     => 'conference_interactive_energy',
+		'volume_in'  => 'conference_interactive_volume',
+		'volume_out' => 'conference_interactive_gain',
+	];
 
 	/**
 	 * Event filter used to filter conference events
@@ -158,7 +160,9 @@ class active_conferences_service extends base_websocket_system_service implement
 
 	/**
 	 * Builds a filter for the subscriber
+	 *
 	 * @param subscriber $subscriber
+	 *
 	 * @return filter
 	 */
 	public static function create_filter_chain_for(subscriber $subscriber): filter {
@@ -176,6 +180,7 @@ class active_conferences_service extends base_websocket_system_service implement
 	/**
 	 * Returns the service name for this service that is used when the web browser clients subscriber
 	 * to this service for updates
+	 *
 	 * @return string
 	 */
 	public static function get_service_name(): string {
@@ -184,8 +189,12 @@ class active_conferences_service extends base_websocket_system_service implement
 
 	/**
 	 * Returns a string used to execute a conference command
-	 * @param string $name
+	 *
+	 * @param string $uuid The UUID of the conference (optional)
+	 * @param string $domain_name The domain name of the conference (optional)
+	 *
 	 * @return string
+	 * @access public
 	 */
 	public static function get_conference_command(string $uuid = '', string $domain_name = ''): string {
 		if (!empty($uuid) && !empty($domain_name)) {
@@ -198,6 +207,7 @@ class active_conferences_service extends base_websocket_system_service implement
 
 	/**
 	 * Reloads the settings for the service so the service does not have to be restarted
+	 *
 	 * @return void
 	 */
 	protected function reload_settings(): void {
@@ -241,8 +251,10 @@ class active_conferences_service extends base_websocket_system_service implement
 
 	/**
 	 * Registers the switch events needed for active conferences
+	 *
+	 * @return void
 	 */
-	protected function register_event_socket_filters() {
+	protected function register_event_socket_filters(): void {
 		$this->event_socket->request('event plain all');
 
 		//
@@ -286,6 +298,11 @@ class active_conferences_service extends base_websocket_system_service implement
 		return;
 	}
 
+	/**
+	 * Establishes a connection to the switch server.
+	 *
+	 * @return bool Returns true if the connection was successfully established, false otherwise.
+	 */
 	protected function connect_to_switch_server(): bool {
 		// Get configuration data from the config.conf file
 		$host = parent::$config->get('switch.event_socket.host', '127.0.0.1');
@@ -320,6 +337,7 @@ class active_conferences_service extends base_websocket_system_service implement
 
 	/**
 	 * Displays the version of the active conferences service in the console
+	 *
 	 * @return void
 	 * @override base_websocket_system_service
 	 */
@@ -327,36 +345,11 @@ class active_conferences_service extends base_websocket_system_service implement
 		echo "Active Conferences Service 1.0\n";
 	}
 
-	protected function handle_switch_events(): void {
-		$event = $this->event_socket->read_event();
-		$event_message = event_message::create_from_switch_event($event, $this->event_filter);
-
-		// Set the event message topic as the event name
-		$topic = $event_message->topic = $event_message->event_name;
-
-		switch ($topic) {
-			case 'conference':
-			case 'conference::maintenance':
-				$this->on_conference_maintenance($event_message);
-				break;
-			case 'heartbeat':
-				$this->on_heartbeat($event_message);
-				break;
-			default:
-				break;
-
-		}
-		return;
-	}
-
-	protected function on_heartbeat($event_message): void {
-		$this->debug('HEARTBEAT');
-	}
-
 	/**
-	 * Registers the topics that this service will respond to from websockets
+	 * Handles FreeSWITCH events for active conferences.
 	 *
-	 * This method only runs once when the service starts.
+	 * This method processes incoming switch events related to conference
+	 * activity and performs the necessary actions based on event types.
 	 *
 	 * @return void
 	 * @throws Exception
@@ -375,6 +368,7 @@ class active_conferences_service extends base_websocket_system_service implement
 	 * Handle ping requests to keep the connection alive
 	 *
 	 * @param websocket_message $message
+	 *
 	 * @return void
 	 */
 	protected function handle_ping(websocket_message $message): void {
@@ -403,6 +397,7 @@ class active_conferences_service extends base_websocket_system_service implement
 	 *          mute_all, unmute_all, energy, volume_in, volume_out
 	 *
 	 * @param websocket_message $message
+	 *
 	 * @return void
 	 */
 	protected function handle_action(websocket_message $message): void {
@@ -469,11 +464,12 @@ class active_conferences_service extends base_websocket_system_service implement
 	/**
 	 * Execute a conference action via event socket
 	 *
-	 * @param string $action The action to execute
+	 * @param string $action          The action to execute
 	 * @param string $conference_name The conference name
-	 * @param string $member_id The member ID (optional)
-	 * @param string $uuid The call UUID (optional)
-	 * @param string $direction Direction for energy/volume (up/down)
+	 * @param string $member_id       The member ID (optional)
+	 * @param string $uuid            The call UUID (optional)
+	 * @param string $direction       Direction for energy/volume (up/down)
+	 *
 	 * @return array ['success' => bool, 'message' => string]
 	 */
 	private function execute_conference_action(string $action, string $conference_name, string $member_id, string $uuid, string $direction): array {
@@ -589,6 +585,7 @@ class active_conferences_service extends base_websocket_system_service implement
 	 * Kick all members from a conference
 	 *
 	 * @param string $conference_name
+	 *
 	 * @return void
 	 */
 	private function kick_all_members(string $conference_name): void {
@@ -624,6 +621,7 @@ class active_conferences_service extends base_websocket_system_service implement
 	 * @param websocket_message $message Original message
 	 * @param bool $success Whether action succeeded
 	 * @param string $status_message Status message
+	 *
 	 * @return void
 	 */
 	private function send_action_response(websocket_message $message, bool $success, string $status_message): void {
@@ -645,6 +643,7 @@ class active_conferences_service extends base_websocket_system_service implement
 	 * Subscribe to all events (wildcard) - useful for debugging
 	 *
 	 * @param websocket_message $message
+	 *
 	 * @return void
 	 */
 	protected function subscribe_all(websocket_message $message): void {
@@ -666,6 +665,13 @@ class active_conferences_service extends base_websocket_system_service implement
 		websocket_client::send($this->ws_client->socket(), $response);
 	}
 
+	/**
+	 * Handles requests for conferences in progress
+	 *
+	 * @param websocket_message $message The incoming websocket message
+	 *
+	 * @return void
+	 */
 	protected function request_in_progress(websocket_message $message): void {
 		$this->debug('Conferences in progress requested by websocket client');
 
@@ -756,6 +762,7 @@ class active_conferences_service extends base_websocket_system_service implement
 	 *
 	 * @param event_message $event_message The event data to broadcast
 	 * @param string $action The action/topic name for the event
+	 *
 	 * @return void
 	 */
 	private function broadcast_event(event_message $event_message, string $action): void {
@@ -770,5 +777,4 @@ class active_conferences_service extends base_websocket_system_service implement
 
 		websocket_client::send($this->ws_client->socket(), $message);
 	}
-
 }
