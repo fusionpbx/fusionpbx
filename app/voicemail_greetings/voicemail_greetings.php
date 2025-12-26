@@ -53,7 +53,7 @@
 	$order = $_GET["order"] ?? '';
 
 //set the back button url
-	$_SESSION['back'][$_SERVER['PHP_SELF']] = !empty($_GET['back']) ? urldecode($_GET['back']) : $_SESSION['back'][$_SERVER['PHP_SELF']];
+	$_SESSION['back'][$_SERVER['PHP_SELF']] = !empty($_GET['back']) ? urldecode($_GET['back']) : $_SESSION['back'][$_SERVER['PHP_SELF']] ?? '';
 
 //define order by default
 	if ($order_by == '') {
@@ -155,6 +155,13 @@
 				}
 			}
 		}
+		exit;
+	}
+
+//greeting limit
+	if (!empty($_POST['limit_reached']) && $_POST['limit_reached'] == 'true'){
+		message::add($text['message-maximum_voicemail_greetings'].' 9', 'negative');
+		header('Location: voicemail_greetings.php?id='.urlencode($voicemail_id));
 		exit;
 	}
 
@@ -363,24 +370,31 @@
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>$_SESSION['back'][$_SERVER['PHP_SELF']]]);
 	$margin_left = false;
-	if (permission_exists('voicemail_greeting_add') && is_array($greetings) && @sizeof($greetings) < 9 && $speech_enabled == 'true') {
+	if (permission_exists('voicemail_greeting_add') && is_array($greetings) && $speech_enabled == 'true') {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','style'=>'margin-left: 15px;','link'=>'voicemail_greeting_edit.php?voicemail_id='.urlencode($voicemail_id)]);
 		$margin_left = true;
 	}
 	if (permission_exists('voicemail_greeting_upload') && is_array($greetings) && @sizeof($greetings) < 9) {
-		echo 	"<form id='form_upload' class='inline' method='post' enctype='multipart/form-data'>\n";
-		echo 	"<input name='a' type='hidden' value='upload'>\n";
-		echo 	"<input type='hidden' name='id' value='".escape($voicemail_id)."'>\n";
-		echo 	"<input type='hidden' name='type' value='rec'>\n";
-		echo 	"<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+		echo "	<form id='form_upload' class='inline' method='post' enctype='multipart/form-data'>\n";
+		echo "	<input name='a' type='hidden' value='upload'>\n";
+		echo "	<input type='hidden' name='id' value='".escape($voicemail_id)."'>\n";
+		echo "	<input type='hidden' name='type' value='rec'>\n";
+		echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 		echo button::create(['type'=>'button','label'=>$text['button-upload'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_upload','style'=>(!$margin_left ? 'margin-left: 15px;' : null),'onclick'=>"$(this).fadeOut(250, function(){ $('span#form_upload').fadeIn(250); document.getElementById('ulfile').click(); });"]);
-		echo 	"<span id='form_upload' style='display: none;'>";
+		echo "	<span id='form_upload' style='display: none;'>";
 		echo button::create(['label'=>$text['button-cancel'],'icon'=>$settings->get('theme', 'button_icon_cancel'),'type'=>'button','id'=>'btn_upload_cancel','style'=>'margin-left: 15px;','onclick'=>"$('span#form_upload').fadeOut(250, function(){ document.getElementById('form_upload').reset(); $('#btn_upload').fadeIn(250) });"]);
-		echo 		"<input type='text' class='txt' style='width: 100px; cursor: pointer;' id='filename' placeholder='Select...' onclick=\"document.getElementById('ulfile').click(); this.blur();\" onfocus='this.blur();'>";
-		echo 		"<input type='file' id='ulfile' name='file' style='display: none;' accept='.wav,.mp3,.ogg' onchange=\"document.getElementById('filename').value = this.files.item(0).name; check_file_type(this);\">";
+		echo "		<input type='text' class='txt' style='width: 100px; cursor: pointer;' id='filename' placeholder='Select...' onclick=\"document.getElementById('ulfile').click(); this.blur();\" onfocus='this.blur();'>";
+		echo "		<input type='file' id='ulfile' name='file' style='display: none;' accept='.wav,.mp3,.ogg' onchange=\"document.getElementById('filename').value = this.files.item(0).name; check_file_type(this);\">";
 		echo button::create(['type'=>'submit','label'=>$text['button-upload'],'icon'=>$settings->get('theme', 'button_icon_upload')]);
-		echo 	"</span>\n";
-		echo 	"</form>";
+		echo "	</span>\n";
+		echo "	</form>\n";
+		$margin_left = true;
+	}
+	else if (permission_exists('voicemail_greeting_upload') && is_array($greetings) && @sizeof($greetings) >= 9) {
+		echo "	<form class='inline' method='post'>\n";
+		echo "	<input type='hidden' name='limit_reached' value='true'>\n";
+		echo button::create(['type'=>'submit','label'=>$text['button-upload'],'icon'=>$settings->get('theme', 'button_icon_add')]);
+		echo "	</form>\n";
 		$margin_left = true;
 	}
 	if (permission_exists('voicemail_greeting_delete') && $greetings) {
