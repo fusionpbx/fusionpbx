@@ -94,10 +94,12 @@ class ws_client {
 		const service = message.service_name || message.service || 'active.conferences';
 
 		// Ensure event has event_name set from topic if not in payload
+		// IMPORTANT: Also preserve the topic as the action since that's what the PHP service sends
 		const event_data = (typeof switch_event === 'object' && switch_event !== null)
-			? { ...switch_event, event_name: switch_event.event_name || message.topic }
-			: { event_name: message.topic, data: switch_event };
+			? { ...switch_event, event_name: switch_event.event_name || message.topic, topic: message.topic }
+			: { event_name: message.topic, topic: message.topic, data: switch_event };
 
+		console.log('Dispatching event to handlers:', event_data);
 		this._dispatch_event(service, event_data);
 	}
 
