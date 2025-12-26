@@ -266,6 +266,8 @@ const domain_name = '<?= $_SESSION['domain_name'] ?>';
 
 // Start websocket connection
 connect_websocket();
+
+render_conference_room();
 </script>
 
 <?php require_once "resources/footer.php"; ?>

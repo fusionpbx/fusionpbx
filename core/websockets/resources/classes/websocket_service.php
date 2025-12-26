@@ -238,12 +238,21 @@ class websocket_service extends service {
 						$class_name         = $subscriber_service->service_class();
 						// Make sure we can call the 'create_filter_chain_for' method
 						if (is_a($class_name, 'websocket_service_interface', true)) {
-							// Call the service class method to validate the subscriber
-							$filter = $class_name::create_filter_chain_for($subscriber);
-							if ($filter !== null) {
-								// Log the filter has been set for the subscriber
-								$this->info("Set filter for " . $subscriber->id());
-								$subscriber->set_filter($filter);
+							try {
+								// Call the service class method to validate the subscriber
+								$filter = $class_name::create_filter_chain_for($subscriber);
+								if ($filter !== null) {
+									// Log the filter has been set for the subscriber
+									$this->info("Set filter for " . $subscriber->id());
+									$subscriber->set_filter($filter);
+								}
+							} catch (subscriber_missing_permission_exception $smpe) {
+								// Subscriber requested debug mode but service is not in debug mode
+								// Disconnect them for security
+								$this->warning("Client $subscriber->id denied: " . $smpe->getMessage());
+								$subscriber->send(websocket_message::request_unauthorized($message->request_id, $message->service));
+								$this->handle_disconnect($subscriber->socket_id());
+								return;
 							}
 						}
 						$this->info("Set permissions for $subscriber->id for service " . $subscriber_service->service_name());

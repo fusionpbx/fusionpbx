@@ -54,11 +54,11 @@ function connect_websocket() {
 			console.warn('WebSocket disconnected - code:', event.code);
 			if (auth_timeout) { clearTimeout(auth_timeout); auth_timeout = null; }
 			update_connection_status('disconnected');
-			
+
 			if (ping_interval_timer) { clearInterval(ping_interval_timer); ping_interval_timer = null; }
 			if (refresh_interval_timer) { clearInterval(refresh_interval_timer); refresh_interval_timer = null; }
 			if (ping_timeout) { clearTimeout(ping_timeout); ping_timeout = null; }
-			
+
 			setTimeout(() => { window.location.reload(); }, ws_config.reconnect_delay);
 		});
 
@@ -89,7 +89,7 @@ function on_authenticated(message) {
 	// refresh_interval is not used; we rely on incremental websocket events
 
 	ws.subscribe('active.conferences');
-	
+
 	// Register event handlers
 	ws.on_event('*', handle_websocket_event);
 
@@ -115,7 +115,7 @@ function handle_websocket_event(event) {
     console.log('handle_websocket_event - received event:', JSON.stringify(event));
     console.log('handle_websocket_event - conference_container exists:', !!document.getElementById('conference_container'));
     console.log('handle_websocket_event - conferences_container exists:', !!document.getElementById('conferences_container'));
-    
+
     if (typeof handle_room_event === 'function' && document.getElementById('conference_container')) {
         console.log('Delegating to handle_room_event');
         handle_room_event(event);
@@ -130,7 +130,7 @@ function handle_websocket_event(event) {
 function update_connection_status(state) {
 	const el = document.getElementById('connection_status');
 	if (!el) return;
-	
+
 	const color = status_colors[state] || status_colors.connecting;
 	const tooltip = status_tooltips[state] || status_tooltips.connecting;
 
@@ -205,7 +205,7 @@ function load_conference_list() {
 function render_conference_list(conferences) {
 	const container = document.getElementById('conferences_container');
     if (!container) return;
-    
+
 	if (!conferences) conferences = [];
 
 	const filtered_conferences = conferences.filter(conf => {
@@ -236,13 +236,13 @@ function render_conference_list(conferences) {
 				}
 				display_name = display_name.replace(/-/g, ' ').replace(/_/g, ' ');
 			}
-			
+
 			// Get extension from conference_name (UUID for Conference Center, extension for simple Conference)
 			let extension = full_name;
 			if (full_name.includes('@')) {
 				extension = full_name.split('@')[0];
 			}
-			
+
 			const member_count = row.member_count;
 			const list_row_url = 'active_conference_room.php?c=' + encodeURIComponent(extension);
 
@@ -257,7 +257,7 @@ function render_conference_list(conferences) {
 			html += "	<td>" + escapeHtml(extension) + "</td>\n";
 			html += "	<td></td>\n";
 			html += "	<td class='center'>" + member_count + "</td>\n";
-			
+
 			if (permissions && permissions.conference_interactive_view && permissions.list_row_edit_button) {
 				html += "	<td class='action-button'>";
 				html += "		<a href='" + list_row_url + "' title='" + text['button-view'] + "'>";
@@ -270,9 +270,9 @@ function render_conference_list(conferences) {
 	}
 	html += "</table>\n";
 	html += "</div>\n";
-	
+
 	container.innerHTML = html;
-	
+
 	const rows = container.querySelectorAll('.list-row');
 	rows.forEach(row => {
 		row.addEventListener('click', function(e) {
@@ -288,7 +288,7 @@ function handle_list_event(event) {
 	const action = payload.action || event.action || event.event_name;
 	const evt_domain_name = payload.domain_name || event.domain_name;
 	const conference_name = payload.conference_name || '';
-	
+
 	// Filter by domain if provided
 	if (evt_domain_name && evt_domain_name !== domain_name) {
 		// Also check if conference_name contains our domain
@@ -385,7 +385,7 @@ function handle_list_del_member(payload) {
 function handle_list_conference_create(payload) {
 	const conference_name = payload.conference_name || '';
 	const conference_display_name = payload.conference_display_name || '';
-	
+
 	if (!conference_name || !conference_name.includes('@' + domain_name)) return;
 
 	// Check if row already exists by data-conference-name attribute
@@ -408,7 +408,7 @@ function handle_list_conference_create(payload) {
  */
 function handle_list_conference_destroy(payload) {
 	const conference_name = payload.conference_name || '';
-	
+
 	if (!conference_name) return;
 
 	// Find and remove row by data-conference-name attribute
@@ -432,7 +432,7 @@ function add_conference_row(conference_name, member_count, conference_display_na
 	if (!table) return;
 
 	const full_name = conference_name;
-	
+
 	// Use provided display name or parse from conference_name
 	let display_name = conference_display_name || '';
 	if (!display_name) {
@@ -442,13 +442,13 @@ function add_conference_row(conference_name, member_count, conference_display_na
 		}
 		display_name = display_name.replace(/-/g, ' ').replace(/_/g, ' ');
 	}
-	
+
 	// Get extension/UUID for URL
 	let extension = full_name;
 	if (full_name.includes('@')) {
 		extension = full_name.split('@')[0];
 	}
-	
+
 	const list_row_url = 'active_conference_room.php?c=' + encodeURIComponent(extension);
 
 	const row = document.createElement('tr');
@@ -467,7 +467,7 @@ function add_conference_row(conference_name, member_count, conference_display_na
 	html += "<td>" + escapeHtml(extension) + "</td>";
 	html += "<td></td>";
 	html += "<td class='center'>" + (member_count || 0) + "</td>";
-	
+
 	if (permissions && permissions.conference_interactive_view && permissions.list_row_edit_button) {
 		html += "<td class='action-button'>";
 		html += "<a href='" + list_row_url + "' title='" + text['button-view'] + "'>";
@@ -501,7 +501,7 @@ function handle_room_event(event) {
 	// Only handle events for this conference room
 	if (event_conference_name && typeof conference_name !== 'undefined') {
 		// Check if event conference matches page conference (either direction)
-		const matches = event_conference_name.includes(conference_id) || 
+		const matches = event_conference_name.includes(conference_id) ||
 		                event_conference_name.includes(conference_name) ||
 		                conference_name.includes(event_conference_name.split('@')[0]);
 		if (!matches) {
@@ -587,7 +587,7 @@ function handle_room_add_member(payload) {
 	const container = document.getElementById('conference_container');
 	const table = container ? container.querySelector('table.list') : null;
 	console.log('Container found:', !!container, 'Table found:', !!table);
-	
+
 	if (!table) {
 		// No table exists - reload conference room data to show the full view
 		console.log('No table found - reloading room view');
@@ -613,7 +613,7 @@ function handle_room_add_member(payload) {
 	console.log('Creating row for member:', member.id, member);
 	const row = create_member_row(member);
 	console.log('Row created:', row);
-	
+
 	// Append to tbody if exists, otherwise to table
 	const tbody = table.querySelector('tbody') || table;
 	tbody.appendChild(row);
@@ -882,7 +882,7 @@ function create_member_row(member) {
 	const uuid = member.uuid;
 	const name = decodeURIComponent(member.caller_id_name || '');
 	const num = member.caller_id_number || '';
-	
+
 	const flags = member.flags || {};
 	const can_hear = flags.can_hear !== false;
 	const can_speak = flags.can_speak !== false;
@@ -891,10 +891,10 @@ function create_member_row(member) {
 	const has_floor = flags.has_floor === true;
 	const is_moderator = flags.is_moderator === true;
 	const hand_raised = false;
-	
+
 	const join_time = member.join_time || 0;
 	const last_talking = member.last_talking || 0;
-	
+
 	const format_time_val = (val) => {
 		const sec = parseInt(val, 10) || 0;
 		const h = Math.floor(sec / 3600);
@@ -902,14 +902,14 @@ function create_member_row(member) {
 		const s = sec % 60;
 		return [h,m,s].map(v => v < 10 ? "0" + v : v).join(":");
 	};
-	
+
 	const join_formatted = format_time_val(join_time);
 	const quiet_formatted = format_time_val(last_talking);
-	
+
 	let row_onclick = "";
 	let row_title = "";
 	let action_mute = "mute";
-	
+
 	if (user_permissions.mute) {
 		action_mute = can_speak ? 'mute' : 'unmute';
 		row_onclick = `onclick="conference_action('${action_mute}', '${id}', '${uuid}');"`;
@@ -922,7 +922,7 @@ function create_member_row(member) {
 	row.setAttribute('data-uuid', uuid);
 	row.setAttribute('data-join-time', join_time);
 	row.setAttribute('data-last-talking', last_talking);
-	
+
 	let html = '';
 	html += `<td ${row_onclick} ${row_title}>`;
 	if (is_moderator) {
@@ -931,17 +931,17 @@ function create_member_row(member) {
 		html += `<i class='fas fa-user fa-fw' title='${text['label-participant']}'></i>`;
 	}
 	html += "</td>";
-	
+
 	const talking_vis = talking ? 'visible' : 'hidden';
 	const talking_icon = `<span class='talking-icon far fa-comment' style='font-size: 14px; margin: -2px 10px -2px 15px; visibility: ${talking_vis};' align='absmiddle' title='${text['label-talking']}'></span>`;
 	html += `<td ${row_onclick} ${row_title} class='no-wrap'>${escapeHtml(name)}${talking_icon}</td>`;
-	
+
 	html += `<td ${row_onclick} ${row_title}>${escapeHtml(num)}</td>`;
 	html += `<td ${row_onclick} ${row_title} class='hide-sm-dn join-time'>${join_formatted}</td>`;
 	html += `<td ${row_onclick} ${row_title} class='hide-xs quiet-time'>${quiet_formatted}</td>`;
 	html += `<td ${row_onclick} ${row_title} class='hide-sm-dn'>${has_floor ? text['label-yes'] : text['label-no']}</td>`;
 	html += `<td ${row_onclick} ${row_title} class='hide-sm-dn'>${hand_raised ? text['label-yes'] : text['label-no']}</td>`;
-	
+
 	html += `<td ${row_onclick} ${row_title} class='center'>`;
 	html += can_speak ? `<i class='fas fa-microphone fa-fw' title='${text['label-speak']}'></i>` : `<i class='fas fa-microphone-slash fa-fw' title='${text['label-speak']}'></i>`;
 	html += can_hear ? `<i class='fas fa-headphones fa-fw' title='${text['label-hear']}' style='margin-left: 10px;'></i>` : `<i class='fas fa-deaf fa-fw' title='${text['label-hear']}' style='margin-left: 10px;'></i>`;
@@ -949,28 +949,28 @@ function create_member_row(member) {
 		html += `<i class='fas fa-video fa-fw' title='${text['label-video']}' style='margin-left: 10px;'></i>`;
 	}
 	html += "</td>";
-	
+
 	if (user_permissions.energy) {
 		html += "<td class='button center'>";
 		html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-energy']}' onclick="event.stopPropagation(); conference_action('energy', '${id}', '', 'up');"><span class='fas fa-plus'></span></button> `;
 		html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-energy']}' onclick="event.stopPropagation(); conference_action('energy', '${id}', '', 'down');"><span class='fas fa-minus'></span></button>`;
 		html += "</td>";
 	}
-	
+
 	if (user_permissions.volume) {
 		html += "<td class='button center'>";
 		html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-volume']}' onclick="event.stopPropagation(); conference_action('volume_in', '${id}', '', 'down');"><span class='fas fa-volume-down'></span></button> `;
 		html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-volume']}' onclick="event.stopPropagation(); conference_action('volume_in', '${id}', '', 'up');"><span class='fas fa-volume-up'></span></button>`;
 		html += "</td>";
 	}
-	
+
 	if (user_permissions.gain) {
 		html += "<td class='button center'>";
 		html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-gain']}' onclick="event.stopPropagation(); conference_action('volume_out', '${id}', '', 'down');"><span class='fas fa-sort-amount-down'></span></button> `;
 		html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-gain']}' onclick="event.stopPropagation(); conference_action('volume_out', '${id}', '', 'up');"><span class='fas fa-sort-amount-up'></span></button>`;
 		html += "</td>";
 	}
-	
+
 	html += "<td class='button right' style='padding-right: 0;'>";
 	if (user_permissions.mute) {
 		if (action_mute == 'mute') {
@@ -979,7 +979,7 @@ function create_member_row(member) {
 			html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-unmute']}' onclick="event.stopPropagation(); conference_action('unmute', '${id}', '${uuid}');"><span class='fas fa-microphone'></span></button> `;
 		}
 	}
-	
+
 	if (user_permissions.deaf) {
 		if (can_hear) {
 			html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-deaf']}' onclick="event.stopPropagation(); conference_action('deaf', '${id}');"><span class='fas fa-deaf'></span></button> `;
@@ -987,7 +987,7 @@ function create_member_row(member) {
 			html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-undeaf']}' onclick="event.stopPropagation(); conference_action('undeaf', '${id}');"><span class='fas fa-headphones'></span></button> `;
 		}
 	}
-	
+
 	if (user_permissions.kick) {
 		html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-kick']}' onclick="event.stopPropagation(); conference_action('kick', '${id}', '${uuid}');"><span class='fas fa-ban'></span></button>`;
 	}
@@ -1032,7 +1032,15 @@ function render_conference_room(conference) {
 
 	// Check if conference was not found in database
 	if (!conference || conference.error === 'not_found' || conference.exists_in_database === false) {
-		container.innerHTML = "<div class='center'>" + (text['message-no_conference'] || 'Conference not found') + "</div>";
+		//container.innerHTML = "<div class='center'>" + (text['message-no_conference'] || 'Conference not found') + "</div>";
+		conference = {
+			members: [],
+			member_count: 0,
+			locked: false,
+			recording: false,
+			conference_display_name: '',
+			conference_name: conference_name
+		}
 		return;
 	}
 
@@ -1042,7 +1050,7 @@ function render_conference_room(conference) {
 	const locked = conference.locked === true;
 	const recording = conference.recording === true;
 	const display_name = conference.conference_display_name || conference.conference_name || '';
-	
+
 	let mute_all = false;
 	let found_unmuted = false;
 	let found_non_moderator = false;
@@ -1051,7 +1059,7 @@ function render_conference_room(conference) {
 		const is_mod = flags.is_moderator;
 		if (!is_mod) {
 			found_non_moderator = true;
-			const speaks = flags.can_speak !== false; 
+			const speaks = flags.can_speak !== false;
 			if (speaks) found_unmuted = true;
 		}
 	});
@@ -1059,7 +1067,7 @@ function render_conference_room(conference) {
 
 	let html = "";
 	html += "<div style='float: right;'>\n";
-	
+
 	const rec_icon = recording ? "recording.png" : "not_recording.png";
 	const rec_title = recording ? text['label-recording'] : text['label-not-recording'];
 	html += "<img src='resources/images/" + rec_icon + "' style='width: 16px; height: 16px; border: none;' align='absmiddle' title='" + escapeHtml(rec_title) + "'>&nbsp;&nbsp;";
@@ -1071,7 +1079,7 @@ function render_conference_room(conference) {
 			html += "<button type='button' class='btn btn-default' onclick=\"conference_action('lock');\" title='" + text['label-lock'] + "'><span class='fas fa-lock'></span> <span class='hidden-xs'>" + text['label-lock'] + "</span></button> ";
 		}
 	}
-	
+
 	if (user_permissions.mute) {
 		if (mute_all) {
 			html += "<button type='button' class='btn btn-default' onclick=\"conference_action('unmute_all');\" title='" + text['label-unmute-all'] + "'><span class='fas fa-microphone'></span> <span class='hidden-xs'>" + text['label-unmute-all'] + "</span></button> ";
@@ -1079,12 +1087,12 @@ function render_conference_room(conference) {
 			html += "<button type='button' class='btn btn-default' onclick=\"conference_action('mute_all');\" title='" + text['label-mute-all'] + "'><span class='fas fa-microphone-slash'></span> <span class='hidden-xs'>" + text['label-mute-all'] + "</span></button> ";
 		}
 	}
-	
+
 	if (user_permissions.kick) {
 		html += "<button type='button' class='btn btn-default' onclick=\"conference_action('kick_all');\" title='" + text['label-end-conference'] + "'><span class='fas fa-stop'></span> <span class='hidden-xs'>" + text['label-end-conference'] + "</span></button>";
 	}
 	html += "</div>\n";
-	
+
 	html += "<strong>" + text['label-members'] + ": " + member_count + "</strong><br /><br />\n";
 
 	html += "<div class='card'>\n";
@@ -1109,19 +1117,19 @@ function render_conference_room(conference) {
 		const uuid = member.uuid;
 		const name = decodeURIComponent(member.caller_id_name || '');
 		const num = member.caller_id_number || '';
-		
+
 		const flags = member.flags || {};
-		const can_hear = flags.can_hear !== false; 
+		const can_hear = flags.can_hear !== false;
 		const can_speak = flags.can_speak !== false;
 		const talking = flags.talking === true;
 		const has_video = flags.has_video === true;
 		const has_floor = flags.has_floor === true;
 		const is_moderator = flags.is_moderator === true;
-		const hand_raised = false; 
-		
+		const hand_raised = false;
+
 		const join_time = member.join_time || 0;
 		const last_talking = member.last_talking || 0;
-		
+
 		const format_time_val = (val) => {
 			const sec = parseInt(val, 10) || 0;
 			const h = Math.floor(sec / 3600);
@@ -1129,22 +1137,22 @@ function render_conference_room(conference) {
 			const s = sec % 60;
 			return [h,m,s].map(v => v < 10 ? "0" + v : v).join(":");
 		};
-		
+
 		const join_formatted = format_time_val(join_time);
 		const quiet_formatted = format_time_val(last_talking);
-		
+
 		let row_onclick = "";
 		let row_title = "";
 		let action_mute = "mute";
-		
+
 		if (user_permissions.mute) {
 			action_mute = can_speak ? 'mute' : 'unmute';
 			row_onclick = `onclick="conference_action('${action_mute}', '${id}', '${uuid}');"`;
 			row_title = `title="${(text['message-click_to_' + action_mute] || action_mute)}"`;
 		}
-		
+
 		html += `<tr class='list-row' data-member-id='${id}' data-uuid='${uuid}' data-join-time='${join_time}' data-last-talking='${last_talking}'>\n`;
-		
+
 		html += `<td ${row_onclick} ${row_title}>`;
 		if (is_moderator) {
 			html += `<i class='fas fa-user-tie fa-fw' title='${text['label-moderator']}'></i>`;
@@ -1152,17 +1160,17 @@ function render_conference_room(conference) {
 			html += `<i class='fas fa-user fa-fw' title='${text['label-participant']}'></i>`;
 		}
 		html += "</td>\n";
-		
+
 		const talking_vis = talking ? 'visible' : 'hidden';
 		const talking_icon = `<span class='talking-icon far fa-comment' style='font-size: 14px; margin: -2px 10px -2px 15px; visibility: ${talking_vis};' align='absmiddle' title='${text['label-talking']}'></span>`;
 		html += `<td ${row_onclick} ${row_title} class='no-wrap'>${escapeHtml(name)}${talking_icon}</td>\n`;
-		
+
 		html += `<td ${row_onclick} ${row_title}>${escapeHtml(num)}</td>\n`;
 		html += `<td ${row_onclick} ${row_title} class='hide-sm-dn join-time'>${join_formatted}</td>\n`;
 		html += `<td ${row_onclick} ${row_title} class='hide-xs quiet-time'>${quiet_formatted}</td>\n`;
 		html += `<td ${row_onclick} ${row_title} class='hide-sm-dn'>${has_floor ? text['label-yes'] : text['label-no']}</td>\n`;
 		html += `<td ${row_onclick} ${row_title} class='hide-sm-dn'>${hand_raised ? text['label-yes'] : text['label-no']}</td>\n`;
-		
+
 		html += `<td ${row_onclick} ${row_title} class='center'>`;
 		html += can_speak ? `<i class='fas fa-microphone fa-fw' title='${text['label-speak']}'></i>` : `<i class='fas fa-microphone-slash fa-fw' title='${text['label-speak']}'></i>`;
 		html += can_hear ? `<i class='fas fa-headphones fa-fw' title='${text['label-hear']}' style='margin-left: 10px;'></i>` : `<i class='fas fa-deaf fa-fw' title='${text['label-hear']}' style='margin-left: 10px;'></i>`;
@@ -1170,28 +1178,28 @@ function render_conference_room(conference) {
 			html += `<i class='fas fa-video fa-fw' title='${text['label-video']}' style='margin-left: 10px;'></i>`;
 		}
 		html += "</td>\n";
-		
+
 		if (user_permissions.energy) {
 			html += "<td class='button center'>\n";
 			html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-energy']}' onclick="event.stopPropagation(); conference_action('energy', '${id}', '', 'up');"><span class='fas fa-plus'></span></button> `;
 			html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-energy']}' onclick="event.stopPropagation(); conference_action('energy', '${id}', '', 'down');"><span class='fas fa-minus'></span></button>`;
 			html += "</td>\n";
 		}
-		
+
 		if (user_permissions.volume) {
 			html += "<td class='button center'>\n";
 			html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-volume']}' onclick="event.stopPropagation(); conference_action('volume_in', '${id}', '', 'down');"><span class='fas fa-volume-down'></span></button> `;
 			html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-volume']}' onclick="event.stopPropagation(); conference_action('volume_in', '${id}', '', 'up');"><span class='fas fa-volume-up'></span></button>`;
 			html += "</td>\n";
 		}
-		
+
 		if (user_permissions.gain) {
 			html += "<td class='button center'>\n";
 			html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-gain']}' onclick="event.stopPropagation(); conference_action('volume_out', '${id}', '', 'down');"><span class='fas fa-sort-amount-down'></span></button> `;
 			html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-gain']}' onclick="event.stopPropagation(); conference_action('volume_out', '${id}', '', 'up');"><span class='fas fa-sort-amount-up'></span></button>`;
 			html += "</td>\n";
 		}
-		
+
 		html += "<td class='button right' style='padding-right: 0;'>\n";
 		if (user_permissions.mute) {
 			if (action_mute == 'mute') {
@@ -1200,7 +1208,7 @@ function render_conference_room(conference) {
 				html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-unmute']}' onclick="event.stopPropagation(); conference_action('unmute', '${id}', '${uuid}');"><span class='fas fa-microphone'></span></button> `;
 			}
 		}
-		
+
 		if (user_permissions.deaf) {
 			if (can_hear) {
 				html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-deaf']}' onclick="event.stopPropagation(); conference_action('deaf', '${id}');"><span class='fas fa-deaf'></span></button> `;
@@ -1208,19 +1216,19 @@ function render_conference_room(conference) {
 				html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-undeaf']}' onclick="event.stopPropagation(); conference_action('undeaf', '${id}');"><span class='fas fa-headphones'></span></button> `;
 			}
 		}
-		
+
 		if (user_permissions.kick) {
 			html += `<button type='button' class='btn btn-default btn-xs' title='${text['label-kick']}' onclick="event.stopPropagation(); conference_action('kick', '${id}', '${uuid}');"><span class='fas fa-ban'></span></button>`;
 		}
 		html += "</td>\n";
-		
+
 		html += "</tr>\n";
 	});
 	html += "</table>\n";
 	html += "</div>\n";
-	
+
 	container.innerHTML = html;
-	
+
 	initialize_timers();
 }
 
