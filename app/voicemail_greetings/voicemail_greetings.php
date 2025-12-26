@@ -189,12 +189,12 @@
 
 			//find the next available greeting id starting at 1
 			$greeting_id = 1;
-			while (true) {
+			for ($i = 1; $i <= 9; $i++) {
 				$found_existing_file = false;
 
 				//check for wav, mp3, and ogg files with the current greeting id
 				foreach ($allowed_extensions as $extension) {
-					$potential_file_name = "greeting_{$greeting_id}.{$extension}";
+					$potential_file_name = "greeting_{$i}.{$extension}";
 					if (file_exists($greeting_dir . '/' . $potential_file_name)) {
 						$found_existing_file = true;
 						break;
@@ -202,10 +202,10 @@
 				}
 
 				if (!$found_existing_file) {
+					//found an available greeting id
+					$greeting_id = $i;
 					break;
 				}
-
-				$greeting_id++;
 			}
 
 			//set the greeting file name
