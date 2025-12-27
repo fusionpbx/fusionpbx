@@ -46,6 +46,20 @@
 		$gateways = $_POST['gateways'] ?? '';
 	}
 
+//get total gateway count from the database, check limit, if defined
+	if (!empty($action) && $action == 'copy' && !empty($settings->get('limit', 'gateways'))) {
+		$sql = "select count(gateway_uuid) from v_gateways ";
+		$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$total_gateways = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
+		if ($total_gateways >= $settings->get('limit', 'gateways')) {
+			message::add($text['message-maximum_gateways'].' '.$settings->get('limit', 'gateways'), 'negative');
+			header('Location: gateways.php');
+			exit;
+		}
+	}
+
 //process the http post data by action
 	if (!empty($action) && !empty($gateways)) {
 		switch ($action) {
