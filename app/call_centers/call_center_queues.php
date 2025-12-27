@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -53,6 +53,21 @@
 		$action = $_POST['action'];
 		$search = $_POST['search'] ?? '';
 		$call_center_queues = $_POST['call_center_queues'];
+	}
+
+//get total call center queues count from the database, check limit, if defined
+	if (!empty($action) && $action == 'copy' && !empty($settings->get('limit','call_center_queues', ''))) {
+		$sql = "select count(*) from v_call_center_queues ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$total_call_center_queues = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
+
+		if ($total_call_center_queues >= $settings->get('limit','call_center_queues', 0)) {
+			message::add($text['message-maximum_queues'].' '.$settings->get('limit','call_center_queues', ''), 'negative');
+			header('Location: call_center_queues.php');
+			return;
+		}
 	}
 
 //process the http post data by action
@@ -144,11 +159,11 @@
 		echo button::create(['type'=>'button','label'=>$text['button-wallboard'],'icon'=>'th','link'=>PROJECT_PATH.'/app/call_center_wallboard/call_center_wallboard.php']);
 	}
 	$margin_left = permission_exists('call_center_agent_view') || permission_exists('call_center_wallboard') ? 'margin-left: 15px;' : null;
-	if (permission_exists('call_center_queue_add') && (!is_numeric($settings->get('limit', 'call_center_queues') ?? '') || $num_rows <= $settings->get('limit', 'call_center_queues'))) {
+	if (permission_exists('call_center_queue_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','style'=>$margin_left,'link'=>'call_center_queue_edit.php']);
 		unset($margin_left);
 	}
-	if (permission_exists('call_center_queue_add') && $result && (!is_numeric($settings->get('limit', 'call_center_queues') ?? '') || $num_rows <= $settings->get('limit', 'call_center_queues'))) {
+	if (permission_exists('call_center_queue_add') && $result) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none; '.!empty($margin_left),'onclick'=>"modal_open('modal-copy','btn_copy');"]);
 		unset($margin_left);
 	}
@@ -176,7 +191,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (permission_exists('call_center_queue_add') && $result && (!is_numeric($settings->get('limit', 'call_center_queues') ?? '') || $num_rows <= $settings->get('limit', 'call_center_queues'))) {
+	if (permission_exists('call_center_queue_add') && $result) {
 		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('copy'); list_form_submit('form_list');"])]);
 	}
 	if (permission_exists('call_center_queue_delete') && $result) {

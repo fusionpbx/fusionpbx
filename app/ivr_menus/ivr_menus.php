@@ -51,6 +51,20 @@
 		$ivr_menus = $_POST['ivr_menus'];
 	}
 
+//get total ivr menu count from the database, check limit, if defined
+	if (!empty($settings->get('limit', 'ivr_menus'))) {
+		$sql = "select count(*) as num_rows from v_ivr_menus where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$total_ivr_menus = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
+
+		if ($action == 'copy' && $total_ivr_menus >= $settings->get('limit', 'ivr_menus')) {
+			message::add($text['message-maximum_ivr_menus'].' '.$settings->get('limit', 'ivr_menus'), 'negative');
+			header('Location: ivr_menus.php');
+			exit;
+		}
+	}
+
 //process the http post data by action
 	if (!empty($action) && is_array($ivr_menus) && @sizeof($ivr_menus) != 0) {
 		switch ($action) {
@@ -163,10 +177,10 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-ivr_menus']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('ivr_menu_add') && (empty($settings->get('limit', 'ivr_menus')) || $num_rows < $settings->get('limit', 'ivr_menus'))) {
+	if (permission_exists('ivr_menu_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'ivr_menu_edit.php']);
 	}
-	if (permission_exists('ivr_menu_add') && $ivr_menus && (empty($settings->get('limit', 'ivr_menus')) || $num_rows < $settings->get('limit', 'ivr_menus'))) {
+	if (permission_exists('ivr_menu_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
 	if (permission_exists('ivr_menu_edit') && $ivr_menus) {
