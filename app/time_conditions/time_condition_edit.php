@@ -304,6 +304,14 @@
 								$cond_start = $_REQUEST['value'][$group_id][$cond_num]['start'];
 								$cond_stop = $_REQUEST['value'][$group_id][$cond_num]['stop'];
 
+								//convert to 24 hour time
+								if (!empty($cond_start) && $cond_var == 'date-time' && $settings->get('domain', 'time_format') != '24h') {
+									$cond_start = DateTime::createFromFormat('Y-m-d h:i a', $cond_start)->format('Y-m-d H:i');
+								}
+								if (!empty($cond_stop) && $cond_var == 'date-time' && $settings->get('domain', 'time_format') != '24h') {
+									$cond_stop = DateTime::createFromFormat('Y-m-d h:i a', $cond_stop)->format('Y-m-d H:i');
+								}
+
 								//convert time-of-day to minute-of-day (due to inconsistencies with time-of-day on some systems)
 								if ($cond_var == 'time-of-day') {
 									$cond_var = 'minute-of-day';
@@ -1072,6 +1080,11 @@ if ($action == 'update') {
 						if ($cond_var == 'date-time') {
 							echo "	change_to_input(document.getElementById('value_".$group_id."_' + condition_id + '_start'));\n";
 							echo "	change_to_input(document.getElementById('value_".$group_id."_' + condition_id + '_stop'));\n";
+							//convert to 12 hour time if needed
+							if ($settings->get('domain', 'time_format') != '24h') {
+								$cond_val_start = DateTime::createFromFormat('Y-m-d H:i', $cond_val_start)->format('Y-m-d h:i a');
+								$cond_val_stop = DateTime::createFromFormat('Y-m-d H:i', $cond_val_stop)->format('Y-m-d h:i a');
+							}
 							echo "	$('#value_".$group_id."_' + condition_id + '_start').val('".$cond_val_start."');\n";
 							echo "	$('#value_".$group_id."_' + condition_id + '_stop').val('".$cond_val_stop."');\n";
 						}
