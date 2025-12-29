@@ -211,7 +211,7 @@
 			}
 			const original_message = modal_message_element.getAttribute('data-original-message');
 
-			document.querySelectorAll("input[type='checkbox']:checked:not(#checkbox_all)").forEach(checkbox => {
+			document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox_all)').forEach(checkbox => {
 				selected_items.push(checkbox.dataset.itemName);
 			});
 
