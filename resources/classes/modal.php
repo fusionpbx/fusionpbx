@@ -18,7 +18,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2020
+	Copyright (C) 2010-2025
 	All Rights Reserved.
 
 	Contributor(s):
@@ -68,9 +68,17 @@ class modal {
 					$array['title'] = $text['modal_title-confirmation'];
 					$array['message'] = $text['confirm-toggle'];
 					break;
+				case 'toggle_items':
+					$array['title'] = $text['modal_title-confirmation'];
+					$array['message'] = $text['confirm-toggle_items'];
+					break;
 				case 'delete':
 					$array['title'] = $text['modal_title-confirmation'];
 					$array['message'] = $text['confirm-delete'];
+					break;
+				case 'delete_items':
+					$array['title'] = $text['modal_title-confirmation'];
+					$array['message'] = $text['confirm-delete_items'];
 					break;
 				case 'unassign':
 					$array['title'] = $text['modal_title-confirmation'];
