@@ -337,8 +337,7 @@ class dashboard {
 						foreach ($this->tables as $table) {
 							$sql      = "select * from v_" . $table . " ";
 							$sql      .= "where dashboard_uuid = " . $uuid . " ";
-							$database = new database;
-							$rows     = $database->select($sql, $parameters ?? null, 'all');
+							$rows     = $this->database->select($sql, $parameters ?? null, 'all');
 							if (is_array($rows) && @sizeof($rows) != 0) {
 								$x = 0;
 								foreach ($rows as $row) {
