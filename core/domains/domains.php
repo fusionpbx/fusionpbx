@@ -204,7 +204,7 @@
 		<script>
 		function get_selected_items(action) {
 			const selected_items = [];
-			const modal_message_element = document.querySelector('#modal-' + action + ' div .modal-message');
+			const modal_message_element = document.querySelector('#modal-' + action + ' .modal-message');
 
 			if (!modal_message_element.hasAttribute('data-original-message')) {
 				modal_message_element.setAttribute('data-original-message', modal_message_element.innerHTML);
@@ -217,7 +217,7 @@
 
 			if (selected_items.length > 0) {
 				const item_list = selected_items.map(item => '<li>' + item + '</li>').join('');
-				modal_message_element.innerHTML = original_message + '<br><br><ul>' + item_list + '</ul>';
+				modal_message_element.innerHTML = original_message + '<ul style="margin-top: 20px;">' + item_list + '</ul>';
 			}
 		}
 		</script>
