@@ -149,11 +149,11 @@ $ac_js_hash = file_exists($ac_js_file) ? md5_file($ac_js_file) : $version;
 
 //page header
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-active_conferences']."</b>&nbsp;";
+	echo "	<div class='heading'><b>".$text['title-active_conferences']."</b>";
 	if ($status_indicator_mode === 'icon') {
 		echo "<span id='connection_status' class='".$status_icons['connecting']."' style='color: ".$status_colors['connecting'].";' title='".$status_tooltips['connecting']."'></span>";
 	} else {
-		echo "<div id='connection_status' class='count' style='display: inline-block; min-width: 12px; height: 12px; vertical-align: middle; background: ".$status_colors['connecting'].";' title='".$status_tooltips['connecting']."'></div>";
+		echo "<div id='connection_status' class='count'><span id='conference_count'>0</span></div>";
 	}
 	echo "</div>\n";
 	echo "	<div class='actions'>\n";

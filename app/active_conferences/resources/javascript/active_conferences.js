@@ -319,6 +319,9 @@ function handle_list_event(event) {
 			// Unknown event, ignore
 			break;
 	}
+
+	// Update count display
+	update_conference_list_count();
 }
 
 /**
@@ -401,6 +404,15 @@ function handle_list_conference_create(payload) {
 	if (!exists) {
 		add_conference_row(conference_name, 0, conference_display_name);
 	}
+}
+
+function update_conference_list_count() {
+	const container = document.getElementById('conferences_container');
+	if (!container) return;
+	const count_el = document.getElementById('conference_count');
+	if (!count_el) return;
+	const rows = container.querySelectorAll('.list-row');
+	count_el.textContent = rows.length;
 }
 
 /**
