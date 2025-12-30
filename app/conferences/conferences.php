@@ -40,15 +40,23 @@
 	$text = $language->get();
 
 //set additional variables
-	$show = $_GET["show"] ?? '';
+	$show = $_REQUEST["show"] ?? '';
+	$action = $_REQUEST['action'] ?? '';
+	$search = $_REQUEST['search'] ?? '';
+
+//check if we are using websockets for the conference view
+	if ($settings->get('active_conferences', 'websocket_enabled', true)) {
+		$conference_view_page = '/app/active_conferences/active_conferences.php';
+	}
+	else {
+		$conference_view_page = '/app/conferences_active/conferences_active.php';
+	}
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get posted data
 	if (!empty($_POST['conferences'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'] ?? '';
 		$conferences = $_POST['conferences'];
 	}
 
@@ -180,7 +188,7 @@
 	echo "	<div class='heading'><b>".$text['title-conferences']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('conference_active_view')) {
-		echo button::create(['type'=>'button','label'=>$text['button-view_active'],'icon'=>'comments','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/app/conferences_active/conferences_active.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-view_active'],'icon'=>'comments','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.$conference_view_page]);
 	}
 	if (permission_exists('conference_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'conference_edit.php']);
@@ -286,10 +294,10 @@
 			echo "	<td class='center'>".escape($row['conference_order'])."&nbsp;</td>\n";
 			echo "	<td class='no-link center'>\n";
 			if (permission_exists('conference_interactive_view')) {
-				echo "		<a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".urlencode($row['conference_extension'])."'>".$text['label-view']."</a>\n";
+				echo "		<a href='".PROJECT_PATH."$conference_view_page?c=".urlencode($row['conference_extension'])."'>".$text['label-view']."</a>\n";
 			}
 			else if (permission_exists('conference_active_view')) {
-				echo "		<a href='".PROJECT_PATH."/app/conferences_active/conferences_active.php'>".$text['label-view']."</a>\n";
+				echo "		<a href='".PROJECT_PATH."$conference_view_page'>".$text['label-view']."</a>\n";
 			}
 			else {
 				echo "		&nsbp;\n";

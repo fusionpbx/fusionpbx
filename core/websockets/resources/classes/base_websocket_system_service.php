@@ -144,10 +144,14 @@ abstract class base_websocket_system_service extends service implements websocke
 				$ws_client->disconnect();
 		}, $this->ws_client);
 
+		// Call the register topics in the child classes
 		$this->register_topics();
 
 		// Register the authenticate request
 		$this->on_topic('authenticate', [$this, 'on_authenticate']);
+
+		// Register the authenticated response handler
+		$this->on_topic('authenticated', [$this, 'handle_ws_authenticated']);
 
 		// Track the WebSocket Server Error Message so it doesn't flood the system logs
 		$suppress_ws_message = false;
@@ -184,7 +188,7 @@ abstract class base_websocket_system_service extends service implements websocke
 				}
 				// stream_select will update $read so re-check it
 				if (!empty($read)) {
-					$this->debug("Received event");
+					//$this->debug("Received event");
 					// Iterate over each socket event
 					foreach ($read as $resource) {
 						// Web socket event
@@ -250,12 +254,41 @@ abstract class base_websocket_system_service extends service implements websocke
 			// Disable the stream blocking
 			$this->ws_client->set_blocking(false);
 
-			$this->debug(self::class . " RESOURCE ID: " . $this->ws_client->socket());
+			// Call the on connected event function
+			$this->handle_ws_connected();
 		} catch (\RuntimeException $re) {
 			//unable to connect
 			return false;
 		}
 		return true;
+	}
+
+	private function handle_ws_connected(): void {
+		$this->info("Websocket connection established to server");
+		$this->debug(static::class . " RESOURCE ID: " . $this->ws_client->socket());
+		$this->on_ws_connected();
+	}
+
+	/**
+	 * This is called when the web socket is first connected
+	 *
+	 * @return void
+	 */
+	protected function on_ws_connected(): void {
+		// Override in child class if needed
+	}
+
+	private function handle_ws_authenticated(websocket_message $websocket_message): void {
+		$this->info("Successfully authenticated with websocket server");
+		$this->on_ws_authenticated();
+	}
+
+	/**
+	 * Called when the service has successfully authenticated with the websocket server.
+	 * Override in child class to perform actions after authentication.
+	 */
+	protected function on_ws_authenticated(): void {
+		// Override in child class if needed
 	}
 
 	/**
@@ -269,11 +302,11 @@ abstract class base_websocket_system_service extends service implements websocke
 
 		// Nothing to do
 		if ($json_string === null) {
-			$this->warn('Message received from Websocket is empty');
+			$this->warning('Message received from Websocket is empty');
 			return;
 		}
 
-		$this->debug("Received message on websocket: $json_string (" . strlen($json_string) . " bytes)");
+		//$this->debug("Received message on websocket: $json_string (" . strlen($json_string) . " bytes)");
 
 		// Get the web socket message as an object
 		$message = websocket_message::create_from_json_message($json_string);
@@ -314,7 +347,9 @@ abstract class base_websocket_system_service extends service implements websocke
 	protected function on_authenticate(websocket_message $websocket_message) {
 		$this->info("Authenticating with websocket server");
 		// Create a service token
-		[$token_name, $token_hash] = websocket_client::create_service_token(active_calls_service::get_service_name(), static::class);
+		$service_name = static::get_service_name();
+		$class_name = static::class;
+		[$token_name, $token_hash] = websocket_client::create_service_token($service_name, $class_name);
 
 		// Request authentication as a service
 		$this->ws_client->authenticate($token_name, $token_hash);

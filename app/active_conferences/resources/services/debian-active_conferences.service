@@ -1,0 +1,17 @@
+[Unit]
+Description=Active Conferences Websocket Service
+
+[Service]
+WorkingDirectory=/var/www/fusionpbx
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/active_conferences/resources/service/active_conferences.php
+RuntimeDirectory=fusionpbx
+RuntimeDirectoryMode=0755
+RuntimeDirectoryPreserve=yes
+User=www-data
+Group=www-data
+Restart=always
+RestartSec=5
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target

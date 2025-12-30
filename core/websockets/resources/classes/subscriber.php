@@ -185,6 +185,13 @@ class subscriber {
 	private $authenticated;
 
 	/**
+	 * Whether this subscriber has requested debug subscribe all mode
+	 *
+	 * @var bool
+	 */
+	private $debug_subscribe_all = false;
+
+	/**
 	 * User information
 	 *
 	 * @var array
@@ -603,6 +610,10 @@ class subscriber {
 					$this->service = is_a($this->service_class, 'websocket_service_interface', true);
 				}
 
+				// Load options (e.g., debug_subscribe_all)
+				$options = $array['options'] ?? [];
+				$this->debug_subscribe_all = !empty($options['debug_subscribe_all']);
+
 				//self::$logger->debug("Permission count(".count($this->permissions) . ")");
 			}
 
@@ -638,6 +649,15 @@ class subscriber {
 	}
 
 	/**
+	 * Returns whether this subscriber has requested debug subscribe all mode.
+	 *
+	 * @return bool
+	 */
+	public function has_debug_subscribe_all(): bool {
+		return $this->debug_subscribe_all;
+	}
+
+	/**
 	 * Sets the domain UUID and name
 	 *
 	 * @param string $uuid
@@ -650,7 +670,7 @@ class subscriber {
 	 */
 	public function set_domain(string $uuid, string $name): self {
 		if (is_uuid($uuid)) {
-			$this->uuid = $uuid;
+			$this->domain_uuid = $uuid;
 		} else {
 			throw new invalid_uuid_exception("UUID is not valid");
 		}
@@ -877,15 +897,21 @@ class subscriber {
 	 * @param array $token                 Standard token issued from the token object
 	 * @param array $services              A simple array list of service names to subscribe to
 	 * @param int   $time_limit_in_minutes Set a token time limit. Setting to zero will disable the time limit
+	 * @param array $options               Optional additional options (e.g., debug_subscribe_all)
 	 *
 	 * @see token::create()
 	 */
-	public static function save_token(array $token, array $services, int $time_limit_in_minutes = 0) {
+	public static function save_token(array $token, array $services, int $time_limit_in_minutes = 0, array $options = []) {
 
 		//
 		// Store the currently logged in user when available
 		//
 		$array['user'] = $_SESSION['user'] ?? [];
+
+		//
+		// Store additional options
+		//
+		$array['options'] = $options;
 
 		//
 		// Store the token service and events

@@ -40,16 +40,24 @@
 	$text = $language->get();
 
 //set additional variables
-	$search = $_GET["search"] ?? null;
+	$show = $_REQUEST["show"] ?? '';
+	$action = $_REQUEST['action'] ?? '';
+	$search = $_REQUEST['search'] ?? '';
+	$toggle_field = $_REQUEST['toggle_field'] ?? '';
+
+//check if we are using websockets for the conference view
+	if ($settings->get('active_conferences', 'websockets_enabled', true)) {
+		$conference_view_page = '/app/active_conferences/active_conference_room.php';
+	}
+	else {
+		$conference_view_page = '/app/conferences_active/conferences_active.php';
+	}
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get the http post data
 	if (!empty($_POST['conference_rooms'])) {
-		$action = $_POST['action'];
-		$toggle_field = $_POST['toggle_field'];
-		$search = $_POST['search'] ?? '';
 		$conference_rooms = $_POST['conference_rooms'];
 	}
 
@@ -448,10 +456,10 @@
 			}
 			echo "	<td class='no-link no-wrap center'>\n";
 			if (permission_exists('conference_interactive_view')) {
-				echo "		<a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".urlencode($row['conference_room_uuid'])."'>".$text['label-view']."</a>\n";
+				echo "		<a href='".PROJECT_PATH.$conference_view_page."?c=".urlencode($row['conference_room_uuid'])."'>".$text['label-view']."</a>\n";
 			}
 			else if (permission_exists('conference_active_view')) {
-				echo "		<a href='".PROJECT_PATH."/app/conferences_active/conferences_active.php'>".$text['label-view']."</a>\n";
+				echo "		<a href='".PROJECT_PATH.$conference_view_page."'>".$text['label-view']."</a>\n";
 			}
 			if (permission_exists('conference_cdr_view')) {
 				echo "		<a href='/app/conference_cdr/conference_cdr.php?id=".urlencode($row['conference_room_uuid'])."'>".$text['button-cdr']."</a>\n";

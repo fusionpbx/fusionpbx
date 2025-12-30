@@ -955,6 +955,18 @@ abstract class service {
 	}
 
 	/**
+	 * Checks if the service is running in debug mode (LOG_DEBUG level).
+	 *
+	 * This is useful for security checks where certain features should only
+	 * be available when the service is explicitly started with debug logging.
+	 *
+	 * @return bool True if the service is running at LOG_DEBUG level
+	 */
+	public static function is_debug_mode(): bool {
+		return self::$log_level === LOG_DEBUG;
+	}
+
+	/**
 	 * Logs a message at the INFO level.
 	 *
 	 * @param string $message The message to be logged. Defaults to an empty string.

@@ -110,7 +110,7 @@ class websocket_message extends base_message {
 	 *
 	 * @param string $service_name
 	 *
-	 * @return $this
+	 * @return $this|string
 	 */
 	public function service_name($service_name = null) {
 		if (func_num_args() > 0) {
@@ -125,13 +125,22 @@ class websocket_message extends base_message {
 	 *
 	 * @param array $permissions
 	 *
-	 * @return $this
+	 * @return array|$this
 	 */
 	public function permissions($permissions = []) {
 		if (func_num_args() > 0) {
 			$this->permissions = $permissions;
 			return $this;
 		}
+		return $this->permissions;
+	}
+
+	/**
+	 * Returns the array of permissions
+	 *
+	 * @return array
+	 */
+	public function get_permissions(): array {
 		return $this->permissions;
 	}
 
