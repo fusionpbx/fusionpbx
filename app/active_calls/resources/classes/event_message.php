@@ -205,7 +205,7 @@ class event_message implements filterable_payload {
 
 	/**
 	 * Creates a websocket_message_event object from a json string
-	 * @param type $json_string
+	 * @param string $json_string
 	 * @return self|null
 	 */
 	public static function create_from_json($json_string) {
@@ -229,7 +229,7 @@ class event_message implements filterable_payload {
 	 *
 	 * @return self
 	 */
-	public static function create_from_switch_event($raw_event, filter $filter = null, $flags = 3): self {
+	public static function create_from_switch_event($raw_event, ?filter $filter = null, ?int $flags = 3): self {
 
 		// Set the options from the flags passed
 		$swap_api_name_with_event_name = ($flags & self::EVENT_SWAP_API) !== 0;

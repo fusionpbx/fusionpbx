@@ -93,7 +93,7 @@ class websocket_service extends service {
 	/**
 	 * Subscriber Objects
 	 *
-	 * @var subscriber
+	 * @var array<subscriber>
 	 */
 	protected $subscribers;
 
@@ -225,8 +225,9 @@ class websocket_service extends service {
 			$subscriber->send(websocket_message::request_authenticated($message->request_id, $message->service));
 			// Check for service authenticated
 			if ($subscriber->is_service()) {
-				$this->info("Service $subscriber->id authenticated");
-				$this->services[$subscriber->service_name()] = $subscriber;
+				$service_name = $subscriber->service_name();
+				$this->info("Service $service_name authenticated using id $subscriber->id");
+				$this->services[$service_name] = $subscriber;
 			} else {
 				// Subscriber authenticated
 				$this->info("Client $subscriber->id authenticated");
@@ -237,12 +238,21 @@ class websocket_service extends service {
 						$class_name         = $subscriber_service->service_class();
 						// Make sure we can call the 'create_filter_chain_for' method
 						if (is_a($class_name, 'websocket_service_interface', true)) {
-							// Call the service class method to validate the subscriber
-							$filter = $class_name::create_filter_chain_for($subscriber);
-							if ($filter !== null) {
-								// Log the filter has been set for the subscriber
-								$this->info("Set filter for " . $subscriber->id());
-								$subscriber->set_filter($filter);
+							try {
+								// Call the service class method to validate the subscriber
+								$filter = $class_name::create_filter_chain_for($subscriber);
+								if ($filter !== null) {
+									// Log the filter has been set for the subscriber
+									$this->info("Set filter for " . $subscriber->id());
+									$subscriber->set_filter($filter);
+								}
+							} catch (subscriber_missing_permission_exception $smpe) {
+								// Subscriber requested debug mode but service is not in debug mode
+								// Disconnect them for security
+								$this->warning("Client $subscriber->id denied: " . $smpe->getMessage());
+								$subscriber->send(websocket_message::request_unauthorized($message->request_id, $message->service));
+								$this->handle_disconnect($subscriber->socket_id());
+								return;
 							}
 						}
 						$this->info("Set permissions for $subscriber->id for service " . $subscriber_service->service_name());
@@ -271,7 +281,7 @@ class websocket_service extends service {
 
 		// Ensure we have something to do
 		if ($message === null) {
-			$this->warn("Unable to broadcast empty message");
+			$this->warning("Unable to broadcast empty message");
 			return;
 		}
 
@@ -301,7 +311,7 @@ class websocket_service extends service {
 					$this->debug("Broadcasting message '" . $message->topic() . "' for service '" . $message->service_name . "' to subscriber $subscriber->id");
 					$subscriber->send_message($message);
 				} catch (subscriber_token_expired_exception $ste) {
-					$this->info("Subscriber $ste->id token expired");
+					$this->info("Subscriber $ste->subscriber_id token expired");
 					// Subscriber token has expired so disconnect them
 					$this->handle_disconnect($subscriber->socket_id());
 				}
@@ -315,7 +325,7 @@ class websocket_service extends service {
 				// Remove the resource_id from the message
 				$message->resource_id('');
 				// TODO: Fix removal of request_id
-				$message->request_id('');
+				//$message->request_id('');
 				// Return the requested results back to the subscriber
 				$subscriber->send_message($message);
 			}
@@ -448,7 +458,7 @@ class websocket_service extends service {
 				$message = websocket_message::create_from_json_message($json_array);
 
 				if ($message === null) {
-					$this->warn("Message is empty");
+					$this->warning("Message is empty");
 					return;
 				}
 
