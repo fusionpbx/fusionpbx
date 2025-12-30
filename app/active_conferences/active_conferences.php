@@ -55,38 +55,38 @@
 
 //get websocket settings from default settings
 	$ws_settings = [
-		'reconnect_delay' => (int)$settings->get('active_conferences', 'reconnect_delay', 2000),
-		'ping_interval' => (int)$settings->get('active_conferences', 'ping_interval', 30000),
-		'auth_timeout' => (int)$settings->get('active_conferences', 'auth_timeout', 10000),
-		'pong_timeout' => (int)$settings->get('active_conferences', 'pong_timeout', 10000),
-		'refresh_interval' => (int)$settings->get('active_conferences', 'refresh_interval', 0),
-		'max_reconnect_delay' => (int)$settings->get('active_conferences', 'max_reconnect_delay', 30000),
+		'reconnect_delay'          => (int)$settings->get('active_conferences', 'reconnect_delay', 2000),
+		'ping_interval'            => (int)$settings->get('active_conferences', 'ping_interval', 30000),
+		'auth_timeout'             => (int)$settings->get('active_conferences', 'auth_timeout', 10000),
+		'pong_timeout'             => (int)$settings->get('active_conferences', 'pong_timeout', 10000),
+		'refresh_interval'         => (int)$settings->get('active_conferences', 'refresh_interval', 0),
+		'max_reconnect_delay'      => (int)$settings->get('active_conferences', 'max_reconnect_delay', 30000),
 		'pong_timeout_max_retries' => (int)$settings->get('active_conferences', 'pong_timeout_max_retries', 3),
 	];
 
 //get theme colors for status indicator
 	$status_colors = [
-		'connected' => $settings->get('theme', 'active_conference_status_connected', '#28a745'),
-		'warning' => $settings->get('theme', 'active_conference_status_warning', '#ffc107'),
+		'connected'    => $settings->get('theme', 'active_conference_status_connected', '#28a745'),
+		'warning'      => $settings->get('theme', 'active_conference_status_warning', '#ffc107'),
 		'disconnected' => $settings->get('theme', 'active_conference_status_disconnected', '#dc3545'),
-		'connecting' => $settings->get('theme', 'active_conference_status_connecting', '#6c757d'),
+		'connecting'   => $settings->get('theme', 'active_conference_status_connecting', '#6c757d'),
 	];
 
 //get status indicator mode and icons
-	$status_indicator_mode = $settings->get('active_conferences', 'status_indicator_mode', 'color');
+	$status_indicator_mode = $settings->get('theme', 'active_conference_status_indicator_mode', 'color');
 	$status_icons = [
-		'connected' => $settings->get('active_conferences', 'status_icon_connected', 'fa-solid fa-plug-circle-check'),
-		'warning' => $settings->get('active_conferences', 'status_icon_warning', 'fa-solid fa-plug-circle-exclamation'),
-		'disconnected' => $settings->get('active_conferences', 'status_icon_disconnected', 'fa-solid fa-plug-circle-xmark'),
-		'connecting' => $settings->get('active_conferences', 'status_icon_connecting', 'fa-solid fa-plug fa-fade'),
+		'connected'    => $settings->get('theme', 'active_conference_status_icon_connected', 'fa-solid fa-plug-circle-check'),
+		'warning'      => $settings->get('theme', 'active_conference_status_icon_warning', 'fa-solid fa-plug-circle-exclamation'),
+		'disconnected' => $settings->get('theme', 'active_conference_status_icon_disconnected', 'fa-solid fa-plug-circle-xmark'),
+		'connecting'   => $settings->get('theme', 'active_conference_status_icon_connecting', 'fa-solid fa-plug fa-fade'),
 	];
 
 //get status tooltips from translations
 	$status_tooltips = [
-		'connected' => $text['status-connected'],
-		'warning' => $text['status-warning'],
+		'connected'    => $text['status-connected'],
+		'warning'      => $text['status-warning'],
 		'disconnected' => $text['status-disconnected'],
-		'connecting' => $text['status-connecting'],
+		'connecting'   => $text['status-connecting'],
 	];
 
 ?>
