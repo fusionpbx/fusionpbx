@@ -122,6 +122,11 @@ if ($domains_processed == 1) {
 	$database->execute($sql);
 	unset($sql);
 
+	//set default value of voicemail_file to attach
+	$sql = "update v_voicemails set voicemail_file = 'attach' where voicemail_file is null";
+	$database->execute($sql);
+	unset($sql);
+
 }
 
 ?>
