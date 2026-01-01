@@ -115,6 +115,15 @@
 		$sql = "update v_dialplan_details set dialplan_detail_data = 'recording_id='  where dialplan_detail_data = 'recording_id=true'\n";
 		$database->execute($sql);
 		unset($sql);
+	
+		//dialplan cleanup
+		$sql = "delete from v_dialplans where dialplan_name is null and dialplan_enabled is null and dialplan_context is null;\n";
+		$database->execute($sql);
+
+		//set the default value of dialplan_detail_enabled to true
+		$sql = "update v_dialplan_details set dialplan_detail_enabled = 'true' where dialplan_detail_enabled is null";
+		$database->execute($sql);
+		unset($sql);
 	}
 
 //remove origination_callee_id_name from domain-variables dialplan
@@ -173,7 +182,7 @@
 				$p = permissions::new();
 				$p->add('dialplan_add', 'temp');
 				$p->add('dialplan_detail_add', 'temp');
-
+ 
 				$database->app_name = 'dialplans';
 				$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 				$database->save($array, false);
