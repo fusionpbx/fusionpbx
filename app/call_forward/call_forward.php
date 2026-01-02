@@ -18,7 +18,7 @@
 
 	  The Initial Developer of the Original Code is
 	  Mark J Crane <markjcrane@fusionpbx.com>
-	  Portions created by the Initial Developer are Copyright (C) 2008-2024
+	  Portions created by the Initial Developer are Copyright (C) 2008-2025
 	  the Initial Developer. All Rights Reserved.
 
 	  Contributor(s):
@@ -34,7 +34,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (!(permission_exists('follow_me') || !permission_exists('call_forward') || permission_exists('do_not_disturb'))) {
+	if (!(permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb'))) {
 		echo "access denied";
 		exit;
 	}

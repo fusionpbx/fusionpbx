@@ -32,10 +32,7 @@
 	require_once "resources/paging.php";
 
 //check permisions
-	if (permission_exists('xml_cdr_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('xml_cdr_view')) {
 		echo "access denied";
 		exit;
 	}

@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('phrase_add') || permission_exists('phrase_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('phrase_add') || permission_exists('phrase_edit'))) {
 		echo "access denied";
 		exit;
 	}

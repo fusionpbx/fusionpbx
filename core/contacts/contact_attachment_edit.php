@@ -30,8 +30,9 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('contact_attachment_edit') && !permission_exists('contact_attachment_add')) {
-		echo "access denied"; exit;
+	if (!(permission_exists('contact_attachment_edit') || permission_exists('contact_attachment_add'))) {
+		echo "access denied";
+		exit;
 	}
 
 //add multi-lingual support
