@@ -358,7 +358,7 @@ class xml_cdr {
 	 */
 	public function xml_array($key, $leg, $xml_string) {
 
-		//set the directory
+		//set the directory, the switch log setting is global only
 		if (!empty($this->settings->get('switch', 'log'))) {
 			$this->xml_cdr_dir = $this->settings->get('switch', 'log') . '/xml_cdr';
 		}
@@ -415,7 +415,7 @@ class xml_cdr {
 			return false;
 		}
 
-		//skip call detail records for calls blocked by call block
+		//skip call detail records for calls blocked by call block, the save_call_detail_record setting is global only
 		if (isset($xml->variables->call_block) && $xml->variables->call_block == 'true' && !$this->settings->get('call_block', 'save_call_detail_record', true)) {
 			//delete the xml cdr file
 			if (file_exists($this->xml_cdr_dir . '/' . $this->file)) {
@@ -687,13 +687,18 @@ class xml_cdr {
 			$domain_name = urldecode($xml->variables->domain_name);
 			$domain_uuid = urldecode($xml->variables->domain_uuid);
 
+			//update the settings object when the domain changes
+			if ($this->domain_uuid != $domain_uuid) {
+				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $domain_uuid]);
+			}
+
 			//sanitize the caller ID
 			$caller_id_name   = preg_replace('#[^a-zA-Z0-9\-.\#*@ ]#', '', $caller_id_name);
 			$caller_id_number = preg_replace('#[^0-9\-\#\*]#', '', $caller_id_number);
 
 			//get the extension_uuid and then add it to the database fields array
 			if (isset($xml->variables->extension_uuid)) {
-				$extension_uuid                         = urldecode($xml->variables->extension_uuid);
+				$extension_uuid = urldecode($xml->variables->extension_uuid);
 				$this->array[$key][0]['extension_uuid'] = $extension_uuid;
 			} else {
 				if (isset($domain_uuid) && isset($xml->variables->dialed_user)) {
