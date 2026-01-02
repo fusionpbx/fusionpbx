@@ -27,10 +27,7 @@
 //includes files
 require_once dirname(__DIR__, 2) . "/resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('contact_view')) {
-	//access granted
-}
-else {
+if (!permission_exists('contact_view')) {
 	echo "access denied";
 	exit;
 }
