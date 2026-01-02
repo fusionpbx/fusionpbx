@@ -4,7 +4,7 @@
  * The settings class is used to load settings using hierarchical overriding
  *
  * The settings are loaded from the database tables default_settings, domain_settings, and user_settings in that order
- * with Each setting overrides the setting from the previous table.
+ * Each table overrides the setting with the same name from the previous table.
  *
  * @access public
  * @author Mark Crane <mark@fusionpbx.com>
@@ -220,7 +220,7 @@ class settings implements clear_cache {
 		$key = 'settings_domain_' . $domain_uuid;
 
 		$result = '';
-		//if the apcu extension is loaded get the cached database result
+		//if the apcu extension is available then get the cached database result
 		if ($this->apcu_enabled && apcu_exists($key)) {
 			$result = apcu_fetch($key);
 		} else {
@@ -229,7 +229,7 @@ class settings implements clear_cache {
 			$sql .= "and domain_setting_enabled = true ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$result = $this->database->select($sql, $parameters, 'all');
-			//if the apcu extension is loaded store the result
+			//if the apcu extension is available, then store the result
 			if ($this->apcu_enabled) {
 				apcu_store($key, $result);
 			}
@@ -253,8 +253,7 @@ class settings implements clear_cache {
 				if (isset($row['domain_setting_value']) && $row['domain_setting_value'] !== '') {
 					if ($name == "boolean") {
 						$this->settings[$category][$subcategory] = filter_var($row['domain_setting_value'], FILTER_VALIDATE_BOOLEAN);
-					}
-					if ($name == "array") {
+					} elseif ($name == "array") {
 						if (!isset($this->settings[$category][$subcategory]) || !is_array($this->settings[$category][$subcategory])) {
 							$this->settings[$category][$subcategory] = [];
 						}
