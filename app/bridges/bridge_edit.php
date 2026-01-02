@@ -26,7 +26,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('bridge_add') && !permission_exists('bridge_edit')) {
+	if (!(permission_exists('bridge_add') || permission_exists('bridge_edit'))) {
 		echo "access denied";
 		exit;
 	}

@@ -32,7 +32,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('call_block_edit') && !permission_exists('call_block_add')) {
+	if (!(permission_exists('call_block_edit') || permission_exists('call_block_add'))) {
 		echo "access denied";
 		exit;
 	}

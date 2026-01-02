@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -31,7 +31,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (!(permission_exists('dialplan_view') || !permission_exists('inbound_route_view') || permission_exists('outbound_route_view'))) {
+	if (!(permission_exists('dialplan_view') || permission_exists('inbound_route_view') || permission_exists('outbound_route_view'))) {
 		echo "access denied";
 		exit;
 	}

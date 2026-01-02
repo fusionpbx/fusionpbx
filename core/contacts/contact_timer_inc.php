@@ -26,7 +26,12 @@
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
-	if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
+
+//check permissions
+	if (!permission_exists('contact_time_add')) {
+		echo "access denied";
+		exit;
+	}
 
 //get contact and time uuids
 	$domain_uuid = $_REQUEST['domain_uuid'];
