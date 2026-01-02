@@ -31,12 +31,12 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (!permission_exists('dialplan_add')
-		|| !permission_exists('dialplan_edit')
-		|| !permission_exists('inbound_route_add')
-		|| !permission_exists('inbound_route_edit')
-		|| !permission_exists('outbound_route_add')
-		|| !permission_exists('outbound_route_edit')) {
+	if (!(permission_exists('dialplan_add')
+		|| permission_exists('dialplan_edit')
+		|| permission_exists('inbound_route_add')
+		|| permission_exists('inbound_route_edit')
+		|| permission_exists('outbound_route_add')
+		|| permission_exists('outbound_route_edit'))) {
 		echo "access denied";
 		exit;
 	}
