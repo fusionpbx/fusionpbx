@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('user_view') && !permission_exists('user_add') && !permission_exists('user_edit')) {
+	if (!(permission_exists('user_view') || !permission_exists('user_add') || permission_exists('user_edit'))) {
 		echo "access denied";
 		exit;
 	}
