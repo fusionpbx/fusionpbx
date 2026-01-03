@@ -18,7 +18,7 @@
 
   The Initial Developer of the Original Code is
   Mark J Crane <markjcrane@fusionpbx.com>
-  Copyright (C) 2013 - 2025
+  Copyright (C) 2013 - 2026
   All Rights Reserved.
 
   Contributor(s):
@@ -681,6 +681,52 @@ class schema {
 				return false; //table doesn't exist
 			}
 		}
+	}
+
+	/**
+	 * Get the column default value from the database.
+	 *
+	 * This method gets the default column value from the database,
+	 * based on the current database default and available schema information.
+	 *
+	 * @param string $table_name The name of the table.
+	 * @param string $column_name The name of the column_name.
+	 * @param string $type The name of the column_name.
+	 *
+	 * @return string Return the column default value, or an empty string for no default
+	 */
+	public function get_column_default($table_name, $column_name, $details = false) {
+		if ($this->db_type == 'pgsql') {
+			if (isset($this->schema_info[$table_name])) {
+				$table_details = $this->schema_info[$table_name];
+				foreach($table_details as $row) {
+					if ($row['column_name'] == $column_name) {
+						$column_default = $row['column_default'];
+						if ($details) {
+							return $column_default;
+						}
+						if (is_string($column_default)) {
+							$column_default = explode('::', $column_default)[0];
+							$column_default = trim($column_default, "'");
+							return $column_default;
+						}
+					}
+				}
+			}
+		}
+
+		// if ($this->db_type == 'sqlite' || $this->db_type == 'msyql') {
+		// 	$sql = "select count(*) from $table_name ";
+		// 	$result = $this->database->execute($sql, null);
+		// 	if ($result > 0) {
+		// 		return true; //table exists
+		// 	} else {
+		// 		return ''; //table doesn't exist
+		// 	}
+		// }
+
+		//return an empty string
+		return '';
 	}
 
 	/**
