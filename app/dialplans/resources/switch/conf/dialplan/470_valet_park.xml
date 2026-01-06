@@ -4,7 +4,7 @@
 		<action application="set" data="referred_by_user=$1" inline="true"/>
 	</condition>
 	<condition field="destination_number" expression="^(?:park)?\+?\*(59(0[1-9]|[1-9][0-9]))$" break="never">
-		<action application="set" data="valet_context=${domain_name}" inline="true"/>
+		<action application="set" data="valet_context=${context}" inline="true"/>
 	</condition>
 	<condition field="destination_number" expression="^(?:park)?\+?\*(59(0[1-9]|[1-9][0-9]))$" break="never">
 		<action application="set" data="park_in_use=false" inline="true"/>
