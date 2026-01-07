@@ -1303,9 +1303,10 @@ function tail(string $file, int $num_to_get = 10): string {
 /**
  * Generates a random password of specified length and strength.
  *
- * @param int $length   The desired length of the password. Defaults to default settings if not provided or zero.
- * @param int $strength The desired strength level of the password. Defaults to default settings if not provided or
- *                      zero.
+ * @param int $length   The desired length of the password. Defaults to 0 if not provided.
+ * @param int $strength The desired strength level of the password.
+ *                      This defaults to 3 if not provided. The higher level includes the previous levels.
+ *                      If the password_strength was set to 3, this would include numeric, lowercase, and uppercase letters.
  *                      - Level 1: Numeric
  *                      - Level 2: Lowercase letters
  *                      - Level 3: Uppercase letters
@@ -1314,16 +1315,13 @@ function tail(string $file, int $num_to_get = 10): string {
  * @return string The generated password.
  * @throws \Random\RandomException
  */
-function generate_password(int $length = 0, int $strength = 0): string {
+function generate_password(int $length = 0, int $strength = 3): string {
 	//define the global variables
 	global $settings;
 
 	$password = '';
 	$chars = '';
-	if ($length === 0 && $strength === 0) { //set length and strenth if specified in default settings and strength isn't numeric-only
-		$length = (is_numeric($settings->get('users', 'password_length'))) ? $settings->get('users', 'password_length') : 20;
-		$strength = (is_numeric($settings->get('users', 'password_strength'))) ? $settings->get('users', 'password_strength') : 4;
-	}
+
 	if ($strength >= 1) {
 		$chars .= "0123456789";
 	}
