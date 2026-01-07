@@ -285,7 +285,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "password_number";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one number in extension passwords.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d5f9acbd-857c-42eb-9e9a-92a850fcb734";
