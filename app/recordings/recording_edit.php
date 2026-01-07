@@ -31,8 +31,8 @@
 
 //check permissions
 	if (!(permission_exists('recording_add') || permission_exists('recording_edit'))) {
-			echo "access denied";
-			exit;
+		echo "access denied";
+		exit;
 	}
 
 //add multi-lingual support
@@ -61,31 +61,31 @@
 
 //add the speech object and get the voices and languages arrays
 	if ($speech_enabled && !empty($speech_engine)) {
-			$speech = new speech($settings);
-			$voices = $speech->get_voices();
-			$recording_extension = $speech->get_format();
-			//$speech_models = $speech->get_models();
-			//$translate_enabled = $speech->get_translate_enabled();
-			//$language_enabled = $speech->get_language_enabled();
-			//$languages = $speech->get_languages();
+		$speech = new speech($settings);
+		$voices = $speech->get_voices();
+		$recording_extension = $speech->get_format();
+		//$speech_models = $speech->get_models();
+		//$translate_enabled = $speech->get_translate_enabled();
+		//$language_enabled = $speech->get_language_enabled();
+		//$languages = $speech->get_languages();
 	}
 
 //add the transcribe object and get the languages arrays
 	if ($transcribe_enabled && !empty($transcribe_engine)) {
-			$transcribe = new transcribe($settings);
-			//$transcribe_models = $transcribe->get_models();
-			//$translate_enabled = $transcribe->get_translate_enabled();
-			//$language_enabled = $transcribe->get_language_enabled();
-			//$languages = $transcribe->get_languages();
+		$transcribe = new transcribe($settings);
+		//$transcribe_models = $transcribe->get_models();
+		//$translate_enabled = $transcribe->get_translate_enabled();
+		//$language_enabled = $transcribe->get_language_enabled();
+		//$languages = $transcribe->get_languages();
 	}
 
 //get recording id
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
-			$recording_uuid = $_REQUEST["id"];
-			$action = 'update';
+		$recording_uuid = $_REQUEST["id"];
+		$action = 'update';
 	}
 	else {
-			$action = 'add';
+		$action = 'add';
 	}
 
 //get the form value and set to php variables
@@ -102,21 +102,21 @@
 
 		//sanitize: recording_filename
 		if (!empty($recording_filename)) {
-				$recording_extension = strtolower(pathinfo($recording_filename, PATHINFO_EXTENSION));
-				if (!in_array($recording_extension, ['wav','mp3','ogg'])) {
-						$recording_filename = pathinfo($recording_filename, PATHINFO_FILENAME);
-						$recording_filename = str_replace('.', '', $recording_filename);
-				}
-				$replace = ['\\', '|', '/', '..', "`", "'"];
-				$recording_filename = str_replace($replace, '', $recording_filename);
-				$recording_filename = str_replace(' ', '-', $recording_filename);
+			$recording_extension = strtolower(pathinfo($recording_filename, PATHINFO_EXTENSION));
+			if (!in_array($recording_extension, ['wav','mp3','ogg'])) {
+				$recording_filename = pathinfo($recording_filename, PATHINFO_FILENAME);
+				$recording_filename = str_replace('.', '', $recording_filename);
+			}
+			$replace = ['\\', '|', '/', '..', "`", "'"];
+			$recording_filename = str_replace($replace, '', $recording_filename);
+			$recording_filename = str_replace(' ', '-', $recording_filename);
 		}
 
 		//sanitize: recording_filename_original
 		if (!empty($recording_filename_original)) {
-				$replace = ['\\', '|', '/', '..', "`", "'"];
-				$recording_filename_original = str_replace($replace, '', $recording_filename_original);
-				$recording_filename_original = str_replace(' ', '-', $recording_filename_original);
+			$replace = ['\\', '|', '/', '..', "`", "'"];
+			$recording_filename_original = str_replace($replace, '', $recording_filename_original);
+			$recording_filename_original = str_replace(' ', '-', $recording_filename_original);
 		}
 	}
 
@@ -127,27 +127,27 @@
 
 			//delete the recording
 			if (permission_exists('recording_delete')) {
-					if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($recording_uuid)) {
-							//prepare
-							$array[0]['checked'] = 'true';
-							$array[0]['uuid'] = $recording_uuid;
+				if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($recording_uuid)) {
+					//prepare
+					$array[0]['checked'] = 'true';
+					$array[0]['uuid'] = $recording_uuid;
 
-							//delete
-							$obj = new switch_recordings;
-							$obj->delete($array);
+					//delete
+					$obj = new switch_recordings;
+					$obj->delete($array);
 
-							//redirect
-							header('Location: recordings.php');
-							exit;
-					}
+					//redirect
+					header('Location: recordings.php');
+					exit;
+				}
 			}
 
 			//validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
-					message::add($text['message-invalid_token'],'negative');
-					header('Location: recordings.php');
-					exit;
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: recordings.php');
+				exit;
 			}
 
 			//check for all required data
@@ -155,21 +155,21 @@
 			if (empty($recording_name)) { $msg .= $text['label-edit_recording']."<br>\n"; }
 			//if (empty($recording_filename)) { $msg .= $text['label-edit_file']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
-					require_once "resources/header.php";
-					require_once "resources/persist_form_var.php";
-					echo "<div align='center'>\n";
-					echo "<table><tr><td>\n";
-					echo $msg."<br />";
-					echo "</td></tr></table>\n";
-					persistformvar($_POST);
-					echo "</div>\n";
-					require_once "resources/footer.php";
-					return;
+				require_once "resources/header.php";
+				require_once "resources/persist_form_var.php";
+				echo "<div align='center'>\n";
+				echo "<table><tr><td>\n";
+				echo $msg."<br />";
+				echo "</td></tr></table>\n";
+				persistformvar($_POST);
+				echo "</div>\n";
+				require_once "resources/footer.php";
+				return;
 			}
 
 			//add the recording_uuid
 			if (empty($recording_uuid)) {
-					$recording_uuid = uuid();
+				$recording_uuid = uuid();
 			}
 
 			//set the default value
@@ -212,10 +212,10 @@
 					$create_recording = false;
 					if ($speech_enabled && !empty($recording_voice) && !empty($recording_message)) {
 						if ($action == 'add') {
-								$create_recording = true;
+							$create_recording = true;
 						}
 						if ($action == 'update' && $_POST["create_recording"] == 'true') {
-								$create_recording = true;
+							$create_recording = true;
 						}
 					}
 
@@ -232,22 +232,22 @@
 
 						//fix invalid riff & data header lengths in generated wave file
 						if ($speech_engine == 'openai') {
-								$recording_filename_temp = str_replace('.'.$recording_extension, '.tmp.'.$recording_extension, $recording_filename);
-								if (file_exists($recording_path.'/'.$recording_filename)) {
-										exec('sox --ignore-length '.escapeshellarg($recording_path.'/'.$recording_filename).' '.escapeshellarg($recording_path.'/'.$recording_filename_temp));
-								}
-								if (file_exists($recording_path.'/'.$recording_filename_temp)) {
-										exec('rm -f '.escapeshellarg($recording_path.'/'.$recording_filename).' && mv '.escapeshellarg($recording_path.'/'.$recording_filename_temp).' '.escapeshellarg($recording_path.'/'.$recording_filename));
-								}
-								unset($recording_filename_temp);
+							$recording_filename_temp = str_replace('.'.$recording_extension, '.tmp.'.$recording_extension, $recording_filename);
+							if (file_exists($recording_path.'/'.$recording_filename)) {
+								exec('sox --ignore-length '.escapeshellarg($recording_path.'/'.$recording_filename).' '.escapeshellarg($recording_path.'/'.$recording_filename_temp));
+							}
+							if (file_exists($recording_path.'/'.$recording_filename_temp)) {
+								exec('rm -f '.escapeshellarg($recording_path.'/'.$recording_filename).' && mv '.escapeshellarg($recording_path.'/'.$recording_filename_temp).' '.escapeshellarg($recording_path.'/'.$recording_filename));
+							}
+							unset($recording_filename_temp);
 						}
 					}
 
 					//audio to text - get the transcription from the audio file
 					if ($transcribe_enabled && empty($recording_message)) {
-							$transcribe->audio_path = $recording_path;
-							$transcribe->audio_filename = $recording_filename;
-							$recording_message = $transcribe->transcribe('text');
+						$transcribe->audio_path = $recording_path;
+						$transcribe->audio_filename = $recording_filename;
+						$recording_message = $transcribe->transcribe('text');
 					}
 
 					//build array
@@ -256,12 +256,12 @@
 					$array['recordings'][0]['recording_filename'] = $recording_filename;
 					$array['recordings'][0]['recording_name'] = $recording_name;
 					if ($settings->get('recordings', 'storage_type', '') == 'base64'
-							&& file_exists($recording_path.'/'.$recording_filename)) {
-							$array['recordings'][0]['recording_base64'] = base64_encode(file_get_contents($recording_path.'/'.$recording_filename));
+						&& file_exists($recording_path.'/'.$recording_filename)) {
+						$array['recordings'][0]['recording_base64'] = base64_encode(file_get_contents($recording_path.'/'.$recording_filename));
 					}
 					if ($speech_enabled || $transcribe_enabled) {
-							$array['recordings'][0]['recording_voice'] = $recording_voice;
-							$array['recordings'][0]['recording_message'] = $recording_message;
+						$array['recordings'][0]['recording_voice'] = $recording_voice;
+						$array['recordings'][0]['recording_message'] = $recording_message;
 					}
 					$array['recordings'][0]['recording_description'] = $recording_description;
 
@@ -281,23 +281,23 @@
 
 //pre-populate the form
 	if (!empty($_GET) && empty($_POST["persistformvar"])) {
-			$recording_uuid = $_GET["id"];
-			$sql = "select recording_name, recording_filename, ";
-			$sql .= "recording_voice, recording_message, recording_description ";
-			$sql .= "from v_recordings ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$sql .= "and recording_uuid = :recording_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$parameters['recording_uuid'] = $recording_uuid;
-			$row = $database->select($sql, $parameters, 'row');
-			if (is_array($row) && @sizeof($row) != 0) {
-					$recording_filename = $row["recording_filename"];
-					$recording_name = $row["recording_name"];
-					$recording_voice = $row["recording_voice"];
-					$recording_message = $row["recording_message"];
-					$recording_description = $row["recording_description"];
-			}
-			unset($sql, $parameters, $row);
+		$recording_uuid = $_GET["id"];
+		$sql = "select recording_name, recording_filename, ";
+		$sql .= "recording_voice, recording_message, recording_description ";
+		$sql .= "from v_recordings ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and recording_uuid = :recording_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['recording_uuid'] = $recording_uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (is_array($row) && @sizeof($row) != 0) {
+			$recording_filename = $row["recording_filename"];
+			$recording_name = $row["recording_name"];
+			$recording_voice = $row["recording_voice"];
+			$recording_message = $row["recording_message"];
+			$recording_description = $row["recording_description"];
+		}
+		unset($sql, $parameters, $row);
 	}
 
 //create token
@@ -316,7 +316,7 @@
 	echo "  <div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'recordings.php']);
 	if (permission_exists('recording_delete') && !empty($recording_uuid) && is_uuid($recording_uuid)) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save']);
 	echo "  </div>\n";
@@ -324,7 +324,7 @@
 	echo "</div>\n";
 
 	if (permission_exists('recording_delete')) {
-			echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
+		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
 	}
 
 	echo "<div class='card'>\n";
@@ -342,175 +342,175 @@
 	echo "</tr>\n";
 
 	if (!empty($_REQUEST["id"])) {
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-			echo "	".$text['label-file_name']."\n";
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
-			echo "	<input class='formfld' type='text' name='recording_filename' maxlength='255' value=\"".escape($recording_filename)."\">\n";
-			echo "	<input type='hidden' name='recording_filename_original' value=\"".escape($recording_filename)."\">\n";
-			echo "<br />\n";
-			echo $text['description-file_name']."\n";
-			echo "</td>\n";
-			echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-file_name']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='recording_filename' maxlength='255' value=\"".escape($recording_filename)."\">\n";
+		echo "	<input type='hidden' name='recording_filename_original' value=\"".escape($recording_filename)."\">\n";
+		echo "<br />\n";
+		echo $text['description-file_name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
 
 	if ($speech_enabled || $transcribe_enabled) {
-			//models
-			if (!empty($models)) {
-					echo "<tr>\n";
-					echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-					echo "	".$text['label-model']."\n";
-					echo "</td>\n";
-					echo "<td class='vtable' align='left'>\n";
-					echo "  <select class='formfld' name='recording_model'>\n";
-					echo "		  <option value=''></option>\n";
-					foreach ($models as $model_id => $model_name) {
-							echo "		  <option value='".escape($model_id)."' ".($model_id == $recording_model ? "selected='selected'" : '').">".escape($model_name)."</option>\n";
-					}
-					echo "  </select>\n";
-					echo "<br />\n";
-					echo $text['description-model']."\n";
-					echo "</td>\n";
-					echo "</tr>\n";
-			}
-			else {
-					echo "<input class='formfld' type='hidden' name='recording_model' maxlength='255' value=''>\n";
-			}
-
-			// INWORLD ENHANCEMENT: Add language filter for Inworld voices
-			if ($speech_engine === 'inworld' && !empty($voices)) {
-					echo "<tr>\n";
-					echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-					echo "	Language Filter\n";
-					echo "</td>\n";
-					echo "<td class='vtable' align='left'>\n";
-					echo "  <select class='formfld' id='language_filter' onchange='filterVoicesByLanguage(this.value)'>\n";
-					echo "		  <option value=''>All Languages</option>\n";
-					echo "  </select>\n";
-					echo "<br />\n";
-					echo "Filter voices by language\n";
-					echo "</td>\n";
-					echo "</tr>\n";
-			}
-
-			//voices
+		//models
+		if (!empty($models)) {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-			echo "	".$text['label-voice']."\n";
+			echo "	".$text['label-model']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			if (!empty($voices)) {
-					echo "  <select class='formfld' name='recording_voice' id='recording_voice'>\n";
-					echo "		  <option value=''></option>\n";
-					foreach ($voices as $key => $voice) {
-							$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
-							
-							// Handle both array and string voice formats
-							if (is_array($voice)) {
-									$voice_name = $voice['name'] ?? $key;
-									$voice_display = $voice_name;
-									if (!empty($voice['description'])) {
-											$voice_display .= ' - ' . $voice['description'];
-									}
-									if (!empty($voice['languages']) && is_array($voice['languages'])) {
-											$voice_display .= ' (' . implode(', ', $voice['languages']) . ')';
-									}
-									echo "		  <option value='".escape($key)."' $recording_voice_selected data-voice-name='".escape($voice_name)."' data-voice-description='".escape($voice['description'] ?? '')."' data-voice-languages='".escape(json_encode($voice['languages'] ?? []))."'>".escape($voice_display)."</option>\n";
-							} else {
-									echo "		  <option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
-							}
-					}
-					echo "  </select>\n";
+			echo "	<select class='formfld' name='recording_model'>\n";
+			echo "		<option value=''></option>\n";
+			foreach ($models as $model_id => $model_name) {
+					echo "		<option value='".escape($model_id)."' ".($model_id == $recording_model ? "selected='selected'" : '').">".escape($model_name)."</option>\n";
 			}
-			else {
-					echo "		  <input class='formfld' type='text' name='recording_voice' maxlength='255' value=\"".escape($recording_voice)."\">\n";
-			}
+			echo "	</select>\n";
 			echo "<br />\n";
-			echo $text['description-voice']."\n";
+			echo $text['description-model']."\n";
 			echo "</td>\n";
 			echo "</tr>\n";
+		}
+		else {
+			echo "<input class='formfld' type='hidden' name='recording_model' maxlength='255' value=''>\n";
+		}
 
-			if ($language_enabled) {
-					echo "<tr>\n";
-					echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-					echo "	".$text['label-language']."\n";
-					echo "</td>\n";
-					echo "<td class='vtable' align='left'>\n";
-					if (!empty($languages)) {
-							sort($languages);
-							echo "  <select class='formfld' name='recording_language'>\n";
-							echo "		  <option value=''></option>\n";
-							foreach ($languages as $language) {
-									echo "		  <option value='".escape($language)."' ".(!empty($recording_language) && $language == $recording_language ? "selected='selected'" : null).">".escape($language)."</option>\n";
-							}
-							echo "  </select>\n";
-					}
-					else {
-							echo "		  <input class='formfld' type='text' name='recording_language' maxlength='255' value=\"".escape($recording_language)."\">\n";
-					}
-					echo "<br />\n";
-					echo $text['description-languages']."\n";
-					echo "</td>\n";
-					echo "</tr>\n";
-			}
-
-			if ($translate_enabled) {
-					echo "<tr>\n";
-					echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-					echo "  ".$text['label-translate']."\n";
-					echo "</td>\n";
-					echo "<td class='vtable' align='left'>\n";
-					if ($input_toggle_style_switch) {
-							echo "  <span class='switch'>\n";
-					}
-					echo "  <select class='formfld' id='translate' name='translate'>\n";
-					echo "		  <option value='true' ".($translate == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-					echo "		  <option value='false' ".($translate == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-					echo "  </select>\n";
-					if ($input_toggle_style_switch) {
-							echo "		  <span class='slider'></span>\n";
-							echo "  </span>\n";
-					}
-					echo "<br />\n";
-					echo $text['description-translate']."\n";
-					echo "</td>\n";
-					echo "</tr>\n";
-			}
-
+		// INWORLD ENHANCEMENT: Add language filter for Inworld voices
+		if ($speech_engine === 'inworld' && !empty($voices)) {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-			echo "	".$text['label-message']."\n";
+			echo "	Language Filter\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<textarea class='formfld' name='recording_message' style='width: 300px; height: 150px;'>".escape_textarea($recording_message)."</textarea>\n";
+			echo "	<select class='formfld' id='language_filter' onchange='filterVoicesByLanguage(this.value)'>\n";
+			echo "		<option value=''>All Languages</option>\n";
+			echo "	</select>\n";
 			echo "<br />\n";
-			echo $text['description-message']."\n";
+			echo "Filter voices by language\n";
 			echo "</td>\n";
 			echo "</tr>\n";
+		}
 
-			if ($action == 'update') {
-					echo "<tr>\n";
-					echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-					echo "  ".$text['label-create_recording']."\n";
-					echo "</td>\n";
-					echo "<td class='vtable' style='position: relative;' align='left'>\n";
-					if ($input_toggle_style_switch) {
-							echo "  <span class='switch'>\n";
+		//voices
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-voice']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		if (!empty($voices)) {
+			echo "  <select class='formfld' name='recording_voice' id='recording_voice'>\n";
+			echo "		  <option value=''></option>\n";
+			foreach ($voices as $key => $voice) {
+				$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
+				
+				// Handle both array and string voice formats
+				if (is_array($voice)) {
+					$voice_name = $voice['name'] ?? $key;
+					$voice_display = $voice_name;
+					if (!empty($voice['description'])) {
+							$voice_display .= ' - ' . $voice['description'];
 					}
-					echo "  <select class='formfld' id='create_recording' name='create_recording'>\n";
-					echo "		  <option value='false' ".($create_recording == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-					echo "		  <option value='true' ".($create_recording == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-					echo "  </select>\n";
-					if ($input_toggle_style_switch) {
-							echo "		  <span class='slider'></span>\n";
-							echo "  </span>\n";
+					if (!empty($voice['languages']) && is_array($voice['languages'])) {
+							$voice_display .= ' (' . implode(', ', $voice['languages']) . ')';
 					}
-					echo "<br />\n";
-					echo $text['description-create_recording']."\n";
-					echo "</td>\n";
-					echo "</tr>\n";
+					echo "		  <option value='".escape($key)."' $recording_voice_selected data-voice-name='".escape($voice_name)."' data-voice-description='".escape($voice['description'] ?? '')."' data-voice-languages='".escape(json_encode($voice['languages'] ?? []))."'>".escape($voice_display)."</option>\n";
+				} else {
+					echo "		  <option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+				}
 			}
+			echo "  </select>\n";
+		}
+		else {
+			echo "		  <input class='formfld' type='text' name='recording_voice' maxlength='255' value=\"".escape($recording_voice)."\">\n";
+		}
+		echo "<br />\n";
+		echo $text['description-voice']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		if ($language_enabled) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "	".$text['label-language']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			if (!empty($languages)) {
+				sort($languages);
+				echo "  <select class='formfld' name='recording_language'>\n";
+				echo "		  <option value=''></option>\n";
+				foreach ($languages as $language) {
+						echo "		  <option value='".escape($language)."' ".(!empty($recording_language) && $language == $recording_language ? "selected='selected'" : null).">".escape($language)."</option>\n";
+				}
+				echo "  </select>\n";
+			}
+			else {
+				echo "		  <input class='formfld' type='text' name='recording_language' maxlength='255' value=\"".escape($recording_language)."\">\n";
+			}
+			echo "<br />\n";
+			echo $text['description-languages']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+
+		if ($translate_enabled) {
+				echo "<tr>\n";
+				echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+				echo "  ".$text['label-translate']."\n";
+				echo "</td>\n";
+				echo "<td class='vtable' align='left'>\n";
+				if ($input_toggle_style_switch) {
+					echo "  <span class='switch'>\n";
+				}
+				echo "  <select class='formfld' id='translate' name='translate'>\n";
+				echo "		  <option value='true' ".($translate == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+				echo "		  <option value='false' ".($translate == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+				echo "  </select>\n";
+				if ($input_toggle_style_switch) {
+						echo "		  <span class='slider'></span>\n";
+						echo "  </span>\n";
+				}
+				echo "<br />\n";
+				echo $text['description-translate']."\n";
+				echo "</td>\n";
+				echo "</tr>\n";
+		}
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-message']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<textarea class='formfld' name='recording_message' style='width: 300px; height: 150px;'>".escape_textarea($recording_message)."</textarea>\n";
+		echo "<br />\n";
+		echo $text['description-message']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		if ($action == 'update') {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "  ".$text['label-create_recording']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' style='position: relative;' align='left'>\n";
+			if ($input_toggle_style_switch) {
+					echo "	<span class='switch'>\n";
+			}
+			echo "	<select class='formfld' id='create_recording' name='create_recording'>\n";
+			echo "		<option value='false' ".($create_recording == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		<option value='true' ".($create_recording == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+					echo "		<span class='slider'></span>\n";
+					echo "	</span>\n";
+			}
+			echo "<br />\n";
+			echo $text['description-create_recording']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 	}
 
 	echo "<tr>\n";
@@ -542,14 +542,14 @@ const style = document.createElement('style');
 style.textContent = `
 	/* Voice select starts at normal size */
 	#recording_voice {
-			width: 300px !important;
-			max-width: 300px !important;
+		width: 300px !important;
+		max-width: 300px !important;
 	}
 	/* Expands to show full details when open */
 	#recording_voice:focus,
 	#recording_voice.dropdown-open {
-			width: 600px !important;
-			max-width: 100% !important;
+		width: 600px !important;
+		max-width: 100% !important;
 	}
 `;
 document.head.appendChild(style);
@@ -559,7 +559,7 @@ const inworldVoices = {};
 <?php
 foreach ($voices as $voice_id => $voice_data) {
 	if (is_array($voice_data)) {
-			echo "inworldVoices[" . json_encode($voice_id) . "] = " . json_encode($voice_data) . ";\n";
+		echo "inworldVoices[" . json_encode($voice_id) . "] = " . json_encode($voice_data) . ";\n";
 	}
 }
 ?>
@@ -585,9 +585,9 @@ const languageNames = {
 function getLanguages() {
 	const languages = new Set();
 	Object.values(inworldVoices).forEach(voice => {
-			if (voice.languages && Array.isArray(voice.languages)) {
-					voice.languages.forEach(lang => languages.add(lang));
-			}
+		if (voice.languages && Array.isArray(voice.languages)) {
+			voice.languages.forEach(lang => languages.add(lang));
+		}
 	});
 	return Array.from(languages).sort();
 }
@@ -596,42 +596,42 @@ function getLanguages() {
 function filterVoicesByLanguage(language) {
 	const voiceSelect = document.getElementById('recording_voice');
 	if (!voiceSelect) return;
-	
+
 	const currentValue = voiceSelect.value;
-	
+
 	// Clear existing options except the first empty one
 	while (voiceSelect.options.length > 1) {
 			voiceSelect.remove(1);
 	}
-	
+
 	// Add filtered voices
 	Object.entries(inworldVoices).forEach(([voiceId, voiceData]) => {
-			// Filter by language if specified
-			if (language === '' || (voiceData.languages && voiceData.languages.includes(language))) {
-					const option = document.createElement('option');
-					option.value = voiceId;
-					
-					// Build full display text
-					let displayText = voiceData.name;
-					if (voiceData.description) {
-							displayText += ' - ' + voiceData.description;
-					}
-					if (voiceData.languages && voiceData.languages.length > 0) {
-							displayText += ' (' + voiceData.languages.join(', ') + ')';
-					}
-					
-					option.textContent = displayText;
-					option.setAttribute('data-voice-name', voiceData.name);
-					option.setAttribute('data-voice-full', displayText);
-					
-					if (voiceId === currentValue) {
-							option.selected = true;
-					}
-					
-					voiceSelect.appendChild(option);
+		// Filter by language if specified
+		if (language === '' || (voiceData.languages && voiceData.languages.includes(language))) {
+			const option = document.createElement('option');
+			option.value = voiceId;
+			
+			// Build full display text
+			let displayText = voiceData.name;
+			if (voiceData.description) {
+				displayText += ' - ' + voiceData.description;
 			}
+			if (voiceData.languages && voiceData.languages.length > 0) {
+				displayText += ' (' + voiceData.languages.join(', ') + ')';
+			}
+
+			option.textContent = displayText;
+			option.setAttribute('data-voice-name', voiceData.name);
+			option.setAttribute('data-voice-full', displayText);
+
+			if (voiceId === currentValue) {
+					option.selected = true;
+			}
+
+			voiceSelect.appendChild(option);
+		}
 	});
-	
+
 	// Update display to show only name when closed
 	updateVoiceDisplay();
 }
@@ -640,16 +640,16 @@ function filterVoicesByLanguage(language) {
 function updateVoiceDisplay() {
 	const voiceSelect = document.getElementById('recording_voice');
 	if (!voiceSelect) return;
-	
+
 	// Get the selected option
 	const selectedOption = voiceSelect.options[voiceSelect.selectedIndex];
 	if (selectedOption && selectedOption.value) {
-			const voiceName = selectedOption.getAttribute('data-voice-name');
-			
-			// Always set to short name when this is called
-			if (voiceName) {
-					selectedOption.textContent = voiceName;
-			}
+		const voiceName = selectedOption.getAttribute('data-voice-name');
+
+		// Always set to short name when this is called
+		if (voiceName) {
+			selectedOption.textContent = voiceName;
+		}
 	}
 }
 
@@ -657,45 +657,45 @@ function updateVoiceDisplay() {
 function showFullVoiceDetails() {
 	const voiceSelect = document.getElementById('recording_voice');
 	if (!voiceSelect) return;
-	
+
 	// Restore full text for all options
 	Array.from(voiceSelect.options).forEach(option => {
-			const fullText = option.getAttribute('data-voice-full');
-			if (fullText) {
-					option.textContent = fullText;
-			}
+		const fullText = option.getAttribute('data-voice-full');
+		if (fullText) {
+			option.textContent = fullText;
+		}
 	});
 }
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
 	if (Object.keys(inworldVoices).length === 0) return;
-	
+
 	// Populate language dropdown
 	const languageSelect = document.getElementById('language_filter');
 	if (!languageSelect) return;
-	
+
 	const languages = getLanguages();
-	
+
 	// Sort languages alphabetically by display name
 	languages.sort((a, b) => {
-			const nameA = languageNames[a] || a;
-			const nameB = languageNames[b] || b;
-			return nameA.localeCompare(nameB);
+		const nameA = languageNames[a] || a;
+		const nameB = languageNames[b] || b;
+		return nameA.localeCompare(nameB);
 	});
-	
+
 	// Move English to the front if it exists
 	const englishIndex = languages.indexOf('en');
 	if (englishIndex > -1) {
-			languages.splice(englishIndex, 1); // Remove English from current position
-			languages.unshift('en'); // Add English to the beginning
+		languages.splice(englishIndex, 1); // Remove English from current position
+		languages.unshift('en'); // Add English to the beginning
 	}
 	
 	languages.forEach(lang => {
-			const option = document.createElement('option');
-			option.value = lang;
-			option.textContent = languageNames[lang] || lang;
-			languageSelect.appendChild(option);
+		const option = document.createElement('option');
+		option.value = lang;
+		option.textContent = languageNames[lang] || lang;
+		languageSelect.appendChild(option);
 	});
 	
 	// Initialize voice display
@@ -704,41 +704,41 @@ document.addEventListener('DOMContentLoaded', function() {
 	// Add event listeners
 	const voiceSelect = document.getElementById('recording_voice');
 	if (voiceSelect) {
-			// Show full details when opening
-			voiceSelect.addEventListener('mousedown', function(e) {
-					// Only on the select itself, not when already open
-					if (e.target === this) {
-							this.classList.add('dropdown-open');
-							showFullVoiceDetails();
-					}
-			});
-			
-			voiceSelect.addEventListener('focus', function() {
+		// Show full details when opening
+		voiceSelect.addEventListener('mousedown', function(e) {
+			// Only on the select itself, not when already open
+			if (e.target === this) {
 					this.classList.add('dropdown-open');
 					showFullVoiceDetails();
-			});
-			
-			// Collapse to name only after selection
-			voiceSelect.addEventListener('change', function() {
-					this.classList.remove('dropdown-open');
-					// Immediately blur to remove focus and trigger size change
-					this.blur();
-					// Small delay to ensure the dropdown has closed
-					setTimeout(updateVoiceDisplay, 50);
-			});
-			
-			voiceSelect.addEventListener('blur', function() {
-					this.classList.remove('dropdown-open');
-					// Delay to ensure dropdown is fully closed
-					setTimeout(updateVoiceDisplay, 100);
-			});
-			
-			// Force update on any click that closes the dropdown
-			document.addEventListener('click', function(e) {
-					if (e.target !== voiceSelect && !voiceSelect.contains(e.target)) {
-							updateVoiceDisplay();
-					}
-			});
+			}
+		});
+		
+		voiceSelect.addEventListener('focus', function() {
+			this.classList.add('dropdown-open');
+			showFullVoiceDetails();
+		});
+		
+		// Collapse to name only after selection
+		voiceSelect.addEventListener('change', function() {
+			this.classList.remove('dropdown-open');
+			// Immediately blur to remove focus and trigger size change
+			this.blur();
+			// Small delay to ensure the dropdown has closed
+			setTimeout(updateVoiceDisplay, 50);
+		});
+		
+		voiceSelect.addEventListener('blur', function() {
+			this.classList.remove('dropdown-open');
+			// Delay to ensure dropdown is fully closed
+			setTimeout(updateVoiceDisplay, 100);
+		});
+		
+		// Force update on any click that closes the dropdown
+		document.addEventListener('click', function(e) {
+			if (e.target !== voiceSelect && !voiceSelect.contains(e.target)) {
+					updateVoiceDisplay();
+			}
+		});
 	}
 });
 </script>
