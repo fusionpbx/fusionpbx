@@ -138,7 +138,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one lowecase letter in user passwords.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether to require at least one lowercase letter in user passwords.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "973b6773-dac0-4041-844e-71c48fc9542c";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "users";
