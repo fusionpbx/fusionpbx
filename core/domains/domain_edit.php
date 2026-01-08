@@ -122,67 +122,67 @@
 			if (empty($_POST["persistformvar"])) {
 
 				//add a domain to the database
-					if ($action == "add" && permission_exists('domain_add')) {
-						$sql = "select count(domain_uuid) from v_domains ";
-						$sql .= "where lower(domain_name) = :domain_name ";
-						$parameters['domain_name'] = $domain_name;
-						$num_rows = $database->select($sql, $parameters, 'column');
-						unset($sql, $parameters);
+				if ($action == "add" && permission_exists('domain_add')) {
+					$sql = "select count(domain_uuid) from v_domains ";
+					$sql .= "where lower(domain_name) = :domain_name ";
+					$parameters['domain_name'] = $domain_name;
+					$num_rows = $database->select($sql, $parameters, 'column');
+					unset($sql, $parameters);
 
-						if ($num_rows == 0) {
+					if ($num_rows == 0) {
 
-							//add the domain uuid
-							$domain_uuid = uuid();
+						//add the domain uuid
+						$domain_uuid = uuid();
 
-							//build the domain array
-							$array['domains'][0]['domain_uuid'] = $domain_uuid;
-							$array['domains'][0]['domain_name'] = $domain_name;
-							$array['domains'][0]['domain_enabled'] = $domain_enabled;
-							$array['domains'][0]['domain_description'] = $domain_description;
+						//build the domain array
+						$array['domains'][0]['domain_uuid'] = $domain_uuid;
+						$array['domains'][0]['domain_name'] = $domain_name;
+						$array['domains'][0]['domain_enabled'] = $domain_enabled;
+						$array['domains'][0]['domain_description'] = $domain_description;
 
-							//create a copy of the domain array as the database save method empties the array that we still need.
-							$domain_array = $array;
+						//create a copy of the domain array as the database save method empties the array that we still need.
+						$domain_array = $array;
 
-							//add the new domain
-							$database->save($array);
+						//add the new domain
+						$database->save($array);
 
-							//add dialplans to the domain
-							if (file_exists(dirname(__DIR__, 2)."/app/dialplans/app_config.php")) {
-								//import the dialplans
-								$dialplan = new dialplan;
-								$dialplan->import($domain_array['domains']);
-								unset($array);
+						//add dialplans to the domain
+						if (file_exists(dirname(__DIR__, 2)."/app/dialplans/app_config.php")) {
+							//import the dialplans
+							$dialplan = new dialplan;
+							$dialplan->import($domain_array['domains']);
+							unset($array);
 
-								//add xml for each dialplan where the dialplan xml is empty
-								$dialplans = new dialplan;
-								$dialplans->source = "details";
-								$dialplans->destination = "database";
-								$dialplans->context = $domain_name;
-								$dialplans->is_empty = "dialplan_xml";
-								$array = $dialplans->xml();
-							}
-
-							//create the recordings directory for the new domain.
-							if (!empty($settings->get('switch', 'recordings')) && !empty($settings->get('switch', 'recordings'))) {
-								if (!file_exists($settings->get('switch', 'recordings')."/".$domain_name)) {
-									mkdir($settings->get('switch', 'recordings')."/".$domain_name, 0770);
-								}
-							}
-
-							//create the voicemail directory for the new domain.
-							if (!empty($settings->get('switch', 'voicemail')) && !empty($settings->get('switch', 'voicemail'))) {
-								if (!file_exists($settings->get('switch', 'voicemail')."/default/".$domain_name)) {
-									mkdir($settings->get('switch', 'voicemail')."/default/".$domain_name, 0770);
-								}
-							}
-
+							//add xml for each dialplan where the dialplan xml is empty
+							$dialplans = new dialplan;
+							$dialplans->source = "details";
+							$dialplans->destination = "database";
+							$dialplans->context = $domain_name;
+							$dialplans->is_empty = "dialplan_xml";
+							$array = $dialplans->xml();
 						}
-						else {
-							message::add($text['message-domain_exists'],'negative');
-							header("Location: domains.php");
-							exit;
+
+						//create the recordings directory for the new domain.
+						if (!empty($settings->get('switch', 'recordings')) && !empty($settings->get('switch', 'recordings'))) {
+							if (!file_exists($settings->get('switch', 'recordings')."/".$domain_name)) {
+								mkdir($settings->get('switch', 'recordings')."/".$domain_name, 0770);
+							}
 						}
+
+						//create the voicemail directory for the new domain.
+						if (!empty($settings->get('switch', 'voicemail')) && !empty($settings->get('switch', 'voicemail'))) {
+							if (!file_exists($settings->get('switch', 'voicemail')."/default/".$domain_name)) {
+								mkdir($settings->get('switch', 'voicemail')."/default/".$domain_name, 0770);
+							}
+						}
+
 					}
+					else {
+						message::add($text['message-domain_exists'],'negative');
+						header("Location: domains.php");
+						exit;
+					}
+				}
 
 				//update the domain
 					if ($action == "update" && permission_exists('domain_edit')) {
