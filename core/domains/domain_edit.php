@@ -511,7 +511,7 @@
 						header("Location: domains.php");
 					}
 					exit;
-					}
+			}
 	}
 
 //pre-populate the form (admin won't have domain_add permissions, but domain_uuid will already be set above)
