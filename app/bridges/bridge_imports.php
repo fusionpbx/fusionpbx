@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019-2024
+	Portions created by the Initial Developer are Copyright (C) 2019-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -238,7 +238,7 @@
 
 		//user selected fields
 			$fields = $_POST['fields'];
-			
+
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
 
@@ -251,13 +251,16 @@
 
 				//loop through the array
 					while (($line = fgets($handle, 4096)) !== false) {
+						//convert the line to UTF-8
+						$line = mb_convert_encoding($line, 'UTF-8');
+
 						if ($from_row <= $row_number) {
 							//format the data
 								$y = 0;
 								foreach ($fields as $key => $value) {
 									//get the line
 									$result = str_getcsv($line, $delimiter, $enclosure);
-									
+
 									//get the table and field name
 									$field_array = explode(".",$value);
 									$table_name = $field_array[0];
@@ -265,7 +268,7 @@
 									//echo "value: $value<br />\n";
 									//echo "table_name: $table_name<br />\n";
 									//echo "field_name: $field_name<br />\n";
-									
+
 									//get the parent table name
 									$parent = get_parent($schema, $table_name);
 

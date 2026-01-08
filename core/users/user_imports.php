@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -260,6 +260,9 @@
 
 				//loop through the array
 					while (($line = fgets($handle, 4096)) !== false) {
+						//convert the line to UTF-8
+						$line = mb_convert_encoding($line, 'UTF-8');
+
 						if ($from_row <= $row_number) {
 							//get the user_uuid
 								$user_uuid = uuid();
