@@ -487,30 +487,30 @@
 					}
 				}
 
-				//clear the cache
-					$cache = new cache;
-					$response = $cache->flush();
+			//clear the cache
+				$cache = new cache;
+				$response = $cache->flush();
 
-				//clear the domains session array to update it
-					unset($_SESSION["domains"]);
-					unset($_SESSION['domain']);
-					unset($_SESSION['switch']);
+			//clear the domains session array to update it
+				unset($_SESSION["domains"]);
+				unset($_SESSION['domain']);
+				unset($_SESSION['switch']);
 
-				//redirect the browser
-					if ($action == "update") {
-						message::add($text['message-update']);
-						if (!permission_exists('domain_add')) { //admin, updating own domain
-							header("Location: domain_edit.php");
-						}
-						else {
-							header("Location: domains.php"); //superadmin
-						}
+			//redirect the browser
+				if ($action == "update") {
+					message::add($text['message-update']);
+					if (!permission_exists('domain_add')) { //admin, updating own domain
+						header("Location: domain_edit.php");
 					}
-					if ($action == "add") {
-						message::add($text['message-add']);
-						header("Location: domains.php");
+					else {
+						header("Location: domains.php"); //superadmin
 					}
-					exit;
+				}
+				if ($action == "add") {
+					message::add($text['message-add']);
+					header("Location: domains.php");
+				}
+				exit;
 			}
 	}
 
