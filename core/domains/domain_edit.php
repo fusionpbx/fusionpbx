@@ -84,6 +84,10 @@
 				$obj = new domains;
 				$obj->delete($array);
 
+				//reset the cache
+				$cache = new cache;
+				$cache->flush();
+
 				//redirect
 				header('Location: domains.php');
 				exit;
@@ -119,7 +123,7 @@
 
 				//add a domain to the database
 				if ($action == "add" && permission_exists('domain_add')) {
-					$sql = "select count(*) from v_domains ";
+					$sql = "select count(domain_uuid) from v_domains ";
 					$sql .= "where lower(domain_name) = :domain_name ";
 					$parameters['domain_name'] = $domain_name;
 					$num_rows = $database->select($sql, $parameters, 'column');
