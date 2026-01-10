@@ -408,6 +408,9 @@
 			) {
 			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
+		if (permission_exists('dialplan_xml')) {
+			echo button::create(['type'=>'button','label'=>$text['button-xml'],'icon'=>'code','style'=>'margin-left: 3px;','link'=>'dialplan_xml.php']);
+		}
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('dialplan_all')) {
