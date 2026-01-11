@@ -3199,5 +3199,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Display A-leg/left and B-leg/right channel audio waveforms on a single axis.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f378f03e-7008-46cf-af93-b4f454a67487";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "qr_brand_type";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "none";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Used to set add branding on the QR code used in contacts. Options: null, image, text, none";
 
-?>
+
+
