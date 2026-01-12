@@ -167,7 +167,7 @@
 					$array['voicemails'][0]['voicemail_id'] = $voicemail_id;
 					$array['voicemails'][0]['voicemail_password'] = $voicemail_password;
 					$array['voicemails'][0]['greeting_id'] = $greeting_id != '' ? $greeting_id : null;
-					$array['voicemails'][0]['voicemail_alternate_greet_id'] = $voicemail_alternate_greet_id != '' ? $voicemail_alternate_greet_id : null;
+					$array['voicemails'][0]['voicemail_alternate_greet_id'] = $voicemail_alternate_greet_id != '' ? preg_replace('/[^0-9+]/', '', $voicemail_alternate_greet_id) : null;
 					$array['voicemails'][0]['voicemail_mail_to'] = $voicemail_mail_to;
 					$array['voicemails'][0]['voicemail_sms_to'] = $voicemail_sms_to;
 					$array['voicemails'][0]['voicemail_transcription_enabled'] = $voicemail_transcription_enabled;
