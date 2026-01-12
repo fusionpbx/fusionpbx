@@ -73,8 +73,12 @@
 	$extension_limit_max						= $settings->get('extension', 'limit_max', 5);
 	$extension_call_timeout						= $settings->get('extension', 'call_timeout', 30);
 	$extension_max_registrations				= $settings->get('extension', 'max_registrations', null);
+	$extension_password_strength				= $settings->get('extension', 'password_strength', 4);      //set default to use numbers, uppercase and lowercase letters, special characters
 	$extension_password_length					= $settings->get('extension', 'password_length', 20);       //set default to 20
-	$extension_password_strength				= $settings->get('extension', 'password_strength', 4);      //set default to use numbers, Upper/Lowercase letters, special characters
+	$extension_password_number					= $settings->get('extension', 'password_number', false);
+	$extension_password_lowercase				= $settings->get('extension', 'password_lowercase', false);
+	$extension_password_uppercase				= $settings->get('extension', 'password_uppercase', false);
+	$extension_password_special					= $settings->get('extension', 'password_special', false);
 	$extension_user_record_default				= $settings->get('extension', 'user_record_default', '');
 	$extension_type								= $settings->get('extension', 'type', 'default');
 	$provision_path								= $settings->get('provision', 'path', '');
@@ -373,20 +377,50 @@
 				exit;
 			}
 
-		//check for all required data
-			$msg = '';
-			if (empty($extension)) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
-			if (!empty($msg) && empty($_POST["persistformvar"])) {
-				require_once "resources/header.php";
-				require_once "resources/persist_form_var.php";
-				echo "<div align='center'>\n";
-				echo "<table><tr><td>\n";
-				echo $msg."<br />";
-				echo "</td></tr></table>\n";
-				persistformvar($_POST);
-				echo "</div>\n";
-				require_once "resources/footer.php";
-				return;
+		//initialize
+			$invalid = [];
+
+		//check required values
+			if (empty($extension)) {
+				$invalid[] = $text['label-extension'];
+			}
+
+		//require passwords with the defined required attributes: length, number, lower case, upper case, and special characters
+			if (permission_exists('extension_password') && !empty($password)) {
+				if (strlen($password) < $extension_password_length) {
+					$invalid[] = $text['label-password'].": ".$text['label-characters'];
+				}
+				if ($extension_password_number) {
+					if (!preg_match('/(?=.*[\d])/', $password)) {
+						$invalid[] = $text['label-password'].": ".$text['label-numbers'];
+					}
+				}
+				if ($extension_password_lowercase) {
+					if (!preg_match('/(?=.*[a-z])/', $password)) {
+						$invalid[] = $text['label-password'].": ".$text['label-lowercase_letters'];
+					}
+				}
+				if ($extension_password_uppercase) {
+					if (!preg_match('/(?=.*[A-Z])/', $password)) {
+						$invalid[] = $text['label-password'].": ".$text['label-uppercase_letters'];
+					}
+				}
+				if ($extension_password_special) {
+					if (!preg_match('/(?=.*[\W])/', $password)) {
+						$invalid[] = $text['label-password'].": ".$text['label-special_characters'];
+					}
+				}
+			}
+
+		//return if error
+			if (message::count() != 0 || !empty($invalid)) {
+				if ($invalid) { message::add($text['message-required'].implode(', ', $invalid), 'negative', 7500); }
+				persistent_form_values('store', $_POST);
+				header("Location: extension_edit.php?".(permission_exists('extension_edit') && $action != 'add' ? "&id=".urlencode($extension_uuid) : null).(!empty($order_by) ? '&order_by='.$order_by : null).(!empty($order) ? '&order='.$order : null).(!empty($page) ? '&page='.$page : null));
+				exit;
+			}
+			else {
+				persistent_form_values('clear');
 			}
 
 		//prevent users from bypassing extension limit by using range
