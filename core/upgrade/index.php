@@ -152,9 +152,6 @@
 			$obj = new schema(['database' => $database]);
 			$_SESSION["response"]["schema"] = $obj->schema("html");
 			message::add($text['message-upgrade_schema'], null, $message_timeout);
-
-			//update database foreign key indexes
-			$database->update_indexes();
 		}
 
 		//process the apps defaults

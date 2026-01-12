@@ -649,6 +649,9 @@ class schema {
 		//create views so that alter table statements complete
 		$this->database->views('create');
 
+		//update database foreign key indexes
+		$this->database->update_indexes();
+
 		//handle response
 		return $response;
 
