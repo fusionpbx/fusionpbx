@@ -450,7 +450,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select the greeting id.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_alternate_greet_id";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Used to provide an alternate id for the voicemail announcement.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_recording_instructions";
