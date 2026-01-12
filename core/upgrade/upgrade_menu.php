@@ -353,9 +353,6 @@ function do_upgrade_schema() {
 	//get the database schema put it into an array then compare and update the database as needed.
 	$obj = new schema();
 	echo $obj->schema('text');
-
-	//update the database foreign key indexes
-	$database->update_indexes();
 }
 
 /**

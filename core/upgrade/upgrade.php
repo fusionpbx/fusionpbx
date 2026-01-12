@@ -235,9 +235,6 @@
 				echo "        ".trim($row)."\n";
 			}
 		}
-
-		//update database foreign key indexes
-		$database->update_indexes();
 	}
 
 
