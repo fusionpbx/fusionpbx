@@ -441,7 +441,7 @@ class schema {
 															break;
 														default:
 															unset($using);
-															$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE " . $field_type . "\n";
+															$sql_update .= "ALTER TABLE " . $table_name . " ALTER COLUMN " . $field_name . " TYPE " . $field_type . ";\n";
 													}
 												}
 											}
