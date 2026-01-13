@@ -149,8 +149,8 @@
 		//load an array of the database schema and compare it with the active database
 		if (!empty($action["upgrade_schema"]) && permission_exists("upgrade_schema")) {
 			//update the database schema and types
-			$obj = new schema(['database' => $database]);
-			$_SESSION["response"]["schema"] = $obj->schema("html");
+			$schema = new schema(['database' => $database]);
+			$_SESSION["response"]["schema"] = $schema->upgrade("html");
 			message::add($text['message-upgrade_schema'], null, $message_timeout);
 		}
 
