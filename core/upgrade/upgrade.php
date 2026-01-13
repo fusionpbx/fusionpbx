@@ -229,7 +229,7 @@
 		}
 
 		//get the database schema put it into an array then compare and update the database as needed.
-		$response = $schema->schema($format ?? '');
+		$response = $schema->upgrade($format ?? '');
 		if ($display_type === 'text') {
 			foreach(explode("\n", $response) as $row) {
 				echo "        ".trim($row)."\n";
@@ -417,7 +417,7 @@
 			}
 
 		//Update the table and field structure.
-			$response = $schema->schema("text");
+			$response = $schema->upgrade("text");
 			if ($display_type === 'text') {
 				foreach(explode("\n", $response) as $row) {
 					echo "        ".trim($row)."\n";

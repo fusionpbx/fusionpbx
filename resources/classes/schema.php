@@ -196,7 +196,7 @@ class schema {
 	 *
 	 * @return string
 	 */
-	public function schema($format = '') {
+	public function upgrade($format = '') {
 
 		//set the global variable
 		global $text, $output_format;
@@ -1036,6 +1036,6 @@ class schema {
 //example use
 //$schema = new schema();
 //$schema->db_type = $db_type;
-//$schema->schema();
+//$schema->upgrade();
 //$result_array = $schema->obj['sql'];
 //print_r($result_array);
