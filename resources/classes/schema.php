@@ -68,7 +68,7 @@ class schema {
 			}
 			$x++;
 		}
-		$this->applications = $apps;
+		$this->applications = is_array($apps) ? $apps : [];
 
 		//set the db_type
 		$this->db_type = $db_type;
@@ -329,7 +329,7 @@ class schema {
 								$row['exists'] = "true";
 							} else {
 								$row['exists'] = "false";
-								$sql_update .= $this->create_table($this->applications, $row['table']['name']['text']);
+								$sql_update .= $this->create_table($row['table']['name']['text']);
 							}
 						}
 					} else {
@@ -467,7 +467,7 @@ class schema {
 						}
 					} elseif (!is_array($row['table']['name'])) {
 						//create table
-						$sql_update .= $this->create_table($this->applications, $row['table']['name']);
+						$sql_update .= $this->create_table($row['table']['name']);
 					}
 				}
 			}
@@ -488,9 +488,9 @@ class schema {
 							//rename the table
 							$sql_update .= "ALTER TABLE " . $table_name . " RENAME TO tmp_" . $table_name . ";\n";
 							//create the table
-							$sql_update .= $this->create_table($this->applications, $table_name);
+							$sql_update .= $this->create_table($table_name);
 							//insert the data into the new table
-							$sql_update .= $this->insert_into($this->applications, $table_name);
+							$sql_update .= $this->insert_into($table_name);
 							//drop the old table
 							$sql_update .= "DROP TABLE tmp_" . $table_name . ";\n";
 							//commit the transaction
@@ -854,12 +854,9 @@ class schema {
 	 *
 	 * @return string|null The SQL statement to create the table, or null if no match is found.
 	 */
-	public function create_table($apps, $table) {
-		if (empty($apps)) {
-			return false;
-		}
-		if (is_array($apps)) {
-			foreach ($apps as $x => $app) {
+	public function create_table($table) {
+		if (is_array($this->applications)) {
+			foreach ($this->applications as $x => $app) {
 				if (!empty($app['db']) && is_array($app['db'])) {
 					foreach ($app['db'] as $y => $row) {
 						if (!empty($row['table']['name']) && is_array($row['table']['name'])) {
@@ -967,8 +964,8 @@ class schema {
 	 *
 	 * @return string The constructed SQL INSERT statement as a string.
 	 */
-	private function insert_into($apps, $table) {
-		foreach ($apps as $x => $app) {
+	private function insert_into($table) {
+		foreach ($this->applications as $x => $app) {
 			foreach ($app['db'] as $y => $row) {
 				if ($row['table']['name'] == $table) {
 					$sql = "INSERT INTO " . $row['table']['name'] . " (";
