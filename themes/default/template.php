@@ -1085,6 +1085,40 @@
 			}
 			document.activeElement.blur();
 		}
+
+		function modal_display_selected(modal_id) {
+			const selected_items = [];
+			const modal_message_element = document.querySelector(`#${modal_id} .modal-message`);
+
+			if (!modal_message_element.hasAttribute('data-message')) {
+				modal_message_element.setAttribute('data-message', modal_message_element.innerHTML);
+				modal_message_element.style.cssText += 'max-height: 50vh; overflow: scroll;';
+			}
+			const message = modal_message_element.getAttribute('data-message');
+
+			document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox_all)').forEach(checkbox => {
+				selected_items.push({
+					name: checkbox.dataset.itemName,
+					domain: checkbox.dataset.itemDomain
+				});
+			});
+
+			if (selected_items.length > 0) {
+				content = message;
+				content += '<table style="margin: 20px 40px; min-width: 70%;">';
+				content += '	<tbody>';
+				selected_items.forEach(item => {
+					content += '	<tr>';
+					content += `		<td style="display: list-item;">${item.name}</td>`;
+					content += `		<td>${item.domain || ''}</td>`;
+					content += '	</tr>';
+				});
+				content += '	</tbody>';
+				content += '</table>';
+
+				modal_message_element.innerHTML = content;
+			}
+		}
 		{/literal}
 
 	//misc functions
