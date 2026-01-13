@@ -198,32 +198,6 @@
 	$document['title'] = $text['title-domains'];
 	require_once "resources/header.php";
 
-//add the list of selected domains to the toggle/delete confirmation
- 	if (permission_exists('domain_edit') || permission_exists('domain_delete')) {
-		?>
-		<script>
-		function get_selected_items(action) {
-			const selected_items = [];
-			const modal_message_element = document.querySelector('#modal-' + action + ' .modal-message');
-
-			if (!modal_message_element.hasAttribute('data-original-message')) {
-				modal_message_element.setAttribute('data-original-message', modal_message_element.innerHTML);
-			}
-			const original_message = modal_message_element.getAttribute('data-original-message');
-
-			document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox_all)').forEach(checkbox => {
-				selected_items.push(checkbox.dataset.itemName);
-			});
-
-			if (selected_items.length > 0) {
-				const item_list = selected_items.map(item => '<li>' + item + '</li>').join('');
-				modal_message_element.innerHTML = original_message + '<ul style="margin-top: 20px;">' + item_list + '</ul>';
-			}
-		}
-		</script>
-		<?php
-	}
-
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-domains']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
@@ -232,10 +206,10 @@
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'domain_edit.php']);
 	}
 	if (permission_exists('domain_edit') && $domains) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"get_selected_items('toggle'); modal_open('modal-toggle','btn_toggle');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"modal_display_selected('modal-toggle'); modal_open('modal-toggle','btn_toggle');"]);
 	}
  	if (permission_exists('domain_delete') && $domains) {
- 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"get_selected_items('delete'); modal_open('modal-delete','btn_delete_domain');"]);
+ 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_display_selected('modal-delete'); modal_open('modal-delete','btn_delete_domain');"]);
  	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
