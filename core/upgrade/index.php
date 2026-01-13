@@ -181,6 +181,17 @@
 			$included = true;
 			require_once("core/menu/menu_restore_default.php");
 			unset($sel_menu);
+
+			//unset the current session menu array
+			unset($_SESSION['menu']['array']);
+
+			//get the menu array and save it to the session
+			$menu = new menu;
+			$menu->menu_uuid = $settings->get('domain', 'menu');
+			$_SESSION['menu']['array'] = $menu->menu_array();
+			unset($menu);
+
+			//set language
 			$text = $language->get(null, '/core/upgrade');
 			message::add($text['message-upgrade_menu'], null, $message_timeout);
 		}
