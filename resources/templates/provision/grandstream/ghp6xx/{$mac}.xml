@@ -1958,12 +1958,14 @@
 		<!-- ############################################################################## -->
 		<!-- Firmware Upgrade Mode -->
 		<!-- TFTP, HTTP, HTTPS -->
-		{if isset($grandstream_firmware_upgrade_protocol) }
-		<item name="provisioning.firmware.protocol">{$grandstream_firmware_upgrade_protocol}</item>
-		{else}
-		<item name="provisioning.firmware.protocol">HTTP</item>
-		{/if}
-		
+    	{if isset($grandstream_firmware_upgrade_protocol) }
+    		{if $grandstream_firmware_upgrade_protocol=="0"}<item name="provisioning.firmware.protocol">TFTP</item>{/if}
+    		{if $grandstream_firmware_upgrade_protocol=="1"}<item name="provisioning.firmware.protocol">HTTP</item>{/if}
+    		{if $grandstream_firmware_upgrade_protocol=="2"}<item name="provisioning.firmware.protocol">HTTPS</item>{/if}
+    	{else}
+    	<item name="provisioning.firmware.protocol">HTTP</item>
+    	{/if}
+
 		<!-- Firmware Server Path -->
 		{if isset($grandstream_firmware_path) && isset($firmware_version)}
 		<item name="provisioning.firmware.serverpath">{$grandstream_firmware_path}/{$firmware_version}</item>
