@@ -615,6 +615,10 @@
 			unset($array);
 		}
 
+		//set the default value of template_enabled to true
+		$sql = "update v_email_templates set template_enabled = 'true' where template_enabled is null";
+		$database->execute($sql);
+		unset($sql);
 	}
 
 ?>
