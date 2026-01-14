@@ -290,7 +290,7 @@
 	}
 	echo th_order_by('call_block_direction', $text['label-direction'], $order_by, $order, null, "style='width: 1%;' class='center'");
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order, null, "class='center'");
-	echo th_order_by('call_block_name', $text['label-name'], $order_by, $order);
+	echo th_order_by('call_block_name', $text['label-caller_id_name'], $order_by, $order);
 	echo th_order_by('call_block_country_code', $text['label-country_code'], $order_by, $order);
 	echo th_order_by('call_block_number', $text['label-number'], $order_by, $order);
 	echo th_order_by('call_block_count', $text['label-count'], $order_by, $order, '', "class='center hide-sm-dn'");
