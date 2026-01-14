@@ -171,7 +171,7 @@ class active_conferences_service extends base_websocket_system_service implement
 	 *
 	 * @var array
 	 */
-	protected array $conference_name_cache = [];
+	protected $conference_name_cache;
 
 	/**
 	 * Builds a filter for the subscriber
