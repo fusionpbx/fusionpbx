@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -429,7 +429,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-name']."\n";
+	echo "	".$text['label-caller_id_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"".escape($call_block_name)."\">\n";
@@ -684,7 +684,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 			echo "		<input type='checkbox' id='checkbox_all_".$direction."' name='checkbox_all' onclick=\"list_all_toggle('".$direction."');\" ".(empty($result) ? "style='visibility: hidden;'" : null).">\n";
 			echo "	</th>\n";
 			echo "<th style='width: 1%;'>&nbsp;</th>\n";
-			echo th_order_by('caller_id_name', $text['label-name'], $order_by, $order);
+			echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order);
 			echo th_order_by('caller_id_number', $text['label-number'], $order_by, $order);
 			echo th_order_by('caller_destination', $text['label-destination'], $order_by, $order);
 			echo th_order_by('start_stamp', $text['label-called'], $order_by, $order);
@@ -808,4 +808,3 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 //include the footer
 	require_once "resources/footer.php";
 
-?>
