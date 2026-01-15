@@ -57,6 +57,7 @@
 	$view = $_REQUEST['view'] ?? '';
 	// 	$action = $_POST['action'] ?? '';
 	$search = $_REQUEST['search'] ?? '';
+	$category = $_REQUEST['category'] ?? '';
 	$group_permissions = $_POST['group_permissions'] ?? '';
 
 //process permission reload
@@ -92,10 +93,18 @@
 
 			//set message and redirect
 				message::add($text['message-permissions_reloaded'],'positive');
-				header('Location: group_permissions.php?group_uuid='.urlencode($_GET['group_uuid']).($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : ''));
+				header('Location: group_permissions.php?group_uuid='.urlencode($_GET['group_uuid']).($view ? '&view='.urlencode($view) : null).($category ? '&category='.urlencode($category) : null).($search ? '&search='.urlencode($search) : ''));
 				exit;
 		}
 	}
+
+//get list of categories (application names)
+	if (!empty($category) && $category == 'all') {
+		$category = '';
+	}
+	$sql = "select distinct application_name from v_permissions order by application_name asc";
+	$categories = $database->select($sql, null, 'all');
+	unset($sql);
 
 //get the list
 	$sql = "select ";
@@ -111,6 +120,10 @@
 	$sql .= "	and group_name = :group_name \n";
 	$sql .= " 	and g.group_uuid = :group_uuid \n";
 	$sql .= "where true \n";
+	if (!empty($category)) {
+		$sql .= "and p.application_name = :category \n";
+		$parameters['category'] = $category;
+	}
 	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	lower(p.permission_name) like :search \n";
@@ -230,7 +243,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: group_permissions.php?group_uuid='.urlencode($group_uuid).($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : ''));
+				header('Location: group_permissions.php?group_uuid='.urlencode($group_uuid).($view ? '&view='.urlencode($view) : null).($category ? '&category='.urlencode($category) : null).($search ? '&search='.urlencode($search) : ''));
 				exit;
 			}
 
@@ -251,7 +264,7 @@
 			message::add($text['message-update']);
 
 		//redirect
-			header('Location: group_permissions.php?group_uuid='.urlencode($group_uuid).($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : ''));
+			header('Location: group_permissions.php?group_uuid='.urlencode($group_uuid).($view ? '&view='.urlencode($view) : null).($category ? '&category='.urlencode($category) : null).($search ? '&search='.urlencode($search) : ''));
 			exit;
 	}
 
@@ -268,13 +281,24 @@
 	echo "	<div class='heading'><b>".$text['title-group_permissions']."</b><div class='count'>".escape($group_name)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','collapse'=>'hide-md-dn','link'=>'groups.php']);
-	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'collapse'=>'hide-md-dn','link'=>'?group_uuid='.urlencode($group_uuid).'&action=reload'.($view ? '&view='.urlencode($view) : null).($search ? '&search='.urlencode($search) : '')]);
+	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'collapse'=>'hide-md-dn','link'=>'?group_uuid='.urlencode($group_uuid).'&action=reload'.($view ? '&view='.urlencode($view) : null).($category ? '&category='.urlencode($category) : null).($search ? '&search='.urlencode($search) : '')]);
 	if (permission_exists('group_member_view')) {
 		echo button::create(['type'=>'button','label'=>$text['button-members'],'icon'=>'users','collapse'=>'hide-md-dn','link'=>'group_members.php?group_uuid='.urlencode($group_uuid)]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
-	echo 		"<select class='txt' style='margin-left: 15px; margin-right: 0;' id='view' name='view' onchange=\"document.getElementById('form_search').submit();\">\n";
+	echo 		"<select class='txt' style='margin-left: 15px; margin-right: 0;' id='category' name='category' onchange=\"document.getElementById('form_search').submit();\">\n";
+	echo 			"<option value='' ".(!$category ? "selected='selected'" : null)." disabled='disabled'>".$text['label-category']."...</option>\n";
+	echo 			"<option value='all'>".$text['label-all']."</option>\n";
+	if (is_array($categories) && @sizeof($categories) != 0) {
+		foreach ($categories as $category_row) {
+			$category_value = $category_row['application_name'];
+			$category_label = ucwords(str_replace(['_','-'], ' ', $category_value));
+			echo "	<option value='".escape($category_value)."' ".($category == $category_value ? "selected='selected'" : null).">".escape($category_label)."</option>\n";
+		}
+	}
+	echo 		"</select>\n";
+	echo 		"<select class='txt' style='margin-left: 0; margin-right: 0;' id='view' name='view' onchange=\"document.getElementById('form_search').submit();\">\n";
 	echo 		"	<option value=''>".$text['label-all']."</option>\n";
 	echo 		"	<option value='assigned' ".($view == 'assigned' ? "selected='selected'" : null).">".$text['label-assigned']."</option>\n";
 	echo 		"	<option value='unassigned' ".($view == 'unassigned' ? "selected='selected'" : null).">".$text['label-unassigned']."</option>\n";
@@ -282,7 +306,7 @@
 	echo 		"</select>\n";
 	echo 		"<input type='text' class='txt list-search' style='margin-left: 0;' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search','collapse'=>'hide-md-dn','style'=>($search != '' ? 'display: none;' : null)]);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','collapse'=>'hide-md-dn','link'=>'group_permissions.php?group_uuid='.urlencode($group_uuid),'style'=>($search == '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','collapse'=>'hide-md-dn','link'=>'group_permissions.php?group_uuid='.urlencode($group_uuid),'style'=>($search == '' && $view == '' && $category == '' ? 'display: none;' : null)]);
 	if (permission_exists('group_permission_edit')) {
 		echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','collapse'=>'hide-md-dn','style'=>'margin-left: 15px;','onclick'=>"document.getElementById('form_list').submit();"]);
 	}
@@ -298,6 +322,7 @@
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "<input type='hidden' name='group_uuid' value='".escape($group_uuid)."'>\n";
 	echo "<input type='hidden' name='view' value=\"".escape($view)."\">\n";
+	echo "<input type='hidden' name='category' value=\"".escape($category)."\">\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<div class='card'>\n";
