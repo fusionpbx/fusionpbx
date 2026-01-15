@@ -351,8 +351,8 @@ function do_upgrade_schema() {
 	global $database;
 
 	//get the database schema put it into an array then compare and update the database as needed.
-	$obj = new schema();
-	echo $obj->schema('text');
+	$schema = new schema();
+	echo $schema->upgrade('text');
 }
 
 /**
@@ -428,8 +428,8 @@ function do_upgrade_defaults() {
 	echo $text['label-database'] . "\n";
 
 	//make sure the database schema and installation have performed all necessary tasks
-	$obj = new schema;
-	echo $obj->schema("text");
+	$schema = new schema;
+	echo $schema->upgrade("text");
 
 	//run all app_defaults.php files
 	$domain = new domains;
