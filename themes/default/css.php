@@ -655,6 +655,15 @@ else { //default: white
 		-khtml-border-radius: <?=$menu_main_border_radius?>;
 		border-radius: <?=$menu_main_border_radius?>;
 		padding: 0;
+		z-index: 1030;
+		<?php if ($menu_style == 'fixed') { ?>
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		<?php } else { ?>
+		position: relative;
+		<?php } ?>
 		}
 
 	/* main menu logo */
@@ -720,6 +729,8 @@ else { //default: white
 		-webkit-box-shadow: <?=$menu_sub_shadow_color?>;
 		-moz-box-shadow: <?=$menu_sub_shadow_color?>;
 		box-shadow: <?=$menu_sub_shadow_color?>;
+		z-index: 1040;
+		position: absolute;
 		<?php $br = format_border_radius($menu_sub_border_radius, '0 0 4px 4px'); ?>
 		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 		-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
@@ -1096,6 +1107,7 @@ else { //default: white
 		div#body_header {
 			position: relative;
 			z-index: 1;
+			isolation: isolate;
 			padding: 17px 10px 13px 10px;
 			height: 60px;
 			background-color: <?=$body_header_background_color?>;
@@ -1741,6 +1753,9 @@ else { //default: white
 	/* default body padding */
 	.container-fluid {
 		width: <?=$body_width?>;
+		<?php if ($menu_style == 'fixed') { ?>
+		padding-top: 49px;
+		<?php } ?>
 		}
 
 	/* maximize viewport usage on xs displays */
@@ -3440,6 +3455,7 @@ else { //default: white
 
 	div.action_bar {
 		z-index: 5;
+		isolation: isolate;
 		<?php
 		switch ($menu_style) {
 			case 'side':
