@@ -368,13 +368,25 @@ class auto_loader {
 	/**
 	 * Returns a list of classes loaded by the auto_loader. If no classes have been loaded an empty array is returned.
 	 *
+	 * @param string $parent Optional parent class name to filter the list of classes that has the given parent class.
+	 *
 	 * @return array List of classes loaded by the auto_loader or empty array
 	 */
-	public function get_class_list(): array {
+	public function get_class_list(string $parent = ''): array {
+		$classes = [];
+		//make sure we can return values if no classes have been loaded
 		if (!empty($this->classes)) {
-			return $this->classes;
+			if ($parent !== '') {
+				foreach ($this->classes as $class_name => $path) {
+					if (is_subclass_of($class_name, $parent)) {
+						$classes[$class_name] = $path;
+					}
+				}
+			} else {
+				$classes = $this->classes;
+			}
 		}
-		return [];
+		return $classes;
 	}
 
 	/**
@@ -426,9 +438,24 @@ class auto_loader {
 		//find the path using the class_name as the key in the classes array
 		if (isset($this->classes[$class_name])) {
 			//include the class or interface
-			include_once $this->classes[$class_name];
+			$result = @include_once $this->classes[$class_name];
 
-			//return boolean
+			//check for edge case where the file was deleted after cache creation
+			if ($result === false) {
+				//send to syslog when debugging
+				self::log(LOG_ERR, "class '$class_name' registered but include failed (file deleted?). Removed from cache.");
+
+				//remove the class from the array
+				unset($this->classes[$class_name]);
+
+				//update the cache with new classes
+				$this->update_cache();
+
+				//return failure
+				return false;
+			}
+
+			//return success
 			return true;
 		}
 
