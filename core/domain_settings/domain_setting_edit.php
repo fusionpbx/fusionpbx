@@ -654,12 +654,6 @@
 		echo "    	<option value='side' ".(($row['domain_setting_value'] == "side") ? "selected='selected'" : null).">".$text['label-side']."</option>\n";
 		echo "    </select>\n";
 	}
-	elseif ($category == "theme" && $subcategory == "menu_position" && $name == "text" ) {
-		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
-		echo "    	<option value='top' ".(($row['domain_setting_value'] == "top") ? "selected='selected'" : null).">".$text['label-top']."</option>\n";
-		echo "    	<option value='bottom' ".(($row['domain_setting_value'] == "bottom") ? "selected='selected'" : null).">".$text['label-bottom']."</option>\n";
-		echo "    </select>\n";
-	}
 	elseif ($category == "theme" && $subcategory == "logo_align" && $name == "text" ) {
 		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='left' ".(($row['domain_setting_value'] == "left") ? "selected='selected'" : null).">".$text['label-left']."</option>\n";
