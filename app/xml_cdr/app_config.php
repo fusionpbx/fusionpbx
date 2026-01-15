@@ -839,7 +839,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "call_disposition";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "call disposition";
-		$y++;
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "hangup_cause";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
@@ -1243,5 +1243,3 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-
-?>
