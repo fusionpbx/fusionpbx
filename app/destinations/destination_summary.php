@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2023-2025
+	Portions created by the Initial Developer are Copyright (C) 2023-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -249,5 +249,3 @@
 
 //show the footer
 	require_once "resources/footer.php";
-
-?>
