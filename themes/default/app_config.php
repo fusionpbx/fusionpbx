@@ -656,14 +656,6 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the border color (and opacity) of the main menu.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "81a1a867-036d-4e9d-a2b8-133f811efb2f";
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_position";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "top";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the position of the main menu (Fixed menu only).";
-		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ed3d428b-8507-41ca-8802-2c6a0d3e8138";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "menu_style";

@@ -598,12 +598,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "    	<option value='inline' ".(($user_setting_value == "inline") ? "selected='selected'" : null).">".$text['label-inline']."</option>\n";
 		echo "    </select>\n";
 	}
-	else if ($user_setting_category == "theme" && $user_setting_subcategory == "menu_position" && $user_setting_name == "text" ) {
-		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
-		echo "    	<option value='top' ".(($user_setting_value == "top") ? "selected='selected'" : null).">".$text['label-top']."</option>\n";
-		echo "    	<option value='bottom' ".(($user_setting_value == "bottom") ? "selected='selected'" : null).">".$text['label-bottom']."</option>\n";
-		echo "    </select>\n";
-	}
 	else if ($user_setting_category == "theme" && $user_setting_subcategory == "logo_align" && $user_setting_name == "text" ) {
 		echo "    <select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
 		echo "    	<option value='left' ".(($user_setting_value == "left") ? "selected='selected'" : null).">".$text['label-left']."</option>\n";

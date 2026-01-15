@@ -23,7 +23,6 @@ $menu_main_background_color = $settings->get('theme', 'menu_main_background_colo
 $menu_main_shadow_color = !empty($settings->get('theme', 'menu_main_shadow_color', '')) ? '0 0 5px '.$settings->get('theme', 'menu_main_shadow_color') : 'none';
 $menu_main_border_color = $settings->get('theme', 'menu_main_border_color', 'transparent');
 $menu_main_border_size = $settings->get('theme', 'menu_main_border_size', 0);
-$menu_position = $settings->get('theme', 'menu_position', 'top');
 $menu_style = $settings->get('theme', 'menu_style', 'fixed');
 switch ($menu_style) {
 	case 'inline': $menu_main_border_radius_default = '4px'; break;
@@ -1710,12 +1709,7 @@ else { //default: white
 		switch ($menu_style) {
 			case 'inline': $body_top_style = "margin-top: -8px;"; break;
 			case 'static': $body_top_style = "margin-top: -5px;"; break;
-			case 'fixed':
-				switch ($menu_position) {
-					case 'bottom': $body_top_style = "margin-top: 30px;"; break;
-					case 'top':
-					default: $body_top_style = "margin-top: 65px;"; break;
-				}
+			case 'fixed': $body_top_style = "margin-top: 65px;"; break;
 		}
 	?>
 

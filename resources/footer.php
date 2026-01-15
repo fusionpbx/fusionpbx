@@ -157,7 +157,6 @@
 				$settings_array['theme']['menu_side_toggle_hover_delay_expand'] = isset($settings_array['theme']['menu_side_toggle_hover_delay_expand']) ? $settings_array['theme']['menu_side_toggle_hover_delay_expand'] : '300';
 				$settings_array['theme']['menu_side_toggle_hover_delay_contract'] = isset($settings_array['theme']['menu_side_toggle_hover_delay_contract']) ? $settings_array['theme']['menu_side_toggle_hover_delay_contract'] : '1000';
 				$settings_array['theme']['menu_style'] = !empty($settings_array['theme']['menu_style']) ? $settings_array['theme']['menu_style'] : 'fixed';
-				$settings_array['theme']['menu_position'] = isset($settings_array['theme']['menu_position']) ? $settings_array['theme']['menu_position'] : 'top';
 				$settings_array['theme']['footer'] = isset($settings_array['theme']['footer']) ? $settings_array['theme']['footer'] : '&copy; '.$text['theme-label-copyright'].' 2008 - '.date('Y')." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a> ".$text['theme-label-all_rights_reserved'];
 				$settings_array['theme']['menu_side_item_main_sub_icon_contract'] = !empty($settings_array['theme']['menu_side_item_main_sub_icon_contract']) ? explode(' ', $settings_array['theme']['menu_side_item_main_sub_icon_contract'])[1] : null;
 				$settings_array['theme']['menu_side_item_main_sub_icon_expand'] = !empty($settings_array['theme']['menu_side_item_main_sub_icon_expand']) ? explode(' ', $settings_array['theme']['menu_side_item_main_sub_icon_expand'])[1] : null;

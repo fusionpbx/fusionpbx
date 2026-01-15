@@ -306,7 +306,6 @@
 				( $category == "theme" && $subcategory == "menu_sub_icons" && $name == "boolean" ) ||
 				( $category == "theme" && $subcategory == "menu_brand_type" && $name == "text" ) ||
 				( $category == "theme" && $subcategory == "menu_style" && $name == "text" ) ||
-				( $category == "theme" && $subcategory == "menu_position" && $name == "text" ) ||
 				( $category == "theme" && $subcategory == "body_header_brand_type" && $name == "text" ) ||
 				( $category == "theme" && $subcategory == "logo_align" && $name == "text" )
 				) {

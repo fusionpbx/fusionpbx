@@ -1183,7 +1183,7 @@ class menu {
 				break;
 			case 'fixed':
 			default:
-				$menu_type = 'fixed-' . $this->settings->get('theme', 'menu_position', 'top');
+				$menu_type = 'fixed-top';
 				if (!http_user_agent('mobile')) {
 					$menu_width = $this->settings->get('theme', 'menu_width_fixed', 'calc(90% - 20px)');
 				}
