@@ -3273,3 +3273,42 @@ if (!function_exists('get_memory_details')) {
 		return false;
 	}
 }
+
+if (!function_exists('mb_convert_encoding')) {
+	function mb_convert_encoding($str, $to_encoding, $from_encoding = null) {
+		// if no from_encoding specified, try to detect it
+		if ($from_encoding === null) {
+			// try to detect encoding using iconv
+			$encodings = array(
+				'UTF-8', 'ISO-8859-1', 'ASCII', 'UTF-16', 'UTF-16BE', 'UTF-16LE',
+				'Windows-1252', 'CP1252', 'ISO-8859-15', 'KOI8-R', 'CP866',
+				'Windows-1251', 'CP1251', 'ISO-8859-2', 'ISO-8859-3', 'ISO-8859-4',
+				'ISO-8859-5', 'ISO-8859-6', 'ISO-8859-7', 'ISO-8859-8', 'ISO-8859-9',
+				'ISO-8859-10', 'ISO-8859-13', 'ISO-8859-14', 'ISO-8859-16'
+			);
+
+			foreach ($encodings as $enc) {
+				$test = @iconv($enc, $enc, $str);
+				if ($test !== false) {
+					$from_encoding = $enc;
+					break;
+				}
+			}
+
+			// if still not detected, assume UTF-8
+			if ($from_encoding === null) {
+				$from_encoding = 'UTF-8';
+			}
+		}
+
+		// convert encoding using iconv
+		$result = @iconv($from_encoding, $to_encoding . '//IGNORE', $str);
+
+		// if conversion failed, try with '//' as fallback
+		if ($result === false) {
+			$result = @iconv($from_encoding, $to_encoding, $str);
+		}
+
+		return $result;
+	}
+}
