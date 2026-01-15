@@ -38,8 +38,12 @@
 	$language = new text;
 	$text = $language->get();
 
+//get variables from the session
+	$domain_uuid = $_SESSION['domain_uuid'];
+	$user_uuid = $_SESSION['user_uuid'];
+
 //add the settings object
-	$settings = new settings(["database" => $database, "domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+	$settings = new settings(["database" => $database, "domain_uuid" => $domain_uuid, "user_uuid" => $user_uuid]);
 	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
 	$transcribe_engine = $settings->get('transcribe', 'engine', '');
 	$call_log_enabled = $settings->get('cdr', 'call_log_enabled', false);
@@ -79,6 +83,7 @@
 		$record_path = trim($row["record_path"] ?? '');
 		$record_name = trim($row["record_name"] ?? '');
 		$record_transcription = trim($row["record_transcription"] ?? '');
+		$call_disposition = trim($row["call_disposition"] ?? '');
 		$status = trim($row["status"] ?? '');
 	}
 	unset($sql, $parameters, $row);
@@ -90,13 +95,13 @@
 		file_exists($record_path.'/'.$record_name)) {
 
 			//prepare the params
-			$params['domain_uuid'] = $_SESSION['domain_uuid'];
+			$params['domain_uuid'] = $domain_uuid;
 			$params['xml_cdr_uuid'] = $uuid;
 			$params['call_direction'] = $call_direction;
 
 			//add the recording to the transcribe queue
 			$array['transcribe_queue'][$x]['transcribe_queue_uuid'] = uuid();
-			$array['transcribe_queue'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+			$array['transcribe_queue'][$x]['domain_uuid'] = $domain_uuid;
 			$array['transcribe_queue'][$x]['hostname'] = gethostname();
 			$array['transcribe_queue'][$x]['transcribe_status'] = 'pending';
 			$array['transcribe_queue'][$x]['transcribe_app_class'] = 'call_recordings';
@@ -277,7 +282,7 @@
 
 //build the call flow summary array
 	$xml_cdr = new xml_cdr(["database" => $database, "settings" => $settings, "destinations" => $destinations]);
-	$xml_cdr->domain_uuid = $_SESSION['domain_uuid'];
+	$xml_cdr->domain_uuid = $domain_uuid;
 	$xml_cdr->call_direction = $call_direction; //used to determine when the call is outbound
 	$xml_cdr->status = $status; //used to determine when the call is outbound
 	if (empty($call_flow)) {
@@ -388,6 +393,9 @@
 	$summary_array['start'] = escape($start_stamp);
 	$summary_array['end'] = escape($end_stamp);
 	$summary_array['duration'] = escape(gmdate("G:i:s", (int)$duration));
+	if (permission_exists('xml_cdr_call_disposition')) {
+		$summary_array['call_disposition'] = escape($call_disposition);
+	}
 	if (isset($status)) {
 		$summary_array['status'] = escape($status);
 	}
