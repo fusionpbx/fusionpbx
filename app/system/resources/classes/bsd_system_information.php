@@ -32,6 +32,20 @@
 class bsd_system_information extends system_information {
 
 	/**
+	 * Returns the network card information.
+	 *
+	 * @param string|null $default_value The default value to return if the network card information cannot be determined.
+	 *
+	 * @return string|null The network card information or the default value.
+	 */
+    public function get_network_card(?string $default_value = null): ?string {
+		// Implementation for BSD systems
+		$result = shell_exec("ifconfig -a | head -n1 | awk '{print $1}'");
+		$network_card = trim($result, " :");
+		return $network_card ?: $default_value;
+    }
+
+	/**
 	 * Returns the number of CPU cores available on the system.
 	 *
 	 * @return int The number of CPU cores.

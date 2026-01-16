@@ -184,4 +184,31 @@ class linux_system_information extends system_information {
 
 		return ['rx_bps' => 0, 'tx_bps' => 0];
 	}
+
+	/**
+	 * Attempts to detect the network card
+	 *
+	 * @param $default_value string|null Default network card
+	 *
+	 * @return string|null
+	 */
+	public function get_network_card(?string $default_value = null): ?string {
+		// Use the default route to find the network interface
+		$result = shell_exec("ip route show default 2>/dev/null");
+		if (!empty($result)) {
+
+			// Parse the output to find the interface name
+			$parts = array_map('trim', explode(' ', $result));
+			$dev_index = array_search('dev', $parts, true);
+
+			// Ensure 'dev' is found and there is a following part to be found
+			if ($dev_index !== false && isset($parts[$dev_index + 1])) {
+				// Return the interface name found after 'dev'
+				$default_value = $parts[$dev_index + 1];
+			}
+		}
+
+		// Return the detected or default value
+		return $default_value;
+	}
 }
