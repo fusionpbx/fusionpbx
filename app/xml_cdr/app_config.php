@@ -60,6 +60,26 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_log_delete";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_transcript_view";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_transcript_delete";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_extension_view';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_extension_add';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_extension_edit';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_extension_delete';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_extension_all';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -224,7 +244,6 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_call_disposition";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_hangup_cause";
 		$y++;
@@ -283,20 +302,12 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_extension_view';
+		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_answered';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_extension_add';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_answered_inbound';
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_extension_edit';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_extension_delete';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_extension_all';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_answered_outbound';
 		$y++;
 
 	//default settings
@@ -1243,3 +1254,4 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+
