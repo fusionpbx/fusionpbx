@@ -1911,6 +1911,24 @@ class xml_cdr {
 		$sql .= ") \n";
 		$sql .= "as answered, \n";
 
+		//answered - inbound
+		$sql .= "count(*) \n";
+		$sql .= "filter ( \n";
+		$sql .= " where c.extension_uuid = e.extension_uuid \n";
+		$sql .= " and status = 'answered' \n";
+		$sql .= " and direction = 'inbound' \n";
+		$sql .= ") \n";
+		$sql .= "as answered_inbound, \n";
+
+		//answered - outbound
+		$sql .= "count(*) \n";
+		$sql .= "filter ( \n";
+		$sql .= " where c.extension_uuid = e.extension_uuid \n";
+		$sql .= " and status = 'answered' \n";
+		$sql .= " and direction = 'outbound' \n";
+		$sql .= ") \n";
+		$sql .= "as answered_outbound, \n";
+
 		//missed
 		$sql .= "count(*) \n";
 		$sql .= "filter ( \n";
