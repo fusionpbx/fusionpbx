@@ -215,7 +215,15 @@
 	if (permission_exists('number_alias')) {
 		echo "		<th>".$text['label-number_alias']."</th>\n";
 	}
-	echo "		<th class='center'>".$text['label-answered']."</th>\n";
+	if (permission_exists('xml_cdr_answered')) {
+		echo "		<th class='center'>".$text['label-answered']."</th>\n";
+	}
+	if (permission_exists('xml_cdr_answered_inbound')) {
+		echo "		<th class='center'>".$text['label-answered_inbound']."</th>\n";
+	}
+	if (permission_exists('xml_cdr_answered_outbound')) {
+		echo "		<th class='center'>".$text['label-answered_outbound']."</th>\n";
+	}
 	echo "		<th class='center'>".$text['label-missed']."</th>\n";
 	echo "		<th class='center'>".$text['label-voicemail']."</th>\n";
 	echo "		<th class='center'>".$text['label-no_answer']."</th>\n";
@@ -238,7 +246,15 @@
 			if (permission_exists('number_alias')) {
 				echo "	<td>".escape($row['number_alias'])."&nbsp;</td>\n";
 			}
-			echo "	<td class='center'>".escape($row['answered'])."&nbsp;</td>\n";
+			if (permission_exists('xml_cdr_answered')) {
+				echo "	<td class='center'>".escape($row['answered'])."&nbsp;</td>\n";
+			}
+			if (permission_exists('xml_cdr_answered_inbound')) {
+				echo "	<td class='center'>".escape($row['answered_inbound'])."&nbsp;</td>\n";
+			}
+			if (permission_exists('xml_cdr_answered_outbound')) {
+				echo "	<td class='center'>".escape($row['answered_outbound'])."&nbsp;</td>\n";
+			}
 			echo "	<td class='center'>".escape($row['missed'])."&nbsp;</td>\n";
 			echo "	<td class='center'>".escape($row['voicemail'])."&nbsp;</td>\n";
 			echo "	<td class='center'>".escape($row['no_answer'])."&nbsp;</td>\n";
