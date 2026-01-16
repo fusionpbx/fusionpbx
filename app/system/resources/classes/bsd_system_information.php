@@ -31,7 +31,6 @@
  */
 class bsd_system_information extends system_information {
 
-
 	/**
 	 * Returns the network card information.
 	 *
@@ -41,8 +40,8 @@ class bsd_system_information extends system_information {
 	 */
     public function get_network_card(?string $default_value = null): ?string {
 		// Implementation for BSD systems
-		$result = shell_exec("ifconfig -a | grep -B1 'status: active' | head -n1 | awk '{print $1}'");
-		$network_card = trim($result);
+		$result = shell_exec("ifconfig -a | head -n1 | awk '{print $1}'");
+		$network_card = trim($result, " :");
 		return $network_card ?: $default_value;
     }
 
