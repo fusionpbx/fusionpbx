@@ -111,13 +111,12 @@
 		document.querySelectorAll('tr[data-agent-status]').forEach(table_row => {
 			const filter = '<?php echo isset($_GET['agent_status']) ? $_GET['agent_status'] : null; ?>';
 
-			//if (filter === 'available' && table_row.getAttribute('data-agent-status') !== 'Available') {
 			if (filter === 'available' && !table_row.getAttribute('data-agent-status').includes('Available')) {
 				table_row.style.display = 'none';
 			}
-			else if (filter === 'on_demand' && !table_row.getAttribute('data-agent-status').includes('On Demand')) {
-				table_row.style.display = 'none';
-			}
+			// else if (filter === 'on_demand' && !table_row.getAttribute('data-agent-status').includes('On Demand')) {
+			// 	table_row.style.display = 'none';
+			// }
 			else if (filter === 'not_available' && table_row.getAttribute('data-agent-status').includes('Available')) {
 				table_row.style.display = 'none';
 			}
@@ -189,7 +188,7 @@
 	echo "				<option value='' selected disabled hidden>".$text['label-status']."...</option>";
 	echo "				<option value=''></option>\n";
 	echo "				<option value='available' ".($agent_status === 'available' ? 'selected' : null).">".$text['label-available']."</option>\n";
-	echo "				<option value='on_demand' ".($agent_status === 'on_demand' ? 'selected' : null).">".$text['label-available_on_demand']."</option>\n";
+	//echo "				<option value='on_demand' ".($agent_status === 'on_demand' ? 'selected' : null).">".$text['label-available_on_demand']."</option>\n";
 	echo "				<option value='not_available' ".($agent_status === 'not_available' ? 'selected' : null).">".$text['label-not_available']."</option>\n";
 	echo "				<option value='on_break' ".($agent_status === 'on_break' ? 'selected' : null).">".$text['label-on_break']."</option>\n";
 	echo "				<option value='logged_out' ".($agent_status === 'logged_out' ? 'selected' : null).">".$text['label-logged_out']."</option>\n";
