@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -106,10 +106,31 @@
 				}
 			});
 		});
+
+		//filter agent list based on status
+		document.querySelectorAll('tr[data-agent-status]').forEach(table_row => {
+			const filter = '<?php echo isset($_GET['agent_status']) ? $_GET['agent_status'] : null; ?>';
+
+			if (filter === 'available' && !table_row.getAttribute('data-agent-status').includes('Available')) {
+				table_row.style.display = 'none';
+			}
+			// else if (filter === 'on_demand' && !table_row.getAttribute('data-agent-status').includes('On Demand')) {
+			// 	table_row.style.display = 'none';
+			// }
+			else if (filter === 'not_available' && table_row.getAttribute('data-agent-status').includes('Available')) {
+				table_row.style.display = 'none';
+			}
+			else if (filter === 'on_break' && !table_row.getAttribute('data-agent-status').includes('On Break')) {
+				table_row.style.display = 'none';
+			}
+			else if (filter === 'logged_out' && !table_row.getAttribute('data-agent-status').includes('Logged Out')) {
+				table_row.style.display = 'none';
+			}
+		});
 	}
 
 	var requestTime = function() {
-		var url = 'call_center_active_inc.php?queue_name=<?php echo escape($queue_name); ?>&name=<?php echo urlencode(escape($name)); ?>';
+		var url = 'call_center_active_inc.php?queue_name=<?php echo escape($queue_name); ?>&name=<?php echo urlencode(escape($name)); ?>&agent_status=<?php echo escape($_GET['agent_status']); ?>';
 		new loadXmlHttp(url, 'ajax_response');
 		<?php
 
@@ -155,11 +176,32 @@
 
 <?php
 
-//show the response
+//show the content
+	$agent_status = $_GET['agent_status'] ?? '';
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['header-agents']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo "		<form id='frm' name='frm' method='GET'>\n";
+	echo "			<input type='hidden' name='queue_name' value='".escape($queue_name)."'>\n";
+	echo "			<input type='hidden' name='name' value='".urlencode(escape($_GET['name']))."'>\n";
+	echo "			<select class='formfld' name='agent_status' id='agent_status' onchange=\"document.getElementById('frm').submit();\">\n";
+	echo "				<option value='' selected disabled hidden>".$text['label-status']."...</option>";
+	echo "				<option value=''></option>\n";
+	echo "				<option value='available' ".($agent_status === 'available' ? 'selected' : null).">".$text['label-available']."</option>\n";
+	//echo "				<option value='on_demand' ".($agent_status === 'on_demand' ? 'selected' : null).">".$text['label-available_on_demand']."</option>\n";
+	echo "				<option value='not_available' ".($agent_status === 'not_available' ? 'selected' : null).">".$text['label-not_available']."</option>\n";
+	echo "				<option value='on_break' ".($agent_status === 'on_break' ? 'selected' : null).">".$text['label-on_break']."</option>\n";
+	echo "				<option value='logged_out' ".($agent_status === 'logged_out' ? 'selected' : null).">".$text['label-logged_out']."</option>\n";
+	echo "			</select>\n";
+	echo "		</form>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+	echo $text['description-agents']."<br /><br />\n";
+
+	//show the response
 	echo "<div id='ajax_response'></div>\n";
 	echo "<br><br>";
 
 //include the footer
 	require_once "resources/footer.php";
-
-?>
