@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -41,6 +41,7 @@
 
 //get the queue uuid and set it as a variable
 	$queue_uuid = $_GET['queue_name'];
+	$name = $_GET['name'] ?? null;
 
 //get the queues from the database
 	if (empty($_SESSION['queues']) || !is_array($_SESSION['queues'])) {
@@ -114,10 +115,6 @@
 	else {
 
 		//get the agent list
-
-			//show the title
-				echo "<b>".$text['header-agents']."</b><br />\n";
-				echo $text['description-agents']."<br /><br />\n";
 
 			//send the event socket command and get the response
 				//callcenter_config queue list tiers [queue_name] |
@@ -224,7 +221,7 @@
 									$talk_time = $agent_row['talk_time'];
 									$ready_time = $agent_row['ready_time'];
 
-									//calcudate the length since status change and bridge end			
+									//calcudate the length since status change and bridge end
 									$last_status_change_length = time() - $last_status_change;
 									$last_bridge_end_length = time() - $last_bridge_end;
 
@@ -241,7 +238,7 @@
 										$list_row_url = "../call_centers/call_center_agent_edit.php?id=".$agent_uuid;
 									}
 
-									echo "<tr class='list-row' href='".$list_row_url."'>\n";
+									echo "<tr class='list-row' href='".$list_row_url."' data-agent-status='".escape($status)."'>\n";
 									echo "<td>";
 									if (permission_exists('call_center_agent_edit')) {
 										echo "<a href='".$list_row_url."'>".escape($agent_name)."</a>";
@@ -400,5 +397,3 @@
 			echo "</div>\n";
 
 	}
-
-?>
