@@ -1168,14 +1168,14 @@
 								if (ring_group_strategy == "enterprise") then
 									app_data = dial_string;
 								else
-									app_data = "{ignore_early_media=true}"..dial_string;
+									app_data = "{ignore_early_media=true,instant_ringback=true}"..dial_string;
 								end
 							else
 								if (app_data == nil) then
 									if (ring_group_strategy == "enterprise") then
 										app_data = dial_string;
 									else
-										app_data = "{ignore_early_media=true}"..dial_string;
+										app_data = "{ignore_early_media=true,instant_ringback=true}"..dial_string;
 									end
 								else
 									app_data = app_data .. delimiter .. dial_string;
