@@ -36,6 +36,7 @@ abstract class system_information {
 	abstract public function get_cpu_percent(): float;
 	abstract public function get_cpu_percent_per_core(): array;
 	abstract public function get_network_speed(string $interface = 'eth0'): array;
+	abstract public function get_network_card(?string $default_value = null): ?string;
 
 	/**
 	 * Returns the system load average.
