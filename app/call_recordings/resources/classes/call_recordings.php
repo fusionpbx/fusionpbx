@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2023
+	Portions created by the Initial Developer are Copyright (C) 2018 - 2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -113,7 +113,6 @@ class call_recordings {
 		$this->table             = 'call_recordings';
 		$this->description_field = 'call_recording_description';
 		$this->location          = 'call_recordings.php';
-
 	}
 
 	/**
@@ -225,12 +224,155 @@ class call_recordings {
 
 		//save the call recording transcript
 		$result = $this->database->save($array, false);
-		$result = $this->database->message;
 		unset($array);
 
 		//remove the temporary permissions
 		$p->delete('xml_cdr_transcript_add', 'temp');
 		$p->delete('xml_cdr_transcript_edit', 'temp');
+
+		//get the email settings
+		$email_address = $this->settings('call_recordings', 'email_address');
+		$email_template = $this->settings('call_recordings', 'email_template');
+
+		//set default language - need to have a way to set the language
+		if (!empty($setting->get('domain', 'language'))) {
+			$template_language = $setting->get('domain', 'language');
+		}
+		else {
+			$template_language = 'en-us';
+		}
+
+		//set the variables
+		$hostname = system('hostname');
+		$email_queue_uuid = uuid();
+		$email_from = $setting->get('email', 'smtp_from');
+		if (isset($record_name)) {
+			$email_attachment_type = substr($record_name, -3);
+		}
+
+		//send the email
+		if (isset($email_address) && !empty($params['transcribe_message'])) {
+			//format the transcription variables for text and html
+			$transcribe_html = transcribe::conversation_format($params['transcribe_message'], 'html');
+
+			//get the email template
+			$sql = "SELECT * FROM v_xml_cdr ";
+			$sql .= "WHERE domain_uuid = :domain_uuid ";
+			$sql .= "AND template_language = :template_language ";
+			$sql .= "AND template_category = 'call_recordings' ";
+			$sql .= "AND template_subcategory = 'transcription' ";
+			$sql .= "AND template_enabled = 'true' ";
+			$sql .= "ORDER BY domain_uuid DESC ";
+			$parameters['domain_uuid'] = $params['domain_uuid'];
+			$parameters['xml_cdr_uuid'] = $params['xml_cdr_uuid'];
+			$row = $this->database->select($sql, $parameters, 'row');
+			$domain_name = $row["domain_name"];
+			$caller_id_name = $row["caller_id_name"];
+			$caller_id_number = $row["caller_id_number"];
+			$account_code = $row["account_code"];
+			$start_date = $row["start_date"];
+			$start_time = $row["start_time"];
+			$end_date = $row["end_date"];
+			$end_time = $row["end_time"];
+			$time = $row["time"];
+			unset($parameters);
+
+			//get the email template
+			$sql = "SELECT * FROM v_email_templates ";
+			$sql .= "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$sql .= "AND template_language = :template_language ";
+			$sql .= "AND template_category = 'call_recordings' ";
+			$sql .= "AND template_subcategory = 'transcription' ";
+			$sql .= "AND template_enabled = 'true' ";
+			$sql .= "ORDER BY domain_uuid DESC ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['template_language'] = $template_language;
+			$row = $this->database->select($sql, $parameters, 'row');
+			$email_subject = $row["template_subject"];
+			$email_body = $row["template_body"];
+			unset($parameters);
+
+			//replace variables in email subject
+			$email_subject = str_replace('${domain_name}', $domain_name, $email_subject);
+			$email_subject = str_replace('${email_address}', $email_address, $email_subject);
+			$email_subject = str_replace('${caller_id_name}', $caller_id_name, $email_subject);
+			$email_subject = str_replace('${caller_id_number}', $caller_id_name, $email_subject);
+			$email_subject = str_replace('${call_duration}', $call_duration, $email_subject);
+			$email_subject = str_replace('${account_code}', $account_code, $email_subject);
+			$email_subject = str_replace('${start_date}', $start_date, $email_subject);
+			$email_subject = str_replace('${start_time}', $start_time, $email_subject);
+			$email_subject = str_replace('${end_date}', $end_date, $email_subject);
+			$email_subject = str_replace('${end_time}', $end_time, $email_subject);
+			$email_subject = str_replace('${time}', $time, $email_subject);
+
+			//replace variables in email body
+			$email_body = str_replace('${domain_name}', $domain_name, $email_body);
+			$email_body = str_replace('${email_address}', $email_address, $email_body);
+			$email_body = str_replace('${caller_id_name}', $caller_id_name, $email_body);
+			$email_body = str_replace('${caller_id_number}', $caller_id_name, $email_body);
+			$email_body = str_replace('${call_duration}', $call_duration, $email_body);
+			$email_body = str_replace('${account_code}', $account_code, $email_body);
+			$email_body = str_replace('${start_date}', $start_date, $email_body);
+			$email_body = str_replace('${start_time}', $start_time, $email_body);
+			$email_body = str_replace('${end_date}', $end_date, $email_body);
+			$email_body = str_replace('${end_time}', $end_time, $email_body);
+			$email_body = str_replace('${time}', $time, $email_body);
+			$email_body = str_replace('${transcript}', $transcribe_html, $email_body);
+
+			//send email - standard
+			//echo "send_email($email_address, $email_subject, $email_body, $email_error, null, null, 3, 3, $attachments);\n";
+
+			//debug information
+			// echo "email from: ".$email_from."\n";
+			// echo "email_address: ".$email_address."\n";
+			// echo "email_subject: ".$email_subject."\n";
+			// echo "file name: ".$file."\n";
+
+			//send email with the email_queue
+			$array['email_queue'][0]['email_queue_uuid'] = $email_queue_uuid;
+			$array['email_queue'][0]['domain_uuid'] = $domain_uuid;
+			$array['email_queue'][0]['hostname'] = $hostname;
+			$array['email_queue'][0]['email_date'] = 'now()';
+			$array['email_queue'][0]['email_from'] = $email_from;
+			$array['email_queue'][0]['email_to'] = $email_address;
+			$array['email_queue'][0]['email_subject'] = $email_subject;
+			$array['email_queue'][0]['email_body'] = $email_body;
+			$array['email_queue'][0]['email_status'] = 'waiting';
+			$array['email_queue'][0]['email_uuid'] = null;
+			$array['email_queue'][0]['email_action_after'] = null;
+
+			//unset the variables
+			unset($email_address, $email_subject, $email_body);
+			unset($domain_name, $account_code);
+
+			//add the attachment
+			// if (is_array($attachments) && @sizeof($attachments) != 0) {
+			// 	//build the attachment array
+			// 	$array['email_queue_attachments'][0]['email_queue_attachment_uuid'] = uuid();
+			// 	$array['email_queue_attachments'][0]['email_queue_uuid'] = $email_queue_uuid;
+			// 	$array['email_queue_attachments'][0]['domain_uuid'] = $domain_uuid;
+			// 	$array['email_queue_attachments'][0]['email_attachment_type'] = $email_attachment_type;
+			// 	$array['email_queue_attachments'][0]['email_attachment_path'] = $record_path;
+			// 	$array['email_queue_attachments'][0]['email_attachment_name'] = $record_name;
+			// 	$array['email_queue_attachments'][0]['email_attachment_base64'] = null;
+
+			// 	//unset the variables
+			// 	unset($email_attachment_type, $record_path, $record_name);
+			// }
+
+			//add temporary permissions
+			$p = permissions::new();
+			$p->add('email_queue_add', 'temp');
+			$p->add('email_queue_edit', 'temp');
+
+			//save the call recording transcript
+			$result = $this->database->save($array, false);
+			unset($array);
+
+			//remove the temporary permissions
+			$p->delete('email_queue_add', 'temp');
+			$p->delete('email_queue_edit', 'temp');
+		} // isset($email_address)
 	}
 
 	/**
@@ -280,13 +422,13 @@ class call_recordings {
 							file_exists($field['call_recording_path'] . '/' . $field['call_recording_name'])
 						) {
 							//prepare the paramaters
-							$params['domain_uuid'] = $_SESSION['domain_uuid'];
+							$params['domain_uuid'] = $this->domain_uuid;
 							$params['xml_cdr_uuid'] = $record['uuid'];
 							$params['call_direction'] = $field['call_direction'];
 
 							//add the recording to the transcribe queue
 							$array['transcribe_queue'][$x]['transcribe_queue_uuid'] = $record['uuid'];
-							$array['transcribe_queue'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+							$array['transcribe_queue'][$x]['domain_uuid'] = $this->domain_uuid;
 							$array['transcribe_queue'][$x]['hostname'] = gethostname();
 							$array['transcribe_queue'][$x]['transcribe_status'] = 'pending';
 							$array['transcribe_queue'][$x]['transcribe_app_class'] = 'call_recordings';
