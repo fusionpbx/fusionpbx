@@ -208,6 +208,12 @@ class call_recordings {
 		//set the global variables
 		global $database;
 
+		//get the settings for this domain
+		$settings = new settings(['database' => $database, 'domain_uuid' => $params['domain_uuid']]);
+
+		//set the domain_uuid
+		$domain_uuid = $params['domain_uuid'];
+
 		//define the array
 		$array = [];
 
@@ -231,12 +237,12 @@ class call_recordings {
 		$p->delete('xml_cdr_transcript_edit', 'temp');
 
 		//get the email settings
-		$email_address = $this->settings('call_recordings', 'email_address');
-		$email_template = $this->settings('call_recordings', 'email_template');
+		$email_address = $settings->get('call_recordings', 'email_address');
+		$email_template = $settings->get('call_recordings', 'email_template');
 
 		//set default language - need to have a way to set the language
-		if (!empty($setting->get('domain', 'language'))) {
-			$template_language = $setting->get('domain', 'language');
+		if (!empty($settings->get('domain', 'language'))) {
+			$template_language = $settings->get('domain', 'language');
 		}
 		else {
 			$template_language = 'en-us';
@@ -245,7 +251,7 @@ class call_recordings {
 		//set the variables
 		$hostname = system('hostname');
 		$email_queue_uuid = uuid();
-		$email_from = $setting->get('email', 'smtp_from');
+		$email_from = $settings->get('email', 'smtp_from');
 		if (isset($record_name)) {
 			$email_attachment_type = substr($record_name, -3);
 		}
@@ -297,7 +303,6 @@ class call_recordings {
 			$email_subject = str_replace('${email_address}', $email_address, $email_subject);
 			$email_subject = str_replace('${caller_id_name}', $caller_id_name, $email_subject);
 			$email_subject = str_replace('${caller_id_number}', $caller_id_name, $email_subject);
-			$email_subject = str_replace('${call_duration}', $call_duration, $email_subject);
 			$email_subject = str_replace('${account_code}', $account_code, $email_subject);
 			$email_subject = str_replace('${start_date}', $start_date, $email_subject);
 			$email_subject = str_replace('${start_time}', $start_time, $email_subject);
@@ -310,7 +315,6 @@ class call_recordings {
 			$email_body = str_replace('${email_address}', $email_address, $email_body);
 			$email_body = str_replace('${caller_id_name}', $caller_id_name, $email_body);
 			$email_body = str_replace('${caller_id_number}', $caller_id_name, $email_body);
-			$email_body = str_replace('${call_duration}', $call_duration, $email_body);
 			$email_body = str_replace('${account_code}', $account_code, $email_body);
 			$email_body = str_replace('${start_date}', $start_date, $email_body);
 			$email_body = str_replace('${start_time}', $start_time, $email_body);
