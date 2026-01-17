@@ -70,3 +70,18 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call recordings set to auto transcribe. Options: true, false";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2bbdb343-4e95-4d9b-886a-33bc5918a4c0";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_recordings";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "email_address";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call recordings email address.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "43ce24ca-fc5e-48ca-a0c4-88fb7b7ce679";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_recordings";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "email_template";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "transcription";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call recordings used to select the email template.";
