@@ -248,6 +248,9 @@ class call_recordings {
 			$template_language = 'en-us';
 		}
 
+		//set the time zone
+		$time_zone = $settings->get('domain','time_zone', date_default_timezone_get());
+
 		//set the variables
 		$hostname = system('hostname');
 		$email_queue_uuid = uuid();
@@ -262,25 +265,31 @@ class call_recordings {
 			$transcribe_html = transcribe::conversation_format($params['transcribe_message'], 'html');
 
 			//get the email template
-			$sql = "SELECT * FROM v_xml_cdr ";
+			$sql = "SELECT ";
+			$sql .= " domain_name, ";
+			$sql .= " caller_id_name, ";
+			$sql .= " caller_id_number, ";
+			$sql .= " to_char(timezone(:time_zone, start_stamp), 'DD Mon YYYY') as start_date, \n";
+			$sql .= " to_char(timezone(:time_zone, start_stamp), 'HH12:MI:SS am') as start_time, \n";
+			$sql .= " to_char(timezone(:time_zone, end_stamp), 'DD Mon YYYY') as end_date, \n";
+			$sql .= " to_char(timezone(:time_zone, end_stamp), 'HH12:MI:SS am') as end_time, \n";
+			$sql .= " duration ";
+			$sql .= "FROM v_xml_cdr ";
 			$sql .= "WHERE domain_uuid = :domain_uuid ";
-			$sql .= "AND template_language = :template_language ";
-			$sql .= "AND template_category = 'call_recordings' ";
-			$sql .= "AND template_subcategory = 'transcription' ";
-			$sql .= "AND template_enabled = 'true' ";
-			$sql .= "ORDER BY domain_uuid DESC ";
+			$sql .= "AND xml_cdr_uuid = :xml_cdr_uuid ";
 			$parameters['domain_uuid'] = $params['domain_uuid'];
 			$parameters['xml_cdr_uuid'] = $params['xml_cdr_uuid'];
+			$parameters['time_zone'] = $time_zone;
 			$row = $this->database->select($sql, $parameters, 'row');
 			$domain_name = $row["domain_name"];
 			$caller_id_name = $row["caller_id_name"];
 			$caller_id_number = $row["caller_id_number"];
-			$account_code = $row["account_code"];
 			$start_date = $row["start_date"];
 			$start_time = $row["start_time"];
 			$end_date = $row["end_date"];
 			$end_time = $row["end_time"];
 			$time = $row["time"];
+			$duration = $row["duration"];
 			unset($parameters);
 
 			//get the email template
@@ -302,35 +311,28 @@ class call_recordings {
 			$email_subject = str_replace('${domain_name}', $domain_name, $email_subject);
 			$email_subject = str_replace('${email_address}', $email_address, $email_subject);
 			$email_subject = str_replace('${caller_id_name}', $caller_id_name, $email_subject);
-			$email_subject = str_replace('${caller_id_number}', $caller_id_name, $email_subject);
-			$email_subject = str_replace('${account_code}', $account_code, $email_subject);
+			$email_subject = str_replace('${caller_id_number}', $caller_id_number, $email_subject);
 			$email_subject = str_replace('${start_date}', $start_date, $email_subject);
 			$email_subject = str_replace('${start_time}', $start_time, $email_subject);
 			$email_subject = str_replace('${end_date}', $end_date, $email_subject);
 			$email_subject = str_replace('${end_time}', $end_time, $email_subject);
-			$email_subject = str_replace('${time}', $time, $email_subject);
+			$email_subject = str_replace('${duration}', $duration, $email_subject);
+			$email_subject = str_replace('${length}', $duration, $email_subject);
+			$email_subject = str_replace('${time}', $start_time, $email_subject);
 
 			//replace variables in email body
 			$email_body = str_replace('${domain_name}', $domain_name, $email_body);
 			$email_body = str_replace('${email_address}', $email_address, $email_body);
 			$email_body = str_replace('${caller_id_name}', $caller_id_name, $email_body);
-			$email_body = str_replace('${caller_id_number}', $caller_id_name, $email_body);
-			$email_body = str_replace('${account_code}', $account_code, $email_body);
+			$email_body = str_replace('${caller_id_number}', $caller_id_number, $email_body);
 			$email_body = str_replace('${start_date}', $start_date, $email_body);
 			$email_body = str_replace('${start_time}', $start_time, $email_body);
 			$email_body = str_replace('${end_date}', $end_date, $email_body);
 			$email_body = str_replace('${end_time}', $end_time, $email_body);
-			$email_body = str_replace('${time}', $time, $email_body);
+			$email_body = str_replace('${time}', $start_time, $email_body);
+			$email_body = str_replace('${duration}', $duration, $email_body);
+			$email_body = str_replace('${length}', $duration, $email_body);
 			$email_body = str_replace('${transcript}', $transcribe_html, $email_body);
-
-			//send email - standard
-			//echo "send_email($email_address, $email_subject, $email_body, $email_error, null, null, 3, 3, $attachments);\n";
-
-			//debug information
-			// echo "email from: ".$email_from."\n";
-			// echo "email_address: ".$email_address."\n";
-			// echo "email_subject: ".$email_subject."\n";
-			// echo "file name: ".$file."\n";
 
 			//send email with the email_queue
 			$array['email_queue'][0]['email_queue_uuid'] = $email_queue_uuid;
