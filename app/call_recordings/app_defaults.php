@@ -8,7 +8,7 @@ if ($domains_processed == 1) {
 	$array['email_templates'][$x]['template_language'] = 'en-us';
 	$array['email_templates'][$x]['template_category'] = 'call_recordings';
 	$array['email_templates'][$x]['template_subcategory'] = 'transcription';
-	$array['email_templates'][$x]['template_subject'] = "Caller ID \${caller_id_name} <\${caller_id_number}> \${call_duration}";
+	$array['email_templates'][$x]['template_subject'] = "Caller ID \${caller_id_name} <\${caller_id_number}> \${duration}";
 	$array['email_templates'][$x]['template_body'] .= "<html>\n";
 	$array['email_templates'][$x]['template_body'] .= "	<head>\n";
 	$array['email_templates'][$x]['template_body'] .= "	 <style>\n";
@@ -44,7 +44,7 @@ if ($domains_processed == 1) {
 	$array['email_templates'][$x]['template_body'] .= "	<br />\n";
 	$array['email_templates'][$x]['template_body'] .= "		Date \${start_date}<br />\n";
 	$array['email_templates'][$x]['template_body'] .= "		Time \${start_time} \${end_time}<br />\n";
-	$array['email_templates'][$x]['template_body'] .= "		Length \${length}<br />\n";
+	$array['email_templates'][$x]['template_body'] .= "		Length \${duration}<br />\n";
 	$array['email_templates'][$x]['template_body'] .= "	<br />\n";
 	$array['email_templates'][$x]['template_body'] .= "		Transcription<br />\n";
 	$array['email_templates'][$x]['template_body'] .= "		\${transcript}\n";
