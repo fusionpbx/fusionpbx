@@ -1,7 +1,7 @@
 <?php
 
 	//application details
-		$apps[$x]['name'] = "Features Report";
+		$apps[$x]['name'] = "Feature Codes Report";
 		$apps[$x]['uuid'] = "f364d207-51cc-4d2c-9881-a9eeedb9b0dc";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
@@ -31,17 +31,16 @@
 
 	//permission details
 		$y = 0;
-		$apps[$x]['permissions'][$y]['name'] = "feature_report_view";
+		$apps[$x]['permissions'][$y]['name'] = "feature_codes_report_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "2847398b-9e62-49bf-b965-a91c11c085e0";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "feature_report_export";
+		$apps[$x]['permissions'][$y]['name'] = "feature_codes_report_export";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "feature_report_raw";
-		$apps[$x]['permissions'][$y]['groups'][] = "";
+		$apps[$x]['permissions'][$y]['name'] = "feature_codes_report_raw";
 
 ?>

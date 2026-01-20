@@ -26,39 +26,59 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('feature_report_view')) {
+	if (!permission_exists('feature_codes_report_view')) {
 		echo "access denied";
 		exit;
 	}
 
 //set permission variables
-	$has_feature_report_export = permission_exists('feature_report_export');
-	$has_feature_report_raw = permission_exists('feature_report_raw');
+	$has_feature_codes_report_export = permission_exists('feature_codes_report_export');
+	$has_feature_codes_report_raw = permission_exists('feature_codes_report_raw');
+
+//function to format feature name for display
+	function format_feature_name($name) {
+		//replace underscores and hyphens with spaces
+		$name = str_replace(array('_', '-'), ' ', $name);
+		//capitalize each word
+		$name = ucwords($name);
+		return $name;
+	}
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//get settings
-	$settings = new settings(array('domain_uuid' => $_SESSION['domain_uuid']));
+//get globals
+	global $database, $settings;
+
+//backwards compatibility
+	if (!isset($database) || !($database instanceof database)) {
+		$database = database::new();
+	}
+	if (!isset($settings) || !($settings instanceof settings)) {
+		$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid ?? $_SESSION['domain_uuid'] ?? '', 'user_uuid' => $user_uuid ?? $_SESSION['user_uuid'] ?? '']);
+	}
+
+//get order and order by
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
 
 //get feature codes from dialplans
 	$sql = "SELECT dialplan_uuid, dialplan_name, dialplan_number, dialplan_description ";
-	if ($has_feature_report_raw) {
+	if ($has_feature_codes_report_raw) {
 		$sql .= ", dialplan_xml ";
 	}
 	$sql .= "FROM v_dialplans ";
 	$sql .= "WHERE dialplan_enabled = 'true' ";
 	$sql .= "AND dialplan_number LIKE '*%' ";
 	$sql .= "AND (domain_uuid = :domain_uuid OR domain_uuid IS NULL) ";
-	$sql .= "ORDER BY dialplan_number ASC ";
+	$sql .= order_by($order_by, $order, 'dialplan_number', 'asc');
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$features = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //handle PDF export
-	if (isset($_GET['export']) && $_GET['export'] == 'pdf' && $has_feature_report_export) {
+	if (isset($_GET['export']) && $_GET['export'] == 'pdf' && $has_feature_codes_report_export) {
 
 		//include fpdf
 		require_once "resources/fpdf/fpdf.php";
@@ -77,7 +97,7 @@
 		$pdf->SetFont('Arial', 'B', 10);
 		$pdf->SetFillColor(240, 240, 240);
 
-		if ($has_feature_report_raw) {
+		if ($has_feature_codes_report_raw) {
 			$pdf->Cell(30, 8, $text['label-feature_code'], 1, 0, 'L', true);
 			$pdf->Cell(50, 8, $text['label-feature_name'], 1, 0, 'L', true);
 			$pdf->Cell(50, 8, $text['label-description'], 1, 0, 'L', true);
@@ -94,10 +114,10 @@
 		if (is_array($features) && count($features) > 0) {
 			foreach ($features as $row) {
 				$feature_code = $row['dialplan_number'];
-				$feature_name = $row['dialplan_name'];
+				$feature_name = format_feature_name($row['dialplan_name']);
 				$feature_description = $row['dialplan_description'];
 
-				if ($has_feature_report_raw) {
+				if ($has_feature_codes_report_raw) {
 					$raw_value = isset($row['dialplan_xml']) ? substr($row['dialplan_xml'], 0, 50) : '';
 					if (strlen($row['dialplan_xml']) > 50) {
 						$raw_value .= '...';
@@ -115,12 +135,12 @@
 			}
 		}
 		else {
-			$col_span = $has_feature_report_raw ? 190 : 190;
+			$col_span = $has_feature_codes_report_raw ? 190 : 190;
 			$pdf->Cell($col_span, 7, $text['label-no_features'], 1, 1, 'C');
 		}
 
 		//output pdf
-		$pdf->Output('D', 'feature_codes_' . date('Y-m-d') . '.pdf');
+		$pdf->Output('feature_codes_' . date('Y-m-d') . '.pdf', 'D');
 		exit;
 	}
 
@@ -128,14 +148,25 @@
 	$document['title'] = $text['title-feature_report'];
 	require_once "resources/header.php";
 
+//javascript to toggle export select box
+	echo "<script language='javascript' type='text/javascript'>";
+	echo "	var fade_speed = 400;";
+	echo "	function toggle_select(select_id) {";
+	echo "		$('#'+select_id).fadeToggle(fade_speed, function() {";
+	echo "			document.getElementById(select_id).selectedIndex = 0;";
+	echo "			document.getElementById(select_id).focus();";
+	echo "		});";
+	echo "	}";
+	echo "</script>";
+
 //content
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-feature_report']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 
-	if ($has_feature_report_export) {
+	if ($has_feature_codes_report_export) {
 		echo button::create(array('type'=>'button','label'=>$text['button-export'],'icon'=>$settings->get('theme', 'button_icon_export'),'onclick'=>"toggle_select('export_format'); this.blur();"));
-		echo "		<select class='formfld' style='display: none; width: auto;' name='export_format' id='export_format' onchange=\"toggle_select('export_format'); window.location.href='feature_report.php?export=' + this.value;\">\n";
+		echo "		<select class='formfld' style='display: none; width: auto;' name='export_format' id='export_format' onchange=\"toggle_select('export_format'); window.location.href='feature_codes_report.php?export=' + this.value;\">\n";
 		echo "			<option value='' disabled='disabled' selected='selected'>".$text['label-format']."</option>\n";
 		echo "			<option value='pdf'>PDF</option>\n";
 		echo "		</select>\n";
@@ -151,10 +182,10 @@
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	echo "	<th>".$text['label-feature_code']."</th>\n";
-	echo "	<th>".$text['label-feature_name']."</th>\n";
+	echo th_order_by('dialplan_number', $text['label-feature_code'], $order_by, $order);
+	echo th_order_by('dialplan_name', $text['label-feature_name'], $order_by, $order);
 	echo "	<th class='hide-sm-dn'>".$text['label-description']."</th>\n";
-	if ($has_feature_report_raw) {
+	if ($has_feature_codes_report_raw) {
 		echo "	<th class='hide-sm-dn'>".$text['label-raw_dialplan']."</th>\n";
 	}
 	echo "</tr>\n";
@@ -163,9 +194,9 @@
 		foreach ($features as $row) {
 			echo "<tr class='list-row'>\n";
 			echo "	<td>".escape($row['dialplan_number'])."</td>\n";
-			echo "	<td>".escape($row['dialplan_name'])."</td>\n";
+			echo "	<td>".escape(format_feature_name($row['dialplan_name']))."</td>\n";
 			echo "	<td class='description hide-sm-dn'>".escape($row['dialplan_description'])."</td>\n";
-			if ($has_feature_report_raw) {
+			if ($has_feature_codes_report_raw) {
 				$raw_display = isset($row['dialplan_xml']) ? htmlspecialchars(substr($row['dialplan_xml'], 0, 100)) : '';
 				if (isset($row['dialplan_xml']) && strlen($row['dialplan_xml']) > 100) {
 					$raw_display .= '...';
@@ -176,7 +207,7 @@
 		}
 	}
 	else {
-		$colspan = $has_feature_report_raw ? 4 : 3;
+		$colspan = $has_feature_codes_report_raw ? 4 : 3;
 		echo "<tr class='list-row'>\n";
 		echo "	<td colspan='".$colspan."' style='text-align: center;'>".$text['label-no_features']."</td>\n";
 		echo "</tr>\n";
