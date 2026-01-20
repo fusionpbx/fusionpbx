@@ -1,7 +1,7 @@
 <?php
 
-class features_report {
-	const app_name = 'features_report';
+class feature_codes_report {
+	const app_name = 'feature_codes_report';
 	const app_uuid = '7a39c83a-f3f2-4774-8732-8d839758aa47';
 	const app_category = 'reports';
 	const app_subcategory = '';
