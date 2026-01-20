@@ -109,7 +109,7 @@
 			if ($dialplan_valid) {
 				preg_match_all('/^\s*<extension.+>(?:[\S\s])+<\/extension>\s*$/mU', $dialplan_xml, $matches);
 				foreach($matches as $match) {
-					if (valid_xml($xml)) {
+					if (!xml::valid($xml)) {
 						//$errors = libxml_get_errors();
 						$dialplan_valid = false;
 						break;
