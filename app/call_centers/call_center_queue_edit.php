@@ -112,6 +112,7 @@
 			$call_center_tiers = $_POST["call_center_tiers"];
 			$queue_moh_sound = $_POST["queue_moh_sound"];
 			$queue_record_enabled = $_POST["queue_record_enabled"];
+			$queue_limit = $_POST["queue_limit"];
 			$queue_time_base_score = $_POST["queue_time_base_score"];
 			$queue_time_base_score_sec = $_POST["queue_time_base_score_sec"];
 			$queue_max_wait_time = $_POST["queue_max_wait_time"];
@@ -341,6 +342,7 @@
 			$array['call_center_queues'][0]['queue_record_template'] = $record_template;
 			$array['call_center_queues'][0]['queue_dialect'] = $queue_dialect;
 			$array['call_center_queues'][0]['queue_voice'] = $queue_voice;
+			$array['call_center_queues'][0]['queue_limit'] = $queue_limit;
 			$array['call_center_queues'][0]['queue_time_base_score'] = $queue_time_base_score;
 			$array['call_center_queues'][0]['queue_time_base_score_sec'] = $queue_time_base_score_sec;
 			$array['call_center_queues'][0]['queue_max_wait_time'] = $queue_max_wait_time;
@@ -409,6 +411,11 @@
 
 		//build the xml dialplan
 			$dialplan_xml = "<extension name=\"".xml::sanitize($queue_name)."\" continue=\"\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
+			if (!empty($queue_limit)) {
+				$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(callcenter\+)?".xml::sanitize($queue_extension)."$\" break=\"on-false\">\n";
+				$dialplan_xml .= "		<action application=\"limit\" data=\"hash inbound \${destination_number} ".xml::sanitize($queue_limit)." !NORMAL_CIRCUIT_CONGESTION\"/>\n";
+				$dialplan_xml .= "	</condition>\n";
+			}
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^([^#]+#)(.*)\$\" break=\"never\">\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"caller_id_name=\$2\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
@@ -571,6 +578,7 @@
 		$sql .= "queue_strategy, ";
 		$sql .= "queue_moh_sound, ";
 		$sql .= "queue_record_template, ";
+		$sql .= "queue_limit, ";
 		$sql .= "queue_time_base_score, ";
 		$sql .= "queue_time_base_score_sec, ";
 		$sql .= "queue_max_wait_time, ";
@@ -614,6 +622,7 @@
 				$queue_strategy = $row["queue_strategy"];
 				$queue_moh_sound = $row["queue_moh_sound"];
 				$queue_record_template = $row["queue_record_template"];
+				$queue_limit = $row["queue_limit"];
 				$queue_time_base_score = $row["queue_time_base_score"];
 				$queue_time_base_score_sec = $row["queue_time_base_score_sec"];
 				$queue_max_wait_time = $row["queue_max_wait_time"];
@@ -1123,6 +1132,17 @@
 	}
 	echo "<br />\n";
 	echo $text['description-record_template']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	".$text['label-queue_limit']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='number' name='queue_limit' maxlength='5' min='0' step='1' value='".escape($queue_limit)."'>\n";
+	echo "<br />\n";
+	echo $text['description-queue_limit']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
