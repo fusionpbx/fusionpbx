@@ -110,7 +110,6 @@
 			if ($action == 'add') {
 				$sql = "select count(*) from v_domains ";
 				$sql .= "where domain_name = :domain_name ";
-				$sql .= "and destination_type = 'inbound' ";
 				$parameters['domain_name'] = $domain_name;
 				$num_rows = $database->select($sql, $parameters, 'column');
 				if ($num_rows > 0) {
