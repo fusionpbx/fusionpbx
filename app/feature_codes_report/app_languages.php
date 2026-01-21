@@ -1,7 +1,7 @@
 <?php
 
-$text['title-feature_report']['en-us'] = "Feature Codes Report";
-$text['title-feature_report']['en-gb'] = "Feature Codes Report";
+$text['title-feature_report']['en-us'] = "Feature Codes";
+$text['title-feature_report']['en-gb'] = "Feature Codes";
 $text['title-feature_report']['ar-eg'] = "تقرير رموز الميزات";
 $text['title-feature_report']['de-at'] = "Funktionscodes Bericht";
 $text['title-feature_report']['de-ch'] = "Funktionscodes Bericht";

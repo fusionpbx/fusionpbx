@@ -1,8 +1,8 @@
 <?php
 
 	$y=0;
-	$apps[$x]['menu'][$y]['title']['en-us'] = "Feature Codes Report";
-	$apps[$x]['menu'][$y]['title']['en-gb'] = "Feature Codes Report";
+	$apps[$x]['menu'][$y]['title']['en-us'] = "Feature Codes";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Feature Codes";
 	$apps[$x]['menu'][$y]['title']['ar-eg'] = "تقرير رموز الميزات";
 	$apps[$x]['menu'][$y]['title']['de-at'] = "Funktionscodes Bericht";
 	$apps[$x]['menu'][$y]['title']['de-ch'] = "Funktionscodes Bericht";
@@ -31,7 +31,7 @@
 	$apps[$x]['menu'][$y]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
 	$apps[$x]['menu'][$y]['category'] = "internal";
 	$apps[$x]['menu'][$y]['icon'] = "";
-	$apps[$x]['menu'][$y]['path'] = "/app/feature_codes_report/feature_codes_report.php";
+	$apps[$x]['menu'][$y]['path'] = "/app/feature_codes/feature_codes.php";
 	$apps[$x]['menu'][$y]['order'] = "";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
