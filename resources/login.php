@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -145,30 +145,17 @@
 							//send reset link
 								if (send_email($email, $email_subject, $email_body, $eml_error)) {
 									//email sent
-									message::add($text['message-reset_link_sent'], 'positive', 2500);
 								}
 								else {
 									//email failed
 									//message::add($eml_error, 'negative', 5000);
 								}
 						}
-						else {
-							//not found
-							message::add($text['message-reset_link_sent'], 'negative', 5000);
-						}
-
 					}
-					else {
-						//matched multiple users
-						message::add($text['message-reset_link_sent'], 'negative', 5000);
-					}
-
-				}
-				else {
-					//not found
-					message::add($text['message-reset_link_sent'], 'negative', 5000);
 				}
 
+			//always show the email sent message
+			message::add($text['message-reset_link_sent'], 'positive', 2500);
 		}
 		//else {
 		//	//invalid email
@@ -302,8 +289,8 @@
 	echo "	}";
 	echo "</script>";
 
-//send an email with the password reset link
-	if (isset($action) && $action == 'request' && !empty($_SESSION['valid_email'])) {
+//email sent message
+	if (isset($action) && $action == 'request' && isset($_REQUEST['email'])) {
 		echo "<div class='card' style='text-align: center;'>\n";
 		echo "	<h5>".$text['label-email_sent']."</h5>\n";
 		echo "	".$text['description-email_sent']."<br />\n";
@@ -311,7 +298,7 @@
 	}
 
 //request the email address
-	if (empty($_SESSION['valid_email']) && !isset($_SESSION['valid_reset'])) {
+	if (isset($action) && $action == 'request' && !isset($_REQUEST['email'])) {
 
 		//create token
 		$object = new token;
@@ -435,5 +422,3 @@
 //add the footer
 	$login_page = true;
 	include "resources/footer.php";
-
-?>
