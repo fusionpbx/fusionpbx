@@ -154,6 +154,22 @@
 					}
 				}
 
+			//build the user log array
+			$log_array['type'] = 'Password Reset Request';
+			if (!empty($result)) {
+				$log_array['domain_uuid'] = $result['domain_uuid'];
+				$log_array['username'] 	  = $result['username'];
+				$log_array['user_uuid']   = $result['user_uuid'];
+				$log_array['authorized']  = true;
+			}
+			else {
+				$log_array["domain_uuid"] = $_SESSION["domain_uuid"];
+				$log_array['authorized']  = false;
+			}
+
+			//add the result to the user logs
+			user_logs::add($log_array);
+
 			//always show the email sent message
 			message::add($text['message-reset_link_sent'], 'positive', 2500);
 		}
@@ -228,6 +244,15 @@
 			$parameters['username'] = $_SESSION['valid_username'];
 			$database->execute($sql, $parameters);
 			unset($sql, $parameters);
+
+			//build the user log array
+			$log_array['type'] = 'Password Changed';
+			$log_array['domain_uuid'] = $_SESSION['valid_domain'];
+			$log_array['username'] 	  = $_SESSION['valid_username'];
+			$log_array['authorized']  = $_SESSION['valid_reset'];
+
+			//add the result to the user logs
+			user_logs::add($log_array);
 
 			//set the message to password reset completed
 			message::add($text['message-password_reset'], 'positive', 2500);
