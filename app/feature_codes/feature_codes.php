@@ -86,7 +86,7 @@
 		$pdf->SetFont('Arial', 'B', 16);
 
 		//title
-		$pdf->Cell(0, 10, $text['title-feature_report'], 0, 1, 'C');
+		$pdf->Cell(0, 10, $text['title-feature_codes'], 0, 1, 'C');
 		$pdf->Ln(5);
 
 		//table header
@@ -141,7 +141,7 @@
 	}
 
 //include header
-	$document['title'] = $text['title-feature_report'];
+	$document['title'] = $text['title-feature_codes'];
 	require_once "resources/header.php";
 
 //javascript to toggle export select box
@@ -157,7 +157,7 @@
 
 //content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-feature_report']."</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-feature_codes']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 
 	if (permission_exists('feature_codes_export')) {
@@ -172,7 +172,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	echo $text['description-feature_report']."\n";
+	echo $text['description-feature_codes']."\n";
 	echo "<br /><br />\n";
 
 	echo "<div class='card'>\n";
