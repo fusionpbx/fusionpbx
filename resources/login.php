@@ -296,6 +296,9 @@
 		echo "<div class='card' style='text-align: center;'>\n";
 		echo "	<h5>".$text['label-email_sent']."</h5>\n";
 		echo "	".$text['description-email_sent']."<br />\n";
+		echo "	<form name='request' method='post'>\n";
+		echo "		<input type='submit' id='btn_back' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-back']."'>\n";
+		echo "	</form>";
 		echo "</div>\n";
 	}
 
