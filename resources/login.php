@@ -157,10 +157,12 @@
 			//always show the email sent message
 			message::add($text['message-reset_link_sent'], 'positive', 2500);
 		}
-		//else {
-		//	//invalid email
-		//	message::add($text['message-invalid_email'], 'negative', 5000);
-		//}
+		else {
+			//invalid email
+			message::add($text['message-invalid_email'], 'negative', 5000);
+			header("Location: /resources/login.php?action=request");
+			exit;
+		}
 	}
 
 //validate the password reset key
