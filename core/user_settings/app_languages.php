@@ -3427,7 +3427,7 @@ $text['label-email_sent']['zh-cn'] = "电子邮件已发送";
 $text['label-email_sent']['ja-jp'] = "メールが送信されました";
 $text['label-email_sent']['ko-kr'] = "이메일이 전송되었습니다";
 
-$text['description-email_sent']['en-us'] = "An email has been sent to with instructions to reset your password.<br />Please check your email.";
+$text['description-email_sent']['en-us'] = "An email has been sent to you with instructions to reset your password.<br />Please check your email.";
 $text['description-email_sent']['en-gb'] = "An email has been sent to you with instructions to reset your password.<br />Please check your email.";
 $text['description-email_sent']['ar-eg'] = "تم إرسال بريد إلكتروني إليك تحتوي على تعليمات لإعادة تعيين كلمة المرور الخاصة بك.<br />رجاءً قم بمراجعة بريدك الإلكتروني.";
 $text['description-email_sent']['de-at'] = "Eine E-Mail mit Anweisungen zum Zurücksetzen Ihres Passworts wurde an Sie gesendet.<br />Bitte überprüfen Sie Ihre E-Mails.";
@@ -3534,5 +3534,3 @@ $text['label-password_reset']['tr-tr'] = "Şifre Sıfırlama";
 $text['label-password_reset']['zh-cn'] = "重置密码";
 $text['label-password_reset']['ja-jp'] = "パスワードのリセット";
 $text['label-password_reset']['ko-kr'] = "비밀번호 재설정";
-
-?>
