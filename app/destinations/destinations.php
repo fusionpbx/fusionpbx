@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -288,6 +288,7 @@
 	if (permission_exists('destination_delete') && $destinations) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
+	echo button::create(['type'=>'button','label'=>$text['button-map'],'icon'=>$settings->get('theme', 'button_icon_map'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'destination_map.php']);
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('destination_all')) {
 		if ($show == 'all') {
