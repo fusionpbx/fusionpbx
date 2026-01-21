@@ -162,7 +162,7 @@
 
 	if (permission_exists('feature_codes_export')) {
 		echo button::create(array('type'=>'button','label'=>$text['button-export'],'icon'=>$settings->get('theme', 'button_icon_export'),'onclick'=>"toggle_select('export_format'); this.blur();"));
-		echo "		<select class='formfld' style='display: none; width: auto;' name='export_format' id='export_format' onchange=\"toggle_select('export_format'); window.location.href='feature_codes_report.php?export=' + this.value;\">\n";
+		echo "		<select class='formfld' style='display: none; width: auto;' name='export_format' id='export_format' onchange=\"toggle_select('export_format'); window.location.href='feature_codes.php?export=' + this.value;\">\n";
 		echo "			<option value='' disabled='disabled' selected='selected'>".$text['label-format']."</option>\n";
 		echo "			<option value='pdf'>PDF</option>\n";
 		echo "		</select>\n";
