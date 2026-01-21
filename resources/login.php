@@ -34,7 +34,7 @@
 //set the current domain_uuid
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
 
-//initialize the settigns object
+//initialize the settings object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
 //get action, if any - define, request, reset
@@ -154,19 +154,19 @@
 						}
 						else {
 							//not found
-							message::add($text['message-reset_link_sent'], 'negative', 5000);
+							message::add($text['message-reset_link_sent'], 'positive', 2500);
 						}
 
 					}
 					else {
 						//matched multiple users
-						message::add($text['message-reset_link_sent'], 'negative', 5000);
+						message::add($text['message-reset_link_sent'], 'positive', 2500);
 					}
 
 				}
 				else {
 					//not found
-					message::add($text['message-reset_link_sent'], 'negative', 5000);
+					message::add($text['message-reset_link_sent'], 'positive', 2500);
 				}
 
 		}
