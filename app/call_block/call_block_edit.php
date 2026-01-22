@@ -48,6 +48,7 @@
 	$call_block_description = '';
 //set the time zone
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+	date_default_timezone_set($time_zone);
 
 //set the time format options: 12h, 24h
 	if ($settings->get('domain', 'time_format') == '24h') {
