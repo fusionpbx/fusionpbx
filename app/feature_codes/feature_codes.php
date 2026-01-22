@@ -94,15 +94,17 @@
 		$pdf->SetFillColor(240, 240, 240);
 
 		if (permission_exists('feature_codes_raw')) {
-			$pdf->Cell(30, 8, $text['label-feature_code'], 1, 0, 'L', true);
-			$pdf->Cell(50, 8, $text['label-feature_name'], 1, 0, 'L', true);
-			$pdf->Cell(50, 8, $text['label-description'], 1, 0, 'L', true);
-			$pdf->Cell(60, 8, $text['label-raw_dialplan'], 1, 1, 'L', true);
+			$col_widths = array(30, 50, 50, 60);
+			$pdf->Cell($col_widths[0], 8, $text['label-feature_code'], 1, 0, 'L', true);
+			$pdf->Cell($col_widths[1], 8, $text['label-feature_name'], 1, 0, 'L', true);
+			$pdf->Cell($col_widths[2], 8, $text['label-description'], 1, 0, 'L', true);
+			$pdf->Cell($col_widths[3], 8, $text['label-raw_dialplan'], 1, 1, 'L', true);
 		}
 		else {
-			$pdf->Cell(40, 8, $text['label-feature_code'], 1, 0, 'L', true);
-			$pdf->Cell(60, 8, $text['label-feature_name'], 1, 0, 'L', true);
-			$pdf->Cell(90, 8, $text['label-description'], 1, 1, 'L', true);
+			$col_widths = array(30, 50, 110);
+			$pdf->Cell($col_widths[0], 8, $text['label-feature_code'], 1, 0, 'L', true);
+			$pdf->Cell($col_widths[1], 8, $text['label-feature_name'], 1, 0, 'L', true);
+			$pdf->Cell($col_widths[2], 8, $text['label-description'], 1, 1, 'L', true);
 		}
 
 		//table rows
@@ -111,22 +113,122 @@
 			foreach ($features as $row) {
 				$feature_code = $row['dialplan_number'];
 				$feature_name = format_feature_name($row['dialplan_name']);
-				$feature_description = $row['dialplan_description'];
+				$feature_description = $row['dialplan_description'] ?? '';
 
 				if (permission_exists('feature_codes_raw')) {
 					$raw_value = isset($row['dialplan_xml']) ? substr($row['dialplan_xml'], 0, 50) : '';
-					if (strlen($row['dialplan_xml']) > 50) {
+					if (strlen($row['dialplan_xml'] ?? '') > 50) {
 						$raw_value .= '...';
 					}
-					$pdf->Cell(30, 7, $feature_code, 1, 0, 'L');
-					$pdf->Cell(50, 7, substr($feature_name, 0, 30), 1, 0, 'L');
-					$pdf->Cell(50, 7, substr($feature_description, 0, 30), 1, 0, 'L');
-					$pdf->Cell(60, 7, $raw_value, 1, 1, 'L');
+
+					//calculate row height by measuring actual text width
+					$desc_width = $col_widths[2] - 2; //account for cell padding
+					$line_height = 5;
+
+					//calculate number of lines needed using GetStringWidth
+					$num_lines = 1;
+					if (!empty($feature_description)) {
+						$words = explode(' ', $feature_description);
+						$current_line = '';
+						$num_lines = 1;
+						foreach ($words as $word) {
+							$test_line = $current_line . ($current_line ? ' ' : '') . $word;
+							if ($pdf->GetStringWidth($test_line) > $desc_width) {
+								$num_lines++;
+								$current_line = $word;
+							} else {
+								$current_line = $test_line;
+							}
+						}
+					}
+					$row_height = max($line_height, $num_lines * $line_height);
+
+					//save starting position
+					$x = $pdf->GetX();
+					$y = $pdf->GetY();
+
+					//calculate vertical center offset for single-line text
+					$text_height = $line_height;
+					$vertical_padding = ($row_height - $text_height) / 2;
+
+					//draw border rectangles for feature code and name columns
+					$pdf->Rect($x, $y, $col_widths[0], $row_height);
+					$pdf->Rect($x + $col_widths[0], $y, $col_widths[1], $row_height);
+
+					//draw vertically centered text for feature code
+					$pdf->SetXY($x + 1, $y + $vertical_padding);
+					$pdf->Cell($col_widths[0] - 2, $text_height, $feature_code, 0, 0, 'L');
+
+					//draw vertically centered text for feature name
+					$pdf->SetXY($x + $col_widths[0] + 1, $y + $vertical_padding);
+					$pdf->Cell($col_widths[1] - 2, $text_height, substr($feature_name, 0, 30), 0, 0, 'L');
+
+					//draw description cell border and use MultiCell for text
+					$desc_x = $x + $col_widths[0] + $col_widths[1];
+					$pdf->Rect($desc_x, $y, $col_widths[2], $row_height);
+					$pdf->SetXY($desc_x + 1, $y + 1);
+					$pdf->MultiCell($col_widths[2] - 2, $line_height, $feature_description, 0, 'L');
+
+					//draw border and vertically centered text for raw column
+					$raw_x = $desc_x + $col_widths[2];
+					$pdf->Rect($raw_x, $y, $col_widths[3], $row_height);
+					$pdf->SetXY($raw_x + 1, $y + $vertical_padding);
+					$pdf->Cell($col_widths[3] - 2, $text_height, $raw_value, 0, 0, 'L');
+
+					//move to next row
+					$pdf->SetXY($x, $y + $row_height);
 				}
 				else {
-					$pdf->Cell(40, 7, $feature_code, 1, 0, 'L');
-					$pdf->Cell(60, 7, substr($feature_name, 0, 35), 1, 0, 'L');
-					$pdf->Cell(90, 7, substr($feature_description, 0, 55), 1, 1, 'L');
+					//calculate row height by measuring actual text width
+					$desc_width = $col_widths[2] - 2; //account for cell padding
+					$line_height = 5;
+
+					//calculate number of lines needed using GetStringWidth
+					$num_lines = 1;
+					if (!empty($feature_description)) {
+						$words = explode(' ', $feature_description);
+						$current_line = '';
+						$num_lines = 1;
+						foreach ($words as $word) {
+							$test_line = $current_line . ($current_line ? ' ' : '') . $word;
+							if ($pdf->GetStringWidth($test_line) > $desc_width) {
+								$num_lines++;
+								$current_line = $word;
+							} else {
+								$current_line = $test_line;
+							}
+						}
+					}
+					$row_height = max($line_height, $num_lines * $line_height);
+
+					//save starting position
+					$x = $pdf->GetX();
+					$y = $pdf->GetY();
+
+					//calculate vertical center offset for single-line text
+					$text_height = $line_height;
+					$vertical_padding = ($row_height - $text_height) / 2;
+
+					//draw border rectangles for feature code and name columns
+					$pdf->Rect($x, $y, $col_widths[0], $row_height);
+					$pdf->Rect($x + $col_widths[0], $y, $col_widths[1], $row_height);
+
+					//draw vertically centered text for feature code
+					$pdf->SetXY($x + 1, $y + $vertical_padding);
+					$pdf->Cell($col_widths[0] - 2, $text_height, $feature_code, 0, 0, 'L');
+
+					//draw vertically centered text for feature name
+					$pdf->SetXY($x + $col_widths[0] + 1, $y + $vertical_padding);
+					$pdf->Cell($col_widths[1] - 2, $text_height, substr($feature_name, 0, 30), 0, 0, 'L');
+
+					//draw description cell border and use MultiCell for text
+					$desc_x = $x + $col_widths[0] + $col_widths[1];
+					$pdf->Rect($desc_x, $y, $col_widths[2], $row_height);
+					$pdf->SetXY($desc_x + 1, $y + 1);
+					$pdf->MultiCell($col_widths[2] - 2, $line_height, $feature_description, 0, 'L');
+
+					//move to next row
+					$pdf->SetXY($x, $y + $row_height);
 				}
 			}
 		}
