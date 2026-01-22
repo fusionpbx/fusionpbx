@@ -47,6 +47,16 @@
 	$call_block_number = '';
 	$call_block_description = '';
 
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+	date_default_timezone_set($time_zone);
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'j M Y H:i';
+	} else {
+		$time_format = 'j M Y g:i a';
+	}
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -697,12 +707,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 						$list_row_onclick_uncheck = "if (!this.checked) { document.getElementById('checkbox_all_".$direction."').checked = false; }";
 						$list_row_onclick_toggle = "onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick_uncheck."\"";
 						if (strlen($row['caller_id_number']) >= 7) {
-							if (!empty($settings->get('domain', 'time_format')) && $settings->get('domain', 'time_format') == '24h') {
-								$tmp_start_epoch = date('j M Y', $row['start_epoch'])." <span class='hide-sm-dn'>".date('H:i:s', $row['start_epoch']).'</span>';
-							}
-							else {
-								$tmp_start_epoch = date('j M Y', $row['start_epoch'])." <span class='hide-sm-dn'>".date('h:i:s a', $row['start_epoch']).'</span>';
-							}
+							$time_start = "<span class='hide-sm-dn'>".date($time_format, $row['start_epoch']).'</span>';
 							echo "<tr class='list-row row_".$row['direction']."' href=''>\n";
 							echo "	<td class='checkbox'>\n";
 							echo "		<input type='checkbox' class='checkbox_".$row['direction']."' name='xml_cdrs[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"".$list_row_onclick_uncheck."\">\n";
@@ -746,7 +751,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 							echo "	<td ".$list_row_onclick_toggle.">".$row['caller_id_name']." </td>\n";
 							echo "	<td ".$list_row_onclick_toggle.">".format_phone($row['caller_id_number'])."</td>\n";
 							echo "	<td ".$list_row_onclick_toggle.">".format_phone($row['caller_destination'])."</td>\n";
-							echo "	<td class='no-wrap' ".$list_row_onclick_toggle.">".$tmp_start_epoch."</td>\n";
+							echo "	<td class='no-wrap' ".$list_row_onclick_toggle.">".$time_start."</td>\n";
 							$seconds = ($row['hangup_cause'] == "ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];  //if they cancelled, show the ring time, not the bill time.
 							echo "	<td class='right hide-sm-dn' ".$list_row_onclick_toggle.">".gmdate("G:i:s", $seconds)."</td>\n";
 							echo "</tr>\n";
@@ -807,4 +812,3 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 
 //include the footer
 	require_once "resources/footer.php";
-
