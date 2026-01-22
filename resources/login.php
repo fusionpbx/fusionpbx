@@ -187,6 +187,7 @@
 		//get the key and decrypt and parse it
 			$key = $_GET['key'];
 			$key_part = explode('|', decrypt($settings->get('login', 'password_reset_key', ''), $key));
+			list($username, $domain_uuid, $password_submitted, $timestamp) = $key_part;
 
 			if (count($key_part) != 4) {
 				//invalid key format
@@ -194,8 +195,6 @@
 				message::add($text['message-password_reset_link_invalid'], 'negative', 5000);
 				exit;
 			}
-
-			list($username, $domain_uuid, $password_submitted, $timestamp) = $key_part;
 
 			//check if the timestamp is within an hour
 			if (time() - intval($timestamp) > 3600) {
