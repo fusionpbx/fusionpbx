@@ -155,7 +155,7 @@
 				}
 
 			//build the user log array
-			$log_array['type'] = 'Password Reset Request';
+			$log_array['type'] = 'Password Reset';
 			if (!empty($result)) {
 				$log_array['domain_uuid'] = $result['domain_uuid'];
 				$log_array['username'] 	  = $result['username'];
