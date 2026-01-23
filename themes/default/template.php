@@ -1007,9 +1007,11 @@
 		}
 
 		function list_self_check(checkbox_id) {
+			//unchecks each selected checkbox
 			document.querySelectorAll('input[type="checkbox"]:not([name*="enabled"])').forEach(checkbox => {
 				checkbox.checked = false;
 			});
+			//select the checkbox with the specified id
 			document.getElementById(checkbox_id).checked = true;
 		}
 
