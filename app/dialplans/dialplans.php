@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -563,6 +563,9 @@
 	if (!empty($dialplans)) {
 		$x = 0;
 		foreach ($dialplans as $row) {
+			//set the dialplan description
+			$dialplan_description = $row['dialplan_description'] ?? $text['description-dialplan_'.$row['dialplan_name']];
+			$dialplan_description = str_replace('${number}', $row['dialplan_number'], $dialplan_description);
 
 			$list_row_url = '';
 			if ($row['app_uuid'] == "4b821450-926b-175a-af93-a03c441818b1") {
@@ -634,7 +637,7 @@
 				echo $text['label-'.$row['dialplan_enabled']];
 			}
 			echo "	</td>\n";
-			echo "	<td class='description overflow hide-sm-dn'>".escape($row['dialplan_description'])."&nbsp;</td>\n";
+			echo "	<td class='description overflow hide-sm-dn'>".escape($dialplan_description)."&nbsp;</td>\n";
 			if ($list_row_edit_button && (
 				(!is_uuid($app_uuid) && permission_exists('dialplan_edit')) ||
 				($row['app_uuid'] == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" && permission_exists('inbound_route_edit')) ||
