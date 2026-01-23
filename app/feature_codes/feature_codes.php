@@ -81,9 +81,13 @@
 
 		//create pdf
 		$pdf = new FPDF('P', 'mm', 'A4');
-		$pdf->SetAutoPageBreak(true, 15);
+		$pdf->SetAutoPageBreak(false); //handle page breaks manually
 		$pdf->AddPage();
 		$pdf->SetFont('Arial', 'B', 16);
+
+		//page dimensions
+		$page_height = 297; //A4 height in mm
+		$bottom_margin = 15;
 
 		//title
 		$pdf->Cell(0, 10, $text['title-feature_codes'], 0, 1, 'C');
@@ -141,7 +145,14 @@
 							}
 						}
 					}
-					$row_height = max($line_height, $num_lines * $line_height);
+					$cell_padding = 2; //1mm top + 1mm bottom
+					$row_height = max($line_height, $num_lines * $line_height) + $cell_padding;
+
+					//check if row fits on current page, if not add new page
+					if ($pdf->GetY() + $row_height > $page_height - $bottom_margin) {
+						$pdf->AddPage();
+						$pdf->SetFont('Arial', '', 9);
+					}
 
 					//save starting position
 					$x = $pdf->GetX();
@@ -166,7 +177,7 @@
 					//draw description cell border and use MultiCell for text
 					$desc_x = $x + $col_widths[0] + $col_widths[1];
 					$pdf->Rect($desc_x, $y, $col_widths[2], $row_height);
-					$pdf->SetXY($desc_x + 1, $y + 1);
+					$pdf->SetXY($desc_x + 1, $y + ($cell_padding / 2));
 					$pdf->MultiCell($col_widths[2] - 2, $line_height, $feature_description, 0, 'L');
 
 					//draw border and vertically centered text for raw column
@@ -199,7 +210,14 @@
 							}
 						}
 					}
-					$row_height = max($line_height, $num_lines * $line_height);
+					$cell_padding = 2; //1mm top + 1mm bottom
+					$row_height = max($line_height, $num_lines * $line_height) + $cell_padding;
+
+					//check if row fits on current page, if not add new page
+					if ($pdf->GetY() + $row_height > $page_height - $bottom_margin) {
+						$pdf->AddPage();
+						$pdf->SetFont('Arial', '', 9);
+					}
 
 					//save starting position
 					$x = $pdf->GetX();
@@ -224,7 +242,7 @@
 					//draw description cell border and use MultiCell for text
 					$desc_x = $x + $col_widths[0] + $col_widths[1];
 					$pdf->Rect($desc_x, $y, $col_widths[2], $row_height);
-					$pdf->SetXY($desc_x + 1, $y + 1);
+					$pdf->SetXY($desc_x + 1, $y + ($cell_padding / 2));
 					$pdf->MultiCell($col_widths[2] - 2, $line_height, $feature_description, 0, 'L');
 
 					//move to next row
@@ -316,5 +334,3 @@
 
 //include footer
 	require_once "resources/footer.php";
-
-?>
