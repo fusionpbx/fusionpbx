@@ -1011,6 +1011,7 @@
 			document.querySelectorAll('input[type="checkbox"]:not([name*="enabled"])').forEach(checkbox => {
 				checkbox.checked = false;
 			});
+	
 			//select the checkbox with the specified id
 			document.getElementById(checkbox_id).checked = true;
 		}
