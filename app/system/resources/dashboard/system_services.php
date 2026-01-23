@@ -188,7 +188,8 @@
 	$widget_key = str_replace(' ', '_', strtolower($widget_name));
 
 //add multi-lingual support
-	$text = (new text())->get($settings->get('domain','language','en-us'), 'core/user_settings');
+	$language = new text();
+	$text = $language->get($settings->get('domain','language','en-us'), 'core/user_settings');
 
 //get the dashboard label
 	$widget_label = $text['label-'.$widget_key] ?? $widget_name;
