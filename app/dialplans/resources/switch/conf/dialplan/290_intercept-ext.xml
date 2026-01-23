@@ -1,4 +1,4 @@
-<extension name="intercept-ext" number="**[ext]" context="${domain_name}" continue="false" app_uuid="2b7b2f82-edfe-4339-8cc5-7d0cf36e1e68" order="290">
+<extension name="intercept-ext" number="**[ext]" context="${domain_name}" continue="false" app_uuid="2b7b2f82-edfe-4339-8cc5-7d0cf36e1e68" order="290" description="Dial ** and extension number to intercept a ringing call.">
 	<condition field="destination_number" expression="^\*\*(\d+)$" break="on-true">
 		<action application="answer"/>
 		<action application="lua" data="intercept.lua $1"/>

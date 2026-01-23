@@ -1,4 +1,4 @@
-<extension name="milliwatt" number="*9197" context="global" continue="false" app_uuid="296acca3-d30f-42a0-ba90-5af2208ad7f8" global="true" order="360">
+<extension name="milliwatt" number="*9197" context="global" continue="false" app_uuid="296acca3-d30f-42a0-ba90-5af2208ad7f8" global="true" order="360" description="Dial *9197 to receive a test tone from the phone system. This is useful to test if the phone system can generate tones for touch-tone dialing.">
 	<condition field="destination_number" expression="^\*9197$">
 		<action application="answer"/>
 		<action application="playback" data="{loops=-1}tone_stream://%(251,0,1004)"/>

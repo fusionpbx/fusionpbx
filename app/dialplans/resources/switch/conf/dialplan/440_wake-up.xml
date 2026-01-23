@@ -1,4 +1,4 @@
-<extension name="wake-up" number="*925" context="${domain_name}" continue="false" app_uuid="e27abe68-41c0-4188-bb0f-67d93de0c610" order="440">
+<extension name="wake-up" number="*925" context="${domain_name}" continue="false" app_uuid="e27abe68-41c0-4188-bb0f-67d93de0c610" order="440" description="Dial *925 to receive a wake up call.">
 	<condition field="destination_number" expression="^\*(925)$">
 		<action application="answer"/>
 		<action application="set" data="wakeup_call_sound=${sounds_dir}/${default_language}/${default_dialect}/${default_voice}/ivr/ivr-wakey_wakey_sunshine.wav" enabled="false"/>

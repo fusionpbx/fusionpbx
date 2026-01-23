@@ -1,4 +1,4 @@
-<extension name="redial" number="*870" context="global" continue="true" app_uuid="459da8c1-073a-458e-ae7e-8194342f9583" global="true" order="60">
+<extension name="redial" number="*870" context="global" continue="true" app_uuid="459da8c1-073a-458e-ae7e-8194342f9583" global="true" order="60" description="Dial *870 to dial the last number dialed.">
 	<condition field="destination_number" expression="^(redial|\*870)$" break="on-true">
 		<action application="transfer" data="${hash(select/${domain_name}-last_dial/${caller_id_number})}"/>
 	</condition>

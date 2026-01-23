@@ -1,4 +1,4 @@
-<extension name="emergency_calls" number="*911" context="global" continue="false" app_uuid="0c57d2f3-0b08-4278-abb0-918e6e81038a" global="true" order="65">
+<extension name="emergency_calls" number="*911" context="global" continue="false" app_uuid="0c57d2f3-0b08-4278-abb0-918e6e81038a" global="true" order="65" description="Dial *911 to listen to the extensions that have called 9-1-1.">
 	<condition field="destination_number" expression="^\*911$" break="on-true">
         <action application="set" data="pin_number={v_pin_number}" enabled="false"/>
         <action application="lua" data="pin_number.lua" enabled="false"/>

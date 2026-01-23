@@ -1,4 +1,4 @@
-<extension name="page" number="*724" context="${domain_name}" continue="false" app_uuid="2011c518-696d-4878-a9b2-b217b6311311" enabled="false" order="240">
+<extension name="page" number="*724" context="${domain_name}" continue="false" app_uuid="2011c518-696d-4878-a9b2-b217b6311311" enabled="false" order="240" description="Dial *724 to start a page. The numbers to page are defined in the Dialplan Manager.">
 	<condition field="destination_number" expression="^\*724$" >
 		<action application="set" data="caller_id_name=Page" />
 		<action application="set" data="caller_id_number=" />

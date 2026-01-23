@@ -1,5 +1,5 @@
 <!-- voicemail provide user extension -->
-<extension name="vmain_user" number="*97" context="global" continue="false" app_uuid="5d47ab13-f25d-4f62-a68e-2a7d945d05b7" global="true" order="330">
+<extension name="vmain_user" number="*97" context="global" continue="false" app_uuid="5d47ab13-f25d-4f62-a68e-2a7d945d05b7" global="true" order="330" description="Dial *97 to dial your voicemail. You may be prompted for a PIN.">
 	<condition field="destination_number" expression="^\*97$">
 		<action application="answer"/>
 		<action application="sleep" data="1000"/>

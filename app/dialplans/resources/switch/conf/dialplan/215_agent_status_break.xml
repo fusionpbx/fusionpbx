@@ -1,4 +1,4 @@
-<extension name="agent-status-break" number="*24" context="global" continue="false" app_uuid="17a937f4-82f1-4a0f-b3a8-213db15127cf" global="true" order="215">
+<extension name="agent-status-break" number="*24" context="global" continue="false" app_uuid="17a937f4-82f1-4a0f-b3a8-213db15127cf" global="true" order="215" description="Dial *24 to toggle the agent break status.">
 	<condition field="destination_number" expression="^\*24$" break="on-true">
 		<action application="set" data="agent_id=${sip_from_user}" enabled="true"/>
 		<action application="set" data="agent_authorized=true" enabled="false"/>

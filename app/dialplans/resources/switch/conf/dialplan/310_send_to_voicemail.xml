@@ -1,4 +1,4 @@
-<extension name="send_to_voicemail" number="*99[ext]" context="global" continue="false" app_uuid="001d5dab-e0c6-4352-8f06-e9986ee7b0d8" global="true" order="310">
+<extension name="send_to_voicemail" number="*99[ext]" context="global" continue="false" app_uuid="001d5dab-e0c6-4352-8f06-e9986ee7b0d8" global="true" order="310" description="Dial *99 followed by the extension number to send your current call to the voicemail of the extension dialed.">
 	<condition field="destination_number" expression="^\*99(\d{2,10})$">
 		<action application="answer"/>
 		<action application="sleep" data="1000"/>

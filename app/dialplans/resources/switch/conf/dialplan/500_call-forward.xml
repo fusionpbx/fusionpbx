@@ -1,4 +1,4 @@
-<extension name="call-forward" number="*72,*73,*74" context="global" continue="false" app_uuid="b4b32fb4-0181-4876-9bec-b9dff1299d60" global="true" enabled="true" order="500">
+<extension name="call-forward" number="*72,*73,*74" context="global" continue="false" app_uuid="b4b32fb4-0181-4876-9bec-b9dff1299d60" global="true" enabled="true" order="500" description="Dial *72 to toggle call forwarding on your extension. If you have not set a number you will be prompted for the number. Dial *73 to disable call forwarding for your extension. Dial *74 to set a new call forwarding number. You will be prompted to dial the number you wish to forward to. If call forwarding is already enabled, call forwarding will be cancelled.">
 	<condition field="destination_number" expression="^\*72(\d{2,20})$" break="on-true">
 		<action application="set" data="request_id=false"/>
 		<action application="set" data="enabled=true"/>

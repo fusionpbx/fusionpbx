@@ -1,4 +1,4 @@
-<extension name="recordings" number="*732" context="${domain_name}" continue="false" app_uuid="430737df-5385-42d1-b933-22600d3fb79e" order="400">
+<extension name="recordings" number="*732" context="${domain_name}" continue="false" app_uuid="430737df-5385-42d1-b933-22600d3fb79e" order="400" description="Dial *732 to create recordings from your extension. You may be prompted for a PIN.">
 	<condition field="destination_number" expression="^\*(732)$">
 		<action application="answer"/>
 		<action application="set" data="pin_number={v_pin_number}"/>

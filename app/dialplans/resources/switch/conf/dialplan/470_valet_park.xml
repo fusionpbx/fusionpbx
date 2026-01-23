@@ -1,4 +1,4 @@
-<extension name="valet_park" number="park+*5901-*5999" context="${domain_name}" continue="false" app_uuid="3cc8363d-5ce3-48aa-8ac1-143cf297c4f7" enabled="true" order="470">
+<extension name="valet_park" number="park+*5901-*5999" context="${domain_name}" continue="false" app_uuid="3cc8363d-5ce3-48aa-8ac1-143cf297c4f7" enabled="true" order="470" description="Dial *59 followed by a number between 01 and 99 to park a call in that parking lot. When a call is already parked, you will retrieve the call.">
 	<condition field="destination_number" expression="^(?:park)?\+?\*(59(0[1-9]|[1-9][0-9]))$" break="never"/>
 	<condition field="${sip_h_Referred-By}" expression="(?:sip:)?(\d+)(?:@.*)?" break="never">
 		<action application="set" data="referred_by_user=$1" inline="true"/>

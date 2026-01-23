@@ -1,4 +1,4 @@
-<extension name="delay_echo" number="*9195" context="global" continue="false" app_uuid="fe638409-b347-46d7-9aca-489561df8b35" global="true" order="340">
+<extension name="delay_echo" number="*9195" context="global" continue="false" app_uuid="fe638409-b347-46d7-9aca-489561df8b35" global="true" order="340" description="Dial *9195 to test audio with a delayed playback.">
 	<condition field="destination_number" expression="^\*9195$">
 		<action application="answer"/>
 		<action application="delay_echo" data="5000"/>

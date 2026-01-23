@@ -1,4 +1,4 @@
-<extension name="do-not-disturb" number="*77,*78,*79" context="global" continue="false" app_uuid="df32d982-e39e-4ae5-a46d-aed1893873f2" global="true" enabled="true" order="490">
+<extension name="do-not-disturb" number="*77,*78,*79" context="global" continue="false" app_uuid="df32d982-e39e-4ae5-a46d-aed1893873f2" global="true" enabled="true" order="490" description="Dial *77 to toggle do not disturb. Dial *78 to enable do not disturb. Dial *79 to disable do not disturb.">
 	<condition field="destination_number" expression="^\*77$" break="on-true">
 		<action application="set" data="enabled=toggle"/>
 		<action application="lua" data="do_not_disturb.lua"/>

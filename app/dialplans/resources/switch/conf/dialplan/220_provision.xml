@@ -1,4 +1,4 @@
-<extension name="provision" number="*11,*12" context="${domain_name}" continue="false" app_uuid="d31d267d-7235-4887-a01b-d59f3a1dfcca" enabled="false" order="220">
+<extension name="provision" number="*11,*12" context="${domain_name}" continue="false" app_uuid="d31d267d-7235-4887-a01b-d59f3a1dfcca" enabled="false" order="220" description="Dial *11 and *12 to activate the provision prompt on the phone.">
 	<condition field="destination_number" expression="^\*11$" break="on-true">
 		<action application="set" data="reboot=true"/>
 		<action application="set" data="action=login"/>

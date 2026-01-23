@@ -1,4 +1,4 @@
-<extension name="call_privacy" number="*67[d+]" context="global" continue="false" app_uuid="eb478e66-f637-4ae7-b1eb-9a7b87a1bd9e" global="true" order="270">
+<extension name="call_privacy" number="*67[d+]" context="global" continue="false" app_uuid="eb478e66-f637-4ae7-b1eb-9a7b87a1bd9e" global="true" order="270" description="Dial *67 followed by the number you wish to dial out to enable caller ID privacy mode.">
 	<condition field="destination_number" expression="^\*67(\d+)$">
 		<action application="privacy" data="full"/>
 		<action application="set" data="sip_h_Privacy=id"/>
