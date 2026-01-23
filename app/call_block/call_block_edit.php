@@ -53,10 +53,12 @@
 
 //set the time format options: 12h, 24h
 	if ($settings->get('domain', 'time_format') == '24h') {
-		$time_format = 'j M Y H:i';
-	} else {
-		$time_format = 'j M Y g:i a';
+		$time_format = 'HH24:MI';
 	}
+	else {
+		$time_format = 'HH12:MI am';
+	}
+
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -310,34 +312,34 @@
 	}
 
 //get the ivr's
-if (permission_exists('call_block_all') || permission_exists('call_block_ivr')) {
-	$sql = "select ivr_menu_uuid,ivr_menu_name, ivr_menu_extension, ivr_menu_description from v_ivr_menus ";
-	$sql .= "where ( ";
-	$sql .= "	domain_uuid = :domain_uuid ";
-	if (permission_exists('call_block_domain')) {
-		$sql .= "	or domain_uuid is null ";
+	if (permission_exists('call_block_all') || permission_exists('call_block_ivr')) {
+		$sql = "select ivr_menu_uuid,ivr_menu_name, ivr_menu_extension, ivr_menu_description from v_ivr_menus ";
+		$sql .= "where ( ";
+		$sql .= "	domain_uuid = :domain_uuid ";
+		if (permission_exists('call_block_domain')) {
+			$sql .= "	or domain_uuid is null ";
+		}
+		$sql .= ") ";
+		// $sql .= "and enabled = 'true' ";
+		$sql .= "order by ivr_menu_extension asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$ivrs = $database->select($sql, $parameters);
 	}
-	$sql .= ") ";
-	// $sql .= "and enabled = 'true' ";
-	$sql .= "order by ivr_menu_extension asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$ivrs = $database->select($sql, $parameters);
-}
 
 //get the ring groups
-if (permission_exists('call_block_all') || permission_exists('call_block_ring_group')) {
-	$sql = "select ring_group_uuid,ring_group_name, ring_group_extension, ring_group_description from v_ring_groups ";
-	$sql .= "where ( ";
-	$sql .= "	domain_uuid = :domain_uuid ";
-	if (permission_exists('call_block_domain')) {
-		$sql .= "	or domain_uuid is null ";
+	if (permission_exists('call_block_all') || permission_exists('call_block_ring_group')) {
+		$sql = "select ring_group_uuid,ring_group_name, ring_group_extension, ring_group_description from v_ring_groups ";
+		$sql .= "where ( ";
+		$sql .= "	domain_uuid = :domain_uuid ";
+		if (permission_exists('call_block_domain')) {
+			$sql .= "	or domain_uuid is null ";
+		}
+		$sql .= ") ";
+		// $sql .= "and ring_group_enabled = 'true' ";
+		$sql .= "order by ring_group_extension asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$ring_groups = $database->select($sql, $parameters);
 	}
-	$sql .= ") ";
-	// $sql .= "and ring_group_enabled = 'true' ";
-	$sql .= "order by ring_group_extension asc ";
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$ring_groups = $database->select($sql, $parameters);
-}
 
 //get the voicemails
 	$sql = "select voicemail_uuid, voicemail_id, voicemail_description ";
@@ -353,6 +355,71 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$voicemails = $database->select($sql, $parameters);
 	unset($sql, $parameters);
+
+//get recent calls from the database (if not editing an existing call block record)
+	if (empty($_REQUEST["id"])) {
+		//without block all permission, limit to assigned extension(s)
+		if (!permission_exists('call_block_extension') && !empty($_SESSION['user']['extension'])) {
+			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
+				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
+			}
+			if (!empty($assigned_extensions)) {
+				$x = 0;
+				foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
+					$sql_where_array[] = "extension_uuid = :extension_uuid_".$x;
+					$parameters['extension_uuid_'.$x] = $assigned_extension_uuid;
+					$x++;
+				}
+				if (!empty($sql_where_array)) {
+					$sql_where .= "and (".implode(' or ', $sql_where_array).") ";
+				}
+				unset($sql_where_array);
+			}
+		}
+
+		//get the recent calls
+		$sql = "select caller_id_name, ";
+		$sql .= "caller_id_number, ";
+		$sql .= "to_char(timezone(:time_zone, start_stamp), 'DD Mon YYYY') as start_date_formatted, \n";
+		$sql .= "to_char(timezone(:time_zone, start_stamp), '".$time_format."') as start_time_formatted, \n";
+		$sql .= "caller_destination, start_epoch, direction, ";
+		$sql .= "hangup_cause, duration, billsec, xml_cdr_uuid ";
+		$sql .= "from v_xml_cdr ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and direction <> 'local' ";
+		$sql .= $sql_where ?? null;
+		$sql .= "order by start_stamp desc ";
+		$sql .= limit_offset($settings->get('call_block', 'recent_call_limit'));
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['time_zone'] = $time_zone;
+		$recent_calls = $database->select($sql, $parameters);
+		unset($sql, $parameters);
+	}
+
+//build the call_block_actions array
+	$call_block_actions[] = ['group_name' => 'action', 'group_label' => $text['label-action'], 'app_name' => 'reject', 'value' => 'reject', 'label' => $text['label-reject']];
+	$call_block_actions[] = ['group_name' => 'action', 'group_label' => $text['label-action'], 'app_name' => 'busy', 'value' => 'busy', 'label' => $text['label-busy']];
+	$call_block_actions[] = ['group_name' => 'action', 'group_label' => $text['label-action'], 'app_name' => 'hold', 'value' => 'hold', 'label' => $text['label-hold']];
+	if (permission_exists('call_block_extension') && !empty($extensions)) {
+		foreach ($extensions as $row) {
+			$call_block_actions[] = ['group_name' => 'extension', 'group_label' => $text['label-extension'], 'app_name' => 'extension', 'extension' => urlencode($row["extension"]), 'value' => 'extension:'.urlencode($row["extension"]), 'label' => escape($row['extension'])." ".escape($row['description'])];
+		}
+	}
+	if (permission_exists('call_block_ivr') && !empty($ivrs)) {
+		foreach ($ivrs as $row) {
+			$call_block_actions[] = ['group_name' => 'ivr', 'group_label' => $text['label-ivr_menus'], 'app_name' => 'ivr', 'extension' => urlencode($row["extension"]), 'value' => 'ivr:'.urlencode($row["extension"]), 'label' => escape($row['ivr_menu_name'])." ".escape($row['ivr_menu_extension'])];
+		}
+	}
+	if (permission_exists('call_block_ring_group') && !empty($ring_groups)) {
+		foreach ($ring_groups as $row) {
+			$call_block_actions[] = ['group_name' => 'ring_group', 'group_label' => $text['label-ring_groups'], 'app_name' => 'ring_group', 'extension' => urlencode($row["ring_group_extension"]), 'value' => 'ring_group:'.urlencode($row["ring_group_extension"]), 'label' => escape($row['ring_group_name'])." ".escape($row['ring_group_extension'])];
+		}
+	}
+	if (permission_exists('call_block_voicemail') && !empty($voicemails)) {
+		foreach ($voicemails as $row) {
+			$call_block_actions[] = ['group_name' => 'voicemail', 'group_label' => $text['label-voicemail'], 'app_name' => 'voicemail', 'extension' => urlencode($row["voicemail_id"]), 'value' => 'voicemail:'.urlencode($row["voicemail_id"]), 'label' => escape($row['voicemail_id'])." ".escape($row['voicemail_description'])];
+		}
+	}
 
 //create token
 	$object = new token;
@@ -466,86 +533,28 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 	echo "	".$text['label-action']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	/**
-	 * Select a call block action.
-	 *
-	 * This function generates an HTML select element for selecting a call block
-	 * action. It includes options for rejecting, busy, holding, and other actions,
-	 * as well as options for extensions, IVRs, ring groups, and voicemail.
-	 *
-	 * @param bool $label Whether to include the label option or not.
-	 *
-	 * @return void The function does not return any value.
-	 */
-	function call_block_action_select($label = false) {
-		global $select_margin, $text, $call_block_app, $call_block_data, $extensions, $ivrs, $voicemails, $ring_groups;
-		echo "<select class='formfld' style='".$select_margin."' name='call_block_action'>\n";
-		if ($label) {
-			echo "	<option value='' disabled='disabled'>".$text['label-action']."</option>\n";
+	echo "	<select class='formfld' style='".$select_margin."' name='call_block_action'>\n";
+	$x = 0;
+	foreach ($call_block_actions as $row) {
+		if ($row['group_name'] !== $previous_group_name) {
+			if ($x > 0) { echo "	</optgroup>\n"; }
+			echo "		<optgroup label='".$text['label-'.$row['group_name']]."'>\n";
 		}
-		if ($call_block_app == "reject") {
-			echo "	<option value='reject' selected='selected'>".$text['label-reject']."</option>\n";
+		if ($call_block_app == $row['app_name'] && empty($row['extension'])) {
+			echo "		<option value='".$row['value']."' selected='selected'>".$row['label']."</option>\n";
+		}
+		elseif ($call_block_app == $row['app_name'] && $call_block_data == $row['extension']) {
+			echo "		<option value='".$row['value']."' selected='selected'>".$row['label']."</option>\n";
 		}
 		else {
-			echo "	<option value='reject' >".$text['label-reject']."</option>\n";
+			echo "		<option value='".$row['value']."' >".$row['label']."</option>\n";
 		}
-		if ($call_block_app == "busy") {
-			echo "	<option value='busy' selected='selected'>".$text['label-busy']."</option>\n";
-		}
-		else {
-			echo "	<option value='busy'>".$text['label-busy']."</option>\n";
-		}
-		if ($call_block_app == "hold") {
-			echo "	<option value='hold' selected='selected'>".$text['label-hold']."</option>\n";
-		}
-		else {
-			echo "	<option value='hold'>".$text['label-hold']."</option>\n";
-		}
-		if (permission_exists('call_block_extension')) {
-			if (!empty($extensions)) {
-				echo "	<optgroup label='".$text['label-extension']."'>\n";
-				foreach ($extensions as $row) {
-					$selected = ($call_block_app == 'extension' && $call_block_data == $row['extension']) ? "selected='selected'" : null;
-					echo "		<option value='extension:".urlencode($row["extension"])."' ".$selected.">".escape($row['extension'])." ".escape($row['description'])."</option>\n";
-				}
-				echo "	</optgroup>\n";
-			}
-		}
-		if (permission_exists('call_block_ivr')) {
-			if (!empty($ivrs)) {
-				echo "	<optgroup label='".$text['label-ivr_menus']."'>\n";
-				foreach ($ivrs as $row) {
-					$selected = ($call_block_app == 'ivr' && $call_block_data == $row['ivr_menu_extension']) ? "selected='selected'" : null;
-					echo "		<option value='ivr:".urlencode($row["ivr_menu_extension"])."' ".$selected.">".escape($row['ivr_menu_name'])." ".escape($row['ivr_menu_extension'])."</option>\n";
-				}
-				echo "	</optgroup>\n";
-			}
-		}
-		if (permission_exists('call_block_ring_group')) {
-			if (!empty($ring_groups)) {
-				echo "	<optgroup label='".$text['label-ring_groups']."'>\n";
-				foreach ($ring_groups as $row) {
-					$selected = ($call_block_app == 'ring_group' && $call_block_data == $row['ring_group_extension']) ? "selected='selected'" : null;
-					echo "		<option value='ring_group:".urlencode($row["ring_group_extension"])."' ".$selected.">".escape($row['ring_group_name'])." ".escape($row['ring_group_extension'])."</option>\n";
-				}
-				echo "	</optgroup>\n";
-			}
-		}
-		if (permission_exists('call_block_voicemail')) {
-			if (!empty($voicemails)) {
-				echo "	<optgroup label='".$text['label-voicemail']."'>\n";
-				foreach ($voicemails as $row) {
-					$selected = ($call_block_app == 'voicemail' && $call_block_data == $row['voicemail_id']) ? "selected='selected'" : null;
-					echo "		<option value='voicemail:".urlencode($row["voicemail_id"])."' ".$selected.">".escape($row['voicemail_id'])." ".escape($row['voicemail_description'])."</option>\n";
-				}
-				echo "	</optgroup>\n";
-			}
-		}
-		echo "	</select>";
+		$previous_group_name = $row['group_name'];
+		$x++;
 	}
-	call_block_action_select();
-	echo "<br />\n";
-	echo $text['description-action']."\n";
+	echo "		</select>";
+	echo "	<br />\n";
+	echo "	".$text['description-action']."\n";
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -612,39 +621,8 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 
 	echo "</form>";
 
-//get recent calls from the db (if not editing an existing call block record)
+//show recent calls from the database (if not editing an existing call block record)
 	if (empty($_REQUEST["id"])) {
-
-		//without block all permission, limit to assigned extension(s)
-		if (!permission_exists('call_block_extension') && !empty($_SESSION['user']['extension'])) {
-			foreach ($_SESSION['user']['extension'] as $assigned_extension) {
-				$assigned_extensions[$assigned_extension['extension_uuid']] = $assigned_extension['user'];
-			}
-			if (!empty($assigned_extensions)) {
-				$x = 0;
-				foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
-					$sql_where_array[] = "extension_uuid = :extension_uuid_".$x;
-					$parameters['extension_uuid_'.$x] = $assigned_extension_uuid;
-					$x++;
-				}
-				if (!empty($sql_where_array)) {
-					$sql_where .= "and (".implode(' or ', $sql_where_array).") ";
-				}
-				unset($sql_where_array);
-			}
-		}
-
-		//get the recent calls
-		$sql = "select caller_id_name, caller_id_number, caller_destination, start_epoch, direction, hangup_cause, duration, billsec, xml_cdr_uuid ";
-		$sql .= "from v_xml_cdr where domain_uuid = :domain_uuid ";
-		$sql .= "and direction <> 'local' ";
-		$sql .= $sql_where ?? null;
-		$sql .= "order by start_stamp desc ";
-		$sql .= limit_offset($settings->get('call_block', 'recent_call_limit'));
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$recent_calls = $database->select($sql, $parameters);
-		unset($sql, $parameters);
-
 		echo "<form id='form_list' method='post'>\n";
 		echo "<input type='hidden' id='action' name='action' value='add'>\n";
 
@@ -674,7 +652,28 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 				echo "	</select>";
 				unset($select_margin);
 			}
-			call_block_action_select(true);
+			echo "	<select class='formfld' style='".$select_margin."' name='call_block_action'>\n";
+			$x = 0;
+			foreach ($call_block_actions as $row) {
+				if ($row['group_name'] !== $previous_group_name) {
+					if ($x > 0) {
+						echo "	</optgroup>\n";
+					}
+					echo "		<optgroup label='".$text['label-'.$row['group_name']]."'>\n";
+				}
+				if ($call_block_app == $row['app_name'] && empty($row['extension'])) {
+					echo "		<option value='".$row['value']."' selected='selected'>".$row['label']."</option>\n";
+				}
+				elseif ($call_block_app == $row['app_name'] && $call_block_data == $row['extension']) {
+					echo "		<option value='".$row['value']."' selected='selected'>".$row['label']."</option>\n";
+				}
+				else {
+					echo "		<option value='".$row['value']."' >".$row['label']."</option>\n";
+				}
+				$previous_group_name = $row['group_name'];
+				$x++;
+			}
+			echo "		</select>";
 			echo button::create(['type'=>'button','label'=>$text['button-block'],'icon'=>'ban','collapse'=>'hide-xs','onclick'=>"modal_open('modal-block','btn_block');"]);
 		}
 		echo 	"</div>\n";
@@ -707,7 +706,6 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 						$list_row_onclick_uncheck = "if (!this.checked) { document.getElementById('checkbox_all_".$direction."').checked = false; }";
 						$list_row_onclick_toggle = "onclick=\"document.getElementById('checkbox_".$x."').checked = document.getElementById('checkbox_".$x."').checked ? false : true; ".$list_row_onclick_uncheck."\"";
 						if (strlen($row['caller_id_number']) >= 7) {
-							$time_start = "<span class='hide-sm-dn'>".date($time_format, $row['start_epoch']).'</span>';
 							echo "<tr class='list-row row_".$row['direction']."' href=''>\n";
 							echo "	<td class='checkbox'>\n";
 							echo "		<input type='checkbox' class='checkbox_".$row['direction']."' name='xml_cdrs[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"".$list_row_onclick_uncheck."\">\n";
@@ -751,7 +749,7 @@ if (permission_exists('call_block_all') || permission_exists('call_block_ring_gr
 							echo "	<td ".$list_row_onclick_toggle.">".$row['caller_id_name']." </td>\n";
 							echo "	<td ".$list_row_onclick_toggle.">".format_phone($row['caller_id_number'])."</td>\n";
 							echo "	<td ".$list_row_onclick_toggle.">".format_phone($row['caller_destination'])."</td>\n";
-							echo "	<td class='no-wrap' ".$list_row_onclick_toggle.">".$time_start."</td>\n";
+							echo "	<td class='no-wrap' ".$list_row_onclick_toggle."><span class='hide-sm-dn'>".$row['start_date_formatted']." ".$row['start_time_formatted']."</span></td>\n";
 							$seconds = ($row['hangup_cause'] == "ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];  //if they cancelled, show the ring time, not the bill time.
 							echo "	<td class='right hide-sm-dn' ".$list_row_onclick_toggle.">".gmdate("G:i:s", $seconds)."</td>\n";
 							echo "</tr>\n";
