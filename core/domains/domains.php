@@ -291,7 +291,8 @@
 			echo "	</td>\n";
 			if (permission_exists('domain_edit')) {
 				echo "	<td class='no-link center'>\n";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['domain_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				echo button::create(['type'=>'button','class'=>'link','label'=>$text['label-'.$row['domain_enabled']],'title'=>$text['button-toggle'],'id'=>'btn_toggle_enabled','name'=>'btn_toggle_enabled','onclick'=>"list_self_check('checkbox_".$x."'); modal_open('modal-toggle_enabled','btn_toggle_enabled');"]);
+				echo modal::create(['id'=>'modal-toggle_enabled','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle_enabled','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
 				echo "	</td>\n";
 			}
 			else {
