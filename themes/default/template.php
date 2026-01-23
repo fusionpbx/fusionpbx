@@ -1007,12 +1007,12 @@
 		}
 
 		function list_self_check(checkbox_id) {
-			var inputs = document.getElementsByTagName('input');
-			for (var i = 0, max = inputs.length; i < max; i++) {
-				if (inputs[i].type === 'checkbox' && inputs[i].name.search['enabled'] == -1) {
-					inputs[i].checked = false;
-				}
-			}
+			//unchecks each selected checkbox
+			document.querySelectorAll('input[type="checkbox"]:not([name*="enabled"])').forEach(checkbox => {
+				checkbox.checked = false;
+			});
+	
+			//select the checkbox with the specified id
 			document.getElementById(checkbox_id).checked = true;
 		}
 
