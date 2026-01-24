@@ -55,6 +55,9 @@
 		$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid ?? $_SESSION['domain_uuid'] ?? '', 'user_uuid' => $user_uuid ?? $_SESSION['user_uuid'] ?? '']);
 	}
 
+//add multi-lingual support for dialplan text
+	$dialplan_text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/dialplans');
+
 //get order and order by
 	$order_by = $_GET["order_by"] ?? '';
 	$order = $_GET["order"] ?? '';
@@ -115,9 +118,20 @@
 		$pdf->SetFont('Arial', '', 9);
 		if (is_array($features) && count($features) > 0) {
 			foreach ($features as $row) {
-				$feature_code = $row['dialplan_number'];
-				$feature_name = format_feature_name($row['dialplan_name']);
-				$feature_description = $row['dialplan_description'] ?? '';
+				//set the feature dialing code eg. *67
+				$feature_code = $row['dialplan_number'] ?? '';
+
+				//set the dialplan name to use underscores for the text array lookup
+				$dialplan_name = str_replace('-','_', $row['dialplan_name'] ?? '');
+
+				//set the feature code name to be the internationalized name when possible
+				$feature_name = $dialplan_text['label-dialplan_'.$dialplan_name] ?? $dialplan_name;
+
+				//set the dialplan description
+				$feature_description = $row['dialplan_description'] ?? $dialplan_text['description-dialplan_'.$dialplan_name] ?? '';
+
+				//replace the ${number} variable in the description with the dialed number used to activate the dialplan
+				$feature_description = str_replace('${number}', $feature_code, $feature_description);
 
 				if (permission_exists('feature_codes_raw')) {
 					$raw_value = isset($row['dialplan_xml']) ? substr($row['dialplan_xml'], 0, 50) : '';
@@ -237,7 +251,7 @@
 
 					//draw vertically centered text for feature name
 					$pdf->SetXY($x + $col_widths[0] + 1, $y + $vertical_padding);
-					$pdf->Cell($col_widths[1] - 2, $text_height, substr($feature_name, 0, 30), 0, 0, 'L');
+					$pdf->Cell($col_widths[1] - 2, $text_height, substr(format_feature_name($feature_name), 0, 30), 0, 0, 'L');
 
 					//draw description cell border and use MultiCell for text
 					$desc_x = $x + $col_widths[0] + $col_widths[1];
@@ -308,10 +322,27 @@
 
 	if (is_array($features) && count($features) > 0) {
 		foreach ($features as $row) {
+			//set the feature dialing code eg. *67
+			$feature_code = $row['dialplan_number'] ?? '';
+
+			//set the dialplan name to use underscores for the text array lookup
+			$dialplan_name = str_replace('-','_', $row['dialplan_name'] ?? '');
+
+			//set the feature code name to be the internationalized name when possible
+			$feature_name = $dialplan_text['label-dialplan_'.$dialplan_name] ?? $dialplan_name;
+
+			//set the dialplan description
+			$feature_description = $row['dialplan_description'] ?? $dialplan_text['description-dialplan_'.$dialplan_name] ?? '';
+
+			//replace the ${number} variable in the description with the dialed number used to activate the dialplan
+			$feature_description = str_replace('${number}', $feature_code, $feature_description);
+
+			//output the row
 			echo "<tr class='list-row'>\n";
 			echo "	<td>".escape($row['dialplan_number'])."</td>\n";
-			echo "	<td>".escape(format_feature_name($row['dialplan_name']))."</td>\n";
-			echo "	<td class='description hide-sm-dn'>".escape($row['dialplan_description'])."</td>\n";
+			echo "	<td>".escape(format_feature_name($feature_name))."</td>\n";
+			echo "	<td class='description hide-sm-dn'>".escape($feature_description)."</td>\n";
+			//when raw permissions are enabled output the raw dialplan xml (first 100 characters) column
 			if (permission_exists('feature_codes_raw')) {
 				$raw_display = isset($row['dialplan_xml']) ? htmlspecialchars(substr($row['dialplan_xml'], 0, 100)) : '';
 				if (isset($row['dialplan_xml']) && strlen($row['dialplan_xml']) > 100) {
