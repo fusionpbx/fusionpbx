@@ -29,7 +29,7 @@ require_once dirname(__DIR__, 2) . "/resources/require.php";
 require_once "resources/check_auth.php";
 
 //check permissions
-if (!(permission_exists('destination_add') || permission_exists('destination_edit'))) {
+if (permission_exists('destination_map')) {
 	echo "access denied";
 	exit;
 }
