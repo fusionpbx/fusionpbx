@@ -288,7 +288,6 @@
 	if (permission_exists('destination_delete') && $destinations) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-map'],'icon'=>$settings->get('theme', 'button_icon_map'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'destination_map.php']);
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('destination_all')) {
 		if ($show == 'all') {
