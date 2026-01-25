@@ -217,11 +217,26 @@ class call_recordings {
 		//define the array
 		$array = [];
 
+		//summarize the transcript
+		if ($settings->get('language_model', 'enabled') && !empty($params['transcribe_message'])) {
+			//get the transcribed text
+			$transcribe_text = transcribe::conversation_format($params['transcribe_message'], 'text');
+
+			//prepare the prompt
+			$prompt = "Summarize this conversation with Key Points, Action Items if any, and Sentiment.";
+			$request_data['prompt'] = $prompt . "```\n".$transcribe_text."\n```";
+
+			//load the language model and get the
+			$language_model = new language_model();
+			$params['transcript_summary'] = $language_model->request('ministral-3:8b', $request_data);
+		}
+
 		//prepare the array with the transcript details
 		$array['xml_cdr_transcripts'][0]['xml_cdr_transcript_uuid'] = $params['xml_cdr_uuid'];
 		$array['xml_cdr_transcripts'][0]['domain_uuid'] = $params['domain_uuid'];
 		$array['xml_cdr_transcripts'][0]['xml_cdr_uuid'] = $params['xml_cdr_uuid'];
 		$array['xml_cdr_transcripts'][0]['transcript_json'] = $params['transcribe_message'];
+		$array['xml_cdr_transcripts'][0]['transcript_summary'] = $params['transcript_summary'] ?? '';
 
 		//add temporary permissions
 		$p = permissions::new();
