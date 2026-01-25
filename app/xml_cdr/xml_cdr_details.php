@@ -214,13 +214,12 @@
 	$call_transcript = conversational_html($transcription_array['segments']);
 
 //format the call recording transcript summary
-	$call_summary = escape($transcript_summary);
-	// require_once "resources/classes/parsedown.php";
-	// $parsedown = new Parsedown();
-	// $parsedown->setSafeMode(true);
-	// $parsedown->setMarkupEscaped(true);
-	//$call_summary = str_replace('###', '', $transcript_summary);
-	//$call_summary = str_replace('&amp;', '&', $parsedown->text($call_summary));
+	require_once "resources/classes/parsedown.php";
+	$parsedown = new Parsedown();
+	$parsedown->setSafeMode(true);
+	$parsedown->setMarkupEscaped(true);
+	$call_summary = str_replace('###', '', $transcript_summary);
+	$call_summary = str_replace('&amp;', '&', $parsedown->text($call_summary));
 
 //get the format
 	if (!empty($xml_string)) {
