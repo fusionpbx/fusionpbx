@@ -182,7 +182,6 @@
 			$parameters['domain_uuid'] = $domain_uuid;
 		}
 		$parameters['xml_cdr_uuid'] = $uuid;
-
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 			$log_content = $row["log_content"];
@@ -190,8 +189,8 @@
 		unset($sql, $parameters, $row);
 	}
 
-//get the cdr transcript from the database
-	//if (permission_exists('xml_cdr_call_log') && $call_log_enabled) {
+//get the transcript from the database
+	if ($transcribe_enabled) {
 		$sql = "select * from v_xml_cdr_transcripts ";
 		if (permission_exists('xml_cdr_all')) {
 			$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
@@ -205,9 +204,23 @@
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 			$transcript_json = trim($row["transcript_json"] ?? '');
+			$transcript_summary = trim($row["transcript_summary"] ?? '');
 		}
 		unset($sql, $parameters, $row);
-	//}
+	}
+
+//format the call recording transcript text
+	$transcription_array = json_decode($transcript_json, true);
+	$call_transcript = conversational_html($transcription_array['segments']);
+
+//format the call recording transcript summary
+	$call_summary = escape($transcript_summary);
+	// require_once "resources/classes/parsedown.php";
+	// $parsedown = new Parsedown();
+	// $parsedown->setSafeMode(true);
+	// $parsedown->setMarkupEscaped(true);
+	//$call_summary = str_replace('###', '', $transcript_summary);
+	//$call_summary = str_replace('&amp;', '&', $parsedown->text($call_summary));
 
 //get the format
 	if (!empty($xml_string)) {
@@ -681,15 +694,13 @@
 	echo "</style>\n";
 
 //transcription, if enabled
-	$transcription_array = json_decode($transcript_json, true);
-	$record_transcription = $transcription_array['segments'];
-	$record_transcription_html = conversational_html($record_transcription);
-	if ($transcribe_enabled == 'true' && !empty($transcribe_engine) && !empty($record_transcription)) {
+	if ($transcribe_enabled && !empty($transcribe_engine) && !empty($call_transcript)) {
 		echo "<b>".$text['label-transcription']."</b><br>\n";
 		echo "<div class='card'>\n";
 		echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "	<tr >\n";
-		echo "		<td valign='top' class='".$row_style[0]."'><div style='width: 80%; min-width: 200px; max-width: 800px;'>".$record_transcription_html."</div></td>\n";
+		echo "		<td valign='top' style='width: 50%;'><div style='min-width: 200px; max-width: 800px;' margin: 0px;>".$call_transcript."</div></td>\n";
+		echo "		<td valign='top' style='width: 50%;'><div style='min-width: 200px; max-width: 800px; margin: 15px;'>".$call_summary."</div></td>\n";
 		echo "	</tr>\n";
 		echo "	</table>";
 		echo "</div>\n";
