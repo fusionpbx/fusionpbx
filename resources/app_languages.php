@@ -7138,6 +7138,33 @@ $text['label-icon']['zh-cn'] = "图标";
 $text['label-icon']['ja-jp'] = "アイコン";
 $text['label-icon']['ko-kr'] = "아이콘";
 
+$text['label-speaker']['en-us'] = "Speaker";
+$text['label-speaker']['en-gb'] = "Speaker";
+$text['label-speaker']['ar-eg'] = "المتحدث";
+$text['label-speaker']['de-at'] = "Sprecher";
+$text['label-speaker']['de-ch'] = "Sprecher";
+$text['label-speaker']['de-de'] = "Sprecher";
+$text['label-speaker']['el-gr'] = "Ομιλητής";
+$text['label-speaker']['es-cl'] = "Altavoz";
+$text['label-speaker']['es-mx'] = "Altavoz";
+$text['label-speaker']['fr-ca'] = "Haut-parleur";
+$text['label-speaker']['fr-fr'] = "Haut-parleur";
+$text['label-speaker']['he-il'] = "מגבר קול";
+$text['label-speaker']['it-it'] = "Altoparlante";
+$text['label-speaker']['ka-ge'] = "მაუწყებელი";
+$text['label-speaker']['nl-nl'] = "Luidspreker";
+$text['label-speaker']['pl-pl'] = "Głośnik";
+$text['label-speaker']['pt-br'] = "Caixa de som";
+$text['label-speaker']['pt-pt'] = "Caixa de som";
+$text['label-speaker']['ro-ro'] = "Difuzor";
+$text['label-speaker']['ru-ru'] = "Динамик";
+$text['label-speaker']['sv-se'] = "Högtalare";
+$text['label-speaker']['uk-ua'] = "Спікер";
+$text['label-speaker']['tr-tr'] = "Hoparlör";
+$text['label-speaker']['zh-cn'] = "扬声器";
+$text['label-speaker']['ja-jp'] = "スピーカー";
+$text['label-speaker']['ko-kr'] = "스피커";
+
 $text['label-primary-contact-attachment-image']['en-us'] = "Primary Assigned Contact Attachment Image";
 $text['label-primary-contact-attachment-image']['en-gb'] = "Primary Assigned Contact Attachment Image";
 $text['label-primary-contact-attachment-image']['ar-eg'] = "صورة مرفقة لجهة الاتصال الأساسية المعينة";
@@ -7165,4 +7192,3 @@ $text['label-primary-contact-attachment-image']['zh-cn'] = "主要指定联系�
 $text['label-primary-contact-attachment-image']['ja-jp'] = "主な連絡先の添付ファイル画像";
 $text['label-primary-contact-attachment-image']['ko-kr'] = "기본 할당된 연락처 첨부 이미지";
 
-?>
