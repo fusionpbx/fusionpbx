@@ -223,7 +223,7 @@ class call_recordings {
 			$transcribe_text = transcribe::conversation_format($params['transcribe_message'], 'text');
 
 			//prepare the prompt
-			$prompt = "Summarize this conversation with Key Points, Action Items if any, and Sentiment.";
+			$prompt = "Summarize this conversation with Key Points, Action Items if any, and Sentiment. Don't include swearing in the summary.";
 			$request_data['prompt'] = $prompt . "```\n".$transcribe_text."\n```";
 
 			//load the language model and get the
