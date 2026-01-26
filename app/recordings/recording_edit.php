@@ -58,6 +58,7 @@
 	$speech_engine = $settings->get('speech', 'engine', '');
 	$transcribe_enabled = class_exists('transcribe') && $settings->get('transcribe', 'enabled', false);
 	$transcribe_engine = $settings->get('transcribe', 'engine', '');
+	$input_toggle_style_switch = (substr($settings->get('theme', 'input_toggle_style', ''), 0, 6) == 'switch');
 
 //add the speech object and get the voices and languages arrays
 	if ($speech_enabled && !empty($speech_engine)) {
@@ -378,6 +379,22 @@
 			echo "<input class='formfld' type='hidden' name='recording_model' maxlength='255' value=''>\n";
 		}
 
+		// INWORLD ENHANCEMENT: Add language filter for Inworld voices
+		if ($speech_engine === 'inworld' && !empty($voices)) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "    Language Filter\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "	<select class='formfld' id='language_filter' onchange='filterVoicesByLanguage(this.value)'>\n";
+			echo "		<option value=''>All Languages</option>\n";
+			echo "	</select>\n";
+			echo "<br />\n";
+			echo "Filter voices by language\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+
 		//voices
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
@@ -385,11 +402,25 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if (!empty($voices)) {
-			echo "	<select class='formfld' name='recording_voice'>\n";
+			echo "	<select class='formfld' name='recording_voice' id='recording_voice'>\n";
 			echo "		<option value=''></option>\n";
 			foreach ($voices as $key => $voice) {
 				$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
-				echo "		<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+				
+				// Handle both array and string voice formats
+				if (is_array($voice)) {
+					$voice_name = $voice['name'] ?? $key;
+					$voice_display = $voice_name;
+					if (!empty($voice['description'])) {
+						$voice_display .= ' - ' . $voice['description'];
+					}
+					if (!empty($voice['languages']) && is_array($voice['languages'])) {
+						$voice_display .= ' (' . implode(', ', $voice['languages']) . ')';
+					}
+					echo "		<option value='".escape($key)."' $recording_voice_selected data-voice-name='".escape($voice_name)."' data-voice-description='".escape($voice['description'] ?? '')."' data-voice-languages='".escape(json_encode($voice['languages'] ?? []))."'>".escape($voice_display)."</option>\n";
+				} else {
+					echo "		<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+				}
 			}
 			echo "	</select>\n";
 		}
@@ -502,6 +533,295 @@
 		echo "<input type='hidden' name='recording_uuid' value='".escape($recording_uuid)."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	// INWORLD ENHANCEMENT: JavaScript for language filtering and improved voice display
+	if ($speech_engine === 'inworld' && !empty($voices)) {
+?>
+<script>
+// Add CSS for voice select dynamic sizing and hide toggle selects
+const style = document.createElement('style');
+style.textContent = `
+	/* Voice select starts at normal size */
+	#recording_voice {
+		width: 300px !important;
+		max-width: 300px !important;
+	}
+	/* Expands to show full details when open */
+	#recording_voice:focus,
+	#recording_voice.dropdown-open {
+		width: 600px !important;
+		max-width: 100% !important;
+	}
+	
+	/* Hide the select dropdown when inside a switch - use !important to override formfld */
+	.switch select {
+		display: none !important;
+		opacity: 0 !important;
+		position: absolute !important;
+		width: 0 !important;
+		height: 0 !important;
+	}
+	
+	/* Complete Toggle Switch Styles */
+	.switch {
+		position: relative;
+		display: inline-block;
+		width: 60px;
+		height: 30px;
+		vertical-align: middle;
+	}
+	
+	.switch .slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #ccc;
+		transition: .4s;
+		border-radius: 30px;
+	}
+	
+	.switch .slider:before {
+		position: absolute;
+		content: "";
+		height: 22px;
+		width: 22px;
+		left: 4px;
+		bottom: 4px;
+		background-color: white;
+		transition: .4s;
+		border-radius: 50%;
+	}
+	
+	.switch.checked .slider {
+		background-color: #00bfff;
+	}
+	
+	.switch.checked .slider:before {
+		transform: translateX(30px);
+	}
+`;
+document.head.appendChild(style);
+
+// Make toggle switches work with FusionPBX theme
+document.addEventListener('DOMContentLoaded', function() {
+	// Handle toggle functionality for switches
+	document.querySelectorAll('.switch').forEach(function(switchElem) {
+		const select = switchElem.querySelector('select');
+		const slider = switchElem.querySelector('.slider');
+		
+		if (select && slider) {
+			// Set initial state based on select value
+			if (select.value === 'true') {
+				switchElem.classList.add('checked');
+			}
+			
+			// Toggle on slider click
+			slider.addEventListener('click', function() {
+				if (select.value === 'true') {
+					select.value = 'false';
+					switchElem.classList.remove('checked');
+				} else {
+					select.value = 'true';
+					switchElem.classList.add('checked');
+				}
+			});
+		}
+	});
+});
+
+// Build Inworld voices data from PHP
+const inworldVoices = {};
+<?php
+foreach ($voices as $voice_id => $voice_data) {
+	if (is_array($voice_data)) {
+		echo "inworldVoices[" . json_encode($voice_id) . "] = " . json_encode($voice_data) . ";\n";
+	}
+}
+?>
+
+// Language code to name mapping
+const languageNames = {
+	'en': 'English',
+	'es': 'Spanish (Español)',
+	'fr': 'French (Français)',
+	'de': 'German (Deutsch)',
+	'it': 'Italian (Italiano)',
+	'pt': 'Portuguese (Português)',
+	'pl': 'Polish (Polski)',
+	'zh': 'Chinese (中文)',
+	'ja': 'Japanese (日本語)',
+	'ko': 'Korean (한국어)',
+	'nl': 'Dutch (Nederlands)',
+	'ru': 'Russian (Русский)',
+	'hi': 'Hindi (हिन्दी)'
+};
+
+// Get unique languages from voices
+function getLanguages() {
+	const languages = new Set();
+	Object.values(inworldVoices).forEach(voice => {
+		if (voice.languages && Array.isArray(voice.languages)) {
+			voice.languages.forEach(lang => languages.add(lang));
+		}
+	});
+	return Array.from(languages).sort();
+}
+
+// Filter voices by language
+function filterVoicesByLanguage(language) {
+	const voiceSelect = document.getElementById('recording_voice');
+	if (!voiceSelect) return;
+	
+	const currentValue = voiceSelect.value;
+	
+	// Clear existing options except the first empty one
+	while (voiceSelect.options.length > 1) {
+		voiceSelect.remove(1);
+	}
+	
+	// Add filtered voices
+	Object.entries(inworldVoices).forEach(([voiceId, voiceData]) => {
+		// Filter by language if specified
+		if (language === '' || (voiceData.languages && voiceData.languages.includes(language))) {
+			const option = document.createElement('option');
+			option.value = voiceId;
+			
+			// Build full display text
+			let displayText = voiceData.name;
+			if (voiceData.description) {
+				displayText += ' - ' + voiceData.description;
+			}
+			if (voiceData.languages && voiceData.languages.length > 0) {
+				displayText += ' (' + voiceData.languages.join(', ') + ')';
+			}
+			
+			option.textContent = displayText;
+			option.setAttribute('data-voice-name', voiceData.name);
+			option.setAttribute('data-voice-full', displayText);
+			
+			if (voiceId === currentValue) {
+				option.selected = true;
+			}
+			
+			voiceSelect.appendChild(option);
+		}
+	});
+	
+	// Update display to show only name when closed
+	updateVoiceDisplay();
+}
+
+// Update voice select to show only name when closed
+function updateVoiceDisplay() {
+	const voiceSelect = document.getElementById('recording_voice');
+	if (!voiceSelect) return;
+	
+	// Get the selected option
+	const selectedOption = voiceSelect.options[voiceSelect.selectedIndex];
+	if (selectedOption && selectedOption.value) {
+		const voiceName = selectedOption.getAttribute('data-voice-name');
+		
+		// Always set to short name when this is called
+		if (voiceName) {
+			selectedOption.textContent = voiceName;
+		}
+	}
+}
+
+// Restore full text when opening dropdown
+function showFullVoiceDetails() {
+	const voiceSelect = document.getElementById('recording_voice');
+	if (!voiceSelect) return;
+	
+	// Restore full text for all options
+	Array.from(voiceSelect.options).forEach(option => {
+		const fullText = option.getAttribute('data-voice-full');
+		if (fullText) {
+			option.textContent = fullText;
+		}
+	});
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+	if (Object.keys(inworldVoices).length === 0) return;
+	
+	// Populate language dropdown
+	const languageSelect = document.getElementById('language_filter');
+	if (!languageSelect) return;
+	
+	const languages = getLanguages();
+	
+	// Sort languages alphabetically by display name
+	languages.sort((a, b) => {
+		const nameA = languageNames[a] || a;
+		const nameB = languageNames[b] || b;
+		return nameA.localeCompare(nameB);
+	});
+	
+	// Move English to the front if it exists
+	const englishIndex = languages.indexOf('en');
+	if (englishIndex > -1) {
+		languages.splice(englishIndex, 1); // Remove English from current position
+		languages.unshift('en'); // Add English to the beginning
+	}
+	
+	languages.forEach(lang => {
+		const option = document.createElement('option');
+		option.value = lang;
+		option.textContent = languageNames[lang] || lang;
+		languageSelect.appendChild(option);
+	});
+	
+	// Initialize voice display
+	filterVoicesByLanguage('');
+	
+	// Add event listeners
+	const voiceSelect = document.getElementById('recording_voice');
+	if (voiceSelect) {
+		// Show full details when opening
+		voiceSelect.addEventListener('mousedown', function(e) {
+			// Only on the select itself, not when already open
+			if (e.target === this) {
+				this.classList.add('dropdown-open');
+				showFullVoiceDetails();
+			}
+		});
+		
+		voiceSelect.addEventListener('focus', function() {
+			this.classList.add('dropdown-open');
+			showFullVoiceDetails();
+		});
+		
+		// Collapse to name only after selection
+		voiceSelect.addEventListener('change', function() {
+			this.classList.remove('dropdown-open');
+			// Immediately blur to remove focus and trigger size change
+			this.blur();
+			// Small delay to ensure the dropdown has closed
+			setTimeout(updateVoiceDisplay, 50);
+		});
+		
+		voiceSelect.addEventListener('blur', function() {
+			this.classList.remove('dropdown-open');
+			// Delay to ensure dropdown is fully closed
+			setTimeout(updateVoiceDisplay, 100);
+		});
+		
+		// Force update on any click that closes the dropdown
+		document.addEventListener('click', function(e) {
+			if (e.target !== voiceSelect && !voiceSelect.contains(e.target)) {
+				updateVoiceDisplay();
+			}
+		});
+	}
+});
+</script>
+<?php
+	}
 
 	echo "</form>";
 
