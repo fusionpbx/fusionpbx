@@ -3274,6 +3274,21 @@ if (!function_exists('get_memory_details')) {
 	}
 }
 
+if (!function_exists('array_type')) {
+	/**
+	 * Determines if the array is single or multi-dimensional array. 
+	 *
+	 * @return string Options: single, multi
+	 */
+	function array_type(array $array): string {
+		$result = count($array, COUNT_RECURSIVE) > count($array);
+		if ($result) {
+			return 'multi';
+		}
+		return 'single';
+	}
+}
+
 if (!function_exists('mb_convert_encoding')) {
 	function mb_convert_encoding($str, $to_encoding, $from_encoding = null) {
 		// if no from_encoding specified, try to detect it
