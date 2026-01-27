@@ -39,15 +39,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//determine the typ of array
-	function array_type(array $array): string {
-		$result = count($array, COUNT_RECURSIVE) > count($array);
-		if ($result) {
-			return 'multi';
-		}
-		return 'single';
-	}
-
 //set defaults
 	$recording_name = '';
 	$recording_message = '';
