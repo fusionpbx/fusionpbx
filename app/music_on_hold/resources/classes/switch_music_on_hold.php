@@ -403,7 +403,7 @@ class switch_music_on_hold {
 						$sql .= "and (domain_uuid = :domain_uuid " . (permission_exists('music_on_hold_global') ? "or domain_uuid is null " : null) . ") ";
 						$parameters['domain_uuid'] = $this->domain_uuid;
 					}
-					$rows = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters ?? null, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$streams[$row['music_on_hold_uuid']] = $row;
