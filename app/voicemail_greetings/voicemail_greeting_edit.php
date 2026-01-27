@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -201,8 +201,19 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			//set file name
 			$greeting_filename = 'greeting_'.$greeting_id.'.'.$greeting_format;
 
-			//text to audio - make a new audio file from the message
+			//determine whether to create the recording
+			$update_greeting = false;
 			if ($speech_enabled && !empty($greeting_voice) && !empty($greeting_message)) {
+				if ($action == 'add') {
+					$update_greeting = true;
+				}
+				if ($action == 'update' && $_POST["update_greeting"] == 'true') {
+					$update_greeting = true;
+				}
+			}
+
+			//text to audio - make a new audio file from the message
+			if ($update_greeting && $speech_enabled && !empty($greeting_voice) && !empty($greeting_message)) {
 				$speech->audio_path = $greeting_path;
 				$speech->audio_filename = $greeting_filename;
 				$speech->audio_format = $greeting_format;
@@ -257,17 +268,15 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		}
 
 		//redirect
-		header("Location: voicemail_greetings.php?id=".$voicemail_id);
+		header("Location: voicemail_greeting_edit.php?id=".$voicemail_greeting_uuid."&voicemail_id=".$voicemail_id);
 		exit;
 	}
 }
 
 //pre-populate the form
-	if (
-		$action == 'update' &&
+	if ($action == 'update' &&
 		!empty($voicemail_greeting_uuid) && is_uuid($voicemail_greeting_uuid) &&
-		(empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")
-		) {
+		(empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$sql = "select * from v_voicemail_greetings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and voicemail_greeting_uuid = :voicemail_greeting_uuid ";
@@ -344,9 +353,9 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			echo "</td>\n";
 			echo "</tr>\n";
 		}
-// 		else {
-// 			echo "<input class='formfld' type='hidden' name='greeting_model' maxlength='255' value=''>\n";
-// 		}
+		// else {
+		// 	echo "<input class='formfld' type='hidden' name='greeting_model' maxlength='255' value=''>\n";
+		// }
 
 		//voices
 		echo "<tr>\n";
@@ -458,6 +467,29 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo $text['description-message']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+
+		if ($action == 'update') {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "	".$text['label-update_greeting']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' style='position: relative;' align='left'>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
+			}
+			echo "	<select class='formfld' id='update_greeting' name='update_greeting'>\n";
+			echo "		<option value='false' ".($update_greeting == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		<option value='true' ".($update_greeting == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
+			}
+			echo "<br />\n";
+			echo $text['description-update_greeting']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 	}
 
 	echo "<tr>\n";
