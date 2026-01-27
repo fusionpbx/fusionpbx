@@ -39,6 +39,15 @@
 	$language = new text;
 	$text = $language->get();
 
+//determine the typ of array
+	function array_type(array $array): string {
+		$result = count($array, COUNT_RECURSIVE) > count($array);
+		if ($result) {
+			return 'multi';
+		}
+		return 'single';
+	}
+
 //set defaults
 	$recording_name = '';
 	$recording_message = '';
@@ -68,6 +77,14 @@
 		//$translate_enabled = $speech->get_translate_enabled();
 		//$language_enabled = $speech->get_language_enabled();
 		//$languages = $speech->get_languages();
+
+		// Determine the aray type single, or multi
+		$voices_array_type = array_type($voices);
+
+		// Sort the array by language code keys alphabetically
+		if ($voices_array_type == 'multi') {
+			ksort($voices);
+		}
 	}
 
 //add the transcribe object and get the languages arrays
@@ -385,13 +402,43 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if (!empty($voices)) {
-			echo "	<select class='formfld' name='recording_voice'>\n";
-			echo "		<option value=''></option>\n";
-			foreach ($voices as $key => $voice) {
-				$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
-				echo "		<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+			if ($voices_array_type == 'single') {
+				echo "	<select class='formfld' name='recording_voice' style='width: 200px;'>\n";
+				echo "		<option value=''></option>\n";
+				foreach ($voices as $key => $voice) {
+					$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
+					echo "		<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+				}
+				echo "	</select>\n";
 			}
-			echo "	</select>\n";
+			if ($voices_array_type == 'multi') {
+				echo "	<select class='formfld' id='recording_voice_source' name='recording_voice_source' style='display: none;'>\n";
+				echo "		<option value=''></option>\n";
+				foreach ($voices as $category => $sub_array) {
+					$category = $text['label-'.$category] ?? $category;
+					echo "<optgroup label='".$category."' data-type='".$category."'>\n";
+					foreach ($sub_array as $key => $voice) {
+						$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
+						echo "		<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+					}
+					echo "</optgroup>\n";
+				}
+				echo "	</select>\n";
+
+				// Select showing only optgroup labels
+				echo "	<select class='formfld' id='recording_voice_group_select' style='width: 100px;' >\n";
+				echo "	<option value='' disabled='disabled' selected='selected'></option>\n";
+				echo "	</select>\n";
+
+				// Select showing only options from selected group\n";
+				echo "	<select class='formfld' id='recording_voice_option_select' name='recording_voice' style='width: 195px;' disabled='disabled'>\n";
+				echo "	<option value='' disabled='disabled' selected='selected'></option>\n";
+				echo "	</select>\n";
+
+				echo "<script>\n";
+				echo "	select_group_option('recording_voice_source', 'recording_voice_group_select', 'recording_voice_option_select');\n";
+				echo "</script>\n";
+			}
 		}
 		else {
 			echo "		<input class='formfld' type='text' name='recording_voice' maxlength='255' value=\"".escape($recording_voice)."\">\n";
