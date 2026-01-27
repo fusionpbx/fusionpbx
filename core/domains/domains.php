@@ -224,10 +224,10 @@
 	echo "</div>\n";
 
 	if (permission_exists('domain_edit') && !empty($domains)) {
-		echo modal::create(['id'=>'modal-toggle','type'=>'toggle_items','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
+		echo modal::create(['id'=>'modal-toggle','type'=>'general','message'=>$text['confirm-toggle_domains'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
 	}
  	if (permission_exists('domain_delete') && !empty($domains)) {
-		echo modal::create(['id'=>'modal-delete','type'=>'delete_items','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
+		echo modal::create(['id'=>'modal-delete','type'=>'general','message'=>$text['confirm-delete_domains'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
  	}
 
 	echo $text['description-domains']."\n";
