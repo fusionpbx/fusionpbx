@@ -50,6 +50,9 @@
 		<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/fonts/web_font_loader.php?v={$settings.theme.font_loader_version}'></script>
 	{/if}
 
+{*//javascript functions *}
+	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/javascript/select_group_option.js'></script>
+
 {*//local javascript *}
 	<script language='JavaScript' type='text/javascript'>
 
@@ -1011,7 +1014,7 @@
 			document.querySelectorAll('input[type="checkbox"]:not([name*="enabled"])').forEach(checkbox => {
 				checkbox.checked = false;
 			});
-	
+
 			//select the checkbox with the specified id
 			document.getElementById(checkbox_id).checked = true;
 		}
