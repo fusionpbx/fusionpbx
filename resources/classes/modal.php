@@ -68,17 +68,9 @@ class modal {
 					$array['title'] = $text['modal_title-confirmation'];
 					$array['message'] = $text['confirm-toggle'];
 					break;
-				case 'toggle_items':
-					$array['title'] = $text['modal_title-confirmation'];
-					$array['message'] = $text['confirm-toggle_items'];
-					break;
 				case 'delete':
 					$array['title'] = $text['modal_title-confirmation'];
 					$array['message'] = $text['confirm-delete'];
-					break;
-				case 'delete_items':
-					$array['title'] = $text['modal_title-confirmation'];
-					$array['message'] = $text['confirm-delete_items'];
 					break;
 				case 'unassign':
 					$array['title'] = $text['modal_title-confirmation'];
