@@ -594,7 +594,7 @@
 							echo "	<td class='overflow'>".escape($stream_file)."</td>\n";
 							echo "	<td class='button center no-link no-wrap'>";
 							echo 		"<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row_uuid."')\" onended=\"recording_reset('".$row_uuid."');\" src='music_on_hold.php?action=download&id=".escape($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)."' type='".$stream_file_type."'></audio>";
-							echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$row_uuid,'onclick'=>"recording_play('".$row_uuid."','".urlencode($stream_file)."');"]);
+							echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$row_uuid,'onclick'=>"recording_play('".$row_uuid."','".urlencode($stream_file)."&moh_id=".urlencode($row['music_on_hold_uuid'])."');"]);
 							echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'link'=>"?action=download&id=".urlencode($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)]);
 							echo "	</td>\n";
 							echo "	<td class='right no-wrap hide-xs'>".escape($stream_file_size)."</td>\n";
