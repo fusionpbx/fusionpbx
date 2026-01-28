@@ -363,7 +363,8 @@
 						echo "	<td class='hide-sm-dn'>".$text['label-status-stopped']."</td>\n";
 						if (permission_exists('gateway_edit')) {
 							echo "	<td class='no-link center'>";
-							echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-action-start'],'title'=>$text['button-start'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('start'); list_form_submit('form_list')"]);
+							echo button::create(['type'=>'button','class'=>'link','label'=>$text['label-action-start'],'title'=>$text['button-start'],'id'=>'btn_toggle_start','name'=>'btn_toggle_start','onclick'=>"list_self_check('checkbox_".$x."'); modal_open('modal-toggle_start','btn_toggle_start');"]);
+							echo modal::create(['id'=>'modal-toggle_start','type'=>'start','message'=>$text['confirm-start_gateway'],'actions'=>button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>'check','id'=>'btn_toggle_start','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('start'); list_form_submit('form_list');"])]);
 							echo "	</td>\n";
 						}
 						echo "	<td>&nbsp;</td>\n";
@@ -376,7 +377,8 @@
 							echo "	<td class='hide-sm-dn'>".$text['label-status-running']."</td>\n";
 							if (permission_exists('gateway_edit')) {
 								echo "	<td class='no-link center'>";
-								echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-action-stop'],'title'=>$text['button-stop'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('stop'); list_form_submit('form_list')"]);
+								echo button::create(['type'=>'button','class'=>'link','label'=>$text['label-action-stop'],'title'=>$text['button-stop'],'id'=>'btn_toggle_stop','name'=>'btn_toggle_stop','onclick'=>"list_self_check('checkbox_".$x."'); modal_open('modal-toggle_stop','btn_toggle_stop');"]);
+								echo modal::create(['id'=>'modal-toggle_stop','type'=>'general','message'=>$text['confirm-stop_gateway'],'actions'=>button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>'check','id'=>'btn_toggle_stop','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('stop'); list_form_submit('form_list');"])]);
 								echo "	</td>\n";
 							}
 							echo "	<td>".escape($state)."</td>\n"; //REGED, NOREG, UNREGED
@@ -397,7 +399,8 @@
 			echo "	<td class='hide-sm-dn'>".escape($row["hostname"])."</td>\n";
 			if (permission_exists('gateway_edit')) {
 				echo "	<td class='no-link center'>";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				echo button::create(['type'=>'button','class'=>'link','label'=>$text['label-'.$row['enabled']],'title'=>$text['button-toggle'],'id'=>'btn_toggle_enabled','name'=>'btn_toggle_enabled','onclick'=>"list_self_check('checkbox_".$x."'); modal_open('modal-toggle_enabled','btn_toggle_enabled');"]);
+				echo modal::create(['id'=>'modal-toggle_enabled','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle_enabled','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
 			}
 			else {
 				echo "	<td class='center'>";
