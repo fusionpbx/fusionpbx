@@ -121,14 +121,16 @@
 				//set the feature dialing code eg. *67
 				$feature_code = $row['dialplan_number'] ?? '';
 
+				$dialplan_name = $row['dialplan_name'] ?? '';
+
 				//set the dialplan name to use underscores for the text array lookup
-				$dialplan_name = str_replace('-','_', $row['dialplan_name'] ?? '');
+				$lookup_name = str_replace(['-',' '],'_', $row['dialplan_name'] ?? '');
 
 				//set the feature code name to be the internationalized name when possible
-				$feature_name = $dialplan_text['label-dialplan_'.$dialplan_name] ?? $dialplan_name;
+				$feature_name = format_feature_name($dialplan_text['label-dialplan_'.$lookup_name] ?? $dialplan_name);
 
 				//set the dialplan description
-				$feature_description = $row['dialplan_description'] ?? $dialplan_text['description-dialplan_'.$dialplan_name] ?? '';
+				$feature_description = $row['dialplan_description'] ?? $dialplan_text['description-dialplan_'.$lookup_name] ?? '';
 
 				//replace the ${number} variable in the description with the dialed number used to activate the dialplan
 				$feature_description = str_replace('${number}', $feature_code, $feature_description);
@@ -325,23 +327,26 @@
 			//set the feature dialing code eg. *67
 			$feature_code = $row['dialplan_number'] ?? '';
 
+			$dialplan_name = $row['dialplan_name'] ?? '';
+
 			//set the dialplan name to use underscores for the text array lookup
-			$dialplan_name = str_replace('-','_', $row['dialplan_name'] ?? '');
+			$lookup_name = str_replace(['-',' '],'_', $row['dialplan_name'] ?? '');
 
 			//set the feature code name to be the internationalized name when possible
-			$feature_name = $dialplan_text['label-dialplan_'.$dialplan_name] ?? $dialplan_name;
+			$feature_name = format_feature_name($dialplan_text['label-dialplan_'.$lookup_name] ?? $dialplan_name);
 
 			//set the dialplan description
-			$feature_description = $row['dialplan_description'] ?? $dialplan_text['description-dialplan_'.$dialplan_name] ?? '';
+			$feature_description = $row['dialplan_description'] ?? $dialplan_text['description-dialplan_'.$lookup_name] ?? '';
 
 			//replace the ${number} variable in the description with the dialed number used to activate the dialplan
 			$feature_description = str_replace('${number}', $feature_code, $feature_description);
 
 			//output the row
 			echo "<tr class='list-row'>\n";
-			echo "	<td>".escape($row['dialplan_number'])."</td>\n";
-			echo "	<td>".escape(format_feature_name($feature_name))."</td>\n";
+			echo "	<td>".escape($feature_code)."</td>\n";
+			echo "	<td>".escape($feature_name)."</td>\n";
 			echo "	<td class='description hide-sm-dn'>".escape($feature_description)."</td>\n";
+
 			//when raw permissions are enabled output the raw dialplan xml (first 100 characters) column
 			if (permission_exists('feature_codes_raw')) {
 				$raw_display = isset($row['dialplan_xml']) ? htmlspecialchars(substr($row['dialplan_xml'], 0, 100)) : '';
@@ -352,8 +357,7 @@
 			}
 			echo "</tr>\n";
 		}
-	}
-	else {
+	} else {
 		$colspan = permission_exists('feature_codes_raw') ? 4 : 3;
 		echo "<tr class='list-row'>\n";
 		echo "	<td colspan='".$colspan."' style='text-align: center;'>".$text['label-no_features']."</td>\n";
