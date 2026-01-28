@@ -113,12 +113,17 @@ if ($domains_processed == 1) {
 	unset($sql);
 
 	//set default value of voicemail_recording_instructions to true
-	$sql = "update v_voicemails set voicemail_recording_instructions = 'true' where voicemail_recording_instructions is null";
+	$sql = "update v_voicemails set voicemail_recording_instructions = true where voicemail_recording_instructions is null";
 	$database->execute($sql);
 	unset($sql);
 
 	//set default value of voicemail_recording_options to true
-	$sql = "update v_voicemails set voicemail_recording_options = 'true' where voicemail_recording_options is null";
+	$sql = "update v_voicemails set voicemail_recording_options = true where voicemail_recording_options is null";
+	$database->execute($sql);
+	unset($sql);
+
+	//set default value of voicemail_file to attach
+	$sql = "update v_voicemails set voicemail_file = 'attach' where voicemail_file is null";
 	$database->execute($sql);
 	unset($sql);
 

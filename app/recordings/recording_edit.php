@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('recording_add') || permission_exists('recording_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('recording_add') || permission_exists('recording_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -71,6 +68,14 @@
 		//$translate_enabled = $speech->get_translate_enabled();
 		//$language_enabled = $speech->get_language_enabled();
 		//$languages = $speech->get_languages();
+
+		// Determine the aray type single, or multi
+		$voices_array_type = array_type($voices);
+
+		// Sort the array by language code keys alphabetically
+		if ($voices_array_type == 'multi') {
+			ksort($voices);
+		}
 	}
 
 //add the transcribe object and get the languages arrays
@@ -250,7 +255,7 @@
 				if ($transcribe_enabled && empty($recording_message)) {
 					$transcribe->audio_path = $recording_path;
 					$transcribe->audio_filename = $recording_filename;
-					$recording_message = $transcribe->transcribe();
+					$recording_message = $transcribe->transcribe('text');
 				}
 
 				//build array
@@ -269,8 +274,6 @@
 				$array['recordings'][0]['recording_description'] = $recording_description;
 
 				//execute update
-				$database->app_name = 'recordings';
-				$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 				$database->save($array);
 				unset($array);
 
@@ -278,7 +281,7 @@
 				message::add($text['message-update']);
 
 				//redirect
-				header("Location: recordings.php");
+				header("Location: recording_edit.php?id=".$recording_uuid);
 				exit;
 			}
 		}
@@ -319,11 +322,23 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-edit']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'recordings.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'recordings.php']);
 	if (permission_exists('recording_delete') && !empty($recording_uuid) && is_uuid($recording_uuid)) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save']);
+	if (permission_exists('recording_play') && !empty($recording_uuid) && is_uuid($recording_uuid)) {
+		$recording_hash = md5($recording_voice.$recording_message);
+		$recording_file_name = strtolower(pathinfo($recording_filename, PATHINFO_BASENAME));
+		$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
+		switch ($recording_file_ext) {
+			case "wav" : $recording_type = "audio/wav"; break;
+			case "mp3" : $recording_type = "audio/mpeg"; break;
+			case "ogg" : $recording_type = "audio/ogg"; break;
+		}
+		echo "<audio id='recording_audio_".escape($recording_uuid)."' style='display: none;' preload='none' onended=\"recording_reset('".escape($recording_uuid)."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?action=download&type=rec&id=".urlencode($recording_uuid)."&v=".$recording_hash."\" type='".$recording_type."'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'label'=>$text['label-preview'],'icon'=>$settings->get('theme','button_icon_play'),'id'=>'recording_button_'.escape($recording_uuid),'onclick'=>"recording_play('".escape($recording_uuid)."','','','".$text['label-preview']."'); this.blur();"]);
+	}
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -346,7 +361,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (!empty($_REQUEST["id"])) {
+	if (!empty($recording_uuid)) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 		echo "    ".$text['label-file_name']."\n";
@@ -390,13 +405,43 @@
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if (!empty($voices)) {
-			echo "	<select class='formfld' name='recording_voice'>\n";
-			echo "		<option value=''></option>\n";
-			foreach ($voices as $key => $voice) {
-				$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
-				echo "		<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+			if ($voices_array_type == 'single') {
+				echo "	<select class='formfld' name='recording_voice' style='width: 200px;'>\n";
+				echo "		<option value=''></option>\n";
+				foreach ($voices as $key => $voice) {
+					$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
+					echo "		<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+				}
+				echo "	</select>\n";
 			}
-			echo "	</select>\n";
+			if ($voices_array_type == 'multi') {
+				echo "	<select class='formfld' id='recording_voice_source' name='recording_voice_source' style='display: none;'>\n";
+				echo "		<option value=''></option>\n";
+				foreach ($voices as $category => $sub_array) {
+					$category = $text['label-'.$category] ?? $category;
+					echo "<optgroup label='".$category."' data-type='".$category."'>\n";
+					foreach ($sub_array as $key => $voice) {
+						$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
+						echo "		<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+					}
+					echo "</optgroup>\n";
+				}
+				echo "	</select>\n";
+
+				// Select showing only optgroup labels
+				echo "	<select class='formfld' id='recording_voice_group_select' style='width: 100px;' >\n";
+				echo "	<option value='' disabled='disabled' selected='selected'></option>\n";
+				echo "	</select>\n";
+
+				// Select showing only options from selected group\n";
+				echo "	<select class='formfld' id='recording_voice_option_select' name='recording_voice' style='width: 195px;' disabled='disabled'>\n";
+				echo "	<option value='' disabled='disabled' selected='selected'></option>\n";
+				echo "	</select>\n";
+
+				echo "<script>\n";
+				echo "	select_group_option('recording_voice_source', 'recording_voice_group_select', 'recording_voice_option_select');\n";
+				echo "</script>\n";
+			}
 		}
 		else {
 			echo "		<input class='formfld' type='text' name='recording_voice' maxlength='255' value=\"".escape($recording_voice)."\">\n";
@@ -436,17 +481,16 @@
 			echo "	".$text['label-translate']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-				echo "	<label class='switch'>\n";
-				echo "		<input type='checkbox' id='translate' name='translate' value='true' ".(!empty($translate) && $translate == 'true' ? "checked='checked'" : null).">\n";
-				echo "		<span class='slider'></span>\n";
-				echo "	</label>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			else {
-				echo "	<select class='formfld' id='translate' name='translate'>\n";
-				echo "		<option value='true'>".$text['option-true']."</option>\n";
-				echo "		<option value='false' ".(!empty($translate) && $translate == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-				echo "	</select>\n";
+			echo "	<select class='formfld' id='translate' name='translate'>\n";
+			echo "		<option value='true' ".($translate == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($translate == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
 			}
 			echo "<br />\n";
 			echo $text['description-translate']."\n";
@@ -471,17 +515,16 @@
 			echo "	".$text['label-create_recording']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' style='position: relative;' align='left'>\n";
-			if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-				echo "	<label class='switch'>\n";
-				echo "		<input type='checkbox' id='create_recording' name='create_recording' value='true' ".(!empty($create_recording) && $create_recording == 'true' ? "checked='checked'" : null).">\n";
-				echo "		<span class='slider'></span>\n";
-				echo "	</label>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			else {
-				echo "	<select class='formfld' id='create_recording' name='create_recording'>\n";
-				echo "		<option value='true'>".$text['option-true']."</option>\n";
-				echo "		<option value='false' selected='selected'>".$text['option-false']."</option>\n";
-				echo "	</select>\n";
+			echo "	<select class='formfld' id='create_recording' name='create_recording'>\n";
+			echo "		<option value='false' ".($create_recording == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		<option value='true' ".($create_recording == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
 			}
 			echo "<br />\n";
 			echo $text['description-create_recording']."\n";

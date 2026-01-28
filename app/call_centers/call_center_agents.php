@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('call_center_agent_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('call_center_agent_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -48,7 +45,7 @@
 //get posted data
 	if (!empty($_POST['call_center_agents'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$call_center_agents = $_POST['call_center_agents'];
 	}
 
@@ -63,7 +60,7 @@
 				break;
 		}
 
-		header('Location: call_center_agents.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: call_center_agents.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -91,11 +88,10 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".urlencode($search);
 	if ($show == "all" && permission_exists('call_center_all')) {
 		$param .= "&show=all";
@@ -124,7 +120,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'agent_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -256,7 +251,6 @@
 				$sql = "select gateway from v_gateways ";
 				$sql .= "where gateway_uuid = :gateway_uuid ";
 				$parameters['gateway_uuid'] = $bridge_statement[2];
-				$database = new database;
 				$result = $database->select($sql, $parameters ?? null, 'all');
 				if (count($result) > 0) {
 					$gateway_name = $result[0]['gateway'];

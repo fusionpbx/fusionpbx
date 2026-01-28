@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('access_control_node_add')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('access_control_node_add')) {
 		echo "access denied";
 		exit;
 	}
@@ -43,6 +40,16 @@
 
 //built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduce the functionality but requires PHP 5.1.0 or higher
 	if (!function_exists('str_getcsv')) {
+		/**
+		 * Parse a CSV string into an array.
+		 *
+		 * @param string $input     The CSV data to parse.
+		 * @param string $delimiter The field delimiter (default: ",").
+		 * @param string $enclosure The field enclosure character (default: """).
+		 * @param string $escape    The escape character (default: "\"").
+		 *
+		 * @return array An array containing the parsed CSV fields.
+		 */
 		function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
 			$fp = fopen("php://memory", 'r+');
 			fputs($fp, $input);
@@ -64,7 +71,7 @@
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
-		$file = $_SESSION['server']['temp']['dir']."/access_control_nodes-".$_SESSION['domain_name'].".csv";
+		$file = $settings->get('server', 'temp')."/access_control_nodes-".$_SESSION['domain_name'].".csv";
 		if (file_put_contents($file, $_POST['data'])) {
 			$_SESSION['file'] = $file;
 		}
@@ -74,7 +81,7 @@
 	//$_POST['submit'] == "Upload" &&
 	if (!empty($_FILES['ulfile']['tmp_name']) &&  is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('access_control_node_add')) {
 		if (!empty($_POST['type']) &&$_POST['type'] == 'csv') {
-			$file = $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name'];
+			$file = $settings->get('server', 'temp').'/'.$_FILES['ulfile']['name'];
 			if (move_uploaded_file($_FILES['ulfile']['tmp_name'], $file)) {
 				$_SESSION['file'] = $file;
 			}
@@ -215,6 +222,14 @@
 	}
 
 //get the parent table
+	/**
+	 * Retrieve the parent table for a given table in a schema.
+	 *
+	 * @param array  $schema     The database schema to search in.
+	 * @param string $table_name The name of the table for which to find the parent.
+	 *
+	 * @return mixed The name of the parent table, or NULL if not found.
+	 */
 	function get_parent($schema,$table_name) {
 		foreach ($schema as $row) {
 			if ($row['table'] == $table_name) {
@@ -250,6 +265,9 @@
 
 				//loop through the array
 					while (($line = fgets($handle, 4096)) !== false) {
+						//convert the line to UTF-8
+						$line = mb_convert_encoding($line, 'UTF-8');
+
 						if ($from_row <= $row_number) {
 							//format the data
 								$y = 0;
@@ -314,9 +332,6 @@
 							//process a chunk of the array
 								if ($row_id === 1000) {
 									//save to the data
-										$database = new database;
-										$database->app_name = 'access_controls';
-										$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 										$database->save($array);
 
 									//clear the array
@@ -337,9 +352,6 @@
 
 				//save to the data
 					if (!empty($array)) {
-						$database = new database;
-						$database->app_name = 'access_controls';
-						$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 						$database->save($array);
 						unset($array);
 					}

@@ -29,16 +29,10 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_view')) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -153,29 +147,29 @@
 	require_once "resources/header.php";
 
 //determine qr branding
-	if (!empty($_SESSION['theme']['qr_brand_type']['text']) && !empty($_SESSION['theme']['qr_brand_image']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'image') {
-		echo "<img id='img-buffer' style='display: none;' src='".$_SESSION["theme"]["qr_brand_image"]["text"]."'>";
+	if (!empty($settings->get('theme', 'qr_brand_type')) && !empty($settings->get('theme', 'qr_brand_image')) && $settings->get('theme', 'qr_brand_type') == 'image') {
+		echo "<img id='img-buffer' style='display: none;' src='".$settings->get('theme', 'qr_brand_image')."'>";
 		$qr_option = "image: $('#img-buffer')[0],";
 		$qr_mode = '4';
 		$qr_size = '0.2';
 	}
-	elseif (!empty($_SESSION['theme']['qr_brand_type']['text']) && empty($_SESSION['theme']['qr_brand_image']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'image') {
+	elseif (!empty($settings->get('theme', 'qr_brand_type')) && empty($settings->get('theme', 'qr_brand_image')) && $settings->get('theme', 'qr_brand_type') == 'image') {
 		$qr_option = '';
 		$qr_mode = '3';
 		$qr_size = '0';
 	}
-	elseif (!empty($_SESSION['theme']['qr_brand_type']['text']) && !empty($_SESSION['theme']['qr_brand_text']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'text') {
-		$qr_option = 'label: "'.$_SESSION['theme']['qr_brand_text']['text'].'"';
+	elseif (!empty($settings->get('theme', 'qr_brand_type')) && !empty($settings->get('theme', 'qr_brand_text')) && $settings->get('theme', 'qr_brand_type') == 'text') {
+		$qr_option = 'label: "'.$settings->get('theme', 'qr_brand_text').'"';
 		$qr_mode = '2';
 		$qr_size = '0.05';
 	}
-	elseif (!empty($_SESSION['theme']['qr_brand_type']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'none') {
+	elseif (!empty($settings->get('theme', 'qr_brand_type')) && $settings->get('theme', 'qr_brand_type') == 'none') {
 		$qr_option = '';
 		$qr_mode = '3';
 		$qr_size = '0';
 	}
 	else {
-		echo "<img id='img-buffer' style='display: none;' src='".PROJECT_PATH."/themes/".$_SESSION["domain"]["template"]["name"]."/images/qr_code.png'>";
+		echo "<img id='img-buffer' style='display: none;' src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template', 'default')."/images/qr_code.png'>";
 		$qr_option = "image: $('#img-buffer')[0],";
 		$qr_mode = '4';
 		$qr_size = '0.2';
@@ -259,10 +253,10 @@
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-qr_code'],'icon'=>'qrcode','collapse'=>'hide-sm-dn','onclick'=>"$('#qr_code_container').fadeIn(400);"]);
 	echo button::create(['type'=>'button','label'=>$text['button-vcard'],'icon'=>'address-card','collapse'=>'hide-sm-dn','link'=>'contacts_vcard.php?id='.urlencode($contact_uuid).'&type=download']);
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/invoices')) {
+	if (is_dir(dirname(__DIR__, 2).'/app/invoices')) {
 		echo button::create(['type'=>'button','label'=>$text['button-invoices'],'icon'=>'file-invoice-dollar','collapse'=>'hide-sm-dn','link'=>'../invoices/invoices.php?id='.urlencode($contact_uuid)]);
 	}
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/certificates')) {
+	if (is_dir(dirname(__DIR__, 2).'/app/certificates')) {
 		echo button::create(['type'=>'button','label'=>$text['button-certificate'],'icon'=>'certificate','collapse'=>'hide-sm-dn','link'=>'../certificates/index.php?name='.urlencode($contact_name_given." ".$contact_name_family)]);
 	}
 	if (!empty($contact_user_uuid) && permission_exists('user_edit') && is_uuid($contact_user_uuid)) {

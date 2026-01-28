@@ -1,0 +1,6 @@
+<!-- Used to transfer both legs into a conference -->
+<extension name="nb-conference" context="global" continue="false" app_uuid="be99ad65-dcf0-40dd-8bf6-0640c52befcd" global="true" order="345">
+	<condition field="destination_number" expression="^\*30(\d{2,7})$">
+		<action application="conference" data="$1@${context}@default"/>
+	</condition>
+</extension>

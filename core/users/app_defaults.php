@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,50 +29,6 @@ if ($domains_processed == 1) {
 	//if the default groups do not exist add them
 		$group = new groups;
 		$group->defaults();
-
-	//create the user view combines username, organization, contact first and last name
-		$database->execute("DROP VIEW view_users;", null);
-
-		$sql = "CREATE VIEW view_users AS ( \n";
-		$sql .= "	select u.domain_uuid, u.user_uuid, d.domain_name, u.username, u.user_status, u.user_enabled, u.add_date, \n";
-		$sql .= "	c.contact_uuid, c.contact_organization, c.contact_name_given ||' '|| c.contact_name_family as contact_name, c.contact_name_given, c.contact_name_family, c.contact_note, \n";
-		$sql .= "	( \n";
-		$sql .= "		select \n";
-		$sql .= "		string_agg(g.group_name, ', ') \n";
-		$sql .= "		from \n";
-		$sql .= "		v_user_groups as ug, \n";
-		$sql .= "		v_groups as g \n";
-		$sql .= "		where \n";
-		$sql .= "		ug.group_uuid = g.group_uuid \n";
-		$sql .= "		and u.user_uuid = ug.user_uuid \n";
-		$sql .= "	) AS group_names, \n";
-		$sql .= "	( \n";
-		$sql .= "		select \n";
-		$sql .= "		string_agg(g.group_uuid::text, ', ') \n";
-		//$sql .= "		array_agg(g.group_uuid::text) \n";
-		$sql .= "		from \n";
-		$sql .= "		v_user_groups as ug, \n";
-		$sql .= "		v_groups as g \n";
-		$sql .= "		where \n";
-		$sql .= "		ug.group_uuid = g.group_uuid \n";
-		$sql .= "		and u.user_uuid = ug.user_uuid \n";
-		$sql .= "	) AS group_uuids, \n";
-		$sql .= "	( \n";
-		$sql .= "		SELECT group_level \n";
-		$sql .= "		FROM v_user_groups ug, v_groups g \n";
-		$sql .= "		WHERE (ug.group_uuid = g.group_uuid) \n";
-		$sql .= "		AND (u.user_uuid = ug.user_uuid) \n"; 
-		$sql .= "		ORDER BY group_level DESC \n";
-		$sql .= "		LIMIT 1 \n";
-		$sql .= "	) AS group_level \n";
-		$sql .= "	from v_contacts as c \n";
-		$sql .= "	right join v_users u on u.contact_uuid = c.contact_uuid \n";
-		$sql .= "	inner join v_domains as d on d.domain_uuid = u.domain_uuid \n";
-		$sql .= "	where 1 = 1 \n";
-		$sql .= "	order by u.username asc \n";
-		$sql .= "); \n";
-		$database->execute($sql, null);
-		unset($sql);
 
 	//find rows that have a null group_uuid and set the correct group_uuid
 		$sql = "select * from v_user_groups ";
@@ -110,7 +66,7 @@ if ($domains_processed == 1) {
 			$sql .= "	from v_users as u, v_contact_emails as e ";
 			$sql .= "	where u.contact_uuid is not null ";
 			$sql .= "	and u.contact_uuid = e.contact_uuid ";
-			$sql .= "	and e.email_primary = 1 ";
+			$sql .= "	and e.email_primary = true ";
 			$sql .= ") ";
 			$sql .= "update v_users ";
 			$sql .= "set user_email = users.email_address ";
@@ -155,8 +111,6 @@ if ($domains_processed == 1) {
 			$p->add("default_setting_edit", 'temp');
 
 			//save to the data
-			$database->app_name = 'default_setting';
-			$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
 			$database->save($array, false);
 			unset($array);
 
@@ -165,7 +119,7 @@ if ($domains_processed == 1) {
 		}
 
 	//insert default password reset email template
-		if (file_exists($_SERVER['DOCUMENT_ROOT'].'/app/email_templates')) {
+		if (file_exists(dirname(__DIR__, 2).'/app/email_templates')) {
 
 			//add the email templates to the database
 			$sql = "select count(*) as num_rows from v_email_templates ";
@@ -183,7 +137,7 @@ if ($domains_processed == 1) {
 				$array['email_templates'][$x]['template_body'] .= "<body>\n";
 				$array['email_templates'][$x]['template_body'] .= "<center><a href='https://\${domain}'><img src='\${logo_full}' style='width: 200px; height: auto; border: none;'></a></center><br />\n";
 				$array['email_templates'][$x]['template_body'] .= "A password reset was just requested for the FusionPBX user account associated with this email address.<br /><br />\n";
-				$array['email_templates'][$x]['template_body'] .= "<b>If you submitted this request</b>, click the button below to begin the password reset process for your user account.<br /><br />";
+				$array['email_templates'][$x]['template_body'] .= "<b>If you submitted this request</b>, click the button below to begin the password reset process for your user account. This link expires in 60 minutes.<br /><br />";
 				$array['email_templates'][$x]['template_body'] .= "\${reset_button}<br /><br />\n";
 				$array['email_templates'][$x]['template_body'] .= "If you did not initiate this action, however, please ignore this message and your password will remain unchanged.\n";
 				$array['email_templates'][$x]['template_body'] .= "If you have questions or concerns regarding this email, please contact your system administrator.";
@@ -195,7 +149,7 @@ if ($domains_processed == 1) {
 				$array['email_templates'][$x]['template_body'] .= "</body>\n";
 				$array['email_templates'][$x]['template_body'] .= "</html>\n";
 				$array['email_templates'][$x]['template_type'] = 'html';
-				$array['email_templates'][$x]['template_enabled'] = 'true';
+				$array['email_templates'][$x]['template_enabled'] = true;
 				$array['email_templates'][$x]['template_description'] = 'Default password reset email template.';
 				$x++;
 
@@ -205,8 +159,6 @@ if ($domains_processed == 1) {
 				$p->add("email_template_edit", 'temp');
 
 				//save to the data
-				$database->app_name = 'email_templates';
-				$database->app_uuid = '8173e738-2523-46d5-8943-13883befd2fd';
 				$database->save($array, false);
 				unset($array);
 
@@ -228,5 +180,3 @@ if ($domains_processed == 1) {
 		}
 
 }
-
-?>

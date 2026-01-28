@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_time_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_time_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -45,6 +42,17 @@
 		$contact_uuid = $_GET['id'];
 	}
 
+//set the time zone
+	date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'H:i:s';
+	}
+	else {
+		$time_format = 'h:i:s a';
+	}
+
 //get the contact list
 	$sql = "select ct.*, u.username, u.domain_uuid as user_domain_uuid ";
 	$sql .= "from v_contact_times as ct, v_users as u ";
@@ -54,7 +62,6 @@
 	$sql .= "order by ct.time_start desc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_times = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -90,7 +97,7 @@
 					if (!empty($row["time_start"]) && !empty($row['time_stop'])) {
 						$time_start = strtotime($row["time_start"]);
 						$time_stop = strtotime($row['time_stop']);
-						$time = gmdate("H:i:s", ($time_stop - $time_start));
+						$time = gmdate($time_zone, ($time_stop - $time_start));
 					}
 					else {
 						unset($time);

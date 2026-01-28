@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019-2024
+	Portions created by the Initial Developer are Copyright (C) 2019-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('bridge_import')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('bridge_import')) {
 		echo "access denied";
 		exit;
 	}
@@ -64,7 +61,7 @@
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
-		$file = $_SESSION['server']['temp']['dir']."/bridges-".$_SESSION['domain_name'].".csv";
+		$file = $settings->get('server', 'temp')."/bridges-".$_SESSION['domain_name'].".csv";
 		file_put_contents($file, $_POST['data']);
 		$_SESSION['file'] = $file;
 	}
@@ -72,11 +69,11 @@
 //copy the csv file
 	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('bridge_import')) {
 		if ($_POST['type'] == 'csv') {
-			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
-			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
-			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
+			move_uploaded_file($_FILES['ulfile']['tmp_name'], $settings->get('server', 'temp').'/'.$_FILES['ulfile']['name']);
+			$save_msg = "Uploaded file to ".$settings->get('server', 'temp')."/". htmlentities($_FILES['ulfile']['name']);
+			//system('chmod -R 744 '.$settings->get('server', 'temp').'*');
 			unset($_POST['txtCommand']);
-			$file = $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name'];
+			$file = $settings->get('server', 'temp').'/'.$_FILES['ulfile']['name'];
 			$_SESSION['file'] = $file;
 		}
 	}
@@ -241,7 +238,7 @@
 
 		//user selected fields
 			$fields = $_POST['fields'];
-			
+
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
 
@@ -254,13 +251,16 @@
 
 				//loop through the array
 					while (($line = fgets($handle, 4096)) !== false) {
+						//convert the line to UTF-8
+						$line = mb_convert_encoding($line, 'UTF-8');
+
 						if ($from_row <= $row_number) {
 							//format the data
 								$y = 0;
 								foreach ($fields as $key => $value) {
 									//get the line
 									$result = str_getcsv($line, $delimiter, $enclosure);
-									
+
 									//get the table and field name
 									$field_array = explode(".",$value);
 									$table_name = $field_array[0];
@@ -268,7 +268,7 @@
 									//echo "value: $value<br />\n";
 									//echo "table_name: $table_name<br />\n";
 									//echo "field_name: $field_name<br />\n";
-									
+
 									//get the parent table name
 									$parent = get_parent($schema, $table_name);
 
@@ -299,9 +299,6 @@
 								if ($row_id === 1000) {
 
 									//save to the data
-										$database = new database;
-										$database->app_name = 'bridges';
-										$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
 										$database->save($array);
 
 									//clear the array
@@ -319,9 +316,6 @@
 
 				//save to the data
 					if (!empty($array) && is_array($array)) {
-						$database = new database;
-						$database->app_name = 'bridges';
-						$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
 						$database->save($array);
 						unset($array);
 					}

@@ -105,7 +105,7 @@ if ($db_type == "sqlite") {
 
 	//set the document_root
 		if (empty($document_root)) {
-			$document_root = $_SERVER["DOCUMENT_ROOT"];
+			$document_root = dirname(__DIR__, 1);
 		}
 
 	//prepare the database connection

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022-2023
+	Portions created by the Initial Developer are Copyright (C) 2022-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('email_queue_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('email_queue_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -45,7 +42,7 @@
 //get the http post data
 	if (!empty($_POST['email_queue']) && is_array($_POST['email_queue'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$email_queue = $_POST['email_queue'];
 	}
 
@@ -73,11 +70,6 @@
 			$x++;
 		}
 
-		//prepare the database object
-		$database = new database;
-		$database->app_name = 'email_queue';
-		$database->app_uuid = '5befdf60-a242-445f-91b3-2e9ee3e0ddf7';
-
 		//send the array to the database class
 		switch ($action) {
 			case 'resend':
@@ -95,16 +87,8 @@
 		}
 
 		//redirect the user
-		header('Location: email_queue.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: email_queue.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
-	}
-
-//set the time zone
-	if (isset($_SESSION['domain']['time_zone']['name'])) {
-		$time_zone = $_SESSION['domain']['time_zone']['name'];
-	}
-	else {
-		$time_zone = date_default_timezone_get();
 	}
 
 //get order and order by
@@ -138,7 +122,6 @@
 	//	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 	//	$parameters['domain_uuid'] = $domain_uuid;
 	//}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -152,11 +135,22 @@
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
+
 //get the list
 	$sql = "select ";
 	$sql .= "email_date, ";
 	$sql .= "to_char(timezone(:time_zone, email_date), 'DD Mon YYYY') as email_date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, email_date), 'HH12:MI:SS am') as email_time_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, email_date), '".$time_format."') as email_time_formatted, \n";
 	$sql .= "email_queue_uuid, ";
 	$sql .= "hostname, ";
 	$sql .= "email_from, ";
@@ -186,7 +180,6 @@
 	$sql .= order_by($order_by, $order, 'email_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$parameters['time_zone'] = $time_zone;
-	$database = new database;
 	$email_queue = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -333,7 +326,7 @@
 			$list_row_url = '';
 			if (permission_exists('email_queue_edit')) {
 				$list_row_url = "email_queue_edit.php?id=".urlencode($row['email_queue_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}
@@ -360,7 +353,7 @@
 			echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
 			echo "	<td class='shrink hide-md-dn'>".escape($row['email_from'])."</td>\n";
 			echo "	<td class='overflow' style='width: 20%; max-width: 200px;'>".escape($row['email_to'])."</td>\n";
-			echo "	<td class='overflow' style='width: 30%; max-width: 200px;'>".iconv_mime_decode($row['email_subject'])."</td>\n";
+			echo "	<td class='overflow' style='width: 30%; max-width: 200px;'>".iconv_mime_decode($row['email_subject'] ?? '')."</td>\n";
 // 			echo "	<td class='hide-md-dn'>".escape($row['email_body'])."</td>\n";
 			echo "	<td>".ucwords($text['label-'.$row['email_status']])."</td>\n";
 			echo "	<td>".escape($row['email_retry_count'])."</td>\n";

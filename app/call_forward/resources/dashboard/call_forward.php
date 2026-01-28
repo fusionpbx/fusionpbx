@@ -2,25 +2,23 @@
 
 //includes files
 	require_once  dirname(__DIR__, 4) . "/resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
-	if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb'))) {
 		echo "access denied";
 		exit;
 	}
 
-//connect to the database
-	if (!isset($database)) {
-		$database = new database;
-	}
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'app/call_forward');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/call_forward');
+
+//get the dashboard label
+	$widget_label = $text['header-'.$widget_key] ?? $widget_name;
 
 //extensions link
 	$extension_link = '#';
@@ -52,7 +50,7 @@
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	$sql .= "and enabled = 'true' ";
+	$sql .= "and enabled = true ";
 	if (!permission_exists('extension_edit')) {
 		if (is_array($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
 			$sql .= "and (";
@@ -70,7 +68,6 @@
 		}
 	}
 	$sql .= order_by($order_by ?? null, $order ?? null, 'extension', 'asc');
-	$database = new database;
 	$extensions = $database->select($sql, $parameters, 'all');
 	unset($parameters);
 
@@ -84,13 +81,13 @@
 	if (is_array($extensions) && @sizeof($extensions) != 0) {
 		foreach ($extensions as $row) {
 			if (permission_exists('call_forward')) {
-				$stats['call_forward'] += $row['forward_all_enabled'] == 'true' && $row['forward_all_destination'] ? 1 : 0;
+				$stats['call_forward'] += $row['forward_all_enabled'] == true && $row['forward_all_destination'] ? 1 : 0;
 			}
 			if (permission_exists('follow_me')) {
-				$stats['follow_me'] += $row['follow_me_enabled'] == 'true' && is_uuid($row['follow_me_uuid']) ? 1 : 0;
+				$stats['follow_me'] += $row['follow_me_enabled'] == true && is_uuid($row['follow_me_uuid']) ? 1 : 0;
 			}
 			if (permission_exists('do_not_disturb')) {
-				$stats['dnd'] += $row['do_not_disturb'] == 'true' ? 1 : 0;
+				$stats['dnd'] += $row['do_not_disturb'] == true ? 1 : 0;
 			}
 		}
 		$stats['active'] = @sizeof($extensions) - $stats['call_forward'] - $stats['follow_me'] - $stats['dnd'];
@@ -103,7 +100,7 @@
 	echo "<div class='hud_box'>\n";
 
 	echo "	<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_call_forward_details').slideToggle('fast');\"").">\n";
-	echo "		<span class='hud_title'>".$text['header-call_forward']."</span>\n";
+	echo "		<span class='hud_title'>".escape($widget_label)."</span>\n";
 
 //doughnut chart
 	if (empty($widget_chart_type) || $widget_chart_type == "doughnut") {
@@ -223,13 +220,12 @@
 				if (permission_exists('follow_me')) {
 					//get destination count
 					$follow_me_destination_count = 0;
-					if ($row['follow_me_enabled'] == 'true' && is_uuid($row['follow_me_uuid'])) {
+					if ($row['follow_me_enabled'] == true && is_uuid($row['follow_me_uuid'])) {
 						$sql = "select count(*) from v_follow_me_destinations ";
 						$sql .= "where follow_me_uuid = :follow_me_uuid ";
 						$sql .= "and domain_uuid = :domain_uuid ";
 						$parameters['follow_me_uuid'] = $row['follow_me_uuid'];
 						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-						$database = new database;
 						$follow_me_destination_count = $database->select($sql, $parameters, 'column');
 						unset($sql, $parameters);
 					}

@@ -41,10 +41,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('conference_active_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('conference_active_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -82,7 +79,6 @@
 		$sql .= "and conference_extension = :conference_extension ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['conference_extension'] = $name;
-		$database = new database;
 		$name = $database->select($sql, $parameters, 'column');
 		unset ($parameters, $sql);
 	}
@@ -147,6 +143,13 @@
 	}
 
 //define an alternative kick all
+	/**
+	 * Ends a conference by killing all its members and destroying the session.
+	 *
+	 * @param string $name The name of the conference to end.
+	 *
+	 * @return void
+	 */
 	function conference_end($name) {
 		$switch_cmd = "conference '".$name."' xml_list";
 		$xml_str = trim(event_socket::api($switch_cmd));
@@ -219,7 +222,7 @@
 						$switch_result = event_socket::api($switch_cmd.' '.$tmp_value);
 					}
 					elseif ($data == "record") {
-						$recording_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
+						$recording_dir = $settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
 						$switch_cmd .= $recording_dir."/{$uuid}.wav";
 						if (!file_exists($switch_cmd)) {
 							$switch_result = event_socket::api($switch_cmd);
@@ -227,7 +230,7 @@
 					}
 					elseif ($data == "norecord") {
 						//stop recording and rename the file
-						$recording_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
+						$recording_dir = $settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
 						$switch_cmd .= $recording_dir."/".$uuid.".wav";
 						$switch_result = event_socket::api($switch_cmd);
 					}

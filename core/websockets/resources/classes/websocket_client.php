@@ -58,10 +58,10 @@ class websocket_client {
 	 * Connects to the WebSocket server and performs handshake.
 	 */
 	public function connect(): void {
-		$parts = parse_url($this->url);
-		$this->host = $parts['host'] ?? '';
-		$this->port = $parts['port'] ?? 80;
-		$this->path = $parts['path'] ?? '/';
+		$parts        = parse_url($this->url);
+		$this->host   = $parts['host'] ?? '';
+		$this->port   = $parts['port'] ?? 80;
+		$this->path   = $parts['path'] ?? '/';
 		$this->origin = ($parts['scheme'] ?? 'http') . '://' . $this->host;
 
 		$this->resource = stream_socket_client("tcp://{$this->host}:{$this->port}", $errno, $errstr, 5);
@@ -100,7 +100,7 @@ class websocket_client {
 		if (!preg_match('/Sec-WebSocket-Accept: (.*)\r\n/', $response, $m)) {
 			throw new \RuntimeException("Handshake failed: no Accept header");
 		}
-		$accept = trim($m[1]);
+		$accept   = trim($m[1]);
 		$expected = base64_encode(sha1($this->key . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11', true));
 		if ($accept !== $expected) {
 			throw new \RuntimeException("Handshake failed: invalid Accept key");
@@ -112,19 +112,47 @@ class websocket_client {
 		}
 	}
 
+	/**
+	 * Sets the blocking mode of the underlying socket.
+	 *
+	 * @param bool $block If true, sets the socket to block on read/write operations; otherwise, sets it to non-blocking.
+	 *
+	 * @return void
+	 */
 	public function set_blocking(bool $block) {
 		if ($this->is_connected())
 			stream_set_blocking($this->resource, $block);
 	}
 
+	/**
+	 * Sets the file descriptor to be in blocking mode.
+	 *
+	 * This ensures that any write operations on this socket will block until the entire data has been sent.
+	 *
+	 * @return void
+	 */
 	public function block() {
 		$this->set_blocking(true);
 	}
 
+	/**
+	 * Disables blocking mode for this resource.
+	 *
+	 * This method sets the resource to non-blocking mode, allowing I/O operations to complete immediately
+	 * without waiting for completion. If an operation is attempted while in non-blocking mode and no data
+	 * is available, a BlockingQueueException will be raised.
+	 *
+	 * @return void
+	 */
 	public function unblock() {
 		$this->set_blocking(false);
 	}
 
+	/**
+	 * Checks if the underlying socket is in a non-blocking state.
+	 *
+	 * @return bool True if the socket is blocking, false otherwise.
+	 */
 	public function is_blocking(): bool {
 		if ($this->is_connected()) {
 			//
@@ -141,7 +169,9 @@ class websocket_client {
 	}
 
 	/**
-	 * Returns true if socket is connected.
+	 * Checks if a connection to the web socket server is established and active.
+	 *
+	 * @return bool
 	 */
 	public function is_connected(): bool {
 		return isset($this->resource) && is_resource($this->resource) && !feof($this->resource);
@@ -150,7 +180,13 @@ class websocket_client {
 	/**
 	 * Sends text to the web socket server.
 	 * The web socket client wraps the payload in a web frame socket before sending on the socket.
+	 *
+	 * @param             $resource
 	 * @param string|null $payload
+	 *
+	 * @return bool
+	 * @throws \Random\RandomException
+	 * @throws \socket_disconnected_exception
 	 */
 	public static function send($resource, ?string $payload): bool {
 		if (!is_resource($resource)) {
@@ -164,7 +200,7 @@ class websocket_client {
 		}
 
 		$frame_header = "\x81"; // FIN=1, opcode=1 (text frame)
-		$length = strlen($payload);
+		$length       = strlen($payload);
 
 		// Set mask bit and payload length
 		if ($length <= 125) {
@@ -176,7 +212,7 @@ class websocket_client {
 		}
 
 		// must be masked when sending to the server
-		$mask = random_bytes(4);
+		$mask           = random_bytes(4);
 		$masked_payload = '';
 
 		for ($i = 0; $i < $length; ++$i) {
@@ -210,6 +246,17 @@ class websocket_client {
 		}
 	}
 
+	/**
+	 * Returns a file path for a token.
+	 *
+	 * Tries to store in RAM first, otherwise uses the filesystem.
+	 *
+	 * @param string $token_name The name of the token.
+	 *
+	 * @return string The file path for the token.
+	 * @see \sys_get_temp_dir()
+	 * @link https://php.net/sys_get_temp_dir
+	 */
 	public static function get_token_file($token_name): string {
 		// Try to store in RAM first
 		if (is_dir('/dev/shm') && is_writable('/dev/shm')) {
@@ -221,8 +268,18 @@ class websocket_client {
 		return $token_file;
 	}
 
+	/**
+	 * Sends a control frame over the WebSocket connection.
+	 *
+	 * This method sends a FIN=1 (final fragment) control frame with the given opcode and payload.
+	 *
+	 * @param int    $opcode  The opcode for the control frame.
+	 * @param string $payload The payload to send, default is an empty string.
+	 *
+	 * @return void
+	 */
 	private function send_control_frame(int $opcode, string $payload = ''): void {
-		$header = chr(0x80 | $opcode); // FIN=1, control frame
+		$header      = chr(0x80 | $opcode); // FIN=1, control frame
 		$payload_len = strlen($payload);
 
 		// Payload length
@@ -233,7 +290,7 @@ class websocket_client {
 		} else {
 			// Control frames should never be this large; truncate to 125
 			$payload = substr($payload, 0, 125);
-			$header .= chr(125);
+			$header  .= chr(125);
 		}
 
 		@fwrite($this->resource, $header . $payload);
@@ -241,7 +298,9 @@ class websocket_client {
 
 	/**
 	 * Reads a web socket data frame and converts it to a regular string
-	 * @param resource $this->resource
+	 *
+	 * @param resource $this ->resource
+	 *
 	 * @return string
 	 */
 	public function read(): ?string {
@@ -249,7 +308,7 @@ class websocket_client {
 			throw new \RuntimeException("Not connected");
 		}
 
-		$final_frame = false;
+		$final_frame  = false;
 		$payload_data = '';
 
 		while (!$final_frame) {
@@ -262,8 +321,8 @@ class websocket_client {
 			$byte2 = ord($header[1]);
 
 			$final_frame = ($byte1 >> 7) & 1;
-			$opcode = $byte1 & 0x0F;
-			$masked = ($byte2 >> 7) & 1;
+			$opcode      = $byte1 & 0x0F;
+			$masked      = ($byte2 >> 7) & 1;
 			$payload_len = $byte2 & 0x7F;
 
 			// Extended payload length
@@ -335,8 +394,16 @@ class websocket_client {
 	}
 
 	// Helper function to fully read N bytes
+
+	/**
+	 * Reads up to the specified number of bytes from the underlying resource.
+	 *
+	 * @param int $length The maximum number of bytes to read.
+	 *
+	 * @return string|null The requested data, or null on error.
+	 */
 	private function read_bytes(int $length): ?string {
-		$data = '';
+		$data           = '';
 		$max_chunk_size = stream_get_chunk_size($this->resource);
 
 		// 20 tries waits 200 ms total per chunk
@@ -376,16 +443,26 @@ class websocket_client {
 		return $data;
 	}
 
+	/**
+	 * Sends an authentication request to the server.
+	 *
+	 * @param string $token_name The name of the token to authenticate with.
+	 * @param string $token_hash The hash of the token to authenticate with.
+	 *
+	 * @return mixed|null The response from the server, or null on error.
+	 */
 	public function authenticate($token_name, $token_hash) {
 		return self::send($this->resource, json_encode(['service' => 'authentication', 'token' => ['name' => $token_name, 'hash' => $token_hash]]));
 	}
 
 	/**
 	 * Create a token for a service that can broadcast a message
+	 *
 	 * @param string $service_name
 	 * @param string $service_class
-	 * @param array $permissions
-	 * @param int $time_limit_in_minutes
+	 * @param array  $permissions
+	 * @param int    $time_limit_in_minutes
+	 *
 	 * @return array
 	 */
 	public static function create_service_token(string $service_name, string $service_class, array $permissions = [], int $time_limit_in_minutes = 0) {
@@ -410,15 +487,15 @@ class websocket_client {
 		//
 		// Store the epoch time and time limit
 		//
-		$array['token']['time'] = "" . time();
+		$array['token']['time']  = "" . time();
 		$array['token']['limit'] = $time_limit_in_minutes;
 
 		//
 		// Store the service name used by web browser to subscribe
 		// and store the class name of this service
 		//
-		$array['service'] = true;
-		$array['service_name'] = $service_name;
+		$array['service']       = true;
+		$array['service_name']  = $service_name;
 		$array['service_class'] = $service_class;
 
 		//
@@ -441,6 +518,14 @@ class websocket_client {
 
 // PHP <=7.4 compatibility - Replaced in PHP 8.0+
 if (!function_exists('stream_get_chunk_size')) {
+	/**
+	 * Returns the recommended chunk size for reading data from a stream.
+	 *
+	 * @param resource $stream The stream to retrieve the chunk size for.
+	 *
+	 * @return int The recommended chunk size.
+	 * @link https://php.net/stream_get_chunk_size
+	 */
 	function stream_get_chunk_size($stream): int {
 		// For PHP versions lower then 8 we send the maximum size defined from https://php.net/stream_get_chunk_size
 		return 8192;

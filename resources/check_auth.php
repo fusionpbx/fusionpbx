@@ -51,7 +51,7 @@
 		//if session created is not set then set the time
 		if (!isset($_SESSION['session']['created'])) {
 			$_SESSION['session']['created'] = time();
-		} 
+		}
 
 		//check the elapsed time if exceeds limit then rotate the session
 		if (time() - $_SESSION['session']['created'] > 900) {
@@ -114,16 +114,13 @@
 //if the session is not authorized then verify the identity
 	if (!$_SESSION['authorized']) {
 
-		//clear the menu
-			unset($_SESSION["menu"]);
-
 		//clear the template only if the template has not been assigned by the superadmin
-			if (empty($_SESSION['domain']['template']['name'])) {
+			if (empty($settings->get('domain', 'template'))) {
 				$_SESSION["template_content"] = '';
 			}
 
 		//validate the username and password
-			$auth = new authentication;
+			$auth = new authentication(['settings' => $settings]);
 			$result = $auth->validate();
 
 		//if not authorized
@@ -140,11 +137,15 @@
 				exit;
 			}
 
+		//clear the menu
+			unset($_SESSION["menu"]);
+
+		//get settings based on the user
+			$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'], 'user_uuid' => $_SESSION['user_uuid']]);
+			settings::clear_cache();
+
 		//if logged in, redirect to login destination
 			if (!isset($_REQUEST["key"])) {
-
-				//create database object
-				$database = database::new();
 
 				//connect to the settings object
 				$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
@@ -166,7 +167,7 @@
 					header("Location: ".$settings->get('login', 'destination', ''));
 					exit;
 				}
-				elseif (file_exists($_SERVER["PROJECT_ROOT"]."/core/dashboard/app_config.php")) {
+				elseif (file_exists(dirname(__DIR__, 1)."/core/dashboard/app_config.php")) {
 					header("Location: ".PROJECT_PATH."/core/dashboard/");
 					exit;
 				}

@@ -32,13 +32,6 @@ defined('STDIN') or die('Unauthorized');
 //include files
 require_once dirname(__DIR__, 2) . "/resources/require.php";
 
-//create a database connection using default config
-$config = config::load();
-$database = database::new(['config' => $config]);
-
-//load global defaults
-$settings = new settings(['database' => $database]);
-
 //get the language code from global defaults
 $language_code = $settings->get('domain', 'language');
 
@@ -59,9 +52,18 @@ $display_type = 'text';
 show_upgrade_menu();
 
 /**
- * Show upgrade menu
- * @global type $text
- * @global type $software_name
+ * Display the upgrade menu to the user.
+ *
+ * This function displays a menu with various upgrade options and prompts the
+ * user for input. Based on the user's selection, it performs the corresponding
+ * actions such as upgrading code, schema, auto loader, domains, menu,
+ * permissions, file permissions, services, or restarting services.
+ *
+ * @return void
+ *
+ * @global text $text
+ * @global string $software_name
+ * @global settings $settings
  */
 function show_upgrade_menu() {
 	//set the global variables
@@ -75,9 +77,7 @@ function show_upgrade_menu() {
 		['1', $text['label-upgrade_source'], $text['description-update_all_source_files']],
 		['1a', $text['label-main_software'], $text['description-main_software']],
 		['1b', $text['label-optional_applications'], $text['description-optional_applications']],
-		['2', $text['label-database'], $text['description-upgrade_schema']],
-		['2a', $text['label-schema'], $text['description-upgrade_schema']],
-		['2b', $text['label-upgrade_data_types'], $text['description-upgrade_data_types']],
+		['2', $text['label-upgrade_schema'], $text['description-upgrade_schema']],
 		['3', $text['label-upgrade_apps'], $text['description-upgrade_apps']],
 		['4', $text['label-upgrade_menu'], $text['description-upgrade_menu']],
 		['5', $text['label-upgrade_permissions'], $text['description-upgrade_permissions']],
@@ -97,7 +97,7 @@ function show_upgrade_menu() {
 
 		//show the command menu
 		echo "Options:\n";
-		foreach ($options as list($key, $label, $description)) {
+		foreach ($options as [$key, $label, $description]) {
 			if (!is_numeric($key)) { echo "    "; }
 			echo "  $key) $label" . ((!empty($option) && $option == 'h') ? " - " . $description : "") . "\n";
 		}
@@ -117,23 +117,17 @@ function show_upgrade_menu() {
 				do_upgrade_code();
 				do_upgrade_code_submodules();
 				do_upgrade_auto_loader();
-				break;
+				exit();
 			case '1a':
 				do_upgrade_code();
 				do_upgrade_auto_loader();
-				break;
+				exit();
 			case '1b':
 				do_upgrade_code_submodules();
 				do_upgrade_auto_loader();
 				break;
 			case 2:
-				do_upgrade_schema(true);
-				break;
-			case '2a':
 				do_upgrade_schema();
-				break;
-			case '2b':
-				do_upgrade_schema(true);
 				break;
 			case 3:
 				do_upgrade_auto_loader();
@@ -161,7 +155,7 @@ function show_upgrade_menu() {
 			case 'a':
 				do_upgrade_code();
 				do_upgrade_auto_loader();
-				do_upgrade_schema(true);
+				do_upgrade_schema();
 				do_upgrade_domains();
 				do_upgrade_menu();
 				do_upgrade_permissions();
@@ -179,8 +173,12 @@ function show_upgrade_menu() {
 }
 
 /**
- * Rebuild the cache file
- * @global type $text
+ * Upgrade auto loader by removing temporary files and updating it.
+ *
+ * @return void
+ *
+ * @global text $text
+ * @global auto_loader $autoload
  */
 function do_upgrade_auto_loader() {
 	global $text, $autoload;
@@ -195,7 +193,10 @@ function do_upgrade_auto_loader() {
 }
 
 /**
- * Update file system permissions
+ * Update file permissions for the application.
+ *
+ * @param array    $text     Array of text to display to the user.
+ * @param settings $settings Settings object containing various configuration options.
  */
 function do_file_permissions($text, settings $settings) {
 
@@ -263,18 +264,33 @@ function do_file_permissions($text, settings $settings) {
 	}
 }
 
+/**
+ * Returns the name of the currently logged in user.
+ *
+ * @return string|null The username of the current user, or null if not available
+ */
 function current_user(): ?string {
 	return posix_getpwuid(posix_getuid())['name'] ?? null;
 }
 
 //show the upgrade type
+/**
+ * Returns a string containing the current version of the software.
+ *
+ * @return string|null The software version as a string, or null if not available.
+ */
 function show_software_version(): ?string {
 	return software::version() . "\n";
 }
 
 /**
- * Upgrade the source folder
- * @return type
+ * Upgrade code by pulling the latest changes from version control.
+ *
+ * If the pull operation is successful, no result message will be returned.
+ * Otherwise, a result array containing 'result' set to false and a 'message'
+ * detailing the failure will be returned.
+ *
+ * @return null A result array or null on success
  */
 function do_upgrade_code() {
 	//assume failed
@@ -291,8 +307,7 @@ function do_upgrade_code() {
 }
 
 /**
- * Upgrade any of the git submodules
- * @global type $text
+ * Upgrade code submodules by pulling the latest changes from Git repositories.
  */
 function do_upgrade_code_submodules() {
 	global $text;
@@ -319,34 +334,40 @@ function do_upgrade_code_submodules() {
 }
 
 /**
- * Execute all app_defaults.php files
+ * Perform upgrade on domains.
  */
 function do_upgrade_domains() {
 	$domain = new domains;
-	$domain->display_type = 'text';
 	$domain->upgrade();
 }
 
 /**
- * Upgrade schema and/or data_types
+ * Upgrades the database schema to the latest version.
+ *
+ * @return void
  */
-function do_upgrade_schema(bool $data_types = false) {
+function do_upgrade_schema() {
+	//define the global variables
+	global $database;
+
 	//get the database schema put it into an array then compare and update the database as needed.
-	$obj = new schema;
-	$obj->data_types = $data_types;
-	echo $obj->schema('text');
+	$schema = new schema();
+	echo $schema->upgrade('text');
 }
 
 /**
- * Restore the default menu
+ * Upgrades the menu and restores it to its default state.
+ *
+ * @return void
  */
 function do_upgrade_menu() {
-	global $included, $sel_menu, $menu_uuid, $menu_language;
+	//define the global variables
+	global $database, $settings, $included, $sel_menu, $menu_uuid, $menu_language;
+
 	//get the menu uuid and language
 	$sql = "select menu_uuid, menu_language from v_menus ";
 	$sql .= "where menu_name = :menu_name ";
 	$parameters['menu_name'] = 'default';
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row) && sizeof($row) != 0) {
 		$menu_uuid = $row["menu_uuid"];
@@ -363,7 +384,7 @@ function do_upgrade_menu() {
 	if (!isset($argv[2]) || $argv[2] == 'default') {
 		//restore the menu
 		$included = true;
-		require_once dirname(__DIR__, 2) . "/core/menu/menu_restore_default.php";
+		require dirname(__DIR__, 2) . "/core/menu/menu_restore_default.php";
 		unset($sel_menu);
 		$text = (new text)->get(null, 'core/upgrade');
 		//send message to the console
@@ -372,13 +393,17 @@ function do_upgrade_menu() {
 }
 
 /**
- * Restore the default permissions
+ * Upgrades database permissions to the latest version.
+ *
+ * @return void
  */
 function do_upgrade_permissions() {
-	global $included;
+	//define the global variables
+	global $database, $settings, $included;
+
 	//default the permissions
 	$included = true;
-	require_once dirname(__DIR__, 2) . "/core/groups/permissions_default.php";
+	require dirname(__DIR__, 2) . "/core/groups/permissions_default.php";
 
 	//send message to the console
 	$text = (new text)->get(null, 'core/upgrade');
@@ -386,7 +411,10 @@ function do_upgrade_permissions() {
 }
 
 /**
- * Default upgrade schema and app defaults
+ * Performs default upgrades to the application, including multi-lingual support,
+ * database schema updates, and running of app_defaults.php files.
+ *
+ * @return void
  */
 function do_upgrade_defaults() {
 	//add multi-lingual support
@@ -400,19 +428,25 @@ function do_upgrade_defaults() {
 	echo $text['label-database'] . "\n";
 
 	//make sure the database schema and installation have performed all necessary tasks
-	$obj = new schema;
-	echo $obj->schema("text");
+	$schema = new schema;
+	echo $schema->upgrade("text");
 
 	//run all app_defaults.php files
 	$domain = new domains;
-	$domain->display_type = 'text';
 	$domain->upgrade();
 
 	echo "\n";
 }
 
 /**
- * Upgrade services
+ * Upgrades the services to the latest version.
+ *
+ * This function upgrades all service files and enables them as systemd services.
+ *
+ * @param string   $text     An array containing upgrade information. The 'description-upgrade_services' key is used for informational messages.
+ * @param settings $settings Configuration settings object.
+ *
+ * @return void
  */
 function do_upgrade_services($text, settings $settings) {
 	echo ($text['description-upgrade_services'] ?? "")."\n";
@@ -429,8 +463,11 @@ function do_upgrade_services($text, settings $settings) {
 }
 
 /**
- * Get the service name
- * @param string $file
+ * Retrieves the name of a service from an .ini file.
+ *
+ * @param string $file Path to the .ini file containing service information.
+ *
+ * @return string The name of the service, or empty string if not found.
  */
 function get_service_name(string $file) {
 	$parsed = parse_ini_file($file);
@@ -444,19 +481,22 @@ function get_service_name(string $file) {
 	return '';
 }
 
-
 /**
- * Checks if the current user has root privileges.
+ * Checks if the current user is the root user.
  *
- * @return bool Returns true if the current user is the root user, false otherwise.
+ * @return bool True if the user is the root user, false otherwise.
  */
 function is_root_user(): bool {
 	return posix_getuid() === 0;
 }
 
-
 /**
- * Restart services
+ * Restarts services defined in the system.
+ *
+ * @param array  $text     An array of strings for service descriptions.
+ * @param object $settings An instance of the settings class, not used in this function.
+ *
+ * @return void
  */
 function do_restart_services($text, settings $settings) {
 	echo ($text['description-restart_services'] ?? "")."\n";
@@ -471,8 +511,13 @@ function do_restart_services($text, settings $settings) {
 }
 
 /**
- * Load the old config.php file
- * @return type
+ * Loads configuration from a PHP file and writes it to a new configuration file.
+ *
+ * If the configuration file does not exist but the config.php file is present,
+ * the settings in the config.php file are used as defaults for the new
+ * configuration file. The config directory is created if it does not exist.
+ *
+ * @return void
  */
 function load_config_php() {
 	//if the config file doesn't exist and the config.php does exist use it to write a new config file
@@ -537,6 +582,11 @@ function load_config_php() {
 	$conf .= "temp.dir = /tmp\n";
 	$conf .= "php.dir = " . PHP_BINDIR . "\n";
 	$conf .= "php.bin = php\n";
+	$conf .= "\n";
+	$conf .= "#session settings\n";
+	$conf .= "session.cookie_httponly = true\n";
+	$conf .= "session.cookie_secure = true\n";
+	$conf .= "session.cookie_samesite = Lax\n";
 	$conf .= "\n";
 	$conf .= "#cache settings\n";
 	$conf .= "cache.method = file\n";

@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2018-2023
+ Portions created by the Initial Developer are Copyright (C) 2018-2025
  the Initial Developer. All Rights Reserved.
 */
 
@@ -26,10 +26,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('email_template_add') || permission_exists('email_template_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('email_template_add') || permission_exists('email_template_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -54,7 +51,6 @@
 	$template_subject = '';
 	$template_body = '';
 	$template_type = '';
-	$template_enabled = '';
 	$template_description = '';
 
 //get http post variables and set them to php variables
@@ -66,7 +62,7 @@
 		$template_subject = $_POST["template_subject"];
 		$template_body = $_POST["template_body"];
 		$template_type = $_POST["template_type"];
-		$template_enabled = $_POST["template_enabled"] ?? 'false';
+		$template_enabled = $_POST["template_enabled"];
 		$template_description = $_POST["template_description"];
 	}
 
@@ -95,7 +91,6 @@
 			if (empty($template_body)) { $msg .= $text['message-required']." ".$text['label-template_body']."<br>\n"; }
 			//if (empty($domain_uuid)) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
 			//if (empty($template_type)) { $msg .= $text['message-required']." ".$text['label-template_type']."<br>\n"; }
-			if (empty($template_enabled)) { $msg .= $text['message-required']." ".$text['label-template_enabled']."<br>\n"; }
 			//if (empty($template_description)) { $msg .= $text['message-required']." ".$text['label-template_description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -128,14 +123,11 @@
 			$array['email_templates'][0]['template_description'] = $template_description;
 
 		//save to the data
-			$database = new database;
-			$database->app_name = 'email_templates';
-			$database->app_uuid = '8173e738-2523-46d5-8943-13883befd2fd';
 			if (!empty($email_template_uuid)) {
 				$database->uuid($email_template_uuid);
 			}
 			$database->save($array);
-			$message = $database->message;
+			//$message = $database->message;
 
 		//redirect the user
 			if (isset($action)) {
@@ -153,12 +145,22 @@
 //pre-populate the form
 	if (count($_GET)>0 && empty($_POST["persistformvar"])) {
 		$email_template_uuid = $_GET["id"];
-		$sql = "select * from v_email_templates ";
+		$sql = "select ";
+		$sql .= "email_template_uuid, ";
+		$sql .= "domain_uuid, ";
+		$sql .= "template_language, ";
+		$sql .= "template_category, ";
+		$sql .= "template_subcategory, ";
+		$sql .= "template_subject, ";
+		$sql .= "template_body, ";
+		$sql .= "template_type, ";
+		$sql .= "template_enabled, ";
+		$sql .= "template_description ";
+		$sql .= "from v_email_templates ";
 		$sql .= "where email_template_uuid = :email_template_uuid ";
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		$parameters['email_template_uuid'] = $email_template_uuid;
 		//$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$domain_uuid = $row["domain_uuid"];
@@ -174,15 +176,15 @@
 		unset($sql, $parameters, $row);
 	}
 
-//set the defaults
-	if (empty($template_enabled)) { $template_enabled = 'true'; }
-
 //load editor preferences/defaults
-	$setting_size = !empty($_SESSION["editor"]["font_size"]["text"]) ? $_SESSION["editor"]["font_size"]["text"] : '12px';
-	$setting_theme = !empty($_SESSION["editor"]["theme"]["text"]) ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
-	$setting_invisibles = isset($_SESSION['editor']['invisibles']['text']) ? $_SESSION['editor']['invisibles']["text"] : 'false';
-	$setting_indenting = isset($_SESSION['editor']['indent_guides']['text']) ? $_SESSION['editor']['indent_guides']["text"]: 'false';
-	$setting_numbering = isset($_SESSION['editor']['line_numbers']['text']) ? $_SESSION['editor']['line_numbers']["text"] : 'true';
+	$setting_size = !empty($settings->get('editor', 'font_size')) ? $settings->get('editor', 'font_size') : '12px';
+	$setting_theme = !empty($settings->get('editor', 'theme')) ? $settings->get('editor', 'theme') : 'cobalt';
+	$setting_invisibles = $settings->get('editor', 'invisibles', 'false');
+	$setting_indenting = $settings->get('editor', 'indent_guides', 'false');
+	$setting_numbering = $settings->get('editor', 'line_numbers', 'true');
+
+//set the defaults
+	$template_enabled = $template_enabled ?? true;
 
 //create token
 	$object = new token;
@@ -425,17 +427,16 @@
 	echo "	".$text['label-template_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='template_enabled' name='template_enabled' value='true' ".($template_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='template_enabled' name='template_enabled'>\n";
-		echo "		<option value='true' ".($template_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($template_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='template_enabled' name='template_enabled'>\n";
+	echo "		<option value='true' ".($template_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($template_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-template_enabled']."\n";

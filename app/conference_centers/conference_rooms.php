@@ -30,32 +30,34 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('conference_room_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('conference_room_view')) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //set additional variables
-	$search = $_GET["search"] ?? null;
+	$show = $_REQUEST["show"] ?? '';
+	$action = $_REQUEST['action'] ?? '';
+	$search = $_REQUEST['search'] ?? '';
+	$toggle_field = $_REQUEST['toggle_field'] ?? '';
+
+//check if we are using websockets for the conference view
+	if ($settings->get('active_conferences', 'websockets_enabled', true)) {
+		$conference_view_page = '/app/active_conferences/active_conference_room.php';
+	}
+	else {
+		$conference_view_page = '/app/conferences_active/conferences_active.php';
+	}
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get the http post data
 	if (!empty($_POST['conference_rooms'])) {
-		$action = $_POST['action'];
-		$toggle_field = $_POST['toggle_field'];
-		$search = $_POST['search'];
 		$conference_rooms = $_POST['conference_rooms'];
 	}
 
@@ -77,7 +79,7 @@
 				break;
 		}
 
-		header('Location: conference_rooms.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: conference_rooms.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -99,7 +101,7 @@
 					$default_language = 'en';
 					$default_dialect = 'us';
 					$default_voice = 'callie';
-					$switch_cmd = "conference ".$meeting_uuid."@".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
+					$switch_cmd = "conference ".$meeting_uuid."@".$_SESSION['domain_name']." play ".$settings->get('switch', 'sounds')."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
 				//connect to event socket
 					$esl = event_socket::create();
 					if ($esl) {
@@ -129,8 +131,6 @@
 			}
 
 		//save to the data
-			$database->app_name = 'conference_rooms';
-			$database->app_uuid = '8d083f5a-f726-42a8-9ffa-8d28f848f10e';
 			$database->save($array);
 			$message = $database->message;
 			unset($array);
@@ -183,7 +183,7 @@
 	$num_rows = $conference_center->room_count();
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = !empty($search) ? "&search=".$search : null;
 	if (isset($_GET['page'])) {
 		$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
@@ -456,10 +456,10 @@
 			}
 			echo "	<td class='no-link no-wrap center'>\n";
 			if (permission_exists('conference_interactive_view')) {
-				echo "		<a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".urlencode($row['conference_room_uuid'])."'>".$text['label-view']."</a>\n";
+				echo "		<a href='".PROJECT_PATH.$conference_view_page."?c=".urlencode($row['conference_room_uuid'])."'>".$text['label-view']."</a>\n";
 			}
 			else if (permission_exists('conference_active_view')) {
-				echo "		<a href='".PROJECT_PATH."/app/conferences_active/conferences_active.php'>".$text['label-view']."</a>\n";
+				echo "		<a href='".PROJECT_PATH.$conference_view_page."'>".$text['label-view']."</a>\n";
 			}
 			if (permission_exists('conference_cdr_view')) {
 				echo "		<a href='/app/conference_cdr/conference_cdr.php?id=".urlencode($row['conference_room_uuid'])."'>".$text['button-cdr']."</a>\n";

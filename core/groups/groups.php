@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,16 +30,10 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('group_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('group_view')) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -74,7 +68,7 @@
 				break;
 		}
 
-		header('Location: groups.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: groups.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -107,7 +101,7 @@
 		$sql .= ") \n";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$num_rows = $database->select($sql, $parameters ?? '', 'column');
+	$num_rows = $database->select($sql, $parameters ?? [], 'column');
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
@@ -119,10 +113,35 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql);
+	$sql = "select ";
+	$sql .= "group_uuid, ";
+	$sql .= "domain_uuid, ";
+	$sql .= "domain_name, ";
+	$sql .= "group_name, ";
+	$sql .= "group_permissions, ";
+	$sql .= "group_members, ";
+	$sql .= "cast(group_protected as text), ";
+	$sql .= "group_level, ";
+	$sql .= "group_description ";
+	$sql .= "from view_groups ";
+	$sql .= "where true \n";
+	if ($show == 'all' && permission_exists('group_all')) {
+		$sql .= "and (domain_uuid is not null or domain_uuid is null) ";
+	}
+	else {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	if (!empty($search)) {
+		$sql .= "and ( \n";
+		$sql .= "	lower(group_name) like :search \n";
+		$sql .= "	or lower(group_description) like :search \n";
+		$sql .= ") \n";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$sql .= order_by($order_by, $order, 'group_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$groups = $database->select($sql, $parameters ?? '', 'all');
+	$groups = $database->select($sql, $parameters ?? [], 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -223,7 +242,8 @@
 				echo "	</td>\n";
 			}
 			if ($show == 'all' && permission_exists('group_all')) {
-echo "	<td>".escape($row['domain_name'])."</td>\n";
+				$domain = $row['domain_name'] ?? $text['label-global'];
+				echo "	<td>".escape($domain)."</td>\n";
 			}
 			echo "	<td>\n";
 			if (permission_exists('group_edit')) {

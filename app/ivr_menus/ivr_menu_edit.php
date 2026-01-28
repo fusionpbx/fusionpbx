@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('ivr_menu_add') || permission_exists('ivr_menu_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('ivr_menu_add') || permission_exists('ivr_menu_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -42,14 +39,15 @@
 	$language = new text;
 	$text = $language->get();
 
-//initialize database and settings
-	$database = database::new();
+//initialize the settings object
 	$settings = new settings(['database' => $database, $_SESSION['domain_uuid'] ?? '', $_SESSION['user_uuid'] ?? '']);
 
 //set the defaults
 	$ivr_menu_name = '';
 	$ivr_menu_extension = '';
 	$ivr_menu_cid_prefix = '';
+	$ivr_menu_greet_long = '';
+	$ivr_menu_greet_short = '';
 	$ivr_menu_description = '';
 	$ivr_menu_ringback = $settings->get('ivr_menu','default_ringback', 'local_stream://default');
 
@@ -142,10 +140,10 @@
 			$ivr_menu_max_failures = $_POST["ivr_menu_max_failures"];
 			$ivr_menu_max_timeouts = $_POST["ivr_menu_max_timeouts"];
 			$ivr_menu_digit_len = $_POST["ivr_menu_digit_len"];
-			$ivr_menu_direct_dial = $_POST["ivr_menu_direct_dial"] ?? 'false';
+			$ivr_menu_direct_dial = $_POST["ivr_menu_direct_dial"];
 			$ivr_menu_ringback = $_POST["ivr_menu_ringback"];
 			$ivr_menu_cid_prefix = $_POST["ivr_menu_cid_prefix"];
-			$ivr_menu_enabled = $_POST["ivr_menu_enabled"] ?? 'false';
+			$ivr_menu_enabled = $_POST["ivr_menu_enabled"];
 			$ivr_menu_description = $_POST["ivr_menu_description"];
 			$ivr_menu_options_delete = $_POST["ivr_menu_options_delete"] ?? null;
 			$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
@@ -228,7 +226,7 @@
 			if (empty($ivr_menu_max_failures)) { $msg .= $text['message-required'].$text['label-max_failures']."<br>\n"; }
 			if (empty($ivr_menu_max_timeouts)) { $msg .= $text['message-required'].$text['label-max_timeouts']."<br>\n"; }
 			if (empty($ivr_menu_digit_len)) { $msg .= $text['message-required'].$text['label-digit_length']."<br>\n"; }
-			if (empty($ivr_menu_direct_dial)) { $msg .= $text['message-required'].$text['label-direct_dial']."<br>\n"; }
+			//if (empty($ivr_menu_direct_dial)) { $msg .= $text['message-required'].$text['label-direct_dial']."<br>\n"; }
 			//if (empty($ivr_menu_ringback)) { $msg .= $text['message-required'].$text['label-ring_back']."<br>\n"; }
 
 			//if (empty($ivr_menu_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
@@ -343,7 +341,7 @@
 							}
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_order"] = $row["ivr_menu_option_order"];
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_description"] = $row["ivr_menu_option_description"];
-							$array['ivr_menus'][0]["ivr_menu_options"][$y]["ivr_menu_option_enabled"] = !empty($row['ivr_menu_option_enabled']) ?? 'false';
+							$array['ivr_menus'][0]["ivr_menu_options"][$y]["ivr_menu_option_enabled"] = $row['ivr_menu_option_enabled'];
 							$y++;
 						}
 					}
@@ -396,7 +394,7 @@
 					if (isset($ivr_menu_context)) {
 						$array['dialplans'][0]["dialplan_context"] = $ivr_menu_context;
 					}
-					$array['dialplans'][0]["dialplan_continue"] = "false";
+					$array['dialplans'][0]["dialplan_continue"] = 'false';
 					$array['dialplans'][0]["dialplan_xml"] = $dialplan_xml;
 					$array['dialplans'][0]["dialplan_order"] = "101";
 					$array['dialplans'][0]["dialplan_enabled"] = $ivr_menu_enabled;
@@ -413,10 +411,8 @@
 					}
 
 				//save to the data
-					$database->app_name = 'ivr_menus';
-					$database->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
 					$database->save($array);
-					//$message = $database->message;
+					$message = $database->message;
 
 				//remove the temporary permission
 					$p->delete("dialplan_add", "temp");
@@ -443,12 +439,12 @@
 					$sql .="	select ivr_menu_parent_uuid ";
 					$sql .="	 from v_ivr_menus ";
 					$sql .="	 where ivr_menu_parent_uuid = :ivr_menu_parent_uuid ";
-					$sql .="	 and ivr_menu_enabled = 'true' ";
+					$sql .="	 and ivr_menu_enabled = true ";
 					$sql .="	 union all ";
 					$sql .="	 select parent.ivr_menu_parent_uuid ";
 					$sql .="	 from v_ivr_menus as parent, ivr_menus as child ";
 					$sql .="	 where parent.ivr_menu_uuid = child.ivr_menu_parent_uuid ";
-					$sql .="	 and parent.ivr_menu_enabled = 'true' ";
+					$sql .="	 and parent.ivr_menu_enabled = true ";
 					$sql .="	) ";
 					$sql .="	select * from ivr_menus ";
 					$parameters['ivr_menu_parent_uuid'] = $ivr_menu_parent_uuid;
@@ -568,7 +564,7 @@
 		$ivr_menu_options[$id]['ivr_menu_option_param'] = '';
 		$ivr_menu_options[$id]['ivr_menu_option_order'] = '';
 		$ivr_menu_options[$id]['ivr_menu_option_description'] = '';
-		$ivr_menu_options[$id]['ivr_menu_option_enabled'] = '';
+		$ivr_menu_options[$id]['ivr_menu_option_enabled'] = true;
 		$id++;
 	}
 
@@ -612,10 +608,10 @@
 		}
 	}
 	if (empty($ivr_menu_digit_len)) { $ivr_menu_digit_len = '5'; }
-	if (empty($ivr_menu_direct_dial)) { $ivr_menu_direct_dial = 'false'; }
 	if (!isset($ivr_menu_context)) { $ivr_menu_context = $_SESSION['domain_name']; }
-	if (empty($ivr_menu_enabled)) { $ivr_menu_enabled = 'true'; }
 	if (!isset($ivr_menu_exit_action)) { $ivr_menu_exit_action = ''; }
+	$ivr_menu_direct_dial = $ivr_menu_direct_dial ?? false;
+	$ivr_menu_enabled = $ivr_menu_enabled ?? true;
 
 //get installed languages
 	$language_paths = glob($settings->get('switch', 'sounds')."/*/*/*");
@@ -1049,18 +1045,13 @@
 
 			echo "<td class='formfld' align='left'>\n";
 			echo "	<select name='ivr_menu_options[".$x."][ivr_menu_option_order]' class='formfld' style='width:55px'>\n";
-			//echo "	<option></option>\n";
-			if (strlen(htmlspecialchars($field['ivr_menu_option_order']))> 0) {
-				if (strlen($field['ivr_menu_option_order']) == 1) { $field['ivr_menu_option_order'] = "00".$field['ivr_menu_option_order']; }
-				if (strlen($field['ivr_menu_option_order']) == 2) { $field['ivr_menu_option_order'] = "0".$field['ivr_menu_option_order']; }
-				echo "	<option value='".escape($field['ivr_menu_option_order'])."'>".escape($field['ivr_menu_option_order'])."</option>\n";
+			if (strlen(htmlspecialchars($field['ivr_menu_option_order'])) > 0) {
+				if (strlen($field['ivr_menu_option_order']) == 1) { $ivr_menu_option_order_label = "00".$field['ivr_menu_option_order']; }
+				if (strlen($field['ivr_menu_option_order']) == 2) { $ivr_menu_option_order_label = "0".$field['ivr_menu_option_order']; }
 			}
-			$i=0;
-			while($i<=999) {
-				if (strlen($i) == 1) { echo "	<option value='00$i'>00$i</option>\n"; }
-				if (strlen($i) == 2) { echo "	<option value='0$i'>0$i</option>\n"; }
-				if (strlen($i) == 3) { echo "	<option value='$i'>$i</option>\n"; }
-				$i++;
+			for ($i = 0; $i <= 999; $i++) {
+				if ($i == $field['ivr_menu_option_order']) { $selected = "selected='selected' "; } else {$selected = ''; }
+				echo "	<option value='".$i."' $selected>".str_pad($i, 3, '0', STR_PAD_LEFT)."</option>\n";
 			}
 			echo "	</select>\n";
 			echo "</td>\n";
@@ -1069,19 +1060,16 @@
 			echo "	<input class='formfld' style='width:100px' type='text' name='ivr_menu_options[".$x."][ivr_menu_option_description]' maxlength='255' value=\"".escape($field['ivr_menu_option_description'])."\">\n";
 			echo "</td>\n";
 			echo "<td class='formfld'>\n";
-			// switch
-			if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-				echo "	<label class='switch'>\n";
-				echo "		<input type='checkbox' id='ivr_menu_options_".$x."_ivr_menu_option_enabled' name='ivr_menu_options[".$x."][ivr_menu_option_enabled]' value='true' ".($field['ivr_menu_option_enabled'] == 'true' ? "checked='checked'" : null).">\n";
-				echo "		<span class='slider'></span>\n";
-				echo "	</label>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			// select
-			else {
-				echo "	<select class='formfld' id='ivr_menu_options_".$x."_ivr_menu_option_enabled' name='ivr_menu_options[".$x."][ivr_menu_option_enabled]'>\n";
-				echo "		<option value='false'>".$text['option-false']."</option>\n";
-				echo "		<option value='true' ".(!empty($field['ivr_menu_option_enabled']) && $field['ivr_menu_option_enabled'] == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-				echo "	</select>\n";
+			echo "	<select class='formfld' id='ivr_menu_options_".$x."_ivr_menu_option_enabled' name='ivr_menu_options[".$x."][ivr_menu_option_enabled]'>\n";
+			echo "		<option value='false' ".($field['ivr_menu_option_enabled'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		<option value='true' ".($field['ivr_menu_option_enabled'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
 			}
 			echo "</td>\n";
 			if ($show_option_delete && permission_exists('ivr_menu_option_delete')) {
@@ -1177,17 +1165,16 @@
 	echo "	".$text['label-direct_dial']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' name='ivr_menu_direct_dial' value='true' ".(!empty($ivr_menu_direct_dial) && $ivr_menu_direct_dial == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' name='ivr_menu_direct_dial'>\n";
-		echo "		<option value='true'>".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".(!empty($ivr_menu_direct_dial) && $ivr_menu_direct_dial == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='ivr_menu_direct_dial' name='ivr_menu_direct_dial'>\n";
+	echo "		<option value='true' ".($ivr_menu_direct_dial == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($ivr_menu_direct_dial == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-direct_dial']."\n";
@@ -1537,17 +1524,16 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td width=\"70%\" class='vtable' align='left'>\n";
-	if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='ivr_menu_enabled' name='ivr_menu_enabled' value='true' ".($ivr_menu_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='ivr_menu_enabled' name='ivr_menu_enabled'>\n";
-		echo "		<option value='true' ".($ivr_menu_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($ivr_menu_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='ivr_menu_enabled' name='ivr_menu_enabled'>\n";
+	echo "		<option value='true' ".($ivr_menu_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($ivr_menu_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";

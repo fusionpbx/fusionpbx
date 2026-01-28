@@ -77,8 +77,8 @@
 //includes
 	//require_once('resources/pop3/mime_parser.php');
 	//require_once('resources/pop3/rfc822_addresses.php');
-	//if (file_exists($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php")) {
-	//	require_once($_SERVER["PROJECT_ROOT"]."/app/emails/email_transcription.php");
+	//if (file_exists(dirname(__DIR__, 1)."/app/emails/email_transcription.php")) {
+	//	require_once(dirname(__DIR__, )."/app/emails/email_transcription.php");
 	//}
 
 //parse the email
@@ -136,9 +136,6 @@
 					$p->add('email_log_add', 'temp');
 
 				//execute insert
-					$database = new database;
-					$database->app_name = 'v_mailto';
-					$database->app_uuid = 'ba41954e-9d21-4b10-bbc2-fa5ceabeb184';
 					$database->save($array);
 					unset($array);
 
@@ -171,7 +168,6 @@
 
 	$sql = "select email from v_email_logs where email_log_uuid = :email_log_uuid ";
 	$parameters['email_log_uuid'] = $email_log_uuid;
-	$database = new database;
 	$email = $database->select($sql, $parameters, 'column');
 	echo $email;
 	unset($sql, $parameters, $email);

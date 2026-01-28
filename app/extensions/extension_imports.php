@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,32 +29,14 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('extension_import')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('extension_import')) {
 		echo "access denied";
 		exit;
 	}
 
-//initialize the database object
-	$database = new database;
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduct the functionality but requirs PHP 5.1.0 or higher
-	if (!function_exists('str_getcsv')) {
-		function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
-			$fp = fopen("php://memory", 'r+');
-			fputs($fp, $input);
-			rewind($fp);
-			$data = fgetcsv($fp, null, $delimiter, $enclosure, $escape);
-			fclose($fp);
-			return $data;
-		}
-	}
 
 //get the http get values and set them as php variables
 	$action = $_POST["action"] ?? null;
@@ -64,7 +46,7 @@
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
-		$file = $_SESSION['server']['temp']['dir']."/extensions-".$_SESSION['domain_name'].".csv";
+		$file = $settings->get('server', 'temp')."/extensions-".$_SESSION['domain_name'].".csv";
 		file_put_contents($file, $_POST['data']);
 		$_SESSION['file'] = $file;
 	}
@@ -73,11 +55,11 @@
 	//$_POST['submit'] == "Upload" &&
 	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('extension_import')) {
 		if ($_POST['type'] == 'csv') {
-			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
-			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
-			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
+			move_uploaded_file($_FILES['ulfile']['tmp_name'], $settings->get('server', 'temp').'/'.$_FILES['ulfile']['name']);
+			$save_msg = "Uploaded file to ".$settings->get('server', 'temp')."/". htmlentities($_FILES['ulfile']['name']);
+			//system('chmod -R 744 '.$settings->get('server', 'temp').'*');
 			unset($_POST['txtCommand']);
-			$file = $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name'];
+			$file = $settings->get('server', 'temp').'/'.$_FILES['ulfile']['name'];
 			$_SESSION['file'] = $file;
 		}
 	}
@@ -230,6 +212,14 @@
 	}
 
 //get the parent table
+	/**
+	 * Retrieves the parent table name for a given table in the database schema.
+	 *
+	 * @param array  $schema     The database schema, where each element is an associative array containing 'table' and 'parent' keys.
+	 * @param string $table_name The name of the table for which to retrieve the parent table name.
+	 *
+	 * @return mixed|null The parent table name if found, otherwise null.
+	 */
 	function get_parent($schema,$table_name) {
 		foreach ($schema as $row) {
 			if ($row['table'] == $table_name) {
@@ -270,6 +260,9 @@
 
 				//loop through the array
 					while (($line = fgets($handle, 4096)) !== false) {
+						//convert the line to UTF-8
+						$line = mb_convert_encoding($line, 'UTF-8');
+
 						if ($from_row <= $row_number) {
 							//format the data
 								$y = 0;
@@ -326,8 +319,6 @@
 								if ($row_id === 1000) {
 
 									//save to the data
-										$database->app_name = 'extensions';
-										$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 										$database->save($array);
 
 									//clear the array
@@ -345,8 +336,6 @@
 
 				//save to the data
 					if (!empty($array) && is_array($array)) {
-						$database->app_name = 'extensions';
-						$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 						$database->save($array);
 						unset($array);
 					}

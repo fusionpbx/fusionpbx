@@ -26,16 +26,10 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('dashboard_widget_add') || permission_exists('dashboard_widget_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('dashboard_widget_add') || permission_exists('dashboard_widget_edit'))) {
 		echo "access denied";
 		exit;
 	}
-
-//initialize the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -55,19 +49,19 @@
 	$widget_content_text_align = '';
 	$widget_content_details = '';
 	$widget_groups = [];
-	$widget_label_enabled = 'true';
 	$widget_label_text_color = '';
 	$widget_label_text_color_hover = '';
 	$widget_label_background_color = '';
 	$widget_label_background_color_hover = '';
 	$widget_number_text_color = '';
 	$widget_number_background_color = '';
+	$widget_background_gradient_style = '';
+	$widget_background_gradient_angle = 0;
 	$widget_column_span = '';
 	$widget_row_span = '';
 	$widget_details_state = '';
 	$widget_parent_uuid = '';
 	$widget_order = '';
-	$widget_enabled = 'true';
 	$widget_description = '';
 
 //action add or update
@@ -96,7 +90,7 @@
 		$widget_content_details = $_POST["widget_content_details"] ?? '';
 		$widget_groups = $_POST["dashboard_widget_groups"] ?? '';
 		$widget_chart_type = $_POST["widget_chart_type"] ?? '';
-		$widget_label_enabled = $_POST["widget_label_enabled"] ?? 'false';
+		$widget_label_enabled = $_POST["widget_label_enabled"];
 		$widget_label_text_color = $_POST["widget_label_text_color"] ?? '';
 		$widget_label_text_color_hover = $_POST["widget_label_text_color_hover"] ?? '';
 		$widget_label_background_color = $_POST["widget_label_background_color"] ?? '';
@@ -108,13 +102,13 @@
 		$widget_background_color_hover = $_POST["widget_background_color_hover"] ?? '';
 		$widget_detail_background_color = $_POST["widget_detail_background_color"] ?? '';
 		$widget_background_gradient_style = $_POST["widget_background_gradient_style"] ?? 'mirror';
-		$widget_background_gradient_angle = $_POST["widget_background_gradient_angle"] ?? '90';
+		$widget_background_gradient_angle = $_POST["widget_background_gradient_angle"] ?? '0';
 		$widget_column_span = $_POST["widget_column_span"] ?? '';
 		$widget_row_span = $_POST["widget_row_span"] ?? '';
 		$widget_details_state = $_POST["widget_details_state"] ?? '';
 		$widget_parent_uuid = $_POST["dashboard_widget_parent_uuid"] ?? '';
 		$widget_order = $_POST["widget_order"] ?? '';
-		$widget_enabled = $_POST["widget_enabled"] ?? 'false';
+		$widget_enabled = $_POST["widget_enabled"];
 		$widget_description = $_POST["widget_description"] ?? '';
 
 		//define the regex patterns
@@ -158,16 +152,23 @@
 	}
 
 //delete the group from the sub table
-	if (isset($_REQUEST["a"]) && $_REQUEST["a"] == "delete" && permission_exists("dashboard_widget_group_delete") && is_uuid($_GET["dashboard_widget_group_uuid"]) && is_uuid($_GET["dashboard_widget_uuid"])) {
+	if (!empty($_POST["action"]) && $_POST["action"] === "delete" && permission_exists("dashboard_widget_group_delete") && is_uuid($_POST["dashboard_widget_group_uuid"]) && is_uuid($_POST["dashboard_widget_uuid"])) {
 		//get the uuid
-			$widget_group_uuid = $_GET["dashboard_widget_group_uuid"];
-			$widget_uuid = $_GET["dashboard_widget_uuid"];
-		//delete the group from the users
+			$widget_group_uuid = $_POST['dashboard_widget_group_uuid'];
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: dashboard_edit.php?id='.urlencode($dashboard_uuid));
+				exit;
+			}
+
+		//delete the group from the widget
 			$array['dashboard_widget_groups'][0]['dashboard_widget_group_uuid'] = $widget_group_uuid;
-			$database->app_name = 'dashboard';
-			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
 			$database->delete($array);
 			unset($array);
+
 		//redirect the user
 			message::add($text['message-delete']);
 			header("Location: dashboard_widget_edit.php?id=".urlencode($dashboard_uuid)."&widget_uuid=".urlencode($widget_uuid));
@@ -180,7 +181,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: dashboard.php');
+				header('Location: dashboard_edit.php?id='.urlencode($dashboard_uuid));
 				exit;
 			}
 
@@ -323,8 +324,6 @@
 			}
 
 		//save the data
-			$database->app_name = 'dashboard';
-			$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
 			$result = $database->save($array);
 
 		//redirect the user
@@ -357,7 +356,7 @@
 		$sql .= " widget_content_text_align, ";
 		$sql .= " widget_content_details, ";
 		$sql .= " widget_chart_type, ";
-		$sql .= " cast(widget_label_enabled as text), ";
+		$sql .= " widget_label_enabled, ";
 		$sql .= " widget_label_text_color, ";
 		$sql .= " widget_label_text_color_hover, ";
 		$sql .= " widget_label_background_color, ";
@@ -412,7 +411,7 @@
 			$widget_details_state = $row["widget_details_state"];
 			$widget_parent_uuid = $row["dashboard_widget_parent_uuid"];
 			$widget_order = $row["widget_order"];
-			$widget_enabled = $row["widget_enabled"] ?? 'false';
+			$widget_enabled = $row["widget_enabled"];
 			$widget_description = $row["widget_description"];
 		}
 		unset($sql, $parameters, $row);
@@ -473,6 +472,10 @@
 	$widget_groups[$x]['dashboard_widget_group_uuid'] = uuid();
 	$widget_groups[$x]['group_uuid'] = '';
 
+//set the defaults
+	$widget_label_enabled = $widget_label_enabled ?? true;
+	$widget_enabled = $widget_enabled ?? true;
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -491,7 +494,7 @@
 
 //get the groups
 	$sql = "SELECT group_uuid, domain_uuid, group_name FROM v_groups ";
-	$sql .= "WHERE (domain_uuid = :domain_uuid or domain_uuid is null)";
+	$sql .= "WHERE (domain_uuid = :domain_uuid or domain_uuid is null) ";
 	$sql .= "ORDER BY domain_uuid desc, group_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$groups = $database->execute($sql, $parameters, 'all');
@@ -499,9 +502,10 @@
 
 //get the dashboards
 	$sql = "SELECT dashboard_widget_uuid, widget_name FROM v_dashboard_widgets ";
-	$sql .= "WHERE dashboard_widget_parent_uuid is null ";
+	$sql .= "WHERE widget_path = 'dashboard/parent' ";
+	$sql .= "AND dashboard_uuid = :dashboard_uuid ";
 	$sql .= "ORDER by widget_order, widget_name asc ";
-	$parameters = null;
+	$parameters['dashboard_uuid'] = $dashboard_uuid;
 	$widget_parents = $database->execute($sql, $parameters, 'all');
 	unset ($sql, $parameters);
 
@@ -519,7 +523,7 @@
 
 //build the $widget_tools array
 	$i = 0;
-	foreach(glob($_SERVER["DOCUMENT_ROOT"].'/*/*/resources/dashboard/*.php') as $value) {
+	foreach(glob(dirname(__DIR__, 2).'/*/*/resources/dashboard/*.php') as $value) {
 
 		//skip adding config.php to the array
 		if (basename($value) === 'config.php') {
@@ -530,14 +534,14 @@
 		$value = str_replace('\\', '/', $value);
 
 		//prepare the key
-		$key_replace[] = $_SERVER["DOCUMENT_ROOT"].'/core/';
-		$key_replace[] = $_SERVER["DOCUMENT_ROOT"].'/app/';
+		$key_replace[] = dirname(__DIR__, 2).'/core/';
+		$key_replace[] = dirname(__DIR__, 2).'/app/';
 		$key_replace[] = 'resources/dashboard/';
 		$key_replace[] = '.php';
 		$key = str_replace($key_replace, '', $value);
 
 		//prepare the value
-		$value_replace[] = $_SERVER["DOCUMENT_ROOT"].'/';
+		$value_replace[] = dirname(__DIR__, 2).'/';
 		$value = str_replace($value_replace, '', $value);
 
 		//build the array
@@ -626,7 +630,7 @@
 			$items_to_remove[] = 'widget_width';
 			$items_to_remove[] = 'widget_height';
 		}
-		if ($widget_label_enabled == "false") {
+		if ($widget_label_enabled === false) {
 			$items_to_remove[] = 'widget_label_text_color';
 			$items_to_remove[] = 'widget_label_text_color_hover';
 			$items_to_remove[] = 'widget_label_background_color';
@@ -649,6 +653,10 @@
 		else if ($widget_chart_type == "line") {
 			$items_to_remove[] = 'widget_number_text_color';
 		}
+	}
+
+	if (empty($widget_details_state) || $widget_details_state == 'none') {
+		$items_to_remove[] = 'widget_details_state';
 	}
 
 	$widget_settings = array_diff($widget_settings, $items_to_remove);
@@ -753,9 +761,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	function toggle_label_settings() {
+		let widget_settings = Object.values(<?php echo json_encode($widget_settings); ?>);
 		let label_settings = document.querySelectorAll("[id^='tr_widget_label_']:not([id='tr_widget_label_enabled'])");
+
 		label_settings.forEach(function(setting) {
-			setting.style.display = (setting.style.display == 'none' ? '' : 'none');
+			let setting_name = setting.id.replace("tr_", "");
+			if (widget_settings.includes(setting_name)) {
+				setting.style.display = (setting.style.display == 'none' ? '' : 'none');
+			}
 		});
 	}
 
@@ -834,8 +847,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	echo "	<tr id='tr_widget_icon' ".(!in_array('widget_icon', $widget_settings) ? "style='display: none;'" : null).">\n";
 	echo "		<td class='vncell'>".$text['label-icon']."</td>\n";
 	echo "		<td class='vtable' style='vertical-align: bottom;'>\n";
-	if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fa_icons.php')) {
-		include $_SERVER["PROJECT_ROOT"].'/resources/fontawesome/fa_icons.php';
+	if (file_exists(dirname(__DIR__, 2).'/resources/fontawesome/fa_icons.php')) {
+		include dirname(__DIR__, 2).'/resources/fontawesome/fa_icons.php';
 	}
 	if (!empty($font_awesome_icons) && is_array($font_awesome_icons)) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
@@ -987,18 +1000,25 @@ document.addEventListener('DOMContentLoaded', function() {
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
 	if (is_array($widget_groups) && sizeof($widget_groups) != 0) {
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
+		if (permission_exists('dashboard_widget_group_delete')) {
+			echo "	<input type='hidden' id='action' name='action' value=''>\n";
+			echo "	<input type='hidden' id='dashboard_widget_group_uuid' name='dashboard_widget_group_uuid' value=''>\n";
+		}
+		$x = 0;
 		foreach($widget_groups as $field) {
 			if (!empty($field['group_name'])) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>\n";
 				echo $field['group_name'].((!empty($field['domain_uuid'])) ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null);
 				echo "	</td>\n";
-				if (permission_exists('dashboard_widget_group_delete') || if_group("superadmin")) {
+				if (permission_exists('dashboard_widget_group_delete')) {
 					echo "	<td class='list_control_icons' style='width: 25px;'>\n";
-					echo 		"<a href='dashboard_widget_edit.php?id=".escape($field['dashboard_widget_group_uuid'])."&dashboard_widget_group_uuid=".escape($field['dashboard_widget_group_uuid'])."&dashboard_widget_uuid=".escape($widget_uuid)."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
+					echo button::create(['type'=>'button','icon'=>'fas fa-minus','id'=>'btn_delete','class'=>'default list_control_icon','name'=>'btn_delete','onclick'=>"modal_open('modal-delete-group-$x','btn_delete');"]);
+					echo modal::create(['id'=>'modal-delete-group-'.$x,'type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); document.getElementById('dashboard_widget_group_uuid').value = '".escape($field['dashboard_widget_group_uuid'])."'; list_form_submit('frm');"])]);
 					echo "	</td>\n";
 				}
 				echo "</tr>\n";
+				$x++;
 			}
 		}
 		echo "</table>\n";
@@ -1062,17 +1082,16 @@ document.addEventListener('DOMContentLoaded', function() {
 	echo "\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='widget_label_enabled' name='widget_label_enabled' value='true' ".(empty($widget_label_enabled) || $widget_label_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='widget_label_enabled' name='widget_label_enabled'>\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
-		echo "		<option value='true' ".(empty($widget_label_enabled) || $widget_label_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='widget_label_enabled' name='widget_label_enabled'>\n";
+	echo "			<option value='true' ".($widget_label_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($widget_label_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-widget_label_enabled']."\n";
@@ -1323,7 +1342,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	echo "	".$text['label-widget_details_state']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<select name='widget_details_state' class='formfld'>\n";
+	echo "	<select name='widget_details_state' class='formfld' ".(!in_array('widget_details_state', $widget_settings) ? "disabled" : null).">\n";
 	echo "		<option value='expanded'>".$text['option-expanded']."</option>\n";
 	echo "		<option value='contracted' ".($widget_details_state == "contracted" ? "selected='selected'" : null).">".$text['option-contracted']."</option>\n";
 	echo "		<option value='hidden' ".($widget_details_state == "hidden" ? "selected='selected'" : null).">".$text['option-hidden']."</option>\n";
@@ -1386,17 +1405,16 @@ document.addEventListener('DOMContentLoaded', function() {
 	echo "	".$text['label-widget_enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='widget_enabled' name='widget_enabled' value='true' ".($widget_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='widget_enabled' name='widget_enabled'>\n";
-		echo "		<option value='false'>".$text['option-false']."</option>\n";
-		echo "		<option value='true' ".($widget_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "	</select>\n";
+	echo "		<select class='formfld' id='widget_enabled' name='widget_enabled'>\n";
+	echo "			<option value='true' ".($widget_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($widget_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-widget_enabled']."\n";

@@ -28,23 +28,30 @@
 
 //includes files
 	require_once dirname(__DIR__, 4) . "/resources/require.php";
+	require_once "resources/check_auth.php";
 
 //check permissions
-	require_once "resources/check_auth.php";
-	if (permission_exists('xml_cdr_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('xml_cdr_view')) {
 		echo "access denied";
 		exit;
 	}
 
 //function to parse a FusionPBX service from a .service file
 	if (!function_exists('get_classname')) {
+		/**
+		 * Retrieves the name of a PHP class from an ExecStart directive in a service file.
+		 *
+		 * @param string $file Path to the service file.
+		 *
+		 * @return string The name of the PHP class, or empty string if not found.
+		 */
 		function get_classname(string $file) {
+			if (!file_exists($file)) {
+				return '';
+			}
 			$parsed = parse_ini_file($file);
-			$exec_cmd = $parsed['ExecStart'];
-			$parts = explode(' ', $exec_cmd);
+			$exec_cmd = $parsed['ExecStart'] ?? '';
+			$parts = explode(' ', $exec_cmd ?? '');
 			$php_file = $parts[1] ?? '';
 			if (!empty($php_file)) {
 				return $php_file;
@@ -55,11 +62,19 @@
 
 //function to check for running process: returns [running, pid, etime]
 	if (!function_exists('is_running')) {
+		/**
+		 * Checks if a process with the given name is currently running.
+		 *
+		 * @param string $name The name of the process to check for.
+		 *
+		 * @return array An array containing information about the process's status,
+		 *               including whether it's running, its PID, and how long it's been running.
+		 */
 		function is_running(string $name) {
 			$name = escapeshellarg($name);
-			$pid = trim(shell_exec("ps -aux | grep $name | grep -v grep | awk '{print \$2}' | head -n 1"));
+			$pid = trim(shell_exec("ps -aux | grep $name | grep -v grep | awk '{print \$2}' | head -n 1") ?? '');
 			if ($pid && is_numeric($pid)) {
-				$etime = trim(shell_exec("ps -p $pid -o etime= | tr -d '\n'"));
+				$etime = trim(shell_exec("ps -p $pid -o etime= | tr -d '\n'") ?? '');
 				return ['running' => true, 'pid' => $pid, 'etime' => $etime];
 			}
 			return ['running' => false, 'pid' => null, 'etime' => null];
@@ -68,6 +83,21 @@
 
 //function to format etime into friendly display
 	if (!function_exists('format_etime')) {
+		/**
+		 * Formats a time duration string into a human-readable format.
+		 *
+		 * The input string can be in one of the following formats:
+		 * - dd-hh:mm:ss
+		 * - hh:mm:ss
+		 * - mm:ss
+		 * - seconds (no units)
+		 *
+		 * If the input string is empty or invalid, an empty string will be returned.
+		 *
+		 * @param string $etime Time duration string to format.
+		 *
+		 * @return string Formatted time duration string in human-readable format.
+		 */
 		function format_etime($etime) {
 			// Format: [[dd-]hh:]mm:ss
 			if (empty($etime)) return '-';
@@ -154,13 +184,20 @@
 //track total installed services for charts
 	$total_services = count($services);
 
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
-	$text = (new text())->get($settings->get('domain','language','en-us'), 'core/user_settings');
+	$language = new text();
+	$text = $language->get($settings->get('domain','language','en-us'), 'core/user_settings');
+
+//get the dashboard label
+	$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //show the results
 echo "<div class='hud_box'>\n";
 echo "	<div class='hud_content' ".($widget_details_state == 'disabled' ?: "onclick=\"$('#hud_system_services_details').slideToggle('fast');\""). ">\n";
-echo "		<span class='hud_title'>System Services</span>\n";
+echo "		<span class='hud_title'>".escape($widget_label)."</span>\n";
 
 //doughnut chart
 if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {

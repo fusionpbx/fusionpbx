@@ -3,18 +3,26 @@
 /*
 * user class - used to store user groups, permissions, and other values
 */
+
 class user {
 
+	public $domain_uuid;
+	public $domain_name;
+	public $username;
+	public $user_email;
+	public $contact_uuid;
 	private $database;
-	public  $domain_uuid;
-	public  $domain_name;
 	private $user_uuid;
 	private $permissions;
 	private $groups;
-	public  $username;
-	public  $user_email;
-	public  $contact_uuid;
 
+	/**
+	 * Constructor for the class.
+	 *
+	 * This method initializes the object with setting_array and session data.
+	 *
+	 * @param array $setting_array An optional array of settings to override default values. Defaults to [].
+	 */
 	public function __construct(database $database, $domain_uuid, $user_uuid) {
 
 		//set the database variable
@@ -30,7 +38,7 @@ class user {
 			$this->user_uuid = $user_uuid;
 		}
 
-		//set the user groups, permission and details
+		//set the user groups, permission, and details
 		if (isset($domain_uuid) && is_uuid($domain_uuid) && isset($user_uuid) && is_uuid($user_uuid)) {
 			$this->set_groups();
 			$this->set_permissions();
@@ -41,6 +49,16 @@ class user {
 	/*
 	* set_details method sets the user assigned details
 	*/
+	/**
+	 * Sets the user details based on the domain UUID and user UUID.
+	 *
+	 * This method queries the database to retrieve the user's details,
+	 * including their domain name, username, email address, and contact UUID.
+	 *
+	 * @access public
+	 *
+	 * @return bool True if the query is successful, false otherwise.
+	 */
 	public function set_details() {
 		$sql = "select d.domain_name, u.username, u.user_email, u.contact_uuid ";
 		$sql .= "from v_users as u, v_domains as d ";
@@ -62,6 +80,11 @@ class user {
 	/*
 	* get_user_uuid method gets the user_uuid
 	*/
+	/**
+	 * Retrieves the user's UUID.
+	 *
+	 * @return string The user's unique identifier in UUID format.
+	 */
 	public function get_user_uuid() {
 		return $this->user_uuid;
 	}
@@ -69,31 +92,55 @@ class user {
 	/*
 	* set_permissions method sets the user assigned permissions
 	*/
-	public function set_permissions() {
-		$this->permissions = new permissions($this->database, $this->domain_uuid, $this->user_uuid);
-	}
 
-	/*
-	* get_permissions method gets the user assigned permissions
-	*/
+	/**
+	 * Retrieves the permissions associated with this entity.
+	 *
+	 * @return array An array of permission objects or identifiers.
+	 * @access public
+	 */
 	public function get_permissions() {
 		return $this->permissions->get_permissions();
 	}
 
 	/*
+	* get_permissions method gets the user assigned permissions
+	*/
+
+	/**
+	 * Sets the user's permissions.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function set_permissions() {
+		$this->permissions = new permissions($this->database, $this->domain_uuid, $this->user_uuid);
+	}
+
+	/*
 	* set_groups method sets the user assigned groups
 	*/
-	public function set_groups() {
-		$this->groups = new groups($this->database, $this->domain_uuid, $this->user_uuid);
+
+	/**
+	 * Retrieves the user's groups.
+	 *
+	 * @return array An array of group objects that the user belongs to.
+	 */
+	public function get_groups() {
+		return $this->groups->get_groups();
 	}
 
 	/*
 	* get_groups method gets the user assigned groups
 	*/
-	public function get_groups() {
-		return $this->groups->get_groups();
+
+	/**
+	 * Sets the user's group assignments.
+	 *
+	 * @return void
+	 */
+	public function set_groups() {
+		$this->groups = new groups($this->database, $this->domain_uuid, $this->user_uuid);
 	}
 
 }
-
-?>

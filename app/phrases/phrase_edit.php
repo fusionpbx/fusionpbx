@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('phrase_add') || permission_exists('phrase_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('phrase_add') || permission_exists('phrase_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -81,7 +78,7 @@
 		}
 		$phrase_name = $_POST["phrase_name"];
 		$phrase_language = $_POST["phrase_language"];
-		$phrase_enabled = $_POST["phrase_enabled"] ?? 'false';
+		$phrase_enabled = $_POST["phrase_enabled"];
 		$phrase_description = $_POST["phrase_description"];
 		$phrase_details_delete = $_POST["phrase_details_delete"] ?? '';
 
@@ -92,7 +89,7 @@
 
 //process the changes from the http post
 	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
-	
+
 		//get the uuid
 			if ($action == "update") {
 				$phrase_uuid = $_POST["phrase_uuid"];
@@ -163,9 +160,6 @@
 						$p = permissions::new();
 						$p->add('phrase_detail_add', 'temp');
 
-						$database = new database;
-						$database->app_name = 'phrases';
-						$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 						$database->save($array);
 						unset($array);
 
@@ -227,9 +221,6 @@
 						$p = permissions::new();
 						$p->add('phrase_detail_add', 'temp');
 
-						$database = new database;
-						$database->app_name = 'phrases';
-						$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 						$database->save($array);
 						unset($array);
 
@@ -262,7 +253,7 @@
 				}
 
 			}
-	
+
 	}
 
 //pre-populate the form
@@ -276,7 +267,6 @@
 		$sql .= "and phrase_uuid = :phrase_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['phrase_uuid'] = $phrase_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$phrase_name = $row["phrase_name"];
@@ -287,9 +277,6 @@
 		unset($sql, $parameters, $row);
 	}
 
-//set the defaults
-	if (empty($phrase_enabled)) { $phrase_enabled = 'true'; }
-
 //get the phrase details
 	if (!empty($phrase_uuid)) {
 		$sql = "select * from v_phrase_details ";
@@ -298,7 +285,6 @@
 		$sql .= "order by phrase_detail_order asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['phrase_uuid'] = $phrase_uuid;
-		$database = new database;
 		$phrase_details = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -308,9 +294,11 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by recording_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$recordings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
+
+//set the defaults
+	$phrase_enabled = $phrase_enabled ?? true;
 
 //create token
 	$object = new token;
@@ -350,11 +338,11 @@
 			echo "var opt_group = document.createElement('optgroup');\n";
 			echo "opt_group.label = \"".$text['label-recordings']."\";\n";
 			foreach ($recordings as $row) {
-				if (!empty($_SESSION['recordings']['storage_type']['text']) && $_SESSION['recordings']['storage_type']['text'] == 'base64') {
+				if (!empty($settings->get('recordings', 'storage_type')) && $settings->get('recordings', 'storage_type') == 'base64') {
 					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"\${lua streamfile.lua ".$row["recording_filename"]."}\"));\n";
 				}
 				else {
-					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"".$_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/'.$row["recording_filename"]."\"));\n";
+					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"".$settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/'.$row["recording_filename"]."\"));\n";
 				}
 			}
 			echo "obj_action.appendChild(opt_group);\n";
@@ -523,7 +511,7 @@
 			}
 			else if ($field['phrase_detail_function'] == 'play-file') {
 				$phrase_detail_function = $text['label-play'];
-				$phrase_detail_data = str_replace($_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/', '', $field['phrase_detail_data']);
+				$phrase_detail_data = str_replace($settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/', '', $field['phrase_detail_data']);
 			}
 			else {
 				$phrase_detail_function = $field['phrase_detail_function'];
@@ -611,17 +599,16 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='phrase_enabled' name='phrase_enabled' value='true' ".($phrase_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='phrase_enabled' name='phrase_enabled'>\n";
-		echo "		<option value='true' ".($phrase_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($phrase_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='phrase_enabled' name='phrase_enabled'>\n";
+	echo "		<option value='true' ".($phrase_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($phrase_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "	<br />\n";
 	echo $text['description-enabled']."\n";

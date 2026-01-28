@@ -26,10 +26,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('dashboard_widget_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('dashboard_widget_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -89,7 +86,6 @@
 	$sql .= "from v_dashboard_widgets ";
 	$sql .= "where dashboard_uuid = :dashboard_uuid ";
 	$parameters['dashboard_uuid'] = $dashboard_uuid;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -117,7 +113,6 @@
 	$sql .= "where dashboard_uuid = :dashboard_uuid ";
 	$sql .= order_by($order_by, $order, 'widget_order, widget_name', 'asc');
 	$sql .= limit_offset($rows_per_page ?? null, $offset ?? null);
-	$database = new database;
 	$parameters['dashboard_uuid'] = $dashboard_uuid;
 	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
@@ -150,7 +145,6 @@
 
 	//get the group list
 	$sql = "select group_uuid, group_name from v_groups ";
-	$database = new database;
 	$groups = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

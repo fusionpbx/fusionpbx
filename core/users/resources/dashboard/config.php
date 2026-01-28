@@ -24,7 +24,7 @@ $array['dashboard_widgets'][$x]['widget_label_background_color_hover'] = '';
 $array['dashboard_widgets'][$x]['widget_number_background_color'] = '';
 $array['dashboard_widgets'][$x]['widget_number_text_color'] = '';
 $array['dashboard_widgets'][$x]['widget_number_text_color_hover'] = '';
-$array['dashboard_widgets'][$x]['widget_background_color'] = '#ffffff';
+$array['dashboard_widgets'][$x]['widget_background_color'] = '';
 $array['dashboard_widgets'][$x]['widget_background_color_hover'] = '';
 $array['dashboard_widgets'][$x]['widget_detail_background_color'] = '';
 $array['dashboard_widgets'][$x]['widget_column_span'] = '1';
@@ -45,14 +45,14 @@ $array['dashboard_widgets'][$x]['dashboard_widget_groups'][$y]['dashboard_widget
 $array['dashboard_widgets'][$x]['dashboard_widget_groups'][$y]['group_name'] = 'admin';
 $x++;
 
-//account settings icon
+//user profile icon
 $array['dashboard_widgets'][$x]['dashboard_uuid'] = '3e2cbaa4-2bec-41b2-a626-999a59b8b19c';
 $array['dashboard_widgets'][$x]['dashboard_widget_uuid'] = '8aa9bb66-7a62-4a90-b52e-68bd4ccf325f';
-$array['dashboard_widgets'][$x]['widget_name'] = 'Account Settings';
+$array['dashboard_widgets'][$x]['widget_name'] = 'User Profile';
 $array['dashboard_widgets'][$x]['widget_path'] = 'dashboard/icon';
 $array['dashboard_widgets'][$x]['widget_icon'] = 'fa-solid fa-user-gear';
 $array['dashboard_widgets'][$x]['widget_icon_color'] = '#0292FF';
-$array['dashboard_widgets'][$x]['widget_url'] = '/core/users/user_edit.php?id=user';
+$array['dashboard_widgets'][$x]['widget_url'] = '/core/users/user_profile.php';
 $array['dashboard_widgets'][$x]['widget_target'] = 'self';
 $array['dashboard_widgets'][$x]['widget_width'] = '';
 $array['dashboard_widgets'][$x]['widget_height'] = '';
@@ -69,7 +69,7 @@ $array['dashboard_widgets'][$x]['widget_label_background_color_hover'] = '';
 $array['dashboard_widgets'][$x]['widget_number_background_color'] = '';
 $array['dashboard_widgets'][$x]['widget_number_text_color'] = '';
 $array['dashboard_widgets'][$x]['widget_number_text_color_hover'] = '';
-$array['dashboard_widgets'][$x]['widget_background_color'] = '#ffffff';
+$array['dashboard_widgets'][$x]['widget_background_color'] = '';
 $array['dashboard_widgets'][$x]['widget_background_color_hover'] = '';
 $array['dashboard_widgets'][$x]['widget_detail_background_color'] = '';
 $array['dashboard_widgets'][$x]['widget_column_span'] = '1';
@@ -119,7 +119,7 @@ $array['dashboard_widgets'][$x]['widget_label_background_color_hover'] = '';
 $array['dashboard_widgets'][$x]['widget_number_background_color'] = '';
 $array['dashboard_widgets'][$x]['widget_number_text_color'] = '';
 $array['dashboard_widgets'][$x]['widget_number_text_color_hover'] = '';
-$array['dashboard_widgets'][$x]['widget_background_color'] = '#ffffff';
+$array['dashboard_widgets'][$x]['widget_background_color'] = '';
 $array['dashboard_widgets'][$x]['widget_background_color_hover'] = '';
 $array['dashboard_widgets'][$x]['widget_detail_background_color'] = '';
 $array['dashboard_widgets'][$x]['widget_column_span'] = '1';

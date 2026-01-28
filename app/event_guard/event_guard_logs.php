@@ -1,7 +1,7 @@
 <?php
 /*
 	BSD-2-Clause License
-	Copyright (C) 2022-2023 Mark J Crane <markjcrane@fusionpbx.com>
+	Copyright (C) 2022-2025 Mark J Crane <markjcrane@fusionpbx.com>
 
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are met:
@@ -29,10 +29,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('event_guard_log_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('event_guard_log_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -44,7 +41,7 @@
 //get the http post data
 	if (!empty($_POST['event_guard_logs']) && is_array($_POST['event_guard_logs'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$event_guard_logs = $_POST['event_guard_logs'];
 	}
 
@@ -73,7 +70,7 @@
 		}
 
 		//redirect the user
-		header('Location: event_guard_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: event_guard_logs.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -105,7 +102,6 @@
 		$sql .= "and filter = :filter ";
 		$parameters['filter'] = $_GET["filter"];
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -118,13 +114,15 @@
 	$offset = $rows_per_page * $page;
 
 //set the time zone
-	if (isset($_SESSION['domain']['time_zone']['name'])) {
-		$time_zone = $_SESSION['domain']['time_zone']['name'];
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
 	}
 	else {
-		$time_zone = date_default_timezone_get();
+		$time_format = 'HH12:MI:SS am';
 	}
-	$parameters['time_zone'] = $time_zone;
 
 //get the list
 	$sql = "select ";
@@ -132,7 +130,7 @@
 	$sql .= "hostname, ";
 	$sql .= "log_date, ";
 	$sql .= "to_char(timezone(:time_zone, log_date), 'DD Mon YYYY') as log_date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, log_date), 'HH12:MI:SS am') as log_time_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, log_date), '".$time_format."') as log_time_formatted, \n";
 	$sql .= "filter, ";
 	$sql .= "ip_address, ";
 	$sql .= "extension, ";
@@ -157,7 +155,7 @@
 	}
 	$sql .= order_by($order_by, $order, 'log_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
+	$parameters['time_zone'] = $time_zone;
 	$event_guard_logs = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -247,7 +245,7 @@
 			$list_row_url = '';
 			if (permission_exists('event_guard_log_edit')) {
 				$list_row_url = "event_guard_log_edit.php?id=".urlencode($row['event_guard_log_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}

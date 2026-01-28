@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('conference_profile_param_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('conference_profile_param_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -88,7 +85,7 @@
 	unset($sql, $parameters);
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&id=".$conference_profile_uuid;
 	if (isset($_GET['page'])) {
 		$page = isset($_GET['page']) ? $_GET['page'] : 0;

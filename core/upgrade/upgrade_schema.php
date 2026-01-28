@@ -59,11 +59,8 @@
 	$text = $language->get();
 
 //get the database schema put it into an array then compare and update the database as needed.
-	$obj = new schema;
-	if (isset($argv[1]) && $argv[1] == 'data_types') {
-		$obj->data_types = true;
-	}
-	echo $obj->schema($format);
+	$schema = new schema(['database' => $database]);
+	echo $schema->upgrade($format);
 
 //formatting for html
 	if (!$included && $format == 'html') {

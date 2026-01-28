@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,13 +30,14 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('dialplan_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('dialplan_edit')) {
 		echo "access denied";
 		exit;
 	}
+
+//get and the domain_uuid from the PHP session
+	$domain_uuid = $_SESSION['domain_uuid'];
+	$domain_name = $_SESSION['domain_name'];
 
 //get the uuids
 	if (!empty($_REQUEST['id']) && is_uuid($_REQUEST['id'])) {
@@ -48,7 +49,7 @@
 	$dialplan_xml = $_REQUEST['dialplan_xml'] ?? '';
 
 //process the HTTP POST
-	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+	if (!empty($_POST) && !empty($dialplan_uuid) && !empty($_REQUEST['app_uuid']) && !empty($_REQUEST['app_uuid'])) {
 
 		//validate the token
 			$token = new token;
@@ -58,12 +59,11 @@
 				exit;
 			}
 
-		//get the dialplan xml
+		//get the dialplan XML
 			if (is_uuid($dialplan_uuid)) {
 				$sql = "select * from v_dialplans ";
 				$sql .= "where dialplan_uuid = :dialplan_uuid ";
 				$parameters['dialplan_uuid'] = $dialplan_uuid;
-				$database = new database;
 				$row = $database->select($sql, $parameters, 'row');
 				if (is_array($row) && @sizeof($row) != 0) {
 					$app_uuid = $row["app_uuid"];
@@ -72,7 +72,7 @@
 				unset($sql, $parameters, $row);
 			}
 
-		//validate the xml
+		//sanitize the xml
 			$dialplan_valid = true;
 			if (preg_match("/.*([\"\'])system([\"\']).*>/i", $dialplan_xml)) {
 				$dialplan_valid = false;
@@ -105,15 +105,15 @@
 				$dialplan_valid = false;
 			}
 
-		//disable xml entities and load the xml object to test if the xml is valid
-			if (PHP_VERSION_ID < 80000) { libxml_disable_entity_loader(true); }
-			preg_match_all('/^\s*<extension.+>(?:[\S\s])+<\/extension>\s*$/mU', $dialplan_xml, $matches);
-			foreach($matches as $match) {
-				$xml = simplexml_load_string($match[0], 'SimpleXMLElement', LIBXML_NOCDATA);
-				if (!$xml) {
-					//$errors = libxml_get_errors();
-					$dialplan_valid = false;
-					break;
+		//disable XML entities and load the XML object to test if the XML is valid
+			if ($dialplan_valid) {
+				preg_match_all('/^\s*<extension.+>(?:[\S\s])+<\/extension>\s*$/mU', $dialplan_xml, $matches);
+				foreach($matches as $match) {
+					if (!xml::valid($xml)) {
+						//$errors = libxml_get_errors();
+						$dialplan_valid = false;
+						break;
+					}
 				}
 			}
 
@@ -121,14 +121,10 @@
 			if ($dialplan_valid) {
 				//build the dialplan array
 					$x = 0;
-					//$array['dialplans'][$x]["domain_uuid"] = $_SESSION['domain_uuid'];
 					$array['dialplans'][$x]["dialplan_uuid"] = $dialplan_uuid;
 					$array['dialplans'][$x]["dialplan_xml"] =  $dialplan_xml;
 
 				//save to the data
-					$database = new database;
-					$database->app_name = 'dialplans';
-					$database->app_uuid = is_uuid($app_uuid) ? $app_uuid : '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 					$database->save($array);
 					unset($array);
 
@@ -153,15 +149,20 @@
 
 	}
 
-//get the dialplan xml
+//get a specific dialplan using the dialplan_uuid
 	if (is_uuid($dialplan_uuid)) {
-		$sql = "select * from v_dialplans ";
+		$sql = "select domain_uuid, app_uuid, dialplan_name, ";
+		$sql .= "dialplan_number, dialplan_order, dialplan_continue, ";
+		$sql .= "dialplan_xml, dialplan_enabled, dialplan_description ";
+		$sql .= "from v_dialplans ";
 		$sql .= "where dialplan_uuid = :dialplan_uuid ";
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['dialplan_uuid'] = $dialplan_uuid;
-		$database = new database;
+		$parameters['domain_uuid'] = $domain_uuid;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$domain_uuid = $row["domain_uuid"];
+			$app_uuid = $row["app_uuid"];
 			$dialplan_name = $row["dialplan_name"];
 			$dialplan_number = $row["dialplan_number"];
 			$dialplan_order = $row["dialplan_order"];
@@ -174,16 +175,59 @@
 		unset($sql, $parameters, $row);
 	}
 
+//get all dialplans for a specific domain with global dialplans
+	if (empty($dialplan_uuid) && is_uuid($domain_uuid)) {
+		$sql = "select dialplan_xml from v_dialplans ";
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and dialplan_enabled = true ";
+		$sql .= "order by dialplan_order asc, lower(dialplan_name) asc ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$dialplans = $database->select($sql, $parameters, 'all');
+	}
+
+//get all dialplans for a specific domain
+	if (empty($dialplan_uuid)) {
+		$dialplan_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n";
+		$dialplan_xml .= "<document type=\"freeswitch/xml\">\n";
+		$dialplan_xml .= "	<section name=\"dialplan\" description=\"\">\n";
+		$dialplan_xml .= "		<context name=\"".$domain_name."\" hostname=\"".gethostname()."\">\n";
+		if (!empty($dialplans)) {
+			foreach($dialplans as $row) {
+				foreach (explode("\n", mb_convert_encoding($row["dialplan_xml"], 'UTF-8')) as $line) {
+					$dialplan_xml .= "\t\t\t".$line."\n";
+				}
+			}
+		}
+		unset($sql, $parameters, $row);
+		$dialplan_xml .= "		</context>\n";
+		$dialplan_xml .= "	</section>\n";
+		$dialplan_xml .= "</document>\n";
+	}
+
+//validate the XML
+	//list($xml_valid, $xml_errors) = xml::valid($dialplan_xml);
+
+//convert the line to UTF-8
+	//$dialplan_xml = mb_convert_encoding($dialplan_xml, 'UTF-8');
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 // load editor preferences/defaults
-	$setting_size = !empty($_SESSION["editor"]["font_size"]["text"]) ? $_SESSION["editor"]["font_size"]["text"] : '12px';
-	$setting_theme = !empty($_SESSION["editor"]["theme"]["text"]) ? $_SESSION["editor"]["theme"]["text"] : 'cobalt';
-	$setting_invisibles = isset($_SESSION['editor']['invisibles']['text']) ? $_SESSION['editor']['invisibles']["text"] : 'false';
-	$setting_indenting = isset($_SESSION['editor']['indent_guides']['text']) ? $_SESSION['editor']['indent_guides']["text"]: 'false';
-	$setting_numbering = isset($_SESSION['editor']['line_numbers']['text']) ? $_SESSION['editor']['line_numbers']["text"] : 'true';
+	$setting_size = !empty($settings->get('editor', 'font_size')) ? $settings->get('editor', 'font_size') : '12px';
+	$setting_theme = !empty($settings->get('editor', 'theme')) ? $settings->get('editor', 'theme') : 'cobalt';
+	$setting_invisibles = $settings->get('editor', 'invisibles', 'false');
+	$setting_indenting = $settings->get('editor', 'indent_guides', 'false');
+	$setting_numbering = $settings->get('editor', 'line_numbers', 'true');
+
+//set the button back link
+	if (is_array($dialplan_uuid)) {
+		$button_back_link = 'dialplan_edit.php?id='.urlencode($dialplan_uuid).(!empty($app_uuid) && is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null);
+	}
+	else {
+		$button_back_link = 'dialplans.php';
+	}
 
 //create token
 	$object = new token;
@@ -221,14 +265,14 @@
 	echo "		editor.focus();\n";
 	echo "	}\n";
 
-	//copy the value from the editor on submit
+	//Copy the value from the editor on submit
 	echo "	function set_value() {\n";
-	echo "		$('#dialplan_xml').val(editor.session.getValue());\n";
+	echo "		document.getElementById('dialplan_xml').value = editor.session.getValue();\n";
 	echo "	}\n";
 
 	//load editor value from hidden textarea
 	echo "	function load_value() {\n";
-	echo "		editor.session.setValue($('#dialplan_xml').val());";
+	echo "		editor.session.setValue(document.getElementById('dialplan_xml').value);";
 	echo "	}\n";
 
 	echo "</script>\n";
@@ -249,8 +293,10 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-dialplan_edit']." XML</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'dialplan_edit.php?id='.urlencode($dialplan_uuid).(!empty($app_uuid) && is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null)]);
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>"set_value(); $('#frm').submit();"]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>$button_back_link]);
+	if (is_uuid($dialplan_uuid)) {
+		echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>"set_value(); $('#frm').submit();"]);
+	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -345,32 +391,32 @@
 	echo "<script type='text/javascript'>\n";
 
 	//load editor
-		echo "	var editor = ace.edit('editor');\n";
-		echo "	editor.setOptions({\n";
-		echo "		mode: 'ace/mode/xml',\n";
-		echo "		theme: 'ace/theme/'+document.getElementById('theme').options[document.getElementById('theme').selectedIndex].value,\n";
-		echo "		selectionStyle: 'text',\n";
-		echo "		cursorStyle: 'smooth',\n";
-		echo "		showInvisibles: ".$setting_invisibles.",\n";
-		echo "		displayIndentGuides: ".$setting_indenting.",\n";
-		echo "		showLineNumbers: ".$setting_numbering.",\n";
-		echo "		showGutter: true,\n";
-		echo "		scrollPastEnd: true,\n";
-		echo "		fadeFoldWidgets: ".$setting_numbering.",\n";
-		echo "		showPrintMargin: false,\n";
-		echo "		highlightGutterLine: false,\n";
-		echo "		useSoftTabs: false\n";
-		echo "		});\n";
-		echo "	document.getElementById('editor').style.fontSize='".$setting_size."';\n";
-		echo "	focus_editor();\n";
+	echo "	var editor = ace.edit('editor');\n";
+	echo "	editor.setOptions({\n";
+	echo "		mode: 'ace/mode/xml',\n";
+	echo "		theme: 'ace/theme/'+document.getElementById('theme').options[document.getElementById('theme').selectedIndex].value,\n";
+	echo "		selectionStyle: 'text',\n";
+	echo "		cursorStyle: 'smooth',\n";
+	echo "		showInvisibles: ".$setting_invisibles.",\n";
+	echo "		displayIndentGuides: ".$setting_indenting.",\n";
+	echo "		showLineNumbers: ".$setting_numbering.",\n";
+	echo "		showGutter: true,\n";
+	echo "		scrollPastEnd: true,\n";
+	echo "		fadeFoldWidgets: ".$setting_numbering.",\n";
+	echo "		showPrintMargin: false,\n";
+	echo "		highlightGutterLine: false,\n";
+	echo "		useSoftTabs: false\n";
+	echo "		});\n";
+	echo "	document.getElementById('editor').style.fontSize='".$setting_size."';\n";
+	echo "	focus_editor();\n";
 
 	//load value into editor
-		echo "	load_value();\n";
+	echo "	load_value();\n";
 
 	//remove certain keyboard shortcuts
-		echo "	editor.commands.bindKey('Ctrl-T', null);\n"; //disable transpose letters - prefer new browser tab
-		echo "	editor.commands.bindKey('Ctrl-F', null);\n"; //disable find - control broken with bootstrap
-		echo "	editor.commands.bindKey('Ctrl-H', null);\n"; //disable replace - control broken with bootstrap
+	echo "	editor.commands.bindKey('Ctrl-T', null);\n"; //disable transpose letters - prefer new browser tab
+	echo "	editor.commands.bindKey('Ctrl-F', null);\n"; //disable find - control broken with bootstrap
+	echo "	editor.commands.bindKey('Ctrl-H', null);\n"; //disable replace - control broken with bootstrap
 
 	echo "</script>\n";
 

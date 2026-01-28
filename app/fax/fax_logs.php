@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('fax_log_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('fax_log_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -84,15 +81,15 @@
 		$parameters['search'] = '%'.$search.'%';
 	}
 
-//prepare to page the results
+//get the count
 	$sql = "select count(fax_log_uuid) from v_fax_logs ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and fax_uuid = :fax_uuid ";
 	$sql .= $sql_search ?? '';
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['fax_uuid'] = $fax_uuid;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
@@ -104,11 +101,47 @@
 		$offset = $rows_per_page * $page;
 	}
 
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
+
 //get the list
-	$sql = str_replace('count(fax_log_uuid)', '*', $sql);
+	$sql = "select ";
+	$sql .= " fax_epoch, ";
+	$sql .= " to_char(timezone(:time_zone, to_timestamp(fax_epoch)), 'DD Mon YYYY') as fax_date_formatted, \n";
+	$sql .= " to_char(timezone(:time_zone, to_timestamp(fax_epoch)), '".$time_format."') as fax_time_formatted, \n";
+	$sql .= " fax_success, ";
+	$sql .= " fax_result_code, ";
+	$sql .= " fax_result_text, ";
+	$sql .= " fax_file, ";
+	$sql .= " fax_ecm_used, ";
+	$sql .= " fax_local_station_id, ";
+	//$sql .= " fax_document_transferred_pages, ";
+	//$sql .= " fax_document_total_pages, ";
+	//$sql .= " fax_image_resolution, ";
+	//$sql .= " fax_image_size, ";
+	$sql .= " fax_bad_rows, ";
+	$sql .= " fax_transfer_rate, ";
+	$sql .= " fax_retry_attempts, ";
+	$sql .= " fax_retry_limit, ";
+	$sql .= " fax_retry_sleep, ";
+	$sql .= " fax_uri ";
+	$sql .= "from v_fax_logs ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and fax_uuid = :fax_uuid ";
+	$sql .= $sql_search ?? '';
 	$sql .= order_by($order_by, $order, 'fax_epoch', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset ?? 0);
-	$database = new database;
+	$parameters['domain_uuid'] = $domain_uuid;
+	$parameters['fax_uuid'] = $fax_uuid;
+	$parameters['time_zone'] = $time_zone;
 	$fax_logs = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -161,7 +194,8 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".(empty($fax_logs) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('fax_epoch', $text['label-fax_date'], $order_by, $order, null, null, "&id=".$fax_uuid);
+	echo th_order_by('fax_epoch', $text['label-date'], $order_by, $order, null, null, "&id=".$fax_uuid);
+	echo th_order_by('fax_epoch', $text['label-time'], $order_by, $order, null, null, "&id=".$fax_uuid);
 	echo th_order_by('fax_success', $text['label-fax_success'], $order_by, $order, null, null, "&id=".$fax_uuid);
 	echo th_order_by('fax_result_code', $text['label-fax_result_code'], $order_by, $order, null, null, "&id=".$fax_uuid);
 	echo th_order_by('fax_result_text', $text['label-fax_result_text'], $order_by, $order, null, null, "&id=".$fax_uuid);
@@ -178,7 +212,6 @@
 	//echo th_order_by('fax_retry_limit', $text['label-fax_retry_limit'], $order_by, $order);
 	//echo th_order_by('fax_retry_sleep', $text['label-fax_retry_sleep'], $order_by, $order);
 	echo th_order_by('fax_uri', $text['label-fax_destination'], $order_by, $order, null, null, "&id=".$fax_uuid);
-	//echo th_order_by('fax_epoch', $text['label-fax_epoch'], $order_by, $order);
 	if ($settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -195,7 +228,8 @@
 				echo "		<input type='hidden' name='fax_logs[$x][uuid]' value='".escape($row['fax_log_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			echo "	<td><a href='".$list_row_url."'>".(!empty($_SESSION['domain']['time_format']['text']) && $_SESSION['domain']['time_format']['text'] == '12h' ? date("j M Y g:i:sa", $row['fax_epoch']) : date("j M Y H:i:s", $row['fax_epoch']))."</a>&nbsp;</td>\n";
+			echo "	<td><a href='".$list_row_url."'>".$row['fax_date_formatted']."</a>&nbsp;</td>\n";
+			echo "	<td><a href='".$list_row_url."'>".$row['fax_time_formatted']."</a>&nbsp;</td>\n";
 			echo "	<td>".$row['fax_success']."&nbsp;</td>\n";
 			echo "	<td>".$row['fax_result_code']."&nbsp;</td>\n";
 			echo "	<td>".$row['fax_result_text']."&nbsp;</td>\n";

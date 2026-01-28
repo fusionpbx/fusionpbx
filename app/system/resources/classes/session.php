@@ -35,7 +35,9 @@ class session {
 
 	/**
 	 * Removes old php session files. Called by the maintenance application.
+	 *
 	 * @param settings $settings A settings object
+	 *
 	 * @return void
 	 */
 	public static function filesystem_maintenance(settings $settings): void {

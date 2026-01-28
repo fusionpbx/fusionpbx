@@ -31,6 +31,25 @@
  */
 class bsd_system_information extends system_information {
 
+	/**
+	 * Returns the network card information.
+	 *
+	 * @param string|null $default_value The default value to return if the network card information cannot be determined.
+	 *
+	 * @return string|null The network card information or the default value.
+	 */
+    public function get_network_card(?string $default_value = null): ?string {
+		// Implementation for BSD systems
+		$result = shell_exec("ifconfig -a | head -n1 | awk '{print $1}'");
+		$network_card = trim($result, " :");
+		return $network_card ?: $default_value;
+    }
+
+	/**
+	 * Returns the number of CPU cores available on the system.
+	 *
+	 * @return int The number of CPU cores.
+	 */
 	public function get_cpu_cores(): int {
 		$result = shell_exec("dmesg | grep -i --max-count 1 CPUs | sed 's/[^0-9]*//g'");
 		$cpu_cores = trim($result);
@@ -38,6 +57,12 @@ class bsd_system_information extends system_information {
 	}
 
 	//get the CPU details
+
+	/**
+	 * Returns the current CPU usage percentage.
+	 *
+	 * @return float The current CPU usage percentage.
+	 */
 	public function get_cpu_percent(): float {
 		$result = shell_exec('ps -A -o pcpu');
 		$percent_cpu = 0;
@@ -49,10 +74,20 @@ class bsd_system_information extends system_information {
 		return $percent_cpu;
 	}
 
+	/**
+	 * Returns the system uptime in seconds.
+	 *
+	 * @return string The system uptime in seconds.
+	 */
 	public function get_uptime() {
 		return shell_exec('uptime');
 	}
 
+	/**
+	 * Returns the current CPU usage percentage per core.
+	 *
+	 * @return array An associative array where keys are core indices and values are their respective CPU usage percentages.
+	 */
 	public function get_cpu_percent_per_core(): array {
 		static $last = [];
 		$results = [];
@@ -94,11 +129,11 @@ class bsd_system_information extends system_information {
 	}
 
 	/**
+	 * Returns the current network speed for a given interface.
 	 *
-	 * @staticvar array $last
-	 * @param string $interface
-	 * @return array
-	 * @depends FreeBSD Version 12
+	 * @param string $interface The network interface to query (default: 'em0')
+	 *
+	 * @return array An array containing the current receive and transmit speeds in bytes per second.
 	 */
 	public function get_network_speed(string $interface = 'em0'): array {
 		static $last = [];

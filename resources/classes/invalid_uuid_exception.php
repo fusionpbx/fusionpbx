@@ -32,7 +32,16 @@
  * @author Tim Fry <tim@fusionpbx.com>
  */
 class invalid_uuid_exception extends Exception {
-	public function __construct(string $message = "UUID is not valid", int $code = 0, ?\Throwable $previous = null) {
-		return parent::__construct($message, $code, $previous);
+	/**
+	 * Constructs a new instance of the class.
+	 *
+	 * @param string          $message  The error message. Defaults to "UUID is not valid".
+	 * @param int             $code     The HTTP status code. Defaults to 0.
+	 * @param \Throwable|null $previous The previous exception, if any.
+	 *
+	 * @return void
+	 */
+	public function __construct(string $message = "UUID is not valid", int $code = 0, ?Throwable $previous = null) {
+		parent::__construct($message, $code, $previous);
 	}
 }

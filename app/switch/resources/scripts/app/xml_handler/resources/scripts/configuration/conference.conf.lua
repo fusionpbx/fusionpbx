@@ -50,7 +50,7 @@
 --start the conference controls
 	xml:append([[			<caller-controls>]]);
 	sql = [[SELECT * FROM v_conference_controls
-		WHERE control_enabled = 'true' ]];
+		WHERE control_enabled = true ]];
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[conference_control] SQL: " .. sql .. "\n");
 	end
@@ -61,7 +61,7 @@
 		--get the conference control details from the database
 		sql = [[SELECT * FROM v_conference_control_details
 			WHERE conference_control_uuid = :conference_control_uuid
-			AND control_enabled = 'true' ]];
+			AND control_enabled = true ]];
 		local params = {conference_control_uuid = conference_control_uuid};
 		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "[conference_control] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -80,7 +80,7 @@
 --start the conference profiles
 	xml:append([[			<profiles>]]);
 	sql = [[SELECT * FROM v_conference_profiles
-		WHERE profile_enabled = 'true' ]];
+		WHERE profile_enabled = true ]];
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[conference_profiles] SQL: " .. sql .. "\n");
 	end
@@ -91,7 +91,7 @@
 		--get the conference profile parameters from the database
 		sql = [[SELECT * FROM v_conference_profile_params
 			WHERE conference_profile_uuid = :conference_profile_uuid
-			AND profile_param_enabled = 'true' ]];
+			AND profile_param_enabled = true ]];
 		local params = {conference_profile_uuid = conference_profile_uuid};
 		if (debug["sql"]) then
 			freeswitch.consoleLog("notice", "[conference_profiles] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -116,7 +116,7 @@
 		freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: " .. XML_STRING .. "\n");
 	end
 
---send the xml to the console
+--send the XML to the console
 	if (debug["xml_string"]) then
 		local file = assert(io.open(temp_dir .."/conference.conf.xml", "w"));
 		file:write(XML_STRING);

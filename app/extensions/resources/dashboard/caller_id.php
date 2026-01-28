@@ -31,21 +31,22 @@
 //check permissions
 	if (permission_exists('extension_caller_id')) {
 
+		//convert to a key
+			$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 		//add multi-lingual support
 			$language = new text;
-			$text = $language->get($_SESSION['domain']['language']['code'], 'app/extensions');
+			$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/extensions');
 
-		//connect to the database
-			if (!isset($database)) {
-				$database = new database;
-			}
+		//get the dashboard label
+			$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 		//add or update the database
 			if (isset($_POST['extensions']) && is_array($_POST['extensions']) && @sizeof($_POST['extensions']) != 0) {
 
 				//validate the token
 					$token = new token;
-					if (!$token->validate($_SERVER["DOCUMENT_ROOT"].'/extensions/resources/dashboard/caller_id.php')) {
+					if (!$token->validate(dirname(__DIR__, 4).'/extensions/resources/dashboard/caller_id.php')) {
 						message::add($text['message-invalid_token'],'negative');
 						header('Location: /core/dashboard/');
 						exit;
@@ -93,8 +94,6 @@
 					$p->add("extension_edit", "temp");
 
 				//save to the data
-					$database->app_name = 'extensions';
-					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 					$message = $database->save($array);
 
 				//update the session array
@@ -118,7 +117,7 @@
 				//clear the cache
 					$cache = new cache;
 					foreach($_SESSION['user']['extension'] as $field) {
-						$cache->delete("directory:".$field['destination']."@".$field['user_context']);
+						$cache->delete(gethostname().":directory:".$field['destination']."@".$field['user_context']);
 					}
 
 				//set the message
@@ -167,13 +166,13 @@
 
 		//create token
 			$object = new token;
-			$token = $object->create($_SERVER["DOCUMENT_ROOT"].'/extensions/resources/dashboard/caller_id.php');
+			$token = $object->create(dirname(__DIR__, 4).'/extensions/resources/dashboard/caller_id.php');
 
 		//caller id
 			echo "<div class='hud_box'>\n";
 
 			echo "	<div class='hud_content'  ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_caller_id_details').slideToggle('fast');\"").">\n";
-			echo "		<span class='hud_title'>".$text['label-caller_id_number']."</span>\n";
+			echo "		<span class='hud_title'>".escape($widget_label)."</span>";
 
 		//doughnut chart
 			if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {

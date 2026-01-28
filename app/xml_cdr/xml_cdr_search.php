@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2024
+	Copyright (C) 2008-2025
 	All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('xml_cdr_search_advanced')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('xml_cdr_search_advanced')) {
 		echo "access denied";
 		exit;
 	}
@@ -66,21 +63,21 @@
 	$remote_media_ip = "";
 	$network_addr = "";
 	$mos_score = "";
+	$call_center_queue_uuid = "";
+	$ring_group_uuid = "";
 
 //get the list of extensions
 	$sql = "select extension_uuid, extension, number_alias from v_extensions ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by extension asc, number_alias asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$extensions = $database->select($sql, $parameters, 'all');
-
 
 //get the ring groups
 	if (permission_exists('xml_cdr_search_ring_groups')) {
 		$sql = "select ring_group_uuid, ring_group_name, ring_group_extension from v_ring_groups ";
 		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and ring_group_enabled = 'true' ";
+		$sql .= "and ring_group_enabled = true ";
 		$sql .= "order by ring_group_extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$ring_groups = $database->select($sql, $parameters, 'all');
@@ -90,7 +87,7 @@
 	if (permission_exists('xml_cdr_search_ivr_menus')) {
 		$sql = "select ivr_menu_uuid, ivr_menu_name, ivr_menu_extension from v_ivr_menus ";
 		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and ivr_menu_enabled = 'true' ";
+		$sql .= "and ivr_menu_enabled = true ";
 		$sql .= "order by ivr_menu_extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$ivr_menus = $database->select($sql, $parameters, 'all');
@@ -102,7 +99,6 @@
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "order by queue_extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$call_center_queues = $database->select($sql, $parameters, 'all');
 	}
 
@@ -218,8 +214,8 @@
 		echo "		<td class='vtable'>";
 		echo "			<div class='row'>\n";
 		echo "				<div class='col-sm-12'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>";
 		echo "				</div>\n";
 		echo "			</div>\n";
 		echo "		</td>";
@@ -229,8 +225,8 @@
 		echo "		<td class='vtable'>";
 		echo "			<div class='row'>\n";
 		echo "				<div class='col-sm-12'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#answer_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='answer_stamp_begin' id='answer_stamp_begin' placeholder='".$text['label-from']."' value='".escape($answer_stamp_begin)."'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#answer_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='answer_stamp_end' id='answer_stamp_end' placeholder='".$text['label-to']."' value='".escape($answer_stamp_end)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#answer_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='answer_stamp_begin' id='answer_stamp_begin' placeholder='".$text['label-from']."' value='".escape($answer_stamp_begin)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#answer_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='answer_stamp_end' id='answer_stamp_end' placeholder='".$text['label-to']."' value='".escape($answer_stamp_end)."'>";
 		echo "				</div>\n";
 		echo "			</div>\n";
 		echo "		</td>";
@@ -240,8 +236,8 @@
 		echo "		<td class='vtable'>";
 		echo "			<div class='row'>\n";
 		echo "				<div class='col-sm-12'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#end_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='end_stamp_begin' id='end_stamp_begin' placeholder='".$text['label-from']."' value='".escape($end_stamp_begin)."'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#end_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='end_stamp_end' id='end_stamp_end' placeholder='".$text['label-to']."' value='".escape($end_stamp_end)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#end_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='end_stamp_begin' id='end_stamp_begin' placeholder='".$text['label-from']."' value='".escape($end_stamp_begin)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#end_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='end_stamp_end' id='end_stamp_end' placeholder='".$text['label-to']."' value='".escape($end_stamp_end)."'>";
 		echo "				</div>\n";
 		echo "			</div>\n";
 		echo "		</td>";
@@ -257,17 +253,16 @@
 			echo "	<tr>";
 			echo "		<td class='vncell'>".$text['button-show_all']."</td>";
 			echo "		<td class='vtable'>\n";
-			if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-				echo "	<label class='switch'>\n";
-				echo "		<input type='checkbox' name='showall' value='true' ".(isset($_REQUEST['show']) && $_REQUEST['show'] == "all" ? "checked='checked'" : null).">\n";
-				echo "		<span class='slider'></span>\n";
-				echo "	</label>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			else {
-				echo "	<select class='formfld' name='showall'>";
-				echo "		<option value=''>".$text['option-false']."</option>";
-				echo "		<option value='true' ".(isset($_REQUEST['show']) && $_REQUEST['show'] == "all" ? "selected='selected'" : null).">".$text['option-true']."</option>";
-				echo "	</select>";
+			echo "		<select class='formfld' id='showall' name='showall'>\n";
+			echo "			<option value='false'>".$text['option-false']."</option>\n";
+			echo "			<option value='true' ".(isset($_REQUEST['show']) && $_REQUEST['show'] == "all" ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
 			}
 			echo "		<td>";
 			echo "	</tr>";

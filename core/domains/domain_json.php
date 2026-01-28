@@ -27,22 +27,16 @@
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
-	
+
 //check permissions
-	if (permission_exists('domain_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('domain_view')) {
 		echo "access denied";
 		exit;
 	}
 
-//connect to the database
-	$database = new database;
-
 //get posted data
 	if (!empty($_POST['search'])) {
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 	}
 
 //add the search term
@@ -66,7 +60,7 @@
 		$sql = "select * ";
 		$sql .= "from v_domains ";
 		$sql .= "where true ";
-		$sql .= "and domain_enabled = 'true' \n";
+		$sql .= "and domain_enabled = true \n";
 		if (isset($search)) {
 			$sql .= "	and ( ";
 			$sql .= "		lower(domain_name) like :search ";
@@ -80,7 +74,7 @@
 	}
 
 //get the domains
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php") && !is_cli()){
+	if (file_exists(dirname(__DIR__, 2)."/app/domains/app_config.php") && !is_cli()){
 		require_once "app/domains/resources/domains.php";
 	}
 

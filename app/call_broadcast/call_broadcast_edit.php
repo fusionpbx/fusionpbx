@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_broadcast_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('call_broadcast_edit')) {
 		echo "access denied";
 		exit;
 	}
@@ -64,7 +61,15 @@
 	$broadcast_toll_allow = '';
 
 //function to Upload CSV/TXT file
-	function upload_file($sql, $broadcast_phone_numbers) {
+/**
+ * Uploads a file and prepares the SQL query for broadcasting phone numbers.
+ *
+ * @param string $sql                     The initial SQL query.
+ * @param mixed  $broadcast_phone_numbers The phone numbers to broadcast, or an empty value if not applicable.
+ *
+ * @return array An array containing the result code ('code') and the prepared SQL query ('sql').
+ */
+function upload_file($sql, $broadcast_phone_numbers) {
 		$upload_csv = $sql = '';
 		if (isset($_FILES['broadcast_phone_numbers_file']) && !empty($_FILES['broadcast_phone_numbers_file']) && $_FILES['broadcast_phone_numbers_file']['size'] > 0) {
 			$filename=$_FILES["broadcast_phone_numbers_file"]["tmp_name"];
@@ -76,7 +81,7 @@
 				{
 					$count++;
 					if ($count == 1) { continue; }
-					$getData = preg_split('/[ ,|]/', $getData[0], null, PREG_SPLIT_NO_EMPTY);
+					$getData = preg_split('/[ ,|]/', $getData[0], '', PREG_SPLIT_NO_EMPTY);
 					$separator = $getData[0];
 					$separator .= (isset($getData[1]) && $getData[1] != '')? '|'.$getData[1] : '';
 					$separator .= (isset($getData[2]) && $getData[2] != '')? ','.$getData[2] : '';
@@ -119,14 +124,13 @@
 		if (if_group("superadmin")) {
 			$broadcast_accountcode = $_POST["broadcast_accountcode"];
 		}
-		else if (if_group("admin") && file_exists($_SERVER["PROJECT_ROOT"]."/app/billing/app_config.php")){
+		else if (if_group("admin") && file_exists(dirname(__DIR__, 2)."/app/billing/app_config.php")){
 			$sql = "select count(*) ";
 			$sql .= "from v_billings ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and type_value = :type_value ";
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['type_value'] = $_POST['accountcode'];
-			$database = new database;
 			$num_rows = $database->select($sql, $parameters, 'column');
 			$broadcast_accountcode = $num_rows > 0 ? $_POST["broadcast_accountcode"] : $_SESSION['domain_name'];
 			unset($sql, $parameters, $num_rows);
@@ -266,10 +270,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					}
 					$array['call_broadcasts'][0]['broadcast_description'] = $broadcast_description;
 
-				//execute
-					$database = new database;
-					$database->app_name = 'call_broadcast';
-					$database->app_uuid = 'efc11f6b-ed73-9955-4d4d-3a1bed75a056';
+				//save changes to the database
 					$database->save($array);
 					unset($array);
 
@@ -290,7 +291,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$sql .= "and call_broadcast_uuid = :call_broadcast_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['call_broadcast_uuid'] = $call_broadcast_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$broadcast_name = $row["broadcast_name"];
@@ -318,6 +318,9 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	$broadcast_avmd = $broadcast_avmd ?? true;
 
 //create token
 	$object = new token;
@@ -428,7 +431,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	//$sql .= "select * from v_recordings ";
 	//$sql .= "where domain_uuid = :domain_uuid ";
 	//$parameters['domain_uuid'] = $domain_uuid;
-	//$database = new database;
 	//$rows = $database->select($sql, $parameters, 'all');
 	//if (!empty($rows)) {
 	//	foreach ($rows as $row) {
@@ -534,10 +536,17 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "    ".$text['label-avmd']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='broadcast_avmd'>\n";
-		echo "    	<option value='false'>".$text['option-false']."</option>\n";
-		echo "    	<option value='true' ".(!empty($broadcast_avmd) && $broadcast_avmd == "true" ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "    </select>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
+		}
+		echo "	<select class='formfld' id='broadcast_avmd' name='broadcast_avmd'>\n";
+		echo "		<option value='true' ".($broadcast_avmd == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".($broadcast_avmd == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
+		}
 		echo "<br />\n";
 		echo $text['description-avmd']."\n";
 		echo "</td>\n";

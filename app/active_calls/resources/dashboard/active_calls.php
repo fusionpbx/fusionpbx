@@ -40,16 +40,17 @@ $c = 0;
 $row_style["0"] = "row_style0";
 $row_style["1"] = "row_style1";
 
-//connect to the database
-if (!isset($database)) {
-	$database = database::new();
-}
-
 //set the dashboard icon to a solid color phone
 $widget_icon = 'fa-solid fa-phone';
 
+//convert to a key
+$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
-$text = (new text)->get($_SESSION['domain']['language']['code'], 'app/active_calls');
+$text = (new text)->get($settings->get('domain', 'language', 'en-us'), 'app/active_calls');
+
+//get the dashboard label
+$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //show the widget
 echo "<div class='hud_box'>\n";
@@ -69,11 +70,19 @@ $row_style["1"] = "row_style1";
 
 //icon and count
 echo "<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_active_calls_details').slideToggle('fast');\"").">\n";
-	echo "<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/active_calls/active_calls.php'\">".$text['title']."</a></span>\n";
-	echo "<div style='position: relative; display: inline-block;'>\n";
-		echo "<span class='hud_stat'><i class=\"fas ".$widget_icon." \"></i></span>\n";
-		echo "<span id='calls_active_count' name='calls_active_count' style=\"background-color: ".(!empty($widget_number_background_color) ? $widget_number_background_color : '#03c04a')."; color: ".(!empty($widget_number_text_color) ? $widget_number_text_color : '#ffffff')."; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">0</span>\n";
-	echo "</div>\n";
+	echo "<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/active_calls/active_calls.php'\">".escape($widget_label)."</a></span>\n";
+	if ($widget_chart_type == 'line') {
+		echo "<div class='hud_chart' style='width: 90%; height: 80%'>\n";
+			echo "<canvas id='active_calls_chart'></canvas>\n";
+			echo "<input type=hidden id='calls_active_count' name='calls_active_count' value='0'>\n";
+		echo "</div>\n";
+	}
+	if ($widget_chart_type == 'icon') {
+		echo "<div style='position: relative; display: inline-block;'>\n";
+			echo "<span class='hud_stat'><i class=\"fas " . $widget_icon . " \"></i></span>\n";
+			echo "<span id='calls_active_count' name='calls_active_count' style=\"background-color: " . (!empty($widget_number_background_color) ? $widget_number_background_color : '#03c04a') . "; color: " . (!empty($widget_number_text_color) ? $widget_number_text_color : '#ffffff') . "; font-size: 12px; font-weight: bold; text-align: center; position: absolute; top: 23px; left: 24.5px; padding: 2px 7px 1px 7px; border-radius: 10px; white-space: nowrap;\">0</span>\n";
+		echo "</div>\n";
+	}
 echo "</div>\n";
 
 //active call details
@@ -105,13 +114,121 @@ echo "<script src='/app/active_calls/resources/javascript/arrows.js?v=$version'>
 
 	var showAll = false;
 	const websockets_domain_name = '<?= $_SESSION['domain_name'] ?>';
+    const active_calls_widget_chart_type = '<?= $widget_chart_type ?>';
 
 	// push PHP values into JS
 	const authToken = {
 		name: "<?= $token['name'] ?>",
 		hash: "<?= $token['hash'] ?>"
 	};
-
+    if (active_calls_widget_chart_type === 'line') {
+        const active_calls_count = document.getElementById('active_calls_chart').getContext('2d');
+        window.active_calls_chart = new Chart(active_calls_count, {
+            type: 'line',
+            data: {
+                datasets: [
+                    {
+                        label: 'Active Calls',
+                        // borderColor: 'blue',
+                        // backgroundColor: rxColor + '33',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        pointHitRadius: 10,
+                        spanGaps: true,
+                        data: []
+                    }
+                ]
+            },
+            options: {
+                // streaming usually looks best with animation off; tweak if you like a tiny slide
+                animation: false,
+                //parsing: {xAxisKey: 'x', yAxisKey: 'y'},
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'realtime',
+                        realtime: {
+                            duration: 60000,   // last 60s
+                            refresh: 1000,     // redraw every 1s
+                            delay: 2000,       // 2s render delay to handle late packets
+                            onRefresh: (chart) => {
+                                chart.data.datasets[0].data.push({ x: Date.now(), y: get_count() });
+                            }
+                        },
+                        grid: {drawOnChartArea: false},
+                        ticks: {display: false},
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grace: '10%',
+                        ticks: {
+                            precision: 0,  //whole numbers only
+                            callback: (v) => Number.isInteger(v) ? v : v.toFixed(0)
+                        },
+                        suggestedMax: 4  //becomes 5 because chart adds the 0 line as a y-axis value
+                    }
+                },
+                plugins: {
+                    legend: {display: false},
+                    tooltip: {
+                        enabled: false
+                    }
+                }
+            }
+        });
+        
+        // Create custom tooltip element
+        const tooltipEl = document.createElement('div');
+        tooltipEl.id = 'chartjs-tooltip';
+        tooltipEl.style.cssText = 'position: absolute; background: rgba(0, 0, 0, 0.8); color: white; padding: 6px 10px; border-radius: 4px; font-size: 12px; pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 1000;';
+        document.body.appendChild(tooltipEl);
+        
+        // Manual hover detection on canvas
+        const canvas = document.getElementById('active_calls_chart');
+        canvas.addEventListener('mousemove', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Get the chart's scale information
+            const chart = window.active_calls_chart;
+            const xScale = chart.scales.x;
+            const yScale = chart.scales.y;
+            
+            // Find closest data point
+            let closestPoint = null;
+            let minDistance = Infinity;
+            const threshold = 15; // pixels
+            
+            chart.data.datasets[0].data.forEach((point, index) => {
+                if (point && typeof point.x !== 'undefined' && typeof point.y !== 'undefined') {
+                    const pixelX = xScale.getPixelForValue(point.x);
+                    const pixelY = yScale.getPixelForValue(point.y);
+                    const distance = Math.sqrt(Math.pow(x - pixelX, 2) + Math.pow(y - pixelY, 2));
+                    
+                    if (distance < minDistance && distance < threshold) {
+                        minDistance = distance;
+                        closestPoint = point;
+                    }
+                }
+            });
+            
+            if (closestPoint && Number.isFinite(closestPoint.y)) {
+                tooltipEl.textContent = `Active Calls: ${closestPoint.y}`;
+                tooltipEl.style.opacity = '1';
+                tooltipEl.style.left = (e.pageX + 10) + 'px';
+                tooltipEl.style.top = (e.pageY - 30) + 'px';
+            } else {
+                tooltipEl.style.opacity = '0';
+            }
+        });
+        
+        canvas.addEventListener('mouseleave', function() {
+            tooltipEl.style.opacity = '0';
+        });
+    }
 <?php
 $user['extensions'] = [];
 // translate the current users assigned extensions
@@ -120,9 +237,10 @@ if (!empty($_SESSION['user']['extension'])) {
 	foreach ($_SESSION['user']['extension'] as $user) {
 		echo "		extension_uuid: '" . $user['extension_uuid'] . "',\n";
 		echo "		extension: '" . $user['user'] . "',\n";
-		if (strlen($user['number_alias']) > 0) {
+		if (!empty($user['number_alias'])) {
 			$user_contact = $user['number_alias'];
-		} else {
+		}
+		else {
 			$user_contact = $user['user'];
 		}
 		echo "		extension_destination: '$user_contact',\n";
@@ -191,28 +309,40 @@ if (!empty($_SESSION['user']['extension'])) {
 		active_calls_widget_client.ws.addEventListener("open", async () => {
 			try {
 				console.log('Connected');
-				console.log('Requesting authentication');
+				reconnectAttempts = 0;
 
 				//set the status as inactive while waiting
 				const status = document.getElementById('calls_active_count');
 				status.style.backgroundColor = colors.INACTIVE;
-
-				//wait to be authenticated
-				await active_calls_widget_client.request('authentication');
-				reconnectAttempts = 0;
-
-				//bind active call event to function
-				active_calls_widget_client.onEvent("CHANNEL_CALLSTATE", channel_callstate_event);
-				console.log('Sent request for calls in progress');
-
-				//get the in progress calls
-				active_calls_widget_client.request('active.calls', 'in.progress');
-
-				//display green circle for connected
-				status.style.backgroundColor = colors.CONNECTED;
 			} catch (err) {
 				console.error("WS setup failed: ", err);
 				return;
+			}
+		});
+
+		// Handle incoming messages for authentication
+		active_calls_widget_client.ws.addEventListener("message", async (event) => {
+			try {
+				const message = JSON.parse(event.data);
+				// Check for authentication request from server
+				if (message.status_code === 407 && message.service_name === 'authentication') {
+					console.log('Authentication required - sending credentials');
+					await active_calls_widget_client.request('authentication');
+					console.log('Authentication sent');
+					
+					//bind active call event to function
+					active_calls_widget_client.onEvent("CHANNEL_CALLSTATE", channel_callstate_event);
+					console.log('Sent request for calls in progress');
+
+					//get the in progress calls
+					active_calls_widget_client.request('active.calls', 'in.progress');
+
+					//display green circle for connected
+					const status = document.getElementById('calls_active_count');
+					status.style.backgroundColor = colors.CONNECTED;
+				}
+			} catch (err) {
+				// Let the ws_client handle other messages
 			}
 		});
 
@@ -244,8 +374,6 @@ if (!empty($_SESSION['user']['extension'])) {
 		const other_leg_unique_id = call.other_leg_unique_id ?? '';
 		switch (state) {
 			case 'ringing':
-				//calls that are already in progress should be answered status
-				if (call.caller_channel_created_time > Date.now()) call.answer_state = 'answered';
 				//update the data
 				update_call(call);
 				replace_arrow_color(uuid, colors.RINGING);
@@ -385,15 +513,14 @@ echo '<td id="answer_state_${uuid}">${call.answer_state}</td>' . PHP_EOL;
 echo '<td id="duration_${uuid}"></td>'.PHP_EOL;
 ?>`;
 //end string block
+			// Only display calls that belong to the current domain (server-side filtering ensures proper security)
+			// The backend filter already restricts calls based on user permissions
 			row.style.display = 'table-row';
 
 			// add the row to the table
 			tbody.appendChild(row);
 
-			console.log('NEW ROW ADDED', row.id);
-
-			// add the uuid to the map
-			callsMap.set(call.unique_id, row);
+			//console.log('NEW ROW ADDED', row.id);
 
 			// start the timer
 			start_duration_timer(call.unique_id, call.caller_channel_created_time);
@@ -441,17 +568,21 @@ echo '<td id="duration_${uuid}"></td>'.PHP_EOL;
 
 	function updateCount() {
 		const calls_active_count = document.getElementById('calls_active_count');
-
-		let visibleCount = 0;
-		callsMap.forEach((row) => {
-			if (row.style.display !== 'none') {
-				visibleCount++;
-			}
-		});
+        if (!calls_active_count) {return;}
 
 		const totalCount = callsMap.size;
-		calls_active_count.textContent = `${visibleCount}`;
+		calls_active_count.textContent = get_count();
 	}
+
+    function get_count() {
+        let visibleCount = 0;
+        callsMap.forEach((row) => {
+            if (row.style.display !== 'none') {
+                visibleCount++;
+            }
+        });
+        return visibleCount;
+    }
 
 	function start_duration_timer(uuid, start_time) {
 		const td = document.getElementById(`duration_${uuid}`)
@@ -461,7 +592,12 @@ echo '<td id="duration_${uuid}"></td>'.PHP_EOL;
 			//calculate already elapsed time
 			const start = new Date(start_time / 1000);
 			const now = new Date();
-			const elapsed = Math.floor(now.getTime() - start.getTime());
+			let elapsed = Math.floor(now.getTime() - start.getTime());
+
+			// Fix rounding issue where floor can produce negative elapsed time
+			if (elapsed < 0) {
+				elapsed = 0;
+			}
 
 			//format time
 			const hh = Math.floor(elapsed / (1000 * 3600)).toString();

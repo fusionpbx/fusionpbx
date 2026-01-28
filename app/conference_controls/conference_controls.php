@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('conference_control_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('conference_control_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -48,7 +45,7 @@
 //get the http post data
 	if (!empty($_POST['conference_controls'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$conference_controls = $_POST['conference_controls'];
 	}
 
@@ -75,7 +72,7 @@
 				break;
 		}
 
-		header('Location: conference_controls.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: conference_controls.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -96,11 +93,11 @@
 //get the count
 	$sql = "select count(conference_control_uuid) from v_conference_controls ";
 	$sql .= $sql_search ?? '';
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
+	unset($sql);
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = $search ? "&search=".$search : null;
 	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
@@ -108,10 +105,15 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(conference_control_uuid)', '*', $sql);
+	$sql = "select ";
+	$sql .= "conference_control_uuid, ";
+	$sql .= "control_name, ";
+	$sql .= "cast(control_enabled as text), ";
+	$sql .= "control_description ";
+	$sql .= "from v_conference_controls ";
+	$sql .= $sql_search ?? '';
 	$sql .= order_by($order_by, $order, 'control_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$conference_controls = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

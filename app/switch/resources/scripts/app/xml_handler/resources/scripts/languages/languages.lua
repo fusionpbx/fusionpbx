@@ -114,7 +114,7 @@
 							sql = sql .. "AND p.phrase_uuid = :macro_name ";
 							sql = sql .. "AND p.phrase_language = :language ";
 							sql = sql .. "AND p.phrase_uuid = d.phrase_uuid ";
-							sql = sql .. "AND p.phrase_enabled = 'true' ";
+							sql = sql .. "AND p.phrase_enabled = true ";
 							sql = sql .. "ORDER BY d.domain_uuid, p.phrase_uuid, d.phrase_detail_order ASC ";
 							local params = {domain_uuid = domain_uuid, macro_name = macro_name, language = language};
 							if (debug["sql"]) then

@@ -34,7 +34,7 @@
 			//set the directory
 				$xml_dir = $settings->get('switch','conf').'/autoload_configs';
 				$xml_file = $xml_dir."/conference.conf";
-				$xml_file_alt = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'/app/switch/resources/conf/autoload_configs/conference.conf';
+				$xml_file_alt = dirname(__DIR__, 2).'/'.PROJECT_PATH.'/app/switch/resources/conf/autoload_configs/conference.conf';
 
 			//rename the file
 				if (file_exists($xml_dir.'/conference.conf.xml.noload')) {
@@ -68,8 +68,6 @@
 						$p = permissions::new();
 						$p->add('conference_control_add', 'temp');
 
-						$database->app_name = 'conference_controls';
-						$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
 						$database->save($array);
 						unset($array);
 
@@ -83,7 +81,7 @@
 								$control_action = $p['@attributes']['action'];
 								$control_digits = $p['@attributes']['digits'];
 								$control_data = $p['@attributes']['data'];
-								$control_enabled = 'true';
+								$control_enabled = true;
 
 							//add the coference profile params
 								$conference_control_detail_uuid = uuid();
@@ -99,8 +97,6 @@
 								$p = permissions::new();
 								$p->add('conference_control_detail_add', 'temp');
 
-								$database->app_name = 'conference_controls';
-								$database->app_uuid = 'e1ad84a2-79e1-450c-a5b1-7507a043e048';
 								$database->save($array);
 								unset($array);
 

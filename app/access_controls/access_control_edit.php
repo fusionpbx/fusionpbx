@@ -35,9 +35,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//create the database connection
-	$database = database::new();
-
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -61,7 +58,7 @@
 	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
 		//check permissions
-			if (!permission_exists('access_control_add') || !permission_exists('access_control_edit')) {
+			if (!(permission_exists('access_control_add') || permission_exists('access_control_edit'))) {
 				echo "access denied";
 				exit;
 			}
@@ -232,8 +229,6 @@
 
 		//save the data
 			if (is_array($array)) {
-				$database->app_name = 'access controls';
-				$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 				$database->save($array);
 			}
 

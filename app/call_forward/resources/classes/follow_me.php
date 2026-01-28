@@ -30,8 +30,22 @@
 
 //define the follow me class
 	class follow_me {
+
+		/**
+		 * declare constant variables
+		 */
+		const app_name = 'call_forward';
+		const app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
+
+		/**
+		 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
 		public $domain_uuid;
-		private $domain_name;
+
+		/**
+		 * declare public variables
+		 */
 		public $db_type;
 		public $follow_me_uuid;
 		public $cid_name_prefix;
@@ -41,9 +55,6 @@
 		public $follow_me_ignore_busy;
 		public $outbound_caller_id_name;
 		public $outbound_caller_id_number;
-		private $extension;
-		private $number_alias;
-		private $toll_allow;
 
 		public $destination_data_1;
 		public $destination_type_1;
@@ -78,6 +89,55 @@
 		public $destination_timeout = 0;
 		public $destination_order = 1;
 
+		/**
+		 * Set in the constructor. Must be a database object and cannot be null.
+		 * @var database Database Object
+		 */
+		private $database;
+
+		/**
+		 * Settings object set in the constructor. Must be a settings object and cannot be null.
+		 * @var settings Settings Object
+		 */
+		private $settings;
+
+		/**
+		 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $user_uuid;
+
+		/**
+		 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set in the session global array
+		 * @var string
+		 */
+		private $domain_name;
+
+		/**
+		 * declare private variables
+		 */
+		private $extension;
+		private $permission;
+		private $list_page;
+		private $table;
+		private $uuid_prefix;
+		private $toggle_field;
+		private $toggle_values;
+
+		/**
+		 * called when the object is created
+		 */
+		public function __construct(array $setting_array = []) {
+			//set domain and user UUIDs
+			$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+			$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+			$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+
+			//set objects
+			$this->database = $setting_array['database'] ?? database::new();
+			$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+		}
+
 		public function add() {
 
 			//build follow me insert array
@@ -94,10 +154,7 @@
 				$p = permissions::new();
 				$p->add('follow_me_add', 'temp');
 			//execute insert
-				$database = new database;
-				$database->app_name = 'calls';
-				$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
-				$database->save($array);
+				$this->database->save($array);
 				unset($array);
 			//revoke temporary permissions
 				$p->delete('follow_me_add', 'temp');
@@ -118,10 +175,7 @@
 				$p = permissions::new();
 				$p->add('follow_me_add', 'temp');
 			//execute update
-				$database = new database;
-				$database->app_name = 'calls';
-				$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
-				$database->save($array);
+				$this->database->save($array);
 				unset($array);
 			//revoke temporary permissions
 				$p->delete('follow_me_add', 'temp');
@@ -138,10 +192,7 @@
 					$p = permissions::new();
 					$p->add('follow_me_destination_delete', 'temp');
 				//execute delete
-					$database = new database;
-					$database->app_name = 'calls';
-					$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
-					$database->delete($array);
+					$this->database->delete($array);
 					unset($array);
 				//revoke temporary permissions
 					$p->delete('follow_me_destination_delete', 'temp');
@@ -213,10 +264,7 @@
 						$p = permissions::new();
 						$p->add('follow_me_destination_add', 'temp');
 					//execute insert
-						$database = new database;
-						$database->app_name = 'calls';
-						$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
-						$database->save($array);
+						$this->database->save($array);
 						unset($array);
 					//revoke temporary permissions
 						$p->delete('follow_me_destination_add', 'temp');
@@ -229,8 +277,7 @@
 				$parameters['follow_me_uuid'] = $this->follow_me_uuid;
 				$sql = "select extension_uuid from v_extensions ";
 				$sql .= "where follow_me_uuid = :follow_me_uuid ";
-				$database = new database;
-				$result = $database->select($sql, $parameters);
+				$result = $this->database->select($sql, $parameters);
 				$extension_uuid = $result[0]['extension_uuid'];
 
 			//grant temporary permissions
@@ -249,10 +296,7 @@
 				$array['extensions'][0]["follow_me_enabled"] = $this->follow_me_enabled;
 
 			//save the destination
-				$database = new database;
-				$database->app_name = 'follow_me';
-				$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
-				$database->save($array);
+				$this->database->save($array);
 
 			//remove the temporary permission
 				$p->delete("follow_me_edit", 'temp');
@@ -260,27 +304,12 @@
 
 		} //function
 
-
-		/**
-		 * declare private variables
-		 */
-		private $app_name;
-		private $app_uuid;
-		private $permission;
-		private $list_page;
-		private $table;
-		private $uuid_prefix;
-		private $toggle_field;
-		private $toggle_values;
-
-		/**
+	/**
 		 * toggle records
 		 */
 		public function toggle($records) {
 
 			//assign private variables
-				$this->app_name = 'calls';
-				$this->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 				$this->permission = 'follow_me';
 				$this->list_page = 'calls.php';
 				$this->table = 'extensions';
@@ -321,9 +350,8 @@
 								$sql .= "from v_".$this->table." ";
 								$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 								$sql .= "and ".$this->uuid_prefix."uuid in (".implode(', ', $uuids).") ";
-								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
-								$rows = $database->select($sql, $parameters, 'all');
+								$parameters['domain_uuid'] = $this->domain_uuid;
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$extensions[$row['uuid']]['extension'] = $row['extension'];
@@ -355,8 +383,7 @@
 										) {
 										$sql = "select count(*) from v_follow_me_destinations where follow_me_uuid = :follow_me_uuid";
 										$parameters['follow_me_uuid'] = $extension['follow_me_uuid'];
-										$database = new database;
-										$num_rows = $database->select($sql, $parameters, 'column');
+										$num_rows = $this->database->select($sql, $parameters, 'column');
 										$destinations_exist = $num_rows ? true : false;
 										unset($sql, $parameters, $num_rows);
 									}
@@ -394,10 +421,8 @@
 									$p->add('follow_me_edit', 'temp');
 
 								//save the array
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->save($array);
+
+									$this->database->save($array);
 									unset($array);
 
 								//revoke temporary permissions
@@ -405,10 +430,10 @@
 									$p->delete('follow_me_edit', 'temp');
 
 								//send feature event notify to the phone
-									if ($settings->get('device', 'feature_sync', false)) {
+									if ($this->settings->get('device', 'feature_sync', false)) {
 										foreach ($extensions as $uuid => $extension) {
 											$feature_event_notify = new feature_event_notify;
-											$feature_event_notify->domain_name = $_SESSION['domain_name'];
+											$feature_event_notify->domain_name = $this->domain_name;
 											$feature_event_notify->extension = $extension['extension'];
 											$feature_event_notify->do_not_disturb = $extension['do_not_disturb'];
 											$feature_event_notify->ring_count = ceil($extension['call_timeout'] / 6);
@@ -425,7 +450,7 @@
 									}
 
 								//synchronize configuration
-									if (!empty($_SESSION['switch']['extensions']['dir']) && is_readable($_SESSION['switch']['extensions']['dir'])) {
+									if (!empty($this->settings->get('switch', 'extensions')) && is_readable($this->settings->get('switch', 'extensions'))) {
 										$ext = new extension;
 										$ext->xml();
 										unset($ext);
@@ -434,9 +459,9 @@
 								//clear the cache
 									$cache = new cache;
 									foreach ($extensions as $uuid => $extension) {
-										$cache->delete("directory:".$extension['extension']."@".$_SESSION['domain_name']);
+										$cache->delete(gethostname().":directory:".$extension['extension']."@".$_SESSION['domain_name']);
 										if ($extension['number_alias'] != '') {
-											$cache->delete("directory:".$extension['number_alias']."@".$_SESSION['domain_name']);
+											$cache->delete(gethostname().":directory:".$extension['number_alias']."@".$_SESSION['domain_name']);
 										}
 									}
 

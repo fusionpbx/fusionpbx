@@ -29,23 +29,17 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('default_setting_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('default_setting_edit')) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //get submitted variables
-	$search = $_REQUEST['search'];
+	$search = $_REQUEST['search'] ?? '';
 	$default_setting_uuids = $_REQUEST["id"];
 
 //toggle the setting
@@ -63,10 +57,9 @@
 				//set new status
 					$array['default_settings'][0]['default_setting_uuid'] = $default_setting_uuid;
 					$array['default_settings'][0]['default_setting_enabled'] = $new_status;
-					$database->app_name = 'default_settings';
-					$database->app_uuid = '2c2453c0-1bea-4475-9f44-4d969650de09';
+
 					$database->save($array);
-					$message = $database->message;
+					//$message = $database->message;
 					unset($array);
 
 				//increment toggle total

@@ -11,9 +11,11 @@ class system_dashboard_service extends base_websocket_system_service {
 		'system_view_memcache',
 		'system_view_ram',
 		'system_view_support',
+		'system_view_network',
 	];
 
 	const CPU_STATUS_TOPIC = 'cpu_status';
+	const NETWORK_STATUS_TOPIC = "network_status";
 
 	/**
 	 *
@@ -33,6 +35,14 @@ class system_dashboard_service extends base_websocket_system_service {
 	 */
 	private $cpu_status_refresh_interval;
 
+	private $network_status_refresh_interval;
+	private $network_interface;
+
+	/**
+	 * Reloads settings from database, config file and websocket server.
+	 *
+	 * @return void
+	 */
 	protected function reload_settings(): void {
 		static::set_system_information();
 
@@ -45,28 +55,26 @@ class system_dashboard_service extends base_websocket_system_service {
 		// Connect to the database
 		$database = new database(['config' => parent::$config]);
 
-		// get the interval
+		// get the settings using global defaults
 		$this->settings = new settings(['database' => $database]);
 
-		// get the settings from the global defaults
-		$this->cpu_status_refresh_interval = $this->settings->get('dashboard', 'cpu_status_refresh_interval', 3);
+		// get the cpu interval
+		$this->cpu_status_refresh_interval = intval($this->settings->get('system', 'cpu_status_refresh_interval', 3));
+
+		// get the network interval
+		$this->network_status_refresh_interval = intval($this->settings->get('system', 'network_status_refresh_interval', 3));
+
+		// get the network card to watch
+		$this->network_interface = $this->settings->get('system', 'network_interface', 'eth0');
 	}
 
 	/**
-	 * @override base_websocket_system_service
-	 * @return void
-	 */
-	protected function on_timer(): void {
-		// Send the CPU status
-		$this->on_cpu_status();
-
-		// Reset the timer
-		$this->set_timer($this->cpu_status_refresh_interval);
-	}
-
-	/**
-	 * Executes once
-	 * @return void
+	 * Registers topics for broadcasting system information.
+	 *
+	 * This method is responsible for setting up the system information object,
+	 * registering callback functions for cpu and network status requests, and
+	 * configuring timer callbacks to refresh these statuses at regular intervals.
+	 * It is only called once during initial startup.
 	 */
 	protected function register_topics(): void {
 
@@ -77,16 +85,105 @@ class system_dashboard_service extends base_websocket_system_service {
 		self::$system_information = system_information::new();
 
 		// Register the call back to respond to cpu_status requests
-		$this->on_topic('cpu_status', [$this, 'on_cpu_status']);
+		$this->on_topic(self::CPU_STATUS_TOPIC, [$this, 'on_cpu_status']);
 
-		// Set a timer
-		$this->set_timer($this->cpu_status_refresh_interval);
+		// Register the call back to respond to network_status requests
+		$this->on_topic(self::NETWORK_STATUS_TOPIC, [$this, 'on_network_status']);
+
+		// Set timer callbacks
+		$this->set_timer($this->cpu_status_refresh_interval, [$this, 'on_cpu_status']);
+		$this->set_timer($this->network_status_refresh_interval, [$this, 'on_network_status']);
 
 		// Notify the user of the interval
 		$this->info("Broadcasting CPU Status every {$this->cpu_status_refresh_interval}s");
+		$this->info("Broadcasting Network Status every {$this->network_status_refresh_interval}s");
 	}
 
-	public function on_cpu_status($message = null): void {
+	/**
+	 * Handles the network status request.
+	 *
+	 * This method retrieves the current network interface and speeds, constructs a response message,
+	 * logs the request for debugging purposes, and attempts to send the broadcast. If the Websocket server
+	 * is disconnected, it waits until reconnection before attempting to send again.
+	 *
+	 * @param string|null $message The original message that triggered this response (optional).
+	 *
+	 * @return int The refresh interval for network status in seconds.
+	 */
+	public function on_network_status($message = null): int {
+		// Get RX (receive) and TX (transmit) bps
+		$network_rates = self::$system_information->get_network_speed($this->network_interface);
+
+		// Prepare a response
+		$response = new websocket_message();
+		$response
+			->payload([self::NETWORK_STATUS_TOPIC => $network_rates])
+			->service_name(self::get_service_name())
+			->topic(self::NETWORK_STATUS_TOPIC)
+		;
+		if ($message !== null && $message instanceof websocket_message) {
+			$this->debug("Responding to message request id: ".$message->id());
+			$response->id($message->id());
+		}
+
+		// Log for debugging
+		$this->debug(sprintf(
+			"Broadcasting Network interface %s of RX %d bps, TX %d bps",
+			$this->network_interface,
+			$network_rates['rx_bps'],
+			$network_rates['tx_bps']
+		));
+
+		$show_disconnect_message = true;
+		try {
+			// Send the broadcast
+			$this->respond($response);
+		} catch (\socket_disconnected_exception $sde) {
+			// wait until we connect again
+			while (!$this->connect_to_ws_server()) {
+				if ($show_disconnect_message) {
+					$this->warning("Websocket server disconnected");
+					$show_disconnect_message = false;
+				}
+				sleep(1);
+			}
+			$this->warning("Websocket server connected");
+		}
+
+		// return a timer value so another timer will be set
+		return $this->network_status_refresh_interval;
+	}
+
+	/**
+	 * Handles the selection of a network interface from a message.
+	 *
+	 * This method checks if the message is an instance of WebSocketMessage and if it contains
+	 * a 'network_interface' payload. If both conditions are true, it sets the network interface
+	 * property to the value of the payload.
+	 *
+	 * @param websocket_message|null $message The message containing the selected network interface.
+	 */
+	public function on_network_interface_select($message = null): void {
+		if ($message !== null && $message instanceof websocket_message) {
+			$payload = $message->payload();
+			if (!empty($payload['network_interface'])) {
+				$this->network_interface = ['network_interface'];
+			}
+		}
+	}
+
+	/**
+	 * Handles cpu status requests.
+	 *
+	 * This method is called to respond to incoming requests for the current CPU usage,
+	 * both total and per-core. It prepares a response message with the requested data
+	 * and sends it to all connected clients.
+	 *
+	 * @param null|websocket_message $message The request message, if responding to a specific request.
+	 *
+	 * @return int The interval at which this method should be called again to refresh the cpu status.
+	 */
+	public function on_cpu_status($message = null): int {
 		// Get total and per-core CPU usage
 		$cpu_percent_total = self::$system_information->get_cpu_percent();
 		$cpu_percent_per_core = self::$system_information->get_cpu_percent_per_core();
@@ -123,27 +220,45 @@ class system_dashboard_service extends base_websocket_system_service {
 			// wait until we connect again
 			while (!$this->connect_to_ws_server()) {
 				if ($show_disconnect_message) {
-					$this->warn("Websocket server disconnected");
+					$this->warning("Websocket server disconnected");
 					$show_disconnect_message = false;
 				}
 				sleep(1);
 			}
-			$this->warn("Websocket server connected");
+			$this->warning("Websocket server connected");
 		}
+
+		// return a timer value so another timer will be set
+		return $this->cpu_status_refresh_interval;
 	}
 
-
-
+	/**
+	 * Returns the service name for system information.
+	 *
+	 * This method provides a unique identifier for the dashboard system information service.
+	 *
+	 * @return string The service name as a string, in this case "dashboard.system.information".
+	 */
 	public static function get_service_name(): string {
 		return "dashboard.system.information";
 	}
 
+	/**
+	 * Creates a filter chain for broadcasting system information.
+	 *
+	 * This method generates a filter based on the subscriber's permissions,
+	 * allowing them to receive only relevant system view information.
+	 *
+	 * @param subscriber $subscriber The subscriber object with permission data.
+	 *
+	 * @return ?filter A filter chain that matches the subscriber's permissions, or null if no match is found.
+	 */
 	public static function create_filter_chain_for(subscriber $subscriber): ?filter {
 		// Get the subscriber permissions
 		$permissions = $subscriber->get_permissions();
 
 		// Create a filter for broadcaster => permission
-		$permission_filter = new permission_filter([self::get_service_name() => 'system_view_cpu']);
+		$permission_filter = new permission_filter([self::get_service_name() => 'system_view_cpu', self::get_service_name() => 'system_view_network']);
 
 		// Match them to create a filter
 		foreach (self::PERMISSIONS as $permission) {
@@ -158,6 +273,15 @@ class system_dashboard_service extends base_websocket_system_service {
 		return $filter;
 	}
 
+	/**
+	 * Sets the system information object.
+	 *
+	 * This method creates a new instance of `SystemInformation` and stores it in
+	 * the class's static property `$system_information`. It is typically called once
+	 * during initial startup to establish the system information source.
+	 *
+	 * @return void
+	 */
 	public static function set_system_information(): void {
 		self::$system_information = system_information::new();
 	}

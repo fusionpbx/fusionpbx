@@ -45,15 +45,12 @@
 //additional includes
 	require_once "resources/check_auth.php";
 
-//initialize the database
-	$database = new database;
-
 //disable login message
 	if (isset($_GET['msg']) && $_GET['msg'] == 'dismiss') {
-		unset($_SESSION['login']['message']['text']);
+		unset($_SESSION['login']['message']);
 
 		$sql = "update v_default_settings ";
-		$sql .= "set default_setting_enabled = 'false' ";
+		$sql .= "set default_setting_enabled = false ";
 		$sql .= "where ";
 		$sql .= "default_setting_category = 'login' ";
 		$sql .= "and default_setting_subcategory = 'message' ";
@@ -75,7 +72,7 @@
 //get the dashboard uuid
 	$sql = "select dashboard_uuid ";
 	$sql .= "from v_dashboards ";
-	$sql .= "where dashboard_enabled = 'true' ";
+	$sql .= "where dashboard_enabled = true ";
 	$sql .= "and (";
 	$sql .= "	domain_uuid = :domain_uuid ";
 	$sql .= "	or domain_uuid is null ";
@@ -106,7 +103,7 @@
 	$sql .= "widget_content_text_align, ";
 	$sql .= "widget_content_details, ";
 	$sql .= "widget_chart_type, ";
-	$sql .= "cast(widget_label_enabled as text), ";
+	$sql .= "widget_label_enabled, ";
 	$sql .= "widget_label_text_color, ";
 	$sql .= "widget_label_text_color_hover, ";
 	$sql .= "widget_label_background_color, ";
@@ -127,7 +124,7 @@
 	$sql .= "cast(widget_enabled as text), ";
 	$sql .= "widget_description ";
 	$sql .= "from v_dashboard_widgets as d ";
-	$sql .= "where widget_enabled = 'true' ";
+	$sql .= "where widget_enabled = true ";
 	$sql .= "and dashboard_widget_uuid in ( ";
 	$sql .= "	select dashboard_widget_uuid from v_dashboard_widget_groups where group_uuid in ( ";
 	$sql .= "		".$group_uuids_in." ";
@@ -189,8 +186,6 @@
 
 			//save the data
 			if (is_array($array)) {
-				$database->app_name = 'dashboard';
-				$database->app_uuid = '55533bef-4f04-434a-92af-999c1e9927f7';
 				$database->save($array);
 			}
 
@@ -221,6 +216,8 @@
 
 //include chart.js
 	echo "<script src='/resources/chartjs/chart.min.js'></script>";
+	echo "<script src='/resources/chartjs/chartjs-adapter-date-fns.bundle.min.js'></script>";
+	echo "<script src='/resources/chartjs/chartjs-plugin-streaming.js'></script>";
 
 //chart variables
 	echo "<script>\n";
@@ -246,7 +243,7 @@
 	echo "	<div class='actions'>\n";
 	echo "		<form id='dashboard' method='post' _onsubmit='setFormSubmitting()'>\n";
 	if ($settings->get('theme', 'menu_style', '') != 'side') {
-		echo "		".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_edit.php?id=user'>".$_SESSION["username"]."</a>&nbsp; &nbsp;";
+		echo "		".$text['label-welcome']." <a href='".PROJECT_PATH."/core/users/user_profile.php'>".$_SESSION["username"]."</a>&nbsp; &nbsp;";
 	}
 	if (permission_exists('dashboard_edit')) {
 		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','name'=>'btn_back','style'=>'display: none;','onclick'=>"edit_mode('off');"]);
@@ -267,8 +264,8 @@
 	echo "</div>\n";
 
 //display login message
-	//if (if_group("superadmin") && isset($_SESSION['login']['message']['text']) && $_SESSION['login']['message']['text'] != '') {
-	//	echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>\n";
+	//if (if_group("superadmin") && !empty($settings->get('login', 'message')) && $settings->get('login', 'message') != '') {
+	//	echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$settings->get('login', 'message')."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>\n";
 	//}
 
 ?>
@@ -322,7 +319,7 @@ foreach ($widgets as $row) {
 		echo "	color: ".$row['widget_icon_color'].";\n";
 		echo "}\n";
 	}
-	if ($row['widget_label_enabled'] == 'false' && $row['widget_path'] != 'dashboard/parent') {
+	if ($row['widget_label_enabled'] === false && $row['widget_path'] != 'dashboard/parent') {
 		echo "#".$widget_id." .hud_title:first-of-type {\n";
 		echo "	display: none;\n";
 		echo "}\n";
@@ -356,7 +353,10 @@ foreach ($widgets as $row) {
 		echo "}\n";
 	}
 	if (!empty($row['widget_background_color'])) {
-		$background_color = json_decode($row['widget_background_color'], true);
+		$background_color = json_validate($row['widget_background_color']) ? json_decode($row['widget_background_color'], true) : $row['widget_background_color'];
+		if (!isset($background_color[1])) {
+			$background_color[1] = '';
+		}
 		echo "#".$widget_id." > .hud_box:first-of-type {\n";
 		echo "	background: ".$background_color[0].";\n";
 		if (empty($row['widget_background_gradient_style']) || $row['widget_background_gradient_style'] == 'mirror') {
@@ -368,7 +368,10 @@ foreach ($widgets as $row) {
 		echo "}\n";
 	}
 	if (!empty($row['widget_background_color_hover'])) {
-		$background_color_hover = json_decode($row['widget_background_color_hover'], true);
+		$background_color_hover = json_validate($row['widget_background_color_hover']) ? json_decode($row['widget_background_color_hover'], true) : $row['widget_background_color_hover'];
+		if (!isset($background_color_hover[1])) {
+			$background_color_hover[1] = '';
+		}
 		echo "#".$widget_id.":hover > .hud_box:first-of-type {\n";
 		echo "	background: ".$background_color_hover[0].";\n";
 		if (empty($row['widget_background_gradient_style']) || $row['widget_background_gradient_style'] == 'mirror') {
@@ -380,7 +383,10 @@ foreach ($widgets as $row) {
 		echo "}\n";
 	}
 	if (!empty($row['widget_detail_background_color'])) {
-		$detail_background_color = json_decode($row['widget_detail_background_color'], true);
+		$detail_background_color = json_validate($row['widget_detail_background_color']) ? json_decode($row['widget_detail_background_color'], true) : $row['widget_detail_background_color'];
+		if (!isset($detail_background_color[1])) {
+			$detail_background_color[1] = '';
+		}
 		echo "#".$widget_id." > .hud_box > .hud_details {\n";
 		echo "	background: ".$detail_background_color[0].";\n";
 		if (empty($row['widget_background_gradient_style']) || $row['widget_background_gradient_style'] == 'mirror') {
@@ -439,6 +445,7 @@ foreach ($widgets as $row) {
 	}
 	$row_span = $row['widget_row_span'] * 4;
 	$expanded_row_span = $row_span + 13;
+	//has detail expand button
 	if ($row['widget_details_state'] === "expanded" || $row['widget_details_state'] === "contracted") {
 		$row_span += 1;
 		$expanded_row_span += 1;
@@ -676,7 +683,7 @@ window.addEventListener('resize', update_parent_height);
 		$widget_label_text_color = $row['widget_label_text_color'] ?? $settings->get('theme', 'dashboard_label_text_color', '');
 		$widget_number_text_color = $row['widget_number_text_color'] ?? $settings->get('theme', 'dashboard_number_text_color', '');
 		$widget_number_background_color = $row['widget_number_background_color'] ?? $settings->get('theme', 'dashboard_number_background_color', '');
-		$widget_details_state = $row['widget_details_state'] ?? 'hidden';
+		$widget_details_state = $row['widget_details_state'] ?? 'disabled';
 		$widget_row_span = $row['widget_row_span'] ?? '';
 
 		//define the regex patterns
@@ -758,7 +765,7 @@ window.addEventListener('resize', update_parent_height);
 
 		.ghost {
 			border: 2px dashed rgba(0,0,0,1);
-			<?php $br = format_border_radius($_SESSION['theme']['dashboard_border_radius']['text'] ?? null, '5px'); ?>
+			<?php $br = format_border_radius($settings->get('theme', 'dashboard_border_radius') ?? null, '5px'); ?>
 			-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 			-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 			border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;

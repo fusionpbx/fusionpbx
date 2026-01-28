@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('time_condition_add') || permission_exists('time_condition_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('time_condition_add') || permission_exists('time_condition_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -45,7 +42,7 @@
 	$destination = new destinations;
 
 //load available presets
-	$preset_region = "preset_".$_SESSION['time_conditions']['region']['text'];
+	$preset_region = "preset_".$settings->get('time_conditions', 'region');
 	if (is_array($_SESSION['time_conditions'][$preset_region])) {
 		foreach ($_SESSION['time_conditions'][$preset_region] as $json) {
 			$json_array = json_decode($json, true);
@@ -80,7 +77,7 @@
 		if (permission_exists('time_condition_context')) {
 			$dialplan_context = $_POST["dialplan_context"];
 		}
-		$dialplan_enabled = $_POST["dialplan_enabled"] ?? 'false';
+		$dialplan_enabled = $_POST["dialplan_enabled"];
 		$dialplan_description = $_POST["dialplan_description"];
 
 		if (!permission_exists('time_condition_domain')) {
@@ -132,7 +129,6 @@
 					$sql = "select * from v_dialplans ";
 					$sql .= "where dialplan_uuid = :dialplan_uuid ";
 					$parameters['dialplan_uuid'] = $dialplan_uuid;
-					$database = new database;
 					$row = $database->select($sql, $parameters, 'row');
 					if (is_array($row) && @sizeof($row) != 0) {
 						$domain_uuid = $row["domain_uuid"];
@@ -165,9 +161,6 @@
 					$p->add('dialplan_detail_delete', 'temp');
 
 				//execute delete
-					$database = new database;
-					$database->app_name = 'time_conditions';
-					$database->app_uuid = '4b821450-926b-175a-af93-a03c441818b1';
 					$database->delete($array);
 					unset($array);
 
@@ -196,9 +189,6 @@
 					$array['dialplans'][0]['dialplan_description'] = $dialplan_description;
 
 				//execute insert/update
-					$database = new database;
-					$database->app_name = 'time_conditions';
-					$database->app_uuid = '4b821450-926b-175a-af93-a03c441818b1';
 					$database->save($array);
 					unset($array);
 
@@ -313,6 +303,14 @@
 							if ($cond_var != '') {
 								$cond_start = $_REQUEST['value'][$group_id][$cond_num]['start'];
 								$cond_stop = $_REQUEST['value'][$group_id][$cond_num]['stop'];
+
+								//convert to 24 hour time
+								if (!empty($cond_start) && $cond_var == 'date-time' && $settings->get('domain', 'time_format') != '24h') {
+									$cond_start = DateTime::createFromFormat('Y-m-d h:i a', $cond_start)->format('Y-m-d H:i');
+								}
+								if (!empty($cond_stop) && $cond_var == 'date-time' && $settings->get('domain', 'time_format') != '24h') {
+									$cond_stop = DateTime::createFromFormat('Y-m-d h:i a', $cond_stop)->format('Y-m-d H:i');
+								}
 
 								//convert time-of-day to minute-of-day (due to inconsistencies with time-of-day on some systems)
 								if ($cond_var == 'time-of-day') {
@@ -486,9 +484,6 @@
 					$p->add('dialplan_detail_edit', 'temp');
 
 				//execute insert
-					$database = new database;
-					$database->app_name = 'time_conditions';
-					$database->app_uuid = '4b821450-926b-175a-af93-a03c441818b1';
 					$database->save($array);
 					unset($array);
 
@@ -536,7 +531,6 @@
 			$sql .= "and domain_uuid = :domain_uuid ";
 			$parameters['dialplan_uuid'] = $dialplan_uuid;
 			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
 				$domain_uuid = $row["domain_uuid"];
@@ -570,7 +564,6 @@
 			$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
 			$parameters['dialplan_uuid'] = $dialplan_uuid;
 			$parameters['domain_uuid'] = $domain_uuid;
-			$database = new database;
 			$dialplan_details = $database->select($sql, $parameters, 'all');
 			unset($sql, $parameters);
 
@@ -661,8 +654,8 @@
 	}
 
 //set the defaults
-	if (empty($dialplan_context)) { $dialplan_context = $_SESSION['domain_name']; }
-	if (empty($dialplan_enabled)) { $dialplan_enabled = 'true'; }
+	$dialplan_context = $dialplan_context ?? $_SESSION['domain_name'];
+	$dialplan_enabled = $dialplan_enabled ?? true;
 
 //create token
 	$object = new token;
@@ -671,6 +664,14 @@
 //include the header
 	$document['title'] = $text['title-time_condition'];
 	require_once "resources/header.php";
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH:mm';
+	}
+	else {
+		$time_format = 'hh:mm a';
+	}
 
 //debug
 // 	echo "<div style='overflow: auto; font-family: courier; width: 100%; height: 200px; border: 1px solid #ccc; padding: 20px;'>\n";
@@ -822,15 +823,12 @@
 
 					case 'hour': //hours of day
 						<?php
-						if ( $_SESSION['domain']['time_format']['text'] =="24h") {
-
+						if ($settings->get('domain', 'time_format') == '24h') {
 							for ($h = 0; $h <= 23; $h++) {
 								echo "sel_start.options[sel_start.options.length] = new Option(".$h.", ".$h.");\n";
 								echo "sel_stop.options[sel_stop.options.length] = new Option(".$h.", ".$h.");\n";
 							}
-
 						} else {
-
 							for ($h = 0; $h <= 23; $h++) {
 								echo "sel_start.options[sel_start.options.length] = new Option(((".$h." != 0) ? ((".$h." >= 12) ? ((".$h." == 12) ? ".$h." : (".$h." - 12)) + ' PM' : ".$h." + ' AM') : '12 AM'), ".$h.");\n";
 								echo "sel_stop.options[sel_stop.options.length] = new Option(((".$h." != 0) ? ((".$h." >= 12) ? ((".$h." == 12) ? ".$h." : (".$h." - 12)) + ' PM' : ".$h." + ' AM') : '12 AM'), ".$h.");\n";
@@ -841,8 +839,7 @@
 
 					case 'time-of-day': //time of day
 						<?php
-						if ( $_SESSION['domain']['time_format']['text'] =="24h") {
-
+						if ($settings->get('domain', 'time_format') == '24h') {
 							for ($h = 0; $h <= 23; $h++) {
 								for ($m = 0; $m <= 59; $m++) {
 									echo "sel_start.options[sel_start.options.length] = new Option(('0'+'".$h."').slice(-2)+':'+('0'+'".$m."').slice(-2),pad('".$h."', 2)  + ':' + pad(".$m.", 2));\n";
@@ -856,7 +853,7 @@
 									echo "sel_start.options[sel_start.options.length] = new Option(((".$h." != 0) ? ((".$h." >= 12) ? ((".$h." == 12) ? ".$h." : (".$h." - 12)) + ':' + pad(".$m.", 2) + ' PM' : ".$h." + ':' + pad(".$m.", 2) + ' AM') : '12:' + pad(".$m.", 2) + ' AM'), pad(".$h.", 2) + ':' + pad(".$m.", 2));\n";
 									echo "sel_stop.options[sel_stop.options.length] = new Option(((".$h." != 0) ? ((".$h." >= 12) ? ((".$h." == 12) ? ".$h." : (".$h." - 12)) + ':' + pad(".$m.", 2) + ' PM' : ".$h." + ':' + pad(".$m.", 2) + ' AM') : '12:' + pad(".$m.", 2) + ' AM'), pad(".$h.", 2) + ':' + pad(".$m.", 2));\n";
 								}
-						}
+							}
 						}
 						//h = 23;
 						//m = 59;
@@ -891,14 +888,14 @@
 		tb.id = obj.id;
 		tb_id = obj.id;
 		tb.className = 'formfld datetimepicker';
-		tb.setAttribute('style', 'position: relative; width: 120px; min-width: 120px; max-width: 120px; text-align: center;');
+		tb.setAttribute('style', 'position: relative; width: 130px; min-width: 130px; max-width: 130px; text-align: center;');
 		tb.setAttribute('data-toggle', 'datetimepicker');
 		tb.setAttribute('data-target', '#' + tb.id);
 		tb.setAttribute('onblur', "$(this).datetimepicker('hide');");
 		obj.parentNode.insertBefore(tb, obj);
 		obj.parentNode.removeChild(obj);
 		$('#'+tb_id).wrap("<div style='position: relative; display: inline;'></div>"); //add parent div
-		$('#'+tb_id).datetimepicker({ format: 'YYYY-MM-DD HH:mm', });
+		$('#'+tb_id).datetimepicker({ format: 'YYYY-MM-DD <?php echo $time_format; ?>', });
 	}
 
 	function change_to_select(obj) {
@@ -999,12 +996,19 @@ echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 echo "	".$text['label-extension']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-echo "	<input class='formfld' type='text' name='dialplan_number' id='dialplan_number' maxlength='255' value=\"".escape($dialplan_number ?? null)."\" required='required' placeholder=\"".($_SESSION['time_conditions']['extension_range']['text'] ?? '')."\">\n";
+echo "	<input class='formfld' type='text' name='dialplan_number' id='dialplan_number' maxlength='255' value=\"".escape($dialplan_number ?? null)."\" required='required' placeholder=\"".($settings->get('time_conditions', 'extension_range') ?? '')."\">\n";
 echo "	<br />\n";
 echo "	".$text['description-extension']."<br />\n";
 echo "</td>\n";
 echo "</tr>\n";
 
+/**
+ * Adds a custom condition to the given group.
+ *
+ * @param object $destination     The destination object being processed.
+ * @param int    $group_id        The ID of the group to which the condition is being added.
+ * @param string $dialplan_action The dialplan action for the group (optional).
+ */
 function add_custom_condition($destination, $group_id, $dialplan_action = '') {
 	global $text, $v_link_label_add;
 	echo "<tr>\n";
@@ -1076,6 +1080,11 @@ if ($action == 'update') {
 						if ($cond_var == 'date-time') {
 							echo "	change_to_input(document.getElementById('value_".$group_id."_' + condition_id + '_start'));\n";
 							echo "	change_to_input(document.getElementById('value_".$group_id."_' + condition_id + '_stop'));\n";
+							//convert to 12 hour time if needed
+							if ($settings->get('domain', 'time_format') != '24h') {
+								$cond_val_start = DateTime::createFromFormat('Y-m-d H:i', $cond_val_start)->format('Y-m-d h:i a');
+								$cond_val_stop = DateTime::createFromFormat('Y-m-d H:i', $cond_val_stop)->format('Y-m-d h:i a');
+							}
 							echo "	$('#value_".$group_id."_' + condition_id + '_start').val('".$cond_val_start."');\n";
 							echo "	$('#value_".$group_id."_' + condition_id + '_stop').val('".$cond_val_stop."');\n";
 						}
@@ -1307,17 +1316,16 @@ if ($action == 'update') {
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='dialplan_enabled' name='dialplan_enabled' value='true' ".($dialplan_enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
-		echo "		<option value='true' ".($dialplan_enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($dialplan_enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='dialplan_enabled' name='dialplan_enabled'>\n";
+	echo "		<option value='true' ".($dialplan_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($dialplan_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo "</td>\n";

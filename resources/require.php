@@ -77,8 +77,8 @@
 
 //debug info
 	//echo "Include Path: ".get_include_path()."\n";
-	//echo "Document Root: ".$_SERVER["DOCUMENT_ROOT"]."\n";
-	//echo "Project Root: ".$_SERVER["PROJECT_ROOT"]."\n";
+	//echo "Document Root: ".dirname(__DIR__, 1)."\n";
+	//echo "Project Root: ".dirname(__DIR__, 1)."\n";
 
 
 //include global functions
@@ -88,9 +88,21 @@
 	global $database;
 	$database = database::new(['config' => $config]);
 
+//security headers
+	if (!defined('STDIN') && session_status() === PHP_SESSION_NONE) {
+		header("X-Frame-Options: SAMEORIGIN");
+		header("Content-Security-Policy: frame-ancestors 'self';");
+		header("X-Content-Type-Options: nosniff");
+		header("Referrer-Policy: strict-origin-when-cross-origin");
+		//header("Strict-Transport-Security: max-age=63072000; includeSubDomains; preload");
+	}
+
 //start the session if not using the command line
 	global $no_session;
-	if (!defined('STDIN') && empty($no_session)) {
+	if (!defined('STDIN') && empty($no_session) && session_status() === PHP_SESSION_NONE) {
+		ini_set('session.cookie_httponly', !isset($conf['session.cookie_httponly']) ? 'true' : (!empty($config->get('session.cookie_httponly')) ? 'true' : 'false'));
+		ini_set('session.cookie_secure', !isset($conf['session.cookie_secure']) ? 'true' : (!empty($config->get('session.cookie_secure')) ? 'true' : 'false'));
+		ini_set('session.cookie_samesite', $config->get('session.cookie_samesite', 'Lax'));
 		session_start();
 	}
 
@@ -110,15 +122,15 @@
 	}
 
 //change language on the fly - for translate tool (if available)
-	if (!defined('STDIN') && isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
-		$_SESSION['domain']['language']['code'] = $_REQUEST['view_lang_code'];
-	}
+	//if (!defined('STDIN') && isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
+	//	$_SESSION['domain']['language']['en-us'] = $_REQUEST['view_lang_code'];
+	//}
 
 //change the domain
-	if (!empty($_GET["domain_uuid"]) && is_uuid($_GET["domain_uuid"]) && $_GET["domain_change"] == "true" && permission_exists('domain_select')) {
+	if (!empty($_GET["domain_uuid"]) && is_uuid($_GET["domain_uuid"]) && !empty($_GET["domain_change"]) && $_GET["domain_change"] == "true" && permission_exists('domain_select')) {
 
 		//include domains
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php") && !permission_exists('domain_all')) {
+			if (file_exists(dirname(__DIR__, 1)."/app/domains/app_config.php") && !permission_exists('domain_all')) {
 				include_once "app/domains/domains.php";
 			}
 
@@ -140,7 +152,6 @@
 
 		//update the domain session variables
 			$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
-			$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'] ?? null;
 			$_SESSION["context"] = $_SESSION["domain_name"];
 
 		//clear the extension array so that it is regenerated for the selected domain

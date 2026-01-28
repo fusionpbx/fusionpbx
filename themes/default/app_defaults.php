@@ -29,7 +29,7 @@
 
 		//get the background images
 			$relative_path = PROJECT_PATH.'/themes/default/images/backgrounds';
-			$backgrounds = opendir($_SERVER["DOCUMENT_ROOT"].'/'.$relative_path);
+			$backgrounds = opendir(dirname(__DIR__, 2).'/'.$relative_path);
 			unset($array);
 			$x = 0;
 			while (false !== ($file = readdir($backgrounds))) {

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2017
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,22 +26,24 @@
 
 	if ($domains_processed == 1) {
 		//add the variables to the database
-		$sql = "select count(*) from v_number_translations ";
+		$sql = "select count(number_translation_uuid) from v_number_translations ";
 		$num_rows = $database->select($sql, null, 'column');
 		unset($sql);
 
 		if ($num_rows == 0) {
 			//get the array of xml files
-			$xml_list = glob($_SERVER["PROJECT_ROOT"] . "/*/*/resources/switch/conf/number_translation/*.xml");
+			$xml_dir = dirname(__DIR__, 2) . "/app/number_translations/resources/switch/conf/number_translation";
 
 			//number_translation class
 			$number_translation = new number_translations;
 
 			//process the xml files
+			$xml_list = array_diff(scandir($xml_dir), array('..', '.'));
 			foreach ($xml_list as $xml_file) {
 				//get and parse the xml
-					$number_translation->xml = file_get_contents($xml_file);
-					$number_translation->import();
+				$file_content = file_get_contents($xml_dir . '/' . $xml_file);
+				$number_translation->get_xml($file_content);
+				$number_translation->import();
 			}
 
 			//check for existing configuration

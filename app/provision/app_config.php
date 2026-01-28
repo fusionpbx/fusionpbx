@@ -296,6 +296,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "allow extensions to be provisioned as contacts in provision templates";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "594c01dc-f0c3-4a10-8039-7e9ca8263cae";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "contact_extensions_filter_by";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "call_group";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filter contact extensions by: call_group. Used in the phone book directory.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d157078e-b363-4f34-a6d4-8a86990a40b7";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "number_as_presence_id";

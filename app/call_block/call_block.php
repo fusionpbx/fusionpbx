@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -34,7 +34,8 @@
 
 //check permissions
 	if (!permission_exists('call_block_view')) {
-		echo "access denied"; exit;
+		echo "access denied";
+		exit;
 	}
 
 //add multi-lingual support
@@ -51,7 +52,7 @@
 //get posted data
 	if (!empty($_POST['call_blocks'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$call_blocks = $_POST['call_blocks'];
 	}
 
@@ -78,7 +79,7 @@
 				break;
 		}
 
-		header('Location: call_block.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: call_block.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -91,15 +92,7 @@
 		$search = strtolower($_GET["search"]);
 	}
 
-//set the time zone
-	if (isset($_SESSION['domain']['time_zone']['name'])) {
-		$time_zone = $_SESSION['domain']['time_zone']['name'];
-	}
-	else {
-		$time_zone = date_default_timezone_get();
-	}
-
-//prepare to page the results
+//get the count
 	$sql = "select count(*) from view_call_block ";
 	$sql .= "where true ";
 	if ($show == "all" && permission_exists('call_block_all')) {
@@ -136,12 +129,11 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($parameters);
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".$search;
 	if ($show == "all" && permission_exists('call_block_all')) {
 		$param .= "&show=all";
@@ -152,21 +144,26 @@
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
+
 //get the list
 	$sql = "select domain_uuid, call_block_uuid, call_block_direction, extension_uuid, call_block_name, ";
 	$sql .= " call_block_country_code, call_block_number, extension, number_alias, call_block_count, ";
 	$sql .= " call_block_app, call_block_data, ";
 	$sql .= " to_char(timezone(:time_zone, insert_date), 'DD Mon YYYY') as date_formatted, \n";
-	if (date(!empty($_SESSION['domain']['time_format']['text']) == '12h')) {
-		$sql .= " to_char(timezone(:time_zone, insert_date), 'HH12:MI:SS am') as time_formatted, \n";
-	}
-	else {
-		$sql .= " to_char(timezone(:time_zone, insert_date), 'HH24:MI:SS am') as time_formatted, \n";
-	}
-	$sql .= " call_block_enabled, call_block_description, insert_date, insert_user, update_date, update_user ";
+	$sql .= " to_char(timezone(:time_zone, insert_date), '".$time_format."') as time_formatted, \n";
+	$sql .= " cast(call_block_enabled as text), call_block_description, insert_date, insert_user, update_date, update_user ";
 	$sql .= "from view_call_block ";
 	$sql .= "where true ";
-	$parameters['time_zone'] = $time_zone;
 	if ($show == "all" && permission_exists('call_block_all')) {
 		//$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -204,7 +201,7 @@
 	}
 	$sql .= order_by($order_by, $order, ['domain_uuid','call_block_country_code','call_block_number']);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
+	$parameters['time_zone'] = $time_zone;
 	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -293,7 +290,7 @@
 	}
 	echo th_order_by('call_block_direction', $text['label-direction'], $order_by, $order, null, "style='width: 1%;' class='center'");
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order, null, "class='center'");
-	echo th_order_by('call_block_name', $text['label-name'], $order_by, $order);
+	echo th_order_by('call_block_name', $text['label-caller_id_name'], $order_by, $order);
 	echo th_order_by('call_block_country_code', $text['label-country_code'], $order_by, $order);
 	echo th_order_by('call_block_number', $text['label-number'], $order_by, $order);
 	echo th_order_by('call_block_count', $text['label-count'], $order_by, $order, '', "class='center hide-sm-dn'");
@@ -313,7 +310,7 @@
 			if (permission_exists('call_block_edit')) {
 				$list_row_url = "call_block_edit.php?id=".urlencode($row['call_block_uuid']);
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
-					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid'] ?? '').'&domain_change=true';
 				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
@@ -343,8 +340,8 @@
 			}
 			echo "	<td class='center'>";
 			switch ($row['call_block_direction']) {
-				case "inbound": echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_answered.png' style='border: none;' title='".$text['label-inbound']."'>\n"; break;
-				case "outbound": echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_answered.png' style='border: none;' title='".$text['label-outbound']."'>\n"; break;
+				case "inbound": echo "<img src='/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_inbound_answered.png' style='border: none;' title='".$text['label-inbound']."'>\n"; break;
+				case "outbound": echo "<img src='/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_outbound_answered.png' style='border: none;' title='".$text['label-outbound']."'>\n"; break;
 			}
 			echo "	</td>\n";
 			echo "	<td class='center'>";
@@ -407,6 +404,3 @@
 
 //include the footer
 	require_once "resources/footer.php";
-
-?>
-

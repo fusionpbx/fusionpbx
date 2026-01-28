@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('voicemail_greeting_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('voicemail_greeting_edit')) {
 		echo "access denied";
 		exit;
 	}
@@ -41,13 +38,8 @@
 	$language = new text;
 	$text = $language->get();
 
-//set the variables
-	$domain_uuid = $_SESSION['domain_uuid'];
-	$domain_name = $_SESSION['domain_name'];
-	$user_uuid = $_SESSION['user_uuid'];
-
 //add the settings object
-	$settings = new settings(["domain_uuid" => $domain_uuid, "user_uuid" => $user_uuid]);
+	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
 
 //as long as the class exists, enable speech using default settings
 	$speech_enabled = class_exists('speech') && $settings->get('speech', 'enabled', false);
@@ -65,7 +57,7 @@
 	$language_enabled = false;
 
 //add the speech object and get the voices and languages arrays
-	if ($speech_enabled && !empty($speech_engine)) {
+	if (class_exists('speech') && $speech_enabled && !empty($speech_engine)) {
 		$speech = new speech($settings);
 		$voices = $speech->get_voices();
 		$greeting_format = $speech->get_format();
@@ -73,10 +65,18 @@
 		//$translate_enabled = $speech->get_translate_enabled();
 		//$language_enabled = $speech->get_language_enabled();
 		//$languages = $speech->get_languages();
+
+		// Determine the aray type single, or multi
+		$voices_array_type = array_type($voices);
+
+		// Sort the array by language code keys alphabetically
+		if ($voices_array_type == 'multi') {
+			ksort($voices);
+		}
 	}
 
 //add the transcribe object and get the languages arrays
-	if ($transcribe_enabled && !empty($transcribe_engine)) {
+	if (class_exists('transcribe') && $transcribe_enabled && !empty($transcribe_engine)) {
 		$transcribe = new transcribe($settings);
 		//$transcribe_models = $transcribe->get_models();
 		//$translate_enabled = $transcribe->get_translate_enabled();
@@ -118,15 +118,17 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		if (permission_exists('voicemail_greeting_delete')) {
 			if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($voicemail_greeting_uuid)) {
 				//prepare
-					$array[0]['checked'] = 'true';
-					$array[0]['uuid'] = $voicemail_greeting_uuid;
+				$array[0]['checked'] = 'true';
+				$array[0]['uuid'] = $voicemail_greeting_uuid;
+
 				//delete
-					$obj = new voicemail_greetings;
-					$obj->voicemail_id = $voicemail_id;
-					$obj->delete($array);
+				$obj = new voicemail_greetings;
+				$obj->voicemail_id = $voicemail_id;
+				$obj->delete($array);
+
 				//redirect
-					header("Location: voicemail_greetings.php?id=".$voicemail_id);
-					exit;
+				header("Location: voicemail_greetings.php?id=".$voicemail_id);
+				exit;
 			}
 		}
 
@@ -162,7 +164,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$sql .= "from v_voicemail_greetings where domain_uuid = :domain_uuid ";
 		$sql .= "and voicemail_id = :voicemail_id ";
 		$sql .= "order by greeting_id asc ";
-		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['voicemail_id'] = $voicemail_id;
 		$rows = $database->select($sql, $parameters, 'all');
 		$greeting_ids = array();
@@ -173,17 +175,22 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		}
 		unset($sql, $parameters);
 
-		//set the recording format
-		$greeting_format = $greeting_format ?? 'wav';
-
 		//build the setting object and get the recording path
-		$greeting_path = $settings->get('switch', 'voicemail').'/default/'.$domain_name.'/'.$voicemail_id.'/';
+		$greeting_path = $settings->get('switch', 'voicemail').'/default/'.$_SESSION['domain_name'].'/'.$voicemail_id;
+
+		//set the recording format
+		$greeting_files = glob($greeting_path.'/greeting_'.$greeting_id.'.*');
+		if (empty($greeting_format) && !empty($greeting_files)) {
+			$greeting_format = pathinfo($greeting_files[0], PATHINFO_EXTENSION);
+		} else {
+			$greeting_format = $greeting_format ?? 'wav';
+		}
 
 		if ($action == 'add') {
 			//find the next available greeting id
 			$greeting_id = 0;
 			for ($i = 1; $i <= 9; $i++) {
-				if (!in_array($i, $greeting_ids) && !file_exists($greeting_path.'greeting_'.$i.'.'.$greeting_format)) {
+				if (!in_array($i, $greeting_ids) && !file_exists($greeting_path.'/greeting_'.$i.'.'.$greeting_format)) {
 					$greeting_id = $i;
 					break;
 				}
@@ -194,10 +201,22 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			//set file name
 			$greeting_filename = 'greeting_'.$greeting_id.'.'.$greeting_format;
 
-			//text to audio - make a new audio file from the message
+			//determine whether to create the recording
+			$update_greeting = false;
 			if ($speech_enabled && !empty($greeting_voice) && !empty($greeting_message)) {
+				if ($action == 'add') {
+					$update_greeting = true;
+				}
+				if ($action == 'update' && $_POST["update_greeting"] == 'true') {
+					$update_greeting = true;
+				}
+			}
+
+			//text to audio - make a new audio file from the message
+			if ($update_greeting && $speech_enabled && !empty($greeting_voice) && !empty($greeting_message)) {
 				$speech->audio_path = $greeting_path;
 				$speech->audio_filename = $greeting_filename;
+				$speech->audio_format = $greeting_format;
 				//$speech->audio_model = $greeting_model ?? '';
 				$speech->audio_voice = $greeting_voice;
 				//$speech->audio_language = $greeting_language;
@@ -208,19 +227,19 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 				//fix invalid riff & data header lengths in generated wave file
 				if ($speech_engine == 'openai') {
 					$greeting_filename_temp = str_replace('.'.$greeting_format, '.tmp.'.$greeting_format, $greeting_filename);
-					exec('sox --ignore-length '.$greeting_path.$greeting_filename.' '.$greeting_path.$greeting_filename_temp);
+					exec('sox --ignore-length '.$greeting_path.'/'.$greeting_filename.' '.$greeting_path.'/'.$greeting_filename_temp);
 					if (file_exists($greeting_path.$greeting_filename_temp)) {
-						exec('rm -f '.$greeting_path.$greeting_filename.' && mv '.$greeting_path.$greeting_filename_temp.' '.$greeting_path.$greeting_filename);
+						exec('rm -f '.$greeting_path.'/'.$greeting_filename.' && mv '.$greeting_path.'/'.$greeting_filename_temp.' '.$greeting_path.'/'.$greeting_filename);
 					}
 					unset($greeting_filename_temp);
 				}
 			}
 
 			//audio to text - get the transcription from the audio file
-			if ($transcribe_enabled && empty($greeting_voice) && empty($greeting_message)) {
+			if ($transcribe_enabled && empty($greeting_message)) {
 				$transcribe->audio_path = $greeting_path;
 				$transcribe->audio_filename = $greeting_filename;
-				$greeting_message = $transcribe->transcribe();
+				$greeting_message = $transcribe->transcribe('text');
 			}
 
 			//if base64 is enabled base64
@@ -230,43 +249,45 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 			//build data array
 			$array['voicemail_greetings'][0]['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
-			$array['voicemail_greetings'][0]['domain_uuid'] = $domain_uuid;
+			$array['voicemail_greetings'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 			$array['voicemail_greetings'][0]['voicemail_id'] = $voicemail_id;
 			$array['voicemail_greetings'][0]['greeting_id'] = $greeting_id;
 			$array['voicemail_greetings'][0]['greeting_name'] = $greeting_name;
+			$array['voicemail_greetings'][0]['greeting_voice'] = $greeting_voice;
 			$array['voicemail_greetings'][0]['greeting_message'] = $greeting_message;
 			$array['voicemail_greetings'][0]['greeting_filename'] = $greeting_filename;
 			$array['voicemail_greetings'][0]['greeting_base64'] = $greeting_base64;
 			$array['voicemail_greetings'][0]['greeting_description'] = $greeting_description;
 
 			//execute query
-			$database->app_name = 'voicemail_greetings';
-			$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
 			$database->save($array);
 			unset($array);
 
 			//set message
 			message::add($text['message-'.($action == 'add' ? 'greeting_created' : 'update')]);
-
 		}
 
 		//redirect
-			header("Location: voicemail_greetings.php?id=".$voicemail_id);
-			exit;
+		header("Location: voicemail_greeting_edit.php?id=".$voicemail_greeting_uuid."&voicemail_id=".$voicemail_id);
+		exit;
 	}
 }
 
 //pre-populate the form
-	if ($action == 'update' && !empty($voicemail_greeting_uuid) && is_uuid($voicemail_greeting_uuid) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
+	if ($action == 'update' &&
+		!empty($voicemail_greeting_uuid) && is_uuid($voicemail_greeting_uuid) &&
+		(empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$sql = "select * from v_voicemail_greetings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and voicemail_greeting_uuid = :voicemail_greeting_uuid ";
-		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$greeting_id = $row["greeting_id"];
 			$greeting_name = $row["greeting_name"];
+			$greeting_filename = $row['greeting_filename'];
+			$greeting_voice = $row["greeting_voice"];
 			$greeting_message = $row["greeting_message"];
 			$greeting_description = $row["greeting_description"];
 		}
@@ -287,11 +308,23 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['label-'.($action == 'update' ? 'edit' : 'add')]."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','collapse'=>'hide-xs','link'=>'voicemail_greetings.php?id='.urlencode($voicemail_id)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','link'=>'voicemail_greetings.php?id='.urlencode($voicemail_id)]);
  	if (permission_exists('voicemail_greeting_delete') && $action == 'update') {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','collapse'=>'hide-xs','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','collapse'=>'hide-xs','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','collapse'=>'hide-xs']);
+	if (permission_exists('voicemail_greeting_play') && $action == 'update') {
+		$greeting_hash = md5($greeting_voice.$greeting_message);
+		$greeting_file_name = strtolower(pathinfo($greeting_filename, PATHINFO_BASENAME));
+		$greeting_file_ext = pathinfo($greeting_file_name, PATHINFO_EXTENSION);
+		switch ($greeting_file_ext) {
+			case "wav" : $greeting_type = "audio/wav"; break;
+			case "mp3" : $greeting_type = "audio/mpeg"; break;
+			case "ogg" : $greeting_type = "audio/ogg"; break;
+		}
+		echo "<audio id='recording_audio_".escape($voicemail_greeting_uuid)."' style='display: none;' preload='none' onended=\"recording_reset('".escape($voicemail_greeting_uuid)."');\" src=\"".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?a=download&type=rec&t=bin&id=".urlencode($voicemail_id)."&uuid=".urlencode($voicemail_greeting_uuid)."&v=".$greeting_hash."\" type='".$greeting_type."'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'label'=>$text['label-preview'],'icon'=>$settings->get('theme','button_icon_play'),'id'=>'recording_button_'.escape($voicemail_greeting_uuid),'onclick'=>"recording_play('".escape($voicemail_greeting_uuid)."','','','".$text['label-preview']."'); this.blur();"]);
+	}
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -333,9 +366,9 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			echo "</td>\n";
 			echo "</tr>\n";
 		}
-// 		else {
-// 			echo "<input class='formfld' type='hidden' name='greeting_model' maxlength='255' value=''>\n";
-// 		}
+		// else {
+		// 	echo "<input class='formfld' type='hidden' name='greeting_model' maxlength='255' value=''>\n";
+		// }
 
 		//voices
 		echo "<tr>\n";
@@ -344,12 +377,43 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if (!empty($voices) && is_array($voices)) {
-			echo "	<select class='formfld' name='greeting_voice'>\n";
-			echo "		<option value=''></option>\n";
-			foreach ($voices as $key => $voice) {
-				echo "		<option value='".escape(gettype($key) === "integer" ? $voice : $key)."' ".(!empty($greeting_voice) && $voice == $greeting_voice ? "selected='selected'" : null).">".escape(ucwords($voice))."</option>\n";
+			if ($voices_array_type == 'single') {
+				echo "	<select class='formfld' name='greeting_voice' style='width: 200px;'>\n";
+				echo "		<option value=''></option>\n";
+				foreach ($voices as $key => $voice) {
+					$greeting_voice_selected = (!empty($greeting_voice) && $key == $greeting_voice) ? "selected='selected'" : null;
+					echo "		<option value='".escape($key)."' $greeting_voice_selected>".escape(ucwords($voice))."</option>\n";
+				}
+				echo "	</select>\n";
 			}
-			echo "	</select>\n";
+			if ($voices_array_type == 'multi') {
+				echo "	<select class='formfld' id='greeting_voice_source' name='greeting_voice_source' style='display: none;'>\n";
+				echo "		<option value=''></option>\n";
+				foreach ($voices as $category => $sub_array) {
+					$category = $text['label-'.$category] ?? $category;
+					echo "<optgroup label='".$category."' data-type='".$category."'>\n";
+					foreach ($sub_array as $key => $voice) {
+						$greeting_voice_selected = (!empty($greeting_voice) && $key == $greeting_voice) ? "selected='selected'" : null;
+						echo "		<option value='".escape($key)."' $greeting_voice_selected>".escape(ucwords($voice))."</option>\n";
+					}
+					echo "</optgroup>\n";
+				}
+				echo "	</select>\n";
+
+				// Select showing only optgroup labels
+				echo "	<select class='formfld' id='greeting_voice_group_select' style='width: 100px;' >\n";
+				echo "		<option value='' disabled='disabled' selected='selected'></option>\n";
+				echo "	</select>\n";
+
+				// Select showing only options from selected group\n";
+				echo "	<select class='formfld' id='greeting_voice_option_select' name='greeting_voice' style='width: 195px;' disabled='disabled'>\n";
+				echo "		<option value='' disabled='disabled' selected='selected'></option>\n";
+				echo "	</select>\n";
+
+				echo "<script>\n";
+				echo "	select_group_option('greeting_voice_source', 'greeting_voice_group_select', 'greeting_voice_option_select');\n";
+				echo "</script>\n";
+			}
 		}
 		else {
 			echo "		<input class='formfld' type='text' name='greeting_voice' maxlength='255' value=\"".escape($greeting_voice ?? '')."\">\n";
@@ -389,17 +453,16 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			echo "	".$text['label-translate']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-				echo "	<label class='switch'>\n";
-				echo "		<input type='checkbox' id='translate' name='translate' value='true' ".($translate == 'true' ? "checked='checked'" : null).">\n";
-				echo "		<span class='slider'></span>\n";
-				echo "	</label>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			else {
-				echo "	<select class='formfld' id='translate' name='translate'>\n";
-				echo "		<option value='true' ".($translate == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-				echo "		<option value='false' ".($translate == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-				echo "	</select>\n";
+			echo "	<select class='formfld' id='translate' name='translate'>\n";
+			echo "		<option value='true' ".($translate == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($translate == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
 			}
 			echo "<br />\n";
 			echo $text['description-translate']."\n";
@@ -412,11 +475,34 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "    ".$text['label-message']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <textarea class='formfld' name='greeting_message' style='width: 300px; height: 150px;'>".escape($greeting_message ?? '')."</textarea>\n";
+		echo "    <textarea class='formfld' name='greeting_message' style='width: 300px; height: 150px;'>".escape_textarea($greeting_message ?? '')."</textarea>\n";
 		echo "<br />\n";
 		echo $text['description-message']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+
+		if ($action == 'update') {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "	".$text['label-update_greeting']."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' style='position: relative;' align='left'>\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
+			}
+			echo "	<select class='formfld' id='update_greeting' name='update_greeting'>\n";
+			echo "		<option value='false' ".($update_greeting == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		<option value='true' ".($update_greeting == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
+			}
+			echo "<br />\n";
+			echo $text['description-update_greeting']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 	}
 
 	echo "<tr>\n";

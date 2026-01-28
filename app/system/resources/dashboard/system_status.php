@@ -13,9 +13,15 @@
 		exit;
 	}
 
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'core/user_settings');
+
+//get the dashboard label
+	$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //system status
 	echo "<div class='hud_box'>\n";
@@ -121,7 +127,7 @@
 
 //show the results
 	echo "	<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_system_status_details').slideToggle('fast');\"").">\n";
-	echo "		<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-system_status']."</a></span>\n";
+	echo "		<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".escape($widget_label)."</a></span>\n";
 
 	if ($widget_chart_type == "doughnut") {
 		?>
@@ -193,7 +199,7 @@
 
 		//disk usage
 		if ($widget_row_span >= 1) {
-			echo "	<span class='hud_title' style='text-align: left; font-size: 11px; line-height: 1.8; font-weight: unset; padding-left: 10%;'>".$text['label-disk_usage']."</span>\n";
+			echo "	<span class='hud_title' style='text-align: left; font-size: 11px; line-height: 1.8; font-weight: unset; padding-left: 10%;'>".$text['label-system_disk_usage']."</span>\n";
 			echo "	<div class='progress_container' style='width: 80%; height: 15px; overflow: hidden; border-radius: 10px; background: ".($settings->get('theme', 'dashboard_disk_usage_chart_sub_color') ?? '#d4d4d4').";'>\n";
 			echo "		<div class='progress_bar' style='width: ".$percent_disk_usage."%; height: 15px; border-radius: 10px; font-size: x-small; color: ".$row['widget_number_text_color']."; background: ".($settings->get('theme', 'dashboard_disk_usage_chart_main_color') ?? '#03c04a').";'>".round($percent_disk_usage)."%</div>\n";
 			echo "	</div>\n";
@@ -222,7 +228,7 @@
 
 		//pbx version
 			echo "<tr class='tr_link_void'>\n";
-			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".(isset($_SESSION['theme']['title']['text'])?$_SESSION['theme']['title']['text']:'FusionPBX')."</td>\n";
+			echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$settings->get('theme', 'title', 'FusionPBX')."</td>\n";
 			echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".software::version()."</td>\n";
 			echo "</tr>\n";
 			$c = ($c) ? 0 : 1;
@@ -329,7 +335,7 @@
 					$style = ($percent_disk_usage > 90) ? "color: red;" : (($percent_disk_usage > 75) ? "color: orange;" : "");
 
 					echo "<tr class='tr_link_void'>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-disk_usage']."</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]." hud_text'>".$text['label-system_disk_usage']."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right; $style'>".$percent_disk_usage."% (".$used_space." / ".$total_space.")"."</td>\n";
 					echo "</tr>\n";
 					$c = ($c) ? 0 : 1;
@@ -356,7 +362,6 @@
 			}
 
 			if (!empty($sql_current) && !empty($sql_max)) {
-				if (!isset($database)) { $database = new database; }
 
 				// Get current connections
 				$current_connections = $database->select($sql_current, null, 'column');
@@ -394,7 +399,7 @@
 				$matches = Array();
 				preg_match("/(\d+)\s+session\(s\)\s+\-\speak/", $tmp, $matches);
 				$channels = !empty($matches[1]) ? $matches[1] : 0;
-				$tr_link = "href='".PROJECT_PATH."/app/calls_active/calls_active.php'";
+				$tr_link = "href='".PROJECT_PATH."/app/active_calls/active_calls.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-channels']."</a></td>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: right;'>".$channels."</td>\n";

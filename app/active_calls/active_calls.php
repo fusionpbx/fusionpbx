@@ -30,9 +30,7 @@ require_once dirname(__DIR__, 2) . "/resources/require.php";
 require_once "resources/check_auth.php";
 
 //check permissions
-if (permission_exists('call_active_view')) {
-	//access granted
-} else {
+if (!permission_exists('call_active_view')) {
 	echo "access denied";
 	exit;
 }
@@ -52,10 +50,6 @@ if (empty($user_uuid)) {
 
 if (!($config instanceof config)) {
 	$config = config::load();
-}
-
-if (!($database instanceof database)) {
-	$database = database::new();
 }
 
 if (!($settings instanceof settings)) {
@@ -260,7 +254,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	};
 
 	// show the user extensions for eavesdrop
-<?php
+	<?php
 	$user['extensions'] = [];
 	// translate the current users assigned extensions
 	if (!empty($_SESSION['user']['extension'])) {
@@ -268,9 +262,10 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		foreach ($_SESSION['user']['extension'] as $user) {
 			echo "		extension_uuid: '" . $user['extension_uuid'] . "',\n";
 			echo "		extension: '" . $user['user'] . "',\n";
-			if (strlen($user['number_alias']) > 0) {
+			if (!empty($user['number_alias'])) {
 				$user_contact = $user['number_alias'];
-			} else {
+			}
+			else {
 				$user_contact = $user['user'];
 			}
 			echo "		extension_destination: '$user_contact',\n";
@@ -279,7 +274,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		echo "	last_entry_so_no_comma: '-100'";
 		echo "	};\n";
 	}
-?>
+	?>
 
 	const colors = {
 		RINGING: 'blue',
@@ -344,18 +339,32 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		client.ws.addEventListener("open", async () => {
 			try {
 				console.log('Connected');
-				console.log('Requesting authentication');
-				await client.request('authentication');
 				reconnectAttempts = 0;
 				const status = document.getElementById('calls_active_count');
 				status.style.backgroundColor = colors.INACTIVE;
-				bindEventHandlers(client);
-				console.log('Sent request for calls in progress');
-				client.request('active.calls', 'in.progress');
-				status.style.backgroundColor = colors.CONNECTED;
 			} catch (err) {
 				console.error("WS setup failed: ", err);
 				return;
+			}
+		});
+
+		// Handle incoming messages for authentication
+		client.ws.addEventListener("message", async (event) => {
+			try {
+				const message = JSON.parse(event.data);
+				// Check for authentication request from server
+				if (message.status_code === 407 && message.service_name === 'authentication') {
+					console.log('Authentication required - sending credentials');
+					await client.request('authentication');
+					console.log('Authentication sent');
+					const status = document.getElementById('calls_active_count');
+					bindEventHandlers(client);
+					console.log('Sent request for calls in progress');
+					client.request('active.calls', 'in.progress');
+					status.style.backgroundColor = colors.CONNECTED;
+				}
+			} catch (err) {
+				// Let the ws_client handle other messages
 			}
 		});
 
@@ -557,7 +566,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 				replace_arrow_icon(uuid, 'local');
 				row.dataset.forced_direction = 'local';
 			}
-			console.log('application', uuid, application_data);
+			//console.log('application', uuid, application_data);
 			update_call_element(`application_${uuid}`, application_data);
 		}
 		<?php endif; ?>
@@ -787,7 +796,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			// add the row to the table
 			tbody.appendChild(row);
 
-			console.log('NEW ROW ADDED', row.id);
+			//console.log('NEW ROW ADDED', row.id);
 
 			// Hide/show domain column
 			const domain = document.getElementById('th_domain');
@@ -993,7 +1002,12 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			//calculate already elapsed time
 			const start = new Date(start_time / 1000);
 			const now = new Date();
-			const elapsed = Math.floor(now.getTime() - start.getTime());
+			let elapsed = Math.floor(now.getTime() - start.getTime());
+
+			// Fix negative timer issue - if start time is in the future, set elapsed to 0
+			if (elapsed < 0) {
+				elapsed = 0;
+			}
 
 			//format time
 			const hh = Math.floor(elapsed / (1000 * 3600)).toString();

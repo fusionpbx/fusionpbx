@@ -1,4 +1,3 @@
-{* <?php *}
 
 {*//set the doctype *}
 	{if $browser_name == 'Internet Explorer'}
@@ -20,7 +19,7 @@
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-tempusdominus.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-colorpicker.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/fontawesome/css/all.min.css.php'>
-	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202508190425'>
+	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202512160230'>
 {*//link to custom css file *}
 	{if !empty($settings.theme.custom_css)}
 		<link rel='stylesheet' type='text/css' href='{$settings.theme.custom_css}'>
@@ -50,6 +49,9 @@
 		{/if}
 		<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/fonts/web_font_loader.php?v={$settings.theme.font_loader_version}'></script>
 	{/if}
+
+{*//javascript functions *}
+	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/javascript/select_group_option.js'></script>
 
 {*//local javascript *}
 	<script language='JavaScript' type='text/javascript'>
@@ -461,7 +463,7 @@
 					{/if}
 
 				//key: [ctrl]+[c], list,edit: to copy
-					{if $settings.theme.keyboard_shortcut_copy_enabled}
+					{if $settings.theme.keyboard_shortcut_copy_enabled|default:false}
 						{if $browser_name_short == 'Safari'} //emulate with detecting [c] only, as [command] and [control] keys are ignored when captured
 							{literal}
 							if (
@@ -568,9 +570,23 @@
 					});
 				//define formatting of individual classes
 					$('.datepicker').datetimepicker({ format: 'YYYY-MM-DD', });
-					$('.datetimepicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm', });
-					$('.datetimepicker-future').datetimepicker({ format: 'YYYY-MM-DD HH:mm', minDate: new Date(), });
-					$('.datetimesecpicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm:ss', });
+					{/literal}
+
+					{if !empty($time_format) && $time_format == '24h'}
+						{literal}
+						$(".datetimepicker").datetimepicker({ format: 'YYYY-MM-DD HH:mm', });
+						$(".datetimepicker-future").datetimepicker({ format: 'YYYY-MM-DD HH:mm', minDate: new Date(), });
+						$(".datetimesecpicker").datetimepicker({ format: 'YYYY-MM-DD HH:mm:ss', });
+						{/literal}
+					{else}
+						{literal}
+						$(".datetimepicker").datetimepicker({ format: 'YYYY-MM-DD hh:mm a', });
+						$(".datetimepicker-future").datetimepicker({ format: 'YYYY-MM-DD hh:mm a', minDate: new Date(), });
+						$(".datetimesecpicker").datetimepicker({ format: 'YYYY-MM-DD hh:mm:ss a', });
+						{/literal}
+					{/if}
+
+			{literal}
 			});
 			{/literal}
 
@@ -706,6 +722,18 @@
 			})(jQuery);
 			{/literal}
 
+		//slide toggle
+			{literal}
+			var switches = document.getElementsByClassName('switch');
+			var toggle = function(){
+				this.children[0].value = (this.children[0].value == 'false' ? 'true' : 'false');
+				this.children[0].dispatchEvent(new Event('change'));
+				};
+			for (var i = 0; i < switches.length; i++) {
+				switches[i].addEventListener('click', toggle, false);
+			}
+			{/literal}
+
 	{literal}
 	}); //document ready end
 	{/literal}
@@ -713,7 +741,7 @@
 
 	//audio playback functions
 		{literal}
-		var recording_audio, audio_clock, recording_id_playing;
+		var recording_audio, audio_clock, recording_id_playing, label_play;
 
 		function recording_load(player_id, data, audio_type) {
 			{/literal}
@@ -752,8 +780,14 @@
 			}
 			recording_audio = document.getElementById('recording_audio_' + player_id);
 
-			var label_play = "{/literal}{if $php_self == 'xml_cdr_details.php'}{literal}<span class='button-label pad'>{/literal}{$text.label_play}{literal}</span>{/literal}{/if}{literal}";
-			var label_pause = "{/literal}{if $php_self == 'xml_cdr_details.php'}{literal}<span class='button-label pad'>{/literal}{$text.label_pause}{literal}</span>{/literal}{/if}{literal}";
+			if (label !== undefined) {
+				label_play = "<span class='button-label pad'>" + label + "</span>";
+				var label_pause = "<span class='button-label pad'>" + label + "</span>";
+			}
+			else {
+				label_play = "{/literal}{if $php_self == 'xml_cdr_details.php'}{literal}<span class='button-label pad'>{/literal}{$text.label_play}{literal}</span>{/literal}{/if}{literal}";
+				var label_pause = "{/literal}{if $php_self == 'xml_cdr_details.php'}{literal}<span class='button-label pad'>{/literal}{$text.label_pause}{literal}</span>{/literal}{/if}{literal}";
+			}
 
 			if (recording_audio.paused) {
 				recording_load(player_id, data, audio_type);
@@ -809,7 +843,7 @@
 				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>";
 			}
 			else {
-				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>";
+				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>" + (label_play ?? '');
 			}
 			clearInterval(audio_clock);
 		}
@@ -982,12 +1016,12 @@
 		}
 
 		function list_self_check(checkbox_id) {
-			var inputs = document.getElementsByTagName('input');
-			for (var i = 0, max = inputs.length; i < max; i++) {
-				if (inputs[i].type === 'checkbox' && inputs[i].name.search['enabled'] == -1) {
-					inputs[i].checked = false;
-				}
-			}
+			//unchecks each selected checkbox
+			document.querySelectorAll('input[type="checkbox"]:not([name*="enabled"])').forEach(checkbox => {
+				checkbox.checked = false;
+			});
+
+			//select the checkbox with the specified id
 			document.getElementById(checkbox_id).checked = true;
 		}
 
@@ -1059,6 +1093,40 @@
 				}
 			}
 			document.activeElement.blur();
+		}
+
+		function modal_display_selected(modal_id) {
+			const selected_items = [];
+			const modal_message_element = document.querySelector(`#${modal_id} .modal-message`);
+
+			if (!modal_message_element.hasAttribute('data-message')) {
+				modal_message_element.setAttribute('data-message', modal_message_element.innerHTML);
+				modal_message_element.style.cssText += 'max-height: 50vh; overflow: scroll;';
+			}
+			const message = modal_message_element.getAttribute('data-message');
+
+			document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox_all)').forEach(checkbox => {
+				selected_items.push({
+					name: checkbox.dataset.itemName,
+					domain: checkbox.dataset.itemDomain
+				});
+			});
+
+			if (selected_items.length > 0) {
+				content = message;
+				content += '<table style="margin: 20px 40px; min-width: 70%;">';
+				content += '	<tbody>';
+				selected_items.forEach(item => {
+					content += '	<tr>';
+					content += `		<td style="display: list-item;">${item.name}</td>`;
+					content += `		<td>${item.domain || ''}</td>`;
+					content += '	</tr>';
+				});
+				content += '	</tbody>';
+				content += '</table>';
+
+				modal_message_element.innerHTML = content;
+			}
 		}
 		{/literal}
 
@@ -1190,7 +1258,7 @@
 <body>
 
 	{*//video background *}
-	{if !empty({$background_video})}
+	{if !empty($background_video)}
 		<video id="background-video" autoplay muted poster="" disablePictureInPicture="true" onloadstart="this.playbackRate = 1; this.pause();">
 			<source src="{$background_video}" type="video/mp4">
 		</video>

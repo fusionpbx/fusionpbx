@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_active_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('call_active_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -273,7 +270,7 @@
 
 	echo "	</table>\n";
 	echo "</div>\n";
-	echo "<input type='hidden' name='".$_SESSION['app']['calls_active']['token']['name']."' value='".$_SESSION['app']['calls_active']['token']['hash']."'>\n";
+	echo "<input type='hidden' name='".$settings->get('app', 'calls_active')['name']."' value='".$settings->get('app', 'calls_active')['hash']."'>\n";
 	echo "</form>\n";
 
 ?>

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2015
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,7 +26,16 @@
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
-	if (!permission_exists('contact_time_add')) { echo "access denied"; exit; }
+
+//check permissions
+	if (!permission_exists('contact_time_add')) {
+		echo "access denied";
+		exit;
+	}
+
+//set the defaults
+	$contact_time_uuid = '';
+	$time_description = '';
 
 //add multi-lingual support
 	$language = new text;
@@ -35,6 +44,9 @@
 //get contact uuid
 	$domain_uuid = $_REQUEST['domain_uuid'];
 	$contact_uuid = $_REQUEST['contact_uuid'];
+
+//set the time zone
+	date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
 
 //get posted variables & set time status
 	if (!empty($_POST)) {
@@ -61,9 +73,6 @@
 		}
 
 		if (!empty($array)) {
-			$database = new database;
-			$database->app_name = 'contacts';
-			$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 			$database->save($array);
 			unset($array);
 		}
@@ -82,7 +91,6 @@
 	$sql .= "and contact_uuid = :contact_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['contact_uuid'] = $contact_uuid;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row)) {
 		$contact_organization = $row["contact_organization"];
@@ -108,7 +116,6 @@
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row)) {
 		$contact_time_uuid = $row["contact_time_uuid"];

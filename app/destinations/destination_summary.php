@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2023-2024
+	Portions created by the Initial Developer are Copyright (C) 2023-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	//require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('destination_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('destination_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -55,6 +52,14 @@
 		$quick_select = 3; //set default
 	}
 
+//convert time format to 24 hour
+	if (!empty($start_stamp_begin)) {
+		$start_stamp_begin_formatted = ($settings->get('domain', 'time_format') == '24h' ? $start_stamp_begin : DateTime::createFromFormat('Y-m-d h:i a', $start_stamp_begin)->format('Y-m-d H:i'));
+	}
+	if (!empty($start_stamp_end)) {
+		$start_stamp_end_formatted = ($settings->get('domain', 'time_format') == '24h' ? $start_stamp_end : DateTime::createFromFormat('Y-m-d h:i a', $start_stamp_end)->format('Y-m-d H:i'));
+	}
+
 //get the summary
 	$destination = new destinations;
 	$destination->domain_uuid = $_SESSION['domain_uuid'];
@@ -62,8 +67,8 @@
 		$destination->quick_select = $quick_select;
 	}
 	else {
-		$destination->start_stamp_begin = $start_stamp_begin ?? '';
-		$destination->start_stamp_end = $start_stamp_end ?? '';
+		$destination->start_stamp_begin = $start_stamp_begin_formatted ?? '';
+		$destination->start_stamp_end = $start_stamp_end_formatted ?? '';
 	}
 	//$destination->include_internal = $include_internal ?? null;
 	$summary = $destination->destination_summary();
@@ -177,7 +182,7 @@
 		echo "			".$text['label-start_date_time']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field'>\n";
-		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin ?? '')."'>\n";
+		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin ?? '')."' onchange=\"document.getElementById('quick_select').value = '';\">\n";
 		echo "		</div>\n";
 		echo "	</div>\n";
 
@@ -186,7 +191,7 @@
 		echo "			".$text['label-end_date_time']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field'>\n";
-		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end ?? '')."'>\n";
+		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end ?? '')."' onchange=\"document.getElementById('quick_select').value = '';\">\n";
 		echo "		</div>\n";
 		echo "	</div>\n";
 
@@ -244,5 +249,3 @@
 
 //show the footer
 	require_once "resources/footer.php";
-
-?>

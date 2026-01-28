@@ -32,16 +32,10 @@
 	require_once "resources/paging.php";
 
 //check permisions
-	if (permission_exists('xml_cdr_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('xml_cdr_view')) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = database::new();
 
 //set permissions
 	$permission = array();
@@ -152,26 +146,29 @@
 		$sql .= "order by extension asc, number_alias asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$extensions = $database->select($sql, $parameters, 'all');
+		unset($parameters);
 	}
 
 //get the ring groups
 	if ($permission['xml_cdr_search_ring_groups']) {
 		$sql = "select ring_group_uuid, ring_group_name, ring_group_extension from v_ring_groups ";
 		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and ring_group_enabled = 'true' ";
+		$sql .= "and ring_group_enabled = true ";
 		$sql .= "order by ring_group_extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$ring_groups = $database->select($sql, $parameters, 'all');
+		unset($parameters);
 	}
 
 //get the ivr menus
 	if ($permission['xml_cdr_search_ivr_menus']) {
 		$sql = "select ivr_menu_uuid, ivr_menu_name, ivr_menu_extension from v_ivr_menus ";
 		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and ivr_menu_enabled = 'true' ";
+		$sql .= "and ivr_menu_enabled = true ";
 		$sql .= "order by ivr_menu_extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$ivr_menus = $database->select($sql, $parameters, 'all');
+		unset($parameters);
 	}
 
 //get the call center queues
@@ -181,6 +178,7 @@
 		$sql .= "order by queue_extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$call_center_queues = $database->select($sql, $parameters, 'all');
+		unset($parameters);
 	}
 
 //include the header
@@ -424,8 +422,8 @@
 			echo "			".$text['label-start_range']."\n";
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap'>\n";
-			echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."' autocomplete='off'>\n";
-			echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."' autocomplete='off'>\n";
+			echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."' autocomplete='off'>\n";
+			echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."' autocomplete='off'>\n";
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
@@ -832,7 +830,7 @@
 	if (is_array($result)) {
 
 		//determine if theme images exist
-			$theme_image_path = $_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/";
+			$theme_image_path = dirname(__DIR__, 2)."/themes/".$settings->get('domain', 'template', 'default')."/images/";
 			$theme_cdr_images_exist = (
 				file_exists($theme_image_path."icon_cdr_inbound_answered.png") &&
 				file_exists($theme_image_path."icon_cdr_inbound_no_answer.png") &&
@@ -969,7 +967,7 @@
 								}
 								$image_name .= ".png";
 								if (file_exists($theme_image_path.$image_name)) {
-									$content .= "<img src='".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$status]. ($row['leg']=='b'?'(b)':'') . "'>\n";
+									$content .= "<img src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template', 'default')."/images/".escape($image_name)."' width='16' style='border: none; cursor: help;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$status]. ($row['leg']=='b'?'(b)':'') . "'>\n";
 								}
 								else { $content .= "&nbsp;"; }
 							}

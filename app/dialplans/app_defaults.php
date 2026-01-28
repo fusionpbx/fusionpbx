@@ -115,6 +115,15 @@
 		$sql = "update v_dialplan_details set dialplan_detail_data = 'recording_id='  where dialplan_detail_data = 'recording_id=true'\n";
 		$database->execute($sql);
 		unset($sql);
+	
+		//dialplan cleanup
+		$sql = "delete from v_dialplans where dialplan_name is null and dialplan_enabled is null and dialplan_context is null;\n";
+		$database->execute($sql);
+
+		//set the default value of dialplan_detail_enabled to true
+		$sql = "update v_dialplan_details set dialplan_detail_enabled = 'true' where dialplan_detail_enabled is null";
+		$database->execute($sql);
+		unset($sql);
 	}
 
 //remove origination_callee_id_name from domain-variables dialplan
@@ -152,9 +161,9 @@
 				$array['dialplans'][0]['app_uuid'] = 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4';
 				$array['dialplans'][0]['dialplan_context'] = 'public';
 				$array['dialplans'][0]['dialplan_name'] = 'not-found';
-				$array['dialplans'][0]['dialplan_continue'] = 'false';
+				$array['dialplans'][0]['dialplan_continue'] = false;
 				$array['dialplans'][0]['dialplan_order'] = '999';
-				$array['dialplans'][0]['dialplan_enabled'] = 'false';
+				$array['dialplans'][0]['dialplan_enabled'] = false;
 
 				$array['dialplan_details'][0]['dialplan_uuid'] = 'ea5339de-1982-46ca-9695-c35176165314';
 				$array['dialplan_details'][0]['dialplan_detail_uuid'] = '8a21744d-b381-4cb0-9930-55b776e4e461';
@@ -174,8 +183,6 @@
 				$p->add('dialplan_add', 'temp');
 				$p->add('dialplan_detail_add', 'temp');
 
-				$database->app_name = 'dialplans';
-				$database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
 				$database->save($array, false);
 				unset($array);
 

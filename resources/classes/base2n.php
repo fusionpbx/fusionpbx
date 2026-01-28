@@ -22,8 +22,7 @@
  *
  * @package binary-to-text-php
  */
-class base2n
-{
+class base2n {
     protected $_chars;
     protected $_bitsPerCharacter;
     protected $_radix;
@@ -36,21 +35,20 @@ class base2n
     /**
      * Constructor
      *
-     * @param   integer $bitsPerCharacter   Bits to use for each encoded character
-     * @param   string  $chars              Base character alphabet
-     * @param   boolean $caseSensitive      To decode in a case-sensitive manner
-     * @param   boolean $rightPadFinalBits  How to encode last character
-     * @param   boolean $padFinalGroup      Add padding to end of encoded output
-     * @param   string  $padCharacter       Character to use for padding
+     * @param integer $bitsPerCharacter  Bits to use for each encoded character
+     * @param string  $chars             Base character alphabet
+     * @param boolean $caseSensitive     To decode in a case-sensitive manner
+     * @param boolean $rightPadFinalBits How to encode last character
+     * @param boolean $padFinalGroup     Add padding to end of encoded output
+     * @param string  $padCharacter      Character to use for padding
      *
      * @throws  InvalidArgumentException    for incompatible parameters
      */
     public function __construct(
         $bitsPerCharacter,
         $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_',
-        $caseSensitive = TRUE, $rightPadFinalBits = FALSE,
-        $padFinalGroup = FALSE, $padCharacter = '=')
-    {
+        $caseSensitive = true, $rightPadFinalBits = false,
+        $padFinalGroup = false, $padCharacter = '=') {
         // Ensure validity of $chars
         if (!is_string($chars) || ($charLength = strlen($chars)) < 2) {
             throw new InvalidArgumentException('$chars must be a string of at least two characters');
@@ -68,7 +66,7 @@ class base2n
                 $padCharFound = stripos($chars, $padCharacter[0]);
             }
 
-            if ($padCharFound !== FALSE) {
+            if ($padCharFound !== false) {
                 throw new InvalidArgumentException('$padCharacter can not be a member of $chars');
             }
         }
@@ -94,9 +92,9 @@ class base2n
 
             $radix >>= 1;
             throw new InvalidArgumentException(
-                    '$bitsPerCharacter can not be more than ' . $bitsPerCharacter
-                  . ' given $chars length of ' . $charLength
-                  . ' (max radix ' . $radix . ')');
+                '$bitsPerCharacter can not be more than ' . $bitsPerCharacter
+                . ' given $chars length of ' . $charLength
+                . ' (max radix ' . $radix . ')');
 
         } elseif ($bitsPerCharacter > 8) {
             // $bitsPerCharacter must not be greater than 8
@@ -106,23 +104,23 @@ class base2n
             $radix = 1 << $bitsPerCharacter;
         }
 
-        $this->_chars             = $chars;
-        $this->_bitsPerCharacter  = $bitsPerCharacter;
-        $this->_radix             = $radix;
+        $this->_chars = $chars;
+        $this->_bitsPerCharacter = $bitsPerCharacter;
+        $this->_radix = $radix;
         $this->_rightPadFinalBits = $rightPadFinalBits;
-        $this->_padFinalGroup     = $padFinalGroup;
-        $this->_padCharacter      = $padCharacter[0];
-        $this->_caseSensitive     = $caseSensitive;
+        $this->_padFinalGroup = $padFinalGroup;
+        $this->_padCharacter = $padCharacter[0];
+        $this->_caseSensitive = $caseSensitive;
     }
 
     /**
      * Encode a string
      *
-     * @param   string  $rawString  Binary data to encode
+     * @param string $rawString Binary data to encode
+     *
      * @return  string
      */
-    public function encode($rawString)
-    {
+    public function encode($rawString) {
         // Unpack string into an array of bytes
         $bytes = unpack('C*', $rawString);
         $byteCount = count($bytes);
@@ -132,11 +130,11 @@ class base2n
         $bitsRead = 0;
         $oldBits = 0;
 
-        $chars             = $this->_chars;
-        $bitsPerCharacter  = $this->_bitsPerCharacter;
+        $chars = $this->_chars;
+        $bitsPerCharacter = $this->_bitsPerCharacter;
         $rightPadFinalBits = $this->_rightPadFinalBits;
-        $padFinalGroup     = $this->_padFinalGroup;
-        $padCharacter      = $this->_padCharacter;
+        $padFinalGroup = $this->_padFinalGroup;
+        $padCharacter = $this->_padCharacter;
 
         $charsPerByte = 8 / $bitsPerCharacter;
         $encodedLength = $byteCount * $charsPerByte;
@@ -159,7 +157,7 @@ class base2n
 
                     if ($padFinalGroup) {
                         // Array of the lowest common multiples of $bitsPerCharacter and 8, divided by 8
-                        $lcmMap = array(1 => 1, 2 => 1, 3 => 3, 4 => 1, 5 => 5, 6 => 3, 7 => 7, 8 => 1);
+                        $lcmMap = [1 => 1, 2 => 1, 3 => 3, 4 => 1, 5 => 5, 6 => 3, 7 => 7, 8 => 1];
                         $bytesPerGroup = $lcmMap[$bitsPerCharacter];
                         $pads = $bytesPerGroup * $charsPerByte - ceil((strlen($rawString) % $bytesPerGroup) * $charsPerByte);
                         $encodedString .= str_repeat($padCharacter, $pads);
@@ -183,7 +181,7 @@ class base2n
             $bitsRead += $newBitCount;
 
             if ($oldBitCount) {
-                // Bits come from seperate bytes, add $oldBits to $bits
+                // Bits come from separate bytes, add $oldBits to $bits
                 $bits = ($oldBits << $newBitCount) | $bits;
             }
 
@@ -196,31 +194,31 @@ class base2n
     /**
      * Decode a string
      *
-     * @param   string  $encodedString  Data to decode
-     * @param   boolean $strict         Returns NULL if $encodedString contains an undecodable character
+     * @param string  $encodedString Data to decode
+     * @param boolean $strict        Returns NULL if $encodedString contains an undecodable character
+     *
      * @return  string
      */
-    public function decode($encodedString, $strict = FALSE)
-    {
+    public function decode($encodedString, $strict = false) {
         if (!$encodedString || !is_string($encodedString)) {
             // Empty string, nothing to decode
             return '';
         }
 
-        $chars             = $this->_chars;
-        $bitsPerCharacter  = $this->_bitsPerCharacter;
-        $radix             = $this->_radix;
+        $chars = $this->_chars;
+        $bitsPerCharacter = $this->_bitsPerCharacter;
+        $radix = $this->_radix;
         $rightPadFinalBits = $this->_rightPadFinalBits;
-        $padFinalGroup     = $this->_padFinalGroup;
-        $padCharacter      = $this->_padCharacter;
-        $caseSensitive     = $this->_caseSensitive;
+        $padFinalGroup = $this->_padFinalGroup;
+        $padCharacter = $this->_padCharacter;
+        $caseSensitive = $this->_caseSensitive;
 
         // Get index of encoded characters
         if ($this->_charmap) {
             $charmap = $this->_charmap;
 
         } else {
-            $charmap = array();
+            $charmap = [];
 
             for ($i = 0; $i < $radix; $i++) {
                 $charmap[$chars[$i]] = $i;
@@ -293,12 +291,10 @@ class base2n
 
             } elseif ($strict) {
                 // Unable to decode character; abort
-                return NULL;
+                return null;
             }
         }
 
         return $rawString;
     }
 }
-
-?>

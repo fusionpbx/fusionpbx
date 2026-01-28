@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('fax_extension_advanced')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('fax_extension_advanced')) {
 		echo "access denied";
 		exit;
 	}
@@ -139,10 +136,7 @@
 						$p->add('fax_add', 'temp');
 						$p->add('fax_edit', 'temp');
 
-						$database = new database;
-						$database->app_name = 'fax';
-						$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
-						$message = $database->save($array);
+						$database->save($array);
 						unset($array);
 
 						//revoke temp permissions
@@ -157,7 +151,7 @@
 					if ($action == "add" && permission_exists('fax_extension_add')) {
 						message::add($text['confirm-add']);
 					}
-					header("Location: fax.php");
+					header("Location: fax_advanced.php?id=".$fax_uuid);
 					return;
 
 			}
@@ -170,7 +164,6 @@
 		$sql .= "and fax_uuid = :fax_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['fax_uuid'] = $fax_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$fax_email_connection_type = $row["fax_email_connection_type"];
@@ -196,6 +189,46 @@
 	$document['title'] = $text['title-fax_server_settings'];
 	require_once "resources/header.php";
 
+//test result layer
+	echo "<style>\n";
+	echo "	#test_result_layer {\n";
+	echo "		z-index: 999999;\n";
+	echo "		position: absolute;\n";
+	echo "		left: 0px;\n";
+	echo "		top: 0px;\n";
+	echo "		right: 0px;\n";
+	echo "		bottom: 0px;\n";
+	echo "		text-align: center;\n";
+	echo "		vertical-align: middle;\n";
+	echo "		}\n";
+	echo "	#test_result_container {\n";
+	echo "		display: block;\n";
+	echo "		overflow: auto;\n";
+	echo "		background-color: #fff;\n";
+	echo "		padding: 25px 25px;\n";
+	if (http_user_agent('mobile')) {
+		echo "	margin: 0;\n";
+	}
+	else {
+		echo "	margin: auto 10%;\n";
+	}
+	echo "		text-align: left;\n";
+	echo "		-webkit-box-shadow: 0px 1px 20px #888;\n";
+	echo "		-moz-box-shadow: 0px 1px 20px #888;\n";
+	echo "		box-shadow: 0px 1px 20px #888;\n";
+	echo "		}\n";
+	echo "</style>\n";
+
+	echo "<div id='test_result_layer' style='display: none;'>\n";
+	echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>\n";
+	echo "		<tr>\n";
+	echo "			<td align='center' valign='middle'>\n";
+	echo "				<span id='test_result_container'></span>\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
+	echo "	</table>\n";
+	echo "</div>\n";
+
 //advanced button js
 	echo "<script type='text/javascript' language='JavaScript'>\n";
 	echo "	function add_sender() {\n";
@@ -212,10 +245,12 @@
 	echo "	<div class='heading'><b>".$text['label-advanced_settings']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'fax_edit.php?id='.$fax_uuid]);
+	echo button::create(['type'=>'button','label'=>$text['button-test'],'icon'=>'tools','id'=>'test_button','style'=>'margin-left: 15px;','onclick'=>"this.blur(); fax_advanced_test();"]);
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
+
 	echo $text['description-advanced_settings']."\n";
 	echo "<br><br>\n";
 
@@ -287,10 +322,21 @@
 		echo "					".$text['label-email_connection_validate']."\n";
 		echo "				</td>\n";
 		echo "				<td class='vtable' align='left'>\n";
-		echo "					<select class='formfld' name='fax_email_connection_validate'>\n";
-		echo "						<option value='true'>".$text['option-true']."</option>\n";
-		echo "						<option value='false' ".(!empty($fax_email_connection_validate) && $fax_email_connection_validate == 'false' ? "selected" : null).">".$text['option-false']."</option>\n";
-		echo "					</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "	<select class='formfld' id='fax_email_connection_validate' name='fax_email_connection_validate'>\n";
+	echo "		<option value='true' ".($fax_email_connection_validate == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($fax_email_connection_validate == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+	}
+//		echo "					<select class='formfld' name='fax_email_connection_validate'>\n";
+//		echo "						<option value='true'>".$text['option-true']."</option>\n";
+//		echo "						<option value='false' ".(!empty($fax_email_connection_validate) && $fax_email_connection_validate == 'false' ? "selected" : null).">".$text['option-false']."</option>\n";
+//		echo "					</select>\n";
 		echo "				<br />\n";
 		echo "					".$text['description-email_connection_validate']."\n";
 		echo "				</td>\n";
@@ -417,7 +463,7 @@
 	echo "			<br>";
 	if ($action == "update") {
 		echo "		<input type='hidden' name='fax_uuid' value='".escape($fax_uuid)."'>\n";
-		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
+		echo "		<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid ?? '')."'>\n";
 	}
 	echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "		</td>\n";
@@ -426,6 +472,25 @@
 
 	echo "</form>";
 	echo "<br />\n";
+
+//test script
+	echo "<script>\n";
+	echo "	function fax_advanced_test() {\n";
+	echo "		document.getElementById('test_button').innerHTML = \"<span class='fa-solid fa-gear fa-fw fa-spin'></span><span class='button-label pad'>".$text['label-testing']."</span>\";\n";
+	echo "		$.ajax({\n";
+	echo "			url: 'fax_advanced_test.php?id=".$fax_uuid."',\n";
+	echo "			type: 'get',\n";
+	echo "			processData: false,\n";
+	echo "			contentType: false,\n";
+	echo "			cache: false,\n";
+	echo "			success: function(response){\n";
+	echo "				$('#test_result_container').html(response);\n";
+	echo "				$('#test_result_layer').fadeIn(400);\n";
+	echo "				$('#test_button').html(\"<span class='fa-solid fa-tools fa-fw'></span><span class='button-label pad'>".$text['button-test']."</span>\");\n";
+	echo "			}\n";
+	echo "		});\n";
+	echo "	};\n";
+	echo "</script>\n";
 
 //show the footer
 	require_once "resources/footer.php";

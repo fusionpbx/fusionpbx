@@ -61,10 +61,8 @@ if ($domains_processed == 1) {
 				$p = permissions::new();
 				$p->add('call_center_tier_edit', 'temp');
 
-				$database->app_name = 'call_centers';
-				$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 				$database->save($array, false);
-				$response = $database->message;
+				//$response = $database->message;
 				unset($array);
 
 				$p->delete('call_center_tier_edit', 'temp');
@@ -150,10 +148,10 @@ if ($domains_processed == 1) {
 						$array['dialplans'][$id]["dialplan_name"] = $row["queue_name"];
 						$array['dialplans'][$id]["dialplan_number"] = $row["queue_extension"];
 						$array['dialplans'][$id]["dialplan_context"] = $row['domain_name'];
-						$array['dialplans'][$id]["dialplan_continue"] = "false";
+						$array['dialplans'][$id]["dialplan_continue"] = false;
 						$array['dialplans'][$id]["dialplan_xml"] = $dialplan_xml;
 						$array['dialplans'][$id]["dialplan_order"] = "230";
-						$array['dialplans'][$id]["dialplan_enabled"] = "true";
+						$array['dialplans'][$id]["dialplan_enabled"] = true;
 						$array['dialplans'][$id]["dialplan_description"] = $row["queue_description"];
 						$array['dialplans'][$id]["app_uuid"] = "95788e50-9500-079e-2807-fd530b0ea370";
 					}
@@ -173,8 +171,6 @@ if ($domains_processed == 1) {
 				$p->add("dialplan_edit", "temp");
 
 			//save to the data
-				$database->app_name = 'call_centers';
-				$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 				$database->save($array, false);
 				$message = $database->message;
 

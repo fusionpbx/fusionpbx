@@ -13,14 +13,15 @@
 		exit;
 	}
 
-//connect to the database
-	if (!isset($database)) {
-		$database = new database;
-	}
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'core/user_settings');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'core/user_settings');
+
+//get the dashboard label
+	$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //system counts
 	//domains
@@ -28,7 +29,7 @@
 		$stats['system']['domains']['total'] = sizeof($_SESSION['domains']);
 		$stats['system']['domains']['disabled'] = 0;
 		foreach ($_SESSION['domains'] as $domain) {
-			$stats['system']['domains']['disabled'] += ($domain['domain_enabled'] != 'true') ? 1 : 0;
+			$stats['system']['domains']['disabled'] += ($domain['domain_enabled'] != true) ? 1 : 0;
 		}
 	}
 
@@ -43,10 +44,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['devices']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['devices']['disabled'] += ($row['device_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['devices']['total']++;
-					$stats['domain']['devices']['disabled'] += ($row['device_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['devices']['disabled'] += ($row['device_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -64,10 +65,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['extensions']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['extensions']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+				$stats['system']['extensions']['disabled'] += ($row['enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['extensions']['total']++;
-					$stats['domain']['extensions']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['extensions']['disabled'] += ($row['enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -85,10 +86,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['gateways']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['gateways']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+				$stats['system']['gateways']['disabled'] += ($row['enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['gateways']['total']++;
-					$stats['domain']['gateways']['disabled'] += ($row['enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['gateways']['disabled'] += ($row['enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -106,10 +107,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['users']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['users']['disabled'] += ($row['user_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['users']['disabled'] += ($row['user_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['users']['total']++;
-					$stats['domain']['users']['disabled'] += ($row['user_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['users']['disabled'] += ($row['user_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -127,10 +128,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['destinations']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['destinations']['disabled'] += ($row['destination_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['destinations']['disabled'] += ($row['destination_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['destinations']['total']++;
-					$stats['domain']['destinations']['disabled'] += ($row['destination_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['destinations']['disabled'] += ($row['destination_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -148,10 +149,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['call_center_queues']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				//$stats['system']['call_center_queues']['disabled'] += ($row['queue_enabled'] != 'true') ? 1 : 0;
+				//$stats['system']['call_center_queues']['disabled'] += ($row['queue_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['call_center_queues']['total']++;
-					//$stats['domain']['call_center_queues']['disabled'] += ($row['queue_enabled'] != 'true') ? 1 : 0;
+					//$stats['domain']['call_center_queues']['disabled'] += ($row['queue_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -169,10 +170,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['ivr_menus']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['ivr_menus']['total']++;
-					$stats['domain']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['ivr_menus']['disabled'] += ($row['ivr_menu_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -185,15 +186,15 @@
 		$stats['system']['ring_groups']['disabled'] = 0;
 		$stats['domain']['ring_groups']['total'] = 0;
 		$stats['domain']['ring_groups']['disabled'] = 0;
-		$sql = "select domain_uuid, ring_group_enabled from v_ring_groups";
+		$sql = "select domain_uuid, cast(ring_group_enabled as text) from v_ring_groups";
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['ring_groups']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['ring_groups']['total']++;
-					$stats['domain']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['ring_groups']['disabled'] += ($row['ring_group_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -211,10 +212,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			$stats['system']['voicemails']['total'] = sizeof($result);
 			foreach ($result as $row) {
-				$stats['system']['voicemails']['disabled'] += ($row['voicemail_enabled'] != 'true') ? 1 : 0;
+				$stats['system']['voicemails']['disabled'] += ($row['voicemail_enabled'] != true) ? 1 : 0;
 				if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
 					$stats['domain']['voicemails']['total']++;
-					$stats['domain']['voicemails']['disabled'] += ($row['voicemail_enabled'] != 'true') ? 1 : 0;
+					$stats['domain']['voicemails']['disabled'] += ($row['voicemail_enabled'] != true) ? 1 : 0;
 				}
 			}
 		}
@@ -260,8 +261,8 @@
 
 	//get the domain active and inactive counts
 	$sql = "select ";
-	$sql .= "(select count(domain_uuid) from v_domains where domain_enabled = 'true') as active, ";
-	$sql .= "(select count(domain_uuid) from v_domains where domain_enabled = 'false') as inactive; ";
+	$sql .= "(select count(domain_uuid) from v_domains where domain_enabled = true) as active, ";
+	$sql .= "(select count(domain_uuid) from v_domains where domain_enabled = false) as inactive; ";
 	$row = $database->select($sql, null, 'row');
 	$domain_active = $row['active'];
 	$domain_inactive = $row['inactive'];
@@ -278,12 +279,12 @@
 		$hud_stat = $stats[$scope]['domains']['total'] - $stats[$scope]['domains']['disabled'];
 		$hud_stat_title = $text['label-active_domains'];
 	}
-	else if (permission_exists('extension_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/")) {
+	else if (permission_exists('extension_view') && file_exists(dirname(__DIR__, 4)."/app/extensions/")) {
 		$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/app/extensions/extensions.php'\"";
 		$hud_stat = $stats[$scope]['extensions']['total'] - $stats[$scope]['extensions']['disabled'];
 		$hud_stat_title = $text['label-active_extensions'];
 	}
-	else if ((permission_exists('user_view') || if_group("superadmin")) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/users/")) {
+	else if ((permission_exists('user_view') || if_group("superadmin")) && file_exists(dirname(__DIR__, 4)."/core/users/")) {
 		$onclick = "onclick=\"document.location.href='".PROJECT_PATH."/core/users/users.php'\"";
 		$hud_stat = $stats[$scope]['users']['total'] - $stats[$scope]['users']['disabled'];
 		$hud_stat_title = $text['label-active_users'];
@@ -296,7 +297,7 @@
 	if ($show_stat) {
 
 		echo "<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_system_counts_details').slideToggle('fast');\"").">\n";
-		echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".$text['label-system_counts']."</a></span>\n";
+		echo "	<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/system/system.php'\">".escape($widget_label)."</a></span>\n";
 
 		if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {
 			//add doughnut chart
@@ -380,7 +381,7 @@
 			}
 
 		//devices
-			if (permission_exists('device_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/devices/")) {
+			if (permission_exists('device_view') && file_exists(dirname(__DIR__, 4)."/app/devices/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/devices/devices.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-devices']."</a></td>\n";
@@ -391,7 +392,7 @@
 			}
 
 		//extensions
-			if (permission_exists('extension_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/")) {
+			if (permission_exists('extension_view') && file_exists(dirname(__DIR__, 4)."/app/extensions/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/extensions/extensions.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-extensions']."</a></td>\n";
@@ -402,7 +403,7 @@
 			}
 
 		//gateways
-			if (permission_exists('gateway_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/gateways/")) {
+			if (permission_exists('gateway_view') && file_exists(dirname(__DIR__, 4)."/app/gateways/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/gateways/gateways.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-gateways']."</a></td>\n";
@@ -413,7 +414,7 @@
 			}
 
 		//users
-			if ((permission_exists('user_view') || if_group("superadmin")) && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/core/users/")) {
+			if ((permission_exists('user_view') || if_group("superadmin")) && file_exists(dirname(__DIR__, 4)."/core/users/")) {
 				$tr_link = "href='".PROJECT_PATH."/core/users/users.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-users']."</a></td>\n";
@@ -424,7 +425,7 @@
 			}
 
 		//destinations
-			if (permission_exists('destination_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/destinations/")) {
+			if (permission_exists('destination_view') && file_exists(dirname(__DIR__, 4)."/app/destinations/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/destinations/destinations.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-destinations']."</a></td>\n";
@@ -435,7 +436,7 @@
 			}
 
 		//call center queues
-			if (permission_exists('call_center_active_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/call_centers/")) {
+			if (permission_exists('call_center_active_view') && file_exists(dirname(__DIR__, 4)."/app/call_centers/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/call_centers/call_center_queues.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-call_center_queues']."</a></td>\n";
@@ -446,7 +447,7 @@
 			}
 
 		//ivr menus
-			if (permission_exists('ivr_menu_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ivr_menus/")) {
+			if (permission_exists('ivr_menu_view') && file_exists(dirname(__DIR__, 4)."/app/ivr_menus/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/ivr_menus/ivr_menus.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-ivr_menus']."</a></td>\n";
@@ -457,7 +458,7 @@
 			}
 
 		//ring groups
-			if (permission_exists('ring_group_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/")) {
+			if (permission_exists('ring_group_view') && file_exists(dirname(__DIR__, 4)."/app/ring_groups/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/ring_groups/ring_groups.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-ring_groups']."</a></td>\n";
@@ -468,7 +469,7 @@
 			}
 
 		//voicemails
-			if (permission_exists('voicemail_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
+			if (permission_exists('voicemail_view') && file_exists(dirname(__DIR__, 4)."/app/voicemails/")) {
 				$tr_link = "href='".PROJECT_PATH."/app/voicemails/voicemails.php'";
 				echo "<tr ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-voicemail']."</a></td>\n";
@@ -479,7 +480,7 @@
 			}
 
 		//messages
-			if (permission_exists('voicemail_message_view') && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/voicemails/")) {
+			if (permission_exists('voicemail_message_view') && file_exists(dirname(__DIR__, 4)."/app/voicemails/")) {
 				echo "<tr>\n";
 				echo "<th class='hud_heading' width='50%'>".$text['label-item']."</th>\n";
 				echo "<th class='hud_heading' width='50%' style='text-align: center; padding-left: 0; padding-right: 0;'>".$text['label-new']."</th>\n";

@@ -418,22 +418,6 @@ class active_calls_service extends service implements websocket_service_interfac
 		return 0;
 	}
 
-	private function debug(string $message) {
-		self::log($message, LOG_DEBUG);
-	}
-
-	private function warn(string $message) {
-		self::log($message, LOG_WARNING);
-	}
-
-	private function error(string $message) {
-		self::log($message, LOG_ERR);
-	}
-
-	private function info(string $message) {
-		self::log($message, LOG_INFO);
-	}
-
 	private function on_authenticate(websocket_message $websocket_message) {
 		$this->info("Authenticating with websocket server");
 		// Create a service token
@@ -446,7 +430,7 @@ class active_calls_service extends service implements websocket_service_interfac
 	private function on_in_progress(websocket_message $websocket_message) {
 		// Check permission
 		if (!$websocket_message->has_permission('call_active_view')) {
-			$this->warn("Permission 'call_active_show' not found in subscriber request");
+			$this->warning("Permission 'call_active_show' not found in subscriber request");
 			websocket_client::send($this->ws_client->socket(), websocket_message::request_forbidden($websocket_message->request_id, SERVICE_NAME, $websocket_message->topic));
 		}
 
@@ -481,7 +465,7 @@ class active_calls_service extends service implements websocket_service_interfac
 	private function on_hangup(websocket_message $websocket_message) {
 		// Check permission
 		if (!$websocket_message->has_permission('call_active_hangup')) {
-			$this->warn("Permission 'call_active_hangup' not found in subscriber request");
+			$this->warning("Permission 'call_active_hangup' not found in subscriber request");
 			websocket_client::send($this->ws_client->socket(), websocket_message::request_forbidden($websocket_message->request_id, SERVICE_NAME, $websocket_message->topic));
 		}
 
@@ -513,7 +497,7 @@ class active_calls_service extends service implements websocket_service_interfac
 
 		// Make sure we are connected
 		if (!$event_socket->is_connected()) {
-			$this->warn("Unable to connect to event socket");
+			$this->warning("Unable to connect to event socket");
 			return;
 		}
 
@@ -542,13 +526,13 @@ class active_calls_service extends service implements websocket_service_interfac
 	private function on_eavesdrop(websocket_message $websocket_message) {
 		// Check permission
 		if (!$websocket_message->has_permission('call_active_eavesdrop')) {
-			$this->warn("Permission 'call_active_eavesdrop' not found in subscriber request");
+			$this->warning("Permission 'call_active_eavesdrop' not found in subscriber request");
 			websocket_client::send($this->ws_client->socket(), websocket_message::request_forbidden($websocket_message->request_id, SERVICE_NAME, $websocket_message->topic));
 		}
 
 		// Make sure we are connected
 		if (!$this->event_socket->is_connected()) {
-			$this->warn("Failed to hangup call because event socket no longer connected");
+			$this->warning("Failed to hangup call because event socket no longer connected");
 			return;
 		}
 
@@ -641,7 +625,7 @@ class active_calls_service extends service implements websocket_service_interfac
 			//set up the socket away from the event_socket object so we have control over blocking
 			$this->switch_socket = stream_socket_client("tcp://$host:$port", $errno, $errstr, 5);
 		} catch (\RuntimeException $re) {
-			$this->warn('Unable to connect to event socket');
+			$this->warning('Unable to connect to event socket');
 		}
 
 		// If we didn't connect then return back false
@@ -813,7 +797,7 @@ class active_calls_service extends service implements websocket_service_interfac
 
 		// Nothing to do
 		if ($json_string === null) {
-			$this->warn('Message received from Websocket is empty');
+			$this->warning('Message received from Websocket is empty');
 			return;
 		}
 
@@ -881,7 +865,7 @@ class active_calls_service extends service implements websocket_service_interfac
 	 * @return array
 	 */
 	private static function get_domain_names(database $database): array {
-		return array_column($database->execute("select domain_name, domain_uuid from v_domains where domain_enabled='true'") ?: [], 'domain_name', 'domain_uuid');
+		return array_column($database->execute("select domain_name, domain_uuid from v_domains where domain_enabled= true ") ?: [], 'domain_name', 'domain_uuid');
 	}
 
 	/**
@@ -890,7 +874,7 @@ class active_calls_service extends service implements websocket_service_interfac
 	 * @return string
 	 */
 	private static function get_domain_name_by_uuid(database $database, string $domain_uuid): string {
-		return $database->execute("select domain_name from v_domains where domain_enabled='true' and domain_uuid = :domain_uuid limit 1", ['domain_uuid' => $domain_uuid], 'column') ?: '';
+		return $database->execute("select domain_name from v_domains where domain_enabled = true and domain_uuid = :domain_uuid limit 1", ['domain_uuid' => $domain_uuid], 'column') ?: '';
 	}
 
 	/**
@@ -899,6 +883,6 @@ class active_calls_service extends service implements websocket_service_interfac
 	 * @return string
 	 */
 	private static function get_domain_uuid_by_name(database $database, string $domain_name): string {
-		return $database->execute("select domain_uuid from v_domains where domain_enabled='true' and domain_name = :domain_name limit 1", ['domain_name' => $domain_name], 'column') ?: '';
+		return $database->execute("select domain_uuid from v_domains where domain_enabled = true and domain_name = :domain_name limit 1", ['domain_name' => $domain_name], 'column') ?: '';
 	}
 }

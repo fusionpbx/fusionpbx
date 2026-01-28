@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('operator_panel_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('operator_panel_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -72,9 +69,6 @@
 				$array['users'][0]['user_uuid'] = $_SESSION['user']['user_uuid'];
 				$array['users'][0]['domain_uuid'] = $_SESSION['user']['domain_uuid'];
 				$array['users'][0]['user_status'] = $user_status;
-				$database = new database;
-				$database->app_name = 'operator_panel';
-				$database->app_uuid = 'dd3d173a-5d51-4231-ab22-b18c5b712bb2';
 				$database->save($array);
 
 				//remove the temporary permission
@@ -84,14 +78,13 @@
 			}
 
 		//if call center app is installed then update the user_status
-			if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_centers')) {
+			if (is_dir(dirname(__DIR__, 2).'/app/call_centers')) {
 				//get the call center agent uuid
 					$sql = "select call_center_agent_uuid from v_call_center_agents ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "and user_uuid = :user_uuid ";
 					$parameters['domain_uuid'] = $_SESSION['user']['domain_uuid'];
 					$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
-					$database = new database;
 					$call_center_agent_uuid = $database->select($sql, $parameters, 'column');
 					unset($sql, $parameters);
 
@@ -120,10 +113,10 @@
 							//delete extension from the cache
 							$cache = new cache;
 							if (!empty($row['extension'])) {
-								$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
+								$cache->delete(gethostname().":directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
 							}
 							if (!empty($number_alias)) {
-								$cache->delete("directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
+								$cache->delete(gethostname().":directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
 							}
 
 							//incrment
@@ -141,10 +134,10 @@
 							//delete extension from the cache
 							$cache = new cache;
 							if (!empty($row['extension'])) {
-								$cache->delete("directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
+								$cache->delete(gethostname().":directory:".$row['extension']."@".$_SESSION['user']['domain_name']);
 							}
 							if (!empty($number_alias)) {
-								$cache->delete("directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
+								$cache->delete(gethostname().":directory:".$row['number_alias']."@".$_SESSION['user']['domain_name']);
 							}
 
 							//incrment
@@ -157,9 +150,6 @@
 					$p->add('extension_edit', 'temp');
 
 				//execute update
-					$database = new database;
-					$database->app_name = 'calls';
-					$database->app_uuid = '19806921-e8ed-dcff-b325-dd3e5da4959d';
 					$database->save($array);
 					unset($array);
 
@@ -169,10 +159,11 @@
 				//delete extension from the cache
 					$cache = new cache;
 					if (!empty($extension)) {
-						$cache->delete("directory:".$extension."@".$this->domain_name);
+						$cache->delete(gethostname().":directory:".$extension."@".$this->domain_name);
+						$cache->delete(gethostname().":directory:".$extension."@".$domain_name);
 					}
 					if (!empty($number_alias)) {
-						$cache->delete("directory:".$number_alias."@".$this->domain_name);
+						$cache->delete(gethostname().":directory:".$number_alias."@".$this->domain_name);
 					}
 			}
 
@@ -202,7 +193,7 @@
 <?php
 //determine refresh rate
 $refresh_default = 1500; //milliseconds
-$refresh = is_numeric($_SESSION['operator_panel']['refresh']['numeric']) ? $_SESSION['operator_panel']['refresh']['numeric'] : $refresh_default;
+$refresh = is_numeric($settings->get('operator_panel', 'refresh')) ? $settings->get('operator_panel', 'refresh') : $refresh_default;
 if ($refresh >= 0.5 && $refresh <= 120) { //convert seconds to milliseconds
 	$refresh = $refresh * 1000;
 }

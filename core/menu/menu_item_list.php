@@ -29,16 +29,10 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('menu_add') || permission_exists('menu_edit') || permission_exists('menu_delete')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('menu_add') || permission_exists('menu_edit') || permission_exists('menu_delete'))) {
 		echo "access denied";
 		exit;
 	}
-
-//initialize the database
-	$database = new database;
 
 //get the http post data
 	if (!empty($_POST['menu_items'])) {
@@ -92,8 +86,19 @@
 	$tmp_menu_item_order = 0;
 
 //add the build db child menu list
+	/**
+	 * Builds a child menu list from the database.
+	 *
+	 * @param object $database        The database connection object.
+	 * @param int    $menu_item_level The current level of the menu item.
+	 * @param string $menu_item_uuid  The UUID of the parent menu item.
+	 *
+	 * @return void
+	 */
 	function build_db_child_menu_list ($database, $menu_item_level, $menu_item_uuid) {
-		global $menu_uuid, $list_row_edit_button, $tmp_menu_item_order, $v_link_label_edit, $v_link_label_delete, $page, $text, $x;
+		global $settings, $menu_uuid, $list_row_edit_button;
+		global $tmp_menu_item_order, $v_link_label_edit, $v_link_label_delete;
+		global $page, $text, $x;
 
 		//check for sub menus
 		$menu_item_level = $menu_item_level+1;
@@ -219,8 +224,6 @@
 					$array['menu_items'][0]['menu_uuid'] = $menu_uuid;
 					$array['menu_items'][0]['menu_item_title'] = $row2['menu_item_title'];
 					$array['menu_items'][0]['menu_item_order'] = $tmp_menu_item_order;
-					$database->app_name = 'menu';
-					$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 					$database->save($array);
 					unset($array);
 				}
@@ -246,8 +249,7 @@
 
 	//get the group list
 	$sql = "select group_uuid, group_name from v_groups ";
-	$database = new database;
-	$groups = $database->select($sql, $parameters, 'all');
+	$groups = $database->select($sql, null, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -431,8 +433,6 @@
 					$array['menu_items'][0]['menu_uuid'] = $menu_uuid;
 					$array['menu_items'][0]['menu_item_title'] = $row['menu_item_title'];
 					$array['menu_items'][0]['menu_item_order'] = $tmp_menu_item_order;
-					//$database->app_name = 'menu';
-					//$database->app_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7';
 					//$database->save($array);
 					unset($array);
 				}

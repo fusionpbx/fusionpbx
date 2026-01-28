@@ -28,7 +28,6 @@
 	if(defined('STDIN')) {
 		//includes files
 		require_once dirname(__DIR__, 2) . "/resources/require.php";
-		$_SERVER["DOCUMENT_ROOT"] = $document_root;
 		$display_type = 'text'; //html, text
 	}
 	else if (!$included) {
@@ -47,7 +46,6 @@
 
 //run all app_defaults.php files
 	$domain = new domains;
-	$domain->display_type = $display_type;
 	$domain->upgrade();
 
 ?>

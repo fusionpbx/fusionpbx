@@ -26,10 +26,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('extension_setting_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('extension_setting_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -49,7 +46,7 @@
 //get the http post data
 	if (!empty($_POST['extension_settings'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$extension_settings = $_POST['extension_settings'];
 	}
 
@@ -93,7 +90,7 @@
 		}
 
 		//redirect the user
-		header('Location: extension_settings.php?id='.urlencode($extension_uuid).'&'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: extension_settings.php?id='.urlencode($extension_uuid).'&'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -126,7 +123,6 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$parameters['extension_uuid'] = $extension_uuid;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 
@@ -157,7 +153,6 @@
 	$sql .= limit_offset($rows_per_page ?? null, $offset ?? null);
 	$parameters['extension_uuid'] = $extension_uuid;
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$extension_settings = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

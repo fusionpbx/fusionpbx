@@ -63,7 +63,7 @@ if ($domains_processed == 1) {
 					$xml_file = '/var/www/fusionpbx/app/switch/resources/conf/vars.xml';
 				}
 				else {
-					$xml_file = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'app/switch/resources/conf/vars.xml';
+					 $xml_file = dirname(__DIR__, 2) . '/app/switch/resources/conf/vars.xml';
 				}
 
 			//load the xml and save it into an array
@@ -101,8 +101,6 @@ if ($domains_processed == 1) {
 
 			//execute insert
 				if (!empty($array)) {
-					$database->app_name = 'vars';
-					$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
 					$database->save($array, false);
 				}
 
@@ -146,7 +144,7 @@ if ($domains_processed == 1) {
 						$array['vars'][$x]['var_name'] = 'default_country';
 						$array['vars'][$x]['var_value'] = $country["isocode"];
 						$array['vars'][$x]['var_category'] = 'Defaults';
-						$array['vars'][$x]['var_enabled'] = 'true';
+						$array['vars'][$x]['var_enabled'] = true;
 						$array['vars'][$x]['var_order'] = $x;
 						$array['vars'][$x]['var_description'] = null;
 						$x++;
@@ -165,7 +163,7 @@ if ($domains_processed == 1) {
 						$array['vars'][$x]['var_name'] = 'default_countrycode';
 						$array['vars'][$x]['var_value'] = $country["countrycode"];
 						$array['vars'][$x]['var_category'] = 'Defaults';
-						$array['vars'][$x]['var_enabled'] = 'true';
+						$array['vars'][$x]['var_enabled'] = true;
 						$array['vars'][$x]['var_order'] = $x;
 						$array['vars'][$x]['var_description'] = null;
 						$x++;
@@ -184,7 +182,7 @@ if ($domains_processed == 1) {
 						$array['vars'][$x]['var_name'] = 'default_exitcode';
 						$array['vars'][$x]['var_value'] = $country["exitcode"];
 						$array['vars'][$x]['var_category'] = 'Defaults';
-						$array['vars'][$x]['var_enabled'] = 'true';
+						$array['vars'][$x]['var_enabled'] = true;
 						$array['vars'][$x]['var_order'] = $x;
 						$array['vars'][$x]['var_description'] = null;
 						$x++;
@@ -198,8 +196,6 @@ if ($domains_processed == 1) {
 						$p->add("var_add", "temp");
 
 					//execute inserts
-						$database->app_name = 'vars';
-						$database->app_uuid = '54e08402-c1b8-0a9d-a30a-f569fc174dd8';
 						$database->save($array, false);
 						unset($array);
 

@@ -26,10 +26,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('dashboard_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('dashboard_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -45,7 +42,7 @@
 //get the http post data
 	if (!empty($_POST['dashboards'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$dashboards = $_POST['dashboards'];
 	}
 
@@ -73,7 +70,7 @@
 		}
 
 		//redirect the user
-		header('Location: dashboard.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: dashboard.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -105,7 +102,6 @@
 		$sql .= ")\n";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
@@ -140,7 +136,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'dashboard_name', 'asc');
 	$sql .= limit_offset($rows_per_page ?? null, $offset ?? null);
-	$database = new database;
 	$dashboards = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

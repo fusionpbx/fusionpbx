@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -35,9 +35,6 @@
 		exit;
 	}
 
-//connect to the database
-	$database = new database;
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -47,6 +44,22 @@
 		$action = $_POST['action'] ?? '';
 		$search = $_POST['search'] ?? '';
 		$users = $_POST['users'] ?? '';
+	}
+
+//get total user count from the database, check limit, if defined
+	if (permission_exists('user_add') && !empty($action) && $action == 'copy' && !empty($settings->get('limit', 'users'))) {
+		$sql = "select count(*) ";
+		$sql .= "from v_users ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$num_rows = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
+
+		if ($num_rows >= $settings->get('limit', 'users')) {
+			message::add($text['message-maximum_users'].' '.$settings->get('limit', 'users'), 'negative');
+			header('Location: users.php');
+			exit;
+		}
 	}
 
 //process the http post data by action
@@ -72,7 +85,7 @@
 				break;
 		}
 
-		header('Location: users.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: users.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 

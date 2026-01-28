@@ -77,15 +77,65 @@
 		--get the ivr menu from the database
 			local sql = [[
 				with recursive ivr_menus as (
-					select *
+					select 
+						domain_uuid,
+						ivr_menu_uuid,
+						ivr_menu_name,
+						ivr_menu_extension,
+						ivr_menu_greet_long,
+						ivr_menu_greet_short,
+						ivr_menu_invalid_sound,
+						ivr_menu_exit_sound,
+						ivr_menu_pin_number,
+						ivr_menu_confirm_macro,
+						ivr_menu_confirm_key,
+						ivr_menu_tts_engine,
+						ivr_menu_tts_voice,
+						ivr_menu_confirm_attempts,
+						ivr_menu_timeout,
+						ivr_menu_exit_app,
+						ivr_menu_exit_data,
+						ivr_menu_inter_digit_timeout,
+						ivr_menu_max_failures,
+						ivr_menu_max_timeouts,
+						ivr_menu_digit_len,
+						cast(ivr_menu_direct_dial as text),
+						ivr_menu_ringback,
+						ivr_menu_cid_prefix,
+						ivr_menu_description
 						from v_ivr_menus
 						where ivr_menu_uuid = :ivr_menu_uuid
-						and ivr_menu_enabled = 'true'
+						and ivr_menu_enabled = true
 						union all
-						select child.*
+						select
+						child.domain_uuid,
+						child.ivr_menu_uuid,
+						child.ivr_menu_name,
+						child.ivr_menu_extension,
+						child.ivr_menu_greet_long,
+						child.ivr_menu_greet_short,
+						child.ivr_menu_invalid_sound,
+						child.ivr_menu_exit_sound,
+						child.ivr_menu_pin_number,
+						child.ivr_menu_confirm_macro,
+						child.ivr_menu_confirm_key,
+						child.ivr_menu_tts_engine,
+						child.ivr_menu_tts_voice,
+						child.ivr_menu_confirm_attempts,
+						child.ivr_menu_timeout,
+						child.ivr_menu_exit_app,
+						child.ivr_menu_exit_data,
+						child.ivr_menu_inter_digit_timeout,
+						child.ivr_menu_max_failures,
+						child.ivr_menu_max_timeouts,
+						child.ivr_menu_digit_len,
+						cast(child.ivr_menu_direct_dial as text),
+						child.ivr_menu_ringback,
+						child.ivr_menu_cid_prefix,
+						child.ivr_menu_description
 						from v_ivr_menus as child, ivr_menus as parent
 						where child.ivr_menu_parent_uuid = parent.ivr_menu_uuid
-						and child.ivr_menu_enabled = 'true'
+						and child.ivr_menu_enabled = true
 					)
 					select * from ivr_menus
 			]];
@@ -273,7 +323,7 @@
 					xml:append([[				>]]);
 
 				--get the ivr menu options
-					local sql = [[ SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = :ivr_menu_uuid AND ivr_menu_option_enabled = 'true' ORDER BY ivr_menu_option_order asc ]];
+					local sql = [[ SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = :ivr_menu_uuid AND ivr_menu_option_enabled = true ORDER BY ivr_menu_option_order asc ]];
 					local params = {ivr_menu_uuid = ivr_menu_uuid};
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
@@ -305,7 +355,7 @@
 					end);
 
 				--direct dial
-					if (ivr_menu_direct_dial == "true") then
+					if (ivr_menu_direct_dial == 'true') then
 						local negative_lookahead = "";
 						if (#direct_dial_exclude > 0) then
 							negative_lookahead = "(?!^("..table.concat(direct_dial_exclude, "|")..")$)";

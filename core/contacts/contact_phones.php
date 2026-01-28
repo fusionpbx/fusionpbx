@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_phone_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_phone_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -44,7 +41,6 @@
 	$sql .= "order by phone_primary desc, phone_label asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_phones = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

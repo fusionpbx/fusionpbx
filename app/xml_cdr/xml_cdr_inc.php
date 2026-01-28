@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -31,10 +31,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('xml_cdr_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('xml_cdr_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -102,9 +99,6 @@
 	if(empty($_GET['show'])) {
 		$_GET['show'] = 'false';
 	}
-
-//connect to database
-	$database = database::new();
 
 //get post or get variables from http
 	if (!empty($_REQUEST)) {
@@ -273,24 +267,23 @@
 
 //count the records in the database
 	/*
-	if ($_SESSION['cdr']['limit']['numeric'] == 0) {
+	if ($settings->get('cdr', 'limit') == 0) {
 		$sql = "select count(*) from v_xml_cdr ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= ".$sql_where;
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$num_rows = $database->select($sql, $parameters, 'column');
 		unset($sql, $parameters);
 	}
 	*/
 
 //limit the number of results
-	if (!empty($_SESSION['cdr']['limit']['numeric']) && $_SESSION['cdr']['limit']['numeric'] > 0) {
-		$num_rows = $_SESSION['cdr']['limit']['numeric'];
+	if (!empty($settings->get('cdr', 'limit')) && $settings->get('cdr', 'limit') > 0) {
+		$num_rows = $settings->get('cdr', 'limit');
 	}
 
 //set the default paging
-	//$rows_per_page = $_SESSION['domain']['paging']['numeric'];
+	//$rows_per_page = $settings->get('domain', 'paging');
 
 //prepare to page the results
 	//$rows_per_page = $settings->get('domain', 'paging', 50); //set on the page that includes this page
@@ -302,18 +295,14 @@
 	$offset = $rows_per_page * $page;
 
 //set the time zone
-	if (isset($_SESSION['domain']['time_zone']['name'])) {
-		$time_zone = $_SESSION['domain']['time_zone']['name'];
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI';
 	}
 	else {
-		$time_zone = date_default_timezone_get();
-	}
-	$parameters['time_zone'] = $time_zone;
-
-//set the sql time format
-	$sql_time_format = 'HH12:MI am';
-	if (!empty($_SESSION['domain']['time_format']['text'])) {
-		$sql_time_format = $_SESSION['domain']['time_format']['text'] == '12h' ? "HH12:MI am" : "HH24:MI";
+		$time_format = 'HH12:MI am';
 	}
 
 //get the results from the db
@@ -325,7 +314,7 @@
 	$sql .= "c.start_stamp, \n";
 	$sql .= "c.end_stamp, \n";
 	$sql .= "to_char(timezone(:time_zone, start_stamp), 'DD Mon YYYY') as start_date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, start_stamp), '".$sql_time_format."') as start_time_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, start_stamp), '".$time_format."') as start_time_formatted, \n";
 	$sql .= "c.start_epoch, \n";
 	$sql .= "c.hangup_cause, \n";
 	$sql .= "c.billsec as duration, \n";
@@ -483,50 +472,67 @@
 			}
 		}
 	}
-
-	if (!empty($start_stamp_begin) && !empty($start_stamp_end)) {
+	if (!empty($start_stamp_begin)) {
+		$start_stamp_begin_formatted = ($settings->get('domain', 'time_format') == '24h' ? $start_stamp_begin : DateTime::createFromFormat('Y-m-d h:i a', $start_stamp_begin)->format('Y-m-d H:i'));
+	}
+	if (!empty($start_stamp_end)) {
+		$start_stamp_end_formatted = ($settings->get('domain', 'time_format') == '24h' ? $start_stamp_end : DateTime::createFromFormat('Y-m-d h:i a', $start_stamp_end)->format('Y-m-d H:i'));
+	}
+	if (!empty($start_stamp_begin_formatted) && !empty($start_stamp_end_formatted)) {
 		$sql .= "and start_stamp between :start_stamp_begin::timestamptz and :start_stamp_end::timestamptz \n";
-		$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000 '.$time_zone;
-		$parameters['start_stamp_end'] = $start_stamp_end.':59.999 '.$time_zone;
+		$parameters['start_stamp_begin'] = $start_stamp_begin_formatted.':00.000 '.$time_zone;
+		$parameters['start_stamp_end'] = $start_stamp_end_formatted.':59.999 '.$time_zone;
 	}
 	else {
-		if (!empty($start_stamp_begin)) {
+		if (!empty($start_stamp_begin_formatted)) {
 			$sql .= "and start_stamp >= :start_stamp_begin \n";
-			$parameters['start_stamp_begin'] = $start_stamp_begin.':00.000 '.$time_zone;
+			$parameters['start_stamp_begin'] = $start_stamp_begin_formatted.':00.000 '.$time_zone;
 		}
-		if (!empty($start_stamp_end)) {
+		if (!empty($start_stamp_end_formatted)) {
 			$sql .= "and start_stamp <= :start_stamp_end \n";
-			$parameters['start_stamp_end'] = $start_stamp_end.':59.999 '.$time_zone;
+			$parameters['start_stamp_end'] = $start_stamp_end_formatted.':59.999 '.$time_zone;
 		}
 	}
-	if (!empty($answer_stamp_begin) && !empty($answer_stamp_end)) {
+	if (!empty($answer_stamp_begin)) {
+		$answer_stamp_begin_formatted = ($settings->get('domain', 'time_format') == '24h' ? $answer_stamp_begin : DateTime::createFromFormat('Y-m-d h:i a', $answer_stamp_begin)->format('Y-m-d H:i'));
+	}
+	if (!empty($answer_stamp_end)) {
+		$answer_stamp_end_formatted = ($settings->get('domain', 'time_format') == '24h' ? $answer_stamp_end : DateTime::createFromFormat('Y-m-d h:i a', $answer_stamp_end)->format('Y-m-d H:i'));
+	}
+	if (!empty($answer_stamp_begin_formatted) && !empty($answer_stamp_end_formatted)) {
 		$sql .= "and answer_stamp between :answer_stamp_begin::timestamptz and :answer_stamp_end::timestamptz \n";
-		$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000 '.$time_zone;
-		$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999 '.$time_zone;
+		$parameters['answer_stamp_begin'] = $answer_stamp_begin_formatted.':00.000 '.$time_zone;
+		$parameters['answer_stamp_end'] = $answer_stamp_end_formatted.':59.999 '.$time_zone;
 	}
 	else {
-		if (!empty($answer_stamp_begin)) {
+		if (!empty($answer_stamp_begin_formatted)) {
 			$sql .= "and answer_stamp >= :answer_stamp_begin \n";
-			$parameters['answer_stamp_begin'] = $answer_stamp_begin.':00.000 '.$time_zone;;
+			$parameters['answer_stamp_begin'] = $answer_stamp_begin_formatted.':00.000 '.$time_zone;;
 		}
-		if (!empty($answer_stamp_end)) {
+		if (!empty($answer_stamp_end_formatted)) {
 			$sql .= "and answer_stamp <= :answer_stamp_end \n";
-			$parameters['answer_stamp_end'] = $answer_stamp_end.':59.999 '.$time_zone;
+			$parameters['answer_stamp_end'] = $answer_stamp_end_formatted.':59.999 '.$time_zone;
 		}
 	}
-	if (!empty($end_stamp_begin) && !empty($end_stamp_end)) {
+	if (!empty($end_stamp_begin)) {
+		$end_stamp_begin_formatted = ($settings->get('domain', 'time_format') == '24h' ? $end_stamp_begin : DateTime::createFromFormat('Y-m-d h:i a', $end_stamp_begin)->format('Y-m-d H:i'));
+	}
+	if (!empty($end_stamp_end)) {
+		$end_stamp_end_formatted = ($settings->get('domain', 'time_format') == '24h' ? $end_stamp_end : DateTime::createFromFormat('Y-m-d h:i a', $end_stamp_end)->format('Y-m-d H:i'));
+	}
+	if (!empty($end_stamp_begin_formatted) && !empty($end_stamp_end_formatted)) {
 		$sql .= "and end_stamp between :end_stamp_begin::timestamptz and :end_stamp_end::timestamptz \n";
-		$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000 '.$time_zone;
-		$parameters['end_stamp_end'] = $end_stamp_end.':59.999 '.$time_zone;
+		$parameters['end_stamp_begin'] = $end_stamp_begin_formatted.':00.000 '.$time_zone;
+		$parameters['end_stamp_end'] = $end_stamp_end_formatted.':59.999 '.$time_zone;
 	}
 	else {
-		if (!empty($end_stamp_begin)) {
+		if (!empty($end_stamp_begin_formatted)) {
 			$sql .= "and end_stamp >= :end_stamp_begin \n";
-			$parameters['end_stamp_begin'] = $end_stamp_begin.':00.000 '.$time_zone;
+			$parameters['end_stamp_begin'] = $end_stamp_begin_formatted.':00.000 '.$time_zone;
 		}
-		if (!empty($end_stamp_end)) {
+		if (!empty($end_stamp_end_formatted)) {
 			$sql .= "and end_stamp <= :end_stamp_end \n";
-			$parameters['end_stamp'] = $end_stamp_end.':59.999 '.$time_zone;
+			$parameters['end_stamp'] = $end_stamp_end_formatted.':59.999 '.$time_zone;
 		}
 	}
 	if (is_numeric($duration_min)) {
@@ -646,7 +652,7 @@
 	if ($export_format !== "csv" && $export_format !== "pdf") {
 		if ($rows_per_page == 0) {
 			$sql .= " limit :limit offset 0 \n";
-			$parameters['limit'] = $_SESSION['cdr']['limit']['numeric'];
+			$parameters['limit'] = $settings->get('cdr', 'limit');
 		}
 		else {
 			$sql .= " limit :limit offset :offset \n";
@@ -664,6 +670,7 @@
 		$database->username = $settings->get('cdr', 'archive_database_username');
 		$database->password = $settings->get('cdr', 'archive_database_password');
 	}
+	$parameters['time_zone'] = $time_zone;
 	$result = $database->select($sql, $parameters, 'all');
 	$result_count = is_array($result) ? sizeof($result) : 0;
 	unset($sql, $parameters);

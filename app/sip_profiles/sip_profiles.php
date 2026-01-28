@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('sip_profile_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('sip_profile_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -50,7 +47,7 @@
 //get the http post data
 	if (!empty($_POST['sip_profiles'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$sip_profiles = $_POST['sip_profiles'];
 	}
 
@@ -71,7 +68,7 @@
 				break;
 		}
 
-		header('Location: sip_profiles.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: sip_profiles.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -99,11 +96,10 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = $search ? "&search=".$search : null;
 	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
@@ -111,10 +107,9 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(sip_profile_uuid)', '*', $sql);
+	$sql = str_replace('count(sip_profile_uuid)', 'sip_profile_uuid, sip_profile_name, sip_profile_hostname, cast(sip_profile_enabled as text), sip_profile_description', $sql);
 	$sql .= order_by($order_by, $order);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$sip_profiles = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -191,9 +186,6 @@
 			$list_row_url = '';
 			if (permission_exists('sip_profile_edit')) {
 				$list_row_url = "sip_profile_edit.php?id=".urlencode($row['sip_profile_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
-					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
-				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('sip_profile_add') || permission_exists('sip_profile_edit') || permission_exists('sip_profile_delete')) {
@@ -213,7 +205,8 @@
 			echo "	<td>".escape($row['sip_profile_hostname'])."&nbsp;</td>\n";
 			if (permission_exists('sip_profile_edit')) {
 				echo "	<td class='no-link center'>\n";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['sip_profile_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				echo button::create(['type'=>'button','class'=>'link','label'=>$text['label-'.$row['sip_profile_enabled']],'title'=>$text['button-toggle'],'id'=>'btn_toggle_enabled','name'=>'btn_toggle_enabled','onclick'=>"list_self_check('checkbox_".$x."'); modal_open('modal-toggle_enabled','btn_toggle_enabled');"]);
+				echo modal::create(['id'=>'modal-toggle_enabled','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle_enabled','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
 			}
 			else {
 				echo "	<td class='center'>\n";
@@ -243,4 +236,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

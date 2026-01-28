@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_time_edit') || permission_exists('contact_time_add')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('contact_time_edit') || permission_exists('contact_time_add'))) {
 		echo "access denied";
 		exit;
 	}
@@ -105,9 +102,6 @@
 				$p = permissions::new();
 				$p->add('contact_edit', 'temp');
 
-				$database = new database;
-				$database->app_name = 'contacts';
-				$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 				$database->save($array);
 				unset($array);
 
@@ -134,9 +128,6 @@
 					$array['contact_times'][0]['time_stop'] = $time_stop;
 					$array['contact_times'][0]['time_description'] = $time_description;
 
-					$database = new database;
-					$database->app_name = 'contacts';
-					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 					$database->save($array);
 					unset($array);
 				}
@@ -161,7 +152,6 @@
 		$parameters['contact_uuid'] = $contact_uuid ?? '';
 		$parameters['user_uuid'] = $_SESSION["user"]["user_uuid"];
 		$parameters['contact_time_uuid'] = $contact_time_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		$time_start = $row["time_start"];
 		$time_stop = $row["time_stop"];

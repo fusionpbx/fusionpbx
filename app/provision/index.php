@@ -36,7 +36,19 @@
 	$file_count = 0;
 	$row_count = 0;
 	$device_template = '';
-	$database = database::new(); //use an existing connection if possible
+
+//check for domain name with username or port number
+	// user:pass@domain_name:port
+	// user:pass@domain_name
+	// domain_name:port
+	$domain_name = $_SERVER['HTTP_HOST'];
+	if (str_contains($domain_name, '@')) {
+		$domain_name = explode("@", $domain_name, 2)[1];
+	}
+	if (str_contains($domain_name, ':')) {
+		$domain_array = explode(":", $domain_name);
+		$domain_name = $domain_array[0];
+	}
 
 //define PHP variables from the HTTP values
 	if (isset($_REQUEST['address'])) {
@@ -64,8 +76,6 @@
 	// The file name is fixed to `Account1_Extern.xml`.
 	// (Account1 is the first account you register)
 	if (empty($device_address) && !empty($ext)) {
-		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-		$domain_name = $domain_array[0];
 		$device = device_by_ext($ext, $domain_name);
 		if ($device !== false && ($device['device_vendor'] == 'escene' || $device['device_vendor'] == 'grandstream')) {
 			$device_address = $device['device_address'];
@@ -73,6 +83,13 @@
 	}
 
 //send http error
+	/**
+	 * Displays a custom HTTP error page with the specified error code and message.
+	 *
+	 * @param int $error The HTTP error code (e.g., 400, 401, etc.)
+	 *
+	 * @return void The script exits after displaying the error page
+	 */
 	function http_error($error) {
 		//$error_int_val = intval($error);
 		$http_errors = [
@@ -189,7 +206,7 @@
 	$parameters['device_address'] = $device_address;
 	if ($domain_filter) {
 		$sql .= "and n.domain_name = :domain_name";
-		$parameters['domain_name'] = $_SERVER['HTTP_HOST'];
+		$parameters['domain_name'] = $domain_name;
 	}
 	$row = $database->select($sql, $parameters, 'row');
 	if (is_array($row)) {
@@ -204,21 +221,17 @@
 
 //get the domain_name and domain_uuid
 	if (empty($domain_uuid)) {
-		//get the domain_name
-			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-			$domain_name = $domain_array[0];
-
 		//get the domain_uuid
-			$sql = "select domain_uuid from v_domains ";
-			$sql .= "where lower(domain_name) = lower(:domain_name) ";
-			$parameters['domain_name'] = $domain_name;
-			$domain_uuid = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
+		$sql = "select domain_uuid from v_domains ";
+		$sql .= "where lower(domain_name) = lower(:domain_name) ";
+		$parameters['domain_name'] = $domain_name;
+		$domain_uuid = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
 	}
 
 //send a request to a remote server to validate the MAC address and secret
 	if (!empty($_SERVER['auth_server'])) {
-		$result = send_http_request($_SERVER['auth_server'], 'mac='.url_encode($_REQUEST['mac']).'&secret='.url_encode($_REQUEST['secret']));
+		$result = send_http_request($_SERVER['auth_server'], 'mac='.urlencode($_REQUEST['mac']).'&secret='.urlencode($_REQUEST['secret']));
 		if ($result == "false") {
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but the remote auth server said no for ".escape($_REQUEST['mac']));
 			http_error('404');
@@ -266,6 +279,13 @@
 	if (!empty($provision["http_auth_username"]) && empty($provision["http_auth_type"])) { $provision["http_auth_type"] = "digest"; }
 	if (!empty($provision["http_auth_username"]) && $provision["http_auth_type"] === "digest" && !empty($provision["http_auth_enabled"]) && $provision["http_auth_enabled"]) {
 		//function to parse the http auth header
+			/**
+			 * Parses the specified HTTP Digest authentication text and extracts relevant data.
+			 *
+			 * @param string $txt The HTTP Digest authentication text to parse
+			 *
+			 * @return array|false An array of extracted data if successful, or false if data is incomplete
+			 */
 			function http_digest_parse($txt) {
 				//protect against missing data
 				$needed_parts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
@@ -280,6 +300,13 @@
 			}
 
 		//function to request digest authentication
+			/**
+			 * Sends an HTTP Digest authentication request with the specified realm.
+			 *
+			 * @param string $realm The name of the protected resource's realm
+			 *
+			 * @return void The script exits after sending the authentication request
+			 */
 			function http_digest_request($realm) {
 				header('HTTP/1.1 401 Authorization Required');
 				header('WWW-Authenticate: Digest realm="'.$realm.'", qop="auth", nonce="'.uniqid().'", opaque="'.md5($realm).'"');
@@ -359,7 +386,7 @@
 
 			if (!$authorized) {
 				//access denied
-				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed http basic authentication for ".check_str($_REQUEST['mac']));
+				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed http basic authentication for ".$_REQUEST['mac']);
 				header('HTTP/1.0 401 Unauthorized');
 				header('WWW-Authenticate: Basic realm="'.$domain_name.'"');
 				unset($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
@@ -374,10 +401,10 @@
 //if the password was defined in the settings then require the password.
 	if (!empty($provision['password'])) {
 		//deny access if the password doesn't match
-		if ($provision['password'] != check_str($_REQUEST['password'])) {
+		if ($provision['password'] != $_REQUEST['password'] ?? '') {
 			//log the failed auth attempt to the system, to be available for fail2ban.
 			openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
-			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
+			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".($_REQUEST['mac'] ?? ''));
 			closelog();
 			echo "access denied";
 			return;
@@ -388,10 +415,9 @@
 	ob_start();
 
 //output template to string for header processing
-	$prov = new provision(['settings'=>$settings]);
-	$prov->domain_uuid = $domain_uuid;
+	$prov = new provision(['settings'=>$settings, 'domain_uuid'=>$domain_uuid, 'domain_name'=>$domain_name, 'user_uuid'=>$_SESSION['user_uuid']]);
 	$prov->device_address = $device_address;
-	$prov->file = $file;
+	$prov->device_file = $file;
 	$file_contents = $prov->render();
 
 //clean the output buffer
@@ -415,7 +441,7 @@
 			header('Expires: 0');
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			header('Pragma: public');
-			header('Content-Length: '.strlen($file_contents));
+			header('Content-Length: '.strlen($file_contents ?? ''));
 	}
 	else {
 		$cfg_ext = ".cfg";
@@ -426,7 +452,7 @@
 			header("Content-Type: text/plain");
 		}
 		else if ($device_vendor === "snom" && $device_template === "snom/m3") {
-			$file_contents = utf8_decode($file_contents);
+			$file_contents = utf8_decode($file_contents ?? '');
 			header("Content-Type: text/plain; charset=iso-8859-1");
 		}
 		elseif (!empty($file_contents) && is_xml($file_contents)) {
@@ -441,8 +467,8 @@
 	$file_size = strlen($file_contents);
 	if (isset($_SERVER['HTTP_RANGE'])) {
 		$ranges = $_SERVER['HTTP_RANGE'];
-		list($unit, $range) = explode('=', $ranges, 2);
-		list($start, $end) = explode('-', $range, 2);
+		[$unit, $range] = explode('=', $ranges, 2);
+		[$start, $end] = explode('-', $range, 2);
 
 		$start = empty($start) ? 0 : (int)$start;
 		$end = empty($end) ? $file_size - 1 : min((int)$end, $file_size - 1);
@@ -471,7 +497,7 @@
 	closelog();
 
 //device logs
-	if (file_exists($_SERVER["PROJECT_ROOT"]."/app/device_logs/app_config.php")){
+	if (file_exists(dirname(__DIR__, 2)."/app/device_logs/app_config.php")){
 		require_once "app/device_logs/resources/device_logs.php";
 	}
 

@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('conference_profile_add') || permission_exists('conference_profile_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('conference_profile_add') || permission_exists('conference_profile_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -113,9 +110,6 @@
 				}
 
 				if (is_uuid($array['conference_profiles'][0]['conference_profile_uuid'])) {
-					$database = new database;
-					$database->app_name = 'conference_profiles';
-					$database->app_uuid = 'c33e2c2a-847f-44c1-8c0d-310df5d65ba9';
 					$database->save($array);
 					unset($array);
 				}
@@ -138,7 +132,6 @@
 		//$sql .= "and domain_uuid = :domain_uuid ";
 		$parameters['conference_profile_uuid'] = $conference_profile_uuid;
 		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$profile_name = $row["profile_name"];
@@ -147,6 +140,9 @@
 		}
 		unset($sql, $parameters);
 	}
+
+//set the defaults
+	$profile_enabled = $profile_enabled ?? true;
 
 //create token
 	$object = new token;
@@ -191,8 +187,8 @@
 		echo "	<span class='switch'>\n";
 	}
 	echo "		<select class='formfld' id='profile_enabled' name='profile_enabled'>\n";
-	echo "			<option value='true' ".($profile_enabled === true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "			<option value='false' ".($profile_enabled === false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "			<option value='true' ".($profile_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($profile_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "		</select>\n";
 	if ($input_toggle_style_switch) {
 		echo "		<span class='slider'></span>\n";

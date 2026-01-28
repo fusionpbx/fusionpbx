@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -44,21 +44,29 @@
 
 //retrieve submitted data
 	if (!empty($_REQUEST)) {
-		$quick_select = $_REQUEST['quick_select'];
-		$start_stamp_begin = $_REQUEST['start_stamp_begin'];
-		$start_stamp_end = $_REQUEST['start_stamp_end'];
-		$include_internal = $_REQUEST['include_internal'] ?? '0';
+		$quick_select = $_REQUEST['quick_select'] ?? null;
+		$start_stamp_begin = $_REQUEST['start_stamp_begin'] ?? null;
+		$start_stamp_end = $_REQUEST['start_stamp_end'] ?? null;
+		$include_internal = $_REQUEST['include_internal'] ?? null;
 	}
 	else {
 		$quick_select = 3; //set default
+	}
+
+//convert time format to 24 hour
+	if (!empty($start_stamp_begin)) {
+		$start_stamp_begin_formatted = ($settings->get('domain', 'time_format') == '24h' ? $start_stamp_begin : DateTime::createFromFormat('Y-m-d h:i a', $start_stamp_begin)->format('Y-m-d H:i'));
+	}
+	if (!empty($start_stamp_end)) {
+		$start_stamp_end_formatted = ($settings->get('domain', 'time_format') == '24h' ? $start_stamp_end : DateTime::createFromFormat('Y-m-d h:i a', $start_stamp_end)->format('Y-m-d H:i'));
 	}
 
 //get the summary
 	$cdr = new xml_cdr;
 	$cdr->domain_uuid = $_SESSION['domain_uuid'];
 	$cdr->quick_select = $quick_select;
-	$cdr->start_stamp_begin = $start_stamp_begin ?? null;
-	$cdr->start_stamp_end = $start_stamp_end ?? null;
+	$cdr->start_stamp_begin = $start_stamp_begin_formatted ?? null;
+	$cdr->start_stamp_end = $start_stamp_end_formatted ?? null;
 	$cdr->include_internal = $include_internal ?? null;
 	$summary = $cdr->user_summary();
 
@@ -154,17 +162,16 @@
 		echo "			".$text['label-include_internal']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field'>\n";
-		if (substr($settings->get('theme', 'input_toggle_style'), 0, 6) == 'switch') {
-			echo "		<label class='switch'>\n";
-			echo "			<input type='checkbox' id='include_internal' name='include_internal' value='1' ".(!empty($include_internal) && $include_internal == 1 ? "checked='checked'" : null).">\n";
-			echo "			<span class='slider'></span>\n";
-			echo "		</label>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='switch'>\n";
 		}
-		else {
-			echo "		<select class='formfld' id='include_internal' name='include_internal'>\n";
-			echo "			<option value='0'>".$text['option-false']."</option>\n";
-			echo "			<option value='1' ".(!empty($include_internal) && $include_internal == 1 ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		</select>\n";
+		echo "			<select class='formfld' id='include_internal' name='include_internal'>\n";
+		echo "				<option value='false' ".(!empty($include_internal) && $include_internal === 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "				<option value='true' ".(!empty($include_internal) && $include_internal === 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "			</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "			<span class='slider'></span>\n";
+			echo "		</span>\n";
 		}
 		echo "		</div>\n";
 
@@ -175,14 +182,14 @@
 		echo "			".$text['label-start_date_time']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field'>\n";
-		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin ?? '')."'>\n";
+		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin ?? '')."' onchange=\"document.getElementById('quick_select').value = '';\">\n";
 		echo "		</div>\n";
 
 		echo "		<div class='label'>\n";
 		echo "			".$text['label-end_date_time']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field'>\n";
-		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px; max-width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end ?? '')."'>\n";
+		echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end ?? '')."' onchange=\"document.getElementById('quick_select').value = '';\">\n";
 		echo "		</div>\n";
 
 		echo "	</div>\n";
@@ -208,7 +215,15 @@
 	if (permission_exists('number_alias')) {
 		echo "		<th>".$text['label-number_alias']."</th>\n";
 	}
-	echo "		<th class='center'>".$text['label-answered']."</th>\n";
+	if (permission_exists('xml_cdr_answered')) {
+		echo "		<th class='center'>".$text['label-answered']."</th>\n";
+	}
+	if (permission_exists('xml_cdr_answered_inbound')) {
+		echo "		<th class='center'>".$text['label-answered_inbound']."</th>\n";
+	}
+	if (permission_exists('xml_cdr_answered_outbound')) {
+		echo "		<th class='center'>".$text['label-answered_outbound']."</th>\n";
+	}
 	echo "		<th class='center'>".$text['label-missed']."</th>\n";
 	echo "		<th class='center'>".$text['label-voicemail']."</th>\n";
 	echo "		<th class='center'>".$text['label-no_answer']."</th>\n";
@@ -231,7 +246,15 @@
 			if (permission_exists('number_alias')) {
 				echo "	<td>".escape($row['number_alias'])."&nbsp;</td>\n";
 			}
-			echo "	<td class='center'>".escape($row['answered'])."&nbsp;</td>\n";
+			if (permission_exists('xml_cdr_answered')) {
+				echo "	<td class='center'>".escape($row['answered'])."&nbsp;</td>\n";
+			}
+			if (permission_exists('xml_cdr_answered_inbound')) {
+				echo "	<td class='center'>".escape($row['answered_inbound'])."&nbsp;</td>\n";
+			}
+			if (permission_exists('xml_cdr_answered_outbound')) {
+				echo "	<td class='center'>".escape($row['answered_outbound'])."&nbsp;</td>\n";
+			}
 			echo "	<td class='center'>".escape($row['missed'])."&nbsp;</td>\n";
 			echo "	<td class='center'>".escape($row['voicemail'])."&nbsp;</td>\n";
 			echo "	<td class='center'>".escape($row['no_answer'])."&nbsp;</td>\n";

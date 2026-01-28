@@ -34,6 +34,13 @@
 	//echo "pid_file: ".$pid_file."\n";
 
 //function to check if the process exists
+	/**
+	 * Checks if a process is running.
+	 *
+	 * @param string $file The path to the file containing the process ID, or false for no check.
+	 *
+	 * @return bool True if the process is running, false otherwise.
+	 */
 	function process_exists($file = false) {
 
 		//set the default exists to false
@@ -142,12 +149,12 @@
 	unset($parameters);
 
 //change the working directory
-	chdir($_SERVER['DOCUMENT_ROOT']);
+	chdir(dirname(__DIR__, 4));
 
 //process the messages
 	if (is_array($fax_queue) && @sizeof($fax_queue) != 0) {
 		foreach($fax_queue as $row) {
-			$command = PHP_BINARY." ".$_SERVER['DOCUMENT_ROOT']."/app/fax_queue/resources/job/fax_send.php ";
+			$command = PHP_BINARY." ".dirname(__DIR__, 4)."/app/fax_queue/resources/job/fax_send.php ";
 			$command .= "'action=send&fax_queue_uuid=".$row["fax_queue_uuid"]."&hostname=".$hostname."&debug=true'";
 			if (isset($debug)) {
 				//run process inline to see debug info

@@ -29,16 +29,10 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('domain_setting_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('domain_setting_view')) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -314,7 +308,6 @@
 				( $category == "theme" && $subcategory == "menu_sub_icons" && $name == "boolean" ) ||
 				( $category == "theme" && $subcategory == "menu_brand_type" && $name == "text" ) ||
 				( $category == "theme" && $subcategory == "menu_style" && $name == "text" ) ||
-				( $category == "theme" && $subcategory == "menu_position" && $name == "text" ) ||
 				( $category == "theme" && $subcategory == "body_header_brand_type" && $name == "text" ) ||
 				( $category == "theme" && $subcategory == "logo_align" && $name == "text" )
 				) {
@@ -339,7 +332,12 @@
 				echo "		".$text['option-'.$row['domain_setting_value']]."\n";
 			}
 			else if ($category == 'theme' && $subcategory == 'input_toggle_style' && $name == 'text') {
-				echo "		".$text['option-'.$row['domain_setting_value']]."\n";
+				if ($row['domain_setting_value'] == 'select') {
+					echo "		".$text['option-select_box']."\n";
+				}
+				else {
+					echo "		".$text['option-'.$row['domain_setting_value']]."\n";
+				}
 			}
 			else if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
 				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['domain_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['domain_setting_value'], -0.18)).'; padding: -1px;'));

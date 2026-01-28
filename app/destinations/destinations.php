@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('destination_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('destination_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -65,12 +62,6 @@
 //process the http post data by action
 	if (!empty($action) && !empty($destinations)) {
 		switch ($action) {
-			case 'toggle':
-				if (permission_exists('destination_edit')) {
-					$obj = new destinations;
-					$obj->toggle($destinations);
-				}
-				break;
 			case 'delete':
 				if (permission_exists('destination_delete')) {
 					$obj = new destinations;
@@ -79,7 +70,7 @@
 				break;
 		}
 
-		header('Location: destinations.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: destinations.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -88,7 +79,16 @@
 	$destination_array = $destination->all('dialplan');
 
 //function to return the action names in the order defined
+	/**
+	 * Returns a list of actions based on the provided destination array and actions.
+	 *
+	 * @param array $destination_array   The array containing the data to process.
+	 * @param array $destination_actions The array of actions to apply to the destination array.
+	 *
+	 * @return array A list of actions resulting from the processing of the destination array and actions.
+	 */
 	function action_name($destination_array, $destination_actions) {
+		global $settings;
 		$actions = [];
 		if (!empty($destination_array) && is_array($destination_array)) {
 			if (!empty($destination_actions) && is_array($destination_actions)) {
@@ -100,17 +100,17 @@
 									if ($destination_action == $value) {
 										if ($group == 'other') {
 											if (!isset($language2) && !isset($text2)) {
-												if (file_exists($_SERVER["PROJECT_ROOT"]."/app/dialplans/app_languages.php")) {
+												if (file_exists(dirname(__DIR__, 2)."/app/dialplans/app_languages.php")) {
 													$language2 = new text;
-													$text2 = $language2->get($_SESSION['domain']['language']['code'], 'app/dialplans');
+													$text2 = $language2->get($settings->get('domain', 'language', 'en-us'), 'app/dialplans');
 												}
 											}
 											$actions[] = trim($text2['title-other'].' &#x203A; '.$text2['option-'.str_replace('&lowbar;','_',$key)]);
 										}
 										else {
-											if (file_exists($_SERVER["PROJECT_ROOT"]."/app/".$group."/app_languages.php")) {
+											if (file_exists(dirname(__DIR__, 2)."/app/".$group."/app_languages.php")) {
 												$language3 = new text;
-												$text3 = $language3->get($_SESSION['domain']['language']['code'], 'app/'.$group);
+												$text3 = $language3->get($settings->get('domain', 'language', 'en-us'), 'app/'.$group);
 												$actions[] = trim($text3['title-'.$group].' &#x203A; '.$key);
 											}
 										}
@@ -164,14 +164,12 @@
 			$sql .= "or lower(destination_caller_id_name) like :search ";
 			$sql .= "or destination_caller_id_number like :search ";
 		}
-		$sql .= "or lower(destination_enabled) like :search ";
 		$sql .= "or lower(destination_description) like :search ";
 		$sql .= "or lower(destination_data) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
 	$parameters['destination_type'] = $destination_type;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
@@ -185,8 +183,8 @@
 		$page = $_GET['page'];
 	}
 	if (!isset($page)) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	[$paging_controls, $rows_per_page] = paging($num_rows, $param, $rows_per_page);
+	[$paging_controls_mini, $rows_per_page] = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
@@ -206,7 +204,7 @@
 	$sql .= " d.destination_context, ";
 	$sql .= " d.destination_caller_id_name, ";
 	$sql .= " d.destination_caller_id_number, ";
-	$sql .= " d.destination_enabled, ";
+	$sql .= " cast(d.destination_enabled as text), ";
 	$sql .= " d.destination_description ";
 	$sql .= "from v_destinations as d ";
 	if ($show == "all" && permission_exists('destination_all')) {
@@ -230,7 +228,6 @@
 			$sql .= " or lower(destination_caller_id_name) like :search ";
 			$sql .= " or destination_caller_id_number like :search ";
 		}
-		$sql .= " or lower(destination_enabled) like :search ";
 		$sql .= " or lower(destination_description) like :search ";
 		$sql .= " or lower(destination_data) like :search ";
 		$sql .= ") ";
@@ -238,31 +235,25 @@
 	}
 	$sql .= order_by($order_by, $order, 'destination_number, destination_order ', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$destinations = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //update the array to add the actions
-	if (!$show == "all") {
+	if ($show != "all") {
 		$x = 0;
 		foreach ($destinations as $row) {
+			$destinations[$x]['actions'] = '';
 			if (!empty($row['destination_actions'])) {
 				//prepare the destination actions
 				if (!empty(json_decode($row['destination_actions'], true))) {
+					//add the actions to the array
+					$destination_app_data = [];
 					foreach (json_decode($row['destination_actions'], true) as $action) {
 						$destination_app_data[] = $action['destination_app'].':'.$action['destination_data'];
 					}
+					$actions = action_name($destination_array, $destination_app_data);
+					$destinations[$x]['actions'] = (!empty($actions)) ? implode(', ', $actions) : '';
 				}
-
-				//add the actions to the array
-				$actions = action_name($destination_array, $destination_app_data);
-				$destinations[$x]['actions'] = (!empty($actions)) ? implode(', ', $actions) : '';
-
-				//empty the array before the next iteration
-				unset($destination_app_data);
-			}
-			else {
-				$destinations[$x]['actions'] = '';
 			}
 			$x++;
 		}
@@ -463,4 +454,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

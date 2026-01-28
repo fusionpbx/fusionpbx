@@ -30,16 +30,10 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('conference_center_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('conference_center_view')) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -54,7 +48,7 @@
 //get posted data
 	if (!empty($_POST['conference_centers'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$conference_centers = $_POST['conference_centers'];
 	}
 
@@ -83,7 +77,7 @@
 				break;
 		}
 
-		header('Location: conference_centers.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: conference_centers.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -115,7 +109,7 @@
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".urlencode($search);
 	if ($show == "all" && permission_exists('conference_center_all')) {
 		$param .= "&show=all";
@@ -127,7 +121,17 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select * from v_conference_centers ";
+	$sql = "select ";
+	$sql .= "domain_uuid, ";
+	$sql .= "conference_center_uuid, ";
+	$sql .= "dialplan_uuid, ";
+	$sql .= "conference_center_name, ";
+	$sql .= "conference_center_extension, ";
+	$sql .= "conference_center_pin_length, ";
+	$sql .= "conference_center_greeting, ";
+	$sql .= "conference_center_description, ";
+	$sql .= "cast(conference_center_enabled as text) ";
+	$sql .= "from v_conference_centers ";
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('conference_center_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
@@ -289,4 +293,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

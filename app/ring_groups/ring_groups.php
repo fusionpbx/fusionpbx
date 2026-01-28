@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2024
+	Portions created by the Initial Developer are Copyright (C) 2010-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -31,10 +31,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('ring_group_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('ring_group_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -52,8 +49,23 @@
 //get posted data
 	if (!empty($_POST['ring_groups'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$ring_groups = $_POST['ring_groups'];
+	}
+
+//get total ring group count from the database, check limit, if defined
+	if (!empty($action) && $action == 'copy' && $settings->get('limit', 'ring_groups', '') ?? '') {
+		$sql = "select count(*) from v_ring_groups ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$total_ring_groups = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
+
+		if (is_numeric($settings->get('limit', 'ring_groups', '')) && $total_ring_groups >= $settings->get('limit', 'ring_groups', '')) {
+			message::add($text['message-maximum_ring_groups'].' '.$settings->get('limit', 'ring_groups', ''), 'negative');
+			header('Location: ring_groups.php');
+			exit;
+		}
 	}
 
 //process the http post data by action
@@ -73,7 +85,7 @@
 				break;
 		}
 
-		header('Location: ring_groups.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: ring_groups.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -91,7 +103,6 @@
 	$sql = "select count(*) from v_ring_groups ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$total_ring_groups = $database->select($sql, $parameters, 'column');
 
 //get filtered ring group count
@@ -118,12 +129,10 @@
 		$sql .= "lower(ring_group_name) like :search ";
 		$sql .= "or lower(ring_group_extension) like :search ";
 		$sql .= "or lower(ring_group_description) like :search ";
-		$sql .= "or lower(ring_group_enabled) like :search ";
 		$sql .= "or lower(ring_group_strategy) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 
@@ -138,17 +147,21 @@
 
 //get the list
 	if ($show == "all" && permission_exists('ring_group_all')) {
-		$sql = "select * from v_ring_groups ";
+		$sql = "select r.ring_group_uuid, r.domain_uuid, r.ring_group_name, r.ring_group_extension, r.ring_group_strategy, ";
+		$sql .= "r.ring_group_forward_destination, r.ring_group_forward_enabled, cast(r.ring_group_enabled as text), r.ring_group_description ";
+		$sql .= "from v_ring_groups as r ";
 		$sql .= "where true ";
 	}
-	elseif (permission_exists('ring_group_domain') || permission_exists('ring_group_all')) {
-		$sql = "select * from v_ring_groups ";
+	else if (permission_exists('ring_group_domain') || permission_exists('ring_group_all')) {
+		$sql = "select r.ring_group_uuid, r.domain_uuid, r.ring_group_name, r.ring_group_extension, r.ring_group_strategy, ";
+		$sql .= "r.ring_group_forward_destination, r.ring_group_forward_enabled, cast(r.ring_group_enabled as text), r.ring_group_description ";
+		$sql .= "from v_ring_groups as r ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	else {
-		$sql = "select r.ring_group_uuid, r.ring_group_name, r.ring_group_extension, r.ring_group_strategy, ";
-		$sql .= "r.ring_group_forward_destination, r.ring_group_forward_enabled, r.ring_group_description ";
+		$sql = "select r.ring_group_uuid, r.domain_uuid, r.ring_group_name, r.ring_group_extension, r.ring_group_strategy, ";
+		$sql .= "r.ring_group_forward_destination, r.ring_group_forward_enabled, cast(r.ring_group_enabled as text), r.ring_group_description ";
 		$sql .= "from v_ring_groups as r, v_ring_group_users as u ";
 		$sql .= "where r.domain_uuid = :domain_uuid ";
 		$sql .= "and r.ring_group_uuid = u.ring_group_uuid ";
@@ -161,7 +174,6 @@
 		$sql .= "lower(ring_group_name) like :search ";
 		$sql .= "or lower(ring_group_extension) like :search ";
 		$sql .= "or lower(ring_group_description) like :search ";
-		$sql .= "or lower(ring_group_enabled) like :search ";
 		$sql .= "or lower(ring_group_strategy) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
@@ -183,10 +195,10 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-ring_groups']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('ring_group_add') && (!isset($_SESSION['limit']['ring_groups']['numeric']) || ($total_ring_groups < $_SESSION['limit']['ring_groups']['numeric']))) {
+	if (permission_exists('ring_group_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'ring_group_edit.php']);
 	}
-	if (permission_exists('ring_group_add') && $ring_groups && (!isset($_SESSION['limit']['ring_groups']['numeric']) || ($total_ring_groups < $_SESSION['limit']['ring_groups']['numeric']))) {
+	if (permission_exists('ring_group_add') && $ring_groups) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
 	if (permission_exists('ring_group_edit') && $ring_groups) {
@@ -215,7 +227,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (permission_exists('ring_group_add') && $ring_groups && (!isset($_SESSION['limit']['ring_groups']['numeric']) || ($total_ring_groups < $_SESSION['limit']['ring_groups']['numeric']))) {
+	if (permission_exists('ring_group_add') && $ring_groups) {
 		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('copy'); list_form_submit('form_list');"])]);
 	}
 	if (permission_exists('ring_group_edit') && $ring_groups) {
@@ -284,7 +296,7 @@
 			echo "	</td>\n";
 			echo "	<td>".escape($row['ring_group_extension'])."&nbsp;</td>\n";
 			echo "	<td>".$text['option-'.escape($row['ring_group_strategy'])]."&nbsp;</td>\n";
-			echo "	<td>".($row['ring_group_forward_enabled'] == 'true' ? format_phone(escape($row['ring_group_forward_destination'])) : null)."&nbsp;</td>\n";
+			echo "	<td>".($row['ring_group_forward_enabled'] === true && !empty($row['ring_group_forward_destination']) ? format_phone(escape($row['ring_group_forward_destination'])) : null)."&nbsp;</td>\n";
 			if (permission_exists('ring_group_edit')) {
 				echo "	<td class='no-link center'>";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['ring_group_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);

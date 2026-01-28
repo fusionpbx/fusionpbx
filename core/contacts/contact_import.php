@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,32 +29,14 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_add')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_add')) {
 		echo "access denied";
 		exit;
 	}
 
-//connect to the database
-	$database = new database;
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduct the functionality but requirs PHP 5.1.0 or higher
-	if (!function_exists('str_getcsv')) {
-		function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
-			$fp = fopen("php://memory", 'r+');
-			fputs($fp, $input);
-			rewind($fp);
-			$data = fgetcsv($fp, null, $delimiter, $enclosure); // $escape only got added in 5.3.0
-			fclose($fp);
-			return $data;
-		}
-	}
 
 //set the max php execution time
 	ini_set('max_execution_time', 7200);
@@ -67,7 +49,7 @@
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
-		$file = $_SESSION['server']['temp']['dir']."/contacts-".$_SESSION['domain_name'].".csv";
+		$file = $settings->get('server', 'temp')."/contacts-".$_SESSION['domain_name'].".csv";
 		file_put_contents($file, $_POST['data']);
 		$_SESSION['file'] = $file;
 	}
@@ -76,10 +58,10 @@
 	//$_POST['submit'] == "Upload" &&
 	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('contact_upload')) {
 		if ($_POST['type'] == 'csv') {
-			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
-			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
-			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
-			$file = $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name'];
+			move_uploaded_file($_FILES['ulfile']['tmp_name'], $settings->get('server', 'temp').'/'.$_FILES['ulfile']['name']);
+			$save_msg = "Uploaded file to ".$settings->get('server', 'temp')."/". htmlentities($_FILES['ulfile']['name']);
+			//system('chmod -R 744 '.$settings->get('server', 'temp').'*');
+			$file = $settings->get('server', 'temp').'/'.$_FILES['ulfile']['name'];
 			$_SESSION['file'] = $file;
 		}
 	}
@@ -258,6 +240,14 @@
 	}
 
 //get the parent table
+	/**
+	 * Retrieves the parent table name from a given schema based on the provided table name.
+	 *
+	 * @param array  $schema     A list of tables and their properties in the database schema.
+	 * @param string $table_name The name of the table for which to retrieve the parent.
+	 *
+	 * @return string|null The parent table name, or null if no match is found.
+	 */
 	function get_parent($schema,$table_name) {
 		foreach ($schema as $row) {
 			if ($row['table'] == $table_name) {
@@ -304,6 +294,9 @@
 
 				//loop through the array
 					while (($line = fgets($handle, 4096)) !== false) {
+						//convert the line to UTF-8
+						$line = mb_convert_encoding($line, 'UTF-8');
+
 						if ($from_row <= $row_number) {
 							//format the data
 								$y = 0;
@@ -385,8 +378,6 @@
 							//process a chunk of the array
 								if ($row_id === 1000) {
 									//save to the data
-										$database->app_name = 'contacts';
-										$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 										$database->save($array);
 
 									//clear the array
@@ -408,8 +399,6 @@
 
 				//save to the data
 					if (!empty($array)) {
-						$database->app_name = 'contacts';
-						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 						$database->save($array);
 						unset($array);
 					}
@@ -517,7 +506,7 @@
 	echo "</div>\n";
 	echo "<br />\n";
 
-	if (function_exists('curl_version') && !empty($_SESSION['contact']['google_oauth_client_id']['text']) && !empty($_SESSION['contact']['google_oauth_client_secret']['text'])) {
+	if (function_exists('curl_version') && !empty($settings->get('contact', 'google_oauth_client_id')) && !empty($settings->get('contact', 'google_oauth_client_secret'))) {
 		echo "<a href='contact_import_google.php'><img src='resources/images/icon_gcontacts.png' style='width: 21px; height: 21px; border: none; text-decoration: none; margin-right: 5px;' align='absmiddle'>".$text['header-contacts_import_google']."</a>\n";
 	}
 

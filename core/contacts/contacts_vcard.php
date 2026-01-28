@@ -27,10 +27,7 @@
 //includes files
 require_once dirname(__DIR__, 2) . "/resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('contact_view')) {
-	//access granted
-}
-else {
+if (!permission_exists('contact_view')) {
 	echo "access denied";
 	exit;
 }
@@ -53,7 +50,6 @@ if (!empty($_GET)) {
 		$sql .= "and contact_uuid = :contact_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$contact_type = $row["contact_type"];
@@ -79,7 +75,6 @@ if (!empty($_GET)) {
 		$sql .= "order by email_primary desc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
 		if (!empty($result)) {
 			$e = 1;
@@ -94,10 +89,9 @@ if (!empty($_GET)) {
 		$sql = "select url_address from v_contact_urls ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and contact_uuid = :contact_uuid ";
-		$sql .= "and url_primary = 1 ";
+		$sql .= "and url_primary = true ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
 		$url_address = $database->select($sql, $parameters, 'column');
 		$vcard->data['url'] = $url_address;
 		unset($sql, $parameters, $row);
@@ -121,7 +115,6 @@ if (!empty($_GET)) {
 		$sql .= "and contact_uuid = :contact_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_uuid'] = $contact_uuid;
-		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
 		if (!empty($result)) {
 			foreach ($result as $row) {
@@ -150,7 +143,6 @@ if (!empty($_GET)) {
 			$sql .= "and contact_uuid = :contact_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['contact_uuid'] = $contact_uuid;
-			$database = new database;
 			$result = $database->select($sql, $parameters, 'all');
 			if (!empty($result)) {
 				foreach ($result as $row) {
@@ -206,7 +198,7 @@ if (!empty($_GET)) {
 			}
 
 			//include
-				require_once $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/qr/qrcode.php";
+				require_once dirname(__DIR__, 2)."/resources/qr/qrcode.php";
 
 			//error correction level
 				//QR_ERROR_CORRECT_LEVEL_L : $e = 0;

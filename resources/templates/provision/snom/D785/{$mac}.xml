@@ -8,8 +8,8 @@
     <ntp_server perm="">{if isset($snom_ntp_server)}{$snom_ntp_server}{else}0.pool.ntp.org{/if}</ntp_server>
     <ntp_refresh_timer perm="">3600</ntp_refresh_timer>
     <timezone perm="">{$snom_time_zone}</timezone>
-    {if isset($snom_dhcp)}<dhcp perm="R">{$snom_dhcp}</dhcp>{/if}
-    <phone_name perm="R">snomD785-{substr($mac, -6)}</phone_name>
+    {if isset($snom_dhcp)}<dhcp perm="RW">{$snom_dhcp}</dhcp>{/if}
+    <phone_name perm="RW">snomD785-{substr($mac, -6)}</phone_name>
     <dim_timer perm="">20</dim_timer>
     <backlight perm="">15</backlight>
     <backlight_idle perm="">5</backlight_idle>
@@ -19,8 +19,8 @@
     <show_ivr_digits perm="">off</show_ivr_digits>
     <cw_dialtone perm="">{if isset($snom_dialtone_on_hold)}{$snom_dialtone_on_hold}{else}false{/if}</cw_dialtone>
     <answer_after_policy perm="">{if isset($snom_answer_after_policy)}{$snom_answer_after_policy}{else}off{/if}</answer_after_policy>
-    <keyboard_lock_emergency perm="R">{if isset($snom_emergency_numbers)}{$snom_emergency_numbers}{else}911 112 110 999{/if}</keyboard_lock_emergency>
-    <status_msgs_that_are_blocked perm="R">PhoneHasVoiceMessages PhoneHasTextMessages HidConnected UxmConnected{if isset($snom_emergency_numbers)} EmergencyCallNumbersMisconfigured{/if}</status_msgs_that_are_blocked>
+    <keyboard_lock_emergency perm="RW">{if isset($snom_emergency_numbers)}{$snom_emergency_numbers}{else}911 112 110 999{/if}</keyboard_lock_emergency>
+    <status_msgs_that_are_blocked perm="RW">PhoneHasVoiceMessages PhoneHasTextMessages HidConnected UxmConnected{if isset($snom_emergency_numbers)} EmergencyCallNumbersMisconfigured{/if}</status_msgs_that_are_blocked>
     <ui_theme perm="RW">{if isset($snom_ui_theme)}{$snom_ui_theme}{/if}</ui_theme>
     <!-- Ringtones -->
     <alert_internal_ring_text perm="">alert-internal</alert_internal_ring_text>
@@ -46,49 +46,47 @@
     <call_screen_fkeys_on_connected perm="">F_HOLD F_TRANSFER F_CONFERENCE</call_screen_fkeys_on_connected>
     <!-- Updates -->
     <update_policy perm="">{if isset($snom_update_policy)}{$snom_update_policy}{else}auto_update{/if}</update_policy>
-    <firmware perm="R">{$snom_firmware_url}{$snom_firmware_d785}</firmware>
-    <firmware_uxm perm="R">{$snom_firmware_url}{$snom_firmware_uxm}</firmware_uxm>
+    <firmware perm="RW">{$snom_firmware_url}{$snom_firmware_d785}</firmware>
+    <firmware_uxm perm="RW">{$snom_firmware_url}{$snom_firmware_uxm}</firmware_uxm>
     <setting_server perm="RW">{if isset($snom_provision_url)}{$snom_provision_url}{else}https://{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}{/if}</setting_server>
     <settings_refresh_timer perm="RW">{if isset($snom_provision_timer_seconds)}{$snom_provision_timer_seconds}{else}0{/if}</settings_refresh_timer>
     <http_client_user perm="">{$http_auth_username}</http_client_user>
     <http_client_pass perm="">{$http_auth_password}</http_client_pass>
     <!-- Admin Access -->
     {if isset($admin_password) }
-    <http_user perm="R">{$admin_name}</http_user>
-    <http_pass perm="R">{$admin_password}</http_pass>
+    <http_user perm="RW">{$admin_name}</http_user>
+    <http_pass perm="RW">{$admin_password}</http_pass>
     <web_logout_timer>5</web_logout_timer>
-    <admin_mode perm="R">on</admin_mode>
-    <admin_mode_password perm="R">{$admin_password}</admin_mode_password>
-    <admin_mode_password_confirm perm="R">{$admin_password}</admin_mode_password_confirm>
+    <admin_mode perm="RW">on</admin_mode>
+    <admin_mode_password perm="RW">{$admin_password}</admin_mode_password>
+    <admin_mode_password_confirm perm="RW">{$admin_password}</admin_mode_password_confirm>
     {else}
-    <admin_mode perm="R">on</admin_mode>
+    <admin_mode perm="RW">on</admin_mode>
     <admin_mode_password>0000</admin_mode_password>
     <admin_mode_password_confirm>0000</admin_mode_password_confirm>
     {/if}
     <!-- SIP Accounts -->
     {foreach $lines as $row}
-    <user_active idx="{$row.line_number}" perm="R">{if $row.enabled}on{else}off{/if}</user_active>
-    <user_realname idx="{$row.line_number}" perm="R">{$row.display_name}</user_realname>
-    <user_name idx="{$row.line_number}" perm="R">{$row.user_id}</user_name>
-    <user_pass idx="{$row.line_number}" perm="R">{$row.password}</user_pass>
-    <user_host idx="{$row.line_number}" perm="R">{$row.server_address}:{$row.sip_port}</user_host>
-    <user_outbound idx="{$row.line_number}" perm="R">{if $row.outbound_proxy_primary == ""}{$row.server_address}{else}{$row.outbound_proxy_primary}{/if}:{$row.sip_port};transport={if $row.sip_transport == 'tcp' || $row.sip_transport == 'tls'}{$row.sip_transport}{else}udp{/if},{if $row.outbound_proxy_secondary == ""}{else}{$row.outbound_proxy_secondary}:{$row.sip_port};transport={if $row.sip_transport == 'tcp' || $row.sip_transport == 'tls'}{$row.sip_transport}{else}udp{/if}{/if}</user_outbound>
-    <user_expiry idx="{$row.line_number}" perm="R">{$row.register_expires}</user_expiry>
-    <user_shared_line idx="{$row.line_number}" perm="R">{if $row.shared_line == "on"}on{else}off{/if}</user_shared_line>    
-    <user_server_type idx="{$row.line_number}" perm="R">Default</user_server_type>
-    <user_srtp idx="{$row.line_number}" perm="R">off</user_srtp>
-    <user_mailbox idx="{$row.line_number}" perm="R">{$voicemail_number}</user_mailbox>
+    <user_active idx="{$row.line_number}" perm="RW">{if $row.enabled}on{else}off{/if}</user_active>
+    <user_realname idx="{$row.line_number}" perm="RW">{$row.display_name}</user_realname>
+    <user_name idx="{$row.line_number}" perm="RW">{$row.user_id}</user_name>
+    <user_pass idx="{$row.line_number}" perm="RW">{$row.password}</user_pass>
+    <user_host idx="{$row.line_number}" perm="RW">{$row.server_address}:{$row.sip_port}</user_host>
+    <user_outbound idx="{$row.line_number}" perm="RW">{if $row.outbound_proxy_primary == ""}{$row.server_address}{else}{$row.outbound_proxy_primary}{/if}:{$row.sip_port};transport={if $row.sip_transport == 'tcp' || $row.sip_transport == 'tls'}{$row.sip_transport}{else}udp{/if},{if $row.outbound_proxy_secondary == ""}{else}{$row.outbound_proxy_secondary}:{$row.sip_port};transport={if $row.sip_transport == 'tcp' || $row.sip_transport == 'tls'}{$row.sip_transport}{else}udp{/if}{/if}</user_outbound>
+    <user_expiry idx="{$row.line_number}" perm="RW">{$row.register_expires}</user_expiry>
+    <user_shared_line idx="{$row.line_number}" perm="RW">{if $row.shared_line == "on"}on{else}off{/if}</user_shared_line>    
+    <user_server_type idx="{$row.line_number}" perm="RW">Default</user_server_type>
+    <user_srtp idx="{$row.line_number}" perm="RW">off</user_srtp>
+    <user_mailbox idx="{$row.line_number}" perm="RW">{$voicemail_number}</user_mailbox>
     <user_symmetrical_rtp idx="{$row.line_number}" perm="">on</user_symmetrical_rtp>
     <user_ice idx="{$row.line_number}" perm="">off</user_ice>
-    <stun_server idx="{$row.line_number}" perm="R">{$stun_server}{if isset($stun_port)}:{$stun_port}{/if}</stun_server>
-    <stun_binding_interval idx="{$row.line_number}" perm="R">{$snom_stun_interval}</stun_binding_interval>
+    <stun_server idx="{$row.line_number}" perm="RW">{$stun_server}{if isset($stun_port)}:{$stun_port}{/if}</stun_server>
+    <stun_binding_interval idx="{$row.line_number}" perm="RW">{$snom_stun_interval}</stun_binding_interval>
     <codec_priority_list idx="{$row.line_number}" perm="RW">{if isset($snom_codec)}{$snom_codec}{else}g722,pcmu,pcma,gsm,g723,g726-32,aal2-g726-32,g729,telephone-event{/if}</codec_priority_list>
-    <keepalive_interval idx="{$row.line_number}" perm="R">{if isset($snom_keepalive)}{$snom_keepalive}{else}5{/if}</keepalive_interval>
+    <keepalive_interval idx="{$row.line_number}" perm="RW">{if isset($snom_keepalive)}{$snom_keepalive}{else}5{/if}</keepalive_interval>
     {if $row@index eq 11}{break}{/if}
     {/foreach}
   </phone-settings>
-
-
 
   <!-- Function Keys. View Key Types here: https://service.snom.com/display/wiki/Function+Key+Types -->
   <functionKeys e="2"> {assign var="maxKeys" value=77 - count($lines)}
