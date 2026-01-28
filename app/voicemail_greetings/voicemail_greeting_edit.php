@@ -313,6 +313,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','collapse'=>'hide-xs','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	if (permission_exists('voicemail_greeting_play') && $action == 'update') {
+		$greeting_hash = md5($greeting_voice.$greeting_message);
 		$greeting_file_name = strtolower(pathinfo($greeting_filename, PATHINFO_BASENAME));
 		$greeting_file_ext = pathinfo($greeting_file_name, PATHINFO_EXTENSION);
 		switch ($greeting_file_ext) {
@@ -320,7 +321,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			case "mp3" : $greeting_type = "audio/mpeg"; break;
 			case "ogg" : $greeting_type = "audio/ogg"; break;
 		}
-		echo "<audio id='recording_audio_".escape($voicemail_greeting_uuid)."' style='display: none;' preload='none' onended=\"recording_reset('".escape($voicemail_greeting_uuid)."');\" src=\"".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?a=download&type=rec&t=bin&id=".urlencode($voicemail_id)."&uuid=".urlencode($voicemail_greeting_uuid)."\" type='".$greeting_type."'></audio>";
+		echo "<audio id='recording_audio_".escape($voicemail_greeting_uuid)."' style='display: none;' preload='none' onended=\"recording_reset('".escape($voicemail_greeting_uuid)."');\" src=\"".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?a=download&type=rec&t=bin&id=".urlencode($voicemail_id)."&uuid=".urlencode($voicemail_greeting_uuid)."&v=".$greeting_hash."\" type='".$greeting_type."'></audio>";
 		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'label'=>$text['label-preview'],'icon'=>$settings->get('theme','button_icon_play'),'id'=>'recording_button_'.escape($voicemail_greeting_uuid),'onclick'=>"recording_play('".escape($voicemail_greeting_uuid)."','','','".$text['label-preview']."'); this.blur();"]);
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;','collapse'=>'hide-xs']);
