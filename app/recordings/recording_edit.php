@@ -335,7 +335,7 @@
 			case "ogg" : $recording_type = "audio/ogg"; break;
 		}
 		echo "<audio id='recording_audio_".escape($recording_uuid)."' style='display: none;' preload='none' onended=\"recording_reset('".escape($recording_uuid)."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?action=download&type=rec&id=".urlencode($recording_uuid)."\" type='".$recording_type."'></audio>";
-		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'label'=>'Preview','icon'=>$settings->get('theme','button_icon_play'),'id'=>'recording_button_'.escape($recording_uuid),'onclick'=>"recording_play('".escape($recording_uuid)."','','','".$text['label-preview']."'); this.blur();"]);
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'label'=>$text['label-preview'],'icon'=>$settings->get('theme','button_icon_play'),'id'=>'recording_button_'.escape($recording_uuid),'onclick'=>"recording_play('".escape($recording_uuid)."','','','".$text['label-preview']."'); this.blur();"]);
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
