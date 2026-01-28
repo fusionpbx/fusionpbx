@@ -222,13 +222,19 @@ class call_recordings {
 			//get the transcribed text
 			$transcribe_text = transcribe::conversation_format($params['transcribe_message'], 'text');
 
-			//prepare the prompt
-			$prompt = "Summarize this conversation with Key Points, Action Items if any, and Sentiment. Don't include swearing in the summary. Return text without markdown.";
+			//get the summary language model prompt
+			$default_prompt = "Summarize this conversation with Key Points, Action Items if any, and Sentiment. Use names when they are provided. Keep the summary professional. Return text without markdown.";
+			$prompt = $this->settings->get('call_recordings', 'summary_model_prompt', $default_prompt);
+
+			//combine the prompt with the call transcript
 			$request_data['prompt'] = $prompt . "```\n".$transcribe_text."\n```";
 
-			//load the language model and get the
+			//get the summary language model name
+			$request_model = $this->settings->get('call_recordings', 'summary_model_name', 'ministral-3:8b');
+
+			//load the language model and get the call summary
 			$language_model = new language_model();
-			$params['transcript_summary'] = $language_model->request('ministral-3:8b', $request_data);
+			$params['transcript_summary'] = $language_model->request($request_model, $request_data);
 		}
 
 		//prepare the array with the transcript details
