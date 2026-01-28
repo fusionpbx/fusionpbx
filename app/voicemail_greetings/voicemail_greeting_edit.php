@@ -312,7 +312,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
  	if (permission_exists('voicemail_greeting_delete') && $action == 'update') {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','collapse'=>'hide-xs','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	if (permission_exists('voicemail_greeting_play') && !empty($voicemail_greeting_uuid) && is_uuid($voicemail_greeting_uuid)) {
+	if (permission_exists('voicemail_greeting_play') && $action == 'update') {
 		$greeting_file_name = strtolower(pathinfo($greeting_filename, PATHINFO_BASENAME));
 		$greeting_file_ext = pathinfo($greeting_file_name, PATHINFO_EXTENSION);
 		switch ($greeting_file_ext) {
