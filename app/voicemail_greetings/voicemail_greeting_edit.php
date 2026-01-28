@@ -236,7 +236,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			}
 
 			//audio to text - get the transcription from the audio file
-			if ($transcribe_enabled && empty($greeting_voice) && empty($greeting_message)) {
+			if ($transcribe_enabled && empty($greeting_message)) {
 				$transcribe->audio_path = $greeting_path;
 				$transcribe->audio_filename = $greeting_filename;
 				$greeting_message = $transcribe->transcribe('text');
