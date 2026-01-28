@@ -741,7 +741,7 @@
 
 	//audio playback functions
 		{literal}
-		var recording_audio, audio_clock, recording_id_playing;
+		var recording_audio, audio_clock, recording_id_playing, label_play;
 
 		function recording_load(player_id, data, audio_type) {
 			{/literal}
@@ -780,8 +780,14 @@
 			}
 			recording_audio = document.getElementById('recording_audio_' + player_id);
 
-			var label_play = "{/literal}{if $php_self == 'xml_cdr_details.php'}{literal}<span class='button-label pad'>{/literal}{$text.label_play}{literal}</span>{/literal}{/if}{literal}";
-			var label_pause = "{/literal}{if $php_self == 'xml_cdr_details.php'}{literal}<span class='button-label pad'>{/literal}{$text.label_pause}{literal}</span>{/literal}{/if}{literal}";
+			if (label !== undefined) {
+				label_play = "<span class='button-label pad'>" + label + "</span>";
+				var label_pause = "<span class='button-label pad'>" + label + "</span>";
+			}
+			else {
+				label_play = "{/literal}{if $php_self == 'xml_cdr_details.php'}{literal}<span class='button-label pad'>{/literal}{$text.label_play}{literal}</span>{/literal}{/if}{literal}";
+				var label_pause = "{/literal}{if $php_self == 'xml_cdr_details.php'}{literal}<span class='button-label pad'>{/literal}{$text.label_pause}{literal}</span>{/literal}{/if}{literal}";
+			}
 
 			if (recording_audio.paused) {
 				recording_load(player_id, data, audio_type);
@@ -837,7 +843,7 @@
 				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>";
 			}
 			else {
-				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>";
+				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>" + (label_play ?? '');
 			}
 			clearInterval(audio_clock);
 		}

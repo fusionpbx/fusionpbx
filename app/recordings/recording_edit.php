@@ -322,11 +322,22 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-edit']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'recordings.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'recordings.php']);
 	if (permission_exists('recording_delete') && !empty($recording_uuid) && is_uuid($recording_uuid)) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save']);
+	if (permission_exists('recording_play') && !empty($recording_uuid) && is_uuid($recording_uuid)) {
+		$recording_file_name = strtolower(pathinfo($recording_filename, PATHINFO_BASENAME));
+		$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
+		switch ($recording_file_ext) {
+			case "wav" : $recording_type = "audio/wav"; break;
+			case "mp3" : $recording_type = "audio/mpeg"; break;
+			case "ogg" : $recording_type = "audio/ogg"; break;
+		}
+		echo "<audio id='recording_audio_".escape($recording_uuid)."' style='display: none;' preload='none' onended=\"recording_reset('".escape($recording_uuid)."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?action=download&type=rec&id=".urlencode($recording_uuid)."\" type='".$recording_type."'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'label'=>'Preview','icon'=>$settings->get('theme','button_icon_play'),'id'=>'recording_button_'.escape($recording_uuid),'onclick'=>"recording_play('".escape($recording_uuid)."','','','".$text['label-preview']."'); this.blur();"]);
+	}
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -349,7 +360,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (!empty($_REQUEST["id"])) {
+	if (!empty($recording_uuid)) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 		echo "    ".$text['label-file_name']."\n";
