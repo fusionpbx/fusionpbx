@@ -124,13 +124,13 @@
 				$dialplan_name = $row['dialplan_name'] ?? '';
 
 				//set the dialplan name to use underscores for the text array lookup
-				$lookup_name = str_replace(['-',' '],'_', $row['dialplan_name'] ?? '');
+				$array_key = str_replace(['-',' '],'_', $row['dialplan_name'] ?? '');
 
 				//set the feature code name to be the internationalized name when possible
-				$feature_name = format_feature_name($dialplan_text['label-dialplan_'.$lookup_name] ?? $dialplan_name);
+				$feature_name = format_feature_name($dialplan_text['label-dialplan_'.$array_key] ?? $dialplan_name);
 
 				//set the dialplan description
-				$feature_description = $row['dialplan_description'] ?? $dialplan_text['description-dialplan_'.$lookup_name] ?? '';
+				$feature_description = $row['dialplan_description'] ?? $dialplan_text['description-dialplan_'.$array_key] ?? '';
 
 				//replace the ${number} variable in the description with the dialed number used to activate the dialplan
 				$feature_description = str_replace('${number}', $feature_code, $feature_description);
@@ -330,13 +330,13 @@
 			$dialplan_name = $row['dialplan_name'] ?? '';
 
 			//set the dialplan name to use underscores for the text array lookup
-			$lookup_name = str_replace(['-',' '],'_', $row['dialplan_name'] ?? '');
+			$array_key = str_replace(['-',' '],'_', $row['dialplan_name'] ?? '');
 
 			//set the feature code name to be the internationalized name when possible
-			$feature_name = format_feature_name($dialplan_text['label-dialplan_'.$lookup_name] ?? $dialplan_name);
+			$feature_name = format_feature_name($dialplan_text['label-dialplan_'.$array_key] ?? $dialplan_name);
 
 			//set the dialplan description
-			$feature_description = $row['dialplan_description'] ?? $dialplan_text['description-dialplan_'.$lookup_name] ?? '';
+			$feature_description = $row['dialplan_description'] ?? $dialplan_text['description-dialplan_'.$array_key] ?? '';
 
 			//replace the ${number} variable in the description with the dialed number used to activate the dialplan
 			$feature_description = str_replace('${number}', $feature_code, $feature_description);
