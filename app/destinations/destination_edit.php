@@ -532,6 +532,11 @@
 										$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"continue_on_fail=true\" inline=\"true\"/>\n";
 								}
 
+								//add this only if using application phrase
+								if (!empty($destination_app) && $destination_app == 'phrase') {
+										$dialplan["dialplan_xml"] .= "		<action application=\"answer\" data=\"\"/>\n";
+								}
+
 								if (!empty($destination_cid_name_prefix)) {
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".xml::sanitize($destination_cid_name_prefix)."#\${caller_id_name}\" inline=\"true\"/>\n";
 								}
@@ -758,6 +763,21 @@
 												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 											$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
+												$y++;
+										}
+
+									//add this only if using application phrase
+										if (!empty($destination_app) && $destination_app == 'phrase') {
+											//add answer
+												$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+												$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+												$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "answer";
+												$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "";
+												$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "";
+												$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
 												$y++;
 										}
 
