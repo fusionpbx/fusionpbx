@@ -33,7 +33,6 @@
 		echo "access denied";
 		exit;
 	}
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -471,8 +470,33 @@
 									$dialplan_detail_type = xml::sanitize($dialplan_detail_type);
 								}
 
-							//set the last destination_app and destination_data variables
+							//process the destination actions
+								$bridge_exists = false;
+								$phrase_exists = false;
 								if (!empty($destination_actions)) {
+									//check if the application bridge exists
+									foreach($destination_actions as $destination_action) {
+										$action_array = explode(":", $destination_action, 2);
+										if (isset($action_array[0]) && !empty($action_array[0])) {
+											if ($action_array[0] == 'bridge') {
+												$bridge_exists = true;
+												break;
+											}
+										}
+									}
+
+									//check if the application bridge exists
+									foreach($destination_actions as $destination_action) {
+										$action_array = explode(":", $destination_action, 2);
+										if (isset($action_array[0]) && !empty($action_array[0])) {
+											if ($action_array[0] == 'phrase') {
+												$phrase_exists = true;
+												break;
+											}
+										}
+									}
+
+									//last app and data
 									foreach($destination_actions as $destination_action) {
 										$action_array = explode(":", $destination_action, 2);
 										if (isset($action_array[0]) && !empty($action_array[0])) {
@@ -526,15 +550,15 @@
 								}
 
 								//add this only if using application bridge
-								if (!empty($destination_app) && $destination_app == 'bridge') {
-										$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"presence_id=\$1@".$_SESSION['domain_name']."\" inline=\"true\"/>\n";
-										$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"hangup_after_bridge=true\" inline=\"true\"/>\n";
-										$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"continue_on_fail=true\" inline=\"true\"/>\n";
+								if ($bridge_exists) {
+									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"presence_id=\$1@".$_SESSION['domain_name']."\" inline=\"true\"/>\n";
+									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"hangup_after_bridge=true\" inline=\"true\"/>\n";
+									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"continue_on_fail=true\" inline=\"true\"/>\n";
 								}
 
 								//add this only if using application phrase
-								if (!empty($destination_app) && $destination_app == 'phrase') {
-										$dialplan["dialplan_xml"] .= "		<action application=\"answer\" data=\"\"/>\n";
+								if ($phrase_exists) {
+									$dialplan["dialplan_xml"] .= "		<action application=\"answer\" data=\"\"/>\n";
 								}
 
 								if (!empty($destination_cid_name_prefix)) {
@@ -725,7 +749,7 @@
 										$dialplan_detail_order = $dialplan_detail_order + 10;
 
 									//add this only if using application bridge
-										if (!empty($destination_app) && $destination_app == 'bridge') {
+										if ($bridge_exists) {
 											//add presence_id
 												$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 												$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
@@ -767,7 +791,7 @@
 										}
 
 									//add this only if using application phrase
-										if (!empty($destination_app) && $destination_app == 'phrase') {
+										if ($phrase_exists) {
 											//add answer
 												$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 												$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
