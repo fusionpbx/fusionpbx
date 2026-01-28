@@ -281,7 +281,7 @@
 				message::add($text['message-update']);
 
 				//redirect
-				header("Location: recordings.php");
+				header("Location: recording_edit.php?id=".$recording_uuid);
 				exit;
 			}
 		}
