@@ -500,6 +500,9 @@
 						$y++;
 						$x++;
 
+					// save this UUID so we can refresh the XML later
+						$dialplan_uuid_outbound = $dialplan_uuid;
+
 					//set the uuid
 						$dialplan_uuid = uuid();
 
@@ -858,6 +861,13 @@
 			$dialplans->source = "details";
 			$dialplans->destination = "database";
 			$dialplans->uuid = $dialplan_uuid;
+			$dialplans->xml();
+
+			// Update the outbound variable dialplan
+			$dialplans = new dialplan;
+			$dialplans->source = "details";
+			$dialplans->destination = "database";
+			$dialplans->uuid = $dialplan_uuid_outbound;
 			$dialplans->xml();
 
 		//remove the temporary permission
