@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -47,7 +47,7 @@
 	$user_uuid = $_SESSION['user_uuid'];
 
 //add the settings object
-	$settings = new settings(["domain_uuid" => $domain_uuid, "user_uuid" => $user_uuid]);
+	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
 
 //as long as the class exists, enable speech using default settings
 	$speech_enabled = class_exists('speech') && $settings->get('speech', 'enabled', false);
@@ -65,18 +65,25 @@
 	$language_enabled = false;
 
 //add the speech object and get the voices and languages arrays
-	if ($speech_enabled && !empty($speech_engine)) {
+	if (class_exists('speech') && $speech_enabled && !empty($speech_engine)) {
 		$speech = new speech($settings);
 		$voices = $speech->get_voices();
-		$greeting_format = $speech->get_format();
 		//$speech_models = $speech->get_models();
 		//$translate_enabled = $speech->get_translate_enabled();
 		//$language_enabled = $speech->get_language_enabled();
 		//$languages = $speech->get_languages();
+
+		// Determine the aray type single, or multi
+		$voices_array_type = array_type($voices);
+
+		// Sort the array by language code keys alphabetically
+		if ($voices_array_type == 'multi') {
+			ksort($voices);
+		}
 	}
 
 //add the transcribe object and get the languages arrays
-	if ($transcribe_enabled && !empty($transcribe_engine)) {
+	if (class_exists('transcribe') && $transcribe_enabled && !empty($transcribe_engine)) {
 		$transcribe = new transcribe($settings);
 		//$transcribe_models = $transcribe->get_models();
 		//$translate_enabled = $transcribe->get_translate_enabled();
@@ -118,15 +125,17 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		if (permission_exists('voicemail_greeting_delete')) {
 			if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($voicemail_greeting_uuid)) {
 				//prepare
-					$array[0]['checked'] = 'true';
-					$array[0]['uuid'] = $voicemail_greeting_uuid;
+				$array[0]['checked'] = 'true';
+				$array[0]['uuid'] = $voicemail_greeting_uuid;
+
 				//delete
-					$obj = new voicemail_greetings;
-					$obj->voicemail_id = $voicemail_id;
-					$obj->delete($array);
+				$obj = new voicemail_greetings;
+				$obj->voicemail_id = $voicemail_id;
+				$obj->delete($array);
+
 				//redirect
-					header("Location: voicemail_greetings.php?id=".$voicemail_id);
-					exit;
+				header("Location: voicemail_greetings.php?id=".$voicemail_id);
+				exit;
 			}
 		}
 
@@ -162,7 +171,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$sql .= "from v_voicemail_greetings where domain_uuid = :domain_uuid ";
 		$sql .= "and voicemail_id = :voicemail_id ";
 		$sql .= "order by greeting_id asc ";
-		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['voicemail_id'] = $voicemail_id;
 		$rows = $database->select($sql, $parameters, 'all');
 		$greeting_ids = array();
@@ -177,7 +186,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$greeting_path = $settings->get('switch', 'voicemail').'/default/'.$_SESSION['domain_name'].'/'.$voicemail_id;
 
 		//set the recording format
-		$greeting_files = glob($greeting_path.'/greeting_'.$greeting_id.'.*');
+		$greeting_files = glob($greeting_path.'/greeting_*');
 		if (empty($greeting_format) && !empty($greeting_files)) {
 			$greeting_format = pathinfo($greeting_files[0], PATHINFO_EXTENSION);
 		} else {
@@ -195,14 +204,21 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			}
 		}
 
-		if (!empty($greeting_id)) {
+		if (isset($greeting_id) && is_numeric($greeting_id)) {
 			//set file name
 			$greeting_filename = 'greeting_'.$greeting_id.'.'.$greeting_format;
 
 			//text to audio - make a new audio file from the message
 			if ($speech_enabled && !empty($greeting_voice) && !empty($greeting_message)) {
+				//set the greeting file format
+				$greeting_format = $speech->get_format();
+
+				//set file name
+				$greeting_filename = 'greeting_'.$greeting_id.'.'.$greeting_format;
+
 				$speech->audio_path = $greeting_path;
 				$speech->audio_filename = $greeting_filename;
+				$speech->audio_format = $greeting_format;
 				//$speech->audio_model = $greeting_model ?? '';
 				$speech->audio_voice = $greeting_voice;
 				//$speech->audio_language = $greeting_language;
@@ -213,8 +229,8 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 				//fix invalid riff & data header lengths in generated wave file
 				if ($speech_engine == 'openai') {
 					$greeting_filename_temp = str_replace('.'.$greeting_format, '.tmp.'.$greeting_format, $greeting_filename);
-					exec('sox --ignore-length '.$greeting_path.'/'.$greeting_filename.' '.$greeting_path.$greeting_filename_temp);
-					if (file_exists($greeting_path.'/'.$greeting_filename_temp)) {
+					exec('sox --ignore-length '.$greeting_path.'/'.$greeting_filename.' '.$greeting_path.'/'.$greeting_filename_temp);
+					if (file_exists($greeting_path.$greeting_filename_temp)) {
 						exec('rm -f '.$greeting_path.'/'.$greeting_filename.' && mv '.$greeting_path.'/'.$greeting_filename_temp.' '.$greeting_path.'/'.$greeting_filename);
 					}
 					unset($greeting_filename_temp);
@@ -222,10 +238,10 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			}
 
 			//audio to text - get the transcription from the audio file
-			if ($transcribe_enabled && empty($greeting_voice) && empty($greeting_message)) {
+			if ($transcribe_enabled && empty($greeting_message)) {
 				$transcribe->audio_path = $greeting_path;
 				$transcribe->audio_filename = $greeting_filename;
-				$greeting_message = $transcribe->transcribe();
+				$greeting_message = $transcribe->transcribe('text');
 			}
 
 			//if base64 is enabled base64
@@ -235,10 +251,11 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 			//build data array
 			$array['voicemail_greetings'][0]['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
-			$array['voicemail_greetings'][0]['domain_uuid'] = $domain_uuid;
+			$array['voicemail_greetings'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 			$array['voicemail_greetings'][0]['voicemail_id'] = $voicemail_id;
 			$array['voicemail_greetings'][0]['greeting_id'] = $greeting_id;
 			$array['voicemail_greetings'][0]['greeting_name'] = $greeting_name;
+			$array['voicemail_greetings'][0]['greeting_voice'] = $greeting_voice;
 			$array['voicemail_greetings'][0]['greeting_message'] = $greeting_message;
 			$array['voicemail_greetings'][0]['greeting_filename'] = $greeting_filename;
 			$array['voicemail_greetings'][0]['greeting_base64'] = $greeting_base64;
@@ -257,21 +274,25 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//redirect
 			header("Location: voicemail_greetings.php?id=".$voicemail_id);
-			exit;
+		exit;
 	}
 }
 
 //pre-populate the form
-	if ($action == 'update' && !empty($voicemail_greeting_uuid) && is_uuid($voicemail_greeting_uuid) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
+	if ($action == 'update' &&
+		!empty($voicemail_greeting_uuid) && is_uuid($voicemail_greeting_uuid) &&
+		(empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$sql = "select * from v_voicemail_greetings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and voicemail_greeting_uuid = :voicemail_greeting_uuid ";
-		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$greeting_id = $row["greeting_id"];
 			$greeting_name = $row["greeting_name"];
+			$greeting_filename = $row['greeting_filename'];
+			$greeting_voice = $row["greeting_voice"];
 			$greeting_message = $row["greeting_message"];
 			$greeting_description = $row["greeting_description"];
 		}
@@ -292,9 +313,9 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['label-'.($action == 'update' ? 'edit' : 'add')]."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','collapse'=>'hide-xs','link'=>'voicemail_greetings.php?id='.urlencode($voicemail_id)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','link'=>'voicemail_greetings.php?id='.urlencode($voicemail_id)]);
  	if (permission_exists('voicemail_greeting_delete') && $action == 'update') {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','collapse'=>'hide-xs','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','collapse'=>'hide-xs','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
@@ -338,9 +359,9 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			echo "</td>\n";
 			echo "</tr>\n";
 		}
-// 		else {
-// 			echo "<input class='formfld' type='hidden' name='greeting_model' maxlength='255' value=''>\n";
-// 		}
+		// else {
+		// 	echo "<input class='formfld' type='hidden' name='greeting_model' maxlength='255' value=''>\n";
+		// }
 
 		//voices
 		echo "<tr>\n";
@@ -352,8 +373,8 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			echo "	<select class='formfld' name='greeting_voice'>\n";
 			echo "		<option value=''></option>\n";
 			foreach ($voices as $key => $voice) {
-				echo "		<option value='".escape(gettype($key) === "integer" ? $voice : $key)."' ".(!empty($greeting_voice) && $voice == $greeting_voice ? "selected='selected'" : null).">".escape(ucwords($voice))."</option>\n";
-			}
+			echo "		<option value='".escape(gettype($key) === "integer" ? $voice : $key)."' ".(!empty($greeting_voice) && $voice == $greeting_voice ? "selected='selected'" : null).">".escape(ucwords($voice))."</option>\n";
+				}
 			echo "	</select>\n";
 		}
 		else {
@@ -417,7 +438,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "    ".$text['label-message']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <textarea class='formfld' name='greeting_message' style='width: 300px; height: 150px;'>".escape($greeting_message ?? '')."</textarea>\n";
+		echo "    <textarea class='formfld' name='greeting_message' style='width: 300px; height: 150px;'>".escape_textarea($greeting_message ?? '')."</textarea>\n";
 		echo "<br />\n";
 		echo $text['description-message']."\n";
 		echo "</td>\n";
