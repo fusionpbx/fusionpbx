@@ -60,7 +60,6 @@
 	if (class_exists('speech') && $speech_enabled && !empty($speech_engine)) {
 		$speech = new speech($settings);
 		$voices = $speech->get_voices();
-		$greeting_format = $speech->get_format();
 		//$speech_models = $speech->get_models();
 		//$translate_enabled = $speech->get_translate_enabled();
 		//$language_enabled = $speech->get_language_enabled();
@@ -179,7 +178,8 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$greeting_path = $settings->get('switch', 'voicemail').'/default/'.$_SESSION['domain_name'].'/'.$voicemail_id;
 
 		//set the recording format
-		$greeting_files = glob($greeting_path.'/greeting_'.$greeting_id.'.*');
+		$greeting_files = glob($greeting_path.'/greeting_*');
+
 		if (empty($greeting_format) && !empty($greeting_files)) {
 			$greeting_format = pathinfo($greeting_files[0], PATHINFO_EXTENSION);
 		} else {
@@ -197,7 +197,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			}
 		}
 
-		if (!empty($greeting_id)) {
+		if (isset($greeting_id) && is_numeric($greeting_id)) {
 			//set file name
 			$greeting_filename = 'greeting_'.$greeting_id.'.'.$greeting_format;
 
@@ -214,6 +214,12 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 			//text to audio - make a new audio file from the message
 			if ($update_greeting && $speech_enabled && !empty($greeting_voice) && !empty($greeting_message)) {
+				//set the greeting file format
+				$greeting_format = $speech->get_format();
+
+				//set file name
+				$greeting_filename = 'greeting_'.$greeting_id.'.'.$greeting_format;
+
 				$speech->audio_path = $greeting_path;
 				$speech->audio_filename = $greeting_filename;
 				$speech->audio_format = $greeting_format;
