@@ -386,31 +386,31 @@
 			}
 
 		//require passwords with the defined required attributes: length, number, lower case, upper case, and special characters
-			if (permission_exists('extension_password') && !empty($password)) {
-				if (strlen($password) < $extension_password_length) {
-					$invalid[] = $text['label-password'].": ".$text['label-characters'];
-				}
-				if ($extension_password_number) {
-					if (!preg_match('/(?=.*[\d])/', $password)) {
-						$invalid[] = $text['label-password'].": ".$text['label-numbers'];
-					}
-				}
-				if ($extension_password_lowercase) {
-					if (!preg_match('/(?=.*[a-z])/', $password)) {
-						$invalid[] = $text['label-password'].": ".$text['label-lowercase_letters'];
-					}
-				}
-				if ($extension_password_uppercase) {
-					if (!preg_match('/(?=.*[A-Z])/', $password)) {
-						$invalid[] = $text['label-password'].": ".$text['label-uppercase_letters'];
-					}
-				}
-				if ($extension_password_special) {
-					if (!preg_match('/(?=.*[\W])/', $password)) {
-						$invalid[] = $text['label-password'].": ".$text['label-special_characters'];
-					}
-				}
-			}
+			// if (permission_exists('extension_password') && !empty($password)) {
+			// 	if (strlen($password) < $extension_password_length) {
+			// 		$invalid[] = $text['label-password'].": ".$text['label-characters'];
+			// 	}
+			// 	if ($extension_password_number) {
+			// 		if (!preg_match('/(?=.*[\d])/', $password)) {
+			// 			$invalid[] = $text['label-password'].": ".$text['label-numbers'];
+			// 		}
+			// 	}
+			// 	if ($extension_password_lowercase) {
+			// 		if (!preg_match('/(?=.*[a-z])/', $password)) {
+			// 			$invalid[] = $text['label-password'].": ".$text['label-lowercase_letters'];
+			// 		}
+			// 	}
+			// 	if ($extension_password_uppercase) {
+			// 		if (!preg_match('/(?=.*[A-Z])/', $password)) {
+			// 			$invalid[] = $text['label-password'].": ".$text['label-uppercase_letters'];
+			// 		}
+			// 	}
+			// 	if ($extension_password_special) {
+			// 		if (!preg_match('/(?=.*[\W])/', $password)) {
+			// 			$invalid[] = $text['label-password'].": ".$text['label-special_characters'];
+			// 		}
+			// 	}
+			// }
 
 		//return if error
 			if (message::count() != 0 || !empty($invalid)) {
