@@ -83,14 +83,14 @@ class event_guard {
 	 * @return void
 	 */
 	public function __construct(array $setting_array = []) {
-		//set domain and user UUIDs
+		// Set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
 		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
-		//set objects
+		// Set the objects
 		$this->database = $setting_array['database'] ?? database::new();
 
-		//assign the variables
+		// Assign the variables
 		$this->name          = 'event_guard_log';
 		$this->table         = 'event_guard_logs';
 		$this->toggle_field  = '';
@@ -110,11 +110,11 @@ class event_guard {
 	public function delete($records) {
 		if (permission_exists($this->name . '_delete')) {
 
-			//add multi-lingual support
+			// Add multi-lingual support
 			$language = new text;
 			$text     = $language->get();
 
-			//validate the token
+			// Validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'], 'negative');
@@ -122,27 +122,27 @@ class event_guard {
 				exit;
 			}
 
-			//delete multiple records
+			// Delete multiple records
 			if (is_array($records) && @sizeof($records) != 0) {
-				//build the delete array
+				// Build the delete array
 				$x = 0;
 				foreach ($records as $record) {
-					//add to the array
+					// Add to the array
 					if ($record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
 						$array[$this->table][$x]['event_guard_log_uuid'] = $record['event_guard_log_uuid'];
 					}
 
-					//increment the id
+					// Increment the id
 					$x++;
 				}
 
-				//delete the checked rows
+				// Delete the checked rows
 				if (is_array($array) && @sizeof($array) != 0) {
-					//execute delete
+					// Execute delete
 					$this->database->delete($array);
 					unset($array);
 
-					//set message
+					// Set the message
 					message::add($text['message-delete']);
 				}
 				unset($records);
@@ -160,11 +160,11 @@ class event_guard {
 	public function unblock($records) {
 		if (permission_exists($this->name . '_unblock')) {
 
-			//add multi-lingual support
+			// Add multi-lingual support
 			$language = new text;
 			$text     = $language->get();
 
-			//validate the token
+			// Validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'], 'negative');
@@ -172,7 +172,7 @@ class event_guard {
 				exit;
 			}
 
-			//delete multiple records
+			// Delete multiple records
 			if (is_array($records) && @sizeof($records) != 0) {
 				//build the delete array
 				$x = 0;
@@ -187,23 +187,23 @@ class event_guard {
 					$x++;
 				}
 
-				//delete the checked rows
+				// Delete the checked rows
 				if (is_array($array) && @sizeof($array) != 0) {
-					//execute delete
+					// Execute delete
 					$this->database->save($array);
 					unset($array);
 
-					//initialize the settings object
+					// Initialize the settings object
 					$setting = new settings(["category" => 'switch']);
 
-					//send unblock event
-					$cmd           = "sendevent CUSTOM\n";
-					$cmd           .= "Event-Name: CUSTOM\n";
-					$cmd           .= "Event-Subclass: event_guard:unblock\n";
-					$esl           = event_socket::create();
+					// Send unblock event
+					$cmd = "sendevent CUSTOM\n";
+					$cmd .= "Event-Name: CUSTOM\n";
+					$cmd .= "Event-Subclass: event_guard:unblock\n";
+					$esl = event_socket::create();
 					$switch_result = event_socket::command($cmd);
 
-					//set message
+					// Set the message
 					message::add($text['message-delete']);
 				}
 				unset($records);
@@ -223,11 +223,11 @@ class event_guard {
 	public function toggle($records) {
 		if (permission_exists($this->name . '_edit')) {
 
-			//add multi-lingual support
+			// Add multi-lingual support
 			$language = new text;
 			$text     = $language->get();
 
-			//validate the token
+			// Validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'], 'negative');
@@ -235,9 +235,9 @@ class event_guard {
 				exit;
 			}
 
-			//toggle the checked records
+			// Toggle the checked records
 			if (is_array($records) && @sizeof($records) != 0) {
-				//get current toggle state
+				// Get current toggle state
 				foreach ($records as $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
 						$uuids[] = "'" . $record['event_guard_log_uuid'] . "'";
@@ -255,25 +255,24 @@ class event_guard {
 					unset($sql, $parameters, $rows, $row);
 				}
 
-				//build update array
+				// Build update array
 				$x = 0;
 				foreach ($states as $uuid => $state) {
-					//create the array
+					// Create the array
 					$array[$this->table][$x][$this->name . '_uuid'] = $uuid;
 					$array[$this->table][$x][$this->toggle_field]   = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 
-					//increment the id
+					// Increment the id
 					$x++;
 				}
 
-				//save the changes
+				// Save the changes
 				if (is_array($array) && @sizeof($array) != 0) {
-					//save the array
-
+					// Save the array
 					$this->database->save($array);
 					unset($array);
 
-					//set message
+					// Set the message
 					message::add($text['message-toggle']);
 				}
 				unset($records, $states);
@@ -293,11 +292,11 @@ class event_guard {
 	public function copy($records) {
 		if (permission_exists($this->name . '_add')) {
 
-			//add multi-lingual support
+			// Add multi-lingual support
 			$language = new text;
 			$text     = $language->get();
 
-			//validate the token
+			// Validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'], 'negative');
@@ -305,17 +304,17 @@ class event_guard {
 				exit;
 			}
 
-			//copy the checked records
+			// Copy the checked records
 			if (is_array($records) && @sizeof($records) != 0) {
 
-				//get checked records
+				// Get checked records
 				foreach ($records as $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
 						$uuids[] = "'" . $record['event_guard_log_uuid'] . "'";
 					}
 				}
 
-				//create the array from existing data
+				// Create the array from existing data
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
 					$sql  = "select * from v_" . $this->table . " ";
 					$sql  .= "where event_guard_log_uuid in (" . implode(', ', $uuids) . ") ";
@@ -323,7 +322,7 @@ class event_guard {
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$x = 0;
 						foreach ($rows as $row) {
-							//convert boolean values to a string
+							// Convert boolean values to a string
 							foreach ($row as $key => $value) {
 								if (gettype($value) == 'boolean') {
 									$value     = $value ? 'true' : 'false';
@@ -331,32 +330,30 @@ class event_guard {
 								}
 							}
 
-							//copy data
+							// Copy data
 							$array[$this->table][$x] = $row;
 
-							//add copy to the description
+							// Add copy to the description
 							$array[$this->table][$x]['event_guard_log_uuid'] = uuid();
 
-							//increment the id
+							// Increment the id
 							$x++;
 						}
 					}
 					unset($sql, $parameters, $rows, $row);
 				}
 
-				//save the changes and set the message
+				// Save the changes and set the message
 				if (is_array($array) && @sizeof($array) != 0) {
-					//save the array
-
+					// Save the array
 					$this->database->save($array);
 					unset($array);
 
-					//set message
+					// Set the message
 					message::add($text['message-copy']);
 				}
 				unset($records);
 			}
 		}
 	}
-
 }
