@@ -58,7 +58,7 @@ class event_guard_service extends service {
 			$firewall_name = $this->settings->get('system','firewall_name', 'pf');
 		}
 		if ($php_os == 'linux') {
-			$firewall_name = $this->settings->get('system','firewall_name', 'nftables');
+			$firewall_name = $this->settings->get('system','firewall_name', 'iptables');
 		}
 		if (empty($firewall_name)) {
 			throw new Exception("No firewall name specified in settings");
