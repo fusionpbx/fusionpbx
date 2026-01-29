@@ -1,11 +1,11 @@
 <?php
 
 	//application details
-		$apps[$x]['name'] = 'Event Guard Logs';
+		$apps[$x]['name'] = 'Event Guard';
 		$apps[$x]['uuid'] = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
-		$apps[$x]['category'] = '';
-		$apps[$x]['subcategory'] = '';
-		$apps[$x]['version'] = '';
+		$apps[$x]['category'] = 'Switch';
+		$apps[$x]['subcategory'] = 'Security';
+		$apps[$x]['version'] = '2.0';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = '';

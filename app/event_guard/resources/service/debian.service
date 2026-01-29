@@ -16,6 +16,9 @@ StartLimitIntervalSec=0
 [Service]
 WorkingDirectory=/var/www/fusionpbx
 ExecStart=/usr/bin/php /var/www/fusionpbx/app/event_guard/resources/service/event_guard.php
+RuntimeDirectory=fusionpbx
+RuntimeDirectoryMode=0755
+RuntimeDirectoryPreserve=yes
 User=root
 Group=root
 TimeoutSec=55s
@@ -23,3 +26,4 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
+
