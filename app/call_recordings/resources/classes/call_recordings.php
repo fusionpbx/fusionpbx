@@ -217,6 +217,9 @@ class call_recordings {
 		//define the array
 		$array = [];
 
+		//define the variable(s)
+		$call_summary = '';
+
 		//summarize the transcript
 		if ($settings->get('language_model', 'enabled') && !empty($params['transcribe_message'])) {
 			//get the transcribed text
@@ -235,6 +238,16 @@ class call_recordings {
 			//load the language model and get the call summary
 			$language_model = new language_model();
 			$params['transcript_summary'] = $language_model->request($request_model, $request_data);
+
+			//get the summary from the params
+			$transcript_summary = $params['transcript_summary'] ?? '';
+
+			//format the call recording transcript summary
+			$parsedown = new Parsedown();
+			$parsedown->setSafeMode(true);
+			$parsedown->setMarkupEscaped(true);
+			$call_summary = str_replace('###', '', $transcript_summary);
+			$call_summary = str_replace('&amp;', '&', $parsedown->text($call_summary));
 		}
 
 		//prepare the array with the transcript details
@@ -353,6 +366,7 @@ class call_recordings {
 			$email_body = str_replace('${time}', $start_time, $email_body);
 			$email_body = str_replace('${duration}', $duration, $email_body);
 			$email_body = str_replace('${length}', $duration, $email_body);
+			$email_body = str_replace('${summary}', $call_summary, $email_body);
 			$email_body = str_replace('${transcript}', $transcribe_html, $email_body);
 
 			//send email with the email_queue
