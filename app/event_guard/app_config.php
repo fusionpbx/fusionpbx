@@ -35,6 +35,17 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
 
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e2fd44b8-524e-40e2-b6f9-083f5cc8f66b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "system";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "firewall_name";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Firewall Options: pf, nftables, iptables";
+		$y++;
+
 	//event guard logs
 		$y = 0;
 		$apps[$x]['db'][$y]['table']['name'] = 'v_event_guard_logs';
