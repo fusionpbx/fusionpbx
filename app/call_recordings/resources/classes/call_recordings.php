@@ -243,6 +243,7 @@ class call_recordings {
 			$transcript_summary = $params['transcript_summary'] ?? '';
 
 			//format the call recording transcript summary
+			require_once "resources/classes/parsedown.php";
 			$parsedown = new Parsedown();
 			$parsedown->setSafeMode(true);
 			$parsedown->setMarkupEscaped(true);
