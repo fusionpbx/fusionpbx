@@ -31,6 +31,9 @@
     <alert_group_ring_text perm="">alert-group</alert_group_ring_text>
     <alert_group_ring_sound perm="">{if isset($snom_alert_group)}{$snom_alert_group}{else}Ringer1{/if}</alert_group_ring_sound>
     <colleagues_ring_sound perm="">{if isset($snom_colleagues_ring_sound)}{$snom_colleagues_ring_sound}{else}Ringer1{/if}</colleagues_ring_sound>
+    <!-- Multicast Page Settings -->
+    <multicast_listen perm="">{if isset($snom_multicast_listen)}{$snom_multicast_listen}{else}{/if}</multicast_listen>
+    <mc_address idx="1" perm="">{if isset($snom_multicast_address)}{$snom_multicast_address}{else}{/if}</mc_address>
     <!-- Wallpaper (320x240px PNG)-->
     <custom_bg_image_url perm="">{if isset($snom_wallpaper_url_d735)}{$snom_wallpaper_url_d735}{else}{$snom_wallpaper_url}{/if}</custom_bg_image_url>
     <!-- Expansion Mod (480x1280px PNG <2MB) -->
