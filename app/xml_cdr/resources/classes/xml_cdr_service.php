@@ -42,7 +42,7 @@ class xml_cdr_service extends service {
 		$this->database = new database(['config' => parent::$config]);
 
 		// get the settings using global defaults
-		$this->settings = new settings(['database' => $database]);
+		$this->settings = new settings(['database' => $this->database]);
 
 		// get the hostname
 		$this->hostname = gethostname();
@@ -98,7 +98,7 @@ class xml_cdr_service extends service {
 					$this->database->connect();
 
 					//reload settings after connection to the database
-					$this->settings = new settings(['database' => $database]);
+					$this->settings = new settings(['database' => $this->database]);
 
 					//sleep for a moment
 					sleep(3);
