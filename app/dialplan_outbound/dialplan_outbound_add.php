@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -71,9 +71,21 @@
 			$limit = $_POST["limit"] ?? '';
 			$accountcode = $_POST["accountcode"] ?? '';
 			$toll_allow = $_POST["toll_allow"] ?? '';
-			$pin_numbers_enable = $_POST["pin_numbers_enabled"] ?? null;
-			$pin_numbers_enable = (empty($pin_numbers_enable) ? 'false' : 'true');
-			$limit_enable = (empty($limit) ? 'false' : 'true');
+			$pin_number = $_POST["pin_number"] ?? '';
+			$pin_database = $_POST["pin_database"] ?? 'false';
+
+		//process the pin number
+			if (!empty($pin_number)) {
+				if ($pin_number == 'database') {
+					$pin_database = 'true';
+				}
+				elseif (!is_numeric($pin_number))  {
+					$pin_number = '';
+				}
+			}
+
+		//determine the limit enable value
+			$limit_enable = (!empty($limit)) ? 'true' : 'false';
 
 		//set the default type
 			$gateway_type = 'gateway';
@@ -760,29 +772,26 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
 						}
 
-						if ($pin_numbers_enable == "true") {
-							$y++;
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
-							$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'pin_number=database';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
-
-							$y++;
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
-							$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'lua';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'pin_number.lua';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
-						}
+						$y++;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = ($pin_database == 'true') ? 'pin_number=database' : "pin_number=".$pin_number;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = ($pin_database == 'true' || is_numeric($pin_number)) ? 'true' : 'false';
+						$y++;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
+						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'lua';
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'pin_number.lua';
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = ($pin_database == 'true' || is_numeric($pin_number)) ? 'true' : 'false';
 
 						if (strlen($prefix_number) > 2) {
 							$y++;
@@ -797,13 +806,12 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
 						}
 
-						if ($gateway_type == "transfer") { $dialplan_detail_type = 'transfer'; } else { $dialplan_detail_type = 'bridge'; }
 						$y++;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = uuid();
 						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = $domain_uuid;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $dialplan_detail_type;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = ($gateway_type == "transfer") ? 'transfer' : 'bridge';;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $bridge_data;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
@@ -1307,20 +1315,20 @@ function type_onchange(dialplan_detail_type) {
 	echo "<td colspan='4' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='toll_allow' maxlength='255' value=\"".escape($toll_allow)."\">\n";
 	echo "<br />\n";
-	echo $text['description-enable-toll_allow']."\n";
+	echo $text['description-toll_allow']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('outbound_route_pin_numbers')) {
+	if (permission_exists('outbound_route_pin_database')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-pin_numbers']."\n";
+		echo "	".$text['label-pin_database']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if ($input_toggle_style_switch) {
 			echo "	<span class='switch'>\n";
 		}
-		echo "	<select class='formfld' name='pin_numbers_enabled'>\n";
+		echo "	<select class='formfld' id='pin_database_enable' name='pin_database'>\n";
 		echo "		<option value='true'>".$text['label-true']."</option>\n";
 		echo "		<option value='false' selected='true'>".$text['label-false']."</option>\n";
 		echo "	</select>\n";
@@ -1329,7 +1337,19 @@ function type_onchange(dialplan_detail_type) {
 			echo "	</span>\n";
 		}
 		echo "<br />\n";
-		//echo $text['description-enable-pin_numbers']."\n";
+		echo $text['description-pin_database']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+	elseif (permission_exists('outbound_route_pin_number')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-pin_number']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='pin_number' maxlength='20' value=\"".escape($pin_number)."\">\n";
+		echo "<br />\n";
+		echo $text['description-pin_number']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

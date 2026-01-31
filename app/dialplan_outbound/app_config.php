@@ -5,7 +5,7 @@
 		$apps[$x]['uuid'] = "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3";
 		$apps[$x]['category'] = "Switch";
 		$apps[$x]['subcategory'] = "";
-		$apps[$x]['version'] = "1.0";
+		$apps[$x]['version'] = "1.1";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Outbound dialplans have one or more conditions that are matched to attributes of a call. When a call matches the conditions the call is then routed to the gateway.";
@@ -52,8 +52,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['description'] = "Add outbound routes for any gateways on any domain.";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "outbound_route_pin_numbers";
+		$apps[$x]['permissions'][$y]['name'] = "outbound_route_pin_number";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "outbound_route_pin_database";
+		$y++;
 
-?>
