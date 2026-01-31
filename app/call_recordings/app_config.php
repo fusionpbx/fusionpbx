@@ -70,7 +70,15 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call recordings set to auto transcribe. Options: true, false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call recordings enable transcribe. Options: true, false";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3a5e8a81-f356-4824-92df-69f6a0da17dc";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_recordings";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "summary_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Call recordings enable call summary. Options: true, false";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "2bbdb343-4e95-4d9b-886a-33bc5918a4c0";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_recordings";

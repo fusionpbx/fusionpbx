@@ -221,7 +221,7 @@ class call_recordings {
 		$call_summary = '';
 
 		//summarize the transcript
-		if ($settings->get('language_model', 'enabled') && !empty($params['transcribe_message'])) {
+		if ($settings->get('language_model', 'enabled') && $settings->get('call_recordings', 'summary_enabled') && !empty($params['transcribe_message'])) {
 			//get the transcribed text
 			$transcribe_text = transcribe::conversation_format($params['transcribe_message'], 'text');
 
