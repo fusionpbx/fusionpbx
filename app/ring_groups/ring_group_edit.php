@@ -476,6 +476,7 @@
 				$dialplan_xml .= "		<action application=\"ring_ready\" data=\"\"/>\n";
 			}
 			$dialplan_xml .= "		<action application=\"set\" data=\"ring_group_uuid=".xml::sanitize($ring_group_uuid)."\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"record_stereo=true\"/>\n";
 			$dialplan_xml .= "		<action application=\"lua\" data=\"app.lua ring_groups\"/>\n";
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "</extension>\n";
