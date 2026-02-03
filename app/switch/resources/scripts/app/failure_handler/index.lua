@@ -37,6 +37,9 @@
 --load libraries
 	require 'resources.functions.send_mail'
 
+--load push gateway for mobile app notifications
+	local push_gateway = require "resources.functions.push_gateway"
+
 --check the missed calls
 	function missed()
 		if (missed_call_app ~= nil and missed_call_data ~= nil) then
@@ -214,6 +217,8 @@
 			elseif (originate_disposition == "USER_NOT_REGISTERED") then
 
 				--handle USER_NOT_REGISTERED
+				freeswitch.consoleLog("NOTICE", "[failure_handler] USER_NOT_REGISTERED - trying push gateway\n");
+
 				forward_user_not_registered_enabled = session:getVariable("forward_user_not_registered_enabled");
 				if (forward_user_not_registered_enabled == "true") then
 					forward_user_not_registered_destination = session:getVariable("forward_user_not_registered_destination");
@@ -221,20 +226,77 @@
 						freeswitch.consoleLog("NOTICE", "[failure_handler] forwarding user not registered to hangup\n");
 						session:hangup("NO_ANSWER");
 					else
-						freeswitch.consoleLog("NOTICE", "[failure_handler] forwarding user not registerd to: " .. forward_user_not_registered_destination .. "\n");
+						freeswitch.consoleLog("NOTICE", "[failure_handler] forwarding user not registered to: " .. forward_user_not_registered_destination .. "\n");
 						session:transfer(forward_user_not_registered_destination, "XML", context);
 					end
 				else
-					--send missed call notification
-					missed();
+					-- TRY PUSH GATEWAY FOR MOBILE DEVICES
+					local extension = dialed_user or sip_to_user or session:getVariable("destination_number");
+					freeswitch.consoleLog("NOTICE", "[failure_handler] Push gateway for extension: " .. tostring(extension) .. "\n");
+
+					-- Send push notification via Laravel
+					local push_success = push_gateway.trigger(
+						session,
+						uuid,
+						caller_id_number,
+						caller_id_name,
+						extension,
+						domain_name,
+						domain_uuid
+					);
+
+					if (push_success) then
+						-- Push was sent! Play ringback and retry bridge
+						freeswitch.consoleLog("NOTICE", "[failure_handler] Push sent - retrying bridge\n");
+
+						session:execute("set", "continue_on_fail=true");
+						session:execute("set", "hangup_after_bridge=true");
+						session:execute("ring_ready");
+
+						local wait_count = 0;
+						local max_wait = 8;
+						local connected = false;
+
+						while (wait_count < max_wait and session:ready() and not connected) do
+							wait_count = wait_count + 1;
+							freeswitch.consoleLog("DEBUG", "[failure_handler] Retry " .. wait_count .. " for " .. extension .. "\n");
+
+							session:sleep(3000);
+
+							if (not session:ready()) then
+								freeswitch.consoleLog("NOTICE", "[failure_handler] Caller hung up\n");
+								push_gateway.notify_hangup(uuid);
+								break;
+							end
+
+							local dial_string = "user/" .. extension .. "@" .. domain_name;
+							session:execute("set", "call_timeout=5");
+							session:execute("bridge", dial_string);
+
+							local hangup_cause = session:getVariable("bridge_hangup_cause");
+							freeswitch.consoleLog("DEBUG", "[failure_handler] Bridge result: " .. tostring(hangup_cause) .. "\n");
+
+							if (hangup_cause == "SUCCESS" or hangup_cause == "NORMAL_CLEARING" or hangup_cause == "ORIGINATOR_CANCEL") then
+								connected = true;
+								freeswitch.consoleLog("NOTICE", "[failure_handler] Call connected!\n");
+							end
+						end
+
+						if (not connected and session:ready()) then
+							freeswitch.consoleLog("NOTICE", "[failure_handler] Timeout after " .. wait_count .. " attempts\n");
+							push_gateway.notify_hangup(uuid);
+							missed();
+							session:hangup("NO_ANSWER");
+						end
+					else
+						freeswitch.consoleLog("NOTICE", "[failure_handler] No devices or push failed\n");
+						missed();
+						session:hangup("NO_ANSWER");
+					end
 				end
 
-				--send missed call notification
-				--missed();
-
-				--handle USER_NOT_REGISTERED
-				if (debug["info"] ) then
-					freeswitch.consoleLog("NOTICE", "[failure_handler] - USER_NOT_REGISTERED - Doing nothing\n");
+				if (debug["info"]) then
+					freeswitch.consoleLog("NOTICE", "[failure_handler] - USER_NOT_REGISTERED - Done\n");
 				end
 
 			elseif (originate_disposition == "SUBSCRIBER_ABSENT" and hangup_on_subscriber_absent == "true") then
