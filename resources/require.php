@@ -106,9 +106,41 @@
 		session_start();
 	}
 
+//get the domain_name and the domain_uuid
+	if (empty($_SESSION['domain_uuid'])) {
+		//get the domain from the url
+		$domain_name = $_SERVER["HTTP_HOST"];
+
+		//get the domain name from the http value
+		if (!empty($_REQUEST["domain_name"])) {
+			$domain_name = $_REQUEST["domain_name"];
+		}
+
+		//remote port number from the domain name
+		$domain_array = explode(":", $domain_name);
+		if (count($domain_array) > 1) {
+			$domain_name = $domain_array[0];
+		}
+
+		//get the domain_uuid from the database
+		$sql = "select domain_uuid from v_domains \n";
+		$sql .= "where domain_name = :domain_name \n";
+		$parameters['domain_name'] = $domain_name;
+		$row = $database->select($sql, $parameters, 'row');
+		$domain_uuid = '';
+		if (is_array($row) && sizeof($row) != 0) {
+			$domain_uuid = $row['domain_uuid'];
+			if (session_status() === PHP_SESSION_ACTIVE) {
+				$_SESSION['domain_uuid'] = $domain_uuid;
+				$_SESSION['domain_name'] = $domain_name;
+			}
+		}
+		unset($parameters, $row);
+	}
+
 //load settings
 	global $settings;
-	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'] ?? '', 'user_uuid' => $_SESSION['user_uuid'] ?? '']);
+	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'] ?? $domain_uuid, 'user_uuid' => $_SESSION['user_uuid'] ?? '']);
 
 //check if the cidr range is valid
 	global $no_cidr;
