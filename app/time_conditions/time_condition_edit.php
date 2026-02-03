@@ -326,7 +326,6 @@
 								    }
 								}
 
-
 								//convert time-of-day to minute-of-day (due to inconsistencies with time-of-day on some systems)
 								if ($cond_var == 'time-of-day') {
 									$cond_var = 'minute-of-day';
@@ -338,7 +337,6 @@
 										$cond_stop = ($array_cond_stop[0] * 60) + $array_cond_stop[1];
 									}
 								}
-
 								$cond_value = $cond_start;
 								if ($cond_stop != '') {
 									$range_indicator = ($cond_var == 'date-time') ? '~' : '-';
@@ -1107,8 +1105,7 @@ if ($action == 'update') {
 							    } else {
 							        $cond_val_start = $dt_start->format('Y-m-d H:i');
 							    }
-							}
-							
+							}		
 							if (!empty($cond_val_stop)) {
 							    $dt_stop = DateTime::createFromFormat('Y-m-d H:i', $cond_val_stop, new DateTimeZone('UTC'));
 							    if ($dt_stop !== false) {
