@@ -307,8 +307,8 @@
 								//convert to 24 hour time and UTC for date-time conditions (FreeSWITCH evaluates date-time in UTC)
 								if (!empty($cond_start) && $cond_var == 'date-time') {
 								    $format = $settings->get('domain', 'time_format') == '24h' ? 'Y-m-d H:i' : 'Y-m-d h:i a';
-								    $user_timezone = $_SESSION['domain']['time_zone']['name'] ?? date_default_timezone_get();
-
+								    $user_timezone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+								    
 								    $dt = DateTime::createFromFormat($format, $cond_start, new DateTimeZone($user_timezone));
 								    if ($dt !== false) {
 								        $dt->setTimezone(new DateTimeZone('UTC'));
@@ -317,8 +317,8 @@
 								}
 								if (!empty($cond_stop) && $cond_var == 'date-time') {
 								    $format = $settings->get('domain', 'time_format') == '24h' ? 'Y-m-d H:i' : 'Y-m-d h:i a';
-								    $user_timezone = $_SESSION['domain']['time_zone']['name'] ?? date_default_timezone_get();
-
+								    $user_timezone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+								    
 								    $dt = DateTime::createFromFormat($format, $cond_stop, new DateTimeZone($user_timezone));
 								    if ($dt !== false) {
 								        $dt->setTimezone(new DateTimeZone('UTC'));
@@ -1095,9 +1095,10 @@ if ($action == 'update') {
 						if ($cond_var == 'date-time') {
 							echo "	change_to_input(document.getElementById('value_".$group_id."_' + condition_id + '_start'));\n";
 							echo "	change_to_input(document.getElementById('value_".$group_id."_' + condition_id + '_stop'));\n";
+							
 							//convert from UTC to user timezone and format appropriately
-							$user_timezone = $_SESSION['domain']['time_zone']['name'] ?? date_default_timezone_get();
-
+							$user_timezone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+							
 							$dt_start = DateTime::createFromFormat('Y-m-d H:i', $cond_val_start, new DateTimeZone('UTC'));
 							if ($dt_start !== false) {
 							    $dt_start->setTimezone(new DateTimeZone($user_timezone));
@@ -1107,7 +1108,7 @@ if ($action == 'update') {
 							        $cond_val_start = $dt_start->format('Y-m-d H:i');
 							    }
 							}
-
+							
 							if (!empty($cond_val_stop)) {
 							    $dt_stop = DateTime::createFromFormat('Y-m-d H:i', $cond_val_stop, new DateTimeZone('UTC'));
 							    if ($dt_stop !== false) {
@@ -1119,6 +1120,7 @@ if ($action == 'update') {
 							        }
 							    }
 							}
+							
 							echo "	$('#value_".$group_id."_' + condition_id + '_start').val('".$cond_val_start."');\n";
 							echo "	$('#value_".$group_id."_' + condition_id + '_stop').val('".$cond_val_stop."');\n";
 						}
