@@ -1105,7 +1105,8 @@ if ($action == 'update') {
 							    } else {
 							        $cond_val_start = $dt_start->format('Y-m-d H:i');
 							    }
-							}		
+							}
+							
 							if (!empty($cond_val_stop)) {
 							    $dt_stop = DateTime::createFromFormat('Y-m-d H:i', $cond_val_stop, new DateTimeZone('UTC'));
 							    if ($dt_stop !== false) {
