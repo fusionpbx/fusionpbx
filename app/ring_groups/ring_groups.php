@@ -55,7 +55,7 @@
 
 //get total ring group count from the database, check limit, if defined
 	if (!empty($action) && $action == 'copy' && $settings->get('limit', 'ring_groups', '') ?? '') {
-		$sql = "select count(*) from v_ring_groups ";
+		$sql = "select count(ring_group_uuid) from v_ring_groups ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$total_ring_groups = $database->select($sql, $parameters, 'column');
@@ -100,23 +100,24 @@
 	}
 
 //get total domain ring group count
-	$sql = "select count(*) from v_ring_groups ";
+	$sql = "select count(ring_group_uuid) from v_ring_groups ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$total_ring_groups = $database->select($sql, $parameters, 'column');
+	unset($parameters);
 
 //get filtered ring group count
 	if ($show == "all" && permission_exists('ring_group_all')) {
-		$sql = "select count(*) from v_ring_groups ";
+		$sql = "select count(ring_group_uuid) from v_ring_groups ";
 		$sql .= "where true ";
 	}
 	elseif (permission_exists('ring_group_domain') || permission_exists('ring_group_all')) {
-		$sql = "select count(*)  from v_ring_groups ";
+		$sql = "select count(ring_group_uuid)  from v_ring_groups ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	else {
-		$sql = "select count(*) ";
+		$sql = "select count(ring_group_uuid) ";
 		$sql .= "from v_ring_groups as r, v_ring_group_users as u ";
 		$sql .= "where r.domain_uuid = :domain_uuid ";
 		$sql .= "and r.ring_group_uuid = u.ring_group_uuid ";
@@ -331,4 +332,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
