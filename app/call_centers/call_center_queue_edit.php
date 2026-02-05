@@ -40,7 +40,7 @@
 	$text = $language->get();
 
 //initialize settings object
-	$settings = new settings(['database' => $database, $_SESSION['domain_uuid'] ?? '', $_SESSION['user_uuid'] ?? '']);
+	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'] ?? '', 'user_uuid' => $_SESSION['user_uuid'] ?? '']);
 
 //set the defaults
 	$queue_name = '';
