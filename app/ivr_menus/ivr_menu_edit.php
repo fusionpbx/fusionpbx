@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -40,7 +40,7 @@
 	$text = $language->get();
 
 //initialize the settings object
-	$settings = new settings(['database' => $database, $_SESSION['domain_uuid'] ?? '', $_SESSION['user_uuid'] ?? '']);
+	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'] ?? '', 'user_uuid' => $_SESSION['user_uuid'] ?? '']);
 
 //set the defaults
 	$ivr_menu_name = '';
