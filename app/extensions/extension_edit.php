@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -116,20 +116,18 @@
 	}
 
 //get total extension count from the database, check limit, if defined
-	if ($action == 'add') {
-		if ($limit_extensions > 0) {
-			$sql = "select count(extension_uuid) ";
-			$sql .= "from v_extensions ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$total_extensions = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
+	if ($action == 'add' && $limit_extensions != '') {
+		$sql = "select count(extension_uuid) ";
+		$sql .= "from v_extensions ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$total_extensions = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
 
-			if ($total_extensions >= $limit_extensions) {
-				message::add($text['message-maximum_extensions'].' '.$limit_extensions, 'negative');
-				header('Location: extensions.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null));
-				exit;
-			}
+		if ($total_extensions >= $limit_extensions) {
+			message::add($text['message-maximum_extensions'].' '.$limit_extensions, 'negative');
+			header('Location: extensions.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null));
+			exit;
 		}
 	}
 

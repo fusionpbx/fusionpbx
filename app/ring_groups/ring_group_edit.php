@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2010-2025
+	Portions created by the Initial Developer are Copyright (C) 2010-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -137,7 +137,7 @@
 	}
 
 //get total ring group count from the database, check limit, if defined
-	if ($action == 'add' && $settings->get('limit', 'ring_groups', '') ?? '') {
+	if ($action == 'add' && $settings->get('limit', 'ring_groups') != '') {
 		$sql = "select count(*) from v_ring_groups ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;

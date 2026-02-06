@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -54,18 +54,17 @@
 	}
 
 //get total gateway count from the database, check limit, if defined
-	if ($action == 'add') {
-		if (!empty($settings->get('limit', 'gateways'))) {
-			$sql = "select count(gateway_uuid) from v_gateways ";
-			$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$total_gateways = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
-			if ($total_gateways >= $settings->get('limit', 'gateways')) {
-				message::add($text['message-maximum_gateways'].' '.$settings->get('limit', 'gateways'), 'negative');
-				header('Location: gateways.php');
-				exit;
-			}
+	if ($action == 'add' && $settings->get('limit', 'gateways') != '') {
+		$sql = "select count(gateway_uuid) from v_gateways ";
+		$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$total_gateways = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
+
+		if ($total_gateways >= $settings->get('limit', 'gateways')) {
+			message::add($text['message-maximum_gateways'].' '.$settings->get('limit', 'gateways'), 'negative');
+			header('Location: gateways.php');
+			exit;
 		}
 	}
 

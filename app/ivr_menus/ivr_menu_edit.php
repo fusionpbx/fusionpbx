@@ -79,13 +79,13 @@
 	}
 
 //get total ivr menu count from the database, check limit, if defined
-	if (!empty($settings->get('limit', 'ivr_menus'))) {
+	if ($action == 'add' && $settings->get('limit', 'ivr_menus') != '') {
 		$sql = "select count(*) as num_rows from v_ivr_menus where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$total_ivr_menus = $database->select($sql, $parameters, 'column');
 		unset($sql, $parameters);
 
-		if ($action == 'add' && $total_ivr_menus >= $settings->get('limit', 'ivr_menus')) {
+		if ($total_ivr_menus >= $settings->get('limit', 'ivr_menus')) {
 			message::add($text['message-maximum_ivr_menus'].' '.$settings->get('limit', 'ivr_menus'), 'negative');
 			header('Location: ivr_menus.php');
 			exit;

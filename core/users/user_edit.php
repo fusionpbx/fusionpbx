@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,7 +50,7 @@
 	}
 
 //get total user count from the database, check limit, if defined
-	if (permission_exists('user_add') && $action == 'add' && !empty($settings->get('limit', 'users'))) {
+	if (permission_exists('user_add') && $action == 'add' && $settings->get('limit', 'users') != '') {
 		$sql = "select count(*) ";
 		$sql .= "from v_users ";
 		$sql .= "where domain_uuid = :domain_uuid ";
