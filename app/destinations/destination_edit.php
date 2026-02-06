@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -68,20 +68,16 @@
 	$record_extension = $settings->get('call_recordings', 'record_extension', 'mp3');
 
 //get total destination count from the database, check limit, if defined
-	if (!permission_exists('destination_domain')) {
-		if ($action == 'add') {
-			if (!empty($settings->get('limit', 'destinations', ''))) {
-				$sql = "select count(*) from v_destinations where domain_uuid = :domain_uuid ";
-				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-				$total_destinations = $database->select($sql, $parameters, 'column');
-				unset($sql, $parameters);
+	if ($action == 'add' && $settings->get('limit', 'destinations', '') != '' && !permission_exists('destination_domain')) {
+		$sql = "select count(*) from v_destinations where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$total_destinations = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
 
-				if ($total_destinations >= $settings->get('limit', 'destinations', '')) {
-					message::add($text['message-maximum_destinations'].' '.$settings->get('limit', 'destinations', ''), 'negative');
-					header('Location: destinations.php');
-					exit;
-				}
-			}
+		if ($total_destinations >= $settings->get('limit', 'destinations', '')) {
+			message::add($text['message-maximum_destinations'].' '.$settings->get('limit', 'destinations', ''), 'negative');
+			header('Location: destinations.php');
+			exit;
 		}
 	}
 
