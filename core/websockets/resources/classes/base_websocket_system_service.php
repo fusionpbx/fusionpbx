@@ -167,6 +167,11 @@ abstract class base_websocket_system_service extends service implements websocke
 					if (!$suppress_ws_message) $this->error("Unable to connect to websocket server.");
 					$suppress_ws_message = true;
 				}
+				if (!$this->ws_client->is_connected()) {
+					// Sleep for a bit before trying to reconnect to prevent flooding the logs with connection errors
+					sleep(1);
+					continue;
+				}
 			}
 
 			if ($this->ws_client !== null && $this->ws_client->is_connected()) {
