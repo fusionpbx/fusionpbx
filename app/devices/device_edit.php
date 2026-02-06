@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 */
@@ -59,18 +59,16 @@
 	}
 
 //get the total device count from the database, check the limit, if defined
-	if ($action == 'add') {
-		if (!empty($settings->get('limit', 'devices', ''))) {
-			$sql = "select count(*) from v_devices where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$total_devices = $database->select($sql, $parameters, 'column');
-			if ($total_devices >= $settings->get('limit', 'devices', '')) {
-				message::add($text['message-maximum_devices'].' '.$settings->get('limit', 'devices', ''), 'negative');
-				header('Location: devices.php');
-				exit;
-			}
-			unset($sql, $parameters, $total_devices);
+	if ($action == 'add' && $settings->get('limit', 'devices', '') != '') {
+		$sql = "select count(*) from v_devices where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$total_devices = $database->select($sql, $parameters, 'column');
+		if ($total_devices >= $settings->get('limit', 'devices', '')) {
+			message::add($text['message-maximum_devices'].' '.$settings->get('limit', 'devices', ''), 'negative');
+			header('Location: devices.php');
+			exit;
 		}
+		unset($sql, $parameters, $total_devices);
 	}
 
 //get http post variables and set them to php variables
