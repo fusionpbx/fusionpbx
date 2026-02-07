@@ -126,11 +126,13 @@ class event_socket {
 
 	/**
 	 * Read the event body from the socket
-	 *
+	 * 
+	 * @param int|null $timeout the timeout in microseconds for stream_select, Default 10000
+	 * 
 	 * @return mixed Content body or false if not connected or empty message
 	 * @depends buffer::class
 	 */
-	public function read_event() {
+	public function read_event($timeout = 10000) {
 		if (!$this->connected()) {
 			return false;
 		}
@@ -152,8 +154,16 @@ class event_socket {
 				break;
 			}
 
-			$buffer = fgets($this->fp, 1024);
-			$b->append($buffer);
+			// Check if we have data available
+			$read = [$this->fp];
+			$write = [];
+			$except = [];
+			if (stream_select($read, $write, $except, 0, $timeout) > 0) {
+				$buffer = fgets($this->fp, 1024);
+				if ($buffer !== false) {
+					$b->append($buffer);
+				}
+			}
 		}
 
 		if (array_key_exists('Content-Length', $content)) {
