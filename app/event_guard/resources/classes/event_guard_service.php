@@ -118,13 +118,22 @@ class event_guard_service extends service {
 			if (!$this->socket->connected()) {
 				$this->warning('Not connected to even socket');
 				if ($this->socket->connect()) {
+					// Define the events
+					$switch_events = [
+						['Event-Subclass' => 'sofia::pre_register'],
+						['Event-Subclass' => 'sofia::register_failure'],
+						['Event-Subclass' => 'event_guard:unblock']
+					];
+
+					// Add the event filters
 					$cmd = "event json ALL";
 					$result = $this->socket->request($cmd);
-					$this->debug('subscribe to ALL events '. print_r($result, true));
-
-					$cmd = "filter Event-Name CUSTOM";
-					$result = $this->socket->request($cmd);
-					$this->debug('subscribe to CUSTOM events '. print_r($result, true));
+					$this->info('subscribe to ALL events '. print_r($result, true));
+					foreach($switch_events as $event_key => $event_value) {
+						$cmd = "filter ".$event_key." ".$event_value;
+						$result = $this->socket->request($cmd);
+						$this->info('subscribe to CUSTOM events '. print_r($result, true));
+					}
 					$this->info('Re-connected to event socket');
 				}
 				else {
@@ -200,6 +209,10 @@ class event_guard_service extends service {
 						//if not registered block the address
 						if (!$this->allow_access($json_array['network-ip'])) {
 							$this->block_add($json_array['network-ip'], 'sip-auth-ip', $json_array);
+							$this->info("IP address NOT allowed ".$json_array['to-host']);
+						}
+						else {
+							$this->info("IP address allowed ".$json_array['to-host']);
 						}
 
 						//debug info
@@ -228,8 +241,8 @@ class event_guard_service extends service {
 				//echo "\n";
 			//}
 
-			// Sleep for 100 ms
-			usleep(100000);
+			// Sleep for 10 ms
+			//usleep(10000);
 		}
 		return 0;
 	}
