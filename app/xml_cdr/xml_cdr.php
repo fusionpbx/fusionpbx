@@ -300,7 +300,7 @@
 	if ($archive_request) {
 		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'link'=>'xml_cdr.php']);
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>'sync-alt','style'=>'margin-left: 15px;','onclick'=>'location.reload(true);']);
+	//echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>'sync-alt','style'=>'margin-left: 15px;','onclick'=>'location.reload(true);']);
 	if (isset($_GET['status']) &&  $_GET['status'] != 'missed') {
 		echo button::create(['type'=>'button','label'=>$text['button-missed'],'icon'=>'phone-slash','link'=>'?status=missed']);
 	}
@@ -422,8 +422,8 @@
 			echo "			".$text['label-start_range']."\n";
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap'>\n";
-			echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."' autocomplete='off'>\n";
-			echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."' autocomplete='off'>\n";
+			echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 115px; width: 130px;')."' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."' autocomplete='off'>\n";
+			echo "			<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 115px; width: 130px;')."' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."' autocomplete='off'>\n";
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
@@ -464,8 +464,8 @@
 			echo "			".$text['label-codecs']."\n";
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap'>\n";
-			echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='read_codec' id='read_codec' value='".escape($read_codec)."' placeholder=\"".$text['label-codec_read']."\">\n";
-			echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='write_codec' id='write_codec' value='".escape($write_codec)."' placeholder=\"".$text['label-codec_write']."\">\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 100px;' name='read_codec' id='read_codec' value='".escape($read_codec)."' placeholder=\"".$text['label-codec_read']."\">\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 100px;' name='write_codec' id='write_codec' value='".escape($write_codec)."' placeholder=\"".$text['label-codec_write']."\">\n";
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
@@ -475,8 +475,8 @@
 			echo "			".$text['label-wait']." (".$text['label-seconds'].")\n";
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap'>\n";
-			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='wait_min' id='wait_min' value='".escape($wait_min)."' placeholder=\"".$text['label-minimum']."\">\n";
-			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='wait_max' id='wait_max' value='".escape($wait_max)."' placeholder=\"".$text['label-maximum']."\">\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 100px;' name='wait_min' id='wait_min' value='".escape($wait_min)."' placeholder=\"".$text['label-minimum']."\">\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 100px;' name='wait_max' id='wait_max' value='".escape($wait_max)."' placeholder=\"".$text['label-maximum']."\">\n";
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
@@ -486,8 +486,8 @@
 			echo "			".$text['label-tta']." (".$text['label-seconds'].")\n";
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap'>\n";
-			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='tta_min' id='tta_min' value='".escape($tta_min)."' placeholder=\"".$text['label-minimum']."\">\n";
-			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 75px;' name='tta_max' id='tta_max' value='".escape($tta_max)."' placeholder=\"".$text['label-maximum']."\">\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 100px;' name='tta_min' id='tta_min' value='".escape($tta_min)."' placeholder=\"".$text['label-minimum']."\">\n";
+			echo "			<input type='text' class='formfld' style='min-width: 75px; width: 100px;' name='tta_max' id='tta_max' value='".escape($tta_max)."' placeholder=\"".$text['label-maximum']."\">\n";
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
@@ -561,7 +561,7 @@
 			echo "			".$text['label-order']."\n";
 			echo "		</div>\n";
 			echo "		<div class='field no-wrap'>\n";
-			echo "			<select name='order_by' class='formfld'>\n";
+			echo "			<select name='order_by' class='formfld' style='max-width: 115px;'>\n";
 			if ($permission['xml_cdr_extension']) {
 				echo "			<option value='extension' ".($order_by == 'extension' ? "selected='selected'" : null).">".$text['label-extension']."</option>\n";
 			}
@@ -631,7 +631,7 @@
 				echo "			".$text['label-call_center_queue']."\n";
 				echo "		</div>\n";
 				echo "		<div class='field'>\n";
-				echo "			<select class='formfld' name='call_center_queue_uuid' id='call_center_queue_uuid'>\n";
+				echo "			<select class='formfld' name='call_center_queue_uuid' id='call_center_queue_uuid' style='max-width: 200px;'>\n";
 				echo "				<option value=''></option>";
 				foreach ($call_center_queues as $row) {
 					$selected = ($row['call_center_queue_uuid'] == $call_center_queue_uuid) ? "selected" : null;
@@ -649,7 +649,7 @@
 				echo "			".$text['label-ring_group']."\n";
 				echo "		</div>\n";
 				echo "		<div class='field'>\n";
-				echo "			<select class='formfld' name='ring_group_uuid' id='ring_group_uuid'>\n";
+				echo "			<select class='formfld' name='ring_group_uuid' id='ring_group_uuid' style='max-width: 200px;'>\n";
 				echo "				<option value=''></option>";
 				foreach ($ring_groups as $row) {
 					$selected = ($row['ring_group_uuid'] == $ring_group_uuid) ? "selected" : null;
@@ -668,7 +668,7 @@
 			echo "			".$text['label-ivr_menu']."\n";
 			echo "		</div>\n";
 			echo "		<div class='field'>\n";
-			echo "			<select class='formfld' name='ivr_menu_uuid' id='ivr_menu_uuid'>\n";
+			echo "			<select class='formfld' name='ivr_menu_uuid' id='ivr_menu_uuid' style='max-width: 200px;'>\n";
 			echo "				<option value=''></option>";
 			foreach ($ivr_menus as $row) {
 				$selected = ($row['ivr_menu_uuid'] == $ivr_menu_uuid) ? "selected" : null;
