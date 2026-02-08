@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -40,7 +40,7 @@
 	$text = $language->get();
 
 //initialize the settings object
-	$settings = new settings(['database' => $database, $_SESSION['domain_uuid'] ?? '', $_SESSION['user_uuid'] ?? '']);
+	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'] ?? '', 'user_uuid' => $_SESSION['user_uuid'] ?? '']);
 
 //set the defaults
 	$ivr_menu_name = '';
@@ -79,13 +79,13 @@
 	}
 
 //get total ivr menu count from the database, check limit, if defined
-	if (!empty($settings->get('limit', 'ivr_menus'))) {
+	if ($action == 'add' && $settings->get('limit', 'ivr_menus') != '') {
 		$sql = "select count(*) as num_rows from v_ivr_menus where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$total_ivr_menus = $database->select($sql, $parameters, 'column');
 		unset($sql, $parameters);
 
-		if ($action == 'add' && $total_ivr_menus >= $settings->get('limit', 'ivr_menus')) {
+		if ($total_ivr_menus >= $settings->get('limit', 'ivr_menus')) {
 			message::add($text['message-maximum_ivr_menus'].' '.$settings->get('limit', 'ivr_menus'), 'negative');
 			header('Location: ivr_menus.php');
 			exit;

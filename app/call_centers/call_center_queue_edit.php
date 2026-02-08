@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -40,7 +40,7 @@
 	$text = $language->get();
 
 //initialize settings object
-	$settings = new settings(['database' => $database, $_SESSION['domain_uuid'] ?? '', $_SESSION['user_uuid'] ?? '']);
+	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'] ?? '', 'user_uuid' => $_SESSION['user_uuid'] ?? '']);
 
 //set the defaults
 	$queue_name = '';
@@ -83,19 +83,17 @@
 	}
 
 //get total call center queues count from the database, check limit, if defined
-	if ($action == 'add') {
-		if (!empty($settings->get('limit','call_center_queues', ''))) {
-			$sql = "select count(*) from v_call_center_queues ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$total_call_center_queues = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
+	if ($action == 'add' && $settings->get('limit','call_center_queues') != '') {
+		$sql = "select count(*) from v_call_center_queues ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$total_call_center_queues = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
 
-			if ($total_call_center_queues >= $settings->get('limit','call_center_queues', 0)) {
-				message::add($text['message-maximum_queues'].' '.$settings->get('limit','call_center_queues', ''), 'negative');
-				header('Location: call_center_queues.php');
-				return;
-			}
+		if ($total_call_center_queues >= $settings->get('limit','call_center_queues', 0)) {
+			message::add($text['message-maximum_queues'].' '.$settings->get('limit','call_center_queues', ''), 'negative');
+			header('Location: call_center_queues.php');
+			return;
 		}
 	}
 
