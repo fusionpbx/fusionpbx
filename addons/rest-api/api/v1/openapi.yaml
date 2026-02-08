@@ -1,0 +1,1570 @@
+openapi: 3.0.3
+info:
+  title: FusionPBX REST API
+  version: 1.0.0
+  description: |
+    Comprehensive REST API for FusionPBX VoIP platform management.
+
+    ## Overview
+    This API provides full CRUD operations for managing FusionPBX resources including extensions,
+    ring groups, conferences, gateways, voicemails, call routing, and more.
+
+    ## Authentication
+    All API requests require two headers:
+    - `X-API-Key`: Your API authentication key
+    - `X-Domain`: The domain name you're managing
+
+    ## Rate Limiting
+    API requests are rate-limited per API key. Exceeding limits will result in HTTP 429 responses.
+
+    ## Pagination
+    List endpoints support pagination via query parameters:
+    - `page`: Page number (default: 1)
+    - `per_page`: Items per page (default: 50, max: 100)
+
+    Response includes a `pagination` object with total counts and page information.
+
+  contact:
+    name: FusionPBX API Support
+    url: https://www.fusionpbx.com
+  license:
+    name: MPL 1.1
+    url: https://www.mozilla.org/en-US/MPL/1.1/
+
+servers:
+  - url: /api/v1
+    description: FusionPBX API v1
+
+security:
+  - ApiKeyAuth: []
+    DomainAuth: []
+
+tags:
+  - name: extensions
+    description: Manage phone extensions
+  - name: users
+    description: User account management
+  - name: gateways
+    description: SIP gateway configuration
+  - name: devices
+    description: Device provisioning and management
+  - name: voicemails
+    description: Voicemail box management
+  - name: destinations
+    description: Call destination management
+  - name: dialplans
+    description: Dialplan rules and routing
+  - name: domains
+    description: Multi-tenant domain management
+  - name: cdr
+    description: Call detail records
+  - name: dashboard
+    description: Dashboard statistics
+  - name: time-conditions
+    description: Time-based call routing
+  - name: inbound-routes
+    description: Inbound call routing rules
+  - name: outbound-routes
+    description: Outbound call routing rules
+  - name: ring-groups
+    description: Ring group management
+  - name: ivr-menus
+    description: Interactive voice response menus
+  - name: call-flows
+    description: Call flow management
+  - name: call-forward
+    description: Call forwarding rules
+  - name: follow-me
+    description: Follow-me call routing
+  - name: conferences
+    description: Conference bridge management
+  - name: fax
+    description: Fax server management
+  - name: call-centers
+    description: Call center queue management
+  - name: call-block
+    description: Call blocking rules
+  - name: call-recordings
+    description: Call recording management
+  - name: access-controls
+    description: Access control lists
+  - name: sip-profiles
+    description: SIP profile configuration
+  - name: number-translations
+    description: Number translation rules
+  - name: active-calls
+    description: Active call monitoring
+  - name: registrations
+    description: SIP registrations monitoring
+  - name: queues
+    description: Queue status and management
+  - name: logs
+    description: System logs
+  - name: conference-centers
+    description: Conference center management
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API authentication key
+    DomainAuth:
+      type: apiKey
+      in: header
+      name: X-Domain
+      description: Domain name for multi-tenant operations
+
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        per_page:
+          type: integer
+          description: Items per page
+          example: 50
+        total:
+          type: integer
+          description: Total number of items
+          example: 150
+        total_pages:
+          type: integer
+          description: Total number of pages
+          example: 3
+
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              description: Error code for programmatic handling
+              example: VALIDATION_ERROR
+            message:
+              type: string
+              description: Human-readable error message
+              example: Extension number is required
+            field:
+              type: string
+              description: Field name that caused the error (for validation errors)
+              example: extension
+            details:
+              type: object
+              description: Additional error context
+
+    Success:
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Operation completed successfully
+        data:
+          type: object
+          description: Response payload
+
+    # Ring Group Schemas
+    RingGroup:
+      type: object
+      required:
+        - ring_group_name
+        - ring_group_extension
+      properties:
+        ring_group_uuid:
+          type: string
+          format: uuid
+          description: Unique identifier for the ring group
+          readOnly: true
+        ring_group_name:
+          type: string
+          description: Ring group name
+          example: Sales Team
+        ring_group_extension:
+          type: string
+          description: Extension number for the ring group
+          example: "6000"
+        ring_group_strategy:
+          type: string
+          description: Ringing strategy
+          enum: [simultaneous, sequence, rollover, random]
+          default: simultaneous
+        ring_group_timeout_app:
+          type: string
+          description: Timeout destination application
+          example: transfer
+        ring_group_timeout_data:
+          type: string
+          description: Timeout destination data
+          example: "9196 XML default"
+        ring_group_cid_name_prefix:
+          type: string
+          description: Caller ID name prefix
+          example: "Sales:"
+        ring_group_cid_number_prefix:
+          type: string
+          description: Caller ID number prefix
+        ring_group_enabled:
+          type: string
+          enum: ["true", "false"]
+          default: "true"
+          description: Whether the ring group is enabled
+        ring_group_description:
+          type: string
+          description: Ring group description
+        destinations:
+          type: array
+          description: Ring group destination extensions
+          items:
+            $ref: '#/components/schemas/RingGroupDestination'
+
+    RingGroupDestination:
+      type: object
+      required:
+        - destination_number
+      properties:
+        ring_group_destination_uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        destination_number:
+          type: string
+          description: Extension number to ring
+          example: "1001"
+        destination_delay:
+          type: string
+          description: Delay before ringing (seconds)
+          default: "0"
+          example: "0"
+        destination_timeout:
+          type: string
+          description: Ring timeout (seconds)
+          default: "30"
+          example: "30"
+        destination_prompt:
+          type: string
+          description: Prompt to play before connecting
+        destination_enabled:
+          type: string
+          enum: ["true", "false"]
+          default: "true"
+
+    RingGroupList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              ring_group_uuid:
+                type: string
+                format: uuid
+              ring_group_name:
+                type: string
+              ring_group_extension:
+                type: string
+              ring_group_strategy:
+                type: string
+              ring_group_timeout_app:
+                type: string
+              ring_group_timeout_data:
+                type: string
+              ring_group_cid_name_prefix:
+                type: string
+              ring_group_cid_number_prefix:
+                type: string
+              ring_group_enabled:
+                type: string
+              ring_group_description:
+                type: string
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # Extension Schemas
+    Extension:
+      type: object
+      required:
+        - extension
+      properties:
+        extension_uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        extension:
+          type: string
+          description: Extension number
+          example: "1001"
+        password:
+          type: string
+          description: SIP password (auto-generated if not provided)
+          example: "Xy9$mK2pL"
+        accountcode:
+          type: string
+          description: Account code for billing
+        effective_caller_id_name:
+          type: string
+          description: Effective caller ID name
+          example: John Doe
+        effective_caller_id_number:
+          type: string
+          description: Effective caller ID number
+          example: "1001"
+        outbound_caller_id_name:
+          type: string
+          description: Outbound caller ID name
+        outbound_caller_id_number:
+          type: string
+          description: Outbound caller ID number
+        emergency_caller_id_name:
+          type: string
+          description: Emergency caller ID name
+        emergency_caller_id_number:
+          type: string
+          description: Emergency caller ID number
+        directory_first_name:
+          type: string
+          description: First name for directory
+          example: John
+        directory_last_name:
+          type: string
+          description: Last name for directory
+          example: Doe
+        directory_visible:
+          type: string
+          enum: ["true", "false"]
+          default: "true"
+        directory_exten_visible:
+          type: string
+          enum: ["true", "false"]
+          default: "true"
+        max_registrations:
+          type: string
+          default: "1"
+          description: Maximum simultaneous registrations
+        limit_max:
+          type: string
+          default: "5"
+          description: Maximum concurrent calls
+        limit_destination:
+          type: string
+          default: "error/user_busy"
+          description: Destination when limit reached
+        enabled:
+          type: string
+          enum: ["true", "false"]
+          default: "true"
+        description:
+          type: string
+          description: Extension description
+        voicemail_enabled:
+          type: string
+          enum: ["true", "false"]
+          description: Enable voicemail for this extension
+        voicemail_password:
+          type: string
+          description: Voicemail PIN (auto-generated if not provided)
+        voicemail_mail_to:
+          type: string
+          format: email
+          description: Email for voicemail notifications
+        user_uuid:
+          type: string
+          format: uuid
+          description: Link extension to existing user
+
+    # Conference Schemas
+    Conference:
+      type: object
+      required:
+        - conference_name
+        - conference_extension
+      properties:
+        conference_uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        conference_name:
+          type: string
+          description: Conference name
+          example: Weekly Team Meeting
+        conference_extension:
+          type: string
+          description: Extension to dial for conference
+          example: "9000"
+        conference_pin:
+          type: string
+          description: PIN for regular participants
+          example: "1234"
+        moderator_pin:
+          type: string
+          description: PIN for moderators
+          example: "5678"
+        wait_mod:
+          type: string
+          enum: ["true", "false"]
+          default: "true"
+          description: Wait for moderator before starting
+        announce_name:
+          type: string
+          enum: ["true", "false"]
+          default: "true"
+          description: Announce participant names
+        announce_count:
+          type: string
+          enum: ["true", "false"]
+          default: "true"
+          description: Announce participant count
+        announce_recording:
+          type: string
+          enum: ["true", "false"]
+          default: "false"
+          description: Announce when recording starts/stops
+        mute:
+          type: string
+          enum: ["true", "false"]
+          default: "false"
+          description: Mute participants on join
+        sounds:
+          type: string
+          enum: ["true", "false"]
+          default: "true"
+          description: Enable enter/exit sounds
+        member_type:
+          type: string
+          enum: [member, moderator]
+          default: member
+          description: Default member type
+        profile:
+          type: string
+          default: default
+          description: Conference profile
+        max_members:
+          type: integer
+          default: 0
+          description: Maximum participants (0 = unlimited)
+        record:
+          type: string
+          enum: ["true", "false"]
+          default: "false"
+          description: Auto-record conference
+        enabled:
+          type: string
+          enum: ["true", "false"]
+          default: "true"
+        description:
+          type: string
+          description: Conference description
+
+    # Gateway Schema
+    Gateway:
+      type: object
+      properties:
+        gateway_uuid:
+          type: string
+          format: uuid
+        gateway:
+          type: string
+          description: Gateway name
+        username:
+          type: string
+        password:
+          type: string
+        proxy:
+          type: string
+        realm:
+          type: string
+        from_user:
+          type: string
+        from_domain:
+          type: string
+        register:
+          type: string
+          enum: ["true", "false"]
+        enabled:
+          type: string
+          enum: ["true", "false"]
+        description:
+          type: string
+
+    # User Schema
+    User:
+      type: object
+      properties:
+        user_uuid:
+          type: string
+          format: uuid
+        username:
+          type: string
+        user_email:
+          type: string
+          format: email
+        contact_organization:
+          type: string
+        contact_name_given:
+          type: string
+        contact_name_family:
+          type: string
+        user_enabled:
+          type: string
+          enum: ["true", "false"]
+
+    # Voicemail Schema
+    Voicemail:
+      type: object
+      properties:
+        voicemail_uuid:
+          type: string
+          format: uuid
+        voicemail_id:
+          type: string
+          description: Voicemail box number
+        voicemail_password:
+          type: string
+        voicemail_mail_to:
+          type: string
+          format: email
+        voicemail_enabled:
+          type: string
+          enum: ["true", "false"]
+        voicemail_description:
+          type: string
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      description: Page number (1-indexed)
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+
+    PerPageParam:
+      name: per_page
+      in: query
+      description: Items per page
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 50
+
+    UuidParam:
+      name: uuid
+      in: path
+      required: true
+      description: Resource UUID
+      schema:
+        type: string
+        format: uuid
+
+  responses:
+    BadRequest:
+      description: Bad request - validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: VALIDATION_ERROR
+              message: Extension number is required
+              field: extension
+
+    Unauthorized:
+      description: Unauthorized - invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: UNAUTHORIZED
+              message: Invalid or missing API key
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: NOT_FOUND
+              message: Ring group not found
+
+    Conflict:
+      description: Conflict - resource already exists
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: CONFLICT
+              message: Extension already exists
+              field: ring_group_extension
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: INTERNAL_ERROR
+              message: An unexpected error occurred
+
+paths:
+  # ==================== RING GROUPS ====================
+  /ring-groups:
+    get:
+      tags: [ring-groups]
+      summary: List all ring groups
+      description: Retrieve a paginated list of ring groups for the authenticated domain
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RingGroupList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags: [ring-groups]
+      summary: Create a new ring group
+      description: Create a new ring group with optional destinations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RingGroup'
+            example:
+              ring_group_name: Sales Team
+              ring_group_extension: "6000"
+              ring_group_strategy: simultaneous
+              ring_group_timeout_app: transfer
+              ring_group_timeout_data: "9196 XML default"
+              ring_group_enabled: "true"
+              ring_group_description: Sales department ring group
+              destinations:
+                - destination_number: "1001"
+                  destination_delay: "0"
+                  destination_timeout: "30"
+                  destination_enabled: "true"
+                - destination_number: "1002"
+                  destination_delay: "0"
+                  destination_timeout: "30"
+                  destination_enabled: "true"
+      responses:
+        '201':
+          description: Ring group created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Ring group created successfully
+                  data:
+                    type: object
+                    properties:
+                      ring_group_uuid:
+                        type: string
+                        format: uuid
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /ring-groups/{uuid}:
+    get:
+      tags: [ring-groups]
+      summary: Get ring group details
+      description: Retrieve detailed information about a specific ring group including destinations
+      parameters:
+        - $ref: '#/components/parameters/UuidParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/RingGroup'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [ring-groups]
+      summary: Update ring group
+      description: Update ring group properties and destinations (replaces all destinations if provided)
+      parameters:
+        - $ref: '#/components/parameters/UuidParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RingGroup'
+            example:
+              ring_group_name: Updated Sales Team
+              ring_group_enabled: "true"
+              destinations:
+                - destination_number: "1001"
+                  destination_timeout: "45"
+      responses:
+        '200':
+          description: Ring group updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [ring-groups]
+      summary: Delete ring group
+      description: Delete a ring group and all its destinations
+      parameters:
+        - $ref: '#/components/parameters/UuidParam'
+      responses:
+        '200':
+          description: Ring group deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== EXTENSIONS ====================
+  /extensions:
+    get:
+      tags: [extensions]
+      summary: List all extensions
+      description: Retrieve a paginated list of extensions
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Extension'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags: [extensions]
+      summary: Create new extension
+      description: Create a new phone extension with optional voicemail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Extension'
+            example:
+              extension: "1001"
+              password: "SecurePass123!"
+              directory_first_name: John
+              directory_last_name: Doe
+              effective_caller_id_name: John Doe
+              effective_caller_id_number: "1001"
+              voicemail_enabled: "true"
+              voicemail_mail_to: john.doe@example.com
+              enabled: "true"
+              description: John Doe's extension
+      responses:
+        '201':
+          description: Extension created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      extension_uuid:
+                        type: string
+                        format: uuid
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /extensions/{uuid}:
+    get:
+      tags: [extensions]
+      summary: Get extension details
+      parameters:
+        - $ref: '#/components/parameters/UuidParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Extension'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [extensions]
+      summary: Update extension
+      parameters:
+        - $ref: '#/components/parameters/UuidParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Extension'
+      responses:
+        '200':
+          description: Extension updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [extensions]
+      summary: Delete extension
+      parameters:
+        - $ref: '#/components/parameters/UuidParam'
+      responses:
+        '200':
+          description: Extension deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== CONFERENCES ====================
+  /conferences:
+    get:
+      tags: [conferences]
+      summary: List all conferences
+      description: Retrieve a paginated list of conference rooms
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Conference'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags: [conferences]
+      summary: Create new conference
+      description: Create a new conference room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Conference'
+            example:
+              conference_name: Weekly Team Meeting
+              conference_extension: "9000"
+              conference_pin: "1234"
+              moderator_pin: "5678"
+              wait_mod: "true"
+              announce_name: "true"
+              announce_count: "true"
+              max_members: 25
+              record: "false"
+              enabled: "true"
+              description: Weekly team sync meeting room
+      responses:
+        '201':
+          description: Conference created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      conference_uuid:
+                        type: string
+                        format: uuid
+                      conference_name:
+                        type: string
+                      conference_extension:
+                        type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /conferences/{uuid}:
+    get:
+      tags: [conferences]
+      summary: Get conference details
+      parameters:
+        - $ref: '#/components/parameters/UuidParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Conference'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [conferences]
+      summary: Update conference
+      parameters:
+        - $ref: '#/components/parameters/UuidParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Conference'
+      responses:
+        '200':
+          description: Conference updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [conferences]
+      summary: Delete conference
+      parameters:
+        - $ref: '#/components/parameters/UuidParam'
+      responses:
+        '200':
+          description: Conference deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # ==================== USERS ====================
+  /users:
+    get:
+      tags: [users]
+      summary: List all users
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /users/{uuid}:
+    get:
+      tags: [users]
+      summary: Get user details
+      parameters:
+        - $ref: '#/components/parameters/UuidParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/User'
+
+  # ==================== GATEWAYS ====================
+  /gateways:
+    get:
+      tags: [gateways]
+      summary: List all gateways
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Gateway'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      tags: [gateways]
+      summary: Create new gateway
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Gateway'
+      responses:
+        '201':
+          description: Gateway created successfully
+
+  /gateways/{uuid}:
+    get:
+      tags: [gateways]
+      summary: Get gateway details
+      parameters:
+        - $ref: '#/components/parameters/UuidParam'
+      responses:
+        '200':
+          description: Successful response
+
+    put:
+      tags: [gateways]
+      summary: Update gateway
+      parameters:
+        - $ref: '#/components/parameters/UuidParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Gateway'
+      responses:
+        '200':
+          description: Gateway updated successfully
+
+    delete:
+      tags: [gateways]
+      summary: Delete gateway
+      parameters:
+        - $ref: '#/components/parameters/UuidParam'
+      responses:
+        '200':
+          description: Gateway deleted successfully
+
+  # ==================== VOICEMAILS ====================
+  /voicemails:
+    get:
+      tags: [voicemails]
+      summary: List all voicemail boxes
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Voicemail'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /voicemails/{uuid}:
+    get:
+      tags: [voicemails]
+      summary: Get voicemail box details
+      parameters:
+        - $ref: '#/components/parameters/UuidParam'
+      responses:
+        '200':
+          description: Successful response
+
+  # ==================== ACTIVE CALLS ====================
+  /active-calls:
+    get:
+      tags: [active-calls]
+      summary: List active calls
+      description: Get list of currently active calls on the system
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        uuid:
+                          type: string
+                        direction:
+                          type: string
+                        created:
+                          type: string
+                        caller_id_name:
+                          type: string
+                        caller_id_number:
+                          type: string
+                        destination:
+                          type: string
+
+  # ==================== REGISTRATIONS ====================
+  /registrations:
+    get:
+      tags: [registrations]
+      summary: List SIP registrations
+      description: Get list of currently registered SIP endpoints
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        user:
+                          type: string
+                        contact:
+                          type: string
+                        agent:
+                          type: string
+                        status:
+                          type: string
+
+  # ==================== CDR ====================
+  /cdr:
+    get:
+      tags: [cdr]
+      summary: Get call detail records
+      description: Retrieve call detail records with filtering and pagination
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  # ==================== DASHBOARD ====================
+  /dashboard/stats:
+    get:
+      tags: [dashboard]
+      summary: Get dashboard statistics
+      description: Retrieve system statistics for dashboard display
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      active_calls:
+                        type: integer
+                      registrations:
+                        type: integer
+                      extensions:
+                        type: integer
+                      conferences:
+                        type: integer
+
+  # Additional endpoint stubs for completeness
+  /destinations:
+    get:
+      tags: [destinations]
+      summary: List destinations
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /devices:
+    get:
+      tags: [devices]
+      summary: List devices
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /dialplans:
+    get:
+      tags: [dialplans]
+      summary: List dialplan rules
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /domains:
+    get:
+      tags: [domains]
+      summary: List domains
+      responses:
+        '200':
+          description: Successful response
+
+  /time-conditions:
+    get:
+      tags: [time-conditions]
+      summary: List time conditions
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /inbound-routes:
+    get:
+      tags: [inbound-routes]
+      summary: List inbound routes
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /outbound-routes:
+    get:
+      tags: [outbound-routes]
+      summary: List outbound routes
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /ivr-menus:
+    get:
+      tags: [ivr-menus]
+      summary: List IVR menus
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /call-flows:
+    get:
+      tags: [call-flows]
+      summary: List call flows
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /call-forward:
+    get:
+      tags: [call-forward]
+      summary: List call forwarding rules
+      responses:
+        '200':
+          description: Successful response
+
+  /follow-me:
+    get:
+      tags: [follow-me]
+      summary: List follow-me configurations
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /fax:
+    get:
+      tags: [fax]
+      summary: List fax configurations
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /call-centers:
+    get:
+      tags: [call-centers]
+      summary: List call center queues
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /call-block:
+    get:
+      tags: [call-block]
+      summary: List call blocking rules
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /call-recordings:
+    get:
+      tags: [call-recordings]
+      summary: List call recordings
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /access-controls:
+    get:
+      tags: [access-controls]
+      summary: List access control rules
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /sip-profiles:
+    get:
+      tags: [sip-profiles]
+      summary: List SIP profiles
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /number-translations:
+    get:
+      tags: [number-translations]
+      summary: List number translation rules
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /queues:
+    get:
+      tags: [queues]
+      summary: Get queue status
+      responses:
+        '200':
+          description: Successful response
+
+  /logs:
+    get:
+      tags: [logs]
+      summary: Get system logs
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response
+
+  /conference-centers:
+    get:
+      tags: [conference-centers]
+      summary: List conference centers
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Successful response

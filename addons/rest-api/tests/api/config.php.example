@@ -1,0 +1,113 @@
+<?php
+/**
+ * FusionPBX API Integration Tests Configuration
+ *
+ * Copy this file to config.php and update with your test environment settings.
+ * IMPORTANT: Never commit config.php with actual credentials to version control.
+ */
+
+// ========================================
+// API Configuration
+// ========================================
+
+/**
+ * Base URL for the API endpoint
+ * Examples:
+ *   - http://localhost/api
+ *   - https://test.fusionpbx.local/api
+ *   - http://192.168.1.100/api
+ */
+define('TEST_API_BASE_URL', 'http://localhost/api');
+
+/**
+ * Test API key
+ * This should be a valid API key in your test database.
+ * Create one using the FusionPBX web interface or directly in the database.
+ */
+define('TEST_API_KEY', 'test-api-key-123');
+
+/**
+ * Test domain name
+ * This should be a valid domain in your test database.
+ * The API key must be associated with this domain.
+ */
+define('TEST_DOMAIN', 'test.example.com');
+
+// ========================================
+// Database Configuration
+// ========================================
+
+/**
+ * Database host
+ * Usually 'localhost' for local development
+ */
+define('TEST_DATABASE_HOST', 'localhost');
+
+/**
+ * Database name
+ * IMPORTANT: Use a separate test database to avoid affecting production data!
+ * Recommended: Create a copy of your production schema for testing
+ */
+define('TEST_DATABASE_NAME', 'fusionpbx_test');
+
+/**
+ * Database user
+ */
+define('TEST_DATABASE_USER', 'fusionpbx');
+
+/**
+ * Database password
+ */
+define('TEST_DATABASE_PASSWORD', '');
+
+// ========================================
+// Test Behavior Configuration
+// ========================================
+
+/**
+ * Maximum per_page value for pagination tests
+ * This helps test the pagination limit enforcement
+ */
+define('TEST_MAX_PER_PAGE', 100);
+
+/**
+ * Default per_page value when not specified
+ */
+define('TEST_DEFAULT_PER_PAGE', 20);
+
+/**
+ * Enable verbose output during tests
+ */
+define('TEST_VERBOSE', false);
+
+/**
+ * Test timeout in seconds
+ * Maximum time allowed for a single test to run
+ */
+define('TEST_TIMEOUT', 30);
+
+// ========================================
+// Setup Instructions
+// ========================================
+
+/**
+ * SETUP STEPS:
+ *
+ * 1. Create a test database:
+ *    $ createdb fusionpbx_test
+ *    $ pg_dump -s fusionpbx | psql fusionpbx_test
+ *
+ * 2. Create a test domain in the database:
+ *    INSERT INTO v_domains (domain_uuid, domain_name, domain_enabled)
+ *    VALUES ('your-uuid', 'test.example.com', 'true');
+ *
+ * 3. Create a test API key:
+ *    INSERT INTO v_api_keys (api_key_uuid, domain_uuid, api_key, api_key_enabled)
+ *    VALUES ('your-uuid', 'domain-uuid', 'test-api-key-123', 'true');
+ *
+ * 4. Update the constants above with your test credentials
+ *
+ * 5. Run the tests:
+ *    $ cd tests/api
+ *    $ phpunit
+ */

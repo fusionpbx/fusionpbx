@@ -1,0 +1,18 @@
+# Configuration file with credentials
+config.php
+
+# Benchmark results
+results/
+*.json
+*.csv
+
+# PHPUnit cache
+.phpunit.cache/
+.phpunit.result.cache
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

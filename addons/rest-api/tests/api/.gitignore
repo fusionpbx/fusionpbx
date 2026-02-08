@@ -1,0 +1,15 @@
+# Ignore test configuration with real credentials
+config.php
+
+# PHPUnit cache and results
+.phpunit.result.cache
+.phpunit.cache/
+
+# Coverage reports
+coverage/
+*.clover
+*.xml.coverage
+
+# Test artifacts
+*.log
+*.tmp
