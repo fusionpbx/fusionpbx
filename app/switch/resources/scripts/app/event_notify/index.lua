@@ -111,7 +111,7 @@
 			event:addHeader('event-string', 'check-sync;reboot=true');
 		end
 		if (command == "check_sync") then
-			event:addHeader('event-string', 'resync');
+			event:addHeader('event-string', 'check-sync');
 		end
 	end
 
