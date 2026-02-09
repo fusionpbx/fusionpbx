@@ -28,7 +28,7 @@
 local push_gateway = {}
 
 -- Configuration - CHANGE THIS URL FOR YOUR ENVIRONMENT
-push_gateway.url = "https://YOUR-PRODUCTION-DOMAIN.com/api/v1/internal/push-gateway/incoming-call"
+push_gateway.url = "https://api.davincitechsolutions.com/api/v1/internal/push-gateway/incoming-call"
 
 -- Trigger push notification via Laravel
 function push_gateway.trigger(session, uuid, caller_number, caller_name, extension, domain_name, domain_uuid)
