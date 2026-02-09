@@ -21,7 +21,7 @@ if (empty($exists)) {
 unset($sql, $parameters, $exists);
 
 // Use the device class to delete
-require_once dirname(__DIR__, 3) . '/app/devices/resources/classes/device.php';
+require_once dirname(__DIR__, 5) . '/app/devices/resources/classes/device.php';
 $device = new device(['database' => $database, 'domain_uuid' => $domain_uuid]);
 $array[0]['checked'] = 'true';
 $array[0]['uuid'] = $device_uuid;
@@ -31,8 +31,8 @@ unset($array);
 // Regenerate provisioning files
 $settings = new settings(['database' => new database, 'domain_uuid' => $domain_uuid]);
 $provision_path = $settings->get('provision', 'path', '');
-if (!empty($provision_path) && is_dir(dirname(__DIR__, 3).'/app/provision')) {
-    require_once dirname(__DIR__, 3) . '/app/provision/resources/classes/provision.php';
+if (!empty($provision_path) && is_dir(dirname(__DIR__, 5).'/app/provision')) {
+    require_once dirname(__DIR__, 5) . '/app/provision/resources/classes/provision.php';
     $prov = new provision;
     $prov->domain_uuid = $domain_uuid;
     $prov->write();

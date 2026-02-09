@@ -75,8 +75,8 @@ if (!empty($request['lines']) && is_array($request['lines'])) {
 // Write provisioning files
 $settings = new settings(['database' => new database, 'domain_uuid' => $domain_uuid]);
 $provision_path = $settings->get('provision', 'path', '');
-if (!empty($provision_path) && is_dir(dirname(__DIR__, 3).'/app/provision')) {
-    require_once dirname(__DIR__, 3) . '/app/provision/resources/classes/provision.php';
+if (!empty($provision_path) && is_dir(dirname(__DIR__, 5).'/app/provision')) {
+    require_once dirname(__DIR__, 5) . '/app/provision/resources/classes/provision.php';
     $prov = new provision;
     $prov->domain_uuid = $domain_uuid;
     $prov->write();

@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__DIR__) . '/auth.php';
-require_once dirname(__DIR__, 3) . '/app/voicemails/resources/classes/voicemail.php';
+require_once dirname(__DIR__, 5) . '/app/voicemails/resources/classes/voicemail.php';
 validate_api_key();
 
 $voicemail_uuid = get_uuid_from_path();

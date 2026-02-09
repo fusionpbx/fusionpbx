@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__DIR__) . '/auth.php';
-require_once dirname(__DIR__, 3) . '/app/extensions/resources/classes/extension.php';
+require_once dirname(__DIR__, 5) . '/app/extensions/resources/classes/extension.php';
 validate_api_key();
 
 $extension_uuid = get_uuid_from_path();

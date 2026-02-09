@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__DIR__) . '/auth.php';
-require_once dirname(__DIR__, 3) . '/app/destinations/resources/classes/destinations.php';
+require_once dirname(__DIR__, 5) . '/app/destinations/resources/classes/destinations.php';
 validate_api_key();
 
 $request = get_request_data();

@@ -26,8 +26,8 @@ $p = permissions::new();
 $p->add('domain_delete', 'temp');
 
 // Get all app configs to find tables with domain_uuid
-$app_config_files = glob(dirname(__DIR__, 4) . '/app/*/app_config.php') ?: [];
-$core_config_files = glob(dirname(__DIR__, 4) . '/core/*/app_config.php') ?: [];
+$app_config_files = glob(dirname(__DIR__, 5) . '/app/*/app_config.php') ?: [];
+$core_config_files = glob(dirname(__DIR__, 5) . '/core/*/app_config.php') ?: [];
 $all_configs = array_merge($app_config_files, $core_config_files);
 
 // Delete all domain-scoped records from every table

@@ -43,8 +43,8 @@ $database->app_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44';
 $database->save($array);
 
 // Import dialplans for the new domain
-if (file_exists(dirname(__DIR__, 4) . '/app/dialplans/app_config.php')) {
-    require_once dirname(__DIR__, 4) . '/app/dialplans/resources/classes/dialplan.php';
+if (file_exists(dirname(__DIR__, 5) . '/app/dialplans/app_config.php')) {
+    require_once dirname(__DIR__, 5) . '/app/dialplans/resources/classes/dialplan.php';
 
     $dialplan = new dialplan;
     $dialplan->import($domain_array['domains']);

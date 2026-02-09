@@ -1,7 +1,6 @@
 <?php
-require_once dirname(__DIR__) . '/auth.php';
-require_once dirname(__DIR__, 3) . '/resources/switch.php';
-validate_api_key();
+require_once dirname(__DIR__) . '/base.php';
+require_once dirname(__DIR__, 5) . '/resources/switch.php';
 
 $gateway_uuid = get_uuid_from_path();
 api_validate_uuid($gateway_uuid, 'gateway_uuid');
