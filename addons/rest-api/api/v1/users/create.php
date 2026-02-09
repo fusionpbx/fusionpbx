@@ -59,7 +59,7 @@ unset($array);
 if (!empty($request['groups']) && is_array($request['groups'])) {
     foreach ($request['groups'] as $index => $group_name) {
         $database = new database;
-        $sql = "SELECT group_uuid FROM v_groups WHERE group_name = :group_name AND domain_uuid = :domain_uuid";
+        $sql = "SELECT group_uuid FROM v_groups WHERE group_name = :group_name AND (domain_uuid = :domain_uuid OR domain_uuid IS NULL) LIMIT 1";
         $group_uuid = $database->select($sql, ['group_name' => $group_name, 'domain_uuid' => $domain_uuid], 'column');
 
         if ($group_uuid) {
