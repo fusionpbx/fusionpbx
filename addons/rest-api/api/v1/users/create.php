@@ -1,6 +1,5 @@
 <?php
-require_once dirname(__DIR__) . '/auth.php';
-validate_api_key();
+require_once dirname(__DIR__) . '/base.php';
 
 $request = get_request_data();
 

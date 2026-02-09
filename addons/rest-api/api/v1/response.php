@@ -32,7 +32,14 @@ function generate_numeric_password($length = 6) {
 
 function get_request_data() {
     $json = file_get_contents('php://input');
-    return json_decode($json, true) ?? [];
+    if (empty($json)) {
+        return [];
+    }
+    $data = json_decode($json, true);
+    if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+        api_error('INVALID_JSON', 'Request body contains invalid JSON: ' . json_last_error_msg(), null, 400);
+    }
+    return $data ?? [];
 }
 
 function get_uuid_from_path() {
