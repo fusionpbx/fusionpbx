@@ -206,10 +206,41 @@
 						freeswitch.consoleLog("NOTICE", "[failure_handler] forwarding no answer to: " .. forward_no_answer_destination .. "\n");
 						session:transfer(forward_no_answer_destination, "XML", context);
 					end
-				else
-					--send missed call notification
-					missed();
-				end
+					else
+						-- For stale SIP registrations, NO_ANSWER can happen even when app is offline.
+						-- Try mobile push gateway before treating it as a missed call.
+						local extension = dialed_user or sip_to_user or session:getVariable("destination_number");
+						local push_success = false;
+
+						if (extension ~= nil and extension ~= "") then
+							freeswitch.consoleLog("NOTICE", "[failure_handler] NO_ANSWER - trying push gateway for extension: " .. tostring(extension) .. "\n");
+							push_success = push_gateway.trigger(
+								session,
+								uuid,
+								caller_id_number,
+								caller_id_name,
+								extension,
+								domain_name,
+								domain_uuid
+							);
+						end
+
+						if (push_success) then
+							freeswitch.consoleLog("NOTICE", "[failure_handler] NO_ANSWER push sent - retrying bridge\n");
+							session:execute("set", "continue_on_fail=true");
+							session:execute("set", "hangup_after_bridge=true");
+							session:execute("ring_ready");
+
+							freeswitch.consoleLog("NOTICE", "[failure_handler] Push sent - backend bridge handles call, skipping local retry\n");
+
+							return;
+
+
+						else
+							--send missed call notification
+							missed();
+						end
+					end
 				if (debug["info"] ) then
 					freeswitch.consoleLog("NOTICE", "[failure_handler] - NO_ANSWER\n");
 				end
@@ -253,41 +284,11 @@
 						session:execute("set", "hangup_after_bridge=true");
 						session:execute("ring_ready");
 
-						local wait_count = 0;
-						local max_wait = 8;
-						local connected = false;
+						freeswitch.consoleLog("NOTICE", "[failure_handler] Push sent - backend bridge handles call, skipping local retry\n");
 
-						while (wait_count < max_wait and session:ready() and not connected) do
-							wait_count = wait_count + 1;
-							freeswitch.consoleLog("DEBUG", "[failure_handler] Retry " .. wait_count .. " for " .. extension .. "\n");
+						return;
 
-							session:sleep(3000);
 
-							if (not session:ready()) then
-								freeswitch.consoleLog("NOTICE", "[failure_handler] Caller hung up\n");
-								push_gateway.notify_hangup(uuid);
-								break;
-							end
-
-							local dial_string = "user/" .. extension .. "@" .. domain_name;
-							session:execute("set", "call_timeout=5");
-							session:execute("bridge", dial_string);
-
-							local hangup_cause = session:getVariable("bridge_hangup_cause");
-							freeswitch.consoleLog("DEBUG", "[failure_handler] Bridge result: " .. tostring(hangup_cause) .. "\n");
-
-							if (hangup_cause == "SUCCESS" or hangup_cause == "NORMAL_CLEARING" or hangup_cause == "ORIGINATOR_CANCEL") then
-								connected = true;
-								freeswitch.consoleLog("NOTICE", "[failure_handler] Call connected!\n");
-							end
-						end
-
-						if (not connected and session:ready()) then
-							freeswitch.consoleLog("NOTICE", "[failure_handler] Timeout after " .. wait_count .. " attempts\n");
-							push_gateway.notify_hangup(uuid);
-							missed();
-							session:hangup("NO_ANSWER");
-						end
 					else
 						freeswitch.consoleLog("NOTICE", "[failure_handler] No devices or push failed\n");
 						missed();
