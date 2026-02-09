@@ -34,11 +34,17 @@ function get_api_secret_key() {
 
 function validate_api_key() {
     global $domain_uuid, $domain_name;
+    static $api_authenticated = false;
 
     // Already authenticated - skip duplicate calls
-    if (!empty($domain_uuid) && !empty($domain_name)) {
+    if ($api_authenticated) {
         return;
     }
+
+    // Reset domain vars set by FusionPBX bootstrap (based on HTTP host)
+    // API must authenticate via X-API-Key, not rely on host-based resolution
+    $domain_uuid = null;
+    $domain_name = null;
 
     $provided_key = $_SERVER['HTTP_X_API_KEY'] ?? '';
     $provided_domain = $_SERVER['HTTP_X_DOMAIN'] ?? '';
@@ -127,6 +133,7 @@ function validate_api_key() {
         api_error('UNAUTHORIZED', 'Invalid API key', null, 401);
     }
 
+    $api_authenticated = true;
     $_SESSION['domain_uuid'] = $domain_uuid;
     $_SESSION['domain_name'] = $domain_name;
 }

@@ -18,7 +18,7 @@ function api_error($code, $message, $field = null, $http_code = 400) {
     exit;
 }
 
-function generate_password($length = 16) {
+function api_generate_password($length = 16) {
     return bin2hex(random_bytes($length / 2));
 }
 
