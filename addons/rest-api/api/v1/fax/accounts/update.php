@@ -45,6 +45,10 @@ foreach ($allowed_fields as $field) {
     }
 }
 
+// Grant permissions
+$p = permissions::new();
+$p->add('fax_edit', 'temp');
+
 // Update database
 $database = new database;
 $database->app_name = 'api-fax';
@@ -53,6 +57,9 @@ $database->save($array);
 
 // Clear dialplan cache
 api_clear_dialplan_cache();
+
+// Revoke permissions
+$p->delete('fax_edit', 'temp');
 
 // Return updated resource
 $fax = api_get_record('v_fax', 'fax_uuid', $fax_uuid);

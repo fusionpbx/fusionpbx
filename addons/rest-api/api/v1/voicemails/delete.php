@@ -18,6 +18,10 @@ if (empty($voicemail)) {
 
 $voicemail_id = $voicemail['voicemail_id'];
 
+// Grant permissions
+$p = permissions::new();
+$p->add('voicemail_delete', 'temp');
+
 // Delete voicemail options
 $sql = "DELETE FROM v_voicemail_options WHERE domain_uuid = :domain_uuid AND voicemail_uuid = :voicemail_uuid";
 $database->execute($sql, $parameters);
@@ -61,5 +65,8 @@ if (file_exists($voicemail_dir)) {
 // Delete cache entries
 $cache = new cache;
 $cache->delete("voicemail:".$voicemail_id."@".$domain_name);
+
+// Revoke permissions
+$p->delete('voicemail_delete', 'temp');
 
 api_no_content();

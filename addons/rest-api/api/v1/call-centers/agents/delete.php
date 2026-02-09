@@ -11,6 +11,10 @@ if (!api_record_exists('v_call_center_agents', 'call_center_agent_uuid', $agent_
     api_not_found('Call Center Agent');
 }
 
+// Grant permissions
+$p = permissions::new();
+$p->add('call_center_agent_delete', 'temp');
+
 // Delete associated tiers first
 $database = new database;
 $database->app_name = 'call-centers-api';
@@ -31,5 +35,8 @@ $database->delete('v_call_center_agents', $array);
 
 // Clear dialplan cache
 api_clear_dialplan_cache();
+
+// Revoke permissions
+$p->delete('call_center_agent_delete', 'temp');
 
 api_no_content();

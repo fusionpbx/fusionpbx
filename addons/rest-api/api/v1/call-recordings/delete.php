@@ -36,6 +36,10 @@ if (!empty($recording['call_recording_path']) && !empty($recording['call_recordi
     $full_path = $recording['call_recording_path'] . '/' . $recording['call_recording_name'];
 }
 
+// Grant permissions
+$p = permissions::new();
+$p->add('call_recording_delete', 'temp');
+
 // Begin transaction
 $database = new database;
 $database->execute("BEGIN");
@@ -71,6 +75,9 @@ try {
     // Commit transaction
     $database->execute("COMMIT");
 
+    // Revoke permissions
+    $p->delete('call_recording_delete', 'temp');
+
     // Return appropriate response
     if ($file_error) {
         api_success(
@@ -87,5 +94,7 @@ try {
 } catch (Exception $e) {
     // Rollback transaction on error
     $database->execute("ROLLBACK");
+    // Revoke permissions on error
+    $p->delete('call_recording_delete', 'temp');
     api_error('DELETE_ERROR', 'Failed to delete recording: ' . $e->getMessage(), null, 500);
 }

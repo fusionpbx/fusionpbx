@@ -23,6 +23,10 @@ if (!$existing) {
     api_not_found('Access Control');
 }
 
+// Grant permissions
+$p = permissions::new();
+$p->add('access_control_delete', 'temp');
+
 // Delete associated nodes first
 $delete_nodes_sql = "DELETE FROM v_access_control_nodes WHERE access_control_uuid = :access_control_uuid";
 $database->execute($delete_nodes_sql, ['access_control_uuid' => $access_control_uuid]);
@@ -33,5 +37,8 @@ $database->execute($delete_sql, ['access_control_uuid' => $access_control_uuid])
 
 // Clear ACL cache
 api_clear_cache("configuration:acl.conf");
+
+// Revoke permissions
+$p->delete('access_control_delete', 'temp');
 
 api_no_content();

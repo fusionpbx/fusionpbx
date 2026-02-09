@@ -44,6 +44,12 @@ if (isset($request['api_key'])) {
     $array['users'][0]['api_key'] = $request['api_key'];
 }
 
+// Grant permissions
+$p = permissions::new();
+$p->add('user_add', 'temp');
+$p->add('user_group_add', 'temp');
+$p->add('contact_add', 'temp');
+
 $database = new database;
 $database->app_name = 'users';
 $database->app_uuid = '112124b3-95c2-5352-7e9d-d14c0b88f207';
@@ -105,5 +111,10 @@ if (!empty($request['contact_name_given']) || !empty($request['contact_name_fami
     $database = new database;
     $database->save($update_array);
 }
+
+// Revoke permissions
+$p->delete('user_add', 'temp');
+$p->delete('user_group_add', 'temp');
+$p->delete('contact_add', 'temp');
 
 api_success(['user_uuid' => $user_uuid], 'User created successfully');

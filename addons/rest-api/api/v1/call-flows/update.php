@@ -44,11 +44,18 @@ if (isset($request['call_flow_alternate_data'])) $array['call_flows'][0]['call_f
 if (isset($request['call_flow_enabled'])) $array['call_flows'][0]['call_flow_enabled'] = $request['call_flow_enabled'];
 if (isset($request['call_flow_description'])) $array['call_flows'][0]['call_flow_description'] = $request['call_flow_description'];
 
+// Grant permissions
+$p = permissions::new();
+$p->add('call_flow_edit', 'temp');
+
 $database = new database;
 $database->app_name = 'call_flows';
 $database->app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02c7d6e';
 $database->save($array);
 
 api_clear_dialplan_cache();
+
+// Revoke permissions
+$p->delete('call_flow_edit', 'temp');
 
 api_success(['call_flow_uuid' => $call_flow_uuid], 'Call flow updated successfully');

@@ -44,6 +44,10 @@ if (!empty($request['device_profile_uuid']) && is_uuid($request['device_profile_
     $array['devices'][0]['device_profile_uuid'] = $request['device_profile_uuid'];
 }
 
+// Grant permissions
+$p = permissions::new();
+$p->add('device_add', 'temp');
+
 $database = new database;
 $database->app_name = 'devices';
 $database->app_uuid = '4efa1a1a-32e7-bf83-534b-6c8299958a8e';
@@ -81,5 +85,8 @@ if (!empty($provision_path) && is_dir(dirname(__DIR__, 5).'/app/provision')) {
     $prov->domain_uuid = $domain_uuid;
     $prov->write();
 }
+
+// Revoke permissions
+$p->delete('device_add', 'temp');
 
 api_success(['device_uuid' => $device_uuid], 'Device created successfully');

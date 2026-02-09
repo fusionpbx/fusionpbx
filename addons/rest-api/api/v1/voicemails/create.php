@@ -39,6 +39,10 @@ $array['voicemails'][0]['voicemail_local_after_email'] = $request['voicemail_loc
 $array['voicemails'][0]['voicemail_enabled'] = $request['voicemail_enabled'] ?? 'true';
 $array['voicemails'][0]['voicemail_description'] = $request['voicemail_description'] ?? '';
 
+// Grant permissions
+$p = permissions::new();
+$p->add('voicemail_add', 'temp');
+
 $database = new database;
 $database->app_name = 'voicemails';
 $database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
@@ -75,5 +79,8 @@ if (!empty($request['voicemail_options']) && is_array($request['voicemail_option
         unset($array);
     }
 }
+
+// Revoke permissions
+$p->delete('voicemail_add', 'temp');
 
 api_success(['voicemail_uuid' => $voicemail_uuid], 'Voicemail created successfully');

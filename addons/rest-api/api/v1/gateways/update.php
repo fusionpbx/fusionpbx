@@ -60,6 +60,10 @@ if (isset($request['ping_max'])) $array['gateways'][0]['ping_max'] = $request['p
 if (isset($request['contact_in_ping'])) $array['gateways'][0]['contact_in_ping'] = $request['contact_in_ping'];
 if (isset($request['codec_prefs'])) $array['gateways'][0]['codec_prefs'] = $request['codec_prefs'];
 
+// Grant permissions
+$p = permissions::new();
+$p->add('gateway_edit', 'temp');
+
 // Save to database
 $database->app_name = 'gateways';
 $database->app_uuid = 'a2124650-6c38-c96a-0767-12ababf0a8d5';
@@ -107,5 +111,8 @@ if ($fp && $fp->is_connected()) {
         event_socket::api("sofia profile " . $new_profile . " rescan");
     }
 }
+
+// Revoke permissions
+$p->delete('gateway_edit', 'temp');
 
 api_success(['gateway_uuid' => $gateway_uuid], 'Gateway updated successfully');

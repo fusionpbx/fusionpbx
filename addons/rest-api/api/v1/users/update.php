@@ -61,6 +61,10 @@ if (isset($request['api_key'])) {
     $array['users'][0]['api_key'] = $request['api_key'];
 }
 
+// Grant permissions
+$p = permissions::new();
+$p->add('user_edit', 'temp');
+
 // Save user updates if any fields changed
 if (count($array['users'][0]) > 2) { // More than just uuid and domain_uuid
     $database = new database;
@@ -97,5 +101,8 @@ if (isset($request['groups']) && is_array($request['groups'])) {
         unset($array);
     }
 }
+
+// Revoke permissions
+$p->delete('user_edit', 'temp');
 
 api_success(['user_uuid' => $user_uuid], 'User updated successfully');

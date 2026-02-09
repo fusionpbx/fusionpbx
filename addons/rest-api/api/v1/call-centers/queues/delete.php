@@ -11,6 +11,10 @@ if (!api_record_exists('v_call_center_queues', 'call_center_queue_uuid', $queue_
     api_not_found('Call Center Queue');
 }
 
+// Grant permissions
+$p = permissions::new();
+$p->add('call_center_queue_delete', 'temp');
+
 // Delete associated tiers first
 $database = new database;
 $database->app_name = 'call-centers-api';
@@ -31,5 +35,8 @@ $database->delete('v_call_center_queues', $array);
 
 // Clear dialplan cache
 api_clear_dialplan_cache();
+
+// Revoke permissions
+$p->delete('call_center_queue_delete', 'temp');
 
 api_no_content();

@@ -31,6 +31,10 @@ $array['fax'][0]['fax_forward_number'] = $data['fax_forward_number'] ?? null;
 $array['fax'][0]['fax_description'] = $data['fax_description'] ?? null;
 $array['fax'][0]['fax_send_channels'] = $data['fax_send_channels'] ?? null;
 
+// Grant permissions
+$p = permissions::new();
+$p->add('fax_add', 'temp');
+
 // Insert into database
 $database = new database;
 $database->app_name = 'api-fax';
@@ -39,6 +43,9 @@ $database->save($array);
 
 // Clear dialplan cache
 api_clear_dialplan_cache();
+
+// Revoke permissions
+$p->delete('fax_add', 'temp');
 
 // Return created resource
 $fax = api_get_record('v_fax', 'fax_uuid', $fax_uuid);

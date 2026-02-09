@@ -75,6 +75,10 @@ if (isset($request['details']) && is_array($request['details'])) {
     }
 }
 
+// Grant permissions
+$p = permissions::new();
+$p->add('dialplan_edit', 'temp');
+
 $database = new database;
 $database->app_name = 'dialplans';
 $database->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
@@ -83,5 +87,8 @@ $database->save($array);
 // CRITICAL: Clear dialplan cache
 $cache = new cache;
 $cache->delete("dialplan:" . $dialplan_context);
+
+// Revoke permissions
+$p->delete('dialplan_edit', 'temp');
 
 api_success(['dialplan_uuid' => $dialplan_uuid], 'Dialplan updated successfully');

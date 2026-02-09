@@ -78,6 +78,10 @@ if (isset($request['voicemail_description'])) {
     $array['voicemails'][0]['voicemail_description'] = $request['voicemail_description'];
 }
 
+// Grant permissions
+$p = permissions::new();
+$p->add('voicemail_edit', 'temp');
+
 $database = new database;
 $database->app_name = 'voicemails';
 $database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
@@ -128,5 +132,8 @@ if (isset($request['voicemail_options'])) {
         }
     }
 }
+
+// Revoke permissions
+$p->delete('voicemail_edit', 'temp');
 
 api_success(['voicemail_uuid' => $voicemail_uuid], 'Voicemail updated successfully');

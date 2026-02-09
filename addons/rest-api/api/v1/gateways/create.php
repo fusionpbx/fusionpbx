@@ -50,6 +50,10 @@ $array['gateways'][0]['ping_max'] = $request['ping_max'] ?? '';
 $array['gateways'][0]['contact_in_ping'] = $request['contact_in_ping'] ?? '';
 $array['gateways'][0]['codec_prefs'] = $request['codec_prefs'] ?? '';
 
+// Grant permissions
+$p = permissions::new();
+$p->add('gateway_add', 'temp');
+
 // Save to database
 $database = new database;
 $database->app_name = 'gateways';
@@ -81,5 +85,8 @@ if ($fp && $fp->is_connected()) {
 
     event_socket::api("sofia profile " . $profile . " rescan");
 }
+
+// Revoke permissions
+$p->delete('gateway_add', 'temp');
 
 api_success(['gateway_uuid' => $gateway_uuid], 'Gateway created successfully');

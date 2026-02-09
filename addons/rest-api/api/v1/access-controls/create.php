@@ -39,6 +39,10 @@ $array['access_controls'][0] = [
     'access_control_description' => $data['access_control_description'] ?? null
 ];
 
+// Grant permissions
+$p = permissions::new();
+$p->add('access_control_add', 'temp');
+
 // Save to database
 $database->app_name = 'api-access-controls';
 $database->app_uuid = '5478b10e-d58d-4c83-b5da-24e2e1b4e267';
@@ -46,6 +50,9 @@ $database->save($array);
 
 // Clear ACL cache
 api_clear_cache("configuration:acl.conf");
+
+// Revoke permissions
+$p->delete('access_control_add', 'temp');
 
 $response = [
     'access_control_uuid' => $access_control_uuid,

@@ -58,6 +58,10 @@ if (isset($data['access_control_description'])) {
     $array['access_controls'][0]['access_control_description'] = $data['access_control_description'];
 }
 
+// Grant permissions
+$p = permissions::new();
+$p->add('access_control_edit', 'temp');
+
 // Save to database
 $database->app_name = 'api-access-controls';
 $database->app_uuid = '5478b10e-d58d-4c83-b5da-24e2e1b4e267';
@@ -65,6 +69,9 @@ $database->save($array);
 
 // Clear ACL cache
 api_clear_cache("configuration:acl.conf");
+
+// Revoke permissions
+$p->delete('access_control_edit', 'temp');
 
 // Get updated record
 $get_sql = "SELECT access_control_uuid, access_control_name, access_control_default, access_control_description, domain_uuid
