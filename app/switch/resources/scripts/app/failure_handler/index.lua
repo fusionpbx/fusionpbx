@@ -149,13 +149,26 @@
 			freeswitch.consoleLog("INFO", "[failure_handler] sip_code: " .. tostring(sip_code) .. "\n");
 		end
 
-		if (originate_causes ~= nil) then
-			array = explode("|",originate_causes);
-			if (string.find(array[1], "USER_BUSY")) or (sip_code == "sip:486") then
-				originate_disposition = "USER_BUSY";
-				session:setVariable("originate_disposition", originate_disposition);
+			if (originate_causes ~= nil) then
+				array = explode("|",originate_causes);
+				if (string.find(array[1], "USER_BUSY")) or (sip_code == "sip:486") then
+					originate_disposition = "USER_BUSY";
+					session:setVariable("originate_disposition", originate_disposition);
+				end
 			end
-		end
+
+			-- Some multi-leg originate paths can collapse to ORIGINATOR_CANCEL even when
+			-- the underlying first failure was USER_NOT_REGISTERED/NO_ANSWER.
+			-- Normalize those cases so push fallback still runs.
+			if (originate_disposition == "ORIGINATOR_CANCEL" and originate_causes ~= nil) then
+				if (string.find(originate_causes, "USER_NOT_REGISTERED")) then
+					originate_disposition = "USER_NOT_REGISTERED";
+					session:setVariable("originate_disposition", originate_disposition);
+				elseif (string.find(originate_causes, "NO_ANSWER")) or (string.find(originate_causes, "ALLOTTED_TIMEOUT")) then
+					originate_disposition = "NO_ANSWER";
+					session:setVariable("originate_disposition", originate_disposition);
+				end
+			end
 
 		if (originate_disposition ~= nil) then
 			if (originate_disposition == 'USER_BUSY') then
@@ -226,13 +239,12 @@
 						end
 
 						if (push_success) then
-							freeswitch.consoleLog("NOTICE", "[failure_handler] NO_ANSWER push sent - retrying bridge\n");
-							session:execute("set", "continue_on_fail=true");
-							session:execute("set", "hangup_after_bridge=true");
+							freeswitch.consoleLog("NOTICE", "[failure_handler] NO_ANSWER push sent - parking caller for backend bridge\n");
+							session:execute("set", "continue_on_fail=false");
+							session:execute("set", "hangup_after_bridge=false");
 							session:execute("ring_ready");
-
-							freeswitch.consoleLog("NOTICE", "[failure_handler] Push sent - backend bridge handles call, skipping local retry\n");
-
+							session:execute("sched_hangup", "+45 NORMAL_CLEARING");
+							session:execute("park");
 							return;
 
 
@@ -276,17 +288,15 @@
 						domain_uuid
 					);
 
-					if (push_success) then
-						-- Push was sent! Play ringback and retry bridge
-						freeswitch.consoleLog("NOTICE", "[failure_handler] Push sent - retrying bridge\n");
-
-						session:execute("set", "continue_on_fail=true");
-						session:execute("set", "hangup_after_bridge=true");
-						session:execute("ring_ready");
-
-						freeswitch.consoleLog("NOTICE", "[failure_handler] Push sent - backend bridge handles call, skipping local retry\n");
-
-						return;
+						if (push_success) then
+							-- Push was sent; keep caller parked while backend does device-ready/originate/bridge
+							freeswitch.consoleLog("NOTICE", "[failure_handler] Push sent - parking caller for backend bridge\n");
+							session:execute("set", "continue_on_fail=false");
+							session:execute("set", "hangup_after_bridge=false");
+							session:execute("ring_ready");
+							session:execute("sched_hangup", "+45 NORMAL_CLEARING");
+							session:execute("park");
+							return;
 
 
 					else
