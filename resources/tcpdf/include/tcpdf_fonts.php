@@ -1998,7 +1998,7 @@ class TCPDF_FONTS {
 	public static function UTF8StringToArray($str, $isunicode, &$currentfont) {
 		if ($isunicode == true) {
 			// requires PCRE unicode support turned on
-			$chars = TCPDF_STATIC::pregSplit('//','u', $str, -1, PREG_SPLIT_NO_EMPTY);
+			$chars = preg_split('//u', $str, -1, PREG_SPLIT_NO_EMPTY);
 			$carr = array_map(array('TCPDF_FONTS', 'uniord'), $chars);
 		} else {
 			$chars = str_split($str);
