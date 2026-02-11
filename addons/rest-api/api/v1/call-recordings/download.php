@@ -1,15 +1,13 @@
 <?php
 /**
- * Get Call Recording File Information for Download
+ * Download Call Recording File
  *
  * GET /api/v1/call-recordings/download.php?call_recording_uuid={uuid}
  *
  * Query Parameters:
  * - call_recording_uuid: UUID of the call recording (required)
  *
- * Returns file path and metadata. Actual file serving is handled by the web server.
- * This endpoint provides the information needed to construct a download URL or
- * to retrieve the file through other means.
+ * Streams the actual recording file as a binary download.
  */
 
 require_once __DIR__ . '/../base.php';
@@ -25,7 +23,7 @@ $recording = api_get_record(
     'view_call_recordings',
     'call_recording_uuid',
     $call_recording_uuid,
-    'call_recording_uuid, call_recording_name, call_recording_path, call_recording_date, call_recording_length'
+    'call_recording_uuid, call_recording_name, call_recording_path'
 );
 
 if (!$recording) {
@@ -37,22 +35,33 @@ if (empty($recording['call_recording_path']) || empty($recording['call_recording
     api_error('FILE_NOT_FOUND', 'Recording file information is missing', null, 404);
 }
 
-// Build full file path
-$full_path = $recording['call_recording_path'] . '/' . $recording['call_recording_name'];
+// Sanitize file name to prevent path traversal
+$file_name = basename($recording['call_recording_name']);
+$full_path = realpath($recording['call_recording_path'] . '/' . $file_name);
 
-// Check if file exists
-if (!file_exists($full_path)) {
+// Verify realpath resolved and file exists
+if ($full_path === false || !file_exists($full_path)) {
     api_error('FILE_NOT_FOUND', 'Recording file does not exist on filesystem', null, 404);
 }
 
-// Get file information (no path disclosure)
-$file_info = [
-    'call_recording_uuid' => $recording['call_recording_uuid'],
-    'file_name' => $recording['call_recording_name'],
-    'file_size' => filesize($full_path),
-    'mime_type' => mime_content_type($full_path),
-    'recording_date' => $recording['call_recording_date'],
-    'length' => $recording['call_recording_length']
-];
+// Verify the resolved path is still within the recording directory
+if (strpos($full_path, realpath($recording['call_recording_path'])) !== 0) {
+    api_error('FORBIDDEN', 'Invalid file path', null, 403);
+}
 
-api_success($file_info, 'File information retrieved successfully');
+// Stream the file
+$file_size = filesize($full_path);
+$mime_type = mime_content_type($full_path) ?: 'application/octet-stream';
+
+header('Content-Type: ' . $mime_type);
+header('Content-Length: ' . $file_size);
+header('Content-Disposition: attachment; filename="' . $file_name . '"');
+header('Cache-Control: no-cache, no-store, must-revalidate');
+
+// Flush output buffers to avoid memory issues with large files
+while (ob_get_level()) {
+    ob_end_clean();
+}
+
+readfile($full_path);
+exit;
