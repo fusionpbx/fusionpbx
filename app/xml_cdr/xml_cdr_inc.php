@@ -91,6 +91,7 @@
 	$permission['xml_cdr_cc_agent_leg'] = permission_exists('xml_cdr_cc_agent_leg');
 	$permission['xml_cdr_cc_side'] = permission_exists('xml_cdr_cc_side');
 	$permission['xml_cdr_call_center_queues'] = permission_exists('xml_cdr_call_center_queues');
+	$permission['xml_cdr_call_disposition'] = permission_exists('xml_cdr_call_disposition');
 
 //set 24hr or 12hr clock
 	define('TIME_24HR', 1);
@@ -355,6 +356,7 @@
 	$sql .= "c.answer_stamp, \n";
 	$sql .= "c.status, \n";
 	$sql .= "c.sip_hangup_disposition, \n";
+	$sql .= "c.call_disposition, \n";
 	if ($permission['xml_cdr_pdd']) {
 		$sql .= "c.pdd_ms, \n";
 	}
