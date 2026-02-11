@@ -41,7 +41,7 @@ abstract class base_websocket_system_service extends service implements websocke
 	 *
 	 * @var array
 	 */
-	protected $listeners;
+	private $listeners;
 
 	/**
 	 * Outputs the version of the Service.
@@ -116,8 +116,23 @@ abstract class base_websocket_system_service extends service implements websocke
 	 *
 	 * @return void
 	 */
-	protected function add_listener($socket, callable $callback): void {
-		$this->listeners[] = [$socket, $callback];
+	protected function add_listener($socket, callable $callback, array $args = []): void {
+		$this->listeners[] = [$socket, $callback, $args];
+	}
+
+	/**
+	 * Remove a socket listener
+	 *
+	 * @param $socket
+	 *
+	 * @return void
+	 */
+	protected function remove_listener($socket): void {
+		foreach ($this->listeners as $key => $listener) {
+			if ($listener[0] === $socket) {
+				unset($this->listeners[$key]);
+			}
+		}
 	}
 
 	/**
@@ -203,9 +218,12 @@ abstract class base_websocket_system_service extends service implements websocke
 						}
 						// Other listeners
 						foreach ($this->listeners as $listener) {
-							if ($resource === $listener[0]) {
+							$socket = $listener[0];
+							if ($resource === $socket) {
 								// Call the callback function provided by the add_listener function
-								call_user_func($listener[1]);
+								$callback = $listener[1];
+								$args = $listener[2] ?? [];
+								call_user_func($callback, $args);
 								continue;
 							}
 						}
@@ -269,7 +287,7 @@ abstract class base_websocket_system_service extends service implements websocke
 	}
 
 	private function handle_ws_connected(): void {
-		$this->info("Websocket connection established to server");
+		$this->notice("Websocket connection established to server");
 		$this->debug(static::class . " RESOURCE ID: " . $this->ws_client->socket());
 		$this->on_ws_connected();
 	}
@@ -284,15 +302,15 @@ abstract class base_websocket_system_service extends service implements websocke
 	}
 
 	private function handle_ws_authenticated(websocket_message $websocket_message): void {
-		$this->info("Successfully authenticated with websocket server");
-		$this->on_ws_authenticated();
+		// Call the on authenticated event function in the child class to perform any necessary actions after authentication ie. logging
+		$this->on_ws_authenticated($websocket_message);
 	}
 
 	/**
 	 * Called when the service has successfully authenticated with the websocket server.
 	 * Override in child class to perform actions after authentication.
 	 */
-	protected function on_ws_authenticated(): void {
+	protected function on_ws_authenticated(websocket_message $websocket_message): void {
 		// Override in child class if needed
 	}
 
