@@ -1101,7 +1101,7 @@
 					}
 				//call disposition
 					if ($permission['xml_cdr_call_disposition']) {
-						$content .= "	<td class='middle no-wrap'><a href='".$list_row_url."'>".escape($xml_cdr_call_disposition)."</a></td>\n";
+						$content .= "	<td class='middle no-wrap'><a href='".$list_row_url."'>".escape($row['call_disposition'])."</a></td>\n";
 					}
 				//call status
 					if ($permission['xml_cdr_status']) {
