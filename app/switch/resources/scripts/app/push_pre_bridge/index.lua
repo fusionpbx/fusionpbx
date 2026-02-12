@@ -43,33 +43,78 @@
 	end
 	session:setVariable("push_pre_bridge_done", "true")
 
+--helpers
+	local function trim(value)
+		if (value == nil) then
+			return ""
+		end
+		return (tostring(value):gsub("^%s+", ""):gsub("%s+$", ""))
+	end
+
+	local function get_contact(api_handle, extension, domain)
+		local command = "sofia_contact */" .. extension .. "@" .. domain
+		return trim(api_handle:executeString(command))
+	end
+
+	local function has_active_registration(api_handle, extension, domain)
+		local command = "sofia status profile internal reg " .. extension .. "@" .. domain
+		local output = trim(api_handle:executeString(command))
+		if (output == "") then
+			return false
+		end
+		if (string.find(output, "Total items returned:%s*0")) then
+			return false
+		end
+		if (string.find(output, "No registrations")) then
+			return false
+		end
+		if (string.find(output, "error/")) then
+			return false
+		end
+		if (string.find(output, "Total items returned:%s*[1-9]")) then
+			return true
+		end
+		if (string.find(output, extension .. "@" .. domain)) then
+			return true
+		end
+		return false
+	end
+
 --check the registration status of the destination
 	local api = freeswitch.API()
-	local cmd = "sofia_contact */" .. destination_number .. "@" .. domain_name
-	local sofia_contact_result = api:executeString(cmd)
+	local sofia_contact_result = get_contact(api, destination_number, domain_name)
+	local registration_exists = has_active_registration(api, destination_number, domain_name)
 
 	freeswitch.consoleLog("INFO", "[push_pre_bridge] sofia_contact for " .. destination_number .. ": " .. tostring(sofia_contact_result) .. "\n")
+	freeswitch.consoleLog("INFO", "[push_pre_bridge] registration_exists for " .. destination_number .. ": " .. tostring(registration_exists) .. "\n")
 
 --determine if push is needed
 	local needs_push = false
-	local is_ws_contact = false
+	local push_reason = ""
 
 	if (sofia_contact_result == nil or sofia_contact_result == "" or sofia_contact_result == "error/user_not_registered") then
 		needs_push = true
-		freeswitch.consoleLog("NOTICE", "[push_pre_bridge] Extension " .. destination_number .. " is NOT registered - will send push\n")
+		push_reason = "not_registered"
 	elseif (sofia_contact_result ~= nil) then
 		-- Check for WebSocket contacts (likely stale when app is backgrounded on iOS)
 		if (string.find(sofia_contact_result, "transport=ws") or string.find(sofia_contact_result, "transport=wss")) then
-			is_ws_contact = true
 			needs_push = true
-			freeswitch.consoleLog("NOTICE", "[push_pre_bridge] Extension " .. destination_number .. " has WebSocket contact - sending push as backup\n")
+			push_reason = "websocket_contact"
 		end
+	end
+
+	-- Treat stale contacts with no active registration as offline.
+	if (not needs_push and not registration_exists) then
+		needs_push = true
+		push_reason = "stale_contact_no_registration"
 	end
 
 	if (not needs_push) then
 		freeswitch.consoleLog("DEBUG", "[push_pre_bridge] Extension " .. destination_number .. " is registered normally, no push needed\n")
 		return
 	end
+
+	freeswitch.consoleLog("NOTICE", "[push_pre_bridge] Sending wake push for " .. destination_number .. " reason=" .. push_reason .. "\n")
 
 --send push notification (wake only - backend won't store pending_call)
 	local uuid = session:getVariable("uuid") or ""
@@ -100,7 +145,7 @@
 	session:execute("ring_ready")
 
 --wait for the extension to register (up to 15 seconds, check every 2 seconds)
-	local max_wait = 15
+	local max_wait = 12
 	local check_interval = 2
 	local waited = 0
 
@@ -115,8 +160,7 @@
 		end
 
 		-- Check if extension is now registered
-		local contact = api:executeString(cmd)
-		if (contact ~= nil and contact ~= "" and contact ~= "error/user_not_registered") then
+		if (has_active_registration(api, destination_number, domain_name)) then
 			freeswitch.consoleLog("NOTICE", "[push_pre_bridge] Extension " .. destination_number .. " registered after " .. waited .. "s - continuing to bridge\n")
 			return
 		end
