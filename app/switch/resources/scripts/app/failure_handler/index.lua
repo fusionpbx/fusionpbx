@@ -206,7 +206,7 @@
 						end
 					end
 
-			elseif (originate_disposition == "NO_ANSWER") or (originate_disposition == "ALLOTTED_TIMEOUT") or (sip_code == "sip:480") then
+			elseif (originate_disposition == "NO_ANSWER") or (originate_disposition == "ALLOTTED_TIMEOUT") or ((sip_code == "sip:480") and (originate_disposition ~= "USER_NOT_REGISTERED") and (originate_disposition ~= "UNALLOCATED_NUMBER") and (originate_disposition ~= "NO_ROUTE_DESTINATION")) then
 
 				--handle NO_ANSWER
 				forward_no_answer_enabled = session:getVariable("forward_no_answer_enabled");
@@ -240,7 +240,7 @@
 
 						if (push_success) then
 							freeswitch.consoleLog("NOTICE", "[failure_handler] NO_ANSWER push sent - parking caller for backend bridge\n");
-							session:execute("set", "continue_on_fail=false");
+							session:execute("set", "continue_on_fail=true");
 							session:execute("set", "hangup_after_bridge=false");
 							session:execute("ring_ready");
 							session:execute("sched_hangup", "+45 NORMAL_CLEARING");
@@ -290,9 +290,10 @@
 
 						if (push_success) then
 							-- Push was sent; keep caller parked while backend does device-ready/originate/bridge
-							freeswitch.consoleLog("NOTICE", "[failure_handler] Push sent - parking caller for backend bridge\n");
-							session:execute("set", "continue_on_fail=false");
-							session:execute("set", "hangup_after_bridge=false");
+								freeswitch.consoleLog("NOTICE", "[failure_handler] Push sent - parking caller for backend bridge\n");
+								-- keep caller leg alive while mobile registers; do not hang up on originate failure
+								session:execute("set", "continue_on_fail=true");
+								session:execute("set", "hangup_after_bridge=false");
 							session:execute("ring_ready");
 							session:execute("sched_hangup", "+45 NORMAL_CLEARING");
 							session:execute("park");
