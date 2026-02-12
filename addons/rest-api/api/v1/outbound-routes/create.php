@@ -63,12 +63,14 @@ $database->save($array);
 $p->delete('dialplan_add', 'temp');
 $p->delete('dialplan_detail_add', 'temp');
 
+// Regenerate dialplan XML from details
+require_once dirname(__DIR__) . '/base.php';
+api_generate_dialplan_xml($dialplan_uuid);
+
 // Clear dialplan cache
 $cache = new cache;
-$dialplan_context = $request['dialplan_context'] ?? '${domain_name}';
-if ($dialplan_context == '${domain_name}' || $dialplan_context == 'global') {
-    $dialplan_context = '*';
-}
+$dialplan_context = $request['dialplan_context'] ?? $domain_name;
 $cache->delete('dialplan:' . $dialplan_context);
+$cache->delete('dialplan:*');
 
-api_success(['dialplan_uuid' => $dialplan_uuid], 'Outbound route created successfully');
+api_created(['dialplan_uuid' => $dialplan_uuid], 'Outbound route created successfully');

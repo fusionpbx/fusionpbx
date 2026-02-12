@@ -255,5 +255,94 @@ function api_build_filters($filters, $allowed_fields) {
     ];
 }
 
+/**
+ * Generate dialplan XML from details and save to database
+ *
+ * @param string $dialplan_uuid Dialplan UUID to generate XML for
+ */
+function api_generate_dialplan_xml($dialplan_uuid) {
+    $database = new database;
+
+    // Get dialplan info
+    $sql = "SELECT dialplan_uuid, dialplan_name, dialplan_continue FROM v_dialplans WHERE dialplan_uuid = :dialplan_uuid";
+    $dialplan = $database->select($sql, ['dialplan_uuid' => $dialplan_uuid], 'row');
+    if (empty($dialplan)) return;
+
+    // Get enabled details ordered by group then order
+    $sql = "SELECT dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data,
+                   dialplan_detail_break, dialplan_detail_inline, dialplan_detail_group
+            FROM v_dialplan_details
+            WHERE dialplan_uuid = :dialplan_uuid AND dialplan_detail_enabled = 'true'
+            ORDER BY CAST(dialplan_detail_group AS INTEGER) ASC, CAST(dialplan_detail_order AS INTEGER) ASC";
+    $details = $database->select($sql, ['dialplan_uuid' => $dialplan_uuid], 'all');
+    if (empty($details)) return;
+
+    // Group details
+    $groups = [];
+    foreach ($details as $detail) {
+        $group = $detail['dialplan_detail_group'] ?? '0';
+        $groups[$group][] = $detail;
+    }
+
+    $continue = ($dialplan['dialplan_continue'] === 'true' || $dialplan['dialplan_continue'] === true) ? 'true' : 'false';
+    $esc = function($v) { return htmlspecialchars($v ?? '', ENT_XML1 | ENT_QUOTES, 'UTF-8'); };
+
+    $xml = '<extension name="' . $esc($dialplan['dialplan_name']) . '" continue="' . $continue . '" uuid="' . $dialplan_uuid . '">' . "\n";
+
+    foreach ($groups as $group_details) {
+        $conditions = [];
+        $actions = [];
+        $anti_actions = [];
+
+        foreach ($group_details as $d) {
+            if ($d['dialplan_detail_tag'] === 'condition') {
+                $conditions[] = $d;
+            } elseif ($d['dialplan_detail_tag'] === 'action') {
+                $actions[] = $d;
+            } elseif ($d['dialplan_detail_tag'] === 'anti-action') {
+                $anti_actions[] = $d;
+            }
+        }
+
+        $last_idx = count($conditions) - 1;
+        foreach ($conditions as $idx => $cond) {
+            $field = $esc($cond['dialplan_detail_type']);
+            $expr = $esc($cond['dialplan_detail_data']);
+            $brk = !empty($cond['dialplan_detail_break']) ? ' break="' . $esc($cond['dialplan_detail_break']) . '"' : '';
+
+            if ($idx < $last_idx || (empty($actions) && empty($anti_actions))) {
+                $xml .= "\t<condition field=\"{$field}\" expression=\"{$expr}\"{$brk}/>\n";
+            } else {
+                $xml .= "\t<condition field=\"{$field}\" expression=\"{$expr}\"{$brk}>\n";
+                foreach ($actions as $a) {
+                    $inline = (!empty($a['dialplan_detail_inline']) && $a['dialplan_detail_inline'] === 'true') ? ' inline="true"' : '';
+                    $xml .= "\t\t<action application=\"" . $esc($a['dialplan_detail_type']) . '" data="' . $esc($a['dialplan_detail_data']) . '"' . $inline . "/>\n";
+                }
+                foreach ($anti_actions as $a) {
+                    $inline = (!empty($a['dialplan_detail_inline']) && $a['dialplan_detail_inline'] === 'true') ? ' inline="true"' : '';
+                    $xml .= "\t\t<anti-action application=\"" . $esc($a['dialplan_detail_type']) . '" data="' . $esc($a['dialplan_detail_data']) . '"' . $inline . "/>\n";
+                }
+                $xml .= "\t</condition>\n";
+            }
+        }
+    }
+
+    $xml .= '</extension>';
+
+    // Save XML to database
+    $update_array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
+    $update_array['dialplans'][0]['dialplan_xml'] = $xml;
+
+    $p = permissions::new();
+    $p->add('dialplan_edit', 'temp');
+
+    $db = new database;
+    $db->app_name = 'dialplans';
+    $db->app_uuid = '742714e5-8cdf-32fd-462c-cbe7e3d655db';
+    $db->save($update_array);
+
+    $p->delete('dialplan_edit', 'temp');
+}
+
 // Auto-authenticate when base.php is loaded
 validate_api_key();

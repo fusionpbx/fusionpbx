@@ -80,6 +80,7 @@ if (isset($request['details']) && is_array($request['details'])) {
 // Grant permissions
 $p = permissions::new();
 $p->add('dialplan_edit', 'temp');
+$p->add('dialplan_detail_add', 'temp');
 $p->add('dialplan_detail_edit', 'temp');
 
 // Save to database
@@ -89,14 +90,17 @@ $database->app_uuid = '4b821450-926b-175a-af93-a03c441f8c30';
 $database->save($array);
 
 $p->delete('dialplan_edit', 'temp');
+$p->delete('dialplan_detail_add', 'temp');
 $p->delete('dialplan_detail_edit', 'temp');
+
+// Regenerate dialplan XML from details
+require_once dirname(__DIR__) . '/base.php';
+api_generate_dialplan_xml($dialplan_uuid);
 
 // Clear dialplan cache
 $cache = new cache;
-$dialplan_context = $request['dialplan_context'] ?? '${domain_name}';
-if ($dialplan_context == '${domain_name}' || $dialplan_context == 'global') {
-    $dialplan_context = '*';
-}
+$dialplan_context = $request['dialplan_context'] ?? $domain_name;
 $cache->delete('dialplan:' . $dialplan_context);
+$cache->delete('dialplan:*');
 
 api_success(['dialplan_uuid' => $dialplan_uuid], 'Time condition updated successfully');
