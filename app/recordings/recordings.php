@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -146,9 +146,14 @@
 //upload the recording
 	if ($action == "upload" && permission_exists('recording_upload') && is_uploaded_file($_FILES['file']['tmp_name'])) {
 
+		//get the file name and extension
+			$file_name = pathinfo($_FILES['file']['name'], PATHINFO_FILENAME);
+			$file_ext = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
+
 		//remove special characters
 			$recording_filename = str_replace(" ", "_", $_FILES['file']['name']);
 			$recording_filename = str_replace("'", "", $recording_filename);
+			$recording_filename = $file_name.'.'.$file_ext;
 
 		//make sure the destination directory exists
 			if (!is_dir($switch_recordings.'/'.$domain_name)) {
@@ -412,9 +417,10 @@
 //file type check script
 	echo "<script language='JavaScript' type='text/javascript'>\n";
 	echo "	function check_file_type(file_input) {\n";
-	echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2);\n";
+	echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2).toLowerCase();\n";
 	echo "		if (file_ext != 'mp3' && file_ext != 'wav' && file_ext != 'ogg' && file_ext != '') {\n";
 	echo "			display_message(\"".$text['message-unsupported_file_type']."\", 'negative', '2750');\n";
+	echo "			document.getElementById('form_upload').reset();\n";
 	echo "		}\n";
 	echo "	}\n";
 	echo "</script>";
