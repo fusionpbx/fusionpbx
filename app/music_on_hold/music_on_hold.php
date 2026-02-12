@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -124,7 +124,7 @@
 					header("Content-Description: File Transfer");
 				}
 				else {
-					$stream_file_ext = pathinfo($stream_file, PATHINFO_EXTENSION);
+					$stream_file_ext = strtolower(pathinfo($stream_file, PATHINFO_EXTENSION));
 					switch ($stream_file_ext) {
 						case "wav" : header("Content-Type: audio/x-wav"); break;
 						case "mp3" : header("Content-Type: audio/mpeg"); break;
@@ -203,19 +203,20 @@
 
 		//get remaining values
 			$stream_file_name_temp = $_FILES['file']['tmp_name'];
-			$stream_file_name = $_FILES['file']['name'];
-			$stream_file_ext = strtolower(pathinfo($stream_file_name, PATHINFO_EXTENSION));
+			$stream_file_name = pathinfo($_FILES['file']['name'], PATHINFO_FILENAME);
+			$stream_file_ext = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
 
 		//check file type
 			$valid_file_type = ($stream_file_ext == 'wav' || $stream_file_ext == 'mp3' || $stream_file_ext == 'ogg') ? true : false;
 
 		//proceed for valid file type
-			if ($stream_file_ext == 'wav' || $stream_file_ext == 'mp3' || $stream_file_ext == 'ogg') {
+			if ($valid_file_type) {
 
 				//strip slashes, replace spaces
 					$slashes = ["/","\\"];
 					$stream_file_name = str_replace($slashes, '', $stream_file_name);
 					$stream_file_name = str_replace(' ', '-', $stream_file_name);
+					$stream_file_name = $stream_file_name.'.'.$stream_file_ext;
 					if ($action == "add") {
 						$stream_name = str_replace($slashes, '', $stream_name);
 						$stream_name = str_replace(' ', '_', $stream_name);
@@ -328,9 +329,10 @@
 
 	//file type check
 		echo "	function check_file_type(file_input) {\n";
-		echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2);\n";
+		echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2).toLowerCase();\n";
 		echo "		if (file_ext != 'mp3' && file_ext != 'wav' && file_ext != 'ogg' && file_ext != '') {\n";
 		echo "			display_message(\"".$text['message-unsupported_file_type']."\", 'negative', '2750');\n";
+		echo "			document.getElementById('form_upload').reset();\n";
 		echo "		}\n";
 		echo "	}\n";
 
