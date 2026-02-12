@@ -87,6 +87,7 @@
 	$permission['xml_cdr_recording_download'] = permission_exists('xml_cdr_recording_download');
 	$permission['xml_cdr_account_code'] = permission_exists('xml_cdr_account_code');
 	$permission['xml_cdr_status'] = permission_exists('xml_cdr_status');
+	$permission['xml_cdr_call_disposition'] = permission_exists('xml_cdr_call_disposition');
 	$permission['xml_cdr_details'] = permission_exists('xml_cdr_details');
 	$permission['xml_cdr_lose_race'] = permission_exists('xml_cdr_lose_race');
 	$permission['xml_cdr_cc_agent_leg'] = permission_exists('xml_cdr_cc_agent_leg');
@@ -813,6 +814,10 @@
 		echo "<th class='center hide-sm-dn'>".$text['label-duration']."</th>\n";
 		$col_count++;
 	}
+	if ($permission['xml_cdr_call_disposition']) {
+		echo "<th class='shrink'>".$text['label-disposition']."</th>\n";
+		$col_count++;
+	}
 	if ($permission['xml_cdr_status']) {
 		echo "<th class='shrink'>".$text['label-status']."</th>\n";
 		$col_count++;
@@ -1094,7 +1099,11 @@
 					if ($permission['xml_cdr_duration']) {
 						$content .= "	<td class='middle center hide-sm-dn'>".gmdate("G:i:s", $duration)."</td>\n";
 					}
-				//call result/status
+				//call disposition
+					if ($permission['xml_cdr_call_disposition']) {
+						$content .= "	<td class='middle no-wrap'><a href='".$list_row_url."'>".escape($row['call_disposition'])."</a></td>\n";
+					}
+				//call status
 					if ($permission['xml_cdr_status']) {
 						$content .= "	<td class='middle no-wrap'><a href='".$list_row_url."'>".escape($text['label-'.$status] ?? '')."</a></td>\n";
 					}
