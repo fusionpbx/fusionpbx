@@ -1041,8 +1041,7 @@
 					--record the session
 						if (record_session) then
 							session:setVariable("record_stereo", "true");
-							record_session = ",api_on_answer='uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "',record_path='".. record_path .."',record_name="..record_name;
-							session:setVariable("record_path", record_path);
+							record_session = ",uuid_record_result='${uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "}',record_path='".. record_path .."',record_name="..record_name;							session:setVariable("record_path", record_path);
 						else
 							record_session = '';
 						end
