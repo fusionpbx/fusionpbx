@@ -429,7 +429,7 @@
 						local record_ext = session:getVariable("record_ext") or "wav";
 						local record_name = uuid.."."..record_ext;
 						local record_path = recordings_dir .. "/" .. domain_name .. "/archive/" .. os.date("%Y/%b/%d");
-						record_session = ",api_on_answer='uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "',record_path='".. record_path .."',record_name="..record_name;
+						record_session = ",uuid_record_result='${uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "}',record_path='".. record_path .."',record_name="..record_name;
 					end
 				end
 
