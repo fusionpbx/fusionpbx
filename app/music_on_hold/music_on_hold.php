@@ -124,7 +124,7 @@
 					header("Content-Description: File Transfer");
 				}
 				else {
-					$stream_file_ext = strtolower(pathinfo($stream_file, PATHINFO_EXTENSION));
+					$stream_file_ext = pathinfo($stream_file, PATHINFO_EXTENSION);
 					switch ($stream_file_ext) {
 						case "wav" : header("Content-Type: audio/x-wav"); break;
 						case "mp3" : header("Content-Type: audio/mpeg"); break;
