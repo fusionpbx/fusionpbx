@@ -178,8 +178,8 @@
 		}
 
 		//get the file extension
-		$file_ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
 		$file_name = $_FILES['file']['name'];
+		$file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
 
 		//define the allowed file extensions
 		$allowed_extensions = ['wav', 'mp3', 'ogg'];
@@ -239,7 +239,7 @@
 			$array['voicemail_greetings'][$x]['greeting_filename'] = $greeting_file_name;
 			$array['voicemail_greetings'][$x]['greeting_description'] = '';
 			if (!empty($settings->get('voicemail', 'storage_type')) && $settings->get('voicemail', 'storage_type') == 'base64') {
-				$array['voicemail_greetings'][$x]['greeting_base64'] = base64_encode(file_get_contents($greeting_dir.'/'.$file_name));
+				$array['voicemail_greetings'][$x]['greeting_base64'] = base64_encode(file_get_contents($greeting_dir.'/'.$greeting_file_name));
 			}
 
 			//save the array
@@ -356,7 +356,7 @@
 //file type check script
 	echo "<script language='JavaScript' type='text/javascript'>\n";
 	echo "	function check_file_type(file_input) {\n";
-	echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2);\n";
+	echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2).toLowerCase();\n";
 	echo "		if (file_ext != 'mp3' && file_ext != 'wav' && file_ext != 'ogg' && file_ext != '') {\n";
 	echo "			display_message(\"".$text['message-unsupported_file_type']."\", 'negative', '2750');\n";
 	echo "			document.getElementById('form_upload').reset();\n";
