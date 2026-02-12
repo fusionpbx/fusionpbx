@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__DIR__) . '/auth.php';
+require_once dirname(__DIR__) . '/base.php';
 require_once dirname(__DIR__, 5) . '/app/extensions/resources/classes/extension.php';
 validate_api_key();
 

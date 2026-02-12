@@ -106,7 +106,8 @@ $valid_endpoints = [
     'queues',
     'logs',
     'conference-centers',
-    'monitoring'
+    'monitoring',
+    'recordings'
 ];
 
 // Extract endpoint and UUID
@@ -121,7 +122,7 @@ if (!in_array($endpoint, $valid_endpoints)) {
 $nested_endpoints = [
     'fax' => ['accounts', 'files', 'logs'],
     'call-centers' => ['queues', 'agents', 'statistics'],
-    'logs' => ['security', 'emergency', 'audit'],
+    'logs' => ['security', 'emergency', 'audit', 'freeswitch'],
     'queues' => ['email', 'fax'],
     'conference-centers' => ['centers', 'rooms', 'profiles'],
     'access-controls' => ['nodes'],
