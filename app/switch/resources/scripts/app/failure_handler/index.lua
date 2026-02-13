@@ -245,6 +245,10 @@
 							session:execute("ring_ready");
 							session:execute("sched_hangup", "+45 NORMAL_CLEARING");
 							session:execute("park");
+							-- Park returned: caller hung up, sched_hangup fired, or call was bridged and ended.
+							-- Notify backend to send call_ended push and dismiss CallKit on callee's phone.
+							-- Safe no-op if the call was already handled (pending data cleared by deviceReady).
+							push_gateway.notify_hangup(uuid);
 							return;
 
 
@@ -297,6 +301,9 @@
 							session:execute("ring_ready");
 							session:execute("sched_hangup", "+45 NORMAL_CLEARING");
 							session:execute("park");
+							-- Park returned: caller hung up, sched_hangup fired, or call was bridged and ended.
+							-- Notify backend to send call_ended push and dismiss CallKit on callee's phone.
+							push_gateway.notify_hangup(uuid);
 							return;
 						else
 							freeswitch.consoleLog("NOTICE", "[failure_handler] No devices or push failed\n");

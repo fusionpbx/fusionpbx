@@ -166,6 +166,8 @@
 		-- Check if caller hung up
 		if (not session:ready()) then
 			freeswitch.consoleLog("NOTICE", "[push_pre_bridge] Caller hung up while waiting for registration\n")
+			-- Notify backend to send call_ended push and dismiss CallKit on callee's phone
+			push_gateway.notify_hangup(uuid)
 			return
 		end
 
