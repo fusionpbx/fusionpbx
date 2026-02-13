@@ -406,6 +406,11 @@
 						if (!empty($row["phone_speed_dial"])) {
 							$cache = new cache;
 							$cache->delete("app.dialplan.speed_dial.".$row["phone_speed_dial"]."@".$_SESSION['domain_name']);
+							$cache->delete("app:caller_id:lookup:domain_name:" . $_SESSION['domain_name'] . ":" . $row["phone_number"]);
+							if (!empty($row["phone_country_code"])) {
+								$cache->delete("app:caller_id:lookup:domain_name:" . $_SESSION['domain_name'] . ":" . $row["phone_country_code"] . $row["phone_number"]);
+								$cache->delete("app:caller_id:lookup:domain_name:" . $_SESSION['domain_name'] . ":+" . $row["phone_country_code"] . $row["phone_number"]);
+							}
 						}
 
 						//increment the row id
