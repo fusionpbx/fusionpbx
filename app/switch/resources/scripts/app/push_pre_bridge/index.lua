@@ -147,14 +147,17 @@
 	end
 
 --wait for the extension to register (up to 12 seconds)
---play US ringback tone so the caller hears ringing instead of silence
+--play hold music so the caller hears something while waiting
 	local max_wait = 12
+	local check_interval = 6
 	local waited = 0
 
 	while (waited < max_wait) do
-		-- Play one ring cycle: 2s tone + 4s silence = 6 seconds
-		session:execute("playback", "tone_stream://%(2000,4000,440.0,480.0);loops=1")
-		waited = waited + 6
+		-- Schedule a break after check_interval seconds to stop the music and check registration
+		api:executeString("sched_api +" .. check_interval .. " none uuid_break " .. uuid .. " all")
+		-- Play hold music (will be interrupted by uuid_break after check_interval seconds)
+		session:execute("playback", "local_stream://default/8000")
+		waited = waited + check_interval
 
 		-- Check if caller hung up
 		if (not session:ready()) then
