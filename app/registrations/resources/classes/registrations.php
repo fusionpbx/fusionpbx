@@ -407,7 +407,7 @@ class registrations {
 							if (!empty($profile) && $user) {
 								switch ($action) {
 									case 'unregister':
-										$command          = "sofia profile " . $profile . " flush_inbound_reg " . $user . " reboot";
+										$command          = "sofia profile " . $profile . " flush_inbound_reg " . $user;
 										$response_message = $text['message-registrations_unregistered'];
 										break;
 									case 'provision':
