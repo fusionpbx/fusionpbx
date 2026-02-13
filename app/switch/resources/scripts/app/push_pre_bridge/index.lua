@@ -142,7 +142,10 @@
 	freeswitch.consoleLog("NOTICE", "[push_pre_bridge] Push sent for " .. destination_number .. " - waiting for registration\n")
 
 --play ringback while waiting
-	session:execute("ring_ready")
+	local call_answered = session:answered()
+	if (not call_answered) then
+		session:execute("ring_ready")
+	end
 
 --wait for the extension to register (up to 15 seconds, check every 2 seconds)
 	local max_wait = 12
@@ -150,8 +153,15 @@
 	local waited = 0
 
 	while (waited < max_wait) do
-		session:execute("sleep", tostring(check_interval * 1000))
-		waited = waited + check_interval
+		if (call_answered) then
+			-- Call already answered (e.g. post-IVR transfer), play ringback tone
+			-- ring_ready does nothing on answered calls, so we must actively play audio
+			session:execute("playback", "tone_stream://%(2000,4000,440.0,480.0);loops=1")
+			waited = waited + 6
+		else
+			session:execute("sleep", tostring(check_interval * 1000))
+			waited = waited + check_interval
+		end
 
 		-- Check if caller hung up
 		if (not session:ready()) then
