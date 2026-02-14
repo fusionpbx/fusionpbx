@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2015 - 2023
+	Copyright (C) 2015 - 2026
 	All Rights Reserved.
 
 	Contributor(s):
@@ -409,7 +409,7 @@ class call_center {
 					//clear the cache
 					$cache = new cache;
 					$cache->delete("dialplan:" . $this->domain_name);
-					remove_config_from_cache('configuration:callcenter.conf');
+					$cache->delete('configuration:callcenter.conf');
 
 					//clear the destinations session array
 					if (isset($_SESSION['destinations']['array'])) {
@@ -506,13 +506,113 @@ class call_center {
 
 					//synchronize configuration
 					save_call_center_xml();
-					remove_config_from_cache('configuration:callcenter.conf');
+
+					//clear the cache
+					$cache = new cache;
+					$cache->delete('configuration:callcenter.conf');
 
 					//set message
 					message::add($text['message-delete']);
 				}
 				unset($records);
 			}
+		}
+	}
+
+	/**
+	 * Remove one or more agents from a call center queue by deleting the tier assignment
+	 *
+	 * @param array $records A list of records to delete, where each record is an associative array containing a 'uuid'
+	 *                       key.
+	 *
+	 * @return void
+	 */
+	public function delete_tiers($records) {
+
+		//permission doesn't exist return now
+		if (!permission_exists('call_center_tier_delete')) {
+			return;
+		}
+
+		//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'], 'negative');
+			header('Location: ' . $this->list_page);
+			exit;
+		}
+
+		//delete multiple records
+		if (is_array($records) && @sizeof($records) != 0) {
+
+			//delete the tier to remove the agent from the queue
+			$x = 0;
+			foreach ($records as $record) {
+				//not checked skip this row
+				if (empty($record['checked'])) {
+					continue;
+				}
+
+				// //not a valid uuid skip this row
+				if (!is_uuid($record['uuid'])) {
+					continue;
+				}
+
+				//get the agent details
+				$sql = "select t.call_center_agent_uuid, t.call_center_queue_uuid, q.queue_extension  ";
+				$sql .= "from v_call_center_tiers as t, v_call_center_queues as q ";
+				$sql .= "where t.domain_uuid = :domain_uuid  ";
+				$sql .= "and t.call_center_tier_uuid = :call_center_tier_uuid ";
+				$sql .= "and t.call_center_queue_uuid = q.call_center_queue_uuid; ";
+				$parameters['domain_uuid'] = $this->domain_uuid;
+				$parameters['call_center_tier_uuid'] = $record['uuid'];
+				$tiers = $this->database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
+				if (!empty($tiers)) {
+					foreach ($tiers as $row) {
+						$call_center_agent_uuid = $row["call_center_agent_uuid"];
+						$call_center_queue_uuid = $row["call_center_queue_uuid"];
+						$queue_extension = $row["queue_extension"];
+					}
+				}
+
+				//delete the agent from freeswitch
+				//setup the event socket connection
+				$esl = event_socket::create();
+
+				//remove the tier to unassign the agent from the queue
+				if ($esl->is_connected()) {
+					//callcenter_config tier del [queue_name] [agent_name]
+					if (is_numeric($queue_extension) && is_uuid($call_center_agent_uuid)) {
+						$cmd = "callcenter_config tier del ".$queue_extension."@".$this->domain_name." ".$call_center_agent_uuid;
+						$response = event_socket::api($cmd);
+					}
+				}
+
+				//build the delete array
+				if (!empty($record['uuid'])) {
+					$array['call_center_tiers'][$x]['domain_uuid'] = $this->domain_uuid;
+					$array['call_center_tiers'][$x]['call_center_tier_uuid'] = $record['uuid'];
+				}
+
+				//increment the $id
+				$x++;
+			}
+
+			//delete the tier from the database
+			if (!empty($array)) {
+				$p = permissions::new();
+				$p->add('call_center_tier_delete', 'temp');
+
+				$this->database->delete($array);
+				unset($array);
+
+				$p->delete('call_center_tier_delete', 'temp');
+			}
+
+			//clear the cache
+			$cache = new cache;
+			$cache->delete('configuration:callcenter.conf');
 		}
 	}
 

@@ -132,6 +132,7 @@
 			$queue_cc_exit_keys = $_POST["queue_cc_exit_keys"] ?? null;
 			$queue_email_address = $_POST["queue_email_address"] ?? null;
 			$queue_description = $_POST["queue_description"];
+			$call_center_tier_delete = $_POST["call_center_tier_delete"] ?? null;
 
 		//set the context for users that do not have the permission
 			if (permission_exists('call_center_queue_context')) {
@@ -216,7 +217,7 @@
 			}
 
 		//if the user doesn't have the correct permission then
-		//override domain_uuid and queue_context values
+			//override domain_uuid and queue_context values
 			if ($action == 'update' && is_uuid($call_center_queue_uuid)) {
 				$sql = "select * from v_call_center_queues ";
 				$sql .= "where call_center_queue_uuid = :call_center_queue_uuid ";
@@ -480,6 +481,12 @@
 		//remove the temporary permission
 			$p->delete("dialplan_add", "temp");
 			$p->delete("dialplan_edit", "temp");
+
+		//remove checked options
+			if ($action == 'update' && permission_exists('call_center_tier_delete') && !empty($call_center_tier_delete)) {
+				$obj = new call_center;
+				$obj->delete_tiers($call_center_tier_delete);
+			}
 
 		//debug info
 			//echo "<pre>". print_r($message, true) ."</pre>"; exit;
@@ -1036,7 +1043,12 @@
 		echo "				<td class='vtable'>".$text['label-agent_name']."</td>\n";
 		echo "				<td class='vtable' style='text-align: center;'>".$text['label-tier_level']."</td>\n";
 		echo "				<td class='vtable' style='text-align: center;'>".$text['label-tier_position']."</td>\n";
-		echo "				<td></td>\n";
+		if (permission_exists('call_center_tier_delete')) {
+			echo "					<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_options', 'delete_toggle_options');\" onmouseout=\"swap_display('delete_label_options', 'delete_toggle_options');\">\n";
+			echo "						<span id='delete_label_options'>".$text['label-delete']."</span>\n";
+			echo "						<span id='delete_toggle_options'><input type='checkbox' id='checkbox_all_options' name='checkbox_all' onclick=\"edit_all_toggle('options');\"></span>\n";
+			echo "					</td>\n";
+		}
 		echo "			</tr>\n";
 		$x = 0;
 		if (is_array($tiers)) {
@@ -1079,11 +1091,17 @@
 				}
 				echo "				</select>\n";
 				echo "		</td>\n";
-				echo "		<td class=''>";
 				if (permission_exists('call_center_tier_delete')) {
-					echo "			<a href=\"call_center_queue_edit.php?id=".escape($call_center_queue_uuid)."&call_center_tier_uuid=".escape($field['call_center_tier_uuid'])."&a=delete\" alt=\"".$text['button-delete']."\" onclick=\"return confirm('".$text['confirm-delete']."');\">$v_link_label_delete</a>";
+					if (!empty($field['call_center_agent_uuid']) && is_uuid($field['call_center_agent_uuid'])) {
+						echo "<td class='vtable' style='text-align: center; padding-bottom: 3px;'>";
+						echo "	<input type='checkbox' name='call_center_tier_delete[".$x."][checked]' value='true' class='chk_delete checkbox_options' onclick=\"edit_delete_action('options');\">\n";
+						echo "	<input type='hidden' name='call_center_tier_delete[".$x."][uuid]' value='".escape($field['call_center_tier_uuid'])."' />\n";
+					}
+					else {
+						echo "<td>";
+					}
+					echo "</td>\n";
 				}
-				echo "		</td>\n";
 				echo "	</tr>\n";
 				$assigned_agents[] = $field['agent_name'];
 				$x++;
