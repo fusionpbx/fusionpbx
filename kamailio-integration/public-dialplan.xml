@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<include>
+  <context name="public">
+    <!-- Inbound from Twilio: +13473219560 -->
+    <extension name="inbound_13473219560" continue="false">
+      <condition field="destination_number" expression="^\+?(1?3473219560)$">
+        <action application="export" data="call_direction=inbound" inline="true"/>
+        <action application="set" data="domain_uuid=9f21e78b-e4c6-4232-b50d-8d03148ac8f1" inline="true"/>
+        <action application="set" data="domain_name=davinci-tech-solutions.voip.davincitechsolutions.us" inline="true"/>
+        <action application="transfer" data="6000 XML davinci-tech-solutions.voip.davincitechsolutions.us"/>
+      </condition>
+    </extension>
+
+    <!-- Catch-all for other inbound -->
+    <extension name="not-found">
+      <condition field="destination_number" expression="^(.*)$">
+        <action application="log" data="WARNING [public] inbound call not routed: ${destination_number} from ${caller_id_number}"/>
+        <action application="hangup" data="NO_ROUTE_DESTINATION"/>
+      </condition>
+    </extension>
+  </context>
+</include>

@@ -10,3 +10,19 @@ secure/*.sqlite
 *.php~
 
 app/yealink/resources/firmware/*
+
+# IDE
+.idea/
+
+# OMC (oh-my-claudecode) state files
+.omc/
+
+# Test configuration (contains credentials)
+addons/rest-api/tests/api/config.php
+addons/rest-api/tests/performance/config.php
+addons/rest-api/tests/performance/results/
+
+# Temporary/cache files
+/tmp/
+*.cache
+*.log

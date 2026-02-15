@@ -1,0 +1,87 @@
+<?php
+/**
+ * FusionPBX Performance Benchmark Configuration
+ *
+ * Copy this file to config.php and update with your test environment settings.
+ * IMPORTANT: Never commit config.php with actual credentials to version control.
+ */
+
+// ========================================
+// API Configuration
+// ========================================
+
+/**
+ * Base URL for the API endpoint
+ * Examples:
+ *   - http://localhost/api
+ *   - https://test.fusionpbx.local/api
+ *   - http://192.168.1.100/api
+ */
+define('PERF_API_BASE_URL', 'http://localhost/api');
+
+/**
+ * Test API key
+ * This should be a valid API key in your test database.
+ * Create one using the FusionPBX web interface or directly in the database.
+ */
+define('PERF_API_KEY', 'test-api-key-123');
+
+/**
+ * Test domain name
+ * This should be a valid domain in your test database.
+ * The API key must be associated with this domain.
+ */
+define('PERF_DOMAIN', 'test.example.com');
+
+// ========================================
+// Performance Benchmark Configuration
+// ========================================
+
+/**
+ * Number of warmup requests before measurements
+ * These requests are discarded to eliminate cold start effects
+ */
+define('PERF_WARMUP_REQUESTS', 5);
+
+/**
+ * Number of measurement iterations for each test
+ * More iterations = more accurate percentile calculations
+ */
+define('PERF_ITERATIONS', 100);
+
+/**
+ * Number of concurrent requests for load testing
+ */
+define('PERF_CONCURRENT_REQUESTS', 10);
+
+/**
+ * Test data sizes
+ */
+define('PERF_SMALL_DATASET_SIZE', 100);
+define('PERF_LARGE_DATASET_SIZE', 1000);
+
+/**
+ * Performance targets in milliseconds
+ */
+define('PERF_TARGET_LIST_100_P50', 50);    // List 100 items - P50 latency
+define('PERF_TARGET_LIST_1000_P95', 100);  // List 1000 items - P95 latency
+define('PERF_TARGET_GET_SINGLE', 20);      // Get single item
+define('PERF_TARGET_CREATE', 100);         // Create item
+define('PERF_TARGET_UPDATE', 100);         // Update item
+define('PERF_TARGET_DELETE', 50);          // Delete item
+define('PERF_TARGET_SEARCH', 100);         // Search/filter
+
+/**
+ * Enable detailed output during benchmarks
+ */
+define('PERF_VERBOSE', false);
+
+/**
+ * Output format: 'text', 'json', 'csv'
+ */
+define('PERF_OUTPUT_FORMAT', 'text');
+
+/**
+ * Results directory for storing benchmark outputs
+ */
+define('PERF_RESULTS_DIR', __DIR__ . '/results');
