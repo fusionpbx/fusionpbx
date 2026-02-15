@@ -55,12 +55,6 @@
 	local play_file   = require "resources.functions.play_file"
 	local send_mail = require 'resources.functions.send_mail'
 
---load push gateway module for mobile push notifications
-	local push_gateway_module = nil
-	pcall(function()
-		push_gateway_module = require "resources.functions.push_gateway"
-	end)
-
 --define hex_to_char function
 	local hex_to_char = function(x)
 		return string.char(tonumber(x, 16))
@@ -843,38 +837,9 @@
 					cmd = "sofia_contact */".. row.destination_number .."@" ..domain_name;
 					sofia_contact_result = api:executeString(cmd);
 
-						--determine if the user is registered if not registered then lookup
-						local ws_contact_requires_push = false;
-						if (sofia_contact_result ~= nil and sofia_contact_result ~= "error/user_not_registered") then
-							if (string.find(sofia_contact_result, "transport=ws") or string.find(sofia_contact_result, "transport=wss")) then
-								ws_contact_requires_push = true;
-							end
-						end
-
-						if (sofia_contact_result == "error/user_not_registered" or (call_direction == "inbound" and ws_contact_requires_push)) then
-							if (ws_contact_requires_push) then
-								freeswitch.consoleLog("NOTICE", "[ring_group][push] WS contact for " .. row.destination_number .. " - forcing push wake path\n");
-								sofia_contact_result = "error/user_not_registered";
-							end
-
-							freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
-
-						--PUSH GATEWAY: Send push notification to wake mobile app
-						if (push_gateway_module) then
-							pcall(function()
-								local uuid = session:getVariable("uuid") or ""
-								local caller_id_number = session:getVariable("caller_id_number") or ""
-								local caller_id_name = session:getVariable("caller_id_name") or ""
-									local push_ok = push_gateway_module.trigger(session, uuid, caller_id_number, caller_id_name, row.destination_number, domain_name, domain_uuid)
-									if (push_ok) then
-										row.push_sent = true
-										row.destination_delay = "10"
-										sofia_contact_result = "error/user_not_registered";
-										freeswitch.consoleLog("NOTICE", "[ring_group][push] Push sent for " .. row.destination_number .. ", adding with 10s delay\n")
-									end
-								end)
-							end
-
+					--determine if the user is registered if not registered then lookup
+					if (sofia_contact_result == "error/user_not_registered") then
+						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
 						cmd = "user_data ".. row.destination_number .."@" ..domain_name.." var forward_user_not_registered_enabled";
 						freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
 						if (api:executeString(cmd) == "true") then
@@ -1130,14 +1095,10 @@
 							end
 							dial_string_user = dial_string_user .. "presence_id=" .. row.destination_number .. "@"..domain_name..",";
 							dial_string_user = dial_string_user .. "extension_uuid="..extension_uuid..record_session.."]";
-								user_contact = api:executeString("sofia_contact */".. row.destination_number .."@" ..domain_name);
-								if (row.push_sent) then
-									--Push was sent, use user/ format with delay to allow time for SIP registration
-									dial_string = dial_string_user .. "user/" .. row.destination_number .. "@" .. domain_name;
-									freeswitch.consoleLog("NOTICE", "[ring_group][push] Adding push-woken ext " .. row.destination_number .. " to bridge with user/ format\n")
-								elseif (user_contact ~= "error/user_not_registered") then
-									dial_string = dial_string_user .. user_contact;
-								end
+							user_contact = api:executeString("sofia_contact */".. row.destination_number .."@" ..domain_name);
+							if (user_contact ~= "error/user_not_registered") then
+								dial_string = dial_string_user .. user_contact;
+							end
 							if (verto_enabled == 'true') then
 								dial_string = dial_string .. ","..api:executeString("verto_contact ".. row.destination_number .."@" ..domain_name);
 							end

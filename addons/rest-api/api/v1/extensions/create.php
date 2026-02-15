@@ -40,6 +40,10 @@ $array['extensions'][0]['limit_destination'] = $request['limit_destination'] ?? 
 $array['extensions'][0]['user_context'] = $domain_name;
 $array['extensions'][0]['enabled'] = $request['enabled'] ?? 'true';
 $array['extensions'][0]['description'] = $request['description'] ?? '';
+$array['extensions'][0]['call_group'] = $request['call_group'] ?? '';
+$array['extensions'][0]['hold_music'] = $request['hold_music'] ?? '';
+$array['extensions'][0]['toll_allow'] = $request['toll_allow'] ?? '';
+$array['extensions'][0]['user_record'] = $request['user_record'] ?? 'all';
 
 // Grant permissions
 $p = permissions::new();

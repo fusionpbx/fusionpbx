@@ -3,7 +3,7 @@ require_once dirname(__DIR__) . '/auth.php';
 validate_api_key();
 
 $page = intval($_GET['page'] ?? 1);
-$per_page = min(intval($_GET['per_page'] ?? 50), 100);
+$per_page = min(intval($_GET['per_page'] ?? $_GET['page_size'] ?? 50), 100);
 $offset = ($page - 1) * $per_page;
 
 // Build WHERE clause

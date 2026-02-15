@@ -37,9 +37,6 @@
 --load libraries
 	require 'resources.functions.send_mail'
 
---load push gateway for mobile app notifications
-	local push_gateway = require "resources.functions.push_gateway"
-
 --check the missed calls
 	function missed()
 		if (missed_call_app ~= nil and missed_call_data ~= nil) then
@@ -149,26 +146,13 @@
 			freeswitch.consoleLog("INFO", "[failure_handler] sip_code: " .. tostring(sip_code) .. "\n");
 		end
 
-			if (originate_causes ~= nil) then
-				array = explode("|",originate_causes);
-				if (string.find(array[1], "USER_BUSY")) or (sip_code == "sip:486") then
-					originate_disposition = "USER_BUSY";
-					session:setVariable("originate_disposition", originate_disposition);
-				end
+		if (originate_causes ~= nil) then
+			array = explode("|",originate_causes);
+			if (string.find(array[1], "USER_BUSY")) or (sip_code == "sip:486") then
+				originate_disposition = "USER_BUSY";
+				session:setVariable("originate_disposition", originate_disposition);
 			end
-
-			-- Some multi-leg originate paths can collapse to ORIGINATOR_CANCEL even when
-			-- the underlying first failure was USER_NOT_REGISTERED/NO_ANSWER.
-			-- Normalize those cases so push fallback still runs.
-			if (originate_disposition == "ORIGINATOR_CANCEL" and originate_causes ~= nil) then
-				if (string.find(originate_causes, "USER_NOT_REGISTERED")) then
-					originate_disposition = "USER_NOT_REGISTERED";
-					session:setVariable("originate_disposition", originate_disposition);
-				elseif (string.find(originate_causes, "NO_ANSWER")) or (string.find(originate_causes, "ALLOTTED_TIMEOUT")) then
-					originate_disposition = "NO_ANSWER";
-					session:setVariable("originate_disposition", originate_disposition);
-				end
-			end
+		end
 
 		if (originate_disposition ~= nil) then
 			if (originate_disposition == 'USER_BUSY') then
@@ -206,7 +190,7 @@
 						end
 					end
 
-			elseif (originate_disposition == "NO_ANSWER") or (originate_disposition == "ALLOTTED_TIMEOUT") or ((sip_code == "sip:480") and (originate_disposition ~= "USER_NOT_REGISTERED") and (originate_disposition ~= "UNALLOCATED_NUMBER") and (originate_disposition ~= "NO_ROUTE_DESTINATION")) then
+			elseif (originate_disposition == "NO_ANSWER") or (originate_disposition == "ALLOTTED_TIMEOUT") or (sip_code == "sip:480") then
 
 				--handle NO_ANSWER
 				forward_no_answer_enabled = session:getVariable("forward_no_answer_enabled");
@@ -219,53 +203,17 @@
 						freeswitch.consoleLog("NOTICE", "[failure_handler] forwarding no answer to: " .. forward_no_answer_destination .. "\n");
 						session:transfer(forward_no_answer_destination, "XML", context);
 					end
-					else
-						-- For stale SIP registrations, NO_ANSWER can happen even when app is offline.
-						-- Try mobile push gateway before treating it as a missed call.
-						local extension = dialed_user or sip_to_user or session:getVariable("destination_number");
-						local push_success = false;
-
-						if (extension ~= nil and extension ~= "") then
-							freeswitch.consoleLog("NOTICE", "[failure_handler] NO_ANSWER - trying push gateway for extension: " .. tostring(extension) .. "\n");
-							push_success = push_gateway.trigger(
-								session,
-								uuid,
-								caller_id_number,
-								caller_id_name,
-								extension,
-								domain_name,
-								domain_uuid
-							);
-						end
-
-						if (push_success) then
-							freeswitch.consoleLog("NOTICE", "[failure_handler] NO_ANSWER push sent - parking caller for backend bridge\n");
-							session:execute("set", "continue_on_fail=true");
-							session:execute("set", "hangup_after_bridge=false");
-							session:execute("ring_ready");
-							session:execute("sched_hangup", "+45 NORMAL_CLEARING");
-							session:execute("park");
-							-- Park returned: caller hung up, sched_hangup fired, or call was bridged and ended.
-							-- Notify backend to send call_ended push and dismiss CallKit on callee's phone.
-							-- Safe no-op if the call was already handled (pending data cleared by deviceReady).
-							push_gateway.notify_hangup(uuid);
-							return;
-
-
-						else
-							--send missed call notification
-							missed();
-						end
-					end
+				else
+					--send missed call notification
+					missed();
+				end
 				if (debug["info"] ) then
 					freeswitch.consoleLog("NOTICE", "[failure_handler] - NO_ANSWER\n");
 				end
 
-				elseif (originate_disposition == "USER_NOT_REGISTERED" or originate_disposition == "UNALLOCATED_NUMBER" or originate_disposition == "NO_ROUTE_DESTINATION") then
+			elseif (originate_disposition == "USER_NOT_REGISTERED") then
 
-					--handle USER_NOT_REGISTERED
-					freeswitch.consoleLog("NOTICE", "[failure_handler] USER_NOT_REGISTERED - trying push gateway\n");
-
+				--handle USER_NOT_REGISTERED
 				forward_user_not_registered_enabled = session:getVariable("forward_user_not_registered_enabled");
 				if (forward_user_not_registered_enabled == "true") then
 					forward_user_not_registered_destination = session:getVariable("forward_user_not_registered_destination");
@@ -273,48 +221,21 @@
 						freeswitch.consoleLog("NOTICE", "[failure_handler] forwarding user not registered to hangup\n");
 						session:hangup("NO_ANSWER");
 					else
-						freeswitch.consoleLog("NOTICE", "[failure_handler] forwarding user not registered to: " .. forward_user_not_registered_destination .. "\n");
+						freeswitch.consoleLog("NOTICE", "[failure_handler] forwarding user not registerd to: " .. forward_user_not_registered_destination .. "\n");
 						session:transfer(forward_user_not_registered_destination, "XML", context);
 					end
 				else
-					-- TRY PUSH GATEWAY FOR MOBILE DEVICES
-						local extension = dialed_user or sip_to_user or session:getVariable("destination_number");
-						freeswitch.consoleLog("NOTICE", "[failure_handler] Push gateway for extension: " .. tostring(extension) .. "\n");
+					--send missed call notification
+					missed();
+				end
 
-						-- Send push notification via Laravel
-						local push_success = push_gateway.trigger(
-							session,
-							uuid,
-							caller_id_number,
-							caller_id_name,
-							extension,
-							domain_name,
-							domain_uuid
-						);
+				--send missed call notification
+				--missed();
 
-						if (push_success) then
-							-- Push was sent; keep caller parked while backend does device-ready/originate/bridge
-								freeswitch.consoleLog("NOTICE", "[failure_handler] Push sent - parking caller for backend bridge\n");
-								-- keep caller leg alive while mobile registers; do not hang up on originate failure
-								session:execute("set", "continue_on_fail=true");
-								session:execute("set", "hangup_after_bridge=false");
-							session:execute("ring_ready");
-							session:execute("sched_hangup", "+45 NORMAL_CLEARING");
-							session:execute("park");
-							-- Park returned: caller hung up, sched_hangup fired, or call was bridged and ended.
-							-- Notify backend to send call_ended push and dismiss CallKit on callee's phone.
-							push_gateway.notify_hangup(uuid);
-							return;
-						else
-							freeswitch.consoleLog("NOTICE", "[failure_handler] No devices or push failed\n");
-							missed();
-							session:hangup("NO_ANSWER");
-						end
-					end
-
-					if (debug["info"]) then
-						freeswitch.consoleLog("NOTICE", "[failure_handler] - USER_NOT_REGISTERED - Done\n");
-					end
+				--handle USER_NOT_REGISTERED
+				if (debug["info"] ) then
+					freeswitch.consoleLog("NOTICE", "[failure_handler] - USER_NOT_REGISTERED - Doing nothing\n");
+				end
 
 			elseif (originate_disposition == "SUBSCRIBER_ABSENT" and hangup_on_subscriber_absent == "true") then
 				--send missed call notification
