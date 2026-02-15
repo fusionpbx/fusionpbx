@@ -1,5 +1,0 @@
-<extension name="push-pre-bridge" number="" context="global" app_uuid="d1e2f3a4-b5c6-7890-abcd-ef1234567890" global="true" continue="true" order="889">
-	<condition field="${user_exists}" expression="true">
-		<action application="lua" data="app.lua push_pre_bridge"/>
-	</condition>
-</extension>

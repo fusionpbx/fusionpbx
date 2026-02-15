@@ -40,6 +40,12 @@
 		call_context = "public";
 	end
 
+--Kamailio integration: when call arrives from Kamailio (context=public)
+--and the network source is localhost, derive tenant domain from the SIP
+--request host (R-URI domain). This is multi-tenant safe: each INVITE
+--carries the correct tenant domain in the R-URI.
+	-- (Kamailio domain override applied below after context_name is set)
+
 --get the dialplan mode from the cache
 	dialplan_destination_key = "dialplan:destination";
 	dialplan_destination, err = cache.get(dialplan_destination_key);
@@ -114,6 +120,26 @@
 		context_name = 'public';
 	end
 
+--Kamailio integration: when context is public, derive tenant from R-URI domain.
+--Override both call_context and context_name so the correct tenant dialplan
+--is queried AND the XML output context matches. Multi-tenant safe.
+	if (context_name == "public") then
+		local net_ip = params:getHeader("variable_sip_network_ip");
+		-- Only override context for calls from Kamailio (localhost/server IP)
+		-- NOT for external inbound (e.g. Twilio)
+		if (net_ip == "127.0.0.1" or net_ip == "5.161.71.60") then
+			local req_host = params:getHeader("variable_sip_req_host");
+			local to_host = params:getHeader("variable_sip_to_host");
+			local domain = req_host or to_host;
+			if (domain ~= nil and domain ~= ""
+				and not string.match(domain, "^%d+%.%d+%.%d+%.%d+$")
+				and domain ~= "127.0.0.1") then
+				call_context = domain;
+				context_name = domain;
+			end
+		end
+	end
+
 --use alternative sip_to_user instead of the default
 	if (dialplan_destination == '${sip_to_user}' or dialplan_destination == 'sip_to_user') then
 		destination_number = api:execute("url_decode", sip_to_user);
@@ -171,6 +197,16 @@
 			xml:append([[	<section name="dialplan" description="">]]);
 			xml:append([[		<context name="]] .. xml.sanitize(call_context) .. [[" destination_number="]] .. xml.sanitize(destination_number) .. [[" hostname="]] .. xml.sanitize(hostname) .. [[">]]);
 
+		--Kamailio: inject domain_name from sip_req_host at top of context
+		--so user_exists and other conditions work even without FS registration
+			if (context_name ~= "public") then
+				xml:append([[<extension name="kamailio_set_domain" continue="true">]]);
+				xml:append([[	<condition field="${domain_name}" expression="^$" break="on-false">]]);
+				xml:append([[		<action application="set" data="domain_name=]] .. xml.sanitize(call_context) .. [[" inline="true"/>]]);
+				xml:append([[	</condition>]]);
+				xml:append([[</extension>]]);
+			end
+
 		--get the dialplan xml
 			if (context_name == 'public' and dialplan_mode == 'single') then
 				--get the single inbound destination dialplan xml  from the database
@@ -218,6 +254,7 @@
 				end
 				dbh:query(sql, params, function(row)
 					dialplan_found = true;
+					freeswitch.consoleLog("WARNING", "[INBOUND DEBUG] row found: domain_name=" .. tostring(row.domain_name) .. " domain_enabled=" .. tostring(row.domain_enabled) .. " xml_len=" .. tostring(string.len(row.dialplan_xml or "")) .. "\n");
 					if (row.domain_uuid ~= nil) then
 						domain_name = row.domain_name;
 					else
@@ -287,6 +324,7 @@
 				xml:append([[	</section>]]);
 				xml:append([[</document>]]);
 				XML_STRING = xml:build();
+				freeswitch.consoleLog("WARNING", "[DIALPLAN XML OUTPUT] context=" .. tostring(call_context) .. " dest=" .. tostring(destination_number) .. " xml_len=" .. tostring(string.len(XML_STRING or "")) .. "\n");
 			end
 
 		--close the database connection

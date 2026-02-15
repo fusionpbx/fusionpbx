@@ -230,8 +230,13 @@
 									xml:append([[							<param name="extension-in-contact" value="]] .. xml.sanitize(field.extension_in_contact) .. [["/>]]);
 								end
 								xml:append([[							<variables>]]);
-								if (string.len(field.sip_cid_type) > 0) then
+								xml:append([[<!-- DEBUG from_user=]] .. tostring(field.from_user) .. [[ type=]] .. type(field.from_user) .. [[ -->]]);
+								if (field.sip_cid_type ~= nil and string.len(field.sip_cid_type) > 0) then
 									xml:append([[								<variable name="sip_cid_type" value="]] .. xml.sanitize(field.sip_cid_type) .. [["/>]]);
+								end
+								if (field.from_user ~= nil and string.len(field.from_user) > 0) then
+									xml:append([[								<variable name="sip_from_user" value="]] .. xml.sanitize(field.from_user) .. [["/>]]);
+									xml:append([[								<variable name="sip_from_display" value="]] .. xml.sanitize(field.from_user) .. [["/>]]);
 								end
 								xml:append([[							</variables>]]);
 								xml:append([[						</gateway>]]);
