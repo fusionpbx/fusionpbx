@@ -218,13 +218,6 @@
 					vm_say_date_time = "before";
 				end
 
-				remote_access = '';
-				if (settings['voicemail']['remote_access'] ~= nil) then
-					if (settings['voicemail']['remote_access']['boolean'] ~= nil) then
-						remote_access = settings['voicemail']['remote_access']['boolean'];
-					end
-				end
-
 				password_complexity = '';
 				if (settings['voicemail']['password_complexity'] ~= nil) then
 					if (settings['voicemail']['password_complexity']['boolean'] ~= nil) then
