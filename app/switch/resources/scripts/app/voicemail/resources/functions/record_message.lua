@@ -64,6 +64,7 @@
 			local message_silence_threshold = settings:get('voicemail', 'message_silence_threshold', 'numeric') or 200;
 			local message_silence_seconds = settings:get('voicemail', 'message_silence_seconds', 'numeric') or 3;
 			local email_queue_enabled = settings:get('email_queue', 'enabled', 'boolean') or "false";
+			local remote_access = settings:get('voicemail', 'remote_access', 'boolean') or "false";
 
 		--get recording instructions and options settings
 			local sql = [[SELECT 
