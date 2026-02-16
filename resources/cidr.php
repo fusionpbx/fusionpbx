@@ -30,12 +30,13 @@
 		$found = false;
 		$cidr_array = $settings->get('domain', 'cidr');
 		if (!empty($cidr_array)) {
-			foreach($cidr_array as $cidr) {
+			foreach($cidr_array as $cidr_value) {
 				if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
 					$found = true;
 					break;
 				}
 			}
+			unset($cidr_value);
 		}
 		if (!$found) {
 			echo "access denied";
