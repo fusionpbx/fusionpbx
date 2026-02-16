@@ -31,7 +31,7 @@
 		$cidr_array = $settings->get('domain', 'cidr');
 		if (!empty($cidr_array)) {
 			foreach($cidr_array as $cidr_value) {
-				if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
+				if (check_cidr($cidr_value, $_SERVER['REMOTE_ADDR'])) {
 					$found = true;
 					break;
 				}
