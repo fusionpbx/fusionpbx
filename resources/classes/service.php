@@ -96,6 +96,15 @@ abstract class service {
 	 */
 	protected static $allow_run_as_root = false;
 
+	protected static $posix_username = null;
+	protected static $posix_groupname = null;
+
+
+	protected static $user_name = null;
+	protected static $group_name = null;
+	protected static $uid = null;
+	protected static $gid = null;
+
 	/**
 	 * Track the internal loop. It is recommended to use this variable to control the loop inside the run function. See
 	 * the example below the class for a more complete explanation
@@ -314,6 +323,41 @@ abstract class service {
 		//parse the cli options and store them statically
 		self::parse_service_command_options();
 
+		if (self::$posix_groupname !== null) {
+			// Drop group privileges if a group name is specified
+			$group_record = posix_getgrnam(self::$posix_groupname);
+			if ($group_record === false) {
+				die("Group " . self::$posix_groupname . " not found\n");
+			}
+			posix_setgid($group_record['gid']);
+		}
+
+		$record = posix_getpwuid(posix_geteuid());
+		if (self::$posix_username !== null) {
+			// Drop privileges if a username is specified
+			$record = posix_getpwnam(self::$posix_username);
+			if ($record === false) {
+				die("User " . self::$posix_username . " not found\n");
+			}
+			posix_setuid($record['uid']);
+		} else {
+			// Get the current user information
+		}
+		self::$uid = $record['uid'] ?? 0;
+		self::$gid = $record['gid'] ?? 0;
+		self::$user_name = $record['name'] ?? 'unknown';
+		self::$group_name = posix_getgrgid(self::$gid)['name'] ?? 'unknown';
+
+		// Check if we are running as root when not allowed
+		if (posix_geteuid() === 0) {
+			if (static::$allow_run_as_root) {
+				self::log("Root user permitted for this service.", LOG_DEBUG);
+			} else {
+				self::log("Running as root is not allowed for this service. Please run as a non-root user.", LOG_ERR);
+				exit(0);
+			}
+		}
+
 		//fork process
 		if (self::$daemon_mode) {
 			//force launching in a separate process
@@ -492,6 +536,20 @@ abstract class service {
 		$help_options[$index]['long_description'] = '--show-timestamp';
 		$help_options[$index]['functions'][] = 'show_timestamp';
 		$index++;
+		$help_options[$index]['short_option'] = 'u:';
+		$help_options[$index]['long_option'] = 'user:';
+		$help_options[$index]['description'] = 'Set the user to run the service as. This will drop privileges to the specified user after starting the service. The user must exist on the system and have permissions to read the configuration file and write to the PID file.';
+		$help_options[$index]['short_description'] = '-u <username>';
+		$help_options[$index]['long_description'] = '--user <username>';
+		$help_options[$index]['functions'][] = 'set_username';
+		$index++;
+		$help_options[$index]['short_option'] = 'g:';
+		$help_options[$index]['long_option'] = 'group:';
+		$help_options[$index]['description'] = 'Set the group to run the service as. This will drop privileges to the specified group after starting the service. The group must exist on the system and have permissions to read the configuration file and write to the PID file.';
+		$help_options[$index]['short_description'] = '-g <groupname>';
+		$help_options[$index]['long_description'] = '--group <groupname>';
+		$help_options[$index]['functions'][] = 'set_groupname';
+		$index++;
 		$help_options[$index]['short_option'] = 'x';
 		$help_options[$index]['long_option'] = 'exit';
 		$help_options[$index]['description'] = 'Exit the service gracefully';
@@ -500,6 +558,14 @@ abstract class service {
 		$help_options[$index]['functions'][] = 'send_shutdown';
 		$help_options[$index]['functions'][] = 'shutdown';
 		return $help_options;
+	}
+
+	protected static function set_username($username) {
+		self::$posix_username = $username;
+	}
+
+	protected static function set_groupname($groupname) {
+		self::$posix_groupname = $groupname;
 	}
 
 	/**
@@ -589,16 +655,6 @@ abstract class service {
 	 */
 	private function init() {
 
-		// Check if we are running as root when not allowed
-		if (posix_geteuid() === 0) {
-			if (static::$allow_run_as_root) {
-				self::log("Root user permitted for this service.", LOG_NOTICE);
-			} else {
-				self::log("Running as root is not allowed for this service. Please run as a non-root user.", LOG_ERR);
-				exit(0);
-			}
-		}
-
 		// Increase limits
 		set_time_limit(0);
 		ini_set('max_execution_time', 0);
@@ -670,6 +726,8 @@ abstract class service {
 		self::log("PID File  : " . self::$pid_file, LOG_INFO);
 		self::log("Log level : " . self::log_level_to_string(self::$log_level), LOG_INFO);
 		self::log("Timestamps: " . (self::$show_timestamp_log ? "Yes" : "No"), LOG_INFO);
+		self::log("User      : " . self::$user_name . " (" . self::$uid . ")", LOG_INFO);
+		self::log("Group     : " . self::$group_name . " (" . self::$gid . ")", LOG_INFO);
 
 		// Save the pid file
 		$success = file_put_contents(self::$pid_file, $pid);
