@@ -84,6 +84,18 @@ abstract class service {
 	 * @var string
 	 */
 	private static $pid_file = "";
+
+	/**
+	 * Allows the service to run as root
+	 *
+	 * The child class should override this value if required. It is recommended to run services as a non-root user
+	 * for security reasons. If this value is set to false and the service is started as root, the service will exit
+	 * with an error message.
+	 *
+	 * @var bool
+	 */
+	protected static $allow_run_as_root = false;
+
 	/**
 	 * Track the internal loop. It is recommended to use this variable to control the loop inside the run function. See
 	 * the example below the class for a more complete explanation
@@ -576,6 +588,16 @@ abstract class service {
 	 *   - registers signal handlers
 	 */
 	private function init() {
+
+		// Check if we are running as root when not allowed
+		if (posix_geteuid() === 0) {
+			if (static::$allow_run_as_root) {
+				self::log("Root user permitted for this service.", LOG_NOTICE);
+			} else {
+				self::log("Running as root is not allowed for this service. Please run as a non-root user.", LOG_ERR);
+				exit(0);
+			}
+		}
 
 		// Increase limits
 		set_time_limit(0);
