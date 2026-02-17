@@ -49,11 +49,12 @@
 	$destination_record = $_POST["destination_record"] ?? null;
 
 //set the defaults
-	if (empty($destination_type)) { $destination_type = 'inbound'; }
-	if (empty($destination_context)) { $destination_context = 'public'; }
+	$destination_type = $destination_type ?? 'inbound';
+	$destination_context = $destination_context ?? 'public';
+	$from_row = $from_row ?? '2';
+	$destination_enabled = $destination_enabled ?? true;
 	if ($destination_type =="outbound" && $destination_context == "public") { $destination_context = $_SESSION['domain_name']; }
 	if ($destination_type =="outbound" && empty($destination_context)) { $destination_context = $_SESSION['domain_name']; }
-	if (empty($from_row)) { $from_row = '2'; }
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
@@ -253,7 +254,7 @@
 										$array["destinations"][$row_id]['destination_record'] = $destination_record;
 										$array["destinations"][$row_id]['destination_context'] = $destination_context;
 										$array["destinations"][$row_id]['destination_number_regex'] = $destination_number_regex;
-										$array["destinations"][$row_id]['destination_enabled'] = $destination_enabled;
+										$array["destinations"][$row_id]['destination_enabled'] = ($destination_enabled) ? 'true' : 'false';
 										$array["destinations"][$row_id]['dialplan_uuid'] = $dialplan_uuid;
 
 									//build the dialplan array
@@ -265,7 +266,7 @@
 										$array["dialplans"][$row_id]["dialplan_context"] = $destination_context;
 										$array["dialplans"][$row_id]["dialplan_continue"] = false;
 										$array["dialplans"][$row_id]["dialplan_order"] = "100";
-										$array["dialplans"][$row_id]["dialplan_enabled"] = $destination_enabled;
+										$array["dialplans"][$row_id]["dialplan_enabled"] = ($destination_enabled) ? 'true' : 'false';
 										$array["dialplans"][$row_id]["dialplan_description"] = $destination_description;
 										$dialplan_detail_order = 10;
 
@@ -343,6 +344,7 @@
 												}
 												$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = $destination_number_regex;
 												$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 												$y++;
 
 											//increment the dialplan detail order
@@ -355,6 +357,7 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -369,6 +372,7 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "answer";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -380,6 +384,7 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "record_path=\${recordings_dir}/\${domain_name}/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -391,6 +396,7 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "record_name=\${uuid}.\${record_ext}";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -404,6 +410,7 @@
 													$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "recording_follow_transfer=true";
 													$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 													$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -415,6 +422,7 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "\${record_path}/\${record_name}";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_inline"] = "false";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -428,6 +436,7 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "accountcode=".$destination_accountcode;
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -441,6 +450,7 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "hangup_after_bridge=true";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -451,6 +461,7 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "continue_on_fail=true";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -464,6 +475,7 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = $destination_app;
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = $destination_data;
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//set inline to true
