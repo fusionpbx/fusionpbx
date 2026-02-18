@@ -77,18 +77,7 @@ class VoicemailDestination extends BaseModel {
 // ============================================================================
 // User Related Models
 // ============================================================================
-
-class UserSetting extends BaseModel {
-    protected $table = 'v_user_settings';
-    protected $primaryKey = 'user_setting_uuid';
-    protected $fillable = ['user_setting_uuid', 'user_uuid', 'domain_uuid', 
-        'user_setting_category', 'user_setting_subcategory', 'user_setting_name', 
-        'user_setting_value', 'user_setting_enabled'];
-    
-    public function user() {
-        return $this->belongsTo(User::class, 'user_uuid', 'user_uuid');
-    }
-}
+// Note: UserSetting is now a standalone model in UserSetting.php
 
 class UserGroup extends BaseModel {
     protected $table = 'v_user_groups';
@@ -374,13 +363,4 @@ class FaxFile extends BaseModel {
 // ============================================================================
 // Group Related Models
 // ============================================================================
-
-class GroupPermission extends BaseModel {
-    protected $table = 'v_group_permissions';
-    protected $primaryKey = 'group_permission_uuid';
-    protected $fillable = ['group_permission_uuid', 'domain_uuid', 'permission_uuid', 'group_uuid'];
-    
-    public function group() {
-        return $this->belongsTo(Group::class, 'group_uuid', 'group_uuid');
-    }
-}
+// Note: GroupPermission is now a standalone model in GroupPermission.php
