@@ -137,8 +137,19 @@
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = !empty($search) ? "&search=".$search : null;
-	$param .= (!empty($_GET['page']) && $show == 'all' && permission_exists('user_log_all')) ? "&show=all" : null;
+	$param = '';
+	if (!empty($search)) {
+		$param .= "&search=".$search;
+	}
+	if (!empty($_GET['page']) && $show == 'all' && permission_exists('user_log_all')) {
+		$param .= "&show=all";
+	}
+	if (!empty($order_by)) {
+		$param .= "&order_by=".$order_by;
+	}
+	if (!empty($order)) {
+		$param .= "&order=".$order;
+	}
 	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
