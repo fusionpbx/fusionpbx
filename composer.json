@@ -1,15 +1,22 @@
 {
     "name": "fusionpbx/fusionpbx",
-    "description": "FusionPBX with Laravel Eloquent ORM for easier database management",
+    "description": "FusionPBX with Laravel Eloquent ORM and Filament 4 Admin Panel",
     "type": "project",
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.1",
         "illuminate/database": "^10.0",
-        "illuminate/events": "^10.0"
+        "illuminate/events": "^10.0",
+        "filament/filament": "^3.0",
+        "filament/tables": "^3.0",
+        "filament/forms": "^3.0",
+        "filament/notifications": "^3.0",
+        "filament/support": "^3.0",
+        "filament/widgets": "^3.0"
     },
     "autoload": {
         "psr-4": {
-            "FusionPBX\\Models\\": "app/models/"
+            "FusionPBX\\Models\\": "app/models/",
+            "FusionPBX\\Filament\\": "app/filament/"
         }
     },
     "config": {
