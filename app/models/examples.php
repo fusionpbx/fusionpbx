@@ -31,21 +31,35 @@ foreach ($domains as $domain) {
 }
 echo "\n";
 
+// Get a domain UUID for examples or skip domain-specific examples
+$domain = Domain::first();
+$domainUuid = $domain ? $domain->domain_uuid : null;
+
+if (!$domainUuid) {
+    echo "⚠ WARNING: No domains found in database.\n";
+    echo "   Many examples require a domain UUID to function.\n";
+    echo "   Some examples will be skipped or may fail.\n";
+    echo "   Please configure your database before running examples.\n\n";
+}
+
 // =============================================================================
 // Example 2: Get extensions for a specific domain
 // =============================================================================
 echo "=== Example 2: Get enabled extensions for a domain ===\n";
-// Replace with your actual domain UUID
-$domainUuid = '12345678-1234-1234-1234-123456789012';
 
-$extensions = Extension::forDomain($domainUuid)
-    ->enabled()
-    ->orderBy('extension')
-    ->get();
+if (!$domainUuid) {
+    echo "⚠ Skipping - No domains found in database\n\n";
+} else {
+    
+    $extensions = Extension::forDomain($domainUuid)
+        ->enabled()
+        ->orderBy('extension')
+        ->get();
 
-echo "Found {$extensions->count()} enabled extensions\n";
-foreach ($extensions->take(5) as $ext) {
-    echo "Extension {$ext->extension}: {$ext->description}\n";
+    echo "Found {$extensions->count()} enabled extensions\n";
+    foreach ($extensions->take(5) as $ext) {
+        echo "Extension {$ext->extension}: {$ext->description}\n";
+    }
 }
 echo "\n";
 

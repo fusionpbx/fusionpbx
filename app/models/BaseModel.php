@@ -91,6 +91,7 @@ abstract class BaseModel extends Model
 
     /**
      * Scope a query to only include enabled records.
+     * Note: FusionPBX stores boolean values as strings 'true'/'false' in the database
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -102,6 +103,7 @@ abstract class BaseModel extends Model
 
     /**
      * Scope a query to only include disabled records.
+     * Note: FusionPBX stores boolean values as strings 'true'/'false' in the database
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder

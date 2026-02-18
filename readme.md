@@ -28,7 +28,7 @@ Laravel Eloquent ORM Integration
 FusionPBX now includes Laravel Eloquent ORM for easier database management! This provides a modern, intuitive way to interact with the database using elegant, expressive syntax.
 
 **Features:**
-- 100+ Eloquent models covering all FusionPBX database tables
+- 58+ Eloquent models covering all FusionPBX database tables (18 main + 40 supporting)
 - Support for PostgreSQL, MySQL, and SQLite
 - Built-in relationships between models
 - Query scopes for common filters

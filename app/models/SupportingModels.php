@@ -106,7 +106,7 @@ class DeviceLine extends BaseModel {
     protected $fillable = ['device_line_uuid', 'device_uuid', 'domain_uuid', 
         'server_address', 'outbound_proxy', 'line_number', 'display_name', 
         'user_id', 'auth_id', 'password', 'sip_port', 'sip_transport', 
-        'register_expires', 'enabled'];
+        'register_expires', 'enabled', 'extension_uuid'];
     
     public function device() {
         return $this->belongsTo(Device::class, 'device_uuid', 'device_uuid');
