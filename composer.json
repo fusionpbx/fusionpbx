@@ -1,28 +1,54 @@
 {
     "name": "fusionpbx/fusionpbx",
-    "description": "FusionPBX with Laravel Eloquent ORM and Filament 4 Admin Panel",
+    "description": "FusionPBX - Modern VoIP Platform with Laravel 12, Filament 4, WebRTC and Live CDR",
     "type": "project",
+    "license": "MPL-1.1",
     "require": {
-        "php": ">=8.1",
-        "illuminate/database": "^10.0",
-        "illuminate/events": "^10.0",
-        "filament/filament": "^3.0",
-        "filament/tables": "^3.0",
-        "filament/forms": "^3.0",
-        "filament/notifications": "^3.0",
-        "filament/support": "^3.0",
-        "filament/widgets": "^3.0"
+        "php": ">=8.3",
+        "laravel/framework": "^12.0",
+        "filament/filament": "^4.0",
+        "livewire/livewire": "^3.0",
+        "filament/widgets": "^4.0",
+        "filament/notifications": "^4.0",
+        "predis/predis": "^2.0",
+        "laravel/reverb": "^1.0",
+        "react/event-loop": "^1.5",
+        "clue/buzz-react": "^2.10",
+        "phpmailer/phpmailer": "^6.9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0",
+        "mockery/mockery": "^1.6",
+        "fakerphp/faker": "^1.23"
     },
     "autoload": {
         "psr-4": {
+            "FusionPBX\\": "app/",
             "FusionPBX\\Models\\": "app/models/",
-            "FusionPBX\\Filament\\": "app/filament/"
+            "FusionPBX\\Controllers\\": "app/controllers/",
+            "FusionPBX\\Filament\\": "app/filament/",
+            "FusionPBX\\Services\\": "app/services/",
+            "FusionPBX\\Http\\": "app/http/",
+            "FusionPBX\\Livewire\\": "app/livewire/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ]
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "minimum-stability": "stable",
     "prefer-stable": true
