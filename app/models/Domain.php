@@ -88,6 +88,53 @@ class Domain extends BaseModel
     }
 
     /**
+     * Get the dashboards for the domain.
+     * Essential for multi-tenant dashboard support.
+     */
+    public function dashboards()
+    {
+        return $this->hasMany(Dashboard::class, 'domain_uuid', 'domain_uuid');
+    }
+
+    /**
+     * Get only enabled dashboards for the domain.
+     */
+    public function enabledDashboards()
+    {
+        return $this->hasMany(Dashboard::class, 'domain_uuid', 'domain_uuid')
+            ->where('dashboard_enabled', 'true');
+    }
+
+    /**
+     * Get the group permissions for the domain.
+     * Essential for multi-tenant permission isolation.
+     */
+    public function groupPermissions()
+    {
+        return $this->hasMany(GroupPermission::class, 'domain_uuid', 'domain_uuid');
+    }
+
+    /**
+     * Get the groups for the domain.
+     */
+    public function groups()
+    {
+        return $this->hasMany(Group::class, 'domain_uuid', 'domain_uuid');
+    }
+
+    /**
+     * Get all permissions assigned within this domain.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAssignedPermissions()
+    {
+        return Permission::whereHas('groupPermissions', function($query) {
+            $query->where('domain_uuid', $this->domain_uuid);
+        })->get();
+    }
+
+    /**
      * Get the parent domain.
      */
     public function parent()

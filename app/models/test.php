@@ -49,6 +49,11 @@ use FusionPBX\Models\Group;
 use FusionPBX\Models\Fax;
 use FusionPBX\Models\Recording;
 use FusionPBX\Models\MusicOnHold;
+use FusionPBX\Models\Dashboard;
+use FusionPBX\Models\DashboardWidget;
+use FusionPBX\Models\UserSetting;
+use FusionPBX\Models\Permission;
+use FusionPBX\Models\GroupPermission;
 
 // Test 2: Database Connection
 echo "Test 2: Testing Database Connection...\n";
@@ -86,6 +91,11 @@ $models = [
     'Fax' => 'FusionPBX\\Models\\Fax',
     'Recording' => 'FusionPBX\\Models\\Recording',
     'MusicOnHold' => 'FusionPBX\\Models\\MusicOnHold',
+    'Dashboard' => 'FusionPBX\\Models\\Dashboard',
+    'DashboardWidget' => 'FusionPBX\\Models\\DashboardWidget',
+    'UserSetting' => 'FusionPBX\\Models\\UserSetting',
+    'Permission' => 'FusionPBX\\Models\\Permission',
+    'GroupPermission' => 'FusionPBX\\Models\\GroupPermission',
 ];
 
 $loadedModels = 0;
