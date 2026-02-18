@@ -6,6 +6,13 @@
 class event_guard_service extends service {
 
 	/**
+	 * Permit this service to run as root user
+	 *
+	 * @var boolean
+	 */
+	protected static $allow_run_as_root = true;
+
+	/**
 	 * database object
 	 * @var database
 	 */
