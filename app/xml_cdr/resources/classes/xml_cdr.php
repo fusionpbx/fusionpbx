@@ -428,16 +428,16 @@ class xml_cdr {
 
 		//check for duplicate call uuid's
 		$duplicate_uuid = false;
-		$uuid           = urldecode($xml->variables->uuid);
-		if (empty($uuid)) {
-			$uuid = urldecode($xml->variables->call_uuid);
+		$call_uuid = urldecode($xml->variables->uuid);
+		if (empty($call_uuid)) {
+			$call_uuid = urldecode($xml->variables->call_uuid);
 		}
-		if ($uuid != null && is_uuid($uuid)) {
+		if ($call_uuid != null && is_uuid($call_uuid)) {
 			//check for duplicates
 			$sql                        = "select count(xml_cdr_uuid) ";
 			$sql                        .= "from v_xml_cdr ";
 			$sql                        .= "where xml_cdr_uuid = :xml_cdr_uuid ";
-			$parameters['xml_cdr_uuid'] = $uuid;
+			$parameters['xml_cdr_uuid'] = $call_uuid;
 			$count                      = $this->database->select($sql, $parameters, 'column');
 			if ($count > 0) {
 				//duplicate uuid detected
@@ -465,7 +465,7 @@ class xml_cdr {
 		}
 
 		//process call detail record data
-		if ($duplicate_uuid == false && is_uuid($uuid)) {
+		if ($duplicate_uuid == false && is_uuid($call_uuid)) {
 
 			//get the caller ID from call flow caller profile
 			$i = 0;
@@ -734,7 +734,7 @@ class xml_cdr {
 			}
 
 			//misc
-			$this->array[$key][0]['xml_cdr_uuid']       = $uuid;
+			$this->array[$key][0]['xml_cdr_uuid']       = $call_uuid;
 			$this->array[$key][0]['destination_number'] = $destination_number;
 			$this->array[$key][0]['sip_call_id']        = urldecode($xml->variables->sip_call_id);
 			$this->array[$key][0]['source_number']      = urldecode($xml->variables->effective_caller_id_number);
@@ -991,6 +991,14 @@ class xml_cdr {
 				} else {
 					$record_length = urldecode($xml->variables->duration);
 				}
+			} elseif (isset($xml->variables->record_path)) {
+				$record_path = urldecode($xml->variables->record_path);
+				$record_ext = urldecode($xml->variables->record_ext);
+				if (empty($record_ext)) { $record_ext = 'wav'; }
+				if (file_exists($record_path.'/'.$call_uuid.'.'.$record_ext)) {
+					$record_name = $call_uuid.'.'.$record_ext;
+					$record_length = urldecode($xml->variables->duration);
+				}
 			} elseif (isset($xml->variables->cc_record_filename)) {
 				$record_path   = dirname(urldecode($xml->variables->cc_record_filename));
 				$record_name   = basename(urldecode($xml->variables->cc_record_filename));
@@ -1038,13 +1046,13 @@ class xml_cdr {
 			//check to see if file exists with the default file name and path
 			if (empty($record_name)) {
 				$path = $this->settings->get('switch', 'recordings') . '/' . $domain_name . '/archive/' . $start_year . '/' . $start_month . '/' . $start_day;
-				if (file_exists($path . '/' . $uuid . '.wav')) {
+				if (file_exists($path . '/' . $call_uuid . '.wav')) {
 					$record_path   = $path;
-					$record_name   = $uuid . '.wav';
+					$record_name   = $call_uuid . '.wav';
 					$record_length = urldecode($xml->variables->duration);
-				} elseif (file_exists($path . '/' . $uuid . '.mp3')) {
+				} elseif (file_exists($path . '/' . $call_uuid . '.mp3')) {
 					$record_path   = $path;
-					$record_name   = $uuid . '.mp3';
+					$record_name   = $call_uuid . '.mp3';
 					$record_length = urldecode($xml->variables->duration);
 				}
 			}
@@ -1092,12 +1100,12 @@ class xml_cdr {
 			if ($record_exists && $this->settings->get('call_recordings', 'transcribe_enabled', false)) {
 				//prepare the paramaters
 				$params['domain_uuid'] = $domain_uuid;
-				$params['xml_cdr_uuid'] = $uuid;
+				$params['xml_cdr_uuid'] = $call_uuid;
 				$params['call_direction'] = $call_direction;
 
 				//prepare the transcribe queue array
 				$app_sourcetranscribe_queue = array();
-				$transcribe_queue['transcribe_queue'][$x]['transcribe_queue_uuid'] = $uuid;
+				$transcribe_queue['transcribe_queue'][$x]['transcribe_queue_uuid'] = $call_uuid;
 				$transcribe_queue['transcribe_queue'][$x]['domain_uuid'] = $domain_uuid;
 				$transcribe_queue['transcribe_queue'][$x]['hostname'] = gethostname();
 				$transcribe_queue['transcribe_queue'][$x]['transcribe_status'] = 'pending';
@@ -1125,7 +1133,7 @@ class xml_cdr {
 			//save the call flow json
 			$key                                       = 'xml_cdr_flow';
 			$this->array[$key][0]['xml_cdr_flow_uuid'] = uuid();
-			$this->array[$key][0]['xml_cdr_uuid']      = $uuid;
+			$this->array[$key][0]['xml_cdr_uuid']      = $call_uuid;
 			$this->array[$key][0]['domain_uuid']       = $domain_uuid ?? '';
 			$this->array[$key][0]['call_flow']         = json_encode($this->call_flow());
 
@@ -1133,7 +1141,7 @@ class xml_cdr {
 			if ($this->settings->get('cdr', 'format') == "json" && $this->settings->get('cdr', 'storage') == "db") {
 				$key                                       = 'xml_cdr_json';
 				$this->array[$key][0]['xml_cdr_json_uuid'] = uuid();
-				$this->array[$key][0]['xml_cdr_uuid']      = $uuid;
+				$this->array[$key][0]['xml_cdr_uuid']      = $call_uuid;
 				$this->array[$key][0]['domain_uuid']       = $domain_uuid ?? '';
 				$this->array[$key][0]['json']              = $this->json;
 			}
@@ -1146,7 +1154,7 @@ class xml_cdr {
 				if ($handle) {
 					while (!feof($handle)) {
 						$line = stream_get_line($handle, 0, "\n");
-						if (substr($line, 0, 36) === $uuid) {
+						if (substr($line, 0, 36) === $call_uuid) {
 							$log_content .= substr($line, 37, strlen($line)) . "\n";
 						}
 					}
@@ -1157,7 +1165,7 @@ class xml_cdr {
 				if (!empty($log_content)) {
 					$key                                      = 'xml_cdr_logs';
 					$this->array[$key][0]['xml_cdr_log_uuid'] = uuid();
-					$this->array[$key][0]['xml_cdr_uuid']     = $uuid;
+					$this->array[$key][0]['xml_cdr_uuid']     = $call_uuid;
 					$this->array[$key][0]['domain_uuid']      = $domain_uuid ?? '';
 					$this->array[$key][0]['log_date']         = 'now()';
 					$this->array[$key][0]['log_content']      = $log_content;
@@ -1166,17 +1174,17 @@ class xml_cdr {
 
 			//store xml cdr on the file system as a file
 			if ($this->settings->get('cdr', 'storage') == "dir" && $error != "true") {
-				if (!empty($uuid)) {
+				if (!empty($call_uuid)) {
 					$tmp_dir = $this->settings->get('switch', 'log') . '/xml_cdr/archive/' . $start_year . '/' . $start_month . '/' . $start_day;
 					if (!file_exists($tmp_dir)) {
 						mkdir($tmp_dir, 0770, true);
 					}
 					if ($this->settings->get('cdr', 'format') == "xml") {
-						$tmp_file = $uuid . '.xml';
+						$tmp_file = $call_uuid . '.xml';
 						$fh       = fopen($tmp_dir . '/' . $tmp_file, 'w');
 						fwrite($fh, $xml_string);
 					} else {
-						$tmp_file = $uuid . '.json';
+						$tmp_file = $call_uuid . '.json';
 						$fh       = fopen($tmp_dir . '/' . $tmp_file, 'w');
 						fwrite($fh, json_encode($xml));
 					}
