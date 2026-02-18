@@ -15,24 +15,29 @@
 // Load Composer autoloader
 require_once(__DIR__ . '/../../vendor/autoload.php');
 
-// Load FusionPBX database configuration
-require_once(__DIR__ . '/../../resources/pdo.php');
-
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 // Create a new Database Capsule Manager instance
 $capsule = new Capsule;
 
-// Get database configuration from FusionPBX
-if (!isset($db)) {
-    // If $db is not set, try to load from config
-    if (file_exists('/etc/fusionpbx/config.php')) {
-        require_once('/etc/fusionpbx/config.php');
-    }
+// Try to load FusionPBX database configuration if available
+// But don't fail if it's not there - allow standalone usage
+$db_config_loaded = false;
+
+// Try to load database config from FusionPBX config file
+if (file_exists('/etc/fusionpbx/config.php')) {
+    include_once('/etc/fusionpbx/config.php');
+    $db_config_loaded = isset($db) && is_array($db);
 }
 
-// Set up database connection based on FusionPBX configuration
-if (isset($db) && is_array($db)) {
+// If not found, try resources/pdo.php (but carefully to avoid redirects)
+if (!$db_config_loaded && file_exists(__DIR__ . '/../../resources/config.php')) {
+    include_once(__DIR__ . '/../../resources/config.php');
+    $db_config_loaded = isset($db) && is_array($db);
+}
+
+// Set up database connection based on configuration or use defaults
+if ($db_config_loaded && isset($db) && is_array($db)) {
     $db_type = $db[0]['type'] ?? 'pgsql';
     $db_host = $db[0]['host'] ?? 'localhost';
     $db_port = $db[0]['port'] ?? ($db_type === 'pgsql' ? 5432 : 3306);

@@ -22,6 +22,34 @@ In addition to providing all of the usual PBX functionality, FusionPBX allows yo
 - Dialplan Programming that allow nearly endless possibilities
 - [Many other Features](https://docs.fusionpbx.com/en/latest/features/features.html)
 
+Laravel Eloquent ORM Integration
+--------------------------------------
+
+FusionPBX now includes Laravel Eloquent ORM for easier database management! This provides a modern, intuitive way to interact with the database using elegant, expressive syntax.
+
+**Features:**
+- 100+ Eloquent models covering all FusionPBX database tables
+- Support for PostgreSQL, MySQL, and SQLite
+- Built-in relationships between models
+- Query scopes for common filters
+- Type casting and validation
+- Comprehensive documentation and examples
+
+**Quick Start:**
+```php
+require_once(__DIR__ . '/app/models/eloquent_bootstrap.php');
+use FusionPBX\Models\Extension;
+
+// Get all extensions for a domain
+$extensions = Extension::forDomain($domain_uuid)->enabled()->get();
+```
+
+For more information, see:
+- Quick Start: `app/models/QUICKSTART.md`
+- Full Documentation: `app/models/README.md`
+- Usage Examples: `app/models/examples.php`
+- Run Tests: `php app/models/test.php`
+
 Software Requirements
 --------------------------------------
 
