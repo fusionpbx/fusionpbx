@@ -10,3 +10,7 @@ secure/*.sqlite
 *.php~
 
 app/yealink/resources/firmware/*
+
+# Laravel Eloquent vendor directory
+/vendor/
+composer.lock
