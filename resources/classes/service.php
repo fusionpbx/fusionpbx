@@ -323,8 +323,8 @@ abstract class service {
 		//parse the cli options and store them statically
 		self::parse_service_command_options();
 
+		// If a group name is specified, then run the service under this group
 		if (self::$posix_groupname !== null) {
-			// Drop group privileges if a group name is specified
 			$group_record = posix_getgrnam(self::$posix_groupname);
 			if ($group_record === false) {
 				die("Group " . self::$posix_groupname . " not found\n");
@@ -332,16 +332,14 @@ abstract class service {
 			posix_setgid($group_record['gid']);
 		}
 
+		// If a user name is specified, then run the service under this user
 		$record = posix_getpwuid(posix_geteuid());
 		if (self::$posix_username !== null) {
-			// Drop privileges if a username is specified
 			$record = posix_getpwnam(self::$posix_username);
 			if ($record === false) {
 				die("User " . self::$posix_username . " not found\n");
 			}
 			posix_setuid($record['uid']);
-		} else {
-			// Get the current user information
 		}
 		self::$uid = $record['uid'] ?? 0;
 		self::$gid = $record['gid'] ?? 0;
