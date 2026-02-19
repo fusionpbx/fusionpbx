@@ -1054,11 +1054,12 @@
 	$device_vendors = $database->select($sql, null, 'all');
 	unset($sql);
 
-//get assigned users
+//get the assigned users
 	if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
 		$sql = "select u.username, e.user_uuid ";
-		$sql .= "from v_extension_users as e, v_users as u ";
-		$sql .= "where e.user_uuid = u.user_uuid  ";
+		$sql .= "from v_extension_users as e ";
+		$sql .= "join v_users u on e.user_uuid = u.user_uuid ";
+		$sql .= "where u.domain_uuid = :domain_uuid ";
 		$sql .= "and u.user_enabled = true ";
 		$sql .= "and e.domain_uuid = :domain_uuid ";
 		$sql .= "and e.extension_uuid = :extension_uuid ";
