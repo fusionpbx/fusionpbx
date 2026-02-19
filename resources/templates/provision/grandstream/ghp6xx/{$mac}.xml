@@ -995,7 +995,7 @@
 		
 		<!-- IPv4 Address Type -->
 		<!-- DHCP, Static IP -->
-		{if isset($grandstream_ip_address_mode) && $grandstream_ip_address_mode == 1}
+		{if isset($grandstream_ip_mode) && $grandstream_ip_mode == 1}
 		<item name="network.port.eth.1.type">Static IP</item>
 		{else}
 		<item name="network.port.eth.1.type">DHCP</item>
