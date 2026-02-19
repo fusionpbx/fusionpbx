@@ -116,7 +116,7 @@ class authentication {
 			//process the plugin
 			if (file_exists($plugin)) {
 				//run the plugin
-				$object              = new $class_name();
+				$object = new $class_name();
 				$object->domain_name = $this->domain_name;
 				$object->domain_uuid = $this->domain_uuid;
 				if ($name == 'database' && isset($this->key)) {
@@ -336,19 +336,19 @@ class authentication {
 		$parameters = [];
 
 		//get the user settings
-		$sql                       = "select * from v_user_settings ";
-		$sql                       .= "where domain_uuid = :domain_uuid ";
-		$sql                       .= "and user_uuid = :user_uuid ";
-		$sql                       .= "and user_setting_enabled = true ";
+		$sql = "select * from v_user_settings ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and user_uuid = :user_uuid ";
+		$sql .= "and user_setting_enabled = true ";
 		$parameters['domain_uuid'] = $result["domain_uuid"];
-		$parameters['user_uuid']   = $result["user_uuid"];
-		$user_settings             = $database->select($sql, $parameters, 'all');
+		$parameters['user_uuid'] = $result["user_uuid"];
+		$user_settings = $database->select($sql, $parameters, 'all');
 
 		//store user settings in the session when available
 		if (is_array($user_settings)) {
 			foreach ($user_settings as $row) {
-				$name        = $row['user_setting_name'];
-				$category    = $row['user_setting_category'];
+				$name = $row['user_setting_name'];
+				$category = $row['user_setting_category'];
 				$subcategory = $row['user_setting_subcategory'];
 				if (isset($row['user_setting_value'])) {
 					if (empty($subcategory)) {
@@ -380,24 +380,24 @@ class authentication {
 				$_SESSION['user']['extension'] = [];
 
 				//get the user extension list
-				$sql                       = "select ";
-				$sql                       .= "e.extension_uuid, ";
-				$sql                       .= "e.extension, ";
-				$sql                       .= "e.number_alias, ";
-				$sql                       .= "e.user_context, ";
-				$sql                       .= "e.outbound_caller_id_name, ";
-				$sql                       .= "e.outbound_caller_id_number, ";
-				$sql                       .= "e.description ";
-				$sql                       .= "from ";
-				$sql                       .= "v_extension_users as u, ";
-				$sql                       .= "v_extensions as e ";
-				$sql                       .= "where ";
-				$sql                       .= "e.domain_uuid = :domain_uuid ";
-				$sql                       .= "and e.extension_uuid = u.extension_uuid ";
-				$sql                       .= "and u.user_uuid = :user_uuid ";
-				$sql                       .= "and e.enabled = 'true' ";
-				$sql                       .= "order by ";
-				$sql                       .= "e.extension asc ";
+				$sql = "select ";
+				$sql .= "e.extension_uuid, ";
+				$sql .= "e.extension, ";
+				$sql .= "e.number_alias, ";
+				$sql .= "e.user_context, ";
+				$sql .= "e.outbound_caller_id_name, ";
+				$sql .= "e.outbound_caller_id_number, ";
+				$sql .= "e.description ";
+				$sql .= "from ";
+				$sql .= "v_extension_users as u, ";
+				$sql .= "v_extensions as e ";
+				$sql .= "where ";
+				$sql .= "e.domain_uuid = :domain_uuid ";
+				$sql .= "and e.extension_uuid = u.extension_uuid ";
+				$sql .= "and u.user_uuid = :user_uuid ";
+				$sql .= "and e.enabled = 'true' ";
+				$sql .= "order by ";
+				$sql .= "e.extension asc ";
 				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 				$parameters['user_uuid']   = $_SESSION['user_uuid'];
 				$extensions                = $database->select($sql, $parameters, 'all');
