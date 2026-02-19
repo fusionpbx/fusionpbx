@@ -212,6 +212,7 @@
 		echo "  -f --file                              Update the file permissions.\n";
 		echo "  -u --service [update|stop|restart]     Update and restart services.\n";
 		echo "  -i --interactive                       Show the interactive menu.\n";
+		echo "  -b --bootstrap                         Bootstrap generate new superadmin password.\n";
 		echo "\n";
 
 	}
@@ -557,6 +558,114 @@
 			echo $repo.": ".$message."\n";
 		}
 
+	}
+
+// Bootstrap new password for super admin 
+	if ($upgrade_type == 'bootstrap' or $upgrade_type == '-b'  or $upgrade_type == '--bootstrap') {
+			$password = '';
+			$charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&';
+  
+ 			for($i = 0; $i < 12; $i++) {
+				$random_int = mt_rand();
+				$password .= $charset[$random_int % strlen($charset)];
+			} 
+
+			// Locate superadmin
+			$sql  = "SELECT ";
+			$sql .= "    domain_uuid, ";
+			$sql .= "    domain_name, ";
+			$sql .= "    domain_enabled ";
+			$sql .= "FROM v_domains";
+
+			$results = $database->select($sql, null, 'row');
+			unset($sql);
+
+                        //check if domain name ip 
+			if (is_array($results) && @sizeof($results) != 0) {
+				if (filter_var($results['domain_name'], FILTER_VALIDATE_IP) && $results['domain_enabled'] == 1) {
+					$domain_uuid = $results['domain_uuid'];
+					$domain_name = $results['domain_name'];
+				}
+			}
+			unset($results);
+			// Find superadmin group
+			$sql  = "SELECT ";
+			$sql .= "    domain_uuid, ";
+			$sql .= "    group_name ";
+			$sql .= "FROM v_user_groups ";
+			$sql .= "WHERE domain_uuid = :domain_uuid";
+
+			$parameters['domain_uuid'] = $domain_uuid;
+			$results = $database->select($sql, $parameters, 'all');
+
+			if (is_array($results) && @sizeof($results) != 0) {
+				if ($results[0]['group_name'] == 'superadmin') {
+					$super_domain = $results[0]['domain_uuid'];
+				}
+			}
+			unset($results);
+
+			$options = ['cost' => 10];
+
+			$sql  = "SELECT user_uuid ";
+			$sql .= "FROM v_users ";
+ 			$sql .= "WHERE domain_uuid = :domain_uuid ";
+			$sql .= "AND username = :admin";
+			$parameters['domain_uuid'] = $super_domain;
+			$parameters['admin'] = 'admin';
+			$results = $database->select($sql, $parameters, 'row');
+			unset($sql, $parameters);
+
+			if (is_array($results) && !empty($results['user_uuid'])) {
+				$sql  = "UPDATE v_users SET ";
+				$sql .= "    password = :password, ";
+				$sql .= "    salt = :salt, ";
+				$sql .= "    update_date = now(), ";
+				$sql .= "    update_user = :update_user ";
+				$sql .= "WHERE domain_uuid = :domain_uuid ";
+				$sql .= "AND username = :username";
+				$parameters['password']     = password_hash($password, PASSWORD_DEFAULT, $options);
+				$parameters['salt']         = null;
+				$parameters['update_user']  = $_SESSION['username'] ?? 'system';
+				$parameters['domain_uuid']  = $super_domain;
+				$parameters['username']     = 'admin';
+				$database->execute($sql, $parameters);	
+				unset($sql, $parameters);
+                                if ($database->message['code'] == 200 ) {
+                                        echo 'Updated credentials for user admin ' .$password."\n";
+                                } else {
+                                        echo 'Failed to update super user, return code ' .$database->message['code'] ."\n";
+                                }
+			} else {
+				// insert or update user
+				$sql  = "INSERT INTO v_users ( ";
+				$sql .= "    user_uuid, ";
+				$sql .= "    domain_uuid, ";
+				$sql .= "    username, ";
+				$sql .= "    password, ";
+				$sql .= "    salt ";
+				$sql .= ") VALUES ( ";
+				$sql .= "    :user_uuid, ";
+				$sql .= "    :domain_uuid, ";
+				$sql .= "    :username, ";
+				$sql .= "    :password, ";
+				$sql .= "    :salt ";
+				$sql .= ") ";
+				$sql .= "ON CONFLICT DO NOTHING";
+				$parameters['user_uuid'] = uuid();
+				$parameters['domain_uuid'] = $super_domain;
+				$parameters['username']    = 'admin';
+				$parameters['password']    = password_hash($password, PASSWORD_DEFAULT, $options);
+				$parameters['salt']        = null;
+				$database->execute($sql, $parameters);
+				if ($database->message['code'] == 200 ) {
+					echo 'Generated new credentials for user admin ' .$password."\n";
+				} else {
+					echo 'Failed to create super user, return code ' .$database->message['code'] ."\n"; 
+				}
+				unset($sql, $parameters);
+			}
+			unset($results);
 	}
 
 /**
