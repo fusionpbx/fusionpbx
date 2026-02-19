@@ -375,7 +375,7 @@
 			echo 	"<select name='name' id='name_select' class='formfld' style='width: auto; margin: 0;'>\n";
 			echo "		<option value='' selected='selected' disabled='disabled'>".$text['label-category']."</option>\n";
 
-			if (permission_exists('music_on_hold_domain')) {
+			if (permission_exists('music_on_hold_domain') && if_group("superadmin")) {
 				echo "	<optgroup label='".$text['option-global']."'>\n";
 				if (!empty($streams) && @sizeof($streams) != 0) {
 					foreach ($streams as $row) {
@@ -474,7 +474,8 @@
 				//set the variables
 					$music_on_hold_name = $row['music_on_hold_name'];
 					$music_on_hold_rate = $row['music_on_hold_rate'];
-
+				//hide default (global MOH) if not in SuperAdmin group
+					if (if_group("superadmin") || $music_on_hold_name != 'default') {
 				//add the name (category)
 					if ($previous_name != $music_on_hold_name) {
 						echo "<b><i>".escape($music_on_hold_name)."</i></b>".(!is_uuid($row['domain_uuid']) ? '&nbsp;&nbsp;&nbsp;('.$text['label-global'].')' : null)."<br />\n";
@@ -609,7 +610,7 @@
 					echo "	</table>\n";
 					echo "</div>\n";
 					echo "<br />\n";
-
+					}
 				//set the previous music_on_hold_name
 					$previous_name = $music_on_hold_name;
 
