@@ -80,12 +80,12 @@ function Settings:get(category, subcategory, name)
 		local key = self:_cache_key(category, subcategory, name)
 
 		v = cache.get(key)
-		if v then
-			if v ~= NONE and name == 'array' then
+		-- if we get NONE or NIL, then we need to use _load()
+		if v ~= nil and v ~= NONE then
+			if name == 'array' then
 				v = split(v, '/+/', true)
 			end
 			self:set(category, subcategory, name, v)
-			if v == NONE then return nil end
 			return v
 		end
 	end
