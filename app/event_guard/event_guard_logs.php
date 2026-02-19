@@ -272,8 +272,8 @@
 			}
 			echo "	<td style='text-align: center;'><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($filter)."</a></td>\n";
 			echo "	<td><a href=\"https://search.arin.net/rdap/?query=".escape($row['ip_address'])."\" target=\"_blank\">".escape($row['ip_address'])."</a></td>\n";
-			echo "	<td>".escape($row['extension'])."</td>\n";
-			echo "	<td class='hide-md-dn'>".escape($row['user_agent'])."</td>\n";
+			echo "	<td style='max-width: 275px;'>".escape($row['extension'])."</td>\n";
+			echo "	<td style='max-width: 300px;' class='hide-md-dn'>".escape($row['user_agent'])."</td>\n";
 			echo "	<td>".escape($text['label-'.$row['log_status']])."</td>\n";
 			if (permission_exists('event_guard_log_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>\n";
