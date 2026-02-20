@@ -154,6 +154,12 @@
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
+	if (!empty($order_by)) {
+		$param = str_replace("&order_by=".$order_by, '', $param);
+	}
+	if (!empty($order)) {
+		$param = str_replace("&order=".$order, '', $param);
+	}
 
 //set the time zone
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
@@ -263,20 +269,20 @@
 		echo "	</th>\n";
 	}
 	if ($show == 'all' && permission_exists('user_log_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
 	echo "<th class='left'>".$text['label-date']."</th>\n";
 	echo "<th class='left hide-md-dn'>".$text['label-time']."</th>\n";
 	echo "<th class='shrink hide-md-dn'>".$text['label-hostname']."</th>\n";
 	echo "<th class='right'>".$text['label-status']."</th>\n";
-	echo th_order_by('username', $text['label-username'], $order_by, $order);
-	echo th_order_by('type', $text['label-type'], $order_by, $order);
-	echo th_order_by('result', $text['label-result'], $order_by, $order);
+	echo th_order_by('username', $text['label-username'], $order_by, $order, null, null, $param);
+	echo th_order_by('type', $text['label-type'], $order_by, $order, null, null, $param);
+	echo th_order_by('result', $text['label-result'], $order_by, $order, null, null, $param);
 	if ($has_column_detail) {
-		echo th_order_by('detail', $text['label-detail'], $order_by, $order);
+		echo th_order_by('detail', $text['label-detail'], $order_by, $order, null, null, $param);
 	}
-	echo th_order_by('remote_address', $text['label-remote_address'], $order_by, $order);
-	echo th_order_by('user_agent', $text['label-user_agent'], $order_by, $order);
+	echo th_order_by('remote_address', $text['label-remote_address'], $order_by, $order, null, null, $param);
+	echo th_order_by('user_agent', $text['label-user_agent'], $order_by, $order, null, null, $param);
 	echo "</tr>\n";
 
 	if (!empty($user_logs) && is_array($user_logs) && @sizeof($user_logs) != 0) {
