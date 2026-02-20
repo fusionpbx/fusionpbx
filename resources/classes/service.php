@@ -953,19 +953,18 @@ abstract class service {
 	protected static function log(string $message, int $level = LOG_NOTICE) {
 		// Check if we need to show the message
 		if ($level <= self::$log_level) {
-			// Log the message to syslog
-			syslog($level, $message);
-
-			// Check if we need to show the message in the console when running in foreground
+			// When not in daemon mode we log to console directly
 			if (!self::$daemon_mode) {
-				if (self::$show_timestamp_log) {
-					$time = date('Y-m-d H:i:s');
-					$class_name = self::base_class_name();
-					$hostname = gethostname();
-					echo "$time $hostname [$class_name] $message\n";
+				$level_as_string = self::log_level_to_string($level);
+				if (!self::$show_timestamp_log) {
+					echo "[$level_as_string] $message\n";
 				} else {
-					echo "[".static::class."] $message\n";
+					$time = date('Y-m-d H:i:s');
+					echo "[$time][$level_as_string] $message\n";
 				}
+			} else {
+				// Log the message to syslog
+				syslog($level, 'fusionpbx[' . posix_getpid() . ']: [' . static::class . '] ' . $message);
 			}
 		}
 	}
