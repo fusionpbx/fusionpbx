@@ -122,7 +122,7 @@
 			$sql .= " or lower(call_group) like :search ";
 		}
 		$sql .= " or lower(user_context) like :search ";
-		$sql .= " or lower(enabled) like :search ";
+		$sql .= " or lower(enabled::text) like :search ";
 		$sql .= " or lower(description) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
@@ -255,6 +255,7 @@
 			$sql .= " or lower(call_group) like :search ";
 		}
 		$sql .= " or lower(user_context) like :search ";
+		$sql .= " or lower(enabled::text) like :search ";
 		$sql .= " or lower(description) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
