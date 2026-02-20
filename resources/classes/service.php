@@ -137,7 +137,7 @@ abstract class service {
 	 *
 	 * @return bool True if the signals were sent successfully, false if no service is running
 	 */
-	public static function send_shutdown() {
+	public static function send_shutdown(): bool {
 		if (self::is_any_running()) {
 			return self::send_signal(15);	// SIGTERM
 		}
