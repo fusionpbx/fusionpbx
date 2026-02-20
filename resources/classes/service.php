@@ -488,6 +488,7 @@ abstract class service {
 		$help_options[$index]['short_description'] = '-r';
 		$help_options[$index]['long_description'] = '--reload';
 		$help_options[$index]['functions'][] = 'send_reload';
+		$help_options[$index]['functions'][] = 'shutdown';
 		$index++;
 		$help_options[$index]['short_option'] = 'd:';
 		$help_options[$index]['long_option'] = 'debug:';
