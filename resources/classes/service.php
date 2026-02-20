@@ -220,7 +220,7 @@ abstract class service {
 	 */
 	public static function send_reload(): bool {
 		if (self::is_any_running()) {
-			return self::send_signal(10);
+			return self::send_signal(10);  // SIGUSR1
 		}
 		return false;
 	}
