@@ -122,7 +122,7 @@ abstract class service {
 	 * calling another method from the constructor) will fail to register the signal handlers.</p>
 	 */
 	protected function __construct() {
-		openlog('[php][' . self::class . ']', LOG_CONS | LOG_NDELAY | LOG_PID, LOG_DAEMON);
+		openlog('[php][' . static::class . ']', LOG_CONS | LOG_NDELAY | LOG_PID, LOG_DAEMON);
 	}
 
 	/**
@@ -134,13 +134,15 @@ abstract class service {
 
 	/**
 	 * Sends a shutdown signal to the running process.
+	 *
+	 * @return bool True if the signals were sent successfully, false if no service is running
 	 */
 	public static function send_shutdown() {
 		if (self::is_any_running()) {
-			self::send_signal(SIGTERM);
-		} else {
-			die("Service Not Started\n");
+			return self::send_signal(15);	// SIGTERM
 		}
+
+		return false;
 	}
 
 	/**
@@ -166,30 +168,17 @@ abstract class service {
 	 * 'service' command as root user. It is possible to start the
 	 * service with user www-data and then the web UI would in fact
 	 * be able to send the reload signal to the running service.</p>
+	 *
+	 * @param int $posix_signal The POSIX signal to send.
+	 *
+	 * @return bool True if the signal was sent successfully, false otherwise.
 	 */
-	public static function send_signal($posix_signal) {
-		$signal_name = "";
-		switch ($posix_signal) {
-			case 1:   //SIGHUP
-			case 10:  //SIGUSR1
-				$signal_name = "Reload";
-				break;
-			case 12:  //SIGUSR2
-			case 15:  //SIGTERM
-				$signal_name = "Shutdown";
-				break;
-		}
+	public static function send_signal(int $posix_signal): bool {
 		$pid = self::get_service_pid();
-		if ($pid === false) {
-			self::log("service not running", LOG_EMERG);
-		} else {
-			if (posix_kill((int)$pid, $posix_signal)) {
-				echo "Sent $signal_name\n";
-			} else {
-				$err = posix_strerror(posix_get_last_error());
-				echo "Failed to send $signal_name: $err\n";
-			}
+		if ($pid !== false && posix_kill((int)$pid, $posix_signal)) {
+			return true;
 		}
+		return false;
 	}
 
 	/**
@@ -227,15 +216,13 @@ abstract class service {
 	/**
 	 * Sends a reload signal to running services, or exits if no service is running.
 	 *
-	 * @return void
+	 * @return bool True if the reload signal was sent successfully, false if no service is running
 	 */
-	public static function send_reload() {
+	public static function send_reload(): bool {
 		if (self::is_any_running()) {
-			self::send_signal(10);
-		} else {
-			die("Service Not Started\n");
+			return self::send_signal(10);
 		}
-		exit();
+		return false;
 	}
 
 	/**
@@ -451,10 +438,6 @@ abstract class service {
 			}
 		}
 	}
-
-	//
-	//
-	//
 
 	/**
 	 * Returns an array of base command options.
@@ -970,18 +953,19 @@ abstract class service {
 	protected static function log(string $message, int $level = LOG_NOTICE) {
 		// Check if we need to show the message
 		if ($level <= self::$log_level) {
-			// When not in daemon mode we log to console directly
+			// Log the message to syslog
+			syslog($level, $message);
+
+			// Check if we need to show the message in the console when running in foreground
 			if (!self::$daemon_mode) {
-				$level_as_string = self::log_level_to_string($level);
-				if (!self::$show_timestamp_log) {
-					echo "[$level_as_string] $message\n";
-				} else {
+				if (self::$show_timestamp_log) {
 					$time = date('Y-m-d H:i:s');
-					echo "[$time][$level_as_string] $message\n";
+					$class_name = self::base_class_name();
+					$hostname = gethostname();
+					echo "$time $hostname [$class_name] $message\n";
+				} else {
+					echo "[".static::class."] $message\n";
 				}
-			} else {
-				// Log the message to syslog
-				syslog($level, 'fusionpbx[' . posix_getpid() . ']: [' . static::class . '] ' . $message);
 			}
 		}
 	}
