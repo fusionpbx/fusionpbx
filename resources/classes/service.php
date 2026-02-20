@@ -175,7 +175,7 @@ abstract class service {
 	 */
 	public static function send_signal(int $posix_signal): bool {
 		$pid = self::get_service_pid();
-		if ($pid !== false && posix_kill((int)$pid, $posix_signal)) {
+		if ($pid !== false && posix_kill((int)$pid, (int)$posix_signal)) {
 			return true;
 		}
 		return false;
