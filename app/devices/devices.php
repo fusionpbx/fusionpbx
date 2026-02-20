@@ -165,17 +165,29 @@
 //prepare to page the results
 	$rows_per_page = intval($settings->get('domain', 'paging', 50));
 	$param = '';
-	if ($search) {
-		$param = "&search=".$search;
-		$param .= "&fields=".$fields;
+	if (!empty($search)) {
+		$param .= "&search=".$search;
+		$param .= !empty($fields) ? "&fields=".$fields : null;
 	}
 	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		$param .= "&show=all";
 	}
-	$page = $_GET['page'] ?? 0;
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param ?? '', $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param ?? '', $rows_per_page, true);
+	if (!empty($order_by)) {
+		$param .= "&order_by=".$order_by;
+	}
+	if (!empty($order)) {
+		$param .= "&order=".$order;
+	}
+	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
+	if (!empty($order_by)) {
+		$param = str_replace("&order_by=".$order_by, '', $param);
+	}
+	if (!empty($order)) {
+		$param = str_replace("&order=".$order, '', $param);
+	}
 
 //set the time zone
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
@@ -360,7 +372,7 @@
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' style='margin-left: 0 !important;' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'devices.php','style'=>($search == '' ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
 	echo "		</form>\n";
@@ -394,17 +406,17 @@
 	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
-	echo th_order_by('device_address', $text['label-device_address'], $order_by, $order, null, null, $param ?? null);
-	echo th_order_by('device_label', $text['label-device_label'], $order_by, $order, null, null, $param ?? null);
+	echo th_order_by('device_address', $text['label-device_address'], $order_by, $order, null, null, $param);
+	echo th_order_by('device_label', $text['label-device_label'], $order_by, $order, null, null, $param);
 	if ($device_alternate) {
-		echo th_order_by('device_template', $text['label-device_uuid_alternate'], $order_by, $order, null, null, $param ?? null);
+		echo th_order_by('device_template', $text['label-device_uuid_alternate'], $order_by, $order, null, null, $param);
 	}
-	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order, null, null, $param ?? null);
-	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order, null, null, $param ?? null);
+	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order, null, null, $param);
+	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order, null, null, $param);
 	echo "<th>". $text['label-device_profiles']."</th>\n";
-	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order, null, "class='center'", $param ?? null);
-	echo th_order_by('device_provisioned_date', $text['label-device_status'], $order_by, $order, null, null, $param ?? null);
-	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order, null, "class='hide-sm-dn'", $param ?? null);
+	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order, null, "class='center'", $param);
+	echo th_order_by('device_provisioned_date', $text['label-device_status'], $order_by, $order, null, null, $param);
+	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order, null, "class='hide-sm-dn'", $param);
 	if (permission_exists('device_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
