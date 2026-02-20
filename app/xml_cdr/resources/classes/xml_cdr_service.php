@@ -99,7 +99,7 @@ class xml_cdr_service extends service {
 		while ($this->running) {
 
 			//get the list of call detail records, and limit the number of records
-			$xml_cdr_array = glob($this->xml_cdr_dir . '/*.cdr.xml');
+			$xml_cdr_array = array_slice(glob($this->xml_cdr_dir . '/*.cdr.xml'), 0, 100);
 
 			//process the call detail records
 			if (!empty($xml_cdr_array)) {
