@@ -48,27 +48,33 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination_number} \${destination_description}";
 		$y++;
 		$apps[$x]['destinations'][$y]['type'] = 'array';
-		$apps[$x]['destinations'][$y]['label'] = 'other';
+		$apps[$x]['destinations'][$y]['label'] = 'dialplans';
 		$apps[$x]['destinations'][$y]['name'] = 'dialplans';
 		$apps[$x]['destinations'][$y]['field']['name']  = 'name';
 		$apps[$x]['destinations'][$y]['field']['destination'] = 'destination';
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
-		/*
 		$z=0;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'check_voicemail';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'check_voicemail';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*98 XML ${context}';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['extension'] = '*98';
 		$z++;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'company_directory';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'company_directory';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['extension'] = '*411';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*411 XML ${context}';
 		$z++;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'hangup';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'hangup';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['extension'] = '';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = 'hangup';
 		$z++;
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'company_directory';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'record';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'record';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['extension'] = '*732';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*732 XML ${context}';
-		*/
 
 	//permission details
 		$y=0;
