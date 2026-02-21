@@ -71,7 +71,7 @@
 				break;
 		}
 
-		header('Location: devices.php'.($search != '' ? '?search='.urlencode($search).'&fields='.urlencode($fields) : null));
+		header('Location: devices.php'.(!empty($search) ? '?search='.urlencode($search).'&fields='.urlencode($fields) : null));
 		exit;
 	}
 
@@ -435,7 +435,7 @@
 
 			$list_row_url = '';
 			if (permission_exists('device_edit')) {
-				$list_row_url = "device_edit.php?id=".urlencode($row['device_uuid']);
+				$list_row_url = "device_edit.php?id=".urlencode($row['device_uuid']).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(is_numeric($page) ? '&page='.urlencode($page) : null).(!empty($search) ? '&search='.$search : null);
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
