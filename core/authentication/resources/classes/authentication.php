@@ -263,7 +263,7 @@ class authentication {
 		}
 
 		//debug information
-		//view_array($_SESSION['authentication'], false);
+		// view_array($_SESSION['authentication'], false);
 
 		//set authorized to false if any authentication method failed
 		$authorized  = false;
@@ -294,6 +294,59 @@ class authentication {
 				$authorized                                                = false;
 				$failed_login_message                                      = "CIDR blocked login attempt";
 				$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
+			}
+		}
+
+		//create remember me token
+		if ($authorized && isset($_SESSION['username']) && isset($_SESSION['remember'])) {
+			//define variables
+			$input_username = $_SESSION['username'];
+			$remember = $_SESSION['remember'];
+
+			//match the username
+			$sql = "select * from v_users ";
+			$sql .= "where username = :username";
+			$parameters['username'] = $input_username;
+			$user = $this->database->select($sql, $parameters, 'all');
+			unset($sql, $parameters);
+
+			if ($remember && $user) {
+				//generate the token
+				$token = generate_password(32);
+				$hashed_token = hash('sha256', $token);
+
+				//save token to the user logs
+				$sql = "update v_user_logs ";
+				$sql .= "set remember_token = :remember_token ";
+				$sql .= "where user_log_uuid = ( ";
+				$sql .= "	select user_log_uuid FROM v_user_logs ";
+				$sql .= "	where result = 'success' ";
+				$sql .= "	and remote_address = :remote_address ";
+				$sql .= "	and user_agent = :user_agent ";
+				$sql .= "	and user_uuid = :user_uuid ";
+				$sql .= "	and timestamp > NOW() - INTERVAL '7 days' ";
+				$sql .= "	order by timestamp desc limit 1 ";
+				$sql .= ") ";
+				$parameters['remember_token'] = $hashed_token;
+				$parameters['remote_address'] = $_SERVER['REMOTE_ADDR'];
+				$parameters['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+				$parameters['user_uuid'] = $user[0]['user_uuid'];
+				$this->database->execute($sql, $parameters);
+				unset($sql, $parameters);
+
+				//set cookie with the token
+				setcookie(
+					'remember',
+					$token,
+					[
+						'expires' => strtotime('+7 days'),
+						'path' => '/',
+						'domain' => '',
+						'secure' => true,
+						'httponly' => true,
+						'samesite' => 'Lax'
+					]
+				);
 			}
 		}
 
