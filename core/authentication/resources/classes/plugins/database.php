@@ -189,6 +189,9 @@ class plugin_database {
 		if (isset($_REQUEST["password"])) {
 			$this->password = $_REQUEST["password"];
 		}
+		if (isset($_POST["remember"])) {
+			$_SESSION['remember'] = $_POST["remember"];
+		}
 		if (isset($_REQUEST["key"])) {
 			$this->key = $_REQUEST["key"];
 		}
