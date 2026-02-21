@@ -169,12 +169,29 @@
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = "&search=".$search;
-	$param .= $order_by ? "&order_by=".$order_by."&order=".$order : null;
-	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
+	$param = '';
+	if (!empty($search)) {
+		$param .= "&search=".urlencode($search);
+	}
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('gateway_all')) {
+		$param .= "&show=all";
+	}
+	if (!empty($order_by)) {
+		$param .= "&order_by=".$order_by;
+	}
+	if (!empty($order)) {
+		$param .= "&order=".$order;
+	}
+	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
+	if (!empty($order_by)) {
+		$param = str_replace("&order_by=".$order_by, '', $param);
+	}
+	if (!empty($order)) {
+		$param = str_replace("&order=".$order, '', $param);
+	}
 
 //get the list
 	$sql = "select ";
@@ -296,12 +313,12 @@
 		echo "	</th>\n";
 	}
 	if ($show == "all" && permission_exists('gateway_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param);
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
-	echo th_order_by('gateway', $text['label-gateway'], $order_by, $order);
+	echo th_order_by('gateway', $text['label-gateway'], $order_by, $order, null, null, $param);
 	echo "<th class='hide-sm-dn'>".$text['label-proxy']."</th>\n";
-	echo th_order_by('context', $text['label-context'], $order_by, $order);
-	echo th_order_by('register', $text['label-register'], $order_by, $order);
+	echo th_order_by('context', $text['label-context'], $order_by, $order, null, null, $param);
+	echo th_order_by('register', $text['label-register'], $order_by, $order, null, null, $param);
 	if ($esl->is_connected()) {
 		echo "<th class='hide-sm-dn'>".$text['label-status']."</th>\n";
 		if (permission_exists('gateway_edit')) {
@@ -309,9 +326,9 @@
 		}
 		echo "<th>".$text['label-state']."</th>\n";
 	}
-	echo th_order_by('hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-sm-dn'");
-	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
-	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
+	echo th_order_by('hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-sm-dn'", $param);
+	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $param);
+	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'", $param);
 	if (permission_exists('gateway_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -322,7 +339,7 @@
 		foreach($gateways as $row) {
 			$list_row_url = '';
 			if (permission_exists('gateway_edit')) {
-				$list_row_url = "gateway_edit.php?id=".urlencode($row['gateway_uuid']);
+				$list_row_url = "gateway_edit.php?id=".urlencode($row['gateway_uuid']).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(is_numeric($page) ? '&page='.urlencode($page) : null).(!empty($search) ? '&search='.$search : null);
 				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
