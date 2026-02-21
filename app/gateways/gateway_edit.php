@@ -38,6 +38,12 @@
 	$language = new text;
 	$text = $language->get();
 
+//get order and order by, page
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_REQUEST["order_by"] ?? ''));
+	$order = $_REQUEST["order"] ?? 'asc';
+	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
+	$search = $_REQUEST['search'] ?? null;
+
 //action add or update
 	if (!empty($_REQUEST["id"])) {
 		$action = "update";
@@ -63,7 +69,7 @@
 
 		if ($total_gateways >= $settings->get('limit', 'gateways')) {
 			message::add($text['message-maximum_gateways'].' '.$settings->get('limit', 'gateways'), 'negative');
-			header('Location: gateways.php');
+			header('Location: gateways.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
 			exit;
 		}
 	}
@@ -117,7 +123,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: gateways.php');
+				header('Location: gateways.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
 				exit;
 			}
 
@@ -241,7 +247,7 @@
 				if ($action == "update") {
 					message::add($text['message-update']);
 				}
-				header("Location: gateways.php");
+				header("Location: gateways.php?".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
 				exit;
 			}
 	}
@@ -360,7 +366,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-gateway']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'gateways.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'gateways.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null)]);
 	if ($action == "update" && permission_exists('gateway_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'name'=>'btn_copy','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
@@ -901,6 +907,7 @@
 	if ($action == "update") {
 		echo "<input type='hidden' name='gateway_uuid' value='".escape($gateway_uuid)."'>\n";
 	}
+	echo "<input type='hidden' name='search' id='search' value=\"".escape($search ?? '')."\" />\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
