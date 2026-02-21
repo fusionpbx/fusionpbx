@@ -71,6 +71,7 @@ class plugin_database {
 		$login_remember_me         = $settings->get('login', 'remember_me');
 		$login_destination         = $settings->get('login', 'destination');
 		$users_unique              = $settings->get('users', 'unique', '');
+
 		//set the default login type and image
 		if (empty($theme_login_type)) {
 			$theme_login_type  = 'image';
