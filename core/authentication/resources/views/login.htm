@@ -91,6 +91,14 @@
 							{/if}
 						{/if}
 					</div>
+					{if !empty($login_remember_me)}
+					<div style="display: flex;">
+						<span style='padding-left: 15px;'>
+							<input type='checkbox' id='remember' name='remember'>
+							<label for='remember' class='login_text' style='padding-bottom: 1px;'>{$label_remember_me}</label>
+						</span>
+					</div>
+					{/if}
 					<div>
 						<input type='submit' id='btn_login' class='btn' style='width: 100px; margin-top: 15px;' value='{$button_login}' /><br />
 						{if !empty($login_password_reset_enabled) && $login_password_reset_enabled}
