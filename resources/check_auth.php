@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -68,6 +68,39 @@
 
 			// update creation time
 			$_SESSION['session']['created'] = time();
+
+			//regenerate remember token
+			if (isset($_COOKIE['remember'])) {
+
+				//remove old token
+				$sql = "update v_user_logs ";
+				$sql .= "set remember_token = null ";
+				$sql .= "where remember_token = :remember_token ";
+				$parameters['remember_token'] = hash('sha256', $_COOKIE['remember']);
+				$database->execute($sql, $parameters);
+				unset($sql, $parameters);
+
+				//generate new token
+				$token = generate_password(32);
+				$hashed_token = hash('sha256', $token);
+
+				//add token to user log array
+				$log_array['remember_token'] = $hashed_token;
+
+				//set a new cookie
+				setcookie(
+					'remember',
+					$token,
+					[
+						'expires' => strtotime('+7 days'),
+						'path' => '/',
+						'domain' => '',
+						'secure' => true,
+						'httponly' => true,
+						'samesite' => 'Lax'
+					]
+				);
+			}
 
 			//add the result to the user logs
 			user_logs::add($log_array);
@@ -123,6 +156,59 @@
 			$auth = new authentication(['settings' => $settings]);
 			$result = $auth->validate();
 
+		//create remember me token
+			if (isset($_POST['username']) && isset($_POST['remember'])) {
+				//define variables
+				$input_username = $_POST['username'];
+				$remember = isset($_POST['remember']);
+
+				//match the username
+				$sql = "select * from v_users ";
+				$sql .= "where username = :username";
+				$parameters['username'] = $input_username;
+				$user = $database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
+
+				if ($remember && $user) {
+					//generate the token
+					$token = generate_password(32);
+					$hashed_token = hash('sha256', $token);
+
+					//save token to the user logs
+					$sql = "update v_user_logs ";
+					$sql .= "set remember_token = :remember_token ";
+					$sql .= "where user_log_uuid = ( ";
+					$sql .= "	select user_log_uuid FROM v_user_logs ";
+					$sql .= "	where result = 'success' ";
+					$sql .= "	and remote_address = :remote_address ";
+					$sql .= "	and user_agent = :user_agent ";
+					$sql .= "	and user_uuid = :user_uuid ";
+					$sql .= "	and timestamp > NOW() - INTERVAL '7 days' ";
+					$sql .= "	order by timestamp desc limit 1 ";
+					$sql .= ") ";
+					$parameters['remember_token'] = $hashed_token;
+					$parameters['remote_address'] = $_SERVER['REMOTE_ADDR'];
+					$parameters['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+					$parameters['user_uuid'] = $user[0]['user_uuid'];
+					$database->execute($sql, $parameters);
+					unset($sql, $parameters);
+
+					//set cookie with the token
+					setcookie(
+						'remember',
+						$token,
+						[
+							'expires' => strtotime('+7 days'),
+							'path' => '/',
+							'domain' => '',
+							'secure' => true,
+							'httponly' => true,
+							'samesite' => 'Lax'
+						]
+					);
+				}
+			}
+
 		//if not authorized
 			if (empty($_SESSION['authorized']) || !$_SESSION['authorized']) {
 				//log the failed auth attempt to the system to the syslog server
@@ -145,7 +231,7 @@
 			settings::clear_cache();
 
 		//if logged in, redirect to login destination
-			if (!isset($_REQUEST["key"])) {
+			if (!isset($_REQUEST["key"]) && !isset($_COOKIE['remember'])) {
 
 				//connect to the settings object
 				$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
