@@ -48,6 +48,7 @@
 	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_REQUEST["order_by"] ?? 'extension'));
 	$order = $_REQUEST["order"] ?? 'asc';
 	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
+	$search = $_REQUEST['search'] ?? null;
 
 //return the first item if data type = array, returns value if data type = text
 	/**
@@ -126,7 +127,7 @@
 
 		if ($total_extensions >= $limit_extensions) {
 			message::add($text['message-maximum_extensions'].' '.$limit_extensions, 'negative');
-			header('Location: extensions.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null));
+			header('Location: extensions.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
 			exit;
 		}
 	}
@@ -329,7 +330,7 @@
 			$p->delete('extension_user_delete', 'temp');
 
 		//redirect
-			header("Location: extension_edit.php?id=".$extension_uuid.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null));
+			header("Location: extension_edit.php?id=".$extension_uuid.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
 			exit;
 	}
 
@@ -354,7 +355,7 @@
 				$p->delete('device_line_delete', 'temp');
 
 			//redirect
-				header("Location: extension_edit.php?id=".$extension_uuid.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null));
+				header("Location: extension_edit.php?id=".$extension_uuid.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
 				exit;
 		}
 	}
@@ -371,7 +372,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: extensions.php');
+				header('Location: extensions.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
 				exit;
 			}
 
@@ -414,7 +415,7 @@
 			if (message::count() != 0 || !empty($invalid)) {
 				if ($invalid) { message::add($text['message-required'].implode(', ', $invalid), 'negative', 7500); }
 				persistent_form_values('store', $_POST);
-				header("Location: extension_edit.php?".(permission_exists('extension_edit') && $action != 'add' ? "&id=".urlencode($extension_uuid) : null).(!empty($order_by) ? '&order_by='.$order_by : null).(!empty($order) ? '&order='.$order : null).(!empty($page) ? '&page='.$page : null));
+				header("Location: extension_edit.php?".(permission_exists('extension_edit') && $action != 'add' ? "&id=".urlencode($extension_uuid) : null).(!empty($order_by) ? '&order_by='.$order_by : null).(!empty($order) ? '&order='.$order : null).(!empty($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
 				exit;
 			}
 			else {
@@ -922,10 +923,10 @@
 						message::add($text['message-update']);
 					}
 					if ($range > 1) {
-						header("Location: extensions.php?".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null));
+						header("Location: extensions.php?".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
 					}
 					else {
-						header("Location: extension_edit.php?id=".$extension_uuid.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null));
+						header("Location: extension_edit.php?id=".$extension_uuid.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
 					}
 					exit;
 			}
@@ -1186,13 +1187,13 @@
 	echo "	var new_ext = prompt('".$text['message-extension']."');\n";
 	echo "	if (new_ext != null) {\n";
 	echo "		if (!isNaN(new_ext)) {\n";
-	echo "			document.location.href='extension_copy.php?id=".escape($extension_uuid ?? '')."&ext=' + new_ext + '".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(!empty($page) && is_numeric($page) ? '&page='.$page : null)."';\n";
+	echo "			document.location.href='extension_copy.php?id=".escape($extension_uuid ?? '')."&ext=' + new_ext + '".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(!empty($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null)."';\n";
 	echo "		}\n";
 	echo "		else {\n";
 	echo "			var new_number_alias = prompt('".$text['message-number_alias']."');\n";
 	echo "			if (new_number_alias != null) {\n";
 	echo "				if (!isNaN(new_number_alias)) {\n";
-	echo "					document.location.href='extension_copy.php?id=".escape($extension_uuid ?? '')."&ext=' + new_ext + '&alias=' + new_number_alias + '".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(!empty($page) && is_numeric($page) ? '&page='.$page : null)."';\n";
+	echo "					document.location.href='extension_copy.php?id=".escape($extension_uuid ?? '')."&ext=' + new_ext + '&alias=' + new_number_alias + '".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(!empty($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null)."';\n";
 	echo "				}\n";
 	echo "			}\n";
 	echo "		}\n";
@@ -1212,7 +1213,7 @@
 	}
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'extensions.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'extensions.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null)]);
 	if ($action == 'update') {
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists('xml_cdr_view')) {
@@ -2404,6 +2405,7 @@
 		echo "<input type='hidden' name='delete_type' id='delete_type' value=''>";
 		echo "<input type='hidden' name='delete_uuid' id='delete_uuid' value=''>";
 	}
+	echo "<input type='hidden' name='search' id='search' value=\"".escape($search ?? '')."\" />\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
