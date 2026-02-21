@@ -417,7 +417,7 @@
 		foreach($extensions as $row) {
 			$list_row_url = '';
 			if (permission_exists('extension_edit')) {
-				$list_row_url = "extension_edit.php?id=".urlencode($row['extension_uuid']).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(is_numeric($page) ? '&page='.urlencode($page) : null);
+				$list_row_url = "extension_edit.php?id=".urlencode($row['extension_uuid']).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(is_numeric($page) ? '&page='.urlencode($page) : null).(!empty($search) ? '&search='.urlencode($search) : null);
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
