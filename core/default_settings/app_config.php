@@ -249,6 +249,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the domain to use in the Password Reset link sent via email.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d8b18b38-8510-489a-9bba-33534550ddef";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "login";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "remember_me";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Display a Remember Me checkbox on the login box.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "962ac32c-74ce-4cce-b1d9-89f4d921493d";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "login";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "domain_name_visible";
