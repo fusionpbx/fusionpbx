@@ -28,7 +28,7 @@
  * authentication
  *
  */
-class authentication {
+class authentication implements logout_event {
 
 	/**
 	 * Declare Public variables
@@ -65,6 +65,19 @@ class authentication {
 
 		//intialize the object
 		$this->user_uuid = null;
+	}
+
+	/**
+	 * Called when the user logs out
+	 */
+	public static function on_logout() {
+		// This method is called when the logout_event interface is triggered.
+		// It can be used to perform any necessary cleanup or actions when a
+		// user logs out. For example, it could be used to log the logout event,
+		// clear any cached data, or perform other tasks related to the logout
+		// process. Since this is a static method, it can be called without
+		// instantiating the authentication class, allowing it to be easily
+		// integrated into the logout process.
 	}
 
 	/**
