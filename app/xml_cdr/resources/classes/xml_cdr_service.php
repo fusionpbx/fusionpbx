@@ -6,6 +6,13 @@
 class xml_cdr_service extends service {
 
 	/**
+	 * Message to show when reloading the settings
+	 *
+	 * @var string
+	 */
+	private $message;
+
+	/**
 	 * database object
 	 * @var database
 	 */
@@ -49,9 +56,18 @@ class xml_cdr_service extends service {
 
 		//get the xml_cdr directory
 		$this->xml_cdr_dir = $this->settings->get('switch', 'log', '/var/log/freeswitch').'/xml_cdr';
+
+		// Show the message in the log so we can track when the settings are reloaded
+		$this->notice($this->message);
+
+		// Set the message for the next reload
+		$this->message = "Settings reloaded";
 	}
 
 	public function run(): int {
+
+		// Set the initial message
+		$this->message = "Settings loaded";
 
 		// Reload the settings
 		$this->reload_settings();
@@ -74,11 +90,6 @@ class xml_cdr_service extends service {
 		//create the invalid sql directory
 		if (!file_exists($this->xml_cdr_dir.'/failed/sql')) {
 			mkdir($this->xml_cdr_dir.'/failed/sql', 0770, true);
-		}
-
-		//update permissions to correct systems with the wrong permissions
-		if (file_exists($this->xml_cdr_dir.'/failed')) {
-			exec('chmod 770 -R '.$this->xml_cdr_dir.'/failed');
 		}
 
 		//import the call detail records from HTTP POST or file system
@@ -144,7 +155,7 @@ class xml_cdr_service extends service {
 						}
 
 						//parse the xml and insert the data into the database
-						$cdr->xml_array($i, $leg, $call_details);
+						$cdr->xml_array(0, $leg, $call_details);
 					}
 				}
 			}
@@ -152,11 +163,13 @@ class xml_cdr_service extends service {
 			//sleep for 100 ms
 			usleep(100000);
 		}
+
+		// Return a successful exit code
 		return 0;
 	}
 
 	protected static function display_version(): void {
-		echo "1.1\n";
+		echo "XML CDR Service version 1.1\n";
 	}
 
 	protected static function set_command_options() {
