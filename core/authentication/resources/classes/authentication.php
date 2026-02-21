@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -101,8 +101,93 @@ class authentication {
 		//check if contacts app exists
 		$contacts_exists = file_exists(dirname(__DIR__, 4) . '/core/contacts/');
 
+		//check for remember me cookie
+		if (isset($_COOKIE['remember'])) {
+			//set variables
+			$plugin_name = 'remember';
+			$hashed_token = hash('sha256', $_COOKIE['remember']);
+
+			//get user logs
+			$sql = "select * from v_user_logs ";
+			$sql .= "where result = 'success' ";
+			$sql .= "and remote_address = :remote_address ";
+			$sql .= "and user_agent = :user_agent ";
+			$sql .= "and remember_token = :remember_token \n";
+			$sql .= "and timestamp > NOW() - INTERVAL '7 days' ";
+			$sql .= "limit 1 ";
+			$parameters['remote_address'] = $_SERVER['REMOTE_ADDR'];
+			$parameters['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+			$parameters['remember_token'] = $hashed_token;
+			$user_logs = $this->database->select($sql, $parameters, 'all');
+			unset($sql, $parameters);
+
+			//get the user details
+			$sql = "select \n";
+			$sql .= "u.domain_uuid, \n";
+			$sql .= "d.domain_name, \n";
+			$sql .= "u.user_uuid, \n";
+			$sql .= "u.username, \n";
+			$sql .= "u.contact_uuid \n";
+			$sql .= "from v_users as u, v_domains as d \n";
+			$sql .= "where user_uuid = :user_uuid \n";
+			$sql .= "and u.domain_uuid = d.domain_uuid \n";
+			$sql .= "and u.user_enabled = 'true' \n";
+			$parameters['user_uuid'] = $user_logs[0]['user_uuid'];
+			$row = $this->database->select($sql, $parameters, 'row');
+			unset($sql, $parameters);
+
+			//set class variables
+			if (!empty($user_logs) && !empty($row["username"])) {
+				//get the contact details
+				if ($contacts_exists && !empty($row["contact_uuid"])) {
+					$sql = "select * from v_contacts \n";
+					$sql .= "where contact_uuid = :contact_uuid \n";
+					$sql .= "and domain_uuid = :domain_uuid \n";
+					$parameters['contact_uuid'] = $row["contact_uuid"];
+					$parameters['domain_uuid'] = $row["domain_uuid"];
+					$contact = $this->database->select($sql, $parameters, 'row');
+					unset($sql, $parameters);
+				}
+
+				//build a result array
+				$result['plugin']       = $plugin_name;
+				$result['domain_name']  = $row["domain_name"];
+				$result['username']     = $row['username'];
+				$result['user_uuid']    = $row['user_uuid'];
+				$result['contact_uuid'] = $row["contact_uuid"];
+				if ($contacts_exists) {
+					$result["contact_organization"] = $contact["contact_organization"] ?? '';
+					$result["contact_name_given"]   = $contact["contact_name_given"] ?? '';
+					$result["contact_name_family"]  = $contact["contact_name_family"] ?? '';
+					$result["contact_image"]        = $contact["contact_image"] ?? '';
+				}
+				$result['domain_uuid'] = $row['domain_uuid'];
+				$result['authorized']  = true;
+
+				//set the domain_uuid
+				$this->domain_uuid = $row["domain_uuid"];
+
+				//set the user_uuid
+				$this->user_uuid = $row["user_uuid"];
+
+				//save the result to the authentication plugin
+				$_SESSION['authentication']['methods'] = [];
+				$_SESSION['authentication']['methods'][] = $plugin_name;
+				$_SESSION['authentication']['plugin'] = [];
+				$_SESSION['authentication']['plugin'][$plugin_name] = $result;
+
+				//user passed the cidr check
+				self::create_user_session($result, $this->settings);
+			}
+		}
+
 		//use the authentication plugins
 		foreach ($_SESSION['authentication']['methods'] as $name) {
+			//skip the loop if already authorized
+			if (isset($result['authorized']) && $result['authorized']) {
+				break;
+			}
+
 			//already processed the plugin move to the next plugin
 			if (!empty($_SESSION['authentication']['plugin'][$name]['authorized']) && $_SESSION['authentication']['plugin'][$name]['authorized']) {
 				continue;
