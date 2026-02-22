@@ -33,11 +33,7 @@
 //call any classes that need to execute code on logout
 	$classes = $autoload->get_interface_list('logout_event');
 	foreach ($classes as $class) {
-<<<<<<< HEAD
 		$class::on_logout($settings);
-=======
-		$class::on_logout();
->>>>>>> bad884891f14f6ec02c401c0f65d2f818b3e4a9e
 	}
 
 //destroy session
