@@ -34,7 +34,7 @@
 //set the current domain_uuid
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
 
-//initialize the settigns object
+//initialize the settings object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
 //get action, if any - define, request, reset
@@ -255,6 +255,15 @@
 			$sql .= "and username = :username ";
 			$parameters['domain_uuid'] = $_SESSION['valid_domain'];
 			$parameters['password'] = password_hash($password_new, PASSWORD_DEFAULT, $options);
+			$parameters['username'] = $_SESSION['valid_username'];
+			$database->execute($sql, $parameters);
+			unset($sql, $parameters);
+
+			//remove remember me token
+			setcookie('remember', '', time() - 3600, '/');
+			$sql  = "update v_user_logs set ";
+			$sql .= "remember_token = null ";
+			$sql .= "and username = :username ";
 			$parameters['username'] = $_SESSION['valid_username'];
 			$database->execute($sql, $parameters);
 			unset($sql, $parameters);

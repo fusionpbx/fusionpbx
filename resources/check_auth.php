@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -68,6 +68,39 @@
 
 			// update creation time
 			$_SESSION['session']['created'] = time();
+
+			//regenerate remember token
+			if (isset($_COOKIE['remember'])) {
+
+				//remove old token
+				$sql = "update v_user_logs ";
+				$sql .= "set remember_token = null ";
+				$sql .= "where remember_token = :remember_token ";
+				$parameters['remember_token'] = hash('sha256', $_COOKIE['remember']);
+				$database->execute($sql, $parameters);
+				unset($sql, $parameters);
+
+				//generate new token
+				$token = generate_password(32);
+				$hashed_token = hash('sha256', $token);
+
+				//add token to user log array
+				$log_array['remember_token'] = $hashed_token;
+
+				//set a new cookie
+				setcookie(
+					'remember',
+					$token,
+					[
+						'expires' => strtotime('+7 days'),
+						'path' => '/',
+						'domain' => '',
+						'secure' => true,
+						'httponly' => true,
+						'samesite' => 'Lax'
+					]
+				);
+			}
 
 			//add the result to the user logs
 			user_logs::add($log_array);
@@ -145,7 +178,7 @@
 			settings::clear_cache();
 
 		//if logged in, redirect to login destination
-			if (!isset($_REQUEST["key"])) {
+			if (!isset($_REQUEST["key"]) && !isset($_COOKIE['remember'])) {
 
 				//connect to the settings object
 				$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
