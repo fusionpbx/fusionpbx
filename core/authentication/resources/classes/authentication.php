@@ -70,14 +70,7 @@ class authentication implements logout_event {
 	/**
 	 * Called when the user logs out
 	 */
-	public static function on_logout() {
-		// This method is called when the logout_event interface is triggered.
-		// It can be used to perform any necessary cleanup or actions when a
-		// user logs out. For example, it could be used to log the logout event,
-		// clear any cached data, or perform other tasks related to the logout
-		// process. Since this is a static method, it can be called without
-		// instantiating the authentication class, allowing it to be easily
-		// integrated into the logout process.
+	public static function on_logout(settings $settings) {
 	}
 
 	/**
@@ -303,6 +296,9 @@ class authentication implements logout_event {
 		global $conf;
 		if (!isset($conf['session.validate'])) {
 			$conf['session.validate'][] = 'HTTP_USER_AGENT';
+		} elseif (!is_array($conf['session.validate'])) {
+			// Ensure value is an array to use in a foreach loop
+			$conf['session.validate'] = [$conf['session.validate']];
 		}
 		foreach ($conf['session.validate'] as $name) {
 			$server_array[$name] = $_SERVER[$name];
