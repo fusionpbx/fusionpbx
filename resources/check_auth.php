@@ -94,7 +94,7 @@
 						'domain' => '',
 						'secure' => true,
 						'httponly' => true,
-						'samesite' => 'Lax'
+						'samesite' => 'Strict'
 					]
 				);
 			}
