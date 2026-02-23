@@ -39,10 +39,17 @@
 	$language = new text;
 	$text = $language->get();
 
+//set variables
+	$order_by = $_REQUEST["order_by"] ?? '';
+	$order = $_REQUEST["order"] ?? '';
+	$page = !empty($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
+	$search = $_REQUEST["search"] ?? '';
+	$show = $_REQUEST["show"] ?? '';
+	$context = $_REQUEST["context"] ?? '';
+
 //get the http post data
 	if (!empty($_POST['users'])) {
 		$action = $_POST['action'] ?? '';
-		$search = $_POST['search'] ?? '';
 		$users = $_POST['users'] ?? '';
 	}
 
@@ -57,7 +64,7 @@
 
 		if ($num_rows >= $settings->get('limit', 'users')) {
 			message::add($text['message-maximum_users'].' '.$settings->get('limit', 'users'), 'negative');
-			header('Location: users.php');
+			header('Location: users.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
 			exit;
 		}
 	}
@@ -85,18 +92,9 @@
 				break;
 		}
 
-		header('Location: users.php'.($search != '' ? '?search='.urlencode($search) : ''));
+		header('Location: users.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
 		exit;
 	}
-
-//get order and order by
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
-
-//set additional variables
-	$context = !empty($_GET["context"]) ? $_GET["context"] : '';
-	$search = !empty($_GET["search"]) ? $_GET["search"] : '';
-	$show = !empty($_GET["show"]) ? $_GET["show"] : '';
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
@@ -140,12 +138,29 @@
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = $search ? "&search=".$search : null;
-	$param .= ($show == 'all' && permission_exists('user_all')) ? "&show=all" : null;
-	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
+	$param = '';
+	if (!empty($search)) {
+		$param .= "&search=".$search;
+		$param .= !empty($fields) ? "&fields=".$fields : null;
+	}
+	if ($show == "all" && permission_exists('user_all')) {
+		$param .= "&show=all";
+	}
+	if (!empty($order_by)) {
+		$param .= "&order_by=".$order_by;
+	}
+	if (!empty($order)) {
+		$param .= "&order=".$order;
+	}
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
+	if (!empty($order_by)) {
+		$param = str_replace("&order_by=".$order_by, '', $param);
+	}
+	if (!empty($order)) {
+		$param = str_replace("&order=".$order, '', $param);
+	}
 
 //get the list
 	$sql = "select domain_name, domain_uuid, user_uuid, username, group_names, ";
@@ -239,6 +254,9 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='order_by' value=\"".escape($order_by)."\">\n";
+	echo "<input type='hidden' name='order' value=\"".escape($order)."\">\n";
+	echo "<input type='hidden' name='page' value=\"".escape($page)."\">\n";
 	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<div class='card'>\n";
@@ -270,7 +288,7 @@
 		foreach ($users as $row) {
 			$list_row_url = '';
 			if (permission_exists('user_edit')) {
-				$list_row_url = "user_edit.php?id=".urlencode($row['user_uuid']);
+				$list_row_url = "user_edit.php?id=".urlencode($row['user_uuid']).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(is_numeric($page) ? '&page='.urlencode($page) : null).(!empty($search) ? '&search='.$search : null);
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
