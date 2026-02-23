@@ -71,21 +71,18 @@
 
 			//regenerate remember token
 			if (isset($_COOKIE['remember'])) {
-
-				//remove old token
-				$sql = "update v_user_logs ";
-				$sql .= "set remember_token = null ";
-				$sql .= "where remember_token = :remember_token ";
-				$parameters['remember_token'] = hash('sha256', $_COOKIE['remember']);
-				$database->execute($sql, $parameters);
-				unset($sql, $parameters);
-
 				//generate new token
 				$token = generate_password(32);
 				$hashed_token = hash('sha256', $token);
 
-				//add token to user log array
-				$log_array['remember_token'] = $hashed_token;
+				//update old token
+				$sql = "update v_user_logs ";
+				$sql .= "set remember_token = :new_token ";
+				$sql .= "where remember_token = :old_token ";
+				$parameters['new_token'] = $hashed_token;
+				$parameters['old_token'] = hash('sha256', $_COOKIE['remember']);
+				$database->execute($sql, $parameters);
+				unset($sql, $parameters);
 
 				//set a new cookie
 				setcookie(
