@@ -211,11 +211,6 @@ class cache {
 			apcu_clear_cache();
 		}
 
-		//remove the autoloader file cache
-		if (file_exists(sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE)) {
-			@unlink(sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE);
-		}
-
 		//cache method memcache
 		if ($this->method === "memcache") {
 			// connect to event socket
