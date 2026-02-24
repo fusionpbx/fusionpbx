@@ -74,13 +74,14 @@
 				//generate new token
 				$token = generate_password(32);
 				$hashed_token = hash('sha256', $token);
+				$cookie_token = hash('sha256', $_COOKIE['remember']);
 
 				//update old token
 				$sql = "update v_user_logs ";
 				$sql .= "set remember_token = :new_token ";
 				$sql .= "where remember_token = :old_token ";
 				$parameters['new_token'] = $hashed_token;
-				$parameters['old_token'] = hash('sha256', $_COOKIE['remember']);
+				$parameters['old_token'] = $cookie_token;
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);
 
