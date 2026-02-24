@@ -123,7 +123,7 @@ class authentication {
 			$user_logs = $this->database->select($sql, $parameters, 'row');
 			unset($sql, $parameters);
 
-			//set class variables
+			//validate the token
 			if (!empty($user_logs) && password_verify($cookie_validator, $user_logs['remember_validator'])) {
 				//get the user details
 				$sql = "select \n";
@@ -182,7 +182,7 @@ class authentication {
 				self::create_user_session($result, $this->settings);
 
 				//generate new token
-				$selector = generate_password(16);
+				$selector = uuid();
 				$validator = generate_password(32);
 				$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
 				$token = $selector.':'.$validator;
@@ -341,7 +341,7 @@ class authentication {
 
 			if ($remember && $user) {
 				//generate the token
-				$selector = generate_password(16);
+				$selector = uuid();
 				$validator = generate_password(32);
 				$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
 				$token = $selector.':'.$validator;
