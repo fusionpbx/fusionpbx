@@ -327,7 +327,7 @@ class authentication {
 				$sql .= "	and timestamp > NOW() - INTERVAL '7 days' ";
 				$sql .= "	order by timestamp desc limit 1 ";
 				$sql .= ") ";
-				$parameters['remember_token'] = $hashed_token;
+				$parameters['remember_token'] = $token;
 				$parameters['remote_address'] = $_SERVER['REMOTE_ADDR'];
 				$parameters['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 				$parameters['user_uuid'] = $user[0]['user_uuid'];
@@ -335,18 +335,13 @@ class authentication {
 				unset($sql, $parameters);
 
 				//set cookie with the token
-				setcookie(
-					'remember',
-					$token,
-					[
-						'expires' => strtotime('+7 days'),
-						'path' => '/',
-						'domain' => '',
-						'secure' => true,
-						'httponly' => true,
-						'samesite' => 'Strict'
-					]
-				);
+				setcookie('remember', $hashed_token, [
+					'expires' => strtotime('+7 days'),
+					'path' => '/',
+					'secure' => true,
+					'httponly' => true,
+					'samesite' => 'Strict'
+				]);
 			}
 		}
 
