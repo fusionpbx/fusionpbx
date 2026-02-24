@@ -30,6 +30,12 @@
 //use custom logout destination if set otherwise redirect to the index page
 	$logout_destination = $settings->get('login', 'logout_destination', PROJECT_PATH.'/');
 
+//trigger the logout event
+	$classes = $autoload->get_interface_list('logout_event');
+	foreach ($classes as $class) {
+		$class::on_logout($settings);
+	}
+
 //destroy session
 	session_unset();
 	session_destroy();

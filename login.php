@@ -23,6 +23,7 @@
 	Contributor(s):
 	Mark J. Crane <markjcrane@fusionpbx.com>
 */
+
 //includes files
 	require_once __DIR__ . "/resources/require.php";
 
@@ -31,5 +32,4 @@
 
 //redirect to the dashboard
 	header("Location: ".$settings->get('login', 'destination', PROJECT_PATH.'/core/dashboard/'));
-
-?>
+	exit();

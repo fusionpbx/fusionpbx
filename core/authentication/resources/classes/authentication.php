@@ -201,19 +201,24 @@ class authentication {
 			//get the cidr restrictions from global, domain, and user default settings
 			$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 			$cidr_list      = $this->settings->get('domain', 'cidr', []);
-			if (check_cidr($cidr_list, $_SERVER['REMOTE_ADDR'])) {
-				//user passed the cidr check
-				self::create_user_session($result, $this->settings);
-			} else {
-				//user failed the cidr check - no longer authorized
-				$authorized                                                = false;
-				$failed_login_message                                      = "CIDR blocked login attempt";
+			//user failed the cidr check - no longer authorized
+			if (!check_cidr($cidr_list, $_SERVER['REMOTE_ADDR'])) {
+				$authorized = false;
+				$failed_login_message = "CIDR blocked login attempt";
 				$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
 			}
 		}
 
 		//set a session variable to indicate whether or not we are authorized
 		$_SESSION['authorized'] = $authorized;
+
+		//bring autoloader into scope
+		global $autoload;
+
+		//call any classes that need to execute code on login
+		foreach ($autoload->get_interface_list('login_event') as $class) {
+			$class::on_login($this->settings);
+		}
 
 		//log the attempt
 		user_logs::add($_SESSION['authentication']['plugin'][$name], $failed_login_message);
@@ -290,6 +295,8 @@ class authentication {
 		global $conf;
 		if (!isset($conf['session.validate'])) {
 			$conf['session.validate'][] = 'HTTP_USER_AGENT';
+		} elseif (!is_array($conf['session.validate'])) {
+			$conf['session.validate'] = [$conf['session.validate']];
 		}
 		foreach ($conf['session.validate'] as $name) {
 			$server_array[$name] = $_SERVER[$name];

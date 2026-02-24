@@ -621,6 +621,10 @@ function update_file_permissions($text, settings $settings) {
 			//execute
 			exec("chown -R www-data:www-data $dir");
 		}
+
+		// Ensure the auto_loader cache files are owned by www-data, as they may be created by root user during the upgrade process
+		exec ("chown www-data:www-data " . sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE);
+		exec ("chown www-data:www-data " . sys_get_temp_dir() . '/' . auto_loader::INTERFACES_FILE);
 	} else {
 		echo ($text['label-not_running_as_root'] ?? "Not root user - operation skipped")."\n";
 	}
