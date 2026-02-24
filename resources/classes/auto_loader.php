@@ -36,6 +36,8 @@ class auto_loader {
 
 	const CLASSES_KEY = 'autoloader_classes';
 	const INTERFACES_KEY = "autoloader_interfaces";
+	const CLASSES_FILE = 'autoloader_cache.php';
+	const INTERFACES_FILE = "autoloader_interface_cache.php";
 	private $classes;
 	/**
 	 * Tracks the APCu extension for caching to RAM drive across requests
