@@ -33,7 +33,8 @@
 //remove remember me token
 	setcookie('remember', '', time() - 3600, '/');
 	$sql = "update v_user_logs ";
-	$sql .= "set remember_token = null ";
+	$sql .= "set remember_selector = null, ";
+	$sql .= "remember_validator = null ";
 	$sql .= "where user_uuid = :user_uuid ";
 	$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	$database->execute($sql, $parameters);
