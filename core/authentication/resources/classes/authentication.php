@@ -105,7 +105,9 @@ class authentication {
 		if (isset($_COOKIE['remember'])) {
 			//set variables
 			$plugin_name = 'remember';
-			$hashed_token = hash('sha256', $_COOKIE['remember']);
+			$remote_address = $_SERVER['REMOTE_ADDR'] ?? '';
+			$user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+			$cookie_token = hash('sha256', $_COOKIE['remember']);
 
 			//get user logs
 			$sql = "select * from v_user_logs ";
@@ -115,9 +117,9 @@ class authentication {
 			$sql .= "and remember_token = :remember_token \n";
 			$sql .= "and timestamp > NOW() - INTERVAL '7 days' ";
 			$sql .= "limit 1 ";
-			$parameters['remote_address'] = $_SERVER['REMOTE_ADDR'];
-			$parameters['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
-			$parameters['remember_token'] = $hashed_token;
+			$parameters['remote_address'] = $remote_address;
+			$parameters['user_agent'] = $user_agent;
+			$parameters['remember_token'] = $cookie_token;
 			$user_logs = $this->database->select($sql, $parameters, 'all');
 			unset($sql, $parameters);
 
