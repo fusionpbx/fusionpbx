@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2026
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -68,32 +68,6 @@
 
 			// update creation time
 			$_SESSION['session']['created'] = time();
-
-			//regenerate remember token
-			if (isset($_COOKIE['remember'])) {
-				//generate new token
-				$token = generate_password(32);
-				$hashed_token = hash('sha256', $token);
-				$cookie_token = hash('sha256', $_COOKIE['remember']);
-
-				//update old token
-				$sql = "update v_user_logs ";
-				$sql .= "set remember_token = :new_token ";
-				$sql .= "where remember_token = :old_token ";
-				$parameters['new_token'] = $hashed_token;
-				$parameters['old_token'] = $cookie_token;
-				$database->execute($sql, $parameters);
-				unset($sql, $parameters);
-
-				//set a new cookie
-				setcookie('remember', $token, [
-					'expires' => strtotime('+7 days'),
-					'path' => '/',
-					'secure' => true,
-					'httponly' => true,
-					'samesite' => 'Strict'
-				]);
-			}
 
 			//add the result to the user logs
 			user_logs::add($log_array);
