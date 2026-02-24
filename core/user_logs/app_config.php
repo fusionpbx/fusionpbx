@@ -93,6 +93,16 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'remember_selector';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Remember me selector";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'remember_validator';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Remember me validator";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';

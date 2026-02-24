@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -68,6 +68,7 @@ class plugin_database {
 		$theme_background_video    = (isset($background_videos[0])) ? $background_videos[0] : '';
 		$login_domain_name_visible = $settings->get('login', 'domain_name_visible', false);
 		$login_domain_name         = $settings->get('login', 'domain_name');
+		$login_remember_me         = $settings->get('login', 'remember_me');
 		$login_destination         = $settings->get('login', 'destination');
 		$users_unique              = $settings->get('users', 'unique', '');
 
@@ -115,6 +116,7 @@ class plugin_database {
 			$view->assign("label_username", $text['label-username']);
 			$view->assign("label_password", $text['label-password']);
 			$view->assign("label_domain", $text['label-domain']);
+			$view->assign("label_remember_me", $text['label-remember_me']);
 			$view->assign("button_login", $text['button-login']);
 
 			//assign default values to the template
@@ -122,6 +124,7 @@ class plugin_database {
 			$view->assign("login_destination_url", $login_destination);
 			$view->assign("login_domain_name_visible", $login_domain_name_visible);
 			$view->assign("login_domain_names", $login_domain_name);
+			$view->assign("login_remember_me", $login_remember_me);
 			$view->assign("login_password_reset_enabled", $login_password_reset_enabled);
 			$view->assign("favicon", $theme_favicon);
 			$view->assign("login_logo_width", $theme_login_logo_width);
@@ -185,6 +188,9 @@ class plugin_database {
 		}
 		if (isset($_REQUEST["password"])) {
 			$this->password = $_REQUEST["password"];
+		}
+		if (isset($_POST["remember"])) {
+			$_SESSION['remember'] = $_POST["remember"];
 		}
 		if (isset($_REQUEST["key"])) {
 			$this->key = $_REQUEST["key"];

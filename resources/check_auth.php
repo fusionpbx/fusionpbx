@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -145,7 +145,7 @@
 			settings::clear_cache();
 
 		//if logged in, redirect to login destination
-			if (!isset($_REQUEST["key"])) {
+			if (!isset($_REQUEST["key"]) && !isset($_COOKIE['remember'])) {
 
 				//connect to the settings object
 				$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);

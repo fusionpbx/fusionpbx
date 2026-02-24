@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,6 +29,16 @@
 
 //use custom logout destination if set otherwise redirect to the index page
 	$logout_destination = $settings->get('login', 'logout_destination', PROJECT_PATH.'/');
+
+//remove remember me token
+	setcookie('remember', '', time() - 3600, '/');
+	$sql = "update v_user_logs ";
+	$sql .= "set remember_selector = null, ";
+	$sql .= "remember_validator = null ";
+	$sql .= "where user_uuid = :user_uuid ";
+	$parameters['user_uuid'] = $_SESSION['user_uuid'];
+	$database->execute($sql, $parameters);
+	unset($sql, $parameters);
 
 //destroy session
 	session_unset();

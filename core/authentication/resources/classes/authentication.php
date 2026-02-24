@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -101,8 +101,122 @@ class authentication {
 		//check if contacts app exists
 		$contacts_exists = file_exists(dirname(__DIR__, 4) . '/core/contacts/');
 
+		//check for remember me cookie
+		if (isset($_COOKIE['remember'])) {
+			//set variables
+			$plugin_name = 'remember';
+			$remote_address = $_SERVER['REMOTE_ADDR'] ?? '';
+			$user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+			list($cookie_selector, $cookie_validator) = explode(":", $_COOKIE['remember']);
+
+			//get user logs
+			$sql = "select user_uuid, remember_validator from v_user_logs ";
+			$sql .= "where remember_selector = :remember_selector \n";
+			$sql .= "and remote_address = :remote_address ";
+			$sql .= "and user_agent = :user_agent ";
+			$sql .= "and timestamp > NOW() - INTERVAL '7 days' ";
+			$sql .= "and result = 'success' ";
+			$sql .= "limit 1 ";
+			$parameters['remember_selector'] = $cookie_selector;
+			$parameters['remote_address'] = $remote_address;
+			$parameters['user_agent'] = $user_agent;
+			$user_logs = $this->database->select($sql, $parameters, 'row');
+			unset($sql, $parameters);
+
+			//validate the token
+			if (!empty($user_logs) && password_verify($cookie_validator, $user_logs['remember_validator'])) {
+				//get the user details
+				$sql = "select \n";
+				$sql .= "u.domain_uuid, \n";
+				$sql .= "d.domain_name, \n";
+				$sql .= "u.user_uuid, \n";
+				$sql .= "u.username, \n";
+				$sql .= "u.contact_uuid \n";
+				$sql .= "from v_users as u, v_domains as d \n";
+				$sql .= "where user_uuid = :user_uuid \n";
+				$sql .= "and u.domain_uuid = d.domain_uuid \n";
+				$sql .= "and u.user_enabled = 'true' \n";
+				$parameters['user_uuid'] = $user_logs['user_uuid'];
+				$row = $this->database->select($sql, $parameters, 'row');
+				unset($sql, $parameters);
+
+				//get the contact details
+				if ($contacts_exists && !empty($row["contact_uuid"])) {
+					$sql = "select * from v_contacts \n";
+					$sql .= "where contact_uuid = :contact_uuid \n";
+					$sql .= "and domain_uuid = :domain_uuid \n";
+					$parameters['contact_uuid'] = $row["contact_uuid"];
+					$parameters['domain_uuid'] = $row["domain_uuid"];
+					$contact = $this->database->select($sql, $parameters, 'row');
+					unset($sql, $parameters);
+				}
+
+				//build a result array
+				$result['plugin']       = $plugin_name;
+				$result['domain_name']  = $row["domain_name"];
+				$result['username']     = $row['username'];
+				$result['user_uuid']    = $row['user_uuid'];
+				$result['contact_uuid'] = $row["contact_uuid"];
+				if ($contacts_exists) {
+					$result["contact_organization"] = $contact["contact_organization"] ?? '';
+					$result["contact_name_given"]   = $contact["contact_name_given"] ?? '';
+					$result["contact_name_family"]  = $contact["contact_name_family"] ?? '';
+					$result["contact_image"]        = $contact["contact_image"] ?? '';
+				}
+				$result['domain_uuid'] = $row['domain_uuid'];
+				$result['authorized']  = true;
+
+				//set the domain_uuid
+				$this->domain_uuid = $row["domain_uuid"];
+
+				//set the user_uuid
+				$this->user_uuid = $row["user_uuid"];
+
+				//save the result to the authentication plugin
+				$_SESSION['authentication']['methods'] = [];
+				$_SESSION['authentication']['methods'][] = $plugin_name;
+				$_SESSION['authentication']['plugin'] = [];
+				$_SESSION['authentication']['plugin'][$plugin_name] = $result;
+
+				//create the session
+				self::create_user_session($result, $this->settings);
+
+				//generate new token
+				$selector = uuid();
+				$validator = generate_password(32);
+				$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
+				$token = $selector.':'.$validator;
+
+				//update the user logs
+				$sql = "update v_user_logs ";
+				$sql .= "set remember_selector = :remember_selector, ";
+				$sql .= "remember_validator = :remember_validator ";
+				$sql .= "where remember_selector = :cookie_selector ";
+				$parameters['remember_selector'] = $selector;
+				$parameters['remember_validator'] = $hashed_validator;
+				$parameters['cookie_selector'] = $cookie_selector;
+				$this->database->execute($sql, $parameters);
+				unset($sql, $parameters);
+
+				//set the cookie
+				setcookie('remember', $token, [
+					'expires' => strtotime('+7 days'),
+					'path' => '/',
+					'secure' => true,
+					'httponly' => true,
+					'samesite' => 'Strict'
+				]);
+
+			}
+		}
+
 		//use the authentication plugins
 		foreach ($_SESSION['authentication']['methods'] as $name) {
+			//skip the loop if already authorized
+			if (isset($result['authorized']) && $result['authorized']) {
+				break;
+			}
+
 			//already processed the plugin move to the next plugin
 			if (!empty($_SESSION['authentication']['plugin'][$name]['authorized']) && $_SESSION['authentication']['plugin'][$name]['authorized']) {
 				continue;
@@ -178,7 +292,7 @@ class authentication {
 		}
 
 		//debug information
-		//view_array($_SESSION['authentication'], false);
+		// view_array($_SESSION['authentication'], false);
 
 		//set authorized to false if any authentication method failed
 		$authorized  = false;
@@ -209,6 +323,60 @@ class authentication {
 				$authorized                                                = false;
 				$failed_login_message                                      = "CIDR blocked login attempt";
 				$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
+			}
+		}
+
+		//create remember me token
+		if ($authorized && isset($_SESSION['username']) && isset($_SESSION['remember'])) {
+			//set session variables
+			$input_username = $_SESSION['username'];
+			$remember = $_SESSION['remember'];
+
+			//match the username
+			$sql = "select user_uuid from v_users ";
+			$sql .= "where username = :username";
+			$parameters['username'] = $input_username;
+			$user = $this->database->select($sql, $parameters, 'row');
+			unset($sql, $parameters);
+
+			if ($remember && $user) {
+				//generate the token
+				$selector = uuid();
+				$validator = generate_password(32);
+				$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
+				$token = $selector.':'.$validator;
+				$remote_address = $_SERVER['REMOTE_ADDR'] ?? '';
+				$user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+
+				//save token to the user logs
+				$sql = "update v_user_logs ";
+				$sql .= "set remember_selector = :remember_selector, ";
+				$sql .= "remember_validator = :remember_validator ";
+				$sql .= "where user_log_uuid = ( ";
+				$sql .= "	select user_log_uuid FROM v_user_logs ";
+				$sql .= "	where result = 'success' ";
+				$sql .= "	and remote_address = :remote_address ";
+				$sql .= "	and user_agent = :user_agent ";
+				$sql .= "	and user_uuid = :user_uuid ";
+				$sql .= "	and timestamp > NOW() - INTERVAL '7 days' ";
+				$sql .= "	order by timestamp desc limit 1 ";
+				$sql .= ") ";
+				$parameters['remember_selector'] = $selector;
+				$parameters['remember_validator'] = $hashed_validator;
+				$parameters['remote_address'] = $remote_address;
+				$parameters['user_agent'] = $user_agent;
+				$parameters['user_uuid'] = $user['user_uuid'];
+				$this->database->execute($sql, $parameters);
+				unset($sql, $parameters);
+
+				//set the cookie
+				setcookie('remember', $token, [
+					'expires' => strtotime('+7 days'),
+					'path' => '/',
+					'secure' => true,
+					'httponly' => true,
+					'samesite' => 'Strict'
+				]);
 			}
 		}
 
