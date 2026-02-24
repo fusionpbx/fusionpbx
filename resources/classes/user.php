@@ -54,32 +54,7 @@ class user implements logout_event {
 	 * @return void
 	 */
 	public static function on_logout(settings $settings)	{
-		/*
-		// Clear the user session data
-		unset($_SESSION['user']);
-
-		// Example of the remember me cookie for the current user:
-		$user_uuid = $_SESSION['user_uuid'] ?? '';
-		$domain_uuid = $_SESSION['domain_uuid'] ?? '';
-
-		// Check if the user_uuid is still set in the session and is a valid UUID
-		if (!is_uuid($user_uuid)) {
-			return;
-		}
-
-		// Get the database object
-		$database = $settings->database();
-
-		// Remove remember me token for this user
-		setcookie('remember', '', time() - 3600, '/');
-		$sql = "update v_user_logs set ";
-		$sql .= "remember_token = null ";
-		$sql .= "where user_uuid = :user_uuid ";
-		$parameters['user_uuid'] = $user_uuid;
-		$database->execute($sql, $parameters);
-
-		// Any additional cleanup or logging can be performed here
-		*/
+		// Actions go here
 	}
 
 	/*
