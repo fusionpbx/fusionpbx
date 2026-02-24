@@ -113,7 +113,6 @@ class user_logs {
 		$array['user_logs'][0]["remote_address"] = $_SERVER['REMOTE_ADDR'];
 		$array['user_logs'][0]["user_agent"]     = $_SERVER['HTTP_USER_AGENT'];
 		$array['user_logs'][0]["session_id"]     = session_id();
-		$array['user_logs'][0]["remember_token"] = $result['remember_token'];
 		if ($result["authorized"]) {
 			$array['user_logs'][0]["result"] = 'success';
 		} else {
