@@ -180,6 +180,28 @@ class authentication {
 
 				//user passed the cidr check
 				self::create_user_session($result, $this->settings);
+
+				//generate new token
+				$token = generate_password(32);
+				$hashed_token = hash('sha256', $token);
+
+				//replace old token
+				$sql = "update v_user_logs ";
+				$sql .= "set remember_token = :new_token ";
+				$sql .= "where remember_token = :old_token ";
+				$parameters['new_token'] = $hashed_token;
+				$parameters['old_token'] = $cookie_token;
+				$this->database->execute($sql, $parameters);
+				unset($sql, $parameters);
+
+				//set the cookie
+				setcookie('remember', $token, [
+					'expires' => strtotime('+7 days'),
+					'path' => '/',
+					'secure' => true,
+					'httponly' => true,
+					'samesite' => 'Strict'
+				]);
 			}
 		}
 
