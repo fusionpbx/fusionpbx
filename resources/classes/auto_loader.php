@@ -86,13 +86,21 @@ class auto_loader {
 		$this->interfaces = [];
 		$this->traits = []; // Reset traits array
 
-		//use apcu when available
-		if ($this->apcu_enabled && apcu_exists(self::CLASSES_KEY)) {
-			$this->classes = apcu_fetch(self::CLASSES_KEY, $classes_cached) ?: [];
-			$this->interfaces = apcu_fetch(self::INTERFACES_KEY, $interfaces_cached) ?: [];
-			//return true if both caches exist
-			if ($classes_cached && $interfaces_cached && !empty($this->classes)) {
+		//use apcu when available - validate BOTH keys exist
+		if ($this->apcu_enabled && apcu_exists(self::CLASSES_KEY) && apcu_exists(self::INTERFACES_KEY)) {
+			$this->classes = apcu_fetch(self::CLASSES_KEY, $classes_cached);
+			$this->interfaces = apcu_fetch(self::INTERFACES_KEY, $interfaces_cached);
+			
+			//validate fetched data is arrays and not corrupted
+			if ($classes_cached && $interfaces_cached && 
+				is_array($this->classes) && is_array($this->interfaces) && 
+				!empty($this->classes)) {
 				return true;
+			}
+			
+			//log when cache validation fails
+			if ($classes_cached || $interfaces_cached) {
+				self::log(LOG_WARNING, "APCu cache validation failed - classes_cached: " . ($classes_cached ? 'true' : 'false') . ", interfaces_cached: " . ($interfaces_cached ? 'true' : 'false') . ", is_array(classes): " . (is_array($this->classes) ? 'true' : 'false') . ", is_array(interfaces): " . (is_array($this->interfaces) ? 'true' : 'false'));
 			}
 		}
 
@@ -217,9 +225,30 @@ class auto_loader {
 
 		//update APCu cache when available
 		if ($this->apcu_enabled) {
-			$classes_cached = apcu_store(self::CLASSES_KEY, $this->classes);
-			$interfaces_cached = apcu_store(self::INTERFACES_KEY, $this->interfaces);
-			return ($classes_cached && $interfaces_cached);
+			$classes_stored = apcu_store(self::CLASSES_KEY, $this->classes, 0);
+			$interfaces_stored = apcu_store(self::INTERFACES_KEY, $this->interfaces, 0);
+
+			//log failures to help diagnose APCu issues
+			if (!$classes_stored) {
+				self::log(LOG_WARNING, "Failed to store classes to APCu");
+			}
+			if (!$interfaces_stored) {
+				self::log(LOG_WARNING, "Failed to store interfaces to APCu");
+			}
+
+			//both must succeed for consistency
+			if ($classes_stored && $interfaces_stored) {
+				return true;
+			}
+
+			//if one failed, clear APCu to prevent inconsistent state
+			if ($classes_stored || $interfaces_stored) {
+				apcu_delete(self::CLASSES_KEY);
+				apcu_delete(self::INTERFACES_KEY);
+				self::log(LOG_WARNING, "Cleared APCu cache due to partial store failure");
+			}
+
+			return false;
 		}
 
 		//APCu not available, cache remains in memory only
