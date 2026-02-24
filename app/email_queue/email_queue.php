@@ -156,7 +156,6 @@
 	$sql .= "email_from, ";
 	$sql .= "email_to, ";
 	$sql .= "email_subject, ";
-	$sql .= "substring(email_body, 0, 80) as email_body, ";
 	//$sql .= "email_action_before, ";
 	$sql .= "email_action_after, ";
 	$sql .= "email_status, ";
@@ -168,7 +167,6 @@
 		$sql .= "	lower(email_from) like :search ";
 		$sql .= "	or lower(email_to) like :search ";
 		$sql .= "	or lower(email_subject) like :search ";
-		$sql .= "	or lower(email_body) like :search ";
 		$sql .= "	or lower(email_status) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
@@ -354,7 +352,6 @@
 			echo "	<td class='shrink hide-md-dn'>".escape($row['email_from'])."</td>\n";
 			echo "	<td class='overflow' style='width: 20%; max-width: 200px;'>".escape($row['email_to'])."</td>\n";
 			echo "	<td class='overflow' style='width: 30%; max-width: 200px;'>".iconv_mime_decode($row['email_subject'] ?? '')."</td>\n";
-// 			echo "	<td class='hide-md-dn'>".escape($row['email_body'])."</td>\n";
 			echo "	<td>".ucwords($text['label-'.$row['email_status']])."</td>\n";
 			echo "	<td>".escape($row['email_retry_count'])."</td>\n";
 			//echo "	<td>".escape($row['email_action_before'])."</td>\n";
