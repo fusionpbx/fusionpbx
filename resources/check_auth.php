@@ -85,18 +85,13 @@
 				unset($sql, $parameters);
 
 				//set a new cookie
-				setcookie(
-					'remember',
-					$token,
-					[
-						'expires' => strtotime('+7 days'),
-						'path' => '/',
-						'domain' => '',
-						'secure' => true,
-						'httponly' => true,
-						'samesite' => 'Strict'
-					]
-				);
+				setcookie('remember', $token, [
+					'expires' => strtotime('+7 days'),
+					'path' => '/',
+					'secure' => true,
+					'httponly' => true,
+					'samesite' => 'Strict'
+				]);
 			}
 
 			//add the result to the user logs
