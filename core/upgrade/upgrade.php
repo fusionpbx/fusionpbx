@@ -621,7 +621,6 @@ function update_file_permissions($text, settings $settings) {
 			//execute
 			exec("chown -R www-data:www-data $dir");
 		}
-
 	} else {
 		echo ($text['label-not_running_as_root'] ?? "Not root user - operation skipped")."\n";
 	}
