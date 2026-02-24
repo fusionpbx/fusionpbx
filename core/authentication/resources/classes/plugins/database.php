@@ -68,7 +68,7 @@ class plugin_database {
 		$theme_background_video    = (isset($background_videos[0])) ? $background_videos[0] : '';
 		$login_domain_name_visible = $settings->get('login', 'domain_name_visible', false);
 		$login_domain_name         = $settings->get('login', 'domain_name');
-		$login_remember_me         = $settings->get('login', 'remember_me');
+		$login_remember_me         = $settings->get('login', 'remember_me', true);
 		$login_destination         = $settings->get('login', 'destination');
 		$users_unique              = $settings->get('users', 'unique', '');
 
