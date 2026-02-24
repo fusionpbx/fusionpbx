@@ -261,9 +261,10 @@
 
 			//remove remember me token
 			setcookie('remember', '', time() - 3600, '/');
-			$sql  = "update v_user_logs ";
-			$sql .= "set remember_token = null ";
-			$sql .= "and username = :username ";
+			$sql = "update v_user_logs ";
+			$sql .= "set remember_selector = null, ";
+			$sql .= "remember_validator = null ";
+			$sql .= "where username = :username ";
 			$parameters['username'] = $_SESSION['valid_username'];
 			$database->execute($sql, $parameters);
 			unset($sql, $parameters);
