@@ -562,24 +562,24 @@ class domains {
 							//delete the dialplan
 							@unlink($_SESSION['switch']['dialplan']['dir'] . '/' . $domain_name . '.xml');
 							if (!empty($_SESSION['switch']['dialplan']['dir'])) {
-								system('rm -rf ' . $_SESSION['switch']['dialplan']['dir'] . '/' . $domain_name);
+								recursive_delete($_SESSION['switch']['dialplan']['dir'] . '/' . $domain_name);
 							}
 
 							//delete the dialplan public
 							@unlink($_SESSION['switch']['dialplan']['dir'] . '/public/' . $domain_name . '.xml');
 							if (!empty($_SESSION['switch']['dialplan']['dir'])) {
-								system('rm -rf ' . $_SESSION['switch']['dialplan']['dir'] . '/public/' . $domain_name);
+								recursive_delete($_SESSION['switch']['dialplan']['dir'] . '/public/' . $domain_name);
 							}
 
 							//delete the extension
 							@unlink($_SESSION['switch']['extensions']['dir'] . '/' . $domain_name . '.xml');
 							if (!empty($_SESSION['switch']['extensions']['dir'])) {
-								system('rm -rf ' . $_SESSION['switch']['extensions']['dir'] . '/' . $domain_name);
+								recursive_delete($_SESSION['switch']['extensions']['dir'] . '/' . $domain_name);
 							}
 
 							//delete fax
 							if (!empty($_SESSION['switch']['storage']['dir'])) {
-								system('rm -rf ' . $_SESSION['switch']['storage']['dir'] . '/fax/' . $domain_name);
+								recursive_delete($_SESSION['switch']['storage']['dir'] . '/fax/' . $domain_name);
 							}
 
 							//delete the gateways
@@ -623,12 +623,12 @@ class domains {
 
 							//delete the recordings
 							if (!empty($_SESSION['switch']['recordings']['dir'])) {
-								system('rm -rf ' . $_SESSION['switch']['recordings']['dir'] . '/' . $_SESSION['domain_name'] . '/' . $domain_name);
+								recursive_delete($_SESSION['switch']['recordings']['dir'] . '/' . $_SESSION['domain_name'] . '/' . $domain_name);
 							}
 
 							//delete voicemail
 							if (!empty($_SESSION['switch']['voicemail']['dir'])) {
-								system('rm -rf ' . $_SESSION['switch']['voicemail']['dir'] . '/' . $domain_name);
+								recursive_delete($_SESSION['switch']['voicemail']['dir'] . '/' . $domain_name);
 							}
 						}
 
