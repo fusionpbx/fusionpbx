@@ -540,7 +540,6 @@
 				$array['users'][$x]['salt'] = null;
 
 				//remove remember me tokens
-				setcookie('remember', '', time() - 3600, '/');
 				$sql = "update v_user_logs ";
 				$sql .= "set remember_selector = null, ";
 				$sql .= "remember_validator = null ";
