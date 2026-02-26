@@ -116,37 +116,29 @@ function show_upgrade_menu() {
 			case 1:
 				do_upgrade_code();
 				do_upgrade_code_submodules();
-				do_upgrade_auto_loader();
 				exit();
 			case '1a':
 				do_upgrade_code();
-				do_upgrade_auto_loader();
 				exit();
 			case '1b':
 				do_upgrade_code_submodules();
-				do_upgrade_auto_loader();
 				break;
 			case 2:
 				do_upgrade_schema();
 				break;
 			case 3:
-				do_upgrade_auto_loader();
 				do_upgrade_domains();
 				break;
 			case 4:
-				do_upgrade_auto_loader();
 				do_upgrade_menu();
 				break;
 			case 5:
-				do_upgrade_auto_loader();
 				do_upgrade_permissions();
 				break;
 			case 6:
-				do_upgrade_auto_loader();
 				do_file_permissions($text, $settings);
 				break;
 			case 7:
-				do_upgrade_auto_loader();
 				do_upgrade_services($text, $settings);
 				break;
 			case 8:
@@ -154,7 +146,6 @@ function show_upgrade_menu() {
 				break;
 			case 'a':
 				do_upgrade_code();
-				do_upgrade_auto_loader();
 				do_upgrade_schema();
 				do_upgrade_domains();
 				do_upgrade_menu();
@@ -170,26 +161,6 @@ function show_upgrade_menu() {
 		//add a few line feeds
 		echo "\n\n";
 	}
-}
-
-/**
- * Upgrade auto loader by removing temporary files and updating it.
- *
- * @return void
- *
- * @global text $text
- * @global auto_loader $autoload
- */
-function do_upgrade_auto_loader() {
-	global $text, $autoload;
-
-	//remove temp files
-	unlink(sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE);
-	unlink(sys_get_temp_dir() . '/' . auto_loader::INTERFACES_FILE);
-
-	//create a new instance of the autoloader
-	$autoload->update();
-	echo "{$text['message-updated_autoloader']}\n";
 }
 
 /**
