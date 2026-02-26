@@ -409,7 +409,24 @@
 			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
 		if (permission_exists('dialplan_xml')) {
-			echo button::create(['type'=>'button','label'=>$text['button-xml'],'icon'=>'code','style'=>'margin-left: 3px;','link'=>'dialplan_xml.php']);
+			$query_params = [];
+			if (!empty($app_uuid) && is_uuid($app_uuid)) {
+				$query_params[] = 'app_uuid='.$app_uuid;
+			}
+			if (!empty($context) && $context == 'global') {
+				$query_params[] = 'context='.$context;
+			}
+			$query_string = '';
+			if (count($query_params) > 0) {
+				$i = 0;
+				foreach($query_params as $query_param) {
+					$delimiter = ($i == 0) ? '?' : '&';
+					$query_string .= $delimiter. $query_param;
+					$i++;
+				}
+			}
+			echo button::create(['type'=>'button','label'=>$text['button-xml'],'icon'=>'code','style'=>'margin-left: 3px;','link'=>'dialplan_xml.php'.$query_string]);
+			unset($query_string);
 		}
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
