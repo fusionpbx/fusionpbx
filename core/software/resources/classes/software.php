@@ -11,7 +11,7 @@
 		 * @return string The version number in the format 'major.minor.patch'.
 		 */
 		public static function version() {
-			return '5.5.7';
+			return '5.6.0-dev';
 		}
 
 		/**
