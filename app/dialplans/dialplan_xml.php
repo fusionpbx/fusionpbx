@@ -46,6 +46,9 @@
 	if (!empty($_REQUEST['app_uuid']) && is_uuid($_REQUEST['app_uuid'])) {
 		$app_uuid = $_REQUEST['app_uuid'];
 	}
+	if (!empty($_REQUEST['context']) && $_REQUEST['context'] == 'public') {
+		$context = $_REQUEST['context'];
+	}
 	$dialplan_xml = $_REQUEST['dialplan_xml'] ?? '';
 
 //process the HTTP POST
@@ -180,6 +183,16 @@
 		$sql = "select dialplan_xml from v_dialplans ";
 		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$sql .= "and dialplan_enabled = true ";
+		if (!empty($app_uuid)) {
+			$sql .= "and app_uuid = :app_uuid ";
+			$parameters['app_uuid'] = $app_uuid;
+		}
+		elseif (!empty($context)) {
+			$sql .= "and dialplan_context = :context ";
+			$parameters['context'] = $context;
+		} else {
+			$sql .= "and dialplan_context <> 'public' ";
+		}
 		$sql .= "order by dialplan_order asc, lower(dialplan_name) asc ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$dialplans = $database->select($sql, $parameters, 'all');
