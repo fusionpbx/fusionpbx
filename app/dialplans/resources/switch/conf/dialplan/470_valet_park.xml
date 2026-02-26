@@ -1,24 +1,50 @@
 <extension name="valet_park" number="park+*5901-*5999" context="${domain_name}" continue="false" app_uuid="3cc8363d-5ce3-48aa-8ac1-143cf297c4f7" enabled="true" order="470">
-	<condition field="destination_number" expression="^(?:park)?\+?\*(59(0[1-9]|[1-9][0-9]))$" break="never"/>
-	<condition field="${sip_h_Referred-By}" expression="(?:sip:)?(\d+)(?:@.*)?" break="never">
+	<condition field="destination_number" expression="^(park)?\+?\*(59(0[1-9]|[1-9][0-9]))$" break="never"/>
+	<condition field="${sip_refer_to}" expression="^.+$" break="never"/>
+	<condition field="${sip_refer_to}" expression="sip:(.*)@(.*?)(?::\d+)?\>" break="never">
+		<action application="set" data="referred_by_host=$2" inline="true"/>
+	</condition>
+	<condition field="${sip_h_Referred-By}" expression="sip:(.*)@(.*?)(?::\d+)?\>" break="never">
 		<action application="set" data="referred_by_user=$1" inline="true"/>
 	</condition>
-	<condition field="destination_number" expression="^(?:park)?\+?\*(59(0[1-9]|[1-9][0-9]))$" break="never">
-		<action application="set" data="valet_context=${context}" inline="true"/>
-	</condition>
-	<condition field="destination_number" expression="^(?:park)?\+?\*(59(0[1-9]|[1-9][0-9]))$" break="never">
-		<action application="set" data="park_in_use=false" inline="true"/>
-		<action application="set" data="park_lot=$1" inline="true"/>
-		<action application="set" data="park_uuid=${regex(${valet_info park@${domain_name}}|extension\suuid=.([0-9a-f-]{36})..\*${park_lot}..extension|%1|n)}"/>
-        <action application="multiset" data="callee_id_name=${uuid_getvar ${park_uuid} caller_id_name} callee_id_number=${uuid_getvar ${park_uuid} caller_id_number}"/>
-	</condition>
-	<condition field="destination_number" expression="^(?:park)?\+?\*(59(0[1-9]|[1-9][0-9]))$"/>
+	<condition field="destination_number" expression="^(park)?\+?\*(59(0[1-9]|[1-9][0-9]))$" break="never"/>
 	<condition field="${referred_by_user}" expression="^.+$" break="never">
-		<action application="set" data="valet_info_park=${valet_info park@${valet_context}}|\*${park_lot}" inline="true"/>
+		<action application="set" data="valet_context=${referred_by_host}" inline="true"/>
+		<anti-action application="set" data="valet_context=${domain_name}" inline="true"/>
+	</condition>
+	<condition field="destination_number" expression="^(park)?\+?\*(59(0[1-9]|[1-9][0-9]))$" break="never">
+		<action application="set" data="park_in_use=false" inline="true"/>
+		<action application="set" data="park_lot=$2" inline="true"/>
+	</condition>
+	<condition field="destination_number" expression="^(park)?\+?\*(59(0[1-9]|[1-9][0-9]))$"/>
+	<condition field="${referred_by_user}" expression="^.+$" break="never">
 		<action application="set" data="park_in_use=${regex ${valet_info park@${valet_context}}|\*${park_lot}}" inline="true"/>
 	</condition>
+	<condition field="destination_number" expression="^(park)?\+?\*(59[0-9][0-9])$" break="never">
+		<action application="set" data="park_in_use=${regex ${valet_info park@${domain_name}}|\*${park_lot}}" inline="true"/>
+	</condition>
+	<condition field="${park_in_use}:${referred_by_user}" expression="^true:.+$" break="on-true">
+		<action application="set" data="hangup_after_bridge=true"/>
+		<action application="set" data="park_after_bridge=false"/>
+		<action application="set" data="continue_on_fail=false"/>
+		<action application="set" data="effective_caller_id_name=${caller_id_name}"/>
+		<action application="set" data="effective_caller_id_number=${caller_id_number}"/>
+		<action application="bridge" data="user/${referred_by_user}@${domain_name}"/>
+	</condition>
 	<condition field="${park_in_use}" expression="true" break="never">
-		<action application="transfer" data="${referred_by_user} XML ${valet_context}"/>
+		<action application="set" data="park_uuid=${regex(${valet_info park@${domain_name}}|extension\suuid=.([0-9a-f-]{36})..\*${park_lot}..extension|%1|n)}"/>
+		<action application="multiset" data="callee_id_name=${uuid_getvar ${park_uuid} caller_id_name} callee_id_number=${uuid_getvar ${park_uuid} caller_id_number}"/>
+		<action application="set" data="effective_caller_id_name=${callee_id_name}"/>
+		<action application="set" data="effective_caller_id_number=${callee_id_number}"/>
+		<action application="eval" data="${uuid_setvar ${park_uuid} effective_caller_id_name ${callee_id_name}}"/>
+		<action application="eval" data="${uuid_setvar ${park_uuid} effective_caller_id_number ${callee_id_number}}"/>
+		<action application="eval" data="${uuid_setvar ${park_uuid} park_uuid ${park_uuid}}"/>
+		<action application="export" data="nolocal:park_uuid=${park_uuid}"/>
+		<action application="export" data="nolocal:effective_caller_id_name=${callee_id_name}"/>
+		<action application="export" data="nolocal:effective_caller_id_number=${callee_id_number}"/>
+		<action application="set" data="sip_h_P-Asserted-Identity=${callee_id_number}"/>
+		<action application="set" data="ignore_display_updates=true"/>
+		<action application="valet_park" data="park@${domain_name} *${park_lot}"/>
 		<anti-action application="set" data="effective_caller_id_name=${cond ${regex ${direction} | inbound} == true ? 'park#${caller_id_name}' : 'park#${callee_id_name}'}" inline="true"/>
 		<anti-action application="set" data="valet_parking_timeout=900"/>
 		<anti-action application="set" data="valet_hold_music=${hold_music}"/>
