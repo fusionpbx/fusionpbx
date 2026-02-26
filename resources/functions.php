@@ -261,41 +261,55 @@
 	}
 
 	if (!function_exists('recursive_delete')) {
-		if (file_exists('/usr/bin/find')) {
+		/**
+		 * Safely deletes a directory and all its contents recursively
+		 *
+		 * @param string $path The path to the directory to delete
+		 * @return bool True on success, false on failure
+		 */
+		function recursive_delete($path) {
+			// Verify the path exists and is a directory
+			if (!file_exists($path) || !is_dir($path)) {
+				return false;
+			}
 
-			function recursive_delete($directory) {
-				if (isset($directory) && strlen($directory) > 8) {
-					exec('/usr/bin/find ' . $directory . '/* -name "*" -delete');
-					//exec('rm -Rf '.$directory.'/*');
-					clearstatcache();
+			// Prepare the directory handle
+			$handle = opendir($path);
+
+			// No handle, send a return
+			if (!$handle) return;
+
+			// Loop through all files and subdirectories
+			while (false !== ($file = readdir($handle))) {
+				// Skip '.' and '..' as they refer to the current and parent directory
+				if ($file == '.' || $file == '..') {
+					continue;
 				}
-			}
 
-		} elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+				// Set the full path
+				$full_path = $path . DIRECTORY_SEPARATOR . $file;
 
-			function recursive_delete($directory) {
-				$directory = normalize_path_to_os($directory);
-				//$this->write_debug("del /S /F /Q \"$dir\"");
-				exec("del /S /F /Q \"$directory\"");
-				clearstatcache();
-			}
-
-		} else {
-
-			function recursive_delete($directory) {
-				foreach (glob($directory) as $file) {
-					if (is_dir($file)) {
-						//$this->write_debug("rm dir: ".$file);
-						recursive_delete("$file/*");
-						rmdir($file);
-					} else {
-						//$this->write_debug("delete file: ".$file);
-						unlink($file);
+				// If this is a directory, recursively delete it
+				if (is_dir($full_path)) {
+					if (!recursive_delete($full_path)) {
+						closedir($handle);
+						return false;
 					}
 				}
-				clearstatcache();
+				else {
+					// If this is a file, delete it
+					if (!unlink($full_path)) {
+						closedir($handle);
+						return false;
+					}
+				}
 			}
 
+			// Close the directory handle
+			closedir($handle);
+
+			// Remove the now-empty directory
+			return rmdir($path);
 		}
 	}
 
