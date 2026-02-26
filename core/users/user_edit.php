@@ -528,12 +528,12 @@
 				$sql .= "and timestamp > NOW() - INTERVAL '4 hours' ";
 				$parameters['user_uuid'] = $user_uuid;
 				$user_logs = $database->select($sql, $parameters, 'all');
-				unset($sql, $parameters);
 				foreach ($user_logs as $row) {
 					if (preg_match('/^[a-zA-Z0-9,-]+$/', $row['session_id']) && file_exists(session_save_path() . "/sess_" . $row['session_id'])) {
 						unlink(session_save_path() . "/sess_" . $row['session_id']);
 					}
 				}
+				unset($sql, $parameters);
 
 				//create a one way hash for the user password
 				$array['users'][$x]['password'] = password_hash($password, PASSWORD_DEFAULT, $options);
