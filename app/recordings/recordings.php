@@ -302,11 +302,12 @@
 
 //add the search term
 	$search = $_REQUEST["search"] ?? '';
-//get total recordings from the database
+
+//get the total recordings from the database
 	$sql = "select count(*) from v_recordings ";
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('conference_center_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and (domain_uuid = :domain_uuid) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!empty($search)) {
@@ -356,7 +357,7 @@
 	$sql .= "from v_recordings ";
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('conference_center_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and (domain_uuid = :domain_uuid) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!empty($search)) {
