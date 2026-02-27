@@ -589,7 +589,7 @@
 					//replace variables in email body
 					$email_body = str_replace('${domain}', $domain_name, $email_body);
 
-					//send reset link
+					//send the email
 					send_email($user_email, $email_subject, $email_body, $eml_error);
 
 					//build the user log array
