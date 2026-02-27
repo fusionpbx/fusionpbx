@@ -415,7 +415,6 @@
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);
 
-
 				//send the password changed email
 				if (valid_email($user_email)) {
 					//generate email and body variables
@@ -455,7 +454,6 @@
 					unset($sql, $parameters, $row);
 
 					//replace variables in email body
-					$email_body = str_replace('${domain_name}', $domain_name, $email_body);
 					$email_body = str_replace('${domain}', $domain_name, $email_body);
 
 					//send reset link
