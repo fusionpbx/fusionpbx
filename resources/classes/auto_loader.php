@@ -367,7 +367,7 @@ class auto_loader {
 	private function loader($class_name): bool {
 
 		//sanitize the class name
-		$class_name = preg_replace('/[^a-zA-Z0-9_]/', '', $class_name);
+		$class_name = preg_replace('/[^a-zA-Z0-9_\\\\]/', '', $class_name);
 
 		//find the path using the class_name as the key in the classes array
 		if (isset($this->classes[$class_name])) {
