@@ -414,6 +414,76 @@
 				$parameters['user_uuid'] = $user_uuid;
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);
+
+
+				//send the password changed email
+				if (valid_email($user_email)) {
+					//generate email and body variables
+					$domain_name = $_SESSION['domain_name'];
+					$domain_uuid = $_SESSION['domain_uuid'];
+
+					//get user language code, if exists
+					$sql = "select user_setting_value from v_user_settings ";
+					$sql .= "where user_uuid = :user_uuid ";
+					$sql .= "and domain_uuid = :domain_uuid ";
+					$sql .= "and user_setting_category = 'domain' ";
+					$sql .= "and user_setting_subcategory = 'language' ";
+					$sql .= "and user_setting_name = 'code' ";
+					$parameters['user_uuid'] = $user_uuid;
+					$parameters['domain_uuid'] = $domain_uuid;
+					$row = $database->select($sql, $parameters, 'row');
+					if (is_array($row) && @sizeof($row) != 0) {
+						$user_language_code = $row['user_setting_value'];
+					}
+					unset($sql, $parameters, $row);
+
+					//get the email template from database
+					$sql = "select template_subject, template_body from v_email_templates ";
+					$sql .= "where template_language = :template_language ";
+					$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and template_category = 'password_changed' ";
+					$sql .= "and template_subcategory = 'default' ";
+					$sql .= "and template_type = 'html' ";
+					$sql .= "and template_enabled = true ";
+					$parameters['template_language'] = $user_language_code ? $user_language_code : $settings->get('domain', 'language', 'en-us');
+					$parameters['domain_uuid'] = $domain_uuid;
+					$row = $database->select($sql, $parameters, 'row');
+					if (is_array($row)) {
+						$email_subject = $row['template_subject'];
+						$email_body = $row['template_body'];
+					}
+					unset($sql, $parameters, $row);
+
+					//replace variables in email body
+					$email_body = str_replace('${domain_name}', $domain_name, $email_body);
+					$email_body = str_replace('${domain}', $domain_name, $email_body);
+
+					//send reset link
+					if (send_email($user_email, $email_subject, $email_body, $eml_error)) {
+						//email sent
+					}
+					else {
+						//email failed
+						//message::add($eml_error, 'negative', 5000);
+					}
+
+					//get the username
+					$sql = "select username from v_users ";
+					$sql .= "where user_uuid = :user_uuid ";
+					$parameters['user_uuid'] = $user_uuid;
+					$username = $database->select($sql, $parameters, 'column');
+					unset($sql, $parameters);
+
+					//build the user log array
+					$log_array['type'] = 'Password Changed';
+					$log_array['domain_uuid'] = $_SESSION['domain_uuid'];
+					$log_array['username'] = $username;
+					$log_array['user_uuid'] = $user_uuid;
+					$log_array['authorized'] = true;
+
+					//add the result to the user logs
+					user_logs::add($log_array);
+				}
 			}
 			$array['users'][$x]['user_email'] = $user_email;
 			$array['users'][$x]['user_status'] = $user_status;
