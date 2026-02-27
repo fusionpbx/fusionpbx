@@ -135,7 +135,7 @@ if ($domains_processed == 1) {
 				$array['email_templates'][$x]['template_subject'] = 'Password Changed';
 				$array['email_templates'][$x]['template_body'] .= "<html>\n";
 				$array['email_templates'][$x]['template_body'] .= "<body>\n";
-				$array['email_templates'][$x]['template_body'] .= "A password was just changed on \${domain_name} for a user account associated with this email address.<br /><br />\n";
+				$array['email_templates'][$x]['template_body'] .= "A password was just changed on \${domain} for a user account associated with this email address.<br /><br />\n";
 				$array['email_templates'][$x]['template_body'] .= "If you made this change, you can ignore this message.<br /><br />";
 				$array['email_templates'][$x]['template_body'] .= "If you did not initiate this action, please contact your system administrator.";
 				$array['email_templates'][$x]['template_body'] .= "<br /><br /><br />\n";
