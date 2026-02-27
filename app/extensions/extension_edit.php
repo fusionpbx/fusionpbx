@@ -1133,7 +1133,7 @@
 	if (empty($user_context)) { $user_context = $domain_name; }
 	if (empty($max_registrations)) { $max_registrations = $extension_max_registrations ?? ''; }
 	if (empty($accountcode)) { $accountcode = get_accountcode(); }
-	if (empty($limit_max)) { $limit_max = $extension_limit_max; }
+	if (!isset($limit_max)) { $limit_max = $extension_limit_max; }
 	if (empty($limit_destination)) { $limit_destination = '!USER_BUSY'; }
 	if (empty($call_timeout)) { $call_timeout = $extension_call_timeout; }
 	if (empty($user_record)) { $user_record = $extension_user_record_default; }
