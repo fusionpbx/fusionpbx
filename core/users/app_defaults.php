@@ -118,6 +118,51 @@ if ($domains_processed == 1) {
 			$p->delete("default_setting_edit", 'temp');
 		}
 
+	//insert default password changed email template
+		if (file_exists(dirname(__DIR__, 2).'/core/email_templates')) {
+
+			//add the email templates to the database
+			$sql = "select count(*) as num_rows from v_email_templates ";
+			$sql .= "where email_template_uuid = 'afca57c4-056c-45b5-be46-13f5522e47b7' ";
+			$num_rows = $database->select($sql, null, 'column');
+			if ($num_rows == 0) {
+				//build the array
+				$x = 0;
+				$array['email_templates'][$x]['email_template_uuid'] = 'afca57c4-056c-45b5-be46-13f5522e47b7';
+				$array['email_templates'][$x]['template_language'] = 'en-us';
+				$array['email_templates'][$x]['template_category'] = 'password_changed';
+				$array['email_templates'][$x]['template_subcategory'] = 'default';
+				$array['email_templates'][$x]['template_subject'] = 'Password Changed';
+				$array['email_templates'][$x]['template_body'] .= "<html>\n";
+				$array['email_templates'][$x]['template_body'] .= "<body>\n";
+				$array['email_templates'][$x]['template_body'] .= "A password was just changed on \${domain_name} for a user account associated with this email address.<br /><br />\n";
+				$array['email_templates'][$x]['template_body'] .= "If you made this change, you can ignore this message.<br /><br />";
+				$array['email_templates'][$x]['template_body'] .= "If you did not initiate this action, please contact your system administrator.";
+				$array['email_templates'][$x]['template_body'] .= "<br /><br /><br />\n";
+				$array['email_templates'][$x]['template_body'] .= "<a href='https://\${domain}'>\${domain}</a>\n";
+				$array['email_templates'][$x]['template_body'] .= "<br /><br /><br />\n";
+				$array['email_templates'][$x]['template_body'] .= "</body>\n";
+				$array['email_templates'][$x]['template_body'] .= "</html>\n";
+				$array['email_templates'][$x]['template_type'] = 'html';
+				$array['email_templates'][$x]['template_enabled'] = true;
+				$array['email_templates'][$x]['template_description'] = 'Default password changed email template.';
+				$x++;
+
+				//add the temporary permission
+				$p = permissions::new();
+				$p->add("email_template_add", 'temp');
+				$p->add("email_template_edit", 'temp');
+
+				//save to the data
+				$database->save($array, false);
+				unset($array);
+
+				//remove the temporary permission
+				$p->delete("email_template_add", 'temp');
+				$p->delete("email_template_edit", 'temp');
+			}
+		}
+
 	//insert default password reset email template
 		if (file_exists(dirname(__DIR__, 2).'/core/email_templates')) {
 
