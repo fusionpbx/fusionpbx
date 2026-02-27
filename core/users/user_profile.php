@@ -456,14 +456,8 @@
 					//replace variables in email body
 					$email_body = str_replace('${domain}', $domain_name, $email_body);
 
-					//send reset link
-					if (send_email($user_email, $email_subject, $email_body, $eml_error)) {
-						//email sent
-					}
-					else {
-						//email failed
-						//message::add($eml_error, 'negative', 5000);
-					}
+					//send the email
+					send_email($user_email, $email_subject, $email_body, $eml_error);
 
 					//get the username
 					$sql = "select username from v_users ";
