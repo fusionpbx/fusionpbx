@@ -92,14 +92,14 @@ class auto_loader {
 		if ($this->apcu_enabled && apcu_exists(self::CLASSES_KEY) && apcu_exists(self::INTERFACES_KEY)) {
 			$this->classes = apcu_fetch(self::CLASSES_KEY, $classes_cached);
 			$this->interfaces = apcu_fetch(self::INTERFACES_KEY, $interfaces_cached);
-			
+
 			//validate fetched data is arrays and not corrupted
-			if ($classes_cached && $interfaces_cached && 
-				is_array($this->classes) && is_array($this->interfaces) && 
+			if ($classes_cached && $interfaces_cached &&
+				is_array($this->classes) && is_array($this->interfaces) &&
 				!empty($this->classes)) {
 				return true;
 			}
-			
+
 			//log when cache validation fails
 			if ($classes_cached || $interfaces_cached) {
 				self::log(LOG_WARNING, "APCu cache validation failed - classes_cached: " . ($classes_cached ? 'true' : 'false') . ", interfaces_cached: " . ($interfaces_cached ? 'true' : 'false') . ", is_array(classes): " . (is_array($this->classes) ? 'true' : 'false') . ", is_array(interfaces): " . (is_array($this->interfaces) ? 'true' : 'false'));
@@ -367,7 +367,7 @@ class auto_loader {
 	private function loader($class_name): bool {
 
 		//sanitize the class name
-		$class_name = preg_replace('/[^a-zA-Z0-9_]/', '', $class_name);
+		$class_name = preg_replace('/[^a-zA-Z0-9_\\\\]/', '', $class_name);
 
 		//find the path using the class_name as the key in the classes array
 		if (isset($this->classes[$class_name])) {
