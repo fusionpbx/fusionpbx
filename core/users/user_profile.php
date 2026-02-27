@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -404,6 +404,16 @@
 				//create a one way hash for the user password
 				$array['users'][$x]['password'] = password_hash($password, PASSWORD_DEFAULT, $options);
 				$array['users'][$x]['salt'] = null;
+
+				//remove remember me tokens
+				setcookie('remember', '', time() - 3600, '/');
+				$sql = "update v_user_logs ";
+				$sql .= "set remember_selector = null, ";
+				$sql .= "remember_validator = null ";
+				$sql .= "where user_uuid = :user_uuid ";
+				$parameters['user_uuid'] = $user_uuid;
+				$database->execute($sql, $parameters);
+				unset($sql, $parameters);
 			}
 			$array['users'][$x]['user_email'] = $user_email;
 			$array['users'][$x]['user_status'] = $user_status;

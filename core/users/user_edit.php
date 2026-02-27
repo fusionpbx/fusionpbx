@@ -533,10 +533,20 @@
 						unlink(session_save_path() . "/sess_" . $row['session_id']);
 					}
 				}
+				unset($sql, $parameters);
 
 				//create a one way hash for the user password
 				$array['users'][$x]['password'] = password_hash($password, PASSWORD_DEFAULT, $options);
 				$array['users'][$x]['salt'] = null;
+
+				//remove remember me tokens
+				$sql = "update v_user_logs ";
+				$sql .= "set remember_selector = null, ";
+				$sql .= "remember_validator = null ";
+				$sql .= "where user_uuid = :user_uuid ";
+				$parameters['user_uuid'] = $user_uuid;
+				$database->execute($sql, $parameters);
+				unset($sql, $parameters);
 			}
 			$array['users'][$x]['user_email'] = $user_email;
 			$array['users'][$x]['user_status'] = $user_status;
