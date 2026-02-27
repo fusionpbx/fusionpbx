@@ -590,13 +590,7 @@
 					$email_body = str_replace('${domain}', $domain_name, $email_body);
 
 					//send reset link
-					if (send_email($user_email, $email_subject, $email_body, $eml_error)) {
-						//email sent
-					}
-					else {
-						//email failed
-						//message::add($eml_error, 'negative', 5000);
-					}
+					send_email($user_email, $email_subject, $email_body, $eml_error);
 
 					//build the user log array
 					$log_array['type'] = 'Password Changed';
