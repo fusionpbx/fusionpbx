@@ -1169,18 +1169,20 @@
 
 	echo "<script type=\"text/javascript\" language=\"JavaScript\">\n";
 	echo "\n";
-	echo "function enable_change(enable_over) {\n";
-	echo "	var endis;\n";
-	echo "	endis = !(document.iform.enable.checked || enable_over);\n";
-	echo "	document.iform.range_from.disabled = endis;\n";
-	echo "	document.iform.range_to.disabled = endis;\n";
-	echo "}\n";
+	echo "	function enable_change(enable_over) {\n";
+	echo "		var endis;\n";
+	echo "		endis = !(document.iform.enable.checked || enable_over);\n";
+	echo "		document.iform.range_from.disabled = endis;\n";
+	echo "		document.iform.range_to.disabled = endis;\n";
+	echo "	}\n";
 	echo "\n";
 	if (permission_exists('extension_advanced')) {
-		echo "function show_advanced_config() {\n";
-		echo "	$('#show_advanced_box').slideToggle();\n";
-		echo "	$('#show_advanced').slideToggle();\n";
-		echo "}\n";
+		echo "	function show_advanced_config() {\n";
+		echo "		const rows = document.querySelectorAll('.advanced-row');\n";
+		echo "		rows.forEach(row => {\n";
+		echo "			row.style.display = row.style.display == 'none' ? 'table-row' : 'none';\n";
+		echo "		});\n";
+		echo "	}\n";
 		echo "\n";
 	}
 	echo "function copy_extension() {\n";
@@ -2170,51 +2172,41 @@
 		echo "</tr>\n";
 	}
 
-	//--- begin: show_advanced -----------------------
-
 	if (permission_exists("extension_advanced")) {
-		echo "<tr>\n";
-		echo "<td style='padding: 0px;' colspan='2' class='' valign='top' align='left' nowrap>\n";
-
-		echo "	<div id=\"show_advanced_box\">\n";
-		echo "		<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-		echo "		<tr>\n";
-		echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">&nbsp;</td>\n";
-		echo "		<td width=\"70%\" class=\"vtable\">\n";
-		echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>'show_advanced_config();']);
-		echo "		</td>\n";
-		echo "		</tr>\n";
-		echo "		</table>\n";
-		echo "	</div>\n";
-
-		echo "	<div id=\"show_advanced\" style=\"display:none\">\n";
-		echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 
 		echo "<tr>\n";
-		echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	<td valign=\"top\" class=\"vncell\">&nbsp;</td>\n";
+		echo "	<td class=\"vtable\">\n";
+		echo "		".button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>'show_advanced_config();']);
+		echo "	</td>\n";
+		echo "</tr>\n";
+
+
+		echo "<tr class='advanced-row' style='display: none;'>\n";
+		echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "    ".$text['label-auth_acl']."\n";
-		echo "</td>\n";
-		echo "<td width=\"70%\" class='vtable' align='left'>\n";
-		echo "   <input class='formfld' type='text' name='auth_acl' maxlength='255' value=\"".escape($auth_acl ?? '')."\">\n";
-		echo "   <br />\n";
-		echo $text['description-auth_acl']."\n";
-		echo "</td>\n";
+		echo "	</td>\n";
+		echo "	<td class='vtable' align='left'>\n";
+		echo " 	  <input class='formfld' type='text' name='auth_acl' maxlength='255' value=\"".escape($auth_acl ?? '')."\">\n";
+		echo " 	  <br />\n";
+		echo "		".$text['description-auth_acl']."\n";
+		echo "	</td>\n";
 		echo "</tr>\n";
 
 		if (permission_exists("extension_cidr")) {
-			echo "<tr>\n";
-			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "<tr class='advanced-row' style='display: none;'>\n";
+			echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "    ".$text['label-cidr']."\n";
-			echo "</td>\n";
-			echo "<td class='vtable' align='left'>\n";
+			echo "	</td>\n";
+			echo "	<td class='vtable' align='left'>\n";
 			echo "    <input class='formfld' type='text' name='cidr' maxlength='255' value=\"".escape($cidr ?? '')."\">\n";
-			echo "<br />\n";
-			echo $text['description-cidr']."\n";
-			echo "</td>\n";
+			echo "		<br />\n";
+			echo "		".$text['description-cidr']."\n";
+			echo "	</td>\n";
 			echo "</tr>\n";
 		}
 
-		echo "<tr>\n";
+		echo "<tr class='advanced-row' style='display: none;'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "    ".$text['label-sip_force_contact']."\n";
 		echo "</td>\n";
@@ -2236,7 +2228,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr>\n";
+		echo "<tr class='advanced-row' style='display: none;'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "    ".$text['label-sip_force_expires']."\n";
 		echo "</td>\n";
@@ -2248,7 +2240,7 @@
 		echo "</tr>\n";
 
 		if (permission_exists('extension_nibble_account')) {
-			echo "<tr>\n";
+			echo "<tr class='advanced-row' style='display: none;'>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "    ".$text['label-nibble_account']."\n";
 			echo "</td>\n";
@@ -2260,7 +2252,7 @@
 			echo "</tr>\n";
 		}
 
-		echo "<tr>\n";
+		echo "<tr class='advanced-row' style='display: none;'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "    ".$text['label-mwi_account']."\n";
 		echo "</td>\n";
@@ -2271,7 +2263,7 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr>\n";
+		echo "<tr class='advanced-row' style='display: none;'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "    ".$text['label-sip_bypass_media']."\n";
 		echo "</td>\n";
@@ -2294,7 +2286,7 @@
 		echo "</tr>\n";
 
 		if (permission_exists('extension_absolute_codec_string')) {
-			echo "<tr>\n";
+			echo "<tr class='advanced-row' style='display: none;'>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "    ".$text['label-absolute_codec_string']."\n";
 			echo "</td>\n";
@@ -2307,7 +2299,7 @@
 		}
 
 		if (permission_exists('extension_force_ping')) {
-			echo "<tr>\n";
+			echo "<tr class='advanced-row' style='display: none;'>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "    ".$text['label-force_ping']."\n";
 			echo "</td>\n";
@@ -2330,7 +2322,7 @@
 		}
 
 		if (permission_exists('extension_dial_string')) {
-			echo "<tr>\n";
+			echo "<tr class='advanced-row' style='display: none;'>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "    ".$text['label-dial_string']."\n";
 			echo "</td>\n";
@@ -2342,14 +2334,8 @@
 			echo "</tr>\n";
 		}
 
-		echo "	</table>\n";
-		echo "	</div>";
-
-		echo "</td>\n";
-		echo "</tr>\n";
-
 	}
-	//--- end: show_advanced -----------------------
+
 
 	if (permission_exists('extension_enabled')) {
 		echo "<tr>\n";
