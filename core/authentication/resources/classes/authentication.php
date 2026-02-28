@@ -207,6 +207,11 @@ class authentication {
 					'samesite' => 'Strict'
 				]);
 
+				//set the session authorized to true
+				$_SESSION['authorized'] = true;
+
+				//return the result
+				return $result;
 			}
 		}
 
