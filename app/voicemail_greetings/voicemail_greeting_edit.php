@@ -235,7 +235,8 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					$greeting_filename_temp = str_replace('.'.$greeting_format, '.tmp.'.$greeting_format, $greeting_filename);
 					exec('sox --ignore-length '.$greeting_path.'/'.$greeting_filename.' '.$greeting_path.'/'.$greeting_filename_temp);
 					if (file_exists($greeting_path.$greeting_filename_temp)) {
-						exec('rm -f '.$greeting_path.'/'.$greeting_filename.' && mv '.$greeting_path.'/'.$greeting_filename_temp.' '.$greeting_path.'/'.$greeting_filename);
+						recursive_delete($greeting_path.'/'.$greeting_filename);
+						exec('mv '.$greeting_path.'/'.$greeting_filename_temp.' '.$greeting_path.'/'.$greeting_filename);
 					}
 					unset($greeting_filename_temp);
 				}
