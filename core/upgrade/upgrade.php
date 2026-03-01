@@ -605,9 +605,6 @@ function update_file_permissions($text, settings $settings) {
 			$directories[] = $log_directory . '/xml_cdr';
 		}
 
-		//update the auto_loader cache permissions file
-		$directories[] = sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE;
-
 		//execute chown command for each directory
 		foreach ($directories as $dir) {
 			//skip empty directories
