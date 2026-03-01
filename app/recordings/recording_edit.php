@@ -245,7 +245,8 @@
 							exec('sox --ignore-length '.escapeshellarg($recording_path.'/'.$recording_filename).' '.escapeshellarg($recording_path.'/'.$recording_filename_temp));
 						}
 						if (file_exists($recording_path.'/'.$recording_filename_temp)) {
-							exec('rm -f '.escapeshellarg($recording_path.'/'.$recording_filename).' && mv '.escapeshellarg($recording_path.'/'.$recording_filename_temp).' '.escapeshellarg($recording_path.'/'.$recording_filename));
+							recursive_delete($recording_path.'/'.$recording_filename);
+							exec('mv '.escapeshellarg($recording_path.'/'.$recording_filename_temp).' '.escapeshellarg($recording_path.'/'.$recording_filename));
 						}
 						unset($recording_filename_temp);
 					}
