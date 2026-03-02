@@ -66,7 +66,13 @@
 			$sql .= "		lower(domain_name) like :search ";
 			$sql .= "		or lower(domain_description) like :search ";
 			$sql .= "	) ";
-			$parameters['search'] = '%'.$search.'%';
+			$search = str_replace("*", "%", $search);
+			if (strstr($search, '%')) {
+				$parameters['search'] = $search;
+			}
+			else {
+				$parameters['search'] = '%'.$search.'%';
+			}
 		}
 		$sql .= "order by domain_name asc ";
 		$domains = $database->select($sql, $parameters ?? null, 'all');
