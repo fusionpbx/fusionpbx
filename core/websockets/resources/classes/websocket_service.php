@@ -511,6 +511,9 @@ class websocket_service extends service {
 				//attach the domain name
 				$message->domain_name($subscriber->get_domain_name());
 
+				//attach the domain uuid
+				$message->domain_uuid($subscriber->get_domain_uuid());
+
 				//attach the client id so we can track the request
 				$message->resource_id = $subscriber->id;
 
@@ -556,7 +559,13 @@ class websocket_service extends service {
 			//
 			// Merge all sockets to a single array
 			//
-			$read  = array_merge([$this->server_socket], $this->clients);
+			$this->update_connected_clients();
+			$read = [$this->server_socket];
+			foreach ($this->clients as $client) {
+				if (is_resource($client) && !feof($client)) {
+					$read[] = $client;
+				}
+			}
 			$write = $except = [];
 
 			//$this->debug("Waiting on event. Connected Clients: (".count($this->clients).")", LOG_DEBUG);
