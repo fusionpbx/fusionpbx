@@ -115,6 +115,7 @@
 			time_limit_secs = session:getVariable("time_limit_secs");
 			silence_thresh = session:getVariable("silence_thresh");
 			silence_hits = session:getVariable("silence_hits");
+			if (not record_ext) then record_ext = 'wav'; end
 			if (not time_limit_secs) then time_limit_secs = '10800'; end
 			if (not silence_thresh) then silence_thresh = '200'; end
 			if (not silence_hits) then silence_hits = '10'; end
