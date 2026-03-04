@@ -298,6 +298,24 @@
 				}
 			}
 
+		//update dialplan detail order if drag and drop was used
+			if (!empty($_POST['dialplan_details_order'])) {
+				$dialplan_details_order = explode(",", $_POST["dialplan_details_order"]);
+
+				foreach ($dialplan_details_order as $dialplan) {
+					list($uuid, $order, $group_id) = explode("|", $dialplan);
+
+					foreach ($array['dialplans'][0]['dialplan_details'] as &$key) {
+						if ($key['dialplan_detail_uuid'] == $uuid) {
+							$key['dialplan_detail_order'] = $order;
+							$key['dialplan_detail_group'] = $group_id;
+							break;
+						}
+					}
+					unset($key);
+				}
+			}
+
 		//update the dialplan_xml by using the array
 			$dialplans = new dialplan;
 			$dialplans->source = "details";
@@ -808,6 +826,8 @@
 						echo "<tr><td colspan='7'><br><br></td></tr>";
 					}
 
+					echo "<tbody class='sortable' id='".$g."'>\n";
+
 					echo "<tr>\n";
 					echo "<td class='vncellcolreq'>".$text['label-tag']."</td>\n";
 					echo "<td class='vncellcolreq'>".$text['label-type']."</td>\n";
@@ -843,7 +863,7 @@
 								$no_border = ($index == 999) ? "border: none;" : null;
 
 							//begin the row
-								echo "<tr>\n";
+								echo "<tr class='".(is_uuid($dialplan_detail_uuid) ? 'draggable' : null)."' data-detail-uuid='".$dialplan_detail_uuid."' data-detail-tag='".$dialplan_detail_tag."'>\n";
 							//determine whether to hide the element
 								if (empty($dialplan_detail_tag)) {
 									$element['hidden'] = false;
@@ -1054,12 +1074,18 @@
 									}
 									echo "	</td>\n";
 								}
+								if (is_uuid($dialplan_detail_uuid)) {
+									echo "	<td class='vtable' style='text-align: center;'>\n";
+									echo "		<span class='drag_handle' style='color: #00000055; cursor: grab;'><i class='fa-solid fa-grip-lines' style='width: 15px;'></i></span>\n";
+									echo "	</td>\n";
+								}
 							//end the row
 								echo "</tr>\n";
 							//increment the value
 								$x++;
 						}
 					}
+					echo "</tbody>\n";
 					$x++;
 				} //end foreach
 				unset($details);
@@ -1072,6 +1098,66 @@
 	} //end if update
 
 	echo "<br /><br />\n";
+
+	//include sortablejs
+	echo "<script src='/resources/sortablejs/sortable.min.js'></script>";
+
+	//dialplan details drag and drop
+	echo "<input type='hidden' id='dialplan_details_order' name='dialplan_details_order' value='' />\n";
+	?>
+	<style>
+
+	.selected td:has(.drag_handle) {
+		background-color: #00000015;
+	}
+
+	</style>
+	<script>
+
+	const sortable_lists = document.querySelectorAll('.sortable');
+
+	sortable_lists.forEach(function(list) {
+		Sortable.create(list, {
+			group: 'shared',
+			animation: 150,
+			draggable: '.draggable',
+			handle: '.drag_handle',
+			onSort: update_dialplan_details_order,
+			multiDrag: true,
+			selectedClass: 'selected',
+		});
+	});
+
+	function update_dialplan_details_order() {
+		const dialplan_details_list = [];
+		let order = 5;
+
+		sortable_lists.forEach(function(list) {
+			let dialplan_details = list.querySelectorAll('.draggable');
+			const tag_order = ['condition', 'regex', 'action', 'anti-action'];
+
+			//add the dialplan details to the list
+			tag_order.forEach(function(tag) {
+				dialplan_details.forEach(function(dialplan_detail) {
+					let dialplan_tag = dialplan_detail.getAttribute('data-detail-tag');
+					let group_id = dialplan_detail.parentElement.id;
+
+					if (dialplan_tag == tag) {
+						let uuid = dialplan_detail.getAttribute('data-detail-uuid');
+						dialplan_details_list.push(`${uuid}|${order}|${group_id}`);
+						order += 5;
+					}
+				});
+			});
+
+			order += 5;
+		});
+
+		document.getElementById('dialplan_details_order').value = dialplan_details_list;
+	}
+
+	</script>
+	<?php
 
 	echo "<input type='hidden' name='app_uuid' value='".escape($app_uuid ?? null)."'>\n";
 	if ($action == "update") {
