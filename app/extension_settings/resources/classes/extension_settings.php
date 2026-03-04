@@ -172,8 +172,8 @@ class extension_settings {
 						$parameters['extension_uuid'] = $this->extension_uuid;
 						$extension                    = $this->database->select($sql, $parameters, 'row');
 						$cache                        = new cache;
-						$cache->delete(gethostname() . ":directory:" . $extension["extension"] . "@" . $extension["user_context"]);
-						$cache->delete(gethostname() . ":directory:" . $extension["number_alias"] . "@" . $extension["user_context"]);
+						$cache->delete("directory:" . $extension["extension"] . "@" . $extension["user_context"]);
+						$cache->delete("directory:" . $extension["number_alias"] . "@" . $extension["user_context"]);
 					}
 
 					//set message
@@ -255,8 +255,8 @@ class extension_settings {
 					$parameters['extension_uuid'] = $this->extension_uuid;
 					$extension                    = $this->database->select($sql, $parameters, 'row');
 					$cache                        = new cache;
-					$cache->delete(gethostname() . ":directory:" . $extension["extension"] . "@" . $extension["user_context"]);
-					$cache->delete(gethostname() . ":directory:" . $extension["number_alias"] . "@" . $extension["user_context"]);
+					$cache->delete("directory:" . $extension["extension"] . "@" . $extension["user_context"]);
+					$cache->delete("directory:" . $extension["number_alias"] . "@" . $extension["user_context"]);
 
 					//set message
 					message::add($text['message-toggle']);

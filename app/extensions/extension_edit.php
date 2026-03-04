@@ -903,9 +903,9 @@
 								$user_context = $database->select($sql, $parameters, 'column');
 							}
 							$cache = new cache;
-							$cache->delete(gethostname().":directory:".$extension."@".$user_context);
+							$cache->delete("directory:".$extension."@".$user_context);
 							if (permission_exists('number_alias') && !empty($number_alias)) {
-								$cache->delete(gethostname().":directory:".$number_alias."@".$user_context);
+								$cache->delete("directory:".$number_alias."@".$user_context);
 							}
 
 						//clear the destinations session array
