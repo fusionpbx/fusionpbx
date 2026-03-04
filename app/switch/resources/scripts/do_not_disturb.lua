@@ -265,9 +265,9 @@
 
 --clear the cache
 	if extension and #extension > 0 and cache.support() then
-		cache.del(hostname..":directory:"..extension.."@"..context);
+		cache.del("directory:"..extension.."@"..context);
 		if #number_alias > 0 then
-			cache.del(hostname..":directory:"..number_alias.."@"..context);
+			cache.del("directory:"..number_alias.."@"..context);
 		end
 	end
 
