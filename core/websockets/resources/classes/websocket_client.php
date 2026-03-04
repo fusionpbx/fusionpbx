@@ -108,7 +108,7 @@ class websocket_client {
 
 		// Put the blocking back to the previous state
 		if (!$is_blocking) {
-			$this->set_blocking(false);
+			$this->unblock();
 		}
 	}
 
@@ -370,9 +370,19 @@ class websocket_client {
 
 			// Handle control frames
 			switch ($opcode) {
-				case 0x8: // CLOSE
-					echo "[INFO] Received CLOSE frame, disconnecting\n";
-					$this->disconnect();
+				case 0x8: // CLOSE frame
+					// Extract close code if present
+					$close_code = 0;
+					if ($payload_len >= 2) {
+						$close_code = unpack('n', substr($payload, 0, 2))[1];
+					}
+					echo "[INFO] Received CLOSE frame (code: $close_code), sending close response\n";
+					// Send close frame back to complete the closing handshake
+					$this->send_control_frame(0x8, $payload_len >= 2 ? substr($payload, 0, 2) : '');
+					// Close the underlying stream
+					if (is_resource($this->resource)) {
+						@fclose($this->resource);
+					}
 					return null;
 				case 0x9: // PING
 					// Respond with PONG using same payload
@@ -383,6 +393,7 @@ class websocket_client {
 					echo "[INFO] Received PONG\n";
 					break 2;
 				case 0x1: // TEXT frame
+				case 0x2: // BINARY frame
 				case 0x0: // Continuation frame
 					$payload_data .= $payload;
 					break;
@@ -392,9 +403,11 @@ class websocket_client {
 			}
 		}
 
+		if (is_resource($this->resource)) {
 			$meta = stream_get_meta_data($this->resource);
 			if ($meta['unread_bytes'] > 0) {
-			echo "[WARNING] {$meta['unread_bytes']} bytes left in socket after read\n";
+				// Data remains in the PHP buffer and will be consumed on the next read
+			}
 		}
 
 		return $payload_data;
@@ -420,10 +433,12 @@ class websocket_client {
 			$read_size = min($max_chunk_size, $remaining);
 
 			// Read maximum chunk size or what is remaining
-			$chunk = fread($this->resource, $read_size);
+			if (!is_resource($this->resource)) {
+				return null;
+			}
+			$chunk = @fread($this->resource, $read_size);
 
 			if ($chunk === false) {
-				echo "[ERROR] fread() failed to read stream\n";
 				return null;
 			}
 
