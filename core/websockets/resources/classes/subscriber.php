@@ -449,6 +449,17 @@ class subscriber {
 	}
 
 	/**
+	 * Returns the domain UUID used.
+	 * <p>Note:<br>
+	 * This value is not validated in the object and must be validated.</p>
+	 *
+	 * @return string
+	 */
+	public function get_domain_uuid(): string {
+		return $this->domain_uuid;
+	}
+
+	/**
 	 * Returns the associated socket
 	 *
 	 * @return resource
