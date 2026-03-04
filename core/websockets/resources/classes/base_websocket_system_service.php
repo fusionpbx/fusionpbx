@@ -323,9 +323,13 @@ abstract class base_websocket_system_service extends service implements websocke
 		// Read the JSON string
 		$json_string = $this->ws_client->read();
 
-		// Nothing to do
+		// Nothing to do - connection may have been closed by server
 		if ($json_string === null) {
-			$this->warning('Message received from Websocket is empty');
+			if (!$this->ws_client->is_connected()) {
+				$this->notice('Websocket connection closed by server, will reconnect');
+			} else {
+				$this->warning('Message received from Websocket is empty');
+			}
 			return;
 		}
 
