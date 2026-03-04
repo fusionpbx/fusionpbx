@@ -441,6 +441,22 @@
 						}
 					}
 
+				//update device key ids if drag and drop was used
+					if (!empty($_POST['device_key_ids'])) {
+						$device_key_ids = explode(",", $_POST["device_key_ids"]);
+
+						foreach ($device_key_ids as $device) {
+							list($key_uuid, $key_id) = explode("|", $device);
+
+							foreach ($array['devices'][0]['device_keys'] as &$key) {
+								if ($key['device_key_uuid'] == $key_uuid) {
+									$key['device_key_id'] = $key_id;
+									break;
+								}
+							}
+							unset($key);
+						}
+					}
 
 				//save the device
 					$database->save($array);
@@ -1588,6 +1604,8 @@
 		foreach ($device_keys as $row) {
 			//set the column names
 				if ((empty($row['device_key_vendor']) || empty($previous_device_key_vendor) || $previous_device_key_vendor != $row['device_key_vendor']) && !$device_keys_generic_header_displayed) {
+					echo "		</tbody>\n";
+					echo "		<tbody class='".(!empty($row['device_key_uuid']) ? 'sortable' : null)."'>\n";
 					echo "			<tr>\n";
 					echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
 					if (permission_exists('device_key_id')) {
@@ -1623,6 +1641,7 @@
 						echo "					<span id='delete_toggle_keys_".$row['device_key_vendor']."'><input type='checkbox' id='checkbox_all_keys_".$row['device_key_vendor']."' name='checkbox_all' onclick=\"edit_all_toggle('keys_".$row['device_key_vendor']."');\"></span>\n";
 						echo "				</td>\n";
 					}
+					echo "				<td class='vtable'></td>\n";
 					echo "			</tr>\n";
 				}
 
@@ -1630,8 +1649,9 @@
 				if (!empty($row['device_key_uuid']) && is_uuid($row['device_key_uuid'])) {
 					echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".escape($row['device_key_uuid'])."\"/>\n";
 				}
+
 			//show all the rows in the array
-				echo "			<tr>\n";
+				echo "<tr class='".(is_uuid($row["device_key_uuid"]) ? 'draggable' : null)."' data-key-uuid='".$row['device_key_uuid']."'>\n";
 				echo "<td valign='top' align='left' nowrap='nowrap'>\n";
 				echo "	<select class='formfld' name='device_keys[".$x."][device_key_category]'>\n";
 				echo "	<option value=''></option>\n";
@@ -1765,12 +1785,19 @@
 					}
 				}
 				echo "				</td>\n";
+				if (is_uuid($row["device_key_uuid"])) {
+					echo "			<td class='vtable' style='text-align: center;'>\n";
+					echo "				<span class='drag_handle' style='color: #00000055; cursor: grab;'><i class='fa-solid fa-grip-lines' style='width: 15px;'></i></span>\n";
+					echo "			</td>\n";
+				}
 				echo "			</tr>\n";
 			//set the previous vendor
 				$previous_device_key_vendor = $row['device_key_vendor'] ?? '';
 			//increment the array key
 				$x++;
 		}
+
+		echo "			</tbody>\n";
 		echo "			</table>\n";
 		if (!empty($text['description-keys'])) {
 			echo "			<br>".$text['description-keys']."\n";
@@ -2067,6 +2094,55 @@
 	echo "</table>";
 	echo "</div>\n";
 	echo "<br><br>";
+
+	//include sortablejs
+	echo "<script src='/resources/sortablejs/sortable.min.js'></script>";
+
+	//device key drag and drop
+	echo "<input type='hidden' id='device_key_ids' name='device_key_ids' value='' />\n";
+	?>
+	<style>
+
+	.selected td:has(.drag_handle) {
+		background-color: #00000015;
+	}
+
+	</style>
+	<script>
+
+	const sortable_lists = document.querySelectorAll('.sortable');
+
+	sortable_lists.forEach(function(list) {
+		Sortable.create(list, {
+			animation: 150,
+			draggable: '.draggable',
+			handle: '.drag_handle',
+			onSort: update_device_key_ids,
+			multiDrag: true,
+			selectedClass: 'selected',
+		});
+	});
+
+	function update_device_key_ids() {
+		let device_key_list = [];
+
+		sortable_lists.forEach(function(list) {
+			let device_keys = list.querySelectorAll('tr.draggable');
+			let key_id = 1;
+
+			//add the device_keys to the list
+			device_keys.forEach(function(device_key) {
+				let key_uuid = device_key.getAttribute('data-key-uuid');
+				device_key_list.push(`${key_uuid}|${key_id}`);
+				key_id += 1;
+			});
+		});
+
+		document.getElementById('device_key_ids').value = device_key_list;
+	}
+
+	</script>
+	<?php
 	echo "</form>";
 
 	echo "<script>\n";
