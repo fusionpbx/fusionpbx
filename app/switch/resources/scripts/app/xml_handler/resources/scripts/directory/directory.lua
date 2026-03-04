@@ -161,7 +161,7 @@
 		-- or we do not need dial-string. In other way we have to use database.
 			if (continue) and (not USE_FS_PATH) then
 				if (cache.support() and domain_name) then
-					local cache_key, err = hostname .. ":directory:" .. (from_user or user) .. "@" .. domain_name
+					local cache_key, err = "directory:" .. (from_user or user) .. "@" .. domain_name
 					XML_STRING, err = cache.get(cache_key);
 
 					if debug['cache'] then
@@ -774,7 +774,7 @@
 
 						--set the cache
 							if cache.support() then
-								local cache_key = hostname .. ":directory:" .. sip_from_number .. "@" .. domain_name
+								local cache_key = "directory:" .. sip_from_number .. "@" .. domain_name
 								if debug['cache'] then
 									freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. cache_key .. "\n")
 								end
@@ -784,7 +784,7 @@
 								end
 
 								if sip_from_number ~= sip_from_user then
-									cache_key = hostname .. ":directory:" .. sip_from_user .. "@" .. domain_name
+									cache_key = "directory:" .. sip_from_user .. "@" .. domain_name
 									if debug['cache'] then
 										freeswitch.consoleLog("notice", "[xml_handler][directory][cache] set key: " .. cache_key .. "\n")
 									end
