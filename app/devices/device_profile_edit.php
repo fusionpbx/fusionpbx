@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2020-2025 All Rights Reserved.
+	Copyright (C) 2020-2026 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -169,6 +169,23 @@
 						$array['device_profiles'][0]['device_profile_settings'][$y]["profile_setting_description"] = $row["profile_setting_description"];
 						$y++;
 					}
+				}
+			}
+
+		//update device key ids if drag and drop was used
+			if (!empty($_POST['device_key_ids'])) {
+				$device_key_ids = explode(",", $_POST["device_key_ids"]);
+
+				foreach ($device_key_ids as $device) {
+					list($key_uuid, $key_id) = explode("|", $device);
+
+					foreach ($array['device_profiles'][0]['device_profile_keys'] as &$key) {
+						if ($key['device_profile_key_uuid'] == $key_uuid) {
+							$key['profile_key_id'] = $key_id;
+							break;
+						}
+					}
+					unset($key);
 				}
 			}
 
@@ -488,6 +505,8 @@
 
 		//set the column names
 		if ($previous_profile_key_vendor != $row['profile_key_vendor']) {
+			echo "		</tbody>\n";
+			echo "		<tbody class='".(!empty($row['device_profile_key_uuid']) ? 'sortable' : null)."' >\n";
 			echo "			<tr>\n";
 			echo "				<th class='vtablereq'>".$text['label-device_key_category']."</td>\n";
 			echo "				<th class='vtablereq'>".$text['label-device_key_id']."</td>\n";
@@ -514,11 +533,12 @@
 				echo "					<span id='delete_toggle_keys_".$device_vendor."'><input type='checkbox' id='checkbox_all_keys_".$device_vendor."' name='checkbox_all' onclick=\"edit_all_toggle('keys_".$device_vendor."');\"></span>\n";
 				echo "				</td>\n";
 			}
+			echo "				<td class='vtable'></td>\n";
 			echo "			</tr>\n";
 		}
 
 		//show all the rows in the array
-		echo "		<tr>\n";
+		echo "		<tr class='".(is_uuid($row["device_profile_key_uuid"]) ? 'draggable' : null)."' data-key-uuid='".$row['device_profile_key_uuid']."'>\n";
 		echo "			<input type='hidden' name='device_profile_keys[$x][domain_uuid]' value=\"".escape($row["domain_uuid"])."\">\n";
 		echo "			<input type='hidden' name='device_profile_keys[$x][device_profile_uuid]' value=\"".escape($row["device_profile_uuid"])."\">\n";
 		echo "			<input type='hidden' name='device_profile_keys[$x][device_profile_key_uuid]' value=\"".(is_uuid($row["device_profile_key_uuid"]) ? $row["device_profile_key_uuid"] : uuid())."\">\n";
@@ -667,6 +687,11 @@
 			}
 			echo "			</td>\n";
 		}
+		if (is_uuid($row["device_profile_key_uuid"])) {
+			echo "			<td class='vtable' style='text-align: center;'>\n";
+			echo "				<span class='drag_handle' style='color: #00000055; cursor: grab;'><i class='fa-solid fa-grip-lines' style='width: 15px;'></i></span>\n";
+			echo "			</td>\n";
+		}
 		echo "		</tr>\n";
 
 		//set the previous vendor
@@ -675,6 +700,8 @@
 		//increment the array key
 		$x++;
 	}
+
+	echo "	</tbody>\n";
 	echo "	</table>\n";
 	echo "<br />\n";
 	echo ($text['description-profile_key_icon'] ?? '')."\n";
@@ -805,6 +832,55 @@
 
 	echo "<input type='hidden' name='device_profile_uuid' value='".escape($device_profile_uuid)."'>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	//include sortablejs
+	echo "<script src='/resources/sortablejs/sortable.min.js'></script>";
+
+	//device key drag and drop
+	echo "<input type='hidden' id='device_key_ids' name='device_key_ids' value='' />\n";
+	?>
+	<style>
+
+	.selected td:has(.drag_handle) {
+		background-color: #00000015;
+	}
+
+	</style>
+	<script>
+
+	const sortable_lists = document.querySelectorAll('.sortable');
+
+	sortable_lists.forEach(function(list) {
+		Sortable.create(list, {
+			animation: 150,
+			draggable: '.draggable',
+			handle: '.drag_handle',
+			onSort: update_device_key_ids,
+			multiDrag: true,
+			selectedClass: 'selected',
+		});
+	});
+
+	function update_device_key_ids() {
+		let device_key_list = [];
+
+		sortable_lists.forEach(function(list) {
+			let device_keys = list.querySelectorAll('tr.draggable');
+			let key_id = 1;
+
+			//add the device_keys to the list
+			device_keys.forEach(function(device_key) {
+				let key_uuid = device_key.getAttribute('data-key-uuid');
+				device_key_list.push(`${key_uuid}|${key_id}`);
+				key_id += 1;
+			});
+		});
+
+		document.getElementById('device_key_ids').value = device_key_list;
+	}
+
+	</script>
+	<?php
 
 	echo "</form>";
 
