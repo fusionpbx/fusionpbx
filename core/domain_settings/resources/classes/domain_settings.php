@@ -231,6 +231,9 @@ class domain_settings {
 	public function copy($records) {
 		if (permission_exists($this->permission_prefix . 'add') && permission_exists('domain_select') && count($_SESSION['domains']) > 1) {
 
+			//define the global variables
+			global $settings;
+
 			//add multi-lingual support
 			$language = new text;
 			$text     = $language->get();
@@ -279,7 +282,7 @@ class domain_settings {
 
 							//set a random password for http_auth_password
 							if ($domain_setting_subcategory == "http_auth_password") {
-								$domain_setting_value = generate_password();
+								$domain_setting_value = generate_password(max(8, intval($settings->get('provision', 'password_http_auth_length', 20))));
 							}
 
 							//target is different domain, check if exists
@@ -360,7 +363,7 @@ class domain_settings {
 
 							//set a random password for http_auth_password
 							if ($domain_setting_subcategory == "http_auth_password") {
-								$domain_setting_value = generate_password();
+								$domain_setting_value = generate_password(max(8, intval($settings->get('provision', 'password_http_auth_length', 20))));
 							}
 
 							// check if exists
