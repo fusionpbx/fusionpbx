@@ -312,6 +312,73 @@
 									$cond_stop = DateTime::createFromFormat('Y-m-d h:i a', $cond_stop)->format('Y-m-d H:i');
 								}
 
+								//Use date-time to set the year, month, day and time
+								if (!empty($cond_start) && !empty($cond_stop) && $cond_var == 'date-time') {
+									// Extract components
+									$cond_start_datetime = DateTime::createFromFormat('Y-m-d h:i a', $_REQUEST['value'][$group_id][$cond_num]['start']);
+									$cond_start_year   = $cond_start_datetime->format('Y');
+									$cond_start_month  = $cond_start_datetime->format('n');
+									$cond_start_day    = $cond_start_datetime->format('j');
+									$cond_start_hour   = $cond_start_datetime->format('G');
+									$cond_start_minute = $cond_start_datetime->format('i');
+									$cond_start_minutes = ($cond_start_hour * 60) + $cond_start_minute + 1;
+
+									$cond_stop_datetime = DateTime::createFromFormat('Y-m-d h:i a', $_REQUEST['value'][$group_id][$cond_num]['stop']);
+									$cond_stop_year   = $cond_stop_datetime->format('Y');
+									$cond_stop_month  = $cond_stop_datetime->format('n');
+									$cond_stop_day    = $cond_stop_datetime->format('j');
+									$cond_stop_hour   = $cond_stop_datetime->format('G');
+									$cond_stop_minute = $cond_stop_datetime->format('i');
+									$cond_stop_minutes = ($cond_stop_hour * 60) + $cond_stop_minute;
+
+									$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+									$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+									$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
+									$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'condition';
+									$array['dialplan_details'][$x]['dialplan_detail_type'] = 'year';
+									$array['dialplan_details'][$x]['dialplan_detail_data'] = ($cond_start_year == $cond_stop_year) ? $cond_start_year : $cond_start_year.'-'. $cond_stop_year;
+									$array['dialplan_details'][$x]['dialplan_detail_break'] = 'never';
+									$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
+									$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
+									$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+									$x++;
+									$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+									$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+									$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
+									$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'condition';
+									$array['dialplan_details'][$x]['dialplan_detail_type'] = 'mon';
+									$array['dialplan_details'][$x]['dialplan_detail_data'] = ($cond_start_month == $cond_stop_month) ? $cond_start_month : $cond_start_month.'-'. $cond_stop_month;
+									$array['dialplan_details'][$x]['dialplan_detail_break'] = 'never';
+									$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
+									$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
+									$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+									$x++;
+									$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+									$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+									$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
+									$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'condition';
+									$array['dialplan_details'][$x]['dialplan_detail_type'] = 'mday';
+									$array['dialplan_details'][$x]['dialplan_detail_data'] = ($cond_start_day == $cond_stop_day) ? $cond_start_day : $cond_start_day.'-'. $cond_stop_day;
+									$array['dialplan_details'][$x]['dialplan_detail_break'] = 'never';
+									$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
+									$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
+									$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+									$x++;
+									if ($cond_start_minutes != $cond_stop_minutes) {
+										$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+										$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+										$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
+										$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'condition';
+										$array['dialplan_details'][$x]['dialplan_detail_type'] = 'minute-of-day';
+										$array['dialplan_details'][$x]['dialplan_detail_data'] = $cond_start_minutes.'-'. $cond_stop_minutes;
+										$array['dialplan_details'][$x]['dialplan_detail_break'] = 'never';
+										$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
+										$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
+										$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+										$x++;
+									}
+								}
+
 								//convert time-of-day to minute-of-day (due to inconsistencies with time-of-day on some systems)
 								if ($cond_var == 'time-of-day') {
 									$cond_var = 'minute-of-day';
@@ -347,18 +414,20 @@
 								}
 
 								//add condition to query string
-								$dialplan_detail_order += 10;
-								$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
-								$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
-								$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
-								$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'condition';
-								$array['dialplan_details'][$x]['dialplan_detail_type'] = $cond_var;
-								$array['dialplan_details'][$x]['dialplan_detail_data'] = $cond_value;
-								$array['dialplan_details'][$x]['dialplan_detail_break'] = 'never';
-								$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
-								$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
-								$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
-								$x++;
+								if (!empty($cond_var) && $cond_var != 'date-time') {
+									$dialplan_detail_order += 10;
+									$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+									$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+									$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
+									$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'condition';
+									$array['dialplan_details'][$x]['dialplan_detail_type'] = $cond_var;
+									$array['dialplan_details'][$x]['dialplan_detail_data'] = $cond_value;
+									$array['dialplan_details'][$x]['dialplan_detail_break'] = 'never';
+									$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
+									$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
+									$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+									$x++;
+								}
 
 								$group_conditions_exist[$group_id] = true;
 							} //if
