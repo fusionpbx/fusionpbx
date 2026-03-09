@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2025
+	Copyright (C) 2008-2026
 	All Rights Reserved.
 
 	Contributor(s):
@@ -110,11 +110,11 @@
 	echo "<script type='text/javascript'>";
 	echo "	function toggle(field) {";
 	echo "		if (field == 'source') {";
-	echo "			document.getElementById('caller_extension_uuid').selectedIndex = 0;";
+	echo "			document.getElementById('extension_uuid').selectedIndex = 0;";
 	echo "			document.getElementById('caller_id_number').value = '';";
-	echo "			$('#caller_extension_uuid').toggle();";
+	echo "			$('#extension_uuid').toggle();";
 	echo "			$('#caller_id_number').toggle();";
-	echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').trigger('focus'); } else { $('#caller_extension_uuid').trigger('focus'); }";
+	echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').trigger('focus'); } else { $('#extension_uuid').trigger('focus'); }";
 	echo "		}";
 	echo "	}";
 	echo "</script>";
