@@ -140,7 +140,7 @@
 	if ($permission['xml_cdr_search_extension']) {
 		$sql = "select extension_uuid, extension, number_alias from v_extensions ";
 		$sql .= "where domain_uuid = :domain_uuid ";
-		if (!$permission['xml_cdr_domain'] && is_array($extension_uuids) && @sizeof($extension_uuids != 0)) {
+		if (!$permission['xml_cdr_domain'] && is_array($extension_uuids) && @sizeof($extension_uuids) != 0) {
 			$sql .= "and extension_uuid in ('".implode("','",$extension_uuids)."') "; //only show the user their extensions
 		}
 		$sql .= "order by extension asc, number_alias asc ";
