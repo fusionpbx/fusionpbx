@@ -108,7 +108,7 @@
 		$caller_id_name = $_REQUEST["caller_id_name"] ?? '';
 		$caller_id_number = $_REQUEST["caller_id_number"] ?? '';
 		$caller_destination = $_REQUEST["caller_destination"] ?? '';
-		$extension_uuid = $_REQUEST["extension_uuid"] ?? '';
+		$extension_uuids = $_REQUEST["extension_uuids"] ?? '';
 		$destination_number = $_REQUEST["destination_number"] ?? '';
 		$context = $_REQUEST["context"] ?? '';
 		$start_stamp_begin = $_REQUEST["start_stamp_begin"] ?? '';
@@ -197,7 +197,7 @@
 	if (!$permission['xml_cdr_domain'] && isset($_SESSION['user']['extension']) && is_array($_SESSION['user']['extension'])) {
 		foreach ($_SESSION['user']['extension'] as $row) {
 			if (is_uuid($row['extension_uuid'])) {
-				$extension_uuids[] = $row['extension_uuid'];
+				$assigned_extension_uuids[] = $row['extension_uuid'];
 			}
 		}
 	}
@@ -209,7 +209,11 @@
 	$param .= "&caller_id_name=".urlencode($caller_id_name ?? '');
 	$param .= "&caller_id_number=".urlencode($caller_id_number ?? '');
 	$param .= "&caller_destination=".urlencode($caller_destination ?? '');
-	$param .= "&extension_uuid=".urlencode($extension_uuid ?? '');
+	foreach ($extension_uuids as $key => $value) {
+		if (is_uuid($value)) {
+			$param .= "&extension_uuids[]=".urlencode($value);
+		}
+	}
 	$param .= "&destination_number=".urlencode($destination_number ?? '');
 	$param .= "&context=".urlencode($context ?? '');
 	$param .= "&start_stamp_begin=".urlencode($start_stamp_begin ?? '');
@@ -379,8 +383,8 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!$permission['xml_cdr_domain']) { //only show the user their calls
-		if (isset($extension_uuids) && is_array($extension_uuids) && @sizeof($extension_uuids)) {
-			$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $extension_uuids)."') \n";
+		if (isset($assigned_extension_uuids) && is_array($assigned_extension_uuids) && @sizeof($assigned_extension_uuids)) {
+			$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $assigned_extension_uuids)."') \n";
 		}
 		else {
 			$sql .= "and false \n";
@@ -422,10 +426,8 @@
 			$parameters['caller_id_number'] = $mod_caller_id_number;
 		}
 	}
-
-	if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
-		$sql .= "and e.extension_uuid = :extension_uuid \n";
-		$parameters['extension_uuid'] = $extension_uuid;
+	if (!empty($extension_uuids)) {
+		$sql .= "and e.extension_uuid in ('".implode("','",$extension_uuids)."') \n";
 	}
 	if (!empty($caller_destination)) {
 		$mod_caller_destination = str_replace("*", "%", $caller_destination);
