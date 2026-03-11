@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2026
+	Copyright (C) 2008-2025
 	All Rights Reserved.
 
 	Contributor(s):
@@ -174,21 +174,36 @@
 		echo "			<input type='text' class='formfld' name='caller_id_number' style='min-width: 115px; width: 115px;' placeholder=\"".$text['label-number']."\" value='".escape($caller_id_number)."'>\n";
 		echo "		</td>\n";
 		echo "	</tr>\n";
-		echo "	<tr>";
-		echo "		<td class='vncell'>".$text['label-extension']."</td>"; //source number
-		echo "		<td class='vtable'>";
-		echo "			<select class='formfld' name='extension_uuid' id='extension_uuid'>\n";
-		echo "				<option value=''></option>";
+		echo "	<tr>\n";
+		echo "		<td class='vncell'>".$text['label-extension']."</td>\n"; //source number
+		echo "		<td class='vtable'>\n";
+		echo "			<div class='multiselect_container'>\n";
+		echo "				<div class='selected_values' id='selected_values'>\n";
+		echo "					<span class='placeholder_text'>".$text['label-select']."...</span>\n";
+		echo "				</div>\n";
+
+		echo "				<div class='dropdown_list' id='dropdown_list'>\n";
+		echo "					<input type='text' class='search_box' id='search_input' placeholder='".$text['label-search']."'>\n";
+
+		echo "					<div id='no_results' class='no_results'>".$text['label-no_results']."</div>\n";
+
+		echo "					<div class='options_list' id='options_list'>\n";
 		if (is_array($extensions) && @sizeof($extensions) != 0) {
 			foreach ($extensions as $row) {
-				$selected = (!empty($caller_extension_uuid) && $row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
-				echo "			<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
+				echo "					<label class='option_item' data-value='".escape($row['extension'])."'>\n";
+				$selected = (!empty($caller_extension_uuid) && $row['extension_uuid'] == $caller_extension_uuid) ? "checked" : null;
+				echo "						<input type='checkbox' value='".escape($row['extension_uuid'])."' ".escape($selected).">\n";
+				echo "						".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."\n";
+				echo "					</label>\n";
 			}
 		}
 		unset($sql, $parameters, $extensions, $row, $selected);
-		echo "			</select>\n";
-		echo "		</td>";
-		echo "	</tr>";
+		echo "					</div>\n";
+		echo "				</div>\n";
+		echo "			</div>\n";
+		echo "			<input type='text' class='formfld' style='display: none;' name='caller_id_numbers[]' id='caller_id_number_0' value='".escape($caller_id_number)."'>\n";
+		echo "		</td>\n";
+		echo "	</tr>\n";
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-destination']."</td>";
 		echo "		<td class='vtable'><input type='text' class='formfld' name='destination_number' value='".escape($destination_number)."'></td>";
