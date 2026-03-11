@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2026
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -209,7 +209,7 @@
 	$param .= "&caller_id_name=".urlencode($caller_id_name ?? '');
 	$param .= "&caller_id_number=".urlencode($caller_id_number ?? '');
 	$param .= "&caller_destination=".urlencode($caller_destination ?? '');
-	foreach ($extension_uuid as $key => $value) {
+	foreach ($extension_uuids as $key => $value) {
 		if (is_uuid($value)) {
 			$param .= "&extension_uuids[]=".urlencode($value);
 		}
