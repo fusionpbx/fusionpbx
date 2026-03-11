@@ -131,6 +131,9 @@ class xml_cdr_service extends service {
 		// Set the initial time
 		$last_poll_time = time();
 
+		// Read the directory to find files to process
+		$this->process_files();
+
 		// Service work is handled here
 		while ($this->running) {
 
