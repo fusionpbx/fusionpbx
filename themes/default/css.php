@@ -3988,6 +3988,158 @@ else { //default: white
 		opacity: 1.0;
 		}
 
+/* MULTI SELECT DROPDOWN ********************************************************/
+
+	.multiselect_container {
+		position: relative;
+		width: 200px;
+		user-select: none;
+	}
+
+	.selected_values {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		cursor: pointer;
+		font-family: <?=$input_text_font?>;
+		font-size: <?=$input_text_size?>;
+		color: <?=$input_text_color?>;
+		text-align: left;
+		min-height: <?=$input_height?>;
+		min-width: <?=$input_width?>;
+		padding: 4px 6px;
+		margin: 1px;
+		border-width: <?=$input_border_size?>;
+		border-style: <?=$input_border_style?>;
+		border-color: <?=$input_border_color?>;
+		outline-width: <?=$input_outline_size?>;
+		<?php if (!empty($input_outline_style)) { ?>
+			outline-style: <?=$input_outline_style?>;
+		<?php } ?>
+		<?php if (!empty($input_outline_color)) { ?>
+			outline-color: <?=$input_outline_color?>;
+		<?php } ?>
+		background: <?=$input_background_color?>;
+		<?php
+		if (!empty($input_shadow_inner_color)) { $shadows[] = $input_shadow_inner_color; }
+		if (!empty($input_shadow_outer_color)) { $shadows[] = $input_shadow_outer_color; }
+		if (!empty($shadows)) {
+			?>
+			-webkit-box-shadow: <?php echo implode(',', $shadows); ?>;
+			-moz-box-shadow:  <?php echo implode(',', $shadows); ?>;
+			box-shadow:  <?php echo implode(',', $shadows); ?>;
+			<?php
+		}
+		unset($shadows);
+		?>
+		<?php $br = format_border_radius($input_border_radius, '3px'); ?>
+		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		<?php unset($br); ?>
+		<?php if (!empty($input_outline_radius)) { ?>
+			outline-radius: <?=$input_outline_radius?>
+		<?php } ?>
+		vertical-align: middle;
+	}
+
+	.selected_values:hover {
+		border-color: <?=$input_border_color_hover?>;
+	}
+
+	.tag {
+		background: #007bff25;
+		color: #007bff;
+		padding: 2px 8px;
+		margin: 2px;
+		border-radius: 15px;
+		font-size: 13px;
+		display: flex;
+		align-items: center;
+	}
+
+	.tag span {
+		margin-left: 5px;
+		cursor: pointer;
+		font-weight: bold;
+		color: #007bff;
+	}
+
+	.tag span:hover {
+		color: #d32f2f;
+	}
+
+	.placeholder_text {
+		color: <?=$input_text_placeholder_color?>;
+	}
+
+	.dropdown_list {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		background: <?=$input_background_color?>;
+		border-width: <?=$input_border_size?>;
+		border-style: <?=$input_border_style?>;
+		border-color: <?=$input_border_color?>;
+		border-top: none;
+		border-radius: 0 0 5px 5px;
+		box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+		z-index: 1000;
+		max-height: 300px;
+		overflow-y: auto;
+		box-sizing: border-box;
+		margin: 0 1px;
+	}
+
+	.dropdown_list.open {
+		display: block;
+	}
+
+	.search_box {
+		background-color: <?=$input_background_color?>;
+		color: <?=$input_text_color?>;
+		width: 100%;
+		padding: 10px;
+		border: none;
+		border-bottom: 1px solid #00000010;
+		box-sizing: border-box;
+		font-size: 14px;
+		outline: none;
+	}
+
+	.option_item {
+		display: flex;
+		align-items: center;
+		padding: 10px;
+		cursor: pointer;
+		border-bottom: 1px solid #00000010;
+		margin: 0;
+	}
+
+	.option_item:hover {
+		background-color: <?=$table_row_background_color_hover?>;
+	}
+
+	.option_item input[type="checkbox"] {
+		margin-right: 10px;
+		transform: scale(1.2);
+		cursor: pointer;
+	}
+
+	.hidden {
+		display: none !important;
+	}
+
+	.no_results {
+		display: none;
+		padding: 15px;
+		text-align: center;
+		color: <?=$input_text_placeholder_color?>;
+	}
+
 <?php
 
 //output custom css
