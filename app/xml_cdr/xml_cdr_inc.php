@@ -252,7 +252,7 @@
 			$array = explode(",", $field);
 			$field_name = end($array);
 			if (isset($$field_name)) {
-				$param .= "&".$field_name."=".urlencode($field_name);
+				$param .= "&".$field_name."=".urlencode($$field_name);
 			}
 		}
 	}
