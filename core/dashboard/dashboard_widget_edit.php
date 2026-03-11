@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2021-2025
+	Portions created by the Initial Developer are Copyright (C) 2021-2026
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -563,7 +563,6 @@
 			'widget_detail_background_color',
 			'widget_background_gradient_style',
 			'widget_background_gradient_angle',
-			'widget_details_state',
 			'widget_column_span',
 			'widget_row_span',
 			'widget_parent_uuid',
@@ -572,6 +571,7 @@
 			'widget_description',
 		],
 		'icon' => [
+			'widget_details_state',
 			'widget_icon',
 			'widget_icon_color',
 			'widget_url',
@@ -584,6 +584,7 @@
 			'widget_background_color_hover',
 		],
 		'content' => [
+			'widget_details_state',
 			'widget_content',
 			'widget_content_text_align',
 			'widget_content_details',
@@ -602,6 +603,7 @@
 			'widget_description',
 		],
 		'chart' => [
+			'widget_details_state',
 			'widget_chart_type',
 			'widget_number_text_color',
 			'icon' => [
@@ -655,7 +657,7 @@
 		}
 	}
 
-	if (empty($widget_details_state) || $widget_details_state == 'none') {
+	if ($widget_details_state === 'none') {
 		$items_to_remove[] = 'widget_details_state';
 	}
 
