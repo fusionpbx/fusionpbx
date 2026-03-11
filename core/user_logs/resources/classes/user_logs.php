@@ -103,7 +103,7 @@ class user_logs {
 		$database = database::new();
 
 		//prepare the array
-		$array                                   = [];
+		$array = [];
 		$array['user_logs'][0]["timestamp"]      = 'now()';
 		$array['user_logs'][0]["domain_uuid"]    = $result['domain_uuid'];
 		$array['user_logs'][0]["user_uuid"]      = $result['user_uuid'];
@@ -113,6 +113,8 @@ class user_logs {
 		$array['user_logs'][0]["remote_address"] = $_SERVER['REMOTE_ADDR'];
 		$array['user_logs'][0]["user_agent"]     = $_SERVER['HTTP_USER_AGENT'];
 		$array['user_logs'][0]["session_id"]     = session_id();
+		$array['user_logs'][0]["remember_selector"] = $result['remember_selector'] ?? '';
+		$array['user_logs'][0]["remember_validator"] = $result['remember_validator'] ?? '';
 		if ($result["authorized"]) {
 			$array['user_logs'][0]["result"] = 'success';
 		} else {
