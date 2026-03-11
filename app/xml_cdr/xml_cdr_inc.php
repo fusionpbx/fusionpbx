@@ -678,7 +678,7 @@
 	$result = $database->select($sql, $parameters, 'all');
 	$result_count = is_array($result) ? sizeof($result) : 0;
 	unset($sql, $parameters);
-// view_array($database->message);
+
 //return the paging
 	if (empty($_REQUEST['export_format'])) {
 		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
