@@ -350,29 +350,10 @@ class authentication {
 				$validator = generate_password(32);
 				$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
 				$token = $selector.':'.$validator;
-				$remote_address = $_SERVER['REMOTE_ADDR'] ?? '';
-				$user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
-				//save token to the user logs
-				$sql = "update v_user_logs ";
-				$sql .= "set remember_selector = :remember_selector, ";
-				$sql .= "remember_validator = :remember_validator ";
-				$sql .= "where user_log_uuid = ( ";
-				$sql .= "	select user_log_uuid FROM v_user_logs ";
-				$sql .= "	where result = 'success' ";
-				$sql .= "	and remote_address = :remote_address ";
-				$sql .= "	and user_agent = :user_agent ";
-				$sql .= "	and user_uuid = :user_uuid ";
-				$sql .= "	and timestamp > NOW() - INTERVAL '7 days' ";
-				$sql .= "	order by timestamp desc limit 1 ";
-				$sql .= ") ";
-				$parameters['remember_selector'] = $selector;
-				$parameters['remember_validator'] = $hashed_validator;
-				$parameters['remote_address'] = $remote_address;
-				$parameters['user_agent'] = $user_agent;
-				$parameters['user_uuid'] = $user['user_uuid'];
-				$this->database->execute($sql, $parameters);
-				unset($sql, $parameters);
+				//save token to the user log array
+				$_SESSION['authentication']['plugin'][$name]['remember_selector'] = $selector;
+				$_SESSION['authentication']['plugin'][$name]['remember_validator'] = $hashed_validator;
 
 				//set the cookie
 				setcookie('remember', $token, [
