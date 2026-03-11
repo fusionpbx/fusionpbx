@@ -830,7 +830,7 @@
 						const clean_label = box.parentElement.textContent.trim();
 
 						// Create a hidden input for each selected tag
-						createHiddenInputForTag(clean_label, box.value);
+						create_hidden_input_for_tag(clean_label, box.value);
 
 						html += `<span class="tag" data-value="${box.value}">`;
 						html += `	${clean_label}`;
@@ -849,9 +849,9 @@
 					checkbox.checked = false;
 
 					// Remove the hidden input corresponding to this tag
-					const hiddenInput = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
-					if (hiddenInput) {
-						hiddenInput.remove();
+					const hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
+					if (hidden_input) {
+						hidden_input.remove();
 					}
 
 					update_selected_values();
@@ -859,14 +859,14 @@
 			};
 
 			// Function to create a hidden input for each selected tag
-			function createHiddenInputForTag(label, value) {
-				const existingHiddenInput = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
-				if (!existingHiddenInput) {
-					const hiddenInput = document.createElement('input');
-					hiddenInput.type = 'hidden';
-					hiddenInput.name = 'extension_uuids[]';
-					hiddenInput.value = value;
-					container.appendChild(hiddenInput);
+			function create_hidden_input_for_tag(label, value) {
+				const existing_hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
+				if (!existing_hidden_input) {
+					const hidden_input = document.createElement('input');
+					hidden_input.type = 'hidden';
+					hidden_input.name = 'extension_uuids[]';
+					hidden_input.value = value;
+					container.appendChild(hidden_input);
 				}
 			}
 
