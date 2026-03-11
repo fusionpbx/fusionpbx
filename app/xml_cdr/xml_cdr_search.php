@@ -106,19 +106,6 @@
 	$document['title'] = $text['title-advanced_search'];
 	require_once "resources/header.php";
 
-//javascript to toggle input/select boxes
-	echo "<script type='text/javascript'>";
-	echo "	function toggle(field) {";
-	echo "		if (field == 'source') {";
-	echo "			document.getElementById('extension_uuid').selectedIndex = 0;";
-	echo "			document.getElementById('caller_id_number').value = '';";
-	echo "			$('#extension_uuid').toggle();";
-	echo "			$('#caller_id_number').toggle();";
-	echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').trigger('focus'); } else { $('#extension_uuid').trigger('focus'); }";
-	echo "		}";
-	echo "	}";
-	echo "</script>";
-
 //start the html form
 	if (isset($_GET['redirect']) && $_GET['redirect'] == 'xml_cdr_statistics') {
 		echo "<form method='get' action='xml_cdr_statistics.php'>\n";
@@ -180,10 +167,13 @@
 		echo "		</td>\n";
 		echo "	</tr>\n";
 
-		echo "	<tr>";
-		echo "		<td class='vncell'>".$text['label-caller_id_name']."</td>"; //source name
-		echo "		<td class='vtable'><input type='text' class='formfld' name='caller_id_name' value='".escape($caller_id_name)."'></td>";
-		echo "	</tr>";
+		echo "	<tr>\n";
+		echo "		<td class='vncell'>".$text['label-caller_id']."</td>\n"; //source name
+		echo "		<td class='vtable'>\n";
+		echo "			<input type='text' class='formfld' name='caller_id_name' style='min-width: 115px; width: 115px;' placeholder=\"".$text['label-name']."\" value='".escape($caller_id_name)."'>\n";
+		echo "			<input type='text' class='formfld' name='caller_id_number' style='min-width: 115px; width: 115px;' placeholder=\"".$text['label-number']."\" value='".escape($caller_id_number)."'>\n";
+		echo "		</td>\n";
+		echo "	</tr>\n";
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-extension']."</td>"; //source number
 		echo "		<td class='vtable'>";
@@ -197,8 +187,6 @@
 		}
 		unset($sql, $parameters, $extensions, $row, $selected);
 		echo "			</select>\n";
-		echo "			<input type='text' class='formfld' style='display: none;' name='caller_id_number' id='caller_id_number' value='".escape($caller_id_number)."'>\n";
-		echo "			<input type='button' id='btn_toggle_source' class='btn' name='' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle('source');\">\n";
 		echo "		</td>";
 		echo "	</tr>";
 		echo "	<tr>";
