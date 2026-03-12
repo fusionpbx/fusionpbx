@@ -1041,7 +1041,8 @@
 					--record the session
 						if (record_session) then
 							session:setVariable("record_stereo", "true");
-							record_session = ",uuid_record_result='${uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "}',record_path='".. record_path .."',record_name="..record_name;							session:setVariable("record_path", record_path);
+							record_session = ",uuid_record_result='${uuid_record "..uuid.." start ".. record_path .. "/" .. record_name .. "}',record_path='".. record_path .."',record_name="..record_name;
+							session:setVariable("record_path", record_path);
 						else
 							record_session = '';
 						end
@@ -1083,6 +1084,7 @@
 
 							--send to user
 							local dial_string_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..",";
+							dial_string_user = dial_string_user .. "domain_name="..domain_name..",domain_uuid="..domain_uuid..",";
 							dial_string_user = dial_string_user .. group_confirm..","..timeout_name.."="..destination_timeout..",";
 							dial_string_user = dial_string_user .. delay_name.."="..destination_delay..",";
 							dial_string_user = dial_string_user .. "dialed_extension=" .. row.destination_number .. ",";
@@ -1103,7 +1105,7 @@
 							end
 						elseif (tonumber(destination_number) == nil) then
 							--sip uri
-							dial_string = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
+							dial_string = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
 						else
 							--external number
 								-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal externsions, but not external calls.
