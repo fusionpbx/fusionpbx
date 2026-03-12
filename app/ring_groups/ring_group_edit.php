@@ -929,6 +929,7 @@
 		if (empty($row['destination_description'])) { $row['destination_description'] = ""; }
 		if (empty($row['destination_delay'])) { $row['destination_delay'] = "0"; }
 		if (empty($row['destination_timeout'])) { $row['destination_timeout'] = "30"; }
+		$destination_enabled = is_true($row['destination_enabled'] ?? false);
 
 		if (!empty($row['ring_group_destination_uuid']) && is_uuid($row['ring_group_destination_uuid'])) {
 			echo "		<input name='ring_group_destinations[".$x."][ring_group_destination_uuid]' type='hidden' value=\"".escape($row['ring_group_destination_uuid'])."\">\n";
