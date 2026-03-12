@@ -396,7 +396,7 @@
 								if (isset($destination_prefix) && !empty($destination_prefix)) {
 									$destination_numbers['destination_prefix'] = $destination_prefix;
 								}
-								if (isset($destination_trunk_prefix) && !empty($destination_trunk_prefix)) {
+								if (isset($destination_trunk_prefix)) {
 									$destination_numbers['destination_trunk_prefix'] = $destination_trunk_prefix;
 								}
 								if (isset($destination_area_code) && !empty($destination_area_code)) {
