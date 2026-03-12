@@ -201,7 +201,6 @@
 		echo "					</div>\n";
 		echo "				</div>\n";
 		echo "			</div>\n";
-		echo "			<input type='text' class='formfld' style='display: none;' name='caller_id_numbers[]' id='caller_id_number_0' value='".escape($caller_id_number)."'>\n";
 		echo "		</td>\n";
 		echo "	</tr>\n";
 		echo "	<tr>";

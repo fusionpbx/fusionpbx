@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -108,7 +108,7 @@
 		$caller_id_name = $_REQUEST["caller_id_name"] ?? '';
 		$caller_id_number = $_REQUEST["caller_id_number"] ?? '';
 		$caller_destination = $_REQUEST["caller_destination"] ?? '';
-		$extension_uuids = $_REQUEST["extension_uuids"] ?? '';
+		$extension_uuids = array_filter($_REQUEST["extension_uuids"]) ?? [];
 		$destination_number = $_REQUEST["destination_number"] ?? '';
 		$context = $_REQUEST["context"] ?? '';
 		$start_stamp_begin = $_REQUEST["start_stamp_begin"] ?? '';
