@@ -467,7 +467,7 @@ foreach ($widgets as $row) {
 		echo "#".$widget_id." {\n";
 		echo "	grid-row: span ".$row_span.";\n";
 		echo "}\n";
-		echo "#".$widget_id.".expanded {\n";
+		echo "#".$widget_id.".details_expanded {\n";
 		echo "	grid-row: span ".$expanded_row_span.";\n";
 		echo "}\n";
 	}
@@ -565,7 +565,7 @@ document.addEventListener('click', function(event) {
 	if (hud_content || hud_expander) {
 		let widget = event.target.closest('div.widget, div.child_widget');
 
-		if (widget.classList.contains('disabled')) {
+		if (widget.classList.contains('details_disabled')) {
 			return;
 		}
 
@@ -578,11 +578,11 @@ document.addEventListener('click', function(event) {
 function toggle_grid_row_span(widget_id) {
 	let widget = document.getElementById(widget_id);
 
-	if (widget.classList.contains('expanded')) {
-		widget.classList.remove('expanded');
+	if (widget.classList.contains('details_expanded')) {
+		widget.classList.remove('details_expanded');
 	}
 	else {
-		widget.classList.add('expanded');
+		widget.classList.add('details_expanded');
 	}
 }
 
@@ -592,20 +592,20 @@ function toggle_grid_row_span_all() {
 	const widgets = document.querySelectorAll('div.widget, div.child_widget');
 
 	widgets.forEach(widget => {
-		if (widget.classList.contains('disabled')) {
+		if (widget.classList.contains('details_disabled')) {
 			return;
 		}
 
-		if (!first_toggle && widget.classList.contains('expanded')) {
+		if (!first_toggle && widget.classList.contains('details_expanded')) {
 			return;
 		}
 
-		if (widget.classList.contains('expanded') || widget.getAttribute('data-expanded-all') === 'true') {
-			widget.classList.remove('expanded');
+		if (widget.classList.contains('details_expanded') || widget.getAttribute('data-expanded-all') === 'true') {
+			widget.classList.remove('details_expanded');
 			widget.setAttribute('data-expanded-all', 'false');
 		}
 		else {
-			widget.classList.add('expanded');
+			widget.classList.add('details_expanded');
 			widget.setAttribute('data-expanded-all', 'true');
 		}
 	});
@@ -707,7 +707,7 @@ window.addEventListener('resize', update_parent_height);
 		$widget_path_name = $widget_path_array[1];
 		$path_array = glob(dirname(__DIR__, 2).'/*/'.$application_name.'/resources/dashboard/'.$widget_path_name.'.php');
 
-		echo "<div class='widget ".$widget_details_state."' id='".$widget_id."' ".($widget_path == 'dashboard/parent' ? "data-is-parent='true'" : null)." draggable='false'>\n";
+		echo "<div class='widget details_".$widget_details_state."' id='".$widget_id."' ".($widget_path == 'dashboard/parent' ? "data-is-parent='true'" : null)." draggable='false'>\n";
 		if (file_exists($path_array[0])) {
 			include $path_array[0];
 		}
