@@ -780,10 +780,10 @@
 					const text = item.innerText.toLowerCase();
 
 					if (text.includes(search_term)) {
-						item.classList.remove('hidden');
+						item.style.display = 'block';
 						visible_count++;
 					} else {
-						item.classList.add('hidden');
+						item.style.display = 'none';
 					}
 				});
 
