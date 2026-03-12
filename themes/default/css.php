@@ -4129,10 +4129,6 @@ else { //default: white
 		cursor: pointer;
 	}
 
-	.hidden {
-		display: none !important;
-	}
-
 	.no_results {
 		display: none;
 		padding: 15px;
