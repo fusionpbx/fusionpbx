@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022-2025
+	Portions created by the Initial Developer are Copyright (C) 2022-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -330,6 +330,16 @@ foreach ($widgets as $row) {
 		echo "	padding-top: 0;\n";
 		echo "}\n";
 	}
+	if ($row['widget_details_state'] != "expanded") {
+		echo "#".$widget_id." .hud_details {\n";
+		echo "	display: none;\n";
+		echo "}\n";
+	}
+	if ($row['widget_details_state'] == "hidden" || $row['widget_details_state'] == "disabled") {
+		echo "#".$widget_id." .hud_expander {\n";
+		echo "	display: none;\n";
+		echo "}\n";
+	}
 	if (!empty($row['widget_label_text_color']) || !empty($row['widget_label_background_color'])) {
 		echo "#".$widget_id." > .hud_box > .hud_content > .hud_title:first-of-type {\n";
 		if (!empty($row['widget_label_text_color'])) { echo "	color: ".$row['widget_label_text_color'].";\n"; }
@@ -486,12 +496,6 @@ foreach ($widgets as $row) {
 				echo "	grid-column: span 1;\n";
 				echo "}\n";
 			}
-			if ($row['widget_details_state'] == "hidden" || $row['widget_details_state'] == "disabled") {
-				echo "#".$widget_id." .hud_box .hud_expander, \n";
-				echo "#".$widget_id." .hud_box .hud_details {\n";
-				echo "	display: none;\n";
-				echo "}\n";
-			}
 		}
 	?>
 }
@@ -506,22 +510,6 @@ foreach ($widgets as $row) {
 			if ($row['widget_column_span'] > 2) {
 				echo "#".$widget_id." {\n";
 				echo "	grid-column: span 2;\n";
-				echo "}\n";
-			}
-			if ($row['widget_details_state'] == "expanded") {
-				echo "#".$widget_id." .hud_box .hud_details {\n";
-				echo "	display: block;\n";
-				echo "}\n";
-			}
-			if ($row['widget_details_state'] == "contracted") {
-				echo "#".$widget_id." .widget .hud_box .hud_details {\n";
-				echo "	display: none;\n";
-				echo "}\n";
-			}
-			if ($row['widget_details_state'] == "hidden" || $row['widget_details_state'] == "disabled") {
-				echo "#".$widget_id." .hud_box .hud_expander, \n";
-				echo "#".$widget_id." .hud_box .hud_details {\n";
-				echo "	display: none;\n";
 				echo "}\n";
 			}
 		}
