@@ -394,11 +394,11 @@
 			echo "		</div>\n";
 			echo "		<div class='field'>\n";
 			echo "			<select class='formfld' name='extension_uuids[]' id='extension_uuid'>\n";
-			echo "				<option value=''></option>";
+			echo "				<option value=''></option>\n";
 			if (is_array($extensions) && @sizeof($extensions) != 0) {
 				foreach ($extensions as $row) {
-					$selected = ($row['extension_uuid'] == $extension_uuid[0]) ? "selected" : null;
-					echo "		<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
+					$selected = ($row['extension_uuid'] == $extension_uuids[0]) ? "selected" : null;
+					echo "		<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>\n";
 				}
 			}
 			echo "			</select>\n";
