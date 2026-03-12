@@ -745,14 +745,15 @@
 			const placeholder = container.querySelector('.placeholder_text');
 			let is_open = false;
 
-			//toggle Dropdown Open/Close
+			//toggle dropdown open/close
 			trigger_btn.addEventListener('click', (event) => {
 				event.stopPropagation();
 				is_open = !is_open;
 				if (is_open) {
 					dropdown_list.classList.add('open');
 					search_input.focus();
-				} else {
+				}
+				else {
 					dropdown_list.classList.remove('open');
 				}
 			});
@@ -782,26 +783,38 @@
 					if (text.includes(search_term)) {
 						item.style.display = 'block';
 						visible_count++;
-					} else {
+					}
+					else {
 						item.style.display = 'none';
 					}
 				});
 
 				if (visible_count === 0) {
 					no_results.style.display = 'block';
-				} else {
+				}
+				else {
 					no_results.style.display = 'none';
 				}
 			});
 
-			//handle Checkbox Selection
+			//handle checkbox selection
 			container.addEventListener('change', (event) => {
 				if (event.target.type === 'checkbox') {
+					//if unchecked, remove the corresponding hidden input
+					if (!event.target.checked) {
+						const value = event.target.value;
+						const hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
+						if (hidden_input) {
+							hidden_input.remove();
+						}
+					}
+
+					//update visual tags and handle checked boxes
 					update_selected_values();
 				}
 			});
 
-			//also handle clicking the text part of the option
+			//handle clicking the text part of the option
 			container.addEventListener('click', (event) => {
 				if (event.target.classList.contains('option_item')) {
 					const checkbox = event.target.querySelector('input[type="checkbox"]');
@@ -812,7 +825,7 @@
 				}
 			});
 
-			//update display Logic (tags & hidden input)
+			//update display logic (tags & hidden input)
 			function update_selected_values() {
 				const checked_boxes = document.querySelectorAll('.option_item input:checked');
 				const selected_count = checked_boxes.length;
@@ -821,7 +834,8 @@
 				if (selected_count === 0) {
 					placeholder.style.display = 'block';
 					trigger_btn.innerHTML = `<span class="placeholder_text">{/literal}{$text.label_select}{literal}...</span>`;
-				} else {
+				}
+				else {
 					placeholder.style.display = 'none';
 					let html = '';
 
@@ -829,7 +843,7 @@
 						const label = box.parentElement.innerText;
 						const clean_label = box.parentElement.textContent.trim();
 
-						// Create a hidden input for each selected tag
+						//create a hidden input for each selected tag
 						create_hidden_input_for_tag(clean_label, box.value);
 
 						html += `<span class="tag" data-value="${box.value}">`;
@@ -848,7 +862,7 @@
 				if (checkbox) {
 					checkbox.checked = false;
 
-					// Remove the hidden input corresponding to this tag
+					//remove the hidden input corresponding to this tag
 					const hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
 					if (hidden_input) {
 						hidden_input.remove();
@@ -858,7 +872,7 @@
 				}
 			};
 
-			// Function to create a hidden input for each selected tag
+			//function to create a hidden input for each selected tag
 			function create_hidden_input_for_tag(label, value) {
 				const existing_hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
 				if (!existing_hidden_input) {
