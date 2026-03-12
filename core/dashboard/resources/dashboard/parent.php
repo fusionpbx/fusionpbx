@@ -100,6 +100,10 @@ div.child_widget div.hud_chart  {
 	padding: 7px;
 }
 
+div.child_widget .hud_expander  {
+	display: none;
+}
+
 /* dashboard settings */
 <?php
 foreach ($child_widgets as $row) {
