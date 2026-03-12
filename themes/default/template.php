@@ -734,7 +734,7 @@
 			}
 			{/literal}
 
-		//multi select box with search
+		// Multi select box with search
 			{literal}
 			const container = document.querySelector('.multiselect_container');
 			const trigger_btn = container.querySelector('.selected_values');
@@ -745,7 +745,7 @@
 			const placeholder = container.querySelector('.placeholder_text');
 			let is_open = false;
 
-			//toggle dropdown open/close
+			// Toggle dropdown open/close
 			trigger_btn.addEventListener('click', (event) => {
 				event.stopPropagation();
 				is_open = !is_open;
@@ -758,7 +758,7 @@
 				}
 			});
 
-			//close dropdown if clicked outside
+			// Close dropdown if clicked outside
 			document.addEventListener('click', (event) => {
 				if (!container.contains(event.target)) {
 					is_open = false;
@@ -766,12 +766,12 @@
 				}
 			});
 
-			//prevent dropdown from closing when clicking inside the dropdown
+			// Prevent dropdown from closing when clicking inside the dropdown
 			dropdown_list.addEventListener('click', (event) => {
 				event.stopPropagation();
 			});
 
-			//handle Search Filtering
+			// Handle Search Filtering
 			search_input.addEventListener('input', (event) => {
 				const search_term = event.target.value.toLowerCase();
 				const option_items = document.querySelectorAll('.option_item');
@@ -797,10 +797,10 @@
 				}
 			});
 
-			//handle checkbox selection
+			// Handle checkbox selection
 			container.addEventListener('change', (event) => {
 				if (event.target.type === 'checkbox') {
-					//if unchecked, remove the corresponding hidden input
+					// If unchecked, remove the corresponding hidden input
 					if (!event.target.checked) {
 						const value = event.target.value;
 						const hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
@@ -809,12 +809,12 @@
 						}
 					}
 
-					//update visual tags and handle checked boxes
+					// Update visual tags and handle checked boxes
 					update_selected_values();
 				}
 			});
 
-			//handle clicking the text part of the option
+			// Handle clicking the text part of the option
 			container.addEventListener('click', (event) => {
 				if (event.target.classList.contains('option_item')) {
 					const checkbox = event.target.querySelector('input[type="checkbox"]');
@@ -825,12 +825,12 @@
 				}
 			});
 
-			//update display logic (tags & hidden input)
+			// Update display logic (tags & hidden input)
 			function update_selected_values() {
 				const checked_boxes = document.querySelectorAll('.option_item input:checked');
 				const selected_count = checked_boxes.length;
 
-				//update visual tags
+				// Update visual tags
 				if (selected_count === 0) {
 					placeholder.style.display = 'block';
 					trigger_btn.innerHTML = `<span class="placeholder_text">{/literal}{$text.label_select}{literal}...</span>`;
@@ -843,7 +843,7 @@
 						const label = box.parentElement.innerText;
 						const clean_label = box.parentElement.textContent.trim();
 
-						//create a hidden input for each selected tag
+						// Create a hidden input for each selected tag
 						create_hidden_input_for_tag(clean_label, box.value);
 
 						html += `<span class="tag" data-value="${box.value}">`;
@@ -856,13 +856,13 @@
 				}
 			}
 
-			//helper function to remove a tag when clicked (External to scope)
+			// Helper function to remove a tag when clicked (External to scope)
 			window.remove_option = function(value) {
 				const checkbox = document.querySelector(`input[value="${value}"]`);
 				if (checkbox) {
 					checkbox.checked = false;
 
-					//remove the hidden input corresponding to this tag
+					// Remove the hidden input corresponding to this tag
 					const hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
 					if (hidden_input) {
 						hidden_input.remove();
@@ -872,7 +872,7 @@
 				}
 			};
 
-			//function to create a hidden input for each selected tag
+			// Function to create a hidden input for each selected tag
 			function create_hidden_input_for_tag(label, value) {
 				const existing_hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
 				if (!existing_hidden_input) {
@@ -884,7 +884,7 @@
 				}
 			}
 
-			//initialize state
+			// Initialize state
 			update_selected_values();
 			{/literal}
 
