@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022-2025
+	Portions created by the Initial Developer are Copyright (C) 2022-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -330,6 +330,16 @@ foreach ($widgets as $row) {
 		echo "	padding-top: 0;\n";
 		echo "}\n";
 	}
+	if ($row['widget_details_state'] != "expanded") {
+		echo "#".$widget_id." .hud_details {\n";
+		echo "	display: none;\n";
+		echo "}\n";
+	}
+	if ($row['widget_details_state'] == "hidden" || $row['widget_details_state'] == "disabled") {
+		echo "#".$widget_id." .hud_expander {\n";
+		echo "	display: none;\n";
+		echo "}\n";
+	}
 	if (!empty($row['widget_label_text_color']) || !empty($row['widget_label_background_color'])) {
 		echo "#".$widget_id." > .hud_box > .hud_content > .hud_title:first-of-type {\n";
 		if (!empty($row['widget_label_text_color'])) { echo "	color: ".$row['widget_label_text_color'].";\n"; }
@@ -457,7 +467,7 @@ foreach ($widgets as $row) {
 		echo "#".$widget_id." {\n";
 		echo "	grid-row: span ".$row_span.";\n";
 		echo "}\n";
-		echo "#".$widget_id.".expanded {\n";
+		echo "#".$widget_id.".details_expanded {\n";
 		echo "	grid-row: span ".$expanded_row_span.";\n";
 		echo "}\n";
 	}
@@ -486,12 +496,6 @@ foreach ($widgets as $row) {
 				echo "	grid-column: span 1;\n";
 				echo "}\n";
 			}
-			if ($row['widget_details_state'] == "hidden" || $row['widget_details_state'] == "disabled") {
-				echo "#".$widget_id." .hud_box .hud_expander, \n";
-				echo "#".$widget_id." .hud_box .hud_details {\n";
-				echo "	display: none;\n";
-				echo "}\n";
-			}
 		}
 	?>
 }
@@ -506,22 +510,6 @@ foreach ($widgets as $row) {
 			if ($row['widget_column_span'] > 2) {
 				echo "#".$widget_id." {\n";
 				echo "	grid-column: span 2;\n";
-				echo "}\n";
-			}
-			if ($row['widget_details_state'] == "expanded") {
-				echo "#".$widget_id." .hud_box .hud_details {\n";
-				echo "	display: block;\n";
-				echo "}\n";
-			}
-			if ($row['widget_details_state'] == "contracted") {
-				echo "#".$widget_id." .widget .hud_box .hud_details {\n";
-				echo "	display: none;\n";
-				echo "}\n";
-			}
-			if ($row['widget_details_state'] == "hidden" || $row['widget_details_state'] == "disabled") {
-				echo "#".$widget_id." .hud_box .hud_expander, \n";
-				echo "#".$widget_id." .hud_box .hud_details {\n";
-				echo "	display: none;\n";
 				echo "}\n";
 			}
 		}
@@ -577,7 +565,7 @@ document.addEventListener('click', function(event) {
 	if (hud_content || hud_expander) {
 		let widget = event.target.closest('div.widget, div.child_widget');
 
-		if (widget.classList.contains('disabled')) {
+		if (widget.classList.contains('details_disabled')) {
 			return;
 		}
 
@@ -590,11 +578,11 @@ document.addEventListener('click', function(event) {
 function toggle_grid_row_span(widget_id) {
 	let widget = document.getElementById(widget_id);
 
-	if (widget.classList.contains('expanded')) {
-		widget.classList.remove('expanded');
+	if (widget.classList.contains('details_expanded')) {
+		widget.classList.remove('details_expanded');
 	}
 	else {
-		widget.classList.add('expanded');
+		widget.classList.add('details_expanded');
 	}
 }
 
@@ -604,20 +592,20 @@ function toggle_grid_row_span_all() {
 	const widgets = document.querySelectorAll('div.widget, div.child_widget');
 
 	widgets.forEach(widget => {
-		if (widget.classList.contains('disabled')) {
+		if (widget.classList.contains('details_disabled')) {
 			return;
 		}
 
-		if (!first_toggle && widget.classList.contains('expanded')) {
+		if (!first_toggle && widget.classList.contains('details_expanded')) {
 			return;
 		}
 
-		if (widget.classList.contains('expanded') || widget.getAttribute('data-expanded-all') === 'true') {
-			widget.classList.remove('expanded');
+		if (widget.classList.contains('details_expanded') || widget.getAttribute('data-expanded-all') === 'true') {
+			widget.classList.remove('details_expanded');
 			widget.setAttribute('data-expanded-all', 'false');
 		}
 		else {
-			widget.classList.add('expanded');
+			widget.classList.add('details_expanded');
 			widget.setAttribute('data-expanded-all', 'true');
 		}
 	});
@@ -719,7 +707,7 @@ window.addEventListener('resize', update_parent_height);
 		$widget_path_name = $widget_path_array[1];
 		$path_array = glob(dirname(__DIR__, 2).'/*/'.$application_name.'/resources/dashboard/'.$widget_path_name.'.php');
 
-		echo "<div class='widget ".$widget_details_state."' id='".$widget_id."' ".($widget_path == 'dashboard/parent' ? "data-is-parent='true'" : null)." draggable='false'>\n";
+		echo "<div class='widget details_".$widget_details_state."' id='".$widget_id."' ".($widget_path == 'dashboard/parent' ? "data-is-parent='true'" : null)." draggable='false'>\n";
 		if (file_exists($path_array[0])) {
 			include $path_array[0];
 		}
