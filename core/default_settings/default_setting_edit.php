@@ -736,11 +736,11 @@
 		echo "	</select>\n";
 	}
 	else {
-		if (!empty($_SESSION['domain']['setting_value_input_type']) && $settings->get('domain', 'setting_value_input_type') == 'textarea') {
-			echo "	<textarea class='formfld' id='default_setting_value' name='default_setting_value'>".($default_setting_value ?? '')."</textarea>\n";
+		if (!empty($_SESSION['domain']['setting_value_input_type']) && $settings->get('domain', 'setting_value_input_type') == 'input') {
+			echo "	<input class='formfld' type='text' id='default_setting_value' name='default_setting_value' value=\"".escape($default_setting_value ?? '')."\">\n";
 		}
 		else {
-			echo "	<input class='formfld' type='text' id='default_setting_value' name='default_setting_value' value=\"".escape($default_setting_value ?? '')."\">\n";
+			echo "	<textarea class='formfld' id='default_setting_value' name='default_setting_value'>".($default_setting_value ?? '')."</textarea>\n";
 		}
 	}
 	echo "<br />\n";
