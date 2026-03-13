@@ -514,8 +514,8 @@
 	}
 	elseif ($category == "domain" && $subcategory == "setting_value_input_type" && $name == "text" ) {
 		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
-		echo "    	<option value='input'>Input</option>\n";
-		echo "    	<option value='textarea' ".($default_setting_value == "textarea" ? "selected='selected'" : null).">TextArea</option>\n";
+		echo "    	<option value='textarea'>TextArea</option>\n";
+		echo "    	<option value='input' ".($default_setting_value == "input" ? "selected='selected'" : null).">Input</option>\n";
 		echo "	</select>\n";
 	}
 	elseif ($subcategory == 'password' || (substr_count($subcategory, '_password') > 0 && $subcategory != 'input_text_font_password') || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
@@ -737,7 +737,7 @@
 	}
 	else {
 		if (!empty($_SESSION['domain']['setting_value_input_type']) && $settings->get('domain', 'setting_value_input_type') == 'textarea') {
-			echo "	<textarea class='formfld' style='width: 185px; height: 80px;' id='default_setting_value' name='default_setting_value'>".($default_setting_value ?? '')."</textarea>\n";
+			echo "	<textarea class='formfld' id='default_setting_value' name='default_setting_value'>".($default_setting_value ?? '')."</textarea>\n";
 		}
 		else {
 			echo "	<input class='formfld' type='text' id='default_setting_value' name='default_setting_value' value=\"".escape($default_setting_value ?? '')."\">\n";
