@@ -139,6 +139,7 @@
 							$conditions[$i]['condition_expression'] = $row['condition_expression'];
 							$conditions[$i]['condition_app'] = $action_array[0];
 							$conditions[$i]['condition_data'] = $action_array[1];
+							$conditions[$i]['condition_description'] = $row['condition_description'];
 							$i++;
 						}
 					}
@@ -1479,12 +1480,14 @@
 		$destination_conditions[$i]['condition_field'] = '';
 		$destination_conditions[$i]['condition_app'] = '';
 		$destination_conditions[$i]['condition_data'] = '';
+		$destination_conditions[$i]['condition_description'] = '';
 	}
 	else {
 		$destination_conditions[0]['condition_field']  = '';
 		$destination_conditions[0]['condition_expression'] = '';
 		$destination_conditions[0]['condition_app'] = '';
 		$destination_conditions[0]['condition_data'] = '';
+		$destination_conditions[0]['condition_description'] = '';
 	}
 
 //get the dialplan details in an array
@@ -1817,7 +1820,7 @@
 		echo "</tr>\n";
 	}
 
-	//caler id number
+	//caller id number
 	if (permission_exists('destination_caller_id_number')) {
 		echo "<tr id='tr_caller_id_number'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -1873,6 +1876,7 @@
 				echo "	<input class='formfld' type='text' name=\"destination_conditions[$x][condition_expression]\" id='destination_conditions' maxlength='255' value=\"".escape($row['condition_expression'] ?? '')."\">\n";
 				echo "	<br />\n";
 				echo $destination->select('dialplan', "destination_conditions[$x][condition_action]", $row['condition_app'].':'.$row['condition_data'])."<br />\n";
+				echo "	<textarea class='formfld' style='width: 200px;' name=\"destination_conditions[$x][condition_description]\" id='destination_conditions' maxlength='255' placeholder='".$text['label-description']."'>".escape($row['condition_description'] ?? '')."</textarea><br />\n";
 				if (!empty($row['condition_app'])) {
 					echo "	<br />\n";
 				}
