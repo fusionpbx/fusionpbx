@@ -69,7 +69,7 @@
 
 <style>
 
-div.parent_widget {
+.parent_widget > .hud_box > .hud_content {
 	max-width: 100%;
 	margin: 0 auto;
 	display: grid;
@@ -124,9 +124,9 @@ foreach ($child_widgets as $row) {
 
 <?php
 
-//include the dashboards
+//include the widgets
 	echo "<div class='hud_box'>\n";
-	echo "	<div class='hud_content parent_widget'>\n";
+	echo "	<div class='hud_content'>\n";
 
 	$x = 0;
 	foreach ($child_widgets as $row) {
