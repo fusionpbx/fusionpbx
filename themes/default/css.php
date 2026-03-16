@@ -3004,7 +3004,8 @@ else { //default: white
 		border: 1px solid <?=$dashboard_border_color_hover?>;
 		}
 
-	div.widget div.hud_box:first-of-type {
+	div.widget div.hud_box:first-of-type,
+	div.parent_widget div.hud_box:first-of-type {
 		<?php
 		echo "background: ".($dashboard_background_color[0] ?? '#ffffff').";\n";
 		if (!empty($dashboard_background_color) && is_array($dashboard_background_color) && sizeof($dashboard_background_color) > 1) {
