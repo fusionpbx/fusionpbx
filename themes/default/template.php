@@ -737,155 +737,158 @@
 		// Multi select box with search
 			{literal}
 			const container = document.querySelector('.multiselect_container');
-			const trigger_btn = container.querySelector('.selected_values');
-			const dropdown_list = container.querySelector('.dropdown_list');
-			const search_input = container.querySelector('.search_box');
-			const options_list = container.querySelector('.options_list');
-			const no_results = container.querySelector('#no_results');
-			const placeholder = container.querySelector('.placeholder_text');
-			let is_open = false;
 
-			// Toggle dropdown open/close
-			trigger_btn.addEventListener('click', (event) => {
-				event.stopPropagation();
-				is_open = !is_open;
-				if (is_open) {
-					dropdown_list.classList.add('open');
-					search_input.focus();
-				}
-				else {
-					dropdown_list.classList.remove('open');
-				}
-			});
-
-			// Close dropdown if clicked outside
-			document.addEventListener('click', (event) => {
-				if (!container.contains(event.target)) {
-					is_open = false;
-					dropdown_list.classList.remove('open');
-				}
-			});
-
-			// Prevent dropdown from closing when clicking inside the dropdown
-			dropdown_list.addEventListener('click', (event) => {
-				event.stopPropagation();
-			});
-
-			// Handle Search Filtering
-			search_input.addEventListener('input', (event) => {
-				const search_term = event.target.value.toLowerCase();
-				const option_items = document.querySelectorAll('.option_item');
-				let visible_count = 0;
-
-				option_items.forEach(item => {
-					const text = item.innerText.toLowerCase();
-
-					if (text.includes(search_term)) {
-						item.style.display = 'block';
-						visible_count++;
+			if (container) {
+				const trigger_btn = container.querySelector('.selected_values');
+				const dropdown_list = container.querySelector('.dropdown_list');
+				const search_input = container.querySelector('.search_box');
+				const options_list = container.querySelector('.options_list');
+				const no_results = container.querySelector('#no_results');
+				const placeholder = container.querySelector('.placeholder_text');
+				let is_open = false;
+	
+				// Toggle dropdown open/close
+				trigger_btn.addEventListener('click', (event) => {
+					event.stopPropagation();
+					is_open = !is_open;
+					if (is_open) {
+						dropdown_list.classList.add('open');
+						search_input.focus();
 					}
 					else {
-						item.style.display = 'none';
+						dropdown_list.classList.remove('open');
 					}
 				});
-
-				if (visible_count === 0) {
-					no_results.style.display = 'block';
+	
+				// Close dropdown if clicked outside
+				document.addEventListener('click', (event) => {
+					if (!container.contains(event.target)) {
+						is_open = false;
+						dropdown_list.classList.remove('open');
+					}
+				});
+	
+				// Prevent dropdown from closing when clicking inside the dropdown
+				dropdown_list.addEventListener('click', (event) => {
+					event.stopPropagation();
+				});
+	
+				// Handle Search Filtering
+				search_input.addEventListener('input', (event) => {
+					const search_term = event.target.value.toLowerCase();
+					const option_items = document.querySelectorAll('.option_item');
+					let visible_count = 0;
+	
+					option_items.forEach(item => {
+						const text = item.innerText.toLowerCase();
+	
+						if (text.includes(search_term)) {
+							item.style.display = 'block';
+							visible_count++;
+						}
+						else {
+							item.style.display = 'none';
+						}
+					});
+	
+					if (visible_count === 0) {
+						no_results.style.display = 'block';
+					}
+					else {
+						no_results.style.display = 'none';
+					}
+				});
+	
+				// Handle checkbox selection
+				container.addEventListener('change', (event) => {
+					if (event.target.type === 'checkbox') {
+						// If unchecked, remove the corresponding hidden input
+						if (!event.target.checked) {
+							const value = event.target.value;
+							const hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
+							if (hidden_input) {
+								hidden_input.remove();
+							}
+						}
+	
+						// Update visual tags and handle checked boxes
+						update_selected_values();
+					}
+				});
+	
+				// Handle clicking the text part of the option
+				container.addEventListener('click', (event) => {
+					if (event.target.classList.contains('option_item')) {
+						const checkbox = event.target.querySelector('input[type="checkbox"]');
+						if (checkbox) {
+							checkbox.checked = !checkbox.checked;
+							update_selected_values();
+						}
+					}
+				});
+	
+				// Update display logic (tags & hidden input)
+				function update_selected_values() {
+					const checked_boxes = document.querySelectorAll('.option_item input:checked');
+					const selected_count = checked_boxes.length;
+	
+					// Update visual tags
+					if (selected_count === 0) {
+						placeholder.style.display = 'block';
+						trigger_btn.innerHTML = `<span class="placeholder_text">{/literal}{$text.label_select}{literal}...</span>`;
+					}
+					else {
+						placeholder.style.display = 'none';
+						let html = '';
+	
+						checked_boxes.forEach(box => {
+							const label = box.parentElement.innerText;
+							const clean_label = box.parentElement.textContent.trim();
+	
+							// Create a hidden input for each selected tag
+							create_hidden_input_for_tag(clean_label, box.value);
+	
+							html += `<span class="tag" data-value="${box.value}">`;
+							html += `	${clean_label}`;
+							html += `	<span onclick="remove_option('${box.value}')">&times;</span>`;
+							html += `</span>`;
+						});
+	
+						trigger_btn.innerHTML = html;
+					}
 				}
-				else {
-					no_results.style.display = 'none';
-				}
-			});
-
-			// Handle checkbox selection
-			container.addEventListener('change', (event) => {
-				if (event.target.type === 'checkbox') {
-					// If unchecked, remove the corresponding hidden input
-					if (!event.target.checked) {
-						const value = event.target.value;
+	
+				// Helper function to remove a tag when clicked (External to scope)
+				window.remove_option = function(value) {
+					const checkbox = document.querySelector(`input[value="${value}"]`);
+					if (checkbox) {
+						checkbox.checked = false;
+	
+						// Remove the hidden input corresponding to this tag
 						const hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
 						if (hidden_input) {
 							hidden_input.remove();
 						}
-					}
-
-					// Update visual tags and handle checked boxes
-					update_selected_values();
-				}
-			});
-
-			// Handle clicking the text part of the option
-			container.addEventListener('click', (event) => {
-				if (event.target.classList.contains('option_item')) {
-					const checkbox = event.target.querySelector('input[type="checkbox"]');
-					if (checkbox) {
-						checkbox.checked = !checkbox.checked;
+	
 						update_selected_values();
 					}
-				}
-			});
-
-			// Update display logic (tags & hidden input)
-			function update_selected_values() {
-				const checked_boxes = document.querySelectorAll('.option_item input:checked');
-				const selected_count = checked_boxes.length;
-
-				// Update visual tags
-				if (selected_count === 0) {
-					placeholder.style.display = 'block';
-					trigger_btn.innerHTML = `<span class="placeholder_text">{/literal}{$text.label_select}{literal}...</span>`;
-				}
-				else {
-					placeholder.style.display = 'none';
-					let html = '';
-
-					checked_boxes.forEach(box => {
-						const label = box.parentElement.innerText;
-						const clean_label = box.parentElement.textContent.trim();
-
-						// Create a hidden input for each selected tag
-						create_hidden_input_for_tag(clean_label, box.value);
-
-						html += `<span class="tag" data-value="${box.value}">`;
-						html += `	${clean_label}`;
-						html += `	<span onclick="remove_option('${box.value}')">&times;</span>`;
-						html += `</span>`;
-					});
-
-					trigger_btn.innerHTML = html;
-				}
-			}
-
-			// Helper function to remove a tag when clicked (External to scope)
-			window.remove_option = function(value) {
-				const checkbox = document.querySelector(`input[value="${value}"]`);
-				if (checkbox) {
-					checkbox.checked = false;
-
-					// Remove the hidden input corresponding to this tag
-					const hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
-					if (hidden_input) {
-						hidden_input.remove();
+				};
+	
+				// Function to create a hidden input for each selected tag
+				function create_hidden_input_for_tag(label, value) {
+					const existing_hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
+					if (!existing_hidden_input) {
+						const hidden_input = document.createElement('input');
+						hidden_input.type = 'hidden';
+						hidden_input.name = 'extension_uuids[]';
+						hidden_input.value = value;
+						container.appendChild(hidden_input);
 					}
-
-					update_selected_values();
 				}
-			};
-
-			// Function to create a hidden input for each selected tag
-			function create_hidden_input_for_tag(label, value) {
-				const existing_hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
-				if (!existing_hidden_input) {
-					const hidden_input = document.createElement('input');
-					hidden_input.type = 'hidden';
-					hidden_input.name = 'extension_uuids[]';
-					hidden_input.value = value;
-					container.appendChild(hidden_input);
-				}
+	
+				// Initialize state
+				update_selected_values();
 			}
-
-			// Initialize state
-			update_selected_values();
 			{/literal}
 
 	{literal}
