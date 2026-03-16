@@ -212,20 +212,27 @@
 
 							//add the actions
 								foreach ($array['destinations'] as $row) {
-
 									//build the array
 										if (!empty($row['destination_actions']) && is_json($row['destination_actions'])) {
-											$destination_actions = $row['destination_actions']; // use json actions
-											$temp = json_decode($row['destination_actions'], true);
-											$row['destination_app'] = $temp[array_key_last($temp)]['destination_app'];
-											$row['destination_data'] = $temp[array_key_last($temp)]['destination_data'];
-											unset($temp);
+											// use destination_actions json
+											$destination_actions_json = $row['destination_actions']; 
+											$destination_actions = json_decode($row['destination_actions'], true);
+											$row['destination_app'] = $destination_actions[array_key_last($destination_actions)]['destination_app'];
+											$row['destination_data'] = $destination_actions[array_key_last($destination_actions)]['destination_data'];
 										}
 										else if (!empty($row['destination_app']) && !empty($row['destination_data'])) {
-											$actions[0]['destination_app'] = $row['destination_app'];
-											$actions[0]['destination_data'] = $row['destination_data'];
-											$destination_actions = json_encode($actions);
-											unset($actions);
+											// use destination app and data
+											$destination_actions[0]['destination_app'] = $row['destination_app'];
+											$destination_actions[0]['destination_data'] = $row['destination_data'];
+											$destination_actions_json = json_encode($destination_actions);
+										}
+
+									//determine if there is a bridge in the destination actions array
+										$bridge_exists = false;
+										foreach($destination_actions as $sub_row) {
+											if ($sub_row['destination_app'] == 'bridge') {
+												$bridge_exists = true;
+											}
 										}
 
 									//get the values
@@ -247,7 +254,7 @@
 
 									//add the additional fields
 										$dialplan_uuid = uuid();
-										$array["destinations"][$row_id]['destination_actions'] = $destination_actions;
+										$array["destinations"][$row_id]['destination_actions'] = $destination_actions_json;
 										$array["destinations"][$row_id]['destination_app'] = $destination_app;
 										$array["destinations"][$row_id]['destination_data'] = $destination_data;
 										$array["destinations"][$row_id]['destination_type'] = $destination_type;
@@ -443,8 +450,8 @@
 													$dialplan_detail_order = $dialplan_detail_order + 10;
 												}
 
-											//add hangup_after_bridge and continue_on_fail
-												if (!empty($destination_data) && $destination_app == 'bridge') {
+											//add hangup_after_bridge and continue_on_fail when a bridge statement is used
+												if ($bridge_exists) {
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "set";
@@ -468,15 +475,18 @@
 													$dialplan_detail_order = $dialplan_detail_order + 10;
 												}
 
-											//set the destination app and data
-												if (strlen($destination_app) > 0 && !empty($destination_data)) {
-													$array["dialplans"][$row_id]["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
-													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = $destination_app;
-													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = $destination_data;
-													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
-													$y++;
+											//add the destination app and data
+												if (!empty($destination_actions)) {
+													//use the destination actions array to add the destination_app and destination_data
+													foreach($destination_actions as $sub_row) {
+														$array["dialplans"][$row_id]["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+														$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+														$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = $sub_row['destination_app'];
+														$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = $sub_row['destination_data'];
+														$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+														$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
+														$y++;
+													}
 
 													//set inline to true
 													if (!empty($action_app) && ($action_app == 'set' || $action_app == 'export')) {
