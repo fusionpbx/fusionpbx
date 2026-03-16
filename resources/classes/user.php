@@ -4,7 +4,7 @@
 * user class - used to store user groups, permissions, and other values
 */
 
-class user {
+class user implements logout_event {
 
 	public $domain_uuid;
 	public $domain_name;
@@ -143,4 +143,14 @@ class user {
 		$this->groups = new groups($this->database, $this->domain_uuid, $this->user_uuid);
 	}
 
+	public static function on_logout(settings $settings) {
+		//remove remember me token
+		setcookie('remember', '', time() - 3600, '/');
+		$sql = "update v_user_logs ";
+		$sql .= "set remember_selector = null, ";
+		$sql .= "remember_validator = null ";
+		$sql .= "where user_uuid = :user_uuid ";
+		$parameters['user_uuid'] = $_SESSION['user_uuid'];
+		$settings->database()->execute($sql, $parameters);
+	}
 }
