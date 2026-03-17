@@ -29,16 +29,13 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_relation_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_relation_view')) {
 		echo "access denied";
 		exit;
 	}
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get the related contacts
 	$sql = "select ";
@@ -61,7 +58,6 @@
 	$sql .= "c.contact_name_family asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_relations = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -85,7 +81,7 @@
 			echo "<th>".$text['label-contact_relation_label']."</th>\n";
 			echo "<th>".$text['label-contact_relation_organization']."</th>\n";
 			echo "<th>".$text['label-contact_relation_name']."</th>\n";
-			if (permission_exists('contact_relation_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('contact_relation_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
@@ -110,9 +106,9 @@
 					echo "	<td>".escape($row['relation_label'])."&nbsp;</td>\n";
 					echo "	<td class='no-link'><a href='contact_edit.php?id=".urlencode($row['contact_uuid'])."'>".escape($row['contact_organization'])."</a>&nbsp;</td>\n";
 					echo "	<td class='no-link'><a href='contact_edit.php?id=".urlencode($row['contact_uuid'])."'>".escape($row['contact_name_given']).((!empty($row['contact_name_given']) && !empty($row['contact_name_family'])) ? ' ' : null).escape($row['contact_name_family'])."</a>&nbsp;</td>\n";
-					if (permission_exists('contact_relation_edit') && $list_row_edit_button == 'true') {
+					if (permission_exists('contact_relation_edit') && $list_row_edit_button) {
 						echo "	<td class='action-button'>\n";
-						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 						echo "	</td>\n";
 					}
 					echo "</tr>\n";

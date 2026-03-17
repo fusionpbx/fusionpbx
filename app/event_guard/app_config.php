@@ -1,11 +1,11 @@
 <?php
 
 	//application details
-		$apps[$x]['name'] = 'Event Guard Logs';
+		$apps[$x]['name'] = 'Event Guard';
 		$apps[$x]['uuid'] = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
-		$apps[$x]['category'] = '';
-		$apps[$x]['subcategory'] = '';
-		$apps[$x]['version'] = '';
+		$apps[$x]['category'] = 'Switch';
+		$apps[$x]['subcategory'] = 'Security';
+		$apps[$x]['version'] = '2.0';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = '';
@@ -33,6 +33,17 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'event_guard_log_unblock';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+
+	//default settings
+		$y=0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e2fd44b8-524e-40e2-b6f9-083f5cc8f66b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "system";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "firewall_name";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = '';
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Firewall Options: pf, nftables, iptables";
 		$y++;
 
 	//event guard logs

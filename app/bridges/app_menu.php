@@ -20,7 +20,7 @@
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "pontes";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Poduri";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Мосты";
-	$apps[$x]['menu'][$y]['title']['sv-se'] = "Broar";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "Bryggor";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Міста";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "桥梁";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "ブリッジ";

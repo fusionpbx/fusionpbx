@@ -28,9 +28,9 @@
 	if ($domains_processed == 1) {
 
 		//create the directory
-			if (!empty($setting->get('switch','extensions'))) {
-				if (!is_dir($setting->get('switch','extensions'))) {
-					mkdir($setting->get('switch','extensions'), 0770, false);
+			if (!empty($settings->get('switch','extensions'))) {
+				if (!is_dir($settings->get('switch','extensions'))) {
+					mkdir($settings->get('switch','extensions'), 0770, false);
 				}
 			}
 
@@ -53,8 +53,6 @@
 					$p = permissions::new();
 					$p->add('extension_edit', 'temp');
 
-					$database->app_name = 'extensions';
-					$database->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 					$database->save($array, false);
 					unset($array);
 

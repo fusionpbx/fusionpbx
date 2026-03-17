@@ -35,10 +35,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('click_to_call_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('click_to_call_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -50,21 +47,35 @@
 //include the header
 	require_once "resources/header.php";
 
+//predefine the variables
+	$src = '';
+	$src_cid_name = '';
+	$src_cid_number = '';
+
+	$dest = '';
+	$dest_cid_name = '';
+	$dest_cid_number = '';
+
+	$auto_answer = ''; //true,false
+	$rec = ''; //true,false
+	$ringback = '';
+	$context = $_SESSION['domain_name'];
+
 //send the call
 	if (is_array($_GET) && isset($_GET['src']) && isset($_GET['dest'])) {
 
 		//retrieve submitted variables
-			$src = check_str($_GET['src']);
-			$src_cid_name = check_str($_GET['src_cid_name']);
-			$src_cid_number = check_str($_GET['src_cid_number']);
+			$src = $_GET['src'] ?? '';
+			$src_cid_name = $_GET['src_cid_name'] ?? '';
+			$src_cid_number = $_GET['src_cid_number'] ?? '';
 
-			$dest = check_str($_GET['dest']);
-			$dest_cid_name = check_str($_GET['dest_cid_name']);
-			$dest_cid_number = check_str($_GET['dest_cid_number']);
+			$dest = $_GET['dest'] ?? '';
+			$dest_cid_name = $_GET['dest_cid_name'] ?? '';
+			$dest_cid_number = $_GET['dest_cid_number'] ?? '';
 
-			$auto_answer = check_str($_GET['auto_answer']); //true,false
-			$rec = check_str($_GET['rec']); //true,false
-			$ringback = check_str($_GET['ringback']);
+			$auto_answer = $_GET['auto_answer'] ?? ''; //true,false
+			$rec = $_GET['rec'] ?? ''; //true,false
+			$ringback = $_GET['ringback'] ?? '';
 			$context = $_SESSION['domain_name'];
 
 		//clean up variable values
@@ -101,16 +112,16 @@
 
 				//add record path and name
 				if ($rec == "true") {
-					$record_path = $_SESSION['switch']['recordings']['dir']."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d");
-					if (isset($_SESSION['recordings']['extension']['text'])) {
-						$record_extension = $_SESSION['recordings']['extension']['text'];
+					$record_path = $settings->get('switch', 'recordings')."/".$_SESSION['domain_name']."/archive/".date("Y")."/".date("M")."/".date("d");
+					if (!empty($settings->get('recordings', 'extension'))) {
+						$record_extension = $settings->get('recordings', 'extension');
 					}
 					else {
 						$record_extension = 'wav';
 					}
-					if (isset($_SESSION['recordings']['template']['text'])) {
+					if (!empty($settings->get('recordings', 'template'))) {
 						//${year}${month}${day}-${caller_id_number}-${caller_destination}-${uuid}.${record_extension}
-						$record_name = $_SESSION['recordings']['template']['text'];
+						$record_name = $settings->get('recordings', 'template');
 						$record_name = str_replace('${year}', date("Y"), $record_name);
 						$record_name = str_replace('${month}', date("M"), $record_name);
 						$record_name = str_replace('${day}', date("d"), $record_name);
@@ -175,7 +186,6 @@
 						$sql = "select outbound_caller_id_name, outbound_caller_id_number from v_extensions where domain_uuid = :domain_uuid and extension = :src ";
 						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 						$parameters['src'] = $src;
-						$database = new database;
 						$result = $database->select($sql, $parameters, 'all');
 						foreach ($result as $row) {
 							$dest_cid_name = $row["outbound_caller_id_name"];
@@ -211,7 +221,7 @@
 					//$uuid = substr($result, 4);
 					if ($rec == "true") {
 						//use the server's time zone to ensure it matches the time zone used by freeswitch
-							date_default_timezone_set($_SESSION['time_zone']['system']);
+							date_default_timezone_set(date_default_timezone_get());
 						//create the api record command and send it over event socket
 							if (is_uuid($origination_uuid) && file_exists($record_path)) {
 								$switch_cmd = "uuid_record $origination_uuid start $record_path/$record_name";

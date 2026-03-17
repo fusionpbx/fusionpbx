@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2019-2024
+	Portions created by the Initial Developer are Copyright (C) 2019-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('voicemail_import')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('voicemail_import')) {
 		echo "access denied";
 		exit;
 	}
@@ -40,18 +37,6 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduct the functionality but requirs PHP 5.1.0 or higher
-	if (!function_exists('str_getcsv')) {
-		function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
-			$fp = fopen("php://memory", 'r+');
-			fputs($fp, $input);
-			rewind($fp);
-			$data = fgetcsv($fp, null, $delimiter, $enclosure); // $escape only got added in 5.3.0
-			fclose($fp);
-			return $data;
-		}
-	}
 
 //set the max php execution time
 	ini_set('max_execution_time', 7200);
@@ -233,7 +218,15 @@
 	}
 
 //get the parent table
-	function get_parent($schema,$table_name) {
+	/**
+	 * Retrieves the parent table for a given table name from a schema.
+	 *
+	 * @param array  $schema     A multidimensional array representing the schema of tables.
+	 * @param string $table_name The name of the table to retrieve the parent for.
+	 *
+	 * @return string|null The name of the parent table, or null if not found in the schema.
+	 */
+	function get_parent($schema, $table_name) {
 		foreach ($schema as $row) {
 			if ($row['table'] == $table_name) {
 				return $row['parent'];
@@ -264,6 +257,9 @@
 
 				//loop through the array
 					while (($line = fgets($handle, 4096)) !== false) {
+						//convert the line to UTF-8
+						$line = mb_convert_encoding($line, 'UTF-8');
+
 						if ($from_row <= $row_number) {
 							//format the data
 								$y = 0;
@@ -320,9 +316,6 @@
 								if ($row_id === 1000) {
 
 									//save to the data
-									$database = new database;
-									$database->app_name = 'voicemails';
-									$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
 									$database->save($array);
 
 									//clear the array
@@ -340,9 +333,6 @@
 
 				//save to the data
 					if (!empty($array) && is_array($array)) {
-						$database = new database;
-						$database->app_name = 'voicemails';
-						$database->app_uuid = 'b523c2d2-64cd-46f1-9520-ca4b4098e044';
 						$database->save($array);
 						unset($array);
 					}

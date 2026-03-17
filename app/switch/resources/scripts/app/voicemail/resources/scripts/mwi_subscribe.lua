@@ -13,7 +13,7 @@ local vm_message_count do
 
 local vm_to_uuid_sql = [[SELECT v.voicemail_uuid
 FROM v_voicemails as v inner join v_domains as d on v.domain_uuid = d.domain_uuid
-WHERE v.voicemail_enabled = 'true' and v.voicemail_id = :voicemail_id and d.domain_name = :domain_name]]
+WHERE v.voicemail_enabled = true and v.voicemail_id = :voicemail_id and d.domain_name = :domain_name]]
 
 local vm_messages_sql = [[SELECT
 ( SELECT count(*)

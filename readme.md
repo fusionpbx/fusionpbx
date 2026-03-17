@@ -122,7 +122,7 @@ Membership Levels
 Green Level
 -------------
 
-<a href="url"><img src="https://raw.githubusercontent.com/Len-PGH/fusionpbx-docs/29d150e291f3f76199402d4eaee39ca501ccf1fa/source/_static/images/fusionpbx_member_emblem_md_green.png" align="center" height="350" width="250" ></a>
+<a href="url"><img src="https://raw.githubusercontent.com/fusionpbx/fusionpbx-docs/29d150e291f3f76199402d4eaee39ca501ccf1fa/source/_static/images/fusionpbx_member_emblem_md_green.png" align="center" height="350" width="250" ></a>
 
 
 The **Green** level Membership allows one individual access to all the following benefits. Some benefits are described in detail in the Membership Benefits section below. FusionPBX is critical to your business, so becoming a Member is a crucial step in protecting your investment.
@@ -144,7 +144,7 @@ The **Green** level Membership allows one individual access to all the following
 Blue Level
 ------------
 
-<a href="url"><img src="https://raw.githubusercontent.com/Len-PGH/fusionpbx-docs/master/source/_static/images/fusionpbx_member_emblem_xl_blue.png" align="center" height="350" width="250" ></a>
+<a href="url"><img src="https://raw.githubusercontent.com/fusionpbx/fusionpbx-docs/master/source/_static/images/fusionpbx_member_emblem_xl_blue.png" align="center" height="350" width="250" ></a>
 
 The Blue level Membership allows one individual access to the Green level benefits, plus includes OVER AN HOUR of Official Support each month. FusionPBX is critical component of your business, so access to support when you need it is crucial.
 
@@ -165,7 +165,7 @@ The Blue level Membership allows one individual access to the Green level benefi
 Purple Level
 -------------
 
-<a href="url"><img src="https://raw.githubusercontent.com/Len-PGH/fusionpbx-docs/29d150e291f3f76199402d4eaee39ca501ccf1fa/source/_static/images/fusionpbx_member_emblem_md_purple.png" align="center" height="350" width="250" ></a>
+<a href="url"><img src="https://raw.githubusercontent.com/fusionpbx/fusionpbx-docs/29d150e291f3f76199402d4eaee39ca501ccf1fa/source/_static/images/fusionpbx_member_emblem_md_purple.png" align="center" height="350" width="250" ></a>
 
 The **Purple** level Membership allows one individual access to the Green level benefits, plus includes up to THREE (3) HOURS of Official Support each month, and the use† of the advanced FusionPBX Call Center applications.
 
@@ -193,7 +193,7 @@ The **Purple** level Membership allows one individual access to the Green level 
 Gold Level
 -------------
 
-<a href="url"><img src="https://github.com/Len-PGH/fusionpbx-docs/blob/29d150e291f3f76199402d4eaee39ca501ccf1fa/source/_static/images/fusionpbx_member_emblem_md_gold.png" align="center" height="350" width="250" ></a>
+<a href="url"><img src="https://github.com/fusionpbx/fusionpbx-docs/blob/29d150e291f3f76199402d4eaee39ca501ccf1fa/source/_static/images/fusionpbx_member_emblem_md_gold.png" align="center" height="350" width="250" ></a>
 
 The **Gold** level Membership includes all the benefits of the Green and Purple membership levels, plus access for up to three (3) employees from your organization, up to SIX (6) HOURS of Official Support each month, and access to the FusionPBX REST API.
 

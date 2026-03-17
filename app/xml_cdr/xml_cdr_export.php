@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('xml_cdr_export')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('xml_cdr_export')) {
 		echo "access denied";
 		exit;
 	}
@@ -42,7 +39,7 @@
 	$text = $language->get();
 
 //additional includes
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$archive_request = isset($_POST['archive_request']) && $_POST['archive_request'] == 'true' ? true : false;
 	require_once "xml_cdr_inc.php";
 
@@ -152,7 +149,7 @@
 		require_once "resources/fpdi/fpdi.php";
 
 		//determine page size
-		switch ($_SESSION['fax']['page_size']['text']) {
+		switch ($settings->get('fax', 'page_size')) {
 			case 'a4':
 				$page_width = 11.7; //in
 				$page_height = 8.3; //in

@@ -36,7 +36,7 @@
 		$apps[$x]['destinations'][$y]['label'] = "destinations";
 		$apps[$x]['destinations'][$y]['name'] = "destinations";
 		$apps[$x]['destinations'][$y]['sql'] = "select destination_uuid, destination_uuid as uuid, destination_number, destination_context, destination_description from v_destinations ";
-		$apps[$x]['destinations'][$y]['where'] = "where (domain_uuid = '\${domain_uuid}' or domain_uuid is null) and (destination_type = 'outbound' or destination_type = 'local') and destination_enabled = 'true' ";
+		$apps[$x]['destinations'][$y]['where'] = "where (domain_uuid = '\${domain_uuid}' or domain_uuid is null) and (destination_type = 'outbound' or destination_type = 'local') and destination_enabled = true ";
 		$apps[$x]['destinations'][$y]['order_by'] = "destination_number asc";
 		$apps[$x]['destinations'][$y]['field']['destination_uuid'] = "destination_uuid";
 		$apps[$x]['destinations'][$y]['field']['destination_number'] = "destination_number";
@@ -48,27 +48,33 @@
 		$apps[$x]['destinations'][$y]['select_label'] = "\${destination_number} \${destination_description}";
 		$y++;
 		$apps[$x]['destinations'][$y]['type'] = 'array';
-		$apps[$x]['destinations'][$y]['label'] = 'other';
+		$apps[$x]['destinations'][$y]['label'] = 'dialplans';
 		$apps[$x]['destinations'][$y]['name'] = 'dialplans';
 		$apps[$x]['destinations'][$y]['field']['name']  = 'name';
 		$apps[$x]['destinations'][$y]['field']['destination'] = 'destination';
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
-		/*
 		$z=0;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'check_voicemail';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'check_voicemail';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*98 XML ${context}';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['extension'] = '*98';
 		$z++;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'company_directory';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'company_directory';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['extension'] = '*411';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*411 XML ${context}';
 		$z++;
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'hangup';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'hangup';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['extension'] = '';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = 'hangup';
 		$z++;
-		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'company_directory';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['label'] = 'record';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['name'] = 'record';
+		$apps[$x]['destinations'][$y]['result']['data'][$z]['extension'] = '*732';
 		$apps[$x]['destinations'][$y]['result']['data'][$z]['destination'] = '*732 XML ${context}';
-		*/
 
 	//permission details
 		$y=0;
@@ -171,6 +177,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "destination_map";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 
 	//default settings
 		$y = 0;
@@ -194,7 +204,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "destinations";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "dialplan_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "multiple";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "single";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: multiple, single";
 		$y++;
@@ -271,6 +281,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_groups";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "group_uuid";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "provider_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_providers";
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "provider_uuid";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "destination_type";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "destination_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
@@ -323,7 +341,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the context.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_record";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select whether to record the call.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_hold_music";
@@ -393,7 +411,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Set the destination order.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_description";
@@ -402,7 +420,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_email";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select whether to send email notifications of incoming SMS/MMS messages";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "insert_date";

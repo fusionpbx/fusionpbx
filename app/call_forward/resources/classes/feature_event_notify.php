@@ -40,7 +40,7 @@
 		public $do_not_disturb;
 		public $ring_count;
 
-	//feature_event method		
+	//feature_event method
 		public function send_notify() {
 			$esl = event_socket::create();
 			if ($esl->is_connected()) {

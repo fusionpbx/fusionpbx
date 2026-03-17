@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -36,9 +36,6 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//initialize the database connection
-	$database = database::new();
 
 //get the session settings
 	$domain_uuid = $_SESSION['domain_uuid'];
@@ -149,9 +146,14 @@
 //upload the recording
 	if ($action == "upload" && permission_exists('recording_upload') && is_uploaded_file($_FILES['file']['tmp_name'])) {
 
+		//get the file name and extension
+			$file_name = pathinfo($_FILES['file']['name'], PATHINFO_FILENAME);
+			$file_ext = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
+
 		//remove special characters
 			$recording_filename = str_replace(" ", "_", $_FILES['file']['name']);
 			$recording_filename = str_replace("'", "", $recording_filename);
+			$recording_filename = $file_name.'.'.$file_ext;
 
 		//make sure the destination directory exists
 			if (!is_dir($switch_recordings.'/'.$domain_name)) {
@@ -176,10 +178,7 @@
 	}
 
 //check the permission
-	if (permission_exists('recording_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('recording_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -207,8 +206,6 @@
 						$p = permissions::new();
 						$p->add('recording_edit', 'temp');
 					//execute update
-						$database->app_name = 'recordings';
-						$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 						$database->save($array);
 						unset($array);
 					//remove temporary permissions
@@ -244,8 +241,6 @@
 							$p = permissions::new();
 							$p->add('recording_add', 'temp');
 						//execute insert
-							$database->app_name = 'recordings';
-							$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 							$database->save($array);
 							unset($array);
 						//remove temporary permissions
@@ -265,8 +260,6 @@
 										$p = permissions::new();
 										$p->add('recording_edit', 'temp');
 									//execute update
-										$database->app_name = 'recordings';
-										$database->app_uuid = '83913217-c7a2-9e90-925d-a866eb40b60e';
 										$database->save($array);
 										unset($array);
 									//remove temporary permissions
@@ -304,7 +297,7 @@
 				break;
 		}
 
-		header('Location: recordings.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: recordings.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -315,11 +308,11 @@
 //add the search term
 	$search = $_REQUEST["search"] ?? '';
 
-//get total recordings from the database
+//get the total recordings from the database
 	$sql = "select count(*) from v_recordings ";
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('conference_center_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and (domain_uuid = :domain_uuid) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!empty($search)) {
@@ -340,8 +333,8 @@
 	}
 	$param .= "&order_by=".$order_by."&order=".$order;
 	$page = isset($_GET['page']) ? $_GET['page'] : 0;
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	[$paging_controls, $rows_per_page] = paging($num_rows, $param, $rows_per_page);
+	[$paging_controls_mini, $rows_per_page] = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the file size
@@ -352,16 +345,24 @@
 		}
 	}
 
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
+
 //get the recordings from the database
 	$sql = "select recording_uuid, domain_uuid, ";
 	if (!empty($sql_file_size)) { $sql .= $sql_file_size; }
-	$sql .= "to_char(timezone(:time_zone, update_date), 'DD Mon YYYY') as date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, update_date), '".$sql_time_format."') as time_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, COALESCE(update_date, insert_date)), 'DD Mon YYYY') as date_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, COALESCE(update_date, insert_date)), '".$time_format."') as time_formatted, \n";
 	$sql .= "recording_name, recording_filename, recording_description ";
 	$sql .= "from v_recordings ";
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('conference_center_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and (domain_uuid = :domain_uuid) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!empty($search)) {
@@ -395,11 +396,11 @@
 					d.domain_uuid = :domain_uuid and
 					d.app_uuid = '430737df-5385-42d1-b933-22600d3fb79e' and
 					d.dialplan_name = 'recordings' and
-					d.dialplan_enabled = 'true' and
+					d.dialplan_enabled = true and
 					dd.dialplan_detail_tag = 'action' and
 					dd.dialplan_detail_type = 'set' and
 					dd.dialplan_detail_data like 'pin_number=%' and
-					dd.dialplan_detail_enabled = 'true' ";
+					dd.dialplan_detail_enabled = true ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$recording_password = $database->select($sql, $parameters, 'column');
 			unset($sql, $parameters);
@@ -417,9 +418,10 @@
 //file type check script
 	echo "<script language='JavaScript' type='text/javascript'>\n";
 	echo "	function check_file_type(file_input) {\n";
-	echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2);\n";
+	echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2).toLowerCase();\n";
 	echo "		if (file_ext != 'mp3' && file_ext != 'wav' && file_ext != 'ogg' && file_ext != '') {\n";
 	echo "			display_message(\"".$text['message-unsupported_file_type']."\", 'negative', '2750');\n";
+	echo "			document.getElementById('form_upload').reset();\n";
 	echo "		}\n";
 	echo "	}\n";
 	echo "</script>";
@@ -623,6 +625,13 @@
 	require_once "resources/footer.php";
 
 //define the download function (helps safari play audio sources)
+	/**
+	 * Downloads a file in range mode, allowing the client to request specific byte ranges.
+	 *
+	 * @param string $file Path to the file being downloaded
+	 *
+	 * @return void
+	 */
 	function range_download($file) {
 		$fp = @fopen($file, 'rb');
 
@@ -651,7 +660,7 @@
 			$c_start = $start;
 			$c_end   = $end;
 			// Extract the range string
-			list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+			[, $range] = explode('=', $_SERVER['HTTP_RANGE'], 2);
 			// Make sure the client hasn't sent us a multibyte range
 			if (strpos($range, ',') !== false) {
 				// (?) Shoud this be issued here, or should the first
@@ -714,4 +723,3 @@
 	}
 
 ?>
-

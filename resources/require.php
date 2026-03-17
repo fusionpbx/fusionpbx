@@ -24,66 +24,35 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//find the config.conf file
-	if (file_exists('/usr/local/etc/fusionpbx/config.conf')) {
-		$config_file = '/usr/local/etc/fusionpbx/config.conf';
-	}
-	elseif (file_exists('/etc/fusionpbx/config.conf')) {
-		$config_file = '/etc/fusionpbx/config.conf';
-	}
-	elseif (file_exists(getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf')) {
-		$config_file =  getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx' . DIRECTORY_SEPARATOR . 'config.conf';
-	}
-	elseif (file_exists(__DIR__ . '/config.php')) {
-		//set a custom config_file variable after the config.php has been validated
-		$file_content = trim(file_get_contents(__DIR__ . '/config.php'));
-		$pattern = '/^<\?php\s+\$config_file\s+=\s+[\'"](.+?)[\'"];\s+\?>$/';
-		if (preg_match($pattern, $file_content, $matches) && file_exists($matches[1])) {
-			$config_file = $matches[1];
-		}
+//class auto loader
+	if (!class_exists('auto_loader')) {
+		require_once __DIR__ . "/classes/auto_loader.php";
+		$autoload = new auto_loader();
 	}
 
+//load config file
+	global $config;
+	$config = config::load();
+
 //config.conf file not found re-direct the request to the install
-	if (empty($config_file)) {
+	if ($config->is_empty()) {
 		header("Location: /core/install/install.php");
 		exit;
 	}
 
-//parse the config.conf file
-	$conf = parse_ini_file($config_file);
-
-//set the include path
-	set_include_path($conf['document.root']);
-
-//set document root
-	$_SERVER["DOCUMENT_ROOT"] = substr($conf['document.root'], -1) === '/' ? substr($conf['document.root'], 0, -1) : $conf['document.root'];
-
-//set project path
-	if (isset($conf['project.path']) && !defined('PROJECT_PATH')) {
-		if (substr($conf['project.path'], 0, 1) === '/') {
-			define("PROJECT_PATH", $conf['project.path']);
-		} else {
-			if (!empty($conf['project.path'])) {
-				define("PROJECT_PATH", '/' . $conf['project.path']);
-			} else {
-				define("PROJECT_PATH", '');
-			}
-		}
-	}
-	$_SERVER["PROJECT_PATH"] = PROJECT_PATH;
-
-//set project root using project path
-	if (!defined('PROJECT_ROOT')) { define("PROJECT_ROOT", $conf['document.root'] . PROJECT_PATH); }
-	$_SERVER["PROJECT_ROOT"] = PROJECT_ROOT;
+//compatibility settings - planned to deprecate
+	global $conf, $db_type, $db_host, $db_port, $db_name, $db_username, $db_password;
+	$conf = $config->configuration();
+	$db_type = $config->get('database.0.type');
+	$db_host = $config->get('database.0.host');
+	$db_port = $config->get('database.0.port');
+	$db_name = $config->get('database.0.name');
+	$db_username = $config->get('database.0.username');
+	$db_password = $config->get('database.0.password');
 
 //set the error reporting
 	ini_set('display_errors', '1');
-	if (isset($conf['error.reporting'])) {
-		$error_reporting_scope = $conf['error.reporting'];
-	}
-	else {
-		$error_reporting_scope = 'user';
-	}
+	$error_reporting_scope = $config->get('error.reporting', 'user');
 	switch ($error_reporting_scope) {
 	case 'user':
 		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED);
@@ -106,52 +75,94 @@
 	//$db_username = $settings['database']['username'];
 	//$db_password = $settings['database']['password'];
 
-//get the database connection settings
-	$db_type = $conf['database.0.type'];
-	$db_host = $conf['database.0.host'];
-	$db_port = $conf['database.0.port'];
-	$db_name = $conf['database.0.name'];
-	$db_username = $conf['database.0.username'];
-	$db_password = $conf['database.0.password'];
-
 //debug info
 	//echo "Include Path: ".get_include_path()."\n";
-	//echo "Document Root: ".$_SERVER["DOCUMENT_ROOT"]."\n";
-	//echo "Project Root: ".$_SERVER["PROJECT_ROOT"]."\n";
+	//echo "Document Root: ".dirname(__DIR__, 1)."\n";
+	//echo "Project Root: ".dirname(__DIR__, 1)."\n";
 
-//class auto loader
-	if (!class_exists('auto_loader')) {
-		require_once "resources/classes/auto_loader.php";
-		$autoload = new auto_loader();
+
+//include global functions
+	require_once __DIR__ . "/functions.php";
+
+//connect to the database
+	global $database;
+	$database = database::new(['config' => $config]);
+
+//security headers
+	if (!defined('STDIN') && session_status() === PHP_SESSION_NONE) {
+		header("X-Frame-Options: SAMEORIGIN");
+		header("Content-Security-Policy: frame-ancestors 'self';");
+		header("X-Content-Type-Options: nosniff");
+		header("Referrer-Policy: strict-origin-when-cross-origin");
+		//header("Strict-Transport-Security: max-age=63072000; includeSubDomains; preload");
 	}
 
-//additional includes
-	if (!defined('STDIN')) {
-		require_once "resources/php.php";
+//start the session if not using the command line
+	global $no_session;
+	if (!defined('STDIN') && empty($no_session) && session_status() === PHP_SESSION_NONE) {
+		ini_set('session.cookie_httponly', !isset($conf['session.cookie_httponly']) ? 'true' : (!empty($config->get('session.cookie_httponly')) ? 'true' : 'false'));
+		ini_set('session.cookie_secure', !isset($conf['session.cookie_secure']) ? 'true' : (!empty($config->get('session.cookie_secure')) ? 'true' : 'false'));
+		ini_set('session.cookie_samesite', $config->get('session.cookie_samesite', 'Lax'));
+		session_start();
 	}
-	require_once "resources/functions.php";
-	if (is_array($conf) && count($conf) > 0) {
-		if (!defined('STDIN')) {
-			require_once "resources/cidr.php";
+
+//get the domain_name and the domain_uuid
+	if (empty($_SESSION['domain_uuid'])) {
+		//get the domain from the url
+		$domain_name = $_SERVER["HTTP_HOST"];
+
+		//get the domain name from the http value
+		if (!empty($_REQUEST["domain_name"])) {
+			$domain_name = $_REQUEST["domain_name"];
 		}
-		if (file_exists($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/switch.php")) {
-			require_once "resources/switch.php";
+
+		//remote port number from the domain name
+		$domain_array = explode(":", $domain_name);
+		if (count($domain_array) > 1) {
+			$domain_name = $domain_array[0];
 		}
+
+		//get the domain_uuid from the database
+		$sql = "select domain_uuid from v_domains \n";
+		$sql .= "where domain_name = :domain_name \n";
+		$parameters['domain_name'] = $domain_name;
+		$row = $database->select($sql, $parameters, 'row');
+		$domain_uuid = '';
+		if (is_array($row) && sizeof($row) != 0) {
+			$domain_uuid = $row['domain_uuid'];
+			if (session_status() === PHP_SESSION_ACTIVE) {
+				$_SESSION['domain_uuid'] = $domain_uuid;
+				$_SESSION['domain_name'] = $domain_name;
+			}
+		}
+		unset($parameters, $row);
+	}
+
+//load settings
+	global $settings;
+	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'] ?? $domain_uuid, 'user_uuid' => $_SESSION['user_uuid'] ?? '']);
+
+//check if the cidr range is valid
+	global $no_cidr;
+	if (!defined('STDIN') && empty($no_cidr)) {
+		require_once __DIR__ . '/cidr.php';
+	}
+
+//include switch functions when available
+	if (file_exists(__DIR__ . '/switch.php')) {
+		require_once __DIR__ . '/switch.php';
 	}
 
 //change language on the fly - for translate tool (if available)
-	if (!defined('STDIN') && isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
-		$_SESSION['domain']['language']['code'] = $_REQUEST['view_lang_code'];
-	}
+	//if (!defined('STDIN') && isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
+	//	$_SESSION['domain']['language']['en-us'] = $_REQUEST['view_lang_code'];
+	//}
 
 //change the domain
-	if (!empty($_GET["domain_uuid"]) && is_uuid($_GET["domain_uuid"]) && $_GET["domain_change"] == "true" && permission_exists('domain_select')) {
-
-		//connect to the database
-			$database = database::new();
+	if (!empty($_GET["domain_uuid"]) && is_uuid($_GET["domain_uuid"]) && !empty($_GET["domain_change"]) && $_GET["domain_change"] == "true" && permission_exists('domain_select')) {
 
 		//include domains
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/domains/app_config.php") && !permission_exists('domain_all')) {
+			if (file_exists(dirname(__DIR__, 1)."/app/domains/app_config.php") && !permission_exists('domain_all')) {
 				include_once "app/domains/domains.php";
 			}
 
@@ -173,7 +184,6 @@
 
 		//update the domain session variables
 			$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
-			$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'] ?? null;
 			$_SESSION["context"] = $_SESSION["domain_name"];
 
 		//clear the extension array so that it is regenerated for the selected domain
@@ -183,5 +193,3 @@
 			$domain = new domains();
 			$domain->set();
 	}
-
-?>

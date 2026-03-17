@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -27,10 +27,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('user_log_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('user_log_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -39,10 +36,25 @@
 	$language = new text;
 	$text = $language->get();
 
+//set config object
+	global $config;
+	if (!($config instanceof config)) {
+		$config = config::load();
+	}
+
+//set database object
+	global $database;
+	if (!($database instanceof database)) {
+		$database = database::new(['config' => $config]);
+	}
+//check for the new column
+	$table_prefix = database::TABLE_PREFIX;
+	$has_column_detail = $database->column_exists("{$table_prefix}user_logs", 'detail');
+
 //get the http post data
 	if (!empty($_POST['user_logs']) && is_array($_POST['user_logs'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$user_logs = $_POST['user_logs'];
 	}
 
@@ -66,18 +78,13 @@
 			}
 		}
 
-		//prepare the database object
-		$database = new database;
-		$database->app_name = 'user_logs';
-		$database->app_uuid = '582a13cf-7d75-4ea3-b2d9-60914352d76e';
-
 		//send the array to the database class
 		if (!empty($action) && $action == 'delete' && permission_exists('user_log_delete')) {
 			$database->delete($array);
 		}
 
 		//redirect the user
-		header('Location: user_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: user_logs.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -125,27 +132,45 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
-	$param = !empty($search) ? "&search=".$search : null;
-	$param .= (!empty($_GET['page']) && $show == 'all' && permission_exists('user_log_all')) ? "&show=all" : null;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
+	$param = '';
+	if (!empty($search)) {
+		$param .= "&search=".$search;
+	}
+	if (!empty($_GET['page']) && $show == 'all' && permission_exists('user_log_all')) {
+		$param .= "&show=all";
+	}
+	if (!empty($order_by)) {
+		$param .= "&order_by=".$order_by;
+	}
+	if (!empty($order)) {
+		$param .= "&order=".$order;
+	}
 	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
+	if (!empty($order_by)) {
+		$param = str_replace("&order_by=".$order_by, '', $param);
+	}
+	if (!empty($order)) {
+		$param = str_replace("&order=".$order, '', $param);
+	}
 
 //set the time zone
-	if (isset($_SESSION['domain']['time_zone']['name'])) {
-		$time_zone = $_SESSION['domain']['time_zone']['name'];
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
 	}
 	else {
-		$time_zone = date_default_timezone_get();
+		$time_format = 'HH12:MI:SS am';
 	}
-	$parameters['time_zone'] = $time_zone;
 
 //get the list
 	$sql = "select ";
@@ -154,13 +179,16 @@
 	$sql .= "u.domain_uuid, ";
 	$sql .= "d.domain_name, ";
 	$sql .= "to_char(timezone(:time_zone, timestamp), 'DD Mon YYYY') as date_formatted, ";
-	$sql .= "to_char(timezone(:time_zone, timestamp), 'HH12:MI:SS am') as time_formatted, ";
+	$sql .= "to_char(timezone(:time_zone, timestamp), '".$time_format."') as time_formatted, ";
 	$sql .= "user_uuid, ";
 	$sql .= "username, ";
 	$sql .= "type, ";
 	$sql .= "result, ";
 	$sql .= "remote_address, ";
 	$sql .= "user_agent, ";
+	if ($has_column_detail) {
+		$sql .= "detail, ";
+	}
 	$sql .= "session_id ";
 	$sql .= "from v_user_logs as u, v_domains as d ";
 	if (permission_exists('user_log_all') && $show == 'all') {
@@ -183,7 +211,7 @@
 	$sql .= "and u.domain_uuid = d.domain_uuid ";
 	$sql .= order_by($order_by, $order, 'timestamp', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
+	$parameters['time_zone'] = $time_zone;
 	$user_logs = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -200,7 +228,7 @@
 	echo "	<div class='heading'><b>".$text['title-user_logs']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('user_log_delete') && $user_logs) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('user_log_all')) {
@@ -208,11 +236,11 @@
 			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all&search='.$search]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all&search='.$search]);
 		}
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
+	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
@@ -241,17 +269,20 @@
 		echo "	</th>\n";
 	}
 	if ($show == 'all' && permission_exists('user_log_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
 	echo "<th class='left'>".$text['label-date']."</th>\n";
 	echo "<th class='left hide-md-dn'>".$text['label-time']."</th>\n";
 	echo "<th class='shrink hide-md-dn'>".$text['label-hostname']."</th>\n";
 	echo "<th class='right'>".$text['label-status']."</th>\n";
-	echo th_order_by('username', $text['label-username'], $order_by, $order);
-	echo th_order_by('type', $text['label-type'], $order_by, $order);
-	echo th_order_by('result', $text['label-result'], $order_by, $order);
-	echo th_order_by('remote_address', $text['label-remote_address'], $order_by, $order);
-	echo th_order_by('user_agent', $text['label-user_agent'], $order_by, $order);
+	echo th_order_by('username', $text['label-username'], $order_by, $order, null, null, $param);
+	echo th_order_by('type', $text['label-type'], $order_by, $order, null, null, $param);
+	echo th_order_by('result', $text['label-result'], $order_by, $order, null, null, $param);
+	if ($has_column_detail) {
+		echo th_order_by('detail', $text['label-detail'], $order_by, $order, null, null, $param);
+	}
+	echo th_order_by('remote_address', $text['label-remote_address'], $order_by, $order, null, null, $param);
+	echo th_order_by('user_agent', $text['label-user_agent'], $order_by, $order, null, null, $param);
 	echo "</tr>\n";
 
 	if (!empty($user_logs) && is_array($user_logs) && @sizeof($user_logs) != 0) {
@@ -283,6 +314,9 @@
 			echo "	<td>".escape($row['username'])."</td>\n";
 			echo "	<td>".escape($row['type'])."</td>\n";
 			echo "	<td>".escape($row['result'])."</td>\n";
+			if ($has_column_detail) {
+				echo "	<td>".escape($row['detail'])."</td>\n";
+			}
 			echo "	<td>".escape($row['remote_address'])."</td>\n";
 			echo "	<td>".escape($row['user_agent'])."</td>\n";
 			echo "</tr>\n";

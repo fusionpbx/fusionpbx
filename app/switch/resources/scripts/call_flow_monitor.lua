@@ -60,7 +60,8 @@
 	local sql = "select d.domain_name, f.call_flow_uuid, f.call_flow_extension, f.call_flow_feature_code," ..
 		"f.call_flow_status, f.call_flow_label, f.call_flow_alternate_label "..
 		"from v_call_flows as f, v_domains as d " ..
-		"where f.domain_uuid = d.domain_uuid " -- and call_flow_enabled = 'true'
+		"where f.domain_uuid = d.domain_uuid " ..
+		"and call_flow_enabled = true "
 	while true do
 		-- debug print
 			if (debug["sql"]) then

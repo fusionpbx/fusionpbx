@@ -377,7 +377,11 @@
 	end
 
 --get the extensions from the database
-	local sql = "SELECT * FROM v_extensions WHERE domain_uuid = :domain_uuid AND enabled = 'true' AND (directory_visible is null or directory_visible = 'true') ORDER BY directory_first_name, effective_caller_id_name asc; ";
+	local sql = "SELECT extension, effective_caller_id_name, ";
+	sql = sql .. "directory_first_name, directory_last_name, directory_exten_visible, user_context ";
+	sql = sql .. "FROM v_extensions WHERE domain_uuid = :domain_uuid AND enabled = true ";
+	sql = sql .. "AND (directory_visible is null or directory_visible = true) ";
+	sql = sql .. "ORDER BY directory_first_name, effective_caller_id_name asc; ";
 	local params = {domain_uuid = domain_uuid};
 	if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "; params: " .. json.encode(params) .. "\n");
@@ -406,15 +410,29 @@
 			end
 		--get the digits
 			if (first_name) then
-				if (string.len(first_name) > 0) then
-					--freeswitch.consoleLog("notice", "[directory] first_name: --" .. first_name .. "--\n");
-					first_name_digits = dialpad_to_digit(string.sub(first_name, 1, 1))..dialpad_to_digit(string.sub(first_name, 2, 2))..dialpad_to_digit(string.sub(first_name, 3, 3));
-				end
+				--freeswitch.consoleLog("notice", "[directory] first_name: --" .. first_name .. "--\n");
+					if (string.len(first_name) > 0) then
+							first_name_digits = dialpad_to_digit(string.sub(first_name, 1, 1));
+					end
+					if (string.len(first_name) > 1) then
+							first_name_digits = first_name_digits .. dialpad_to_digit(string.sub(first_name, 2, 2));
+					end
+					if (string.len(first_name) > 2) then
+							first_name_digits = first_name_digits .. dialpad_to_digit(string.sub(first_name, 3, 3));
+					end
 			end
 			if (last_name) then
 				if (string.len(last_name) > 0) then
 					--freeswitch.consoleLog("notice", "[directory] last_name: --" .. last_name .. "--\n");
-					last_name_digits = dialpad_to_digit(string.sub(last_name, 1, 1))..dialpad_to_digit(string.sub(last_name, 2, 2))..dialpad_to_digit(string.sub(last_name, 3, 3));
+					if (string.len(last_name) > 0) then
+						last_name_digits = dialpad_to_digit(string.sub(last_name, 1, 1));
+					end
+					if (string.len(last_name) > 1) then
+						last_name_digits = last_name_digits..dialpad_to_digit(string.sub(last_name, 2, 2));
+					end
+					if (string.len(last_name) > 2) then
+						last_name_digits = last_name_digits..dialpad_to_digit(string.sub(last_name, 3, 3));
+					end
 				end
 			end
 

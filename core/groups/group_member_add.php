@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('group_member_add') || if_group("superadmin")) {
-		//access allowed
-	}
-	else {
+	if (!permission_exists('group_member_add')) {
 		echo "access denied";
 		return;
 	}
@@ -42,9 +39,6 @@
 		echo "access denied";
 		return;
 	}
-
-//connect to the database
-	$database = new database;
 
 //get the http values and set them as variables
 	$domain_uuid = $_POST["domain_uuid"];
@@ -71,8 +65,6 @@
 		$p = permissions::new();
 		$p->add('user_group_add', 'temp');
 
-		$database->app_name = 'groups';
-		$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 		$database->save($array);
 		unset($array);
 

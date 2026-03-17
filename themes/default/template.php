@@ -1,4 +1,3 @@
-{* <?php *}
 
 {*//set the doctype *}
 	{if $browser_name == 'Internet Explorer'}
@@ -20,7 +19,7 @@
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-tempusdominus.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-colorpicker.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/fontawesome/css/all.min.css.php'>
-	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php'>
+	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202603110200'>
 {*//link to custom css file *}
 	{if !empty($settings.theme.custom_css)}
 		<link rel='stylesheet' type='text/css' href='{$settings.theme.custom_css}'>
@@ -50,6 +49,9 @@
 		{/if}
 		<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/fonts/web_font_loader.php?v={$settings.theme.font_loader_version}'></script>
 	{/if}
+
+{*//javascript functions *}
+	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/javascript/select_group_option.js'></script>
 
 {*//local javascript *}
 	<script language='JavaScript' type='text/javascript'>
@@ -428,19 +430,19 @@
 				//key: [ctrl]+[a], list,edit: to check all
 					{if $settings.theme.keyboard_shortcut_check_all_enabled}
 						{literal}
-						if ((((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey) && !e.shiftKey) || e.which == 19) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {
-							var all_checkboxes;
-							all_checkboxes = document.querySelectorAll('table.list tr.list-header th.checkbox input[name=checkbox_all]');
-							if (typeof all_checkboxes != 'object' || all_checkboxes.length == 0) {
-								all_checkboxes = document.querySelectorAll('td.edit_delete_checkbox_all > span > input[name=checkbox_all]');
-							}
-							if (typeof all_checkboxes == 'object' && all_checkboxes.length > 0) {
-								e.preventDefault();
-								for (var x = 0, max = all_checkboxes.length; x < max; x++) {
-									all_checkboxes[x].click();
-								}
-							}
-						}
+						// if ((((e.which == 97 || e.which == 65) && (e.ctrlKey || e.metaKey) && !e.shiftKey) || e.which == 19) && !(e.target.tagName == 'INPUT' && e.target.type == 'text') && e.target.tagName != 'TEXTAREA') {
+						// 	var all_checkboxes;
+						// 	all_checkboxes = document.querySelectorAll('table.list tr.list-header th.checkbox input[name=checkbox_all]');
+						// 	if (typeof all_checkboxes != 'object' || all_checkboxes.length == 0) {
+						// 		all_checkboxes = document.querySelectorAll('td.edit_delete_checkbox_all > span > input[name=checkbox_all]');
+						// 	}
+						// 	if (typeof all_checkboxes == 'object' && all_checkboxes.length > 0) {
+						// 		e.preventDefault();
+						// 		for (var x = 0, max = all_checkboxes.length; x < max; x++) {
+						// 			all_checkboxes[x].click();
+						// 		}
+						// 	}
+						// }
 						{/literal}
 
 					{/if}
@@ -461,7 +463,7 @@
 					{/if}
 
 				//key: [ctrl]+[c], list,edit: to copy
-					{if $settings.theme.keyboard_shortcut_copy_enabled}
+					{if $settings.theme.keyboard_shortcut_copy_enabled|default:false}
 						{if $browser_name_short == 'Safari'} //emulate with detecting [c] only, as [command] and [control] keys are ignored when captured
 							{literal}
 							if (
@@ -568,9 +570,23 @@
 					});
 				//define formatting of individual classes
 					$('.datepicker').datetimepicker({ format: 'YYYY-MM-DD', });
-					$('.datetimepicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm', });
-					$('.datetimepicker-future').datetimepicker({ format: 'YYYY-MM-DD HH:mm', minDate: new Date(), });
-					$('.datetimesecpicker').datetimepicker({ format: 'YYYY-MM-DD HH:mm:ss', });
+					{/literal}
+
+					{if !empty($time_format) && $time_format == '24h'}
+						{literal}
+						$(".datetimepicker").datetimepicker({ format: 'YYYY-MM-DD HH:mm', });
+						$(".datetimepicker-future").datetimepicker({ format: 'YYYY-MM-DD HH:mm', minDate: new Date(), });
+						$(".datetimesecpicker").datetimepicker({ format: 'YYYY-MM-DD HH:mm:ss', });
+						{/literal}
+					{else}
+						{literal}
+						$(".datetimepicker").datetimepicker({ format: 'YYYY-MM-DD hh:mm a', });
+						$(".datetimepicker-future").datetimepicker({ format: 'YYYY-MM-DD hh:mm a', minDate: new Date(), });
+						$(".datetimesecpicker").datetimepicker({ format: 'YYYY-MM-DD hh:mm:ss a', });
+						{/literal}
+					{/if}
+
+			{literal}
 			});
 			{/literal}
 
@@ -687,17 +703,15 @@
 				{/literal}
 			{/if}
 
-		//side/fixed menu: hide an open user menu in the body header or menu on scroll
-			{if $settings.theme.menu_style == 'side' || $settings.theme.menu_style == 'fixed' }
-				{literal}
-				$(window).on('scroll', function() {
-					$('#body_header_user_menu').fadeOut(200);
-				});
-				$('div#main_content').on('click', function() {
-					$('#body_header_user_menu').fadeOut(200);
-				});
-				{/literal}
-			{/if}
+		//hide an open user menu in the body header or menu on scroll
+			{literal}
+			$(window).on('scroll', function() {
+				$('#body_header_user_menu').fadeOut(200);
+			});
+			$('div#main_content').on('click', function() {
+				$('#body_header_user_menu').fadeOut(200);
+			});
+			{/literal}
 
 		//create function to mimic toggling fade and slide at the same time
 			{literal}
@@ -708,6 +722,175 @@
 			})(jQuery);
 			{/literal}
 
+		//slide toggle
+			{literal}
+			var switches = document.getElementsByClassName('switch');
+			var toggle = function(){
+				this.children[0].value = (this.children[0].value == 'false' ? 'true' : 'false');
+				this.children[0].dispatchEvent(new Event('change'));
+				};
+			for (var i = 0; i < switches.length; i++) {
+				switches[i].addEventListener('click', toggle, false);
+			}
+			{/literal}
+
+		// Multi select box with search
+			{literal}
+			const container = document.querySelector('.multiselect_container');
+
+			if (container) {
+				const trigger_btn = container.querySelector('.selected_values');
+				const dropdown_list = container.querySelector('.dropdown_list');
+				const search_input = container.querySelector('.search_box');
+				const options_list = container.querySelector('.options_list');
+				const no_results = container.querySelector('#no_results');
+				const placeholder = container.querySelector('.placeholder_text');
+				let is_open = false;
+	
+				// Toggle dropdown open/close
+				trigger_btn.addEventListener('click', (event) => {
+					event.stopPropagation();
+					is_open = !is_open;
+					if (is_open) {
+						dropdown_list.classList.add('open');
+						search_input.focus();
+					}
+					else {
+						dropdown_list.classList.remove('open');
+					}
+				});
+	
+				// Close dropdown if clicked outside
+				document.addEventListener('click', (event) => {
+					if (!container.contains(event.target)) {
+						is_open = false;
+						dropdown_list.classList.remove('open');
+					}
+				});
+	
+				// Prevent dropdown from closing when clicking inside the dropdown
+				dropdown_list.addEventListener('click', (event) => {
+					event.stopPropagation();
+				});
+	
+				// Handle Search Filtering
+				search_input.addEventListener('input', (event) => {
+					const search_term = event.target.value.toLowerCase();
+					const option_items = document.querySelectorAll('.option_item');
+					let visible_count = 0;
+	
+					option_items.forEach(item => {
+						const text = item.innerText.toLowerCase();
+	
+						if (text.includes(search_term)) {
+							item.style.display = 'block';
+							visible_count++;
+						}
+						else {
+							item.style.display = 'none';
+						}
+					});
+	
+					if (visible_count === 0) {
+						no_results.style.display = 'block';
+					}
+					else {
+						no_results.style.display = 'none';
+					}
+				});
+	
+				// Handle checkbox selection
+				container.addEventListener('change', (event) => {
+					if (event.target.type === 'checkbox') {
+						// If unchecked, remove the corresponding hidden input
+						if (!event.target.checked) {
+							const value = event.target.value;
+							const hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
+							if (hidden_input) {
+								hidden_input.remove();
+							}
+						}
+	
+						// Update visual tags and handle checked boxes
+						update_selected_values();
+					}
+				});
+	
+				// Handle clicking the text part of the option
+				container.addEventListener('click', (event) => {
+					if (event.target.classList.contains('option_item')) {
+						const checkbox = event.target.querySelector('input[type="checkbox"]');
+						if (checkbox) {
+							checkbox.checked = !checkbox.checked;
+							update_selected_values();
+						}
+					}
+				});
+	
+				// Update display logic (tags & hidden input)
+				function update_selected_values() {
+					const checked_boxes = document.querySelectorAll('.option_item input:checked');
+					const selected_count = checked_boxes.length;
+	
+					// Update visual tags
+					if (selected_count === 0) {
+						placeholder.style.display = 'block';
+						trigger_btn.innerHTML = `<span class="placeholder_text">{/literal}{$text.label_select}{literal}...</span>`;
+					}
+					else {
+						placeholder.style.display = 'none';
+						let html = '';
+	
+						checked_boxes.forEach(box => {
+							const label = box.parentElement.innerText;
+							const clean_label = box.parentElement.textContent.trim();
+	
+							// Create a hidden input for each selected tag
+							create_hidden_input_for_tag(clean_label, box.value);
+	
+							html += `<span class="tag" data-value="${box.value}">`;
+							html += `	${clean_label}`;
+							html += `	<span onclick="remove_option('${box.value}')">&times;</span>`;
+							html += `</span>`;
+						});
+	
+						trigger_btn.innerHTML = html;
+					}
+				}
+	
+				// Helper function to remove a tag when clicked (External to scope)
+				window.remove_option = function(value) {
+					const checkbox = document.querySelector(`input[value="${value}"]`);
+					if (checkbox) {
+						checkbox.checked = false;
+	
+						// Remove the hidden input corresponding to this tag
+						const hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
+						if (hidden_input) {
+							hidden_input.remove();
+						}
+	
+						update_selected_values();
+					}
+				};
+	
+				// Function to create a hidden input for each selected tag
+				function create_hidden_input_for_tag(label, value) {
+					const existing_hidden_input = document.querySelector(`input[name="extension_uuids[]"][value="${value}"]`);
+					if (!existing_hidden_input) {
+						const hidden_input = document.createElement('input');
+						hidden_input.type = 'hidden';
+						hidden_input.name = 'extension_uuids[]';
+						hidden_input.value = value;
+						container.appendChild(hidden_input);
+					}
+				}
+	
+				// Initialize state
+				update_selected_values();
+			}
+			{/literal}
+
 	{literal}
 	}); //document ready end
 	{/literal}
@@ -715,39 +898,63 @@
 
 	//audio playback functions
 		{literal}
-		var recording_audio, audio_clock, recording_id_playing;
+		var recording_audio, audio_clock, recording_id_playing, label_play;
 
-		function recording_play(player_id, data, audio_type) {
+		function recording_load(player_id, data, audio_type) {
+			{/literal}
+			//create and load waveform image
+			{if $settings.theme.audio_player_waveform_enabled == 'true'}
+				{literal}
+				//list playback
+				if (document.getElementById('playback_progress_bar_background_' + player_id)) {
+					// alert("waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : ''));
+					document.getElementById('playback_progress_bar_background_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 20%), url('waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : '') + "')";
+				}
+				//form playback
+				else if (document.getElementById('recording_progress_bar_' + player_id)) {
+					// alert("waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : ''));
+					document.getElementById('recording_progress_bar_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 20%), url('waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : '') + "')";
+				}
+				{/literal}
+			{else}
+				{literal}
+				//list playback
+				if (document.getElementById('playback_progress_bar_background_' + player_id)) {
+					document.getElementById('playback_progress_bar_background_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%)";
+				}
+				//form playback
+				else if (document.getElementById('recording_progress_bar_' + player_id)) {
+					document.getElementById('recording_progress_bar_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 100%)";
+				}
+				{/literal}
+			{/if}
+			{literal}
+		}
+
+		function recording_play(player_id, data, audio_type, label) {
 			if (document.getElementById('recording_progress_bar_' + player_id)) {
 				document.getElementById('recording_progress_bar_' + player_id).style.display='';
 			}
 			recording_audio = document.getElementById('recording_audio_' + player_id);
 
+			if (label !== undefined) {
+				label_play = "<span class='button-label pad'>" + label + "</span>";
+				var label_pause = "<span class='button-label pad'>" + label + "</span>";
+			}
+			else {
+				label_play = "{/literal}{if $php_self == 'xml_cdr_details.php'}{literal}<span class='button-label pad'>{/literal}{$text.label_play}{literal}</span>{/literal}{/if}{literal}";
+				var label_pause = "{/literal}{if $php_self == 'xml_cdr_details.php'}{literal}<span class='button-label pad'>{/literal}{$text.label_pause}{literal}</span>{/literal}{/if}{literal}";
+			}
+
 			if (recording_audio.paused) {
-				{/literal}
-				//create and load waveform image
-				{if $settings.theme.audio_player_waveform_enabled == 'true'}
-					{literal}
-					//list playback
-					if (document.getElementById('playback_progress_bar_background_' + player_id)) {
-						// alert("waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : ''));
-						document.getElementById('playback_progress_bar_background_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 20%), url('waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : '') + "')";
-					}
-					//form playback
-					else if (document.getElementById('recording_progress_bar_' + player_id)) {
-						// alert("waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : ''));
-						document.getElementById('recording_progress_bar_' + player_id).style.backgroundImage = "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, transparent 20%), url('waveform.php?id=" + player_id + (data !== undefined ? '&data=' + data : '') + (audio_type !== undefined ? '&type=' + audio_type : '') + "')";
-					}
-					{/literal}
-				{/if}
-				{literal}
+				recording_load(player_id, data, audio_type);
 				recording_audio.volume = 1;
 				recording_audio.play();
 				recording_id_playing = player_id;
-				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_pause}{literal} fa-fw'></span>";
+				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_pause}{literal} fa-fw'></span>" + (label_pause ?? '');
 				audio_clock = setInterval(function () { update_progress(player_id); }, 20);
 
-				$('[id*=recording_button]').not('[id*=recording_button_' + player_id + ']').html("<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>");
+				$('[id*=recording_button]').not('[id*=recording_button_' + player_id + ']').html("<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>" + (label_play ?? ''));
 				$('[id*=recording_button_intro]').not('[id*=recording_button_' + player_id + ']').html("<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>");
 				$('[id*=recording_progress_bar]').not('[id*=recording_progress_bar_' + player_id + ']').css('display', 'none');
 
@@ -765,7 +972,7 @@
 					document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>";
 				}
 				else {
-					document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>";
+					document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>" + (label_play ?? '');
 				}
 				clearInterval(audio_clock);
 			}
@@ -780,14 +987,20 @@
 			recording_audio = document.getElementById('recording_audio_' + player_id);
 			recording_audio.pause();
 			recording_audio.currentTime = 0;
-			if (document.getElementById('recording_progress_bar_' + player_id)) {
-				document.getElementById('recording_progress_bar_' + player_id).style.display='none';
-			}
+			{/literal}
+			{if $php_self <> 'xml_cdr_details.php'}
+				{literal}
+				if (document.getElementById('recording_progress_bar_' + player_id)) {
+					document.getElementById('recording_progress_bar_' + player_id).style.display='none';
+				}
+				{/literal}
+			{/if}
+			{literal}
 			if (player_id.substring(0,6) == 'intro_') {
 				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_comment}{literal} fa-fw'></span>";
 			}
 			else {
-				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>";
+				document.getElementById('recording_button_' + player_id).innerHTML = "<span class='{/literal}{$settings.theme.button_icon_play}{literal} fa-fw'></span>" + (label_play ?? '');
 			}
 			clearInterval(audio_clock);
 		}
@@ -902,14 +1115,14 @@
 			btn_delete = document.getElementById("btn_delete");
 			btn_download = document.getElementById("btn_download");
 			btn_transcribe = document.getElementById("btn_transcribe");
-			btn_resend = document.getElementById("btn_resend");
+			any_revealed = document.getElementsByClassName('revealed');
 			if (checked == true) {
 				if (btn_copy) { btn_copy.style.display = "inline"; }
 				if (btn_toggle) { btn_toggle.style.display = "inline"; }
 				if (btn_delete) { btn_delete.style.display = "inline"; }
 				if (btn_download) { btn_download.style.display = "inline"; }
 				if (btn_transcribe) { btn_transcribe.style.display = "inline"; }
-				if (btn_resend) { btn_resend.style.display = "inline"; }
+				if (any_revealed) { [...any_revealed].map(btn => btn.style.display = "inline"); }
 			}
 		 	else {
 				if (btn_copy) { btn_copy.style.display = "none"; }
@@ -917,7 +1130,7 @@
 				if (btn_delete) { btn_delete.style.display = "none"; }
 				if (btn_download) { btn_download.style.display = "none"; }
 				if (btn_transcribe) { btn_transcribe.style.display = "none"; }
-				if (btn_resend) { btn_resend.style.display = "none"; }
+				if (any_revealed) { [...any_revealed].map(btn => btn.style.display = "none"); }
 		 	}
 		}
 		{/literal}
@@ -925,7 +1138,7 @@
 	//list page functions
 		{literal}
 		function list_all_toggle(modifier) {
-			var checkboxes = (modifier !== undefined) ? document.getElementsByClassName('checkbox_'+modifier) : document.querySelectorAll("input[type='checkbox']");
+			var checkboxes = (modifier !== undefined) ? document.getElementsByClassName('checkbox_'+modifier) : document.querySelectorAll("input[type='checkbox']:not([id*='_enabled'])");
 			var checkbox_checked = document.getElementById('checkbox_all' + (modifier !== undefined ? '_'+modifier : '')).checked;
 			for (var i = 0, max = checkboxes.length; i < max; i++) {
 				checkboxes[i].checked = checkbox_checked;
@@ -940,6 +1153,13 @@
 					document.getElementById('btn_check_none').style.display = 'none';
 				}
 			}
+			any_revealed = document.getElementsByClassName('revealed');
+			if (checkbox_checked == true) {
+				if (any_revealed) { [...any_revealed].map(btn => btn.style.display = "inline"); }
+			}
+		 	else {
+				if (any_revealed) { [...any_revealed].map(btn => btn.style.display = "none"); }
+		 	}
 		}
 
 		function list_all_check() {
@@ -953,12 +1173,12 @@
 		}
 
 		function list_self_check(checkbox_id) {
-			var inputs = document.getElementsByTagName('input');
-			for (var i = 0, max = inputs.length; i < max; i++) {
-				if (inputs[i].type === 'checkbox' && inputs[i].name.search['enabled'] == -1) {
-					inputs[i].checked = false;
-				}
-			}
+			//unchecks each selected checkbox
+			document.querySelectorAll('input[type="checkbox"]:not([name*="enabled"])').forEach(checkbox => {
+				checkbox.checked = false;
+			});
+
+			//select the checkbox with the specified id
 			document.getElementById(checkbox_id).checked = true;
 		}
 
@@ -1031,6 +1251,40 @@
 			}
 			document.activeElement.blur();
 		}
+
+		function modal_display_selected(modal_id) {
+			const selected_items = [];
+			const modal_message_element = document.querySelector(`#${modal_id} .modal-message`);
+
+			if (!modal_message_element.hasAttribute('data-message')) {
+				modal_message_element.setAttribute('data-message', modal_message_element.innerHTML);
+				modal_message_element.style.cssText += 'max-height: 50vh; overflow: scroll;';
+			}
+			const message = modal_message_element.getAttribute('data-message');
+
+			document.querySelectorAll('input[type="checkbox"]:checked:not(#checkbox_all)').forEach(checkbox => {
+				selected_items.push({
+					name: checkbox.dataset.itemName,
+					domain: checkbox.dataset.itemDomain
+				});
+			});
+
+			if (selected_items.length > 0) {
+				content = message;
+				content += '<table style="margin: 20px 40px; min-width: 70%;">';
+				content += '	<tbody>';
+				selected_items.forEach(item => {
+					content += '	<tr>';
+					content += `		<td style="display: list-item;">${item.name}</td>`;
+					content += `		<td>${item.domain || ''}</td>`;
+					content += '	</tr>';
+				});
+				content += '	</tbody>';
+				content += '</table>';
+
+				modal_message_element.innerHTML = content;
+			}
+		}
 		{/literal}
 
 	//misc functions
@@ -1084,7 +1338,7 @@
 				obj = JSON.parse(this.responseText);
 
 				//update the domain count
-				document.getElementById('domain_count').innerText = '('+ obj.length +')';
+				document.getElementById('domain_count').innerText = obj.length;
 
 				//add new options from the json results
 				for (var i=0; i < obj.length; i++) {
@@ -1161,7 +1415,7 @@
 <body>
 
 	{*//video background *}
-	{if !empty({$background_video})}
+	{if !empty($background_video)}
 		<video id="background-video" autoplay muted poster="" disablePictureInPicture="true" onloadstart="this.playbackRate = 1; this.pause();">
 			<source src="{$background_video}" type="video/mp4">
 		</video>
@@ -1184,7 +1438,7 @@
 			<div id='domains_block'>
 				<div id='domains_header'>
 					<input id='domains_hide' type='button' class='btn' style='float: right' value="{$text.theme_button_close}">
-					<a id='domains_title' href='{$domains_app_path}'>{$text.theme_title_domains} <span id='domain_count' style='font-size: 80%;'></span></a>
+					<a id='domains_title' href='{$domains_app_path}'>{$text.theme_title_domains}<div class='count' id='domain_count' style='font-size: 80%;'></div></a>
 					<br><br>
 					<input type='text' id='domains_search' class='formfld' style='margin-left: 0; min-width: 100%; width: 100%;' placeholder="{$text.theme_label_search}" onkeyup="search_domains('domains_list');">
 				</div>

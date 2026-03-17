@@ -201,9 +201,8 @@ if (!function_exists('fax_split_dtmf')) {
 
 //includes files
 	require_once dirname(__DIR__) . "/resources/require.php";
-	include "resources/classes/event_socket.php";
-	include "resources/phpmailer/class.phpmailer.php";
-	include "resources/phpmailer/class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
+	include_once "resources/phpmailer/class.phpmailer.php";
+	include_once "resources/phpmailer/class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
 
 //set php ini values
 	ini_set('max_execution_time', 900); //15 minutes
@@ -309,7 +308,7 @@ if (!function_exists('fax_split_dtmf')) {
 //get the enabled domains from the database
 	//$domains = domains::fetch($database);
 	$domains = [];
-	$result = $database->select("select domain_uuid, domain_name from v_domains where domain_enabled = 'true'");
+	$result = $database->select("select domain_uuid, domain_name from v_domains where domain_enabled = true ");
 	if (is_array($result) && @sizeof($result) != 0) {
 		foreach ($result as $row) {
 			//set the domain variables
@@ -431,9 +430,7 @@ if (!function_exists('fax_split_dtmf')) {
 			$p = permissions::new();
 			$p->add('fax_queue_add', 'temp');
 
-			//save the data
-			$database->app_name = 'fax_queue';
-			$database->app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
+			//save to the database
 			$database->save($array);
 
 			//remove temporary permisison
@@ -456,6 +453,19 @@ if (!function_exists('fax_split_dtmf')) {
 			$template_subcategory = 'inbound';
 		}
 
+		//create a new variable for the full file path and name
+		if (!empty($pdf_file) && file_exists($pdf_file)) {
+			$attachment_file = $pdf_file;
+		}
+		else {
+			$attachment_file = $fax_file;
+		}
+
+		//send a link if the file is larger than 10 Megabytes
+		if (filesize($attachment_file) > 10 * 1024 * 1024) {
+			$fax_email_file = 'link';
+		}
+
 		//get the email template from the database
 		if (!empty($domain_uuid)) {
 			$sql = "select template_subject, template_body from v_email_templates ";
@@ -464,7 +474,7 @@ if (!function_exists('fax_split_dtmf')) {
 			$sql .= "and template_category = :template_category ";
 			$sql .= "and template_subcategory = :template_subcategory ";
 			$sql .= "and template_type = :template_type ";
-			$sql .= "and template_enabled = 'true' ";
+			$sql .= "and template_enabled = true ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['template_language'] = $language_code;
 			$parameters['template_category'] = 'fax';
@@ -511,16 +521,15 @@ if (!function_exists('fax_split_dtmf')) {
 				$email_attachments[0]['type'] = 'file';
 				if (!empty($pdf_file) && file_exists($pdf_file)) {
 					$email_attachments[0]['name'] = $fax_file_name.'.pdf';
-					$email_attachments[0]['value'] = $pdf_file;
 				}
 				else {
 					$email_attachments[0]['name'] = $fax_file_name.'.tif';
-					$email_attachments[0]['value'] = $fax_file;
 				}
+				$email_attachments[0]['value'] = $attachment_file;
 			}
 
 			//send the email
-			$email = new email;
+			$email = new email(["domain_uuid" => $domain_uuid]);
 			$email->recipients = $fax_email;
 			$email->subject = $email_subject;
 			$email->body = $email_body;

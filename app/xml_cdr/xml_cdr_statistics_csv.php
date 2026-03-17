@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('xml_cdr_statistics')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('xml_cdr_statistics')) {
 		echo "access denied";
 		exit;
 	}

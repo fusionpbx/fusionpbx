@@ -73,6 +73,7 @@
 		--run the query
 			sql = "select * from v_number_translations ";
 			sql = sql .. "order by number_translation_name asc ";
+			sql = sql .. "number_translation_enabled = true ";
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 			end
@@ -136,7 +137,7 @@
 			end
 	end --if XML_STRING
 
---send the xml to the console
+--send the XML to the console
 	if (debug["xml_string"]) then
 		local file = assert(io.open(temp_dir .. "/translate.conf.xml", "w"));
 		file:write(XML_STRING);

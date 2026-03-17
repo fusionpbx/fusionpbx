@@ -34,6 +34,13 @@
 	//echo "pid_file: ".$pid_file."\n";
 
 //function to check if the process exists
+	/**
+	 * Checks if a process is running.
+	 *
+	 * @param string $file The path to the file containing the process ID, or false for no check.
+	 *
+	 * @return bool True if the process is running, false otherwise.
+	 */
 	function process_exists($file = false) {
 
 		//set the default exists to false
@@ -56,31 +63,28 @@
 		return $exists;
 	}
 
-//get the email queue settings
-	$setting = new settings(["category" => "fax_queue"]);
-
 //set the fax queue interval
-	if (!empty($setting->get('fax_queue', 'interval'))) {
-		$fax_queue_interval = $setting->get('fax_queue', 'interval');
+	if (!empty($settings->get('fax_queue', 'interval'))) {
+		$fax_queue_interval = $settings->get('fax_queue', 'interval');
 	}
 	else {
 		$fax_queue_interval = '30';
 	}
 
 //set the fax queue limit
-	if (!empty($setting->get('fax_queue', 'limit'))) {
-		$fax_queue_limit = $setting->get('fax_queue', 'limit');
+	if (!empty($settings->get('fax_queue', 'limit'))) {
+		$fax_queue_limit = $settings->get('fax_queue', 'limit');
 	}
 	else {
 		$fax_queue_limit = '30';
 	}
-	if (!empty($setting->get('fax_queue', 'debug'))) {
-		$debug = $setting->get('fax_queue', 'debug');
+	if (!empty($settings->get('fax_queue', 'debug'))) {
+		$debug = $settings->get('fax_queue', 'debug');
 	}
 
 //set the fax queue retry interval
-	if (!empty($setting->get('fax_queue', 'retry_interval'))) {
-		$fax_retry_interval = $setting->get('fax_queue', 'retry_interval');
+	if (!empty($settings->get('fax_queue', 'retry_interval'))) {
+		$fax_retry_interval = $settings->get('fax_queue', 'retry_interval');
 	}
 	else {
 		$fax_retry_interval = '180';
@@ -141,17 +145,16 @@
 	}
 	$parameters['limit'] = $fax_queue_limit;
 	$parameters['retry_interval'] = $fax_retry_interval;
-	$database = new database;
 	$fax_queue = $database->select($sql, $parameters, 'all');
 	unset($parameters);
 
 //change the working directory
-	chdir($_SERVER['DOCUMENT_ROOT']);
+	chdir(dirname(__DIR__, 4));
 
 //process the messages
 	if (is_array($fax_queue) && @sizeof($fax_queue) != 0) {
 		foreach($fax_queue as $row) {
-			$command = PHP_BINARY." ".$_SERVER['DOCUMENT_ROOT']."/app/fax_queue/resources/job/fax_send.php ";
+			$command = PHP_BINARY." ".dirname(__DIR__, 4)."/app/fax_queue/resources/job/fax_send.php ";
 			$command .= "'action=send&fax_queue_uuid=".$row["fax_queue_uuid"]."&hostname=".$hostname."&debug=true'";
 			if (isset($debug)) {
 				//run process inline to see debug info

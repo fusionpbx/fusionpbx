@@ -839,5 +839,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "933";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "933 service";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b9596f2e-cebe-46a4-8edf-5a278b170213";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_restrict_pickup";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "0 (default) - The attendant can pick up calls to monitored users while they show as ringing. 1 - The attendant cannot pick up monitored calls.";
 
 ?>

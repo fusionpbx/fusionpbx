@@ -1,0 +1,8 @@
+<extension name="emergency_recent_calls" number="*9411" context="global" continue="false" app_uuid="0c57d2f3-0b08-4278-abb0-918e6e81038a" global="true" order="65">
+	<condition field="destination_number" expression="^\*9411$" break="on-true">
+        <action application="set" data="pin_number={v_pin_number}" enabled="true"/>
+        <action application="lua" data="pin_number.lua" enabled="true"/>
+        <action application="lua" data="app/emergency/resources/scripts/emergency_calls.lua" enabled="true"/>
+	</condition>
+</extension>
+

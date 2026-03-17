@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('log_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('log_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -57,7 +54,6 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$parameters['xml_cdr_uuid'] = $xml_cdr_uuid;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 		$log_content = trim($row["log_content"]);
@@ -135,9 +131,9 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['label-call_log']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'style'=>'margin-left: 15px;','link'=>'xml_cdr_details.php?id='.$xml_cdr_uuid]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'style'=>'margin-left: 15px;','link'=>'xml_cdr_details.php?id='.$xml_cdr_uuid]);
 	if (permission_exists('log_download')) {
-		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$xml_cdr_uuid.'&a=download']);
+		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$xml_cdr_uuid.'&a=download']);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";

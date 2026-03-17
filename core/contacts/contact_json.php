@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -57,7 +54,7 @@
 	$sql = "select *, ";
 	$sql .= "( ";
 	$sql .= "	select a.contact_attachment_uuid from v_contact_attachments as a ";
-	$sql .= "	where a.contact_uuid = c.contact_uuid and a.attachment_primary = 1 ";
+	$sql .= "	where a.contact_uuid = c.contact_uuid and a.attachment_primary = true ";
 	$sql .= ") as contact_attachment_uuid ";
 	$sql .= "from v_contacts as c ";
 	$sql .= "where true ";
@@ -147,7 +144,6 @@
 	}
 	$sql .= "order by contact_organization asc ";
 	$sql .= "limit 300 ";
-	$database = new database;
 	$contact_array = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,8 +30,9 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('contact_attachment_edit') && !permission_exists('contact_attachment_add')) {
-		echo "access denied"; exit;
+	if (!(permission_exists('contact_attachment_edit') || permission_exists('contact_attachment_add'))) {
+		echo "access denied";
+		exit;
 	}
 
 //add multi-lingual support
@@ -70,21 +71,20 @@
 
 		//get the attachment type
 		if (empty($attachment) || sizeof($attachment) == 0) {
-			$attachment_type = strtolower(pathinfo($_POST['attachment_filename'], PATHINFO_EXTENSION));
+			$attachment_extension = strtolower(pathinfo($_POST['attachment_filename'], PATHINFO_EXTENSION));
 		}
 		else {
-			$attachment_type = strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION));
+			$attachment_extension = strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION));
 		}
 
 		//unflag others as primary
 		$allowed_primary_attachment = false;
-		if ($attachment_primary && ($attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png')) {
-			$sql = "update v_contact_attachments set attachment_primary = 0 ";
+		if ($attachment_primary && ($attachment_extension == 'jpg' || $attachment_extension == 'jpeg' || $attachment_extension == 'gif' || $attachment_extension == 'png')) {
+			$sql = "update v_contact_attachments set attachment_primary = false ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and contact_uuid = :contact_uuid ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['contact_uuid'] = $contact_uuid;
-			$database = new database;
 			$database->execute($sql, $parameters ?? null);
 			unset($sql, $parameters);
 
@@ -92,31 +92,43 @@
 		}
 
 		//get the allowed extensions
-		$allowed_extensions = array_keys(json_decode($_SESSION['contact']['allowed_attachment_types']['text'], true));
-
-		//get the attachment extension
-		$attachment_extension = strtolower(pathinfo($attachment['name'], PATHINFO_EXTENSION));
+		$allowed_extensions = array_keys(json_decode($settings->get('contact', 'allowed_attachment_types'), true));
 
 		//check the allowed extensions
 		if ($attachment['error'] == '0' && in_array($attachment_extension, $allowed_extensions)) {
 			//get the attachment content
 			$attachment_content = file_get_contents($attachment['tmp_name']);
 
-			//list of image extensions
-			$image_extensions = array('png','jpg','jpeg','gif','bmp', 'webp');
-
 			//read the image from the string then output the image without meta data
-			if (in_array($attachment_extension, $image_extensions)) {
+			if (in_array($attachment_extension, ['png','jpg','jpeg','gif','bmp', 'webp'])) {
 				//create the image object from the content string
 				$image = imagecreatefromstring($attachment_content);
-				imagealphablending($image, FALSE);
-				imagesavealpha($image, TRUE);
 
 				//start output buffering to capture the image data
 				ob_start();
 
 				//output the image without the EXIF data
-				imagepng($image);
+				switch ($attachment_extension) {
+					case 'png':
+						imagealphablending($image, FALSE);
+						imagesavealpha($image, TRUE);
+						imagepng($image);
+						break;
+					case 'jpg':
+					case 'jpeg':
+						imagejpeg($image);
+						break;
+					case 'gif':
+						imagesavealpha($image, TRUE);
+						imagegif($image);
+						break;
+					case 'bmp':
+						imagebmp($image);
+						break;
+					case 'webp':
+						imagewebp($image);
+						break;
+				}
 
 				//get the image from the buffer
 				$attachment_content = ob_get_contents();
@@ -145,9 +157,6 @@
 		}
 
 		//save data
-		$database = new database;
-		$database->app_name = 'contacts';
-		$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 		$database->save($array);
 		unset($array);
 
@@ -164,7 +173,6 @@
 		$sql .= "and contact_attachment_uuid = :contact_attachment_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_attachment_uuid'] = $contact_attachment_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$attachment_primary = $row["attachment_primary"];
@@ -174,6 +182,9 @@
 		}
 		unset($sql, $parameters, $row);
 	}
+
+//set the defaults
+	$attachment_primary = $attachment_primary ?? false;
 
 //create token
 	$object = new token;
@@ -201,8 +212,8 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -215,25 +226,25 @@
 	echo "	".$text['label-attachment']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	$attachment_type = strtolower(pathinfo($attachment_filename ?? '', PATHINFO_EXTENSION));
+	$attachment_extension = strtolower(pathinfo($attachment_filename ?? '', PATHINFO_EXTENSION));
 	if ($action == 'update') {
 		echo "<input type='hidden' name='attachment_filename' value=\"".escape($attachment_filename)."\">\n";
-		if ($attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png') {
-			echo "<img src='data:image/".$attachment_type.";base64,".$attachment_content."' style='border: none; width: auto; max-height: 400px;' oncontextmenu=\"window.open('contact_attachment.php?id=".$contact_attachment_uuid."&action=download'); return false;\">";
+		if ($attachment_extension == 'jpg' || $attachment_extension == 'jpeg' || $attachment_extension == 'gif' || $attachment_extension == 'png') {
+			echo "<img src='data:image/".$attachment_extension.";base64,".$attachment_content."' style='border: none; width: auto; max-height: 400px;' oncontextmenu=\"window.open('contact_attachment.php?id=".$contact_attachment_uuid."&action=download'); return false;\">";
 		}
 		else {
 			echo "<a href='contact_attachment.php?id=".$contact_attachment_uuid."&action=download' style='font-size: 120%;'>".$attachment_filename."</a>";
 		}
 	}
 	else {
-		$allowed_attachment_types = json_decode($_SESSION['contact']['allowed_attachment_types']['text'], true);
+		$allowed_attachment_types = json_decode($settings->get('contact', 'allowed_attachment_types'), true);
 		echo "	<input type='file' class='formfld' name='attachment' id='attachment' accept='.".implode(',.',array_keys($allowed_attachment_types))."'>\n";
 		echo "	<span style='display: inline-block; margin-top: 5px; font-size: 80%;'>".strtoupper(implode(', ', array_keys($allowed_attachment_types)))."</span>";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($action == 'update' && ($attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png')) {
+	if ($action == 'update' && ($attachment_extension == 'jpg' || $attachment_extension == 'jpeg' || $attachment_extension == 'gif' || $attachment_extension == 'png')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-attachment_filename']."\n";
@@ -249,10 +260,17 @@
 	echo "	".$text['label-primary']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='attachment_primary' id='attachment_primary'>\n";
-	echo "		<option value='0'>".$text['option-false']."</option>\n";
-	echo "		<option value='1' ".(!empty($attachment_primary) && $attachment_primary ? "selected" : null).">".$text['option-true']."</option>\n";
-	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "		<select class='formfld' id='attachment_primary' name='attachment_primary'>\n";
+	echo "			<option value='true' ".($attachment_primary == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($attachment_primary == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 

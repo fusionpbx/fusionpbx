@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -26,16 +26,10 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_add') || permission_exists('contact_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('contact_add') || permission_exists('contact_edit'))) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -58,7 +52,7 @@
 	$contact_attachments = [];
 
 //set from session variables
-	$body_text_color = !empty($_SESSION['theme']['body_text_color']['text']) ? $_SESSION['theme']['body_text_color']['text'] : 'false';
+	$body_text_color = !empty($settings->get('theme', 'body_text_color')) ? $settings->get('theme', 'body_text_color') : 'false';
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -92,7 +86,7 @@
 
 		//$contact_users = $_POST["contact_users"];
 		//$contact_groups = $_POST["contact_groups"];
-		$contact_user_uuid = ($_SESSION['contact']['permissions']['boolean'] == "true") ? ($_POST["contact_user_uuid"] ?? $_SESSION["user_uuid"]) : ($contact_user_uuid = $_POST["contact_user_uuid"] ?? null);
+		$contact_user_uuid = $settings->get('contact', 'permissions', false) ? ($_POST["contact_user_uuid"] ?? $_SESSION["user_uuid"]) : ($contact_user_uuid = $_POST["contact_user_uuid"] ?? null);
 		$contact_group_uuid = $_POST["contact_group_uuid"] ?? null;
 
 		$contact_phones = $_POST["contact_phones"];
@@ -382,7 +376,6 @@
 								}
 								$parameters['phone_speed_dial'] = $row["phone_speed_dial"];
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
 								if (!empty($database->execute($sql, $parameters, 'column'))) {
 									$phone_speed_dial_exists = true;
 								}
@@ -413,6 +406,11 @@
 						if (!empty($row["phone_speed_dial"])) {
 							$cache = new cache;
 							$cache->delete("app.dialplan.speed_dial.".$row["phone_speed_dial"]."@".$_SESSION['domain_name']);
+							$cache->delete("app:caller_id:lookup:domain_name:" . $_SESSION['domain_name'] . ":" . $row["phone_number"]);
+							if (!empty($row["phone_country_code"])) {
+								$cache->delete("app:caller_id:lookup:domain_name:" . $_SESSION['domain_name'] . ":" . $row["phone_country_code"] . $row["phone_number"]);
+								$cache->delete("app:caller_id:lookup:domain_name:" . $_SESSION['domain_name'] . ":+" . $row["phone_country_code"] . $row["phone_number"]);
+							}
 						}
 
 						//increment the row id
@@ -576,15 +574,9 @@
 				$p->add('contact_user_add', 'temp');
 				$p->add('contact_group_add', 'temp');
 
-				//view_array($array);
-
-				$database->app_name = 'contacts';
-				$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 				$database->save($array);
-				$message = $database->message;
+				//$message = $database->message;
 				unset($array);
-
-				//view_array($message);
 
 				$p->delete('contact_add', 'temp');
 				$p->delete('contact_phone_add', 'temp');
@@ -605,6 +597,17 @@
 				header('Location: contact_edit.php?id='.urlencode($contact_uuid ?? null));
 				return;
 			}
+	}
+
+//set the time zone
+	date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'H:i:s';
+	}
+	else {
+		$time_format = 'h:i:s a';
 	}
 
 //pre-populate the form
@@ -744,7 +747,7 @@
 		$contact_phones[$x]['phone_country_code'] = '';
 		$contact_phones[$x]['phone_number'] = '';
 		$contact_phones[$x]['phone_extension'] = '';
-		$contact_phones[$x]['phone_primary'] = '';
+		$contact_phones[$x]['phone_primary'] = false;
 		$contact_phones[$x]['phone_description'] = '';
 	}
 
@@ -782,7 +785,7 @@
 		$contact_addresses[$x]['address_country'] = '';
 		$contact_addresses[$x]['address_latitude'] = '';
 		$contact_addresses[$x]['address_longitude'] = '';
-		$contact_addresses[$x]['address_primary'] = '';
+		$contact_addresses[$x]['address_primary'] = false;
 		$contact_addresses[$x]['address_description'] = '';
 	}
 
@@ -810,7 +813,7 @@
 		$contact_emails[$x]['contact_email_uuid'] = uuid();
 		$contact_emails[$x]['email_label'] = '';
 		$contact_emails[$x]['email_address'] = '';
-		$contact_emails[$x]['email_primary'] = '';
+		$contact_emails[$x]['email_primary'] = false;
 		$contact_emails[$x]['email_description'] = '';
 	}
 
@@ -840,7 +843,7 @@
 		$contact_urls[$x]['url_type'] = '';
 		$contact_urls[$x]['url_label'] = '';
 		$contact_urls[$x]['url_address'] = '';
-		$contact_urls[$x]['url_primary'] = '';
+		$contact_urls[$x]['url_primary'] = false;
 		$contact_urls[$x]['url_description'] = '';
 	}
 
@@ -897,7 +900,7 @@
 		$contact_settings[$x]['contact_setting_name'] = '';
 		$contact_settings[$x]['contact_setting_value'] = '';
 		$contact_settings[$x]['contact_setting_order'] = '';
-		$contact_settings[$x]['contact_setting_enabled'] = '';
+		$contact_settings[$x]['contact_setting_enabled'] = true;
 		$contact_settings[$x]['contact_setting_description'] = '';
 	}
 
@@ -1001,29 +1004,29 @@
 <?php
 
 //determine qr branding
-	if (!empty($_SESSION['theme']['qr_brand_image']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'image') {
-		echo "<img id='img-buffer' style='display: none;' src='".$_SESSION["theme"]["qr_brand_image"]["text"]."'>";
+	if (!empty($settings->get('theme', 'qr_brand_image')) && $settings->get('theme', 'qr_brand_type') == 'image') {
+		echo "<img id='img-buffer' style='display: none;' src='".$settings->get('theme', 'qr_brand_image')."'>";
 		$qr_option = "image: $('#img-buffer')[0],";
 		$qr_mode = '4';
 		$qr_size = '0.2';
 	}
-	elseif (empty($_SESSION['theme']['qr_brand_image']['text']) && !empty($_SESSION['theme']['qr_brand_type']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'image') {
+	elseif (empty($settings->get('theme', 'qr_brand_image')) && !empty($settings->get('theme', 'qr_brand_type')) && $settings->get('theme', 'qr_brand_type') == 'image') {
 		$qr_option = '';
 		$qr_mode = '3';
 		$qr_size = '0';
 	}
-	elseif (!empty($_SESSION['theme']['qr_brand_image']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'text') {
-		$qr_option = 'label: "'.$_SESSION['theme']['qr_brand_text']['text'].'"';
+	elseif (!empty($settings->get('theme', 'qr_brand_image')) && $settings->get('theme', 'qr_brand_type') == 'text') {
+		$qr_option = 'label: "'.$settings->get('theme', 'qr_brand_text').'"';
 		$qr_mode = '2';
 		$qr_size = '0.05';
 	}
-	elseif (!empty($_SESSION['theme']['qr_brand_image']['text']) && $_SESSION['theme']['qr_brand_type']['text'] == 'none') {
+	elseif (!empty($settings->get('theme', 'qr_brand_image')) && $settings->get('theme', 'qr_brand_type') == 'none') {
 		$qr_option = '';
 		$qr_mode = '3';
 		$qr_size = '0';
 	}
 	else {
-		echo "<img id='img-buffer' style='display: none;' src='".PROJECT_PATH."/themes/".$_SESSION["domain"]["template"]["name"]."/images/qr_code.png'>";
+		echo "<img id='img-buffer' style='display: none;' src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template', 'default')."/images/qr_code.png'>";
 		$qr_option = "image: $('#img-buffer')[0],";
 		$qr_mode = '4';
 		$qr_size = '0.2';
@@ -1106,13 +1109,13 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-contact-edit']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'contact_view.php?id='.$contact_uuid]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'contact_view.php?id='.$contact_uuid]);
 	if ($action == 'update') {
 		if (permission_exists('contact_phone_add')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 		}
 		if (permission_exists('contact_phone_delete')) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
 	}
 
@@ -1189,9 +1192,9 @@
 		permission_exists('contact_setting_delete') ||
 		permission_exists('contact_attachment_delete')
 		)) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','collapse'=>'hide-sm-dn','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','collapse'=>'hide-sm-dn','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'style'=>'margin-left: 15px;','id'=>'btn_save','collapse'=>'hide-xs']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'style'=>'margin-left: 15px;','id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -1204,7 +1207,7 @@
 			echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'copy','onclick'=>"modal_close();"])]);
 		}
 		if (permission_exists('contact_delete')) {
-			echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
+			echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
 		}
 	}
 
@@ -1529,7 +1532,7 @@ echo "		</div>\n";
 echo "	</div>\n";
 unset($contact_note);
 
-if ($_SESSION['contact']['permissions']['boolean'] == "true") {
+if ($settings->get('contact', 'permissions', false)) {
 	if (permission_exists('contact_user_view') || permission_exists('contact_group_view')) {
 		echo "	<div class='form_set card'>\n";
 		echo "		<div class='heading'>\n";
@@ -1574,7 +1577,7 @@ if ($_SESSION['contact']['permissions']['boolean'] == "true") {
 			}
 			if (permission_exists('contact_user_add')) {
 				echo "		<div class='vtable' style='border-bottom: none;'>\n";
-				echo "			<select name='contact_user_uuid' class='formfld' style='width: auto;'>\n";
+				echo "			<select name='contact_user_uuid' class='formfld' style='width: 112px;'>\n";
 				echo "				<option value=''></option>\n";
 				foreach ($users as $field) {
 					if (!empty($contact_users_assigned) && in_array($field['user_uuid'], array_column($contact_users_assigned, 'user_uuid'))) { continue; } //skip users already assigned
@@ -1582,7 +1585,7 @@ if ($_SESSION['contact']['permissions']['boolean'] == "true") {
 				}
 				echo "			</select>\n";
 				if ($action == "update") {
-					echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+					echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add')]);
 				}
 				unset($users);
 				echo "		</div>\n";
@@ -1632,7 +1635,7 @@ if ($_SESSION['contact']['permissions']['boolean'] == "true") {
 			if (permission_exists('contact_group_add')) {
 				if (!empty($contact_groups_available)) {
 					echo "	<div class='vtable' style='border-bottom: none;'>\n";
-					echo "		<select name='contact_group_uuid' class='formfld' style='width: auto; margin-right: 3px;'>\n";
+					echo "		<select name='contact_group_uuid' class='formfld' style='width: 112px;'>\n";
 					echo "			<option value=''></option>\n";
 					foreach ($contact_groups_available as $field) {
 						if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show superadmin group to superadmins
@@ -1641,7 +1644,7 @@ if ($_SESSION['contact']['permissions']['boolean'] == "true") {
 					}
 					echo "		</select>";
 					if ($action == "update") {
-						echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+						echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add')]);
 					}
 					echo "	</div>\n";
 				}
@@ -1688,7 +1691,7 @@ if (permission_exists('contact_phone_view')) {
 			echo "			</div>\n";
 		}
 		echo "			<div class='button no-link' style='float: left; margin-top: 1px; margin-left: 8px;'>\n";
-		echo "				<a href='../xml_cdr/xml_cdr.php?caller_id_number=".urlencode($row['phone_number'] ?? '')."'>\n";
+		echo "				<a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?caller_id_number=".urlencode($row['phone_number'] ?? '')."'>\n";
 		echo "					<i class='fas fa-search fa-fw' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 3px; margin-right: 3px;' title=\"".$text['button-cdr']."\"></i>\n";
 		echo "				</a>\n";
 
@@ -1712,7 +1715,7 @@ if (permission_exists('contact_phone_view')) {
 		echo "			</div>\n";
 		echo "		</div>\n";
 		echo "		<div style='clear: both;'>\n";
-		if ($row['phone_primary'] == "1") {
+		if ($row['phone_primary'] === true) {
 			echo "		<i class='fa-solid fa-star fa-sm' style='color: ".$body_text_color."; float: right; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
 		}
 		echo "		</div>\n";
@@ -1788,10 +1791,10 @@ if (permission_exists('contact_phone_view')) {
 		echo "		<div class='label'>\n";
 		echo "			".$text['label-phone_type']."\n";
 		echo "		</div>\n";
-		echo "		<div class='field no-wrap'>\n";
-		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_voice]' id='phone_type_voice' value='1' ".(($row['phone_type_voice']) ? "checked='checked'" : null)."> ".$text['label-voice']."</label>&nbsp;\n";
-		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_fax]' id='phone_type_fax' value='1' ".(($row['phone_type_fax']) ? "checked='checked'" : null)."> ".$text['label-fax']."</label>&nbsp;\n";
-		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_video]' id='phone_type_video' value='1' ".(($row['phone_type_video']) ? "checked='checked'" : null)."> ".$text['label-video']."</label>&nbsp;\n";
+		echo "		<div class='field no-wrap' style='display: flex; flex-wrap: wrap; gap: 3px;'>\n";
+		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_voice]' id='phone_type_voice' value='1' ".(($row['phone_type_voice']) ? "checked='checked'" : null)."> ".$text['label-voice']."</label>\n";
+		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_fax]' id='phone_type_fax' value='1' ".(($row['phone_type_fax']) ? "checked='checked'" : null)."> ".$text['label-fax']."</label>\n";
+		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_video]' id='phone_type_video' value='1' ".(($row['phone_type_video']) ? "checked='checked'" : null)."> ".$text['label-video']."</label>\n";
 		echo "			<label style='padding-top: 2px; margin: 0;'><input type='checkbox' name='contact_phones[$x][phone_type_text]' id='phone_type_text' value='1' ".(($row['phone_type_text']) ? "checked='checked'" : null)."> ".$text['label-text']."</label>\n";
 		echo "			<br />\n";
 		//echo 			$text['description-phone_type']."\n";
@@ -1833,22 +1836,17 @@ if (permission_exists('contact_phone_view')) {
 		echo "			".$text['label-primary']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
-
-		echo "			<select class='formfld' name='contact_phones[$x][phone_primary]' style='width: auto;'>\n";
-		echo "				<option value=''></option>\n";
-		if ($row['phone_primary'] == "1") {
-			echo "				<option value='1' selected='selected'>".$text['label-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "			<span class='switch'>\n";
 		}
-		else {
-			echo "				<option value='1'>".$text['label-true']."</option>\n";
+		echo "				<select class='formfld' id='phone_primary' name='contact_phones[$x][phone_primary]' style='width: auto;'>\n";
+		echo "					<option value='true' ".($row['phone_primary'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "					<option value='false' ".($row['phone_primary'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "				</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "				<span class='slider'></span>\n";
+			echo "			</span>\n";
 		}
-		if ($row['phone_primary'] == "0") {
-			echo "				<option value='0' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "				<option value='0'>".$text['label-false']."</option>\n";
-		}
-		echo "			</select>\n";
 		//echo 				$text['description-phone_primary']."\n";
 		echo "		</div>\n";
 
@@ -1905,7 +1903,7 @@ if (permission_exists('contact_address_view')) {
 		echo "			</div>\n";
 		echo "		</div>\n";
 		echo "		<div style='clear: both;'>\n";
-		if ($row['address_primary'] == "1") {
+		if ($row['address_primary'] === true) {
 			echo "		<i class='fa-solid fa-star fa-sm' style='color: ".$body_text_color."; float: right; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
 		}
 		echo "		</div>\n";
@@ -2096,21 +2094,17 @@ if (permission_exists('contact_address_view')) {
 		echo "			".$text['label-primary']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
-		echo "			<select class='formfld' name='contact_addresses[$x][address_primary]' style='width: auto;'>\n";
-		echo "				<option value=''>".escape($text['label-address_primary'] ?? '')."</option>\n";
-		if ($row['address_primary'] == "1") {
-			echo "			<option value='1' selected='selected'>".$text['label-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "			<span class='switch'>\n";
 		}
-		else {
-			echo "			<option value='1'>".$text['label-true']."</option>\n";
+		echo "				<select class='formfld' id='address_primary' name='contact_addresses[$x][address_primary]' style='width: auto;'>\n";
+		echo "					<option value='true' ".($row['address_primary'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "					<option value='false' ".($row['address_primary'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "				</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "				<span class='slider'></span>\n";
+			echo "			</span>\n";
 		}
-		if ($row['address_primary'] == "0") {
-			echo "			<option value='0' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "			<option value='0'>".$text['label-false']."</option>\n";
-		}
-		echo "			</select>\n";
 		echo "		</div>\n";
 
 		echo "		<div class='label'>\n";
@@ -2155,7 +2149,7 @@ if (permission_exists('contact_email_view')) {
 		echo "			</div>\n";
 		echo "		</div>\n";
 		echo "		<div style='clear: both;'>\n";
-		if ($row['email_primary'] == "1") {
+		if ($row['email_primary'] === true) {
 			echo "		<i class='fa-solid fa-star fa-sm' style='color: ".$body_text_color."; float: right; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
 		}
 		echo "		</div>\n";
@@ -2182,21 +2176,17 @@ if (permission_exists('contact_email_view')) {
 		echo "			".$text['label-primary']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
-		echo "			<select class='formfld' name='contact_emails[$x][email_primary]' style='width: auto;'>\n";
-		echo "				<option value=''>".escape($text['label-contact_emails'] ?? '')."</option>\n";
-		if ($row['email_primary'] == "1") {
-			echo "				<option value='1' selected='selected'>".$text['label-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "			<span class='switch'>\n";
 		}
-		else {
-			echo "				<option value='1'>".$text['label-true']."</option>\n";
+		echo "				<select class='formfld' id='email_primary' name='contact_emails[$x][email_primary]' style='width: auto;'>\n";
+		echo "					<option value='true' ".($row['email_primary'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "					<option value='false' ".($row['email_primary'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "				</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "				<span class='slider'></span>\n";
+			echo "			</span>\n";
 		}
-		if ($row['email_primary'] == "0") {
-			echo "				<option value='0' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "				<option value='0'>".$text['label-false']."</option>\n";
-		}
-		echo "			</select>\n";
 		//echo "				<br />\n";
 		//echo 				$text['description-email_primary']."\n";
 		echo "		</div>\n";
@@ -2248,7 +2238,7 @@ if (permission_exists('contact_url_view')) {
 		echo "			</div>\n";
 		echo "		</div>\n";
 		echo "		<div style='clear: both;'>\n";
-		if ($row['url_primary'] == "1") {
+		if ($row['url_primary'] === true) {
 			echo "		<i class='fa-solid fa-star fa-sm' style='color: ".$body_text_color."; float: right; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
 		}
 		echo "		</div>\n";
@@ -2303,34 +2293,29 @@ if (permission_exists('contact_url_view')) {
 		echo "				".$text['label-primary']."\n";
 		echo "			</div>\n";
 		echo "			<div class='field no-wrap'>\n";
-		echo "				<select class='formfld' name='contact_urls[$x][url_primary]' style='width: auto;'>\n";
-		echo "					<option value=''></option>\n";
-		if ($row['url_primary'] == "1") {
-			echo "					<option value='1' selected='selected'>".$text['label-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "			<span class='switch'>\n";
 		}
-		else {
-			echo "					<option value='1'>".$text['label-true']."</option>\n";
-		}
-		if ($row['url_primary'] == "0") {
-			echo "					<option value='0' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "					<option value='0'>".$text['label-false']."</option>\n";
-		}
+		echo "				<select class='formfld' id='url_primary' name='contact_urls[$x][url_primary]' style='width: auto;'>\n";
+		echo "					<option value='true' ".($row['url_primary'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "					<option value='false' ".($row['url_primary'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 		echo "				</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "				<span class='slider'></span>\n";
+			echo "			</span>\n";
+		}
 		echo "			</div>\n";
-
 		echo "			<div class='label'>\n";
 		echo "				".$text['label-url_description']."\n";
 		echo "			</div>\n";
 		echo "			<div class='field no-wrap'>\n";
 		echo "				<input class='formfld' type='text' name='contact_urls[$x][url_description]' placeholder='' maxlength='255' value=\"".escape($row["url_description"])."\">\n";
 		echo "			</div>\n";
-		if (!empty($contact_urls) && @sizeof($contact_urls) > 1 && permission_exists('contact_url_delete')) {
-			if (is_uuid($row['contact_url_uuid'])) {
-				echo "			<input type='checkbox' name='contact_urls[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"checkbox_on_change(this);\">\n";
-			}
-		}
+		// if (!empty($contact_urls) && @sizeof($contact_urls) > 1 && permission_exists('contact_url_delete')) {
+		// 	if (is_uuid($row['contact_url_uuid'])) {
+		// 		echo "			<input type='checkbox' name='contact_urls[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"checkbox_on_change(this);\">\n";
+		// 	}
+		// }
 		//echo "			<br />\n";
 		//echo "			".$text['description-contact_organization']."\n";
 		echo "			<div class='label empty_row' style='grid-row: 6 / span 99;'>\n";
@@ -2501,19 +2486,8 @@ if (permission_exists('contact_setting_view')) {
 		echo "		<div class='field no-wrap'>\n";
 		echo "			<select name='contact_settings[$x][contact_setting_order]' class='formfld'>\n";
 		echo "				<option value=''></option>\n";
-		$i=0;
-		while ($i<=999) {
-			$selected = ($i == $row["contact_setting_order"]) ? "selected='selected'" : null;
-			if (strlen($i) == 1) {
-				echo "				<option value='00$i' ".$selected.">00$i</option>\n";
-			}
-			if (strlen($i) == 2) {
-				echo "				<option value='0$i' ".$selected.">0$i</option>\n";
-			}
-			if (strlen($i) == 3) {
-				echo "				<option value='$i' ".$selected.">$i</option>\n";
-			}
-			$i++;
+		for ($i = 0; $i <=999; $i++) {
+			echo "			<option value='".str_pad($i, 3, '0', STR_PAD_LEFT)."' ".(isset($row["contact_setting_order"]) && $i == $row["contact_setting_order"] ? "selected='selected'" : null).">".str_pad($i, 3, '0', STR_PAD_LEFT)."</option>\n";
 		}
 		echo "			</select>\n";
 		echo "		</div>\n";
@@ -2522,23 +2496,18 @@ if (permission_exists('contact_setting_view')) {
 		echo "			".$text['label-enabled']."\n";
 		echo "		</div>\n";
 		echo "		<div class='field no-wrap'>\n";
-		echo "			<select class='formfld' name='contact_settings[$x][contact_setting_enabled]' style='width: 5em;'>\n";
-		echo "				<option value=''><b>".escape($text['label-contact_setting_enabled'] ?? '')."</b></option>\n";
-		if ($row['contact_setting_enabled'] == "true") {
-			echo "				<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
 		}
-		else {
-			echo "				<option value='true'>".$text['label-true']."</option>\n";
+		echo "		<select class='formfld' id='contact_setting_enabled' name='contact_settings[$x][contact_setting_enabled]' style='width: auto;'>\n";
+		echo "			<option value='true' ".($row['contact_setting_enabled'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		echo "			<option value='false' ".($row['contact_setting_enabled'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "		</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
 		}
-		if ($row['contact_setting_enabled'] == "false") {
-			echo "				<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "				<option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "			</select>\n";
 		echo "		</div>\n";
-
 		echo "		<div class='label'>\n";
 		echo "			".$text['label-description']."\n";
 		echo "		</div>\n";
@@ -2546,22 +2515,11 @@ if (permission_exists('contact_setting_view')) {
 		echo "				<input class='formfld' type='text' name='contact_settings[$x][contact_setting_description]' placeholder='".escape($text['label-contact_setting_description'] ?? '')."' maxlength='255' value=\"".escape($row["contact_setting_description"])."\">\n";
 		echo "		</div>\n";
 
-		if (!empty($contact_settings) && @sizeof($contact_settings) > 1 && permission_exists('contact_setting_delete')) {
-			if (!empty($row['contact_setting_uuid']) && is_uuid($row['contact_setting_uuid'])) {
-				echo "		<div class='label'>\n";
-				echo "			".$text['label-enabled']."\n";
-				echo "		</div>\n";
-				echo "		<div class='field no-wrap'>\n";
-				echo "			<input type='checkbox' name='contact_settings[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"checkbox_on_change(this);\">\n";
-				echo "		</div>\n";
-			}
-		}
-
-		echo "		<div class='label empty_row' style='grid-row: 9 / span 99;'>\n";
-		echo "			&nbsp;\n";
-		echo "		</div>\n";
-		echo "		<div class='field no-wrap empty_row' style='grid-row: 9 / span 99;'>\n";
-		echo "		</div>\n";
+		// echo "		<div class='label empty_row' style='grid-row: 9 / span 99;'>\n";
+		// echo "			&nbsp;\n";
+		// echo "		</div>\n";
+		// echo "		<div class='field no-wrap empty_row' style='grid-row: 9 / span 99;'>\n";
+		// echo "		</div>\n";
 
 		echo "	</div>\n";
 		$x++;
@@ -2587,7 +2545,7 @@ if (permission_exists('contact_attachment_view')) {
 		}
 		echo "	</div>\n";
 		echo "		<div style='clear: both;'>\n";
-		if ($row['attachment_primary'] == "1") {
+		if ($row['attachment_primary'] === true) {
 			echo "		<i class='fa-solid fa-star fa-sm' style='color: ".$body_text_color."; float: right; margin-top: 7px; margin-left: 8px;' title=\"".$text['label-primary']."\"></i>\n";
 		}
 		echo "		</div>\n";
@@ -2616,7 +2574,7 @@ if (permission_exists('contact_attachment_view')) {
 			}
 		//}
 		//else {
-		//	$allowed_attachment_types = json_decode($_SESSION['contact']['allowed_attachment_types']['text'], true);
+		//	$allowed_attachment_types = json_decode($settings->get('contact', 'allowed_attachment_types'), true);
 		//	echo "	<input type='file' class='formfld' name='attachment' id='attachment' accept='.".implode(',.',array_keys($allowed_attachment_types))."'>\n";
 		//	echo "	<span style='display: inline-block; margin-top: 5px; font-size: 80%;'>".strtoupper(implode(', ', array_keys($allowed_attachment_types)))."</span>";
 		//}
@@ -2640,10 +2598,17 @@ if (permission_exists('contact_attachment_view')) {
 		echo "		".$text['label-primary']."\n";
 		echo "	</div>\n";
 		echo "	<div class='field no-wrap'>\n";
-		echo "		<select class='formfld' name='contact_attachments[$x][attachment_primary]' id='attachment_primary' style='width: auto;'>\n";
-		echo "			<option value='0'>".$text['option-false']."</option>\n";
-		echo "			<option value='1' ".(($row['attachment_primary']) ? "selected" : null).">".$text['option-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
+		}
+		echo "		<select class='formfld' id='attachment_primary' name='contact_attachments[$x][attachment_primary]' style='width: auto;'>\n";
+		echo "			<option value='false' ".($row['attachment_primary'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+		echo "			<option value='true' ".($row['attachment_primary'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 		echo "		</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
+		}
 		echo "	</div>\n";
 
 		echo "	<div class='label'>\n";
@@ -2686,14 +2651,14 @@ if (permission_exists('contact_time_view')) {
 		echo "		".$text['label-time_start']."\n";
 		echo "	</div>\n";
 		echo "	<div class='field no-wrap'>\n";
-		echo "		<input class='formfld datetimesecpicker' data-toggle='datetimepicker' data-target='#time_start' type='text' name='contact_times[$x][time_start]' id='time_start' style='min-width: 135px; width: 135px;' value='".escape($row["time_start"])."' onblur=\"$(this).datetimepicker('hide');\">\n";
+		echo "		<input class='formfld datetimesecpicker' data-toggle='datetimepicker' data-target='#time_start_$x' type='text' name='contact_times[$x][time_start]' id='time_start_$x' style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 125px; width: 125px;' : 'min-width: 145px; width: 145px;')."' value='".escape($row["time_start"])."' onblur=\"$(this).datetimepicker('hide');\">\n";
 		echo "	</div>\n";
 
 		echo "	<div class='label'>\n";
 		echo "		".$text['label-time_stop']."\n";
 		echo "	</div>\n";
 		echo "	<div class='field no-wrap'>\n";
-		echo "		<input class='formfld datetimesecpicker' data-toggle='datetimepicker' data-target='#time_stop' type='text' name='contact_times[$x][time_stop]' id='time_stop' style='min-width: 135px; width: 135px;' value='".escape($row["time_stop"])."' onblur=\"$(this).datetimepicker('hide');\">\n";
+		echo "		<input class='formfld datetimesecpicker' data-toggle='datetimepicker' data-target='#time_stop_$x' type='text' name='contact_times[$x][time_stop]' id='time_stop_$x' style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 125px; width: 125px;' : 'min-width: 145px; width: 145px;')."' value='".escape($row["time_stop"])."' onblur=\"$(this).datetimepicker('hide');\">\n";
 		echo "	</div>\n";
 
 		echo "	<div class='label'>\n";
@@ -2719,8 +2684,9 @@ if (permission_exists('contact_note_view')) {
 	$x = 0;
 	foreach($contact_notes as $row) {
 		$contact_note = $row['contact_note'];
-		$contact_note = escape($contact_note);
-		$contact_note = str_replace("\n","<br />",$contact_note);
+		if (!empty($contact_note)) {
+			$contact_note = htmlspecialchars($contact_note, ENT_QUOTES, 'UTF-8');
+		}
 		if (permission_exists('contact_note_add')) {
 			$list_row_url = "contact_note_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_note_uuid']);
 		}
@@ -2751,7 +2717,7 @@ if (permission_exists('contact_note_view')) {
 		echo "		".$text['label-note_user']."\n";
 		echo "	</div>\n";
 		echo "	<div class='field no-wrap' style='margin-top: 2px;'>\n";
-		echo "		<div class='description'><strong>".escape($row['last_mod_user'])."</strong>: ".date("j M Y @ H:i:s", strtotime($row['last_mod_date']))."</div>\n";
+		echo "		<div class='description'><strong>".escape($row['last_mod_user'])."</strong>: ".date("j M Y @ ".$time_format, strtotime($row['last_mod_date']))."</div>\n";
 		echo "	</div>\n";
 
 		echo "	<div class='label empty_row' style='grid-row: 4 / span 99;'>\n";

@@ -41,18 +41,49 @@
 //prepare the email
 	$email_recipient = !empty($_POST['to']) && valid_email($_POST['to']) ? strtolower($_POST['to']) : null;
 
-	$email_body = "<b>Test Message</b><br /><br />\n";
-	$email_body .= "This message is a test of the SMTP settings configured within your PBX.<br />\n";
-	$email_body .= "If you received this message, your current SMTP settings are valid.<br /><br />\n";
+//retrieve email template
+	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+	$language_dialect = $settings->get('domain', 'language', 'en-us');
+	if (!empty($language_dialect)) {
+		$sql = "select ";
+		$sql .= "	template_subject, ";
+		$sql .= "	template_body ";
+		$sql .= "from ";
+		$sql .= "	v_email_templates ";
+		$sql .= "where ";
+		$sql .= "	template_language = :template_language ";
+		$sql .= "	and template_category = 'email' ";
+		$sql .= "	and template_subcategory = 'test' ";
+		$sql .= "	and template_type = 'html' ";
+		$sql .= "	and template_enabled = true ";
+		$sql .= "	and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "limit 1 ";
+		$parameters['template_language'] = $language_dialect;
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$template = $database->select($sql, $parameters, 'row');
+		unset($sql, $parameters);
+	}
+//use email template
+	if (!empty($template) && (!empty($template['template_body']) || !empty($template['template_body']))) {
+		$email_subject = $template['template_subject'];
+		$email_body = $template['template_body'];
+	}
+//no template found, use default message
+	else {
+		$email_subject = 'Test Message';
+		$email_body = "<b>Test Message</b><br /><br />\n";
+		$email_body .= "This message is a test of the SMTP settings configured within your PBX.<br />\n";
+		$email_body .= "If you received this message, your current SMTP settings are valid.<br /><br />\n";
+	}
 
-	$email_from_address = $_SESSION['email']['smtp_from']['text'];
-	$email_from_name = $_SESSION['email']['smtp_from_name']['text'];
+	$email_from_address = $settings->get('email', 'smtp_from');
+	$email_from_name = $settings->get('email', 'smtp_from_name');
 
 //send email
 	$sent = 0;
 	$email = new email;
 	$email->recipients = $email_recipient;
-	$email->subject = 'Test Message';
+	$email->subject = $email_subject;
 	$email->body = $email_body;
 	$email->from_address = $email_from_address;
 	$email->from_name = $email_from_name;
@@ -87,6 +118,7 @@
 	echo "<table>\n";
 	foreach ($_SESSION['email'] as $name => $setting) {
 		foreach ($setting as $type => $value) {
+			$value = $value ?? '';
 			echo "<tr>\n";
 			if ($type == 'uuid') { $uuid = $value; continue; }
 			if ($name == 'smtp_password') { $value = str_repeat('*', strlen($value)); }
@@ -107,7 +139,7 @@
 	echo "<b>".$text['header-connection']."</b>\n";
 	echo "<br><br>\n";
 
-	echo "<div style='width: 100%; max-height: 250px; overflow: auto; border: 1px solid ".($_SESSION['theme']['table_row_border_color']['text'] ?? '#c5d1e5')."; padding: 12px 15px; background-color: ".($_SESSION['theme']['table_row_background_color_light']['text'] ?? '#fff')."; font-family: monospace; font-size: 85%;'>\n";
+	echo "<div style='width: 100%; max-height: 250px; overflow: auto; border: 1px solid ".($settings->get('theme', 'table_row_border_color') ?? '#c5d1e5')."; padding: 12px 15px; background-color: ".($settings->get('theme', 'table_row_background_color_light') ?? '#fff')."; font-family: monospace; font-size: 85%;'>\n";
 
 	if (!empty($email_response) && is_array($email_response) && @sizeof($email_response) != 0) {
 		echo implode("<br>\n<hr style='margin: 3px 0;'>\n", $email_response);

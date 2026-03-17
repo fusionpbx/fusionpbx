@@ -30,16 +30,10 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('user_setting_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('user_setting_view')) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -102,8 +96,6 @@
 		//update setting
 			$array['user_settings'][0]['user_setting_uuid'] = $user_setting_uuids[0];
 			$array['user_settings'][0]['user_setting_enabled'] = $enabled;
-			$database->app_name = 'user_settings';
-			$database->app_uuid = '3a3337f7-78d1-23e3-0cfd-f14499b8ed97';
 			$database->save($array);
 			unset($array);
 
@@ -119,16 +111,16 @@
 	$order = $_GET["order"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
-	$button_icon_back = !empty($_SESSION['theme']['button_icon_back']) ? $_SESSION['theme']['button_icon_back'] : '';
-	$button_icon_add = !empty($_SESSION['theme']['button_icon_add']) ? $_SESSION['theme']['button_icon_add'] : '';
-	$button_icon_copy = !empty($_SESSION['theme']['button_icon_copy']) ? $_SESSION['theme']['button_icon_copy'] : '';
-	$button_icon_toggle = !empty($_SESSION['theme']['button_icon_toggle']) ? $_SESSION['theme']['button_icon_toggle'] : '';
-	$button_icon_all = !empty($_SESSION['theme']['button_icon_all']) ? $_SESSION['theme']['button_icon_all'] : '';
-	$button_icon_delete = !empty($_SESSION['theme']['button_icon_delete']) ? $_SESSION['theme']['button_icon_delete'] : '';
-	$button_icon_search = !empty($_SESSION['theme']['button_icon_search']) ? $_SESSION['theme']['button_icon_search'] : '';
-	$button_icon_edit = !empty($_SESSION['theme']['button_icon_edit']) ? $_SESSION['theme']['button_icon_edit'] : '';
-	$button_icon_reset = !empty($_SESSION['theme']['button_icon_reset']) ? $_SESSION['theme']['button_icon_reset'] : '';
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
+	$button_icon_back = !empty($settings->get('theme', 'button_icon_back')) ? $settings->get('theme', 'button_icon_back') : '';
+	$button_icon_add = !empty($settings->get('theme', 'button_icon_add')) ? $settings->get('theme', 'button_icon_add') : '';
+	$button_icon_copy = !empty($settings->get('theme', 'button_icon_copy')) ? $settings->get('theme', 'button_icon_copy') : '';
+	$button_icon_toggle = !empty($settings->get('theme', 'button_icon_toggle')) ? $settings->get('theme', 'button_icon_toggle') : '';
+	$button_icon_all = !empty($settings->get('theme', 'button_icon_all')) ? $settings->get('theme', 'button_icon_all') : '';
+	$button_icon_delete = !empty($settings->get('theme', 'button_icon_delete')) ? $settings->get('theme', 'button_icon_delete') : '';
+	$button_icon_search = !empty($settings->get('theme', 'button_icon_search')) ? $settings->get('theme', 'button_icon_search') : '';
+	$button_icon_edit = !empty($settings->get('theme', 'button_icon_edit')) ? $settings->get('theme', 'button_icon_edit') : '';
+	$button_icon_reset = !empty($settings->get('theme', 'button_icon_reset')) ? $settings->get('theme', 'button_icon_reset') : '';
 
 //prepare to page the results
 	$sql = "select count(*) from v_user_settings ";
@@ -142,7 +134,7 @@
 	unset($sql);
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 100;
+	$rows_per_page = (!empty($settings->get('domain', 'paging'))) ? $settings->get('domain', 'paging') : 100;
 	$param = '';
 	$paging_controls = '';
 	if (isset($_GET['page'])) {
@@ -187,7 +179,7 @@
 	echo "	<div class='heading'><b id='heading_sub'>".$text['title-user_settings']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('user_add') || permission_exists('user_edit')) {
-		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'/core/users/user_edit.php?id='.$user_uuid]);
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'/core/users/user_edit.php?id='.$user_uuid]);
 	}
 	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$button_icon_back,'style'=>'margin-right: 15px; display: none;','link'=>'users.php']);
 	if (permission_exists('user_setting_add')) {
@@ -259,7 +251,7 @@
 				echo "<th class='pct-30'>".$text['label-value']."</th>";
 				echo "<th class='center'>".$text['label-enabled']."</th>";
 				echo "<th class='pct-25 hide-sm-dn'>".$text['label-description']."</th>";
-				if (permission_exists('user_setting_edit') && $list_row_edit_button == 'true') {
+				if (permission_exists('user_setting_edit') && $list_row_edit_button) {
 					echo "	<td class='action-button'>&nbsp;</td>\n";
 				}
 				echo "</tr>\n";
@@ -314,13 +306,12 @@
 				( $category == "theme" && $subcategory == "menu_sub_icons" && $name == "boolean" ) ||
 				( $category == "theme" && $subcategory == "menu_brand_type" && $name == "text" ) ||
 				( $category == "theme" && $subcategory == "menu_style" && $name == "text" ) ||
-				( $category == "theme" && $subcategory == "menu_position" && $name == "text" ) ||
 				( $category == "theme" && $subcategory == "body_header_brand_type" && $name == "text" ) ||
 				( $category == "theme" && $subcategory == "logo_align" && $name == "text" )
 				) {
 				echo "		".$text['label-'.escape($row['user_setting_value'])];
 			}
-			else if ($subcategory == 'password' || substr_count($subcategory, '_password') > 0 || substr_count($subcategory, '_key') || substr_count($subcategory, '_secret') > 0) {
+			else if ($subcategory == 'password' || (substr_count($subcategory, '_password') > 0 && $subcategory != 'input_text_font_password') || substr_count($subcategory, '_key') || substr_count($subcategory, '_secret') > 0) {
 				echo "		".str_repeat('*', strlen(escape($row['user_setting_value'])));
 			}
 			else if ($category == 'theme' && $subcategory == 'button_icons' && $name == 'text') {
@@ -336,7 +327,12 @@
 				echo "		".$text['option-'.$row['user_setting_value']]."\n";
 			}
 			else if ($category == 'theme' && $subcategory == 'input_toggle_style' && $name == 'text') {
-				echo "		".$text['option-'.$row['user_setting_value']]."\n";
+				if ($row['user_setting_value'] == 'select') {
+					echo "		".$text['option-select_box']."\n";
+				}
+				else {
+					echo "		".$text['option-'.$row['user_setting_value']]."\n";
+				}
 			}
 			else if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
 				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['user_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['user_setting_value'], -0.18)).'; padding: -1px;'));
@@ -383,7 +379,7 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn' title=\"".escape($row['user_setting_description'])."\">".escape($row['user_setting_description'])."&nbsp;</td>\n";
-			if (permission_exists('user_setting_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('user_setting_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$button_icon_edit,'link'=>$list_row_url]);
 				echo "	</td>\n";

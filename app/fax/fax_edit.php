@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('fax_extension_add') || permission_exists('fax_extension_edit') || permission_exists('fax_extension_delete')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('fax_extension_add') || permission_exists('fax_extension_edit') || permission_exists('fax_extension_delete'))) {
 		echo "access denied";
 		exit;
 	}
@@ -41,13 +38,16 @@
 	$language = new text;
 	$text = $language->get();
 
+//set the defaults
+	$fax_file = '';
+
 //get the fax_extension and save it as a variable
 	if (isset($_REQUEST["fax_extension"])) {
 		$fax_extension = $_REQUEST["fax_extension"];
 	}
 
 //set the fax directory
-	$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
+	$fax_dir = $settings->get('switch', 'storage').'/fax/'.$_SESSION['domain_name'];
 
 //get the fax extension
 	if (!empty($fax_extension) && is_numeric($fax_extension)) {
@@ -57,8 +57,8 @@
 			$dir_fax_temp = $fax_dir.'/'.$fax_extension.'/temp';
 
 		//make sure the directories exist
-			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
-				mkdir($_SESSION['switch']['storage']['dir'], 0770, true);
+			if (!is_dir($settings->get('switch', 'storage'))) {
+				mkdir($settings->get('switch', 'storage'), 0770, true);
 			}
 			if (!is_dir($fax_dir.'/'.$fax_extension)) {
 				mkdir($fax_dir.'/'.$fax_extension, 0770, true);
@@ -178,9 +178,6 @@
 			$p = permissions::new();
 			$p->add('fax_user_delete', 'temp');
 
-			$database = new database;
-			$database->app_name = 'fax';
-			$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
 			$database->delete($array);
 			unset($array);
 
@@ -206,9 +203,6 @@
 			$p = permissions::new();
 			$p->add('fax_user_add', 'temp');
 
-			$database = new database;
-			$database->app_name = 'fax';
-			$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
 			$database->save($array);
 			unset($array);
 
@@ -365,9 +359,6 @@
 						$array['fax'][0]['fax_description'] = $fax_description;
 
 					//execute
-						$database = new database;
-						$database->app_name = 'fax';
-						$database->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
 						$database->save($array);
 						unset($array);
 
@@ -388,7 +379,6 @@
 					$sql .= "and fax_uuid = :fax_uuid ";
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 					$parameters['fax_uuid'] = $fax_uuid;
-					$database = new database;
 					$dialplan_uuid = $database->select($sql, $parameters, 'column');
 					unset($sql, $parameters);
 
@@ -425,7 +415,6 @@
 		$sql .= "and fax_uuid = :fax_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['fax_uuid'] = $fax_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$dialplan_uuid = $row["dialplan_uuid"];
@@ -458,7 +447,6 @@
 		$sql .= "and e.fax_uuid = :fax_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['fax_uuid'] = $fax_uuid;
-		$database = new database;
 		$fax_users = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -475,7 +463,6 @@
 		$sql .= ")\n";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['fax_uuid'] = $fax_uuid;
-		$database = new database;
 		$available_users = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 	}
@@ -509,7 +496,7 @@
 	echo "	<div class='heading'><b>".$text['header-fax_server_settings']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'fax.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'fax.php']);
 	if ($action == "update") {
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists('fax_extension_advanced')) {
@@ -520,16 +507,16 @@
 			unset($button_margin);
 		}
 		if (permission_exists('fax_extension_copy')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','style'=>($button_margin ?? null),'onclick'=>"modal_open('modal-copy','btn_copy');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'name'=>'btn_copy','style'=>($button_margin ?? null),'onclick'=>"modal_open('modal-copy','btn_copy');"]);
 			unset($button_margin);
 		}
 		if (permission_exists('fax_extension_delete')) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'name'=>'btn_delete','style'=>($button_margin ?? null),'onclick'=>"modal_open('modal-delete','btn_delete');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','style'=>($button_margin ?? null),'onclick'=>"modal_open('modal-delete','btn_delete');"]);
 			unset($button_margin);
 		}
 	}
 
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -562,7 +549,7 @@
 		echo "	".$text['label-extension']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_extension' maxlength='15' value=\"".escape($fax_extension ?? '')."\" required='required' placeholder=\"".($_SESSION['fax']['extension_range']['text'] ?? '')."\">\n";
+		echo "	<input class='formfld' type='text' name='fax_extension' maxlength='15' value=\"".escape($fax_extension ?? '')."\" required='required' placeholder=\"".($settings->get('fax', 'extension_range') ?? '')."\">\n";
 		echo "<br />\n";
 		echo "".$text['description-extension']."\n";
 		echo "</td>\n";
@@ -738,7 +725,7 @@
 					echo "			<option value='".escape($field['user_uuid'])."'>".escape($field['username'])."</option>\n";
 				}
 				echo "		</select>";
-				echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add']]);
+				echo button::create(['type'=>'submit','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add')]);
 				echo "		<br>\n";
 				echo "		".$text['description-user-add']."\n";
 				echo "		<br />\n";

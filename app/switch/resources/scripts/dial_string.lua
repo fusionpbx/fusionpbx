@@ -25,7 +25,12 @@
 --set default variables
 	max_tries = "3";
 	digit_timeout = "5000";
+
+--create the api object
 	api = freeswitch.API();
+
+--get the hostname
+	local hostname = api:execute("hostname", "");
 
 --set the debug level
 	debug["sql"] = false;

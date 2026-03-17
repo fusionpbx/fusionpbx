@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018 - 2020
+	Portions created by the Initial Developer are Copyright (C) 2018-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('number_translation_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('number_translation_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -46,61 +43,40 @@
 	$search = $_GET["search"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get the http post data
 	if (!empty($_POST['number_translations'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$number_translations = $_POST['number_translations'];
 	}
 
 //process the http post data by action
 	if (!empty($action) && !empty($number_translations)) {
-
-		//validate the token
-		$token = new token;
-		if (!$token->validate($_SERVER['PHP_SELF'])) {
-			message::add($text['message-invalid_token'],'negative');
-			header('Location: number_translations.php');
-			exit;
-		}
-
-		//prepare the array
-		$x = 0;
-		foreach ($number_translations as $row) {
-			$array['number_translations'][$x]['checked'] = $row['checked'] ?? null;
-			$array['number_translations'][$x]['number_translation_uuid'] = $row['number_translation_uuid'];
-			$array['number_translations'][$x]['number_translation_enabled'] = $row['number_translation_enabled'];
-			$x++;
-		}
-
-		//prepare the database object
-		$database = new database;
-		$database->app_name = 'number_translations';
-		$database->app_uuid = '6ad54de6-4909-11e7-a919-92ebcb67fe33';
-
-		//send the array to the database class
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('number_translation_add')) {
-					$database->copy($array);
+					$obj = new number_translations;
+					$obj->copy($number_translations);
 				}
 				break;
 			case 'toggle':
 				if (permission_exists('number_translation_edit')) {
-					$database->toggle($array);
+					$obj = new number_translations;
+					$obj->toggle($number_translations);
 				}
 				break;
 			case 'delete':
 				if (permission_exists('number_translation_delete')) {
-					$database->delete($array);
+					$obj = new number_translations;
+					$obj->delete($number_translations);
 				}
 				break;
 		}
 
 		//redirect the user
-		header('Location: number_translations.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: number_translations.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -123,11 +99,10 @@
 		$sql .= "	or lower(number_translation_description) like :search ";
 		$sql .= ") ";
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = $search ? "&search=".$search : null;
 	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
@@ -149,7 +124,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'number_translation_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$number_translations = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -166,21 +140,21 @@
 	echo "	<div class='heading'><b>".$text['title-number_translations']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('number_translation_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'number_translation_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'number_translation_edit.php']);
 	}
 	if (permission_exists('number_translation_add') && $number_translations) {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
 	if (permission_exists('number_translation_edit') && $number_translations) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	}
 	if (permission_exists('number_translation_delete') && $number_translations) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
-	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'number_translations.php','style'=>($search == '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
+	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'number_translations.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
@@ -217,7 +191,7 @@
 	echo th_order_by('number_translation_name', $text['label-number_translation_name'], $order_by, $order);
 	echo th_order_by('number_translation_enabled', $text['label-number_translation_enabled'], $order_by, $order, null, "class='center'");
 	echo "	<th class='hide-sm-dn'>".$text['label-number_translation_description']."</th>\n";
-	if (permission_exists('number_translation_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('number_translation_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -228,15 +202,12 @@
 			$list_row_url = '';
 			if (permission_exists('number_translation_edit')) {
 				$list_row_url = "number_translation_edit.php?id=".urlencode($row['number_translation_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
-					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
-				}
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('number_translation_add') || permission_exists('number_translation_edit') || permission_exists('number_translation_delete')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='number_translations[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-				echo "		<input type='hidden' name='number_translations[$x][number_translation_uuid]' value='".escape($row['number_translation_uuid'])."' />\n";
+				echo "		<input type='hidden' name='number_translations[$x][uuid]' value='".escape($row['number_translation_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
 			echo "	<td>\n";
@@ -258,9 +229,9 @@
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['number_translation_description'])."</td>\n";
-			if (permission_exists('number_translation_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('number_translation_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
@@ -280,4 +251,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

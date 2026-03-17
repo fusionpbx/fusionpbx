@@ -80,8 +80,8 @@
 			sql = sql .. "	where domain_uuid = :domain_uuid ";
 			sql = sql .. "	and ( ";
 			sql = sql .. "		phone_number = :caller_id_number ";
-			sql = sql .. "		or phone_country_code || phone_number = :caller_id_number ";
-			sql = sql .. "		or '+' || phone_country_code || phone_number = :caller_id_number ";
+			sql = sql .. "		or concat(phone_country_code, phone_number) = :caller_id_number ";
+			sql = sql .. "		or concat('+', phone_country_code, phone_number) = :caller_id_number ";
 			sql = sql .. "	) ";
 			sql = sql .. "); ";
 			local params = {caller_id_number = caller_id_number, domain_uuid = domain_uuid};

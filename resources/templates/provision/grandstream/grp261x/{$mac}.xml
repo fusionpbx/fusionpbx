@@ -147,8 +147,11 @@
 
 		<!-- SIP Transport -->
 		<!-- UDP, TCP, TlsOrTcp -->
-		<item name="account.{$line}.sip.transport">{if $row.sip_transport=='tcp'}TCP{elseif $row.sip_transport=='tls'}Tls Or Tcp{else}UDP{/if}</item>
-
+		{if $row.sip_transport == ''}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
+		{if $row.sip_transport == 'udp'}<item name="account.{$row.line_number}.sip.transport">0</item>{/if}
+		{if $row.sip_transport == 'tcp'}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
+		{if $row.sip_transport == 'tls'}<item name="account.{$row.line_number}.sip.transport">2</item>{/if}
+	
 		<!-- SIP Listening Mode -->
 		<!-- TransportOnly, Dual, Dual_BLF_Enforced, Dual_Secured -->
 		<item name="account.{$line}.sip.listeningMode">TransportOnly</item>
@@ -256,7 +259,11 @@
 
 		<!-- BLF Call-pickup  -->
 		<!-- Auto, Force, Disabled -->
-		<item name="account.{$line}.sip.blf.callPickup.forcePrefix">Auto</item>
+		{if isset($grandstream_blf_callpickup_force) }
+			<item name="account.{$line}.sip.blf.callPickup.forcePrefix">{$grandstream_blf_callpickup_force}</item>
+		{else}
+			<item name="account.{$line}.sip.blf.callPickup.forcePrefix">Auto</item>
+		{/if}
 
 		<!-- BLF Call-pickup Prefix -->
 		<item name="account.{$line}.sip.blf.callPickup.prefix">**</item>
@@ -1253,7 +1260,14 @@
 		<!-- Maintenance - Upgrade -->
 		<!-- Firmware Upgrade Mode -->
 		<!-- TFTP, HTTP, HTTPS -->
-		<item name="provisioning.firmware.protocol">HTTP</item>
+    	{if isset($grandstream_firmware_upgrade_protocol) }
+    		{if $grandstream_firmware_upgrade_protocol=="0"}<item name="provisioning.firmware.protocol">TFTP</item>{/if}
+    		{if $grandstream_firmware_upgrade_protocol=="1"}<item name="provisioning.firmware.protocol">HTTP</item>{/if}
+    		{if $grandstream_firmware_upgrade_protocol=="2"}<item name="provisioning.firmware.protocol">HTTPS</item>{/if}
+    	{else}
+    	<item name="provisioning.firmware.protocol">HTTP</item>
+    	{/if}
+
 		<!-- Firmware Server Path -->
 		{if isset($grandstream_firmware_path) && isset($firmware_version)}
 		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}/{$firmware_version}</item>

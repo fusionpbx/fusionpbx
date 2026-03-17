@@ -80,8 +80,8 @@
 
 		--record the session
 			if (record_session) then
-				cmd = "uuid_record "..uuid.." start "..path.."/"..uuid.."."..record_ext;
-				session:execute("set", "api_on_answer="..cmd);
-				--freeswitch.consoleLog("notice", "[app:dialplan] "..cmd.."\n");
+				command = "uuid_record_result='${uuid_record "..uuid.." start "..path.."/"..uuid.."."..record_ext .."}'";
+				session:execute("set", command);
+				--freeswitch.consoleLog("notice", "[app:dialplan] " .. command .. "\n");
 			end
 	end

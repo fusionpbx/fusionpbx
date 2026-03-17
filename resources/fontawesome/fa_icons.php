@@ -29,8 +29,8 @@ require_once dirname(__DIR__, 2) . "/resources/require.php";
 
 //load icons
 $font_awesome_icons = [];
-if (file_exists($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/metadata/icons.json')) {
-	$icons_json = file_get_contents($_SERVER["PROJECT_ROOT"].'/resources/fontawesome/metadata/icons.json');
+if (file_exists(dirname(__DIR__, 2).'/resources/fontawesome/metadata/icons.json')) {
+	$icons_json = file_get_contents(dirname(__DIR__, 2).'/resources/fontawesome/metadata/icons.json');
 	if (!empty($icons_json)) {
 		$icons_array = json_decode($icons_json, true);
 		if (!empty($icons_array) && is_array($icons_array)) {
@@ -113,6 +113,6 @@ if (
 	!empty($font_awesome_icons) && is_array($font_awesome_icons)
 	) {
 	foreach ($font_awesome_icons as $icon) {
-		echo "<span class='".escape(implode(' ', $icon['classes']))." fa-fw' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".escape($icon['label'])."' onclick=\"$('#selected_icon').val('".escape(implode(' ', $icon['classes']))."'); $('#icons').slideUp(); $('#icon_search').fadeOut(200, function() { $('#icon_search').val(''); $('#grid_icon').fadeIn(); });\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
+		echo "<span class='".escape(implode(' ', $icon['classes']))." fa-fw' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".escape($icon['label'])."' onclick=\"$('#selected_icon').val('".escape(implode(' ', $icon['classes']))."'); $('#icon_color').show(); $('#icons').slideUp(); $('#icon_search').fadeOut(200, function() { $('#icon_search').val(''); $('#grid_icon').fadeIn(); });\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
 	}
 }

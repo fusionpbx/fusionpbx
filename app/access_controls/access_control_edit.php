@@ -26,10 +26,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('access_control_add') || permission_exists('access_control_edit')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('access_control_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -37,9 +34,6 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//create the database connection
-	$database = database::new();
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -62,6 +56,12 @@
 
 //process the user data and save it to the database
 	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
+
+		//check permissions
+			if (!(permission_exists('access_control_add') || permission_exists('access_control_edit'))) {
+				echo "access denied";
+				exit;
+			}
 
 		//enforce valid data
 			if ($access_control_name == 'providers' || $access_control_name == 'domains') {
@@ -202,7 +202,7 @@
 				//attempt digs
 				if (!empty($digs) && is_array($digs)) {
 					foreach ($digs as $dig) {
-						$response = shell_exec("dig +noall +answer ".$dig['value']." | awk '{ print $5 }'");
+						$response = shell_exec("dig +noall +answer ".escapeshellarg(str_replace(' ', '', $dig['value']))." | awk '{ print $5 }'");
 						if (!empty($response)) {
 							$lines = explode("\n", $response);
 							foreach ($lines as $l => $line) {
@@ -217,7 +217,7 @@
 									$array['access_controls'][0]['access_control_nodes'][$y]['access_control_node_uuid'] = uuid();
 									$array['access_controls'][0]['access_control_nodes'][$y]['node_type'] = $dig['type'];
 									$array['access_controls'][0]['access_control_nodes'][$y]['node_cidr'] = $line.'/32';
-									$array['access_controls'][0]['access_control_nodes'][$y]['node_description'] = !empty($dig['description']) ? $dig['description'] : $dig['value'];
+									$array['access_controls'][0]['access_control_nodes'][$y]['node_description'] = !empty($dig['description']) ? $dig['description'] : str_replace(' ', '', $dig['value']);
 									$y++;
 								}
 							}
@@ -229,8 +229,6 @@
 
 		//save the data
 			if (is_array($array)) {
-				$database->app_name = 'access controls';
-				$database->app_uuid = '1416a250-f6e1-4edc-91a6-5c9b883638fd';
 				$database->save($array);
 			}
 
@@ -319,22 +317,24 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-access_control']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'access_controls.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'access_controls.php']);
 	if ($action == 'update') {
 		if (permission_exists('access_control_node_add')) {
-			echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'style'=>'margin-right: 3px;','link'=>'access_control_import.php?id='.escape($access_control_uuid)]);
+			echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$settings->get('theme', 'button_icon_import'),'style'=>'margin-right: 3px;','link'=>'access_control_import.php?id='.escape($access_control_uuid)]);
 		}
 		if (permission_exists('access_control_node_view')) {
-			echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'style'=>'margin-right: 3px;','link'=>'access_control_export.php?id='.escape($access_control_uuid)]);
+			echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$settings->get('theme', 'button_icon_export'),'style'=>'margin-right: 3px;','link'=>'access_control_export.php?id='.escape($access_control_uuid)]);
 		}
 		if (permission_exists('access_control_node_add')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 		}
 		if (permission_exists('access_control_node_delete')) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','collapse'=>'hide-xs']);
+	if (permission_exists('access_control_add') || permission_exists('access_control_edit')) {
+		echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','collapse'=>'hide-xs']);
+	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";

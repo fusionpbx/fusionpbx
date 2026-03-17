@@ -29,20 +29,28 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_time_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_time_view')) {
 		echo "access denied";
 		exit;
 	}
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //set the uuid
 	if (!empty($_GET['id']) && is_uuid($_GET['id'])) {
 		$contact_uuid = $_GET['id'];
+	}
+
+//set the time zone
+	date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'H:i:s';
+	}
+	else {
+		$time_format = 'h:i:s a';
 	}
 
 //get the contact list
@@ -54,7 +62,6 @@
 	$sql .= "order by ct.time_start desc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_times = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -79,7 +86,7 @@
 			echo "<th class='pct-20'>".$text['label-time_start']."</th>\n";
 			echo "<th class='pct-20'>".$text['label-time_duration']."</th>\n";
 			echo "<th class='pct-40 hide-md-dn'>".$text['label-time_description']."</th>\n";
-			if (permission_exists('contact_time_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('contact_time_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
@@ -90,7 +97,7 @@
 					if (!empty($row["time_start"]) && !empty($row['time_stop'])) {
 						$time_start = strtotime($row["time_start"]);
 						$time_stop = strtotime($row['time_stop']);
-						$time = gmdate("H:i:s", ($time_stop - $time_start));
+						$time = gmdate($time_zone, ($time_stop - $time_start));
 					}
 					else {
 						unset($time);
@@ -115,9 +122,9 @@
 					echo "	<td>".$time_start."&nbsp;</td>\n";
 					echo "	<td>".$time."&nbsp;</td>\n";
 					echo "	<td class='description overflow hide-md-dn'>".escape($row['time_description'])."&nbsp;</td>\n";
-					if (permission_exists('contact_time_edit') && $list_row_edit_button == 'true') {
+					if (permission_exists('contact_time_edit') && $list_row_edit_button) {
 						echo "	<td class='action-button'>\n";
-						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 						echo "	</td>\n";
 					}
 					echo "</tr>\n";

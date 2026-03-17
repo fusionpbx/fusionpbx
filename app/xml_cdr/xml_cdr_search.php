@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2024
+	Copyright (C) 2008-2026
 	All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('xml_cdr_search_advanced')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('xml_cdr_search_advanced')) {
 		echo "access denied";
 		exit;
 	}
@@ -66,41 +63,48 @@
 	$remote_media_ip = "";
 	$network_addr = "";
 	$mos_score = "";
+	$call_center_queue_uuid = "";
+	$ring_group_uuid = "";
 
 //get the list of extensions
 	$sql = "select extension_uuid, extension, number_alias from v_extensions ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "order by extension asc, number_alias asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$database = new database;
 	$extensions = $database->select($sql, $parameters, 'all');
 
-//get the list of call center queues
-	if (permission_exists('xml_cdr_call_center_queue')) {
+//get the ring groups
+	if (permission_exists('xml_cdr_search_ring_groups')) {
+		$sql = "select ring_group_uuid, ring_group_name, ring_group_extension from v_ring_groups ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and ring_group_enabled = true ";
+		$sql .= "order by ring_group_extension asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$ring_groups = $database->select($sql, $parameters, 'all');
+	}
+
+//get the ivr menus
+	if (permission_exists('xml_cdr_search_ivr_menus')) {
+		$sql = "select ivr_menu_uuid, ivr_menu_name, ivr_menu_extension from v_ivr_menus ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and ivr_menu_enabled = true ";
+		$sql .= "order by ivr_menu_extension asc ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$ivr_menus = $database->select($sql, $parameters, 'all');
+	}
+
+//get the call center queues
+	if (permission_exists('xml_cdr_search_call_center_queues')) {
 		$sql = "select call_center_queue_uuid, queue_name, queue_extension from v_call_center_queues ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "order by queue_extension asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$database = new database;
 		$call_center_queues = $database->select($sql, $parameters, 'all');
 	}
 
 //send the header
 	$document['title'] = $text['title-advanced_search'];
 	require_once "resources/header.php";
-
-//javascript to toggle input/select boxes
-	echo "<script type='text/javascript'>";
-	echo "	function toggle(field) {";
-	echo "		if (field == 'source') {";
-	echo "			document.getElementById('caller_extension_uuid').selectedIndex = 0;";
-	echo "			document.getElementById('caller_id_number').value = '';";
-	echo "			$('#caller_extension_uuid').toggle();";
-	echo "			$('#caller_id_number').toggle();";
-	echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').trigger('focus'); } else { $('#caller_extension_uuid').trigger('focus'); }";
-	echo "		}";
-	echo "	}";
-	echo "</script>";
 
 //start the html form
 	if (isset($_GET['redirect']) && $_GET['redirect'] == 'xml_cdr_statistics') {
@@ -113,8 +117,8 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-advanced_search']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'xml_cdr.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'id'=>'btn_save']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'xml_cdr.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'id'=>'btn_save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -163,27 +167,42 @@
 		echo "		</td>\n";
 		echo "	</tr>\n";
 
-		echo "	<tr>";
-		echo "		<td class='vncell'>".$text['label-caller_id_name']."</td>"; //source name
-		echo "		<td class='vtable'><input type='text' class='formfld' name='caller_id_name' value='".escape($caller_id_name)."'></td>";
-		echo "	</tr>";
-		echo "	<tr>";
-		echo "		<td class='vncell'>".$text['label-extension']."</td>"; //source number
-		echo "		<td class='vtable'>";
-		echo "			<select class='formfld' name='extension_uuid' id='extension_uuid'>\n";
-		echo "				<option value=''></option>";
+		echo "	<tr>\n";
+		echo "		<td class='vncell'>".$text['label-caller_id']."</td>\n"; //source name
+		echo "		<td class='vtable'>\n";
+		echo "			<input type='text' class='formfld' name='caller_id_name' style='min-width: 115px; width: 115px;' placeholder=\"".$text['label-name']."\" value='".escape($caller_id_name)."'>\n";
+		echo "			<input type='text' class='formfld' name='caller_id_number' style='min-width: 115px; width: 115px;' placeholder=\"".$text['label-number']."\" value='".escape($caller_id_number)."'>\n";
+		echo "		</td>\n";
+		echo "	</tr>\n";
+		echo "	<tr>\n";
+		echo "		<td class='vncell'>".$text['label-extension']."</td>\n"; //source number
+		echo "		<td class='vtable'>\n";
+		echo "			<div class='multiselect_container'>\n";
+		echo "				<div class='selected_values' id='selected_values'>\n";
+		echo "					<span class='placeholder_text'>".$text['label-select']."...</span>\n";
+		echo "				</div>\n";
+
+		echo "				<div class='dropdown_list' id='dropdown_list'>\n";
+		echo "					<input type='text' class='search_box' id='search_input' placeholder='".$text['label-search']."'>\n";
+
+		echo "					<div id='no_results' class='no_results'>".$text['label-no_results']."</div>\n";
+
+		echo "					<div class='options_list' id='options_list'>\n";
 		if (is_array($extensions) && @sizeof($extensions) != 0) {
 			foreach ($extensions as $row) {
-				$selected = (!empty($caller_extension_uuid) && $row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
-				echo "			<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
+				echo "					<label class='option_item' data-value='".escape($row['extension'])."'>\n";
+				$selected = (!empty($caller_extension_uuid) && $row['extension_uuid'] == $caller_extension_uuid) ? "checked" : null;
+				echo "						<input type='checkbox' value='".escape($row['extension_uuid'])."' ".escape($selected).">\n";
+				echo "						".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."\n";
+				echo "					</label>\n";
 			}
 		}
 		unset($sql, $parameters, $extensions, $row, $selected);
-		echo "			</select>\n";
-		echo "			<input type='text' class='formfld' style='display: none;' name='caller_id_number' id='caller_id_number' value='".escape($caller_id_number)."'>\n";
-		echo "			<input type='button' id='btn_toggle_source' class='btn' name='' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle('source');\">\n";
-		echo "		</td>";
-		echo "	</tr>";
+		echo "					</div>\n";
+		echo "				</div>\n";
+		echo "			</div>\n";
+		echo "		</td>\n";
+		echo "	</tr>\n";
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-destination']."</td>";
 		echo "		<td class='vtable'><input type='text' class='formfld' name='destination_number' value='".escape($destination_number)."'></td>";
@@ -197,8 +216,8 @@
 		echo "		<td class='vtable'>";
 		echo "			<div class='row'>\n";
 		echo "				<div class='col-sm-12'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='start_stamp_begin' id='start_stamp_begin' placeholder='".$text['label-from']."' value='".escape($start_stamp_begin)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#start_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='start_stamp_end' id='start_stamp_end' placeholder='".$text['label-to']."' value='".escape($start_stamp_end)."'>";
 		echo "				</div>\n";
 		echo "			</div>\n";
 		echo "		</td>";
@@ -208,8 +227,8 @@
 		echo "		<td class='vtable'>";
 		echo "			<div class='row'>\n";
 		echo "				<div class='col-sm-12'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#answer_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='answer_stamp_begin' id='answer_stamp_begin' placeholder='".$text['label-from']."' value='".escape($answer_stamp_begin)."'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#answer_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='answer_stamp_end' id='answer_stamp_end' placeholder='".$text['label-to']."' value='".escape($answer_stamp_end)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#answer_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='answer_stamp_begin' id='answer_stamp_begin' placeholder='".$text['label-from']."' value='".escape($answer_stamp_begin)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#answer_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='answer_stamp_end' id='answer_stamp_end' placeholder='".$text['label-to']."' value='".escape($answer_stamp_end)."'>";
 		echo "				</div>\n";
 		echo "			</div>\n";
 		echo "		</td>";
@@ -219,8 +238,8 @@
 		echo "		<td class='vtable'>";
 		echo "			<div class='row'>\n";
 		echo "				<div class='col-sm-12'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#end_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='end_stamp_begin' id='end_stamp_begin' placeholder='".$text['label-from']."' value='".escape($end_stamp_begin)."'>";
-		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#end_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='min-width: 115px; width: 115px;' name='end_stamp_end' id='end_stamp_end' placeholder='".$text['label-to']."' value='".escape($end_stamp_end)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#end_stamp_begin' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='end_stamp_begin' id='end_stamp_begin' placeholder='".$text['label-from']."' value='".escape($end_stamp_begin)."'>";
+		echo "					<input type='text' class='formfld datetimepicker' data-toggle='datetimepicker' data-target='#end_stamp_end' onblur=\"$(this).datetimepicker('hide');\" style='".($settings->get('domain', 'time_format') == '24h' ? 'min-width: 115px; width: 115px;' : 'min-width: 130px; width: 130px;')."' name='end_stamp_end' id='end_stamp_end' placeholder='".$text['label-to']."' value='".escape($end_stamp_end)."'>";
 		echo "				</div>\n";
 		echo "			</div>\n";
 		echo "		</td>";
@@ -236,20 +255,25 @@
 			echo "	<tr>";
 			echo "		<td class='vncell'>".$text['button-show_all']."</td>";
 			echo "		<td class='vtable'>\n";
-			if (permission_exists('xml_cdr_all') && isset($_REQUEST['show']) && $_REQUEST['show'] == "all") {
-				echo "			<input type='checkbox' class='formfld' name='showall' checked='checked' value='true'>";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			else {
-				echo "			<input type='checkbox' class='formfld' name='showall' value='true'>";
+			echo "		<select class='formfld' id='showall' name='showall'>\n";
+			echo "			<option value='false'>".$text['option-false']."</option>\n";
+			echo "			<option value='true' ".(isset($_REQUEST['show']) && $_REQUEST['show'] == "all" ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
 			}
 			echo "		<td>";
 			echo "	</tr>";
 		}
 		echo "</table>";
-	
+
 	echo "		</td>";
 	echo "		<td width='50%' style='vertical-align: top;'>\n";
-	
+
 		echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 		echo "	<tr>";
 		echo "		<td width='30%' class='vncell'>".$text['label-billsec']."</td>";
@@ -356,13 +380,13 @@
 		}
 
 		echo "</table>\n";
-	
+
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>\n";
 	echo "<br><br>";
-	
+
 	echo "</form>";
 
 //include footer

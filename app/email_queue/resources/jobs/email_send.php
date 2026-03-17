@@ -10,7 +10,6 @@
 	}
 
 //include files
-	include "resources/classes/permissions.php";
 	include_once "resources/phpmailer/class.phpmailer.php";
 	include_once "resources/phpmailer/class.smtp.php";
 
@@ -18,9 +17,6 @@
 	set_time_limit(0);
 	//ini_set('max_execution_time',1800); //30 minutes
 	ini_set('memory_limit', '512M');
-
-//connect to the database
-	$database = database::new();
 
 //save the arguments to variables
 	$script_name = $argv[0];
@@ -42,38 +38,30 @@
 	}
 
 //define the process id file
-	$pid_file = "/var/run/fusionpbx/email_send".".".$email_queue_uuid.".pid";
+	$pid_file = '/var/run/fusionpbx/email_send.'.$email_queue_uuid.'.pid';
 	//echo "pid_file: ".$pid_file."\n";
 
 //function to check if the process exists
-	function process_exists($file = false) {
-
-		//set the default exists to false
-		$exists = false;
-
-		//check to see if the process is running
-		if (file_exists($file)) {
-			$pid = file_get_contents($file);
-			if (function_exists('posix_getsid')) {
-				//check if the process is running
-				$pid = posix_getsid($pid);
-				if ($pid === null || $pid === 0) {
-					//process is not running
-					$exists = false;
-				}
-				else {
-					//process is running
-					$exists = true;
-				}
-			}
-			else {
-				//file exists assume the pid is running
-				$exists = true;
-			}
+	function process_exists($file = '') {
+		//check if the file exists return false if not found
+		if (!file_exists($file)) {
+			return false;
 		}
 
-		//return the result
-		return $exists;
+		//check to see if the process id is valid
+		$pid = file_get_contents($file);
+		if (filter_var($pid, FILTER_VALIDATE_INT) === false) {
+			return false;
+		}
+
+		//check if the process is running
+		exec('ps -p '.$pid, $output);
+		if (count($output) > 1) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 //check to see if the process exists
@@ -157,7 +145,7 @@
 //get the email settings
 	$retry_limit = $settings->get('email_queue', 'retry_limit');
 	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
-	$save_response = $settings->get('email_queue', 'save_response');
+	$save_response = $settings->get('email_queue', 'save_response', false);
 
 //set defaults
 	if (empty($email_retry_count)) {
@@ -190,7 +178,7 @@
 		//$voicemail_name_base64 = $row["voicemail_name_base64"];
 		//$voicemail_tutorial = $row["voicemail_tutorial"];
 		if (gettype($voicemail_transcription_enabled) === 'string') {
-			$voicemail_transcription_enabled = ($voicemail_transcription_enabled === 'true') ? true : false;
+			$voicemail_transcription_enabled = ($voicemail_transcription_enabled === true) ? true : false;
 		}
 	}
 	unset($parameters);
@@ -249,7 +237,7 @@
 						$transcribe->audio_filename = $email_attachment_name;
 						$transcribe->audio_mime_type = $email_attachment_mime_type;
 						$transcribe->audio_string = (!empty($field['email_attachment_base64'])) ? base64_decode($field['email_attachment_base64']) : '';
-						$transcribe_message = $transcribe->transcribe();
+						$transcribe_message = $transcribe->transcribe('text');
 					}
 				}
 				else {
@@ -298,7 +286,7 @@
 	//echo "Body: ".$email_body."\n";
 
 //update the message transcription
-	if (isset($voicemail_transcription_enabled) && $voicemail_transcription_enabled == 'true' && isset($transcribe_message)) {
+	if (isset($voicemail_transcription_enabled) && $voicemail_transcription_enabled && isset($transcribe_message)) {
 		$sql = "update v_voicemail_messages ";
 		$sql .= "set message_transcription = :message_transcription ";
 		$sql .= "where voicemail_message_uuid = :voicemail_message_uuid; ";
@@ -369,7 +357,7 @@
 			$parameters['email_body'] = $email_body;
 			$parameters['email_transcription'] = $transcribe_message;
 		}
-		if (isset($save_response) && $save_response == 'true') {
+		if ($save_response) {
 			$sql .= "email_response = :email_response, ";
 			$parameters['email_response'] = $email_settings."\n".$email_response;
 		}
@@ -455,9 +443,6 @@
 			$p->add('email_queue_add', 'temp');
 			$p->add('email_queue_update', 'temp');
 		//execute insert
-			$database->app_name = 'email_queue';
-			$database->app_uuid = '5befdf60-a242-445f-91b3-2e9ee3e0ddf7';
-			print_r($array);
 			$message = $database->save($array);
 			print_r($message);
 			unset($array);
@@ -486,8 +471,6 @@
 		$p->add('email_queue_add', 'temp');
 
 		//execute insert
-		$database->app_name = 'email_queue';
-		$database->app_uuid = 'ba41954e-9d21-4b10-bbc2-fa5ceabeb184';
 		$database->save($array);
 		unset($array);
 
@@ -539,8 +522,6 @@
 					$p = permissions::new();
 					$p->add('email_log_add', 'temp');
 				//execute insert
-					$database->app_name = 'v_mailto';
-					$database->app_uuid = 'ba41954e-9d21-4b10-bbc2-fa5ceabeb184';
 					$database->save($array);
 					unset($array);
 				//revoke temporary permissions

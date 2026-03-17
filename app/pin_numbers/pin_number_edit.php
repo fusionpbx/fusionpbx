@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2016-2023
+	Portions created by the Initial Developer are Copyright (C) 2016-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('pin_number_add') || permission_exists('pin_number_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('pin_number_add') || permission_exists('pin_number_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -58,7 +55,7 @@
 		$description = $_POST["description"];
 	}
 
-if (count($_POST)>0 && empty($_POST["persistformvar"])) {
+if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -76,7 +73,6 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 	//check for all required data
 		if (empty($pin_number)) { $msg .= $text['message-required']." ".$text['label-pin_number']."<br>\n"; }
 		//if (empty($accountcode)) { $msg .= $text['message-required']." ".$text['label-accountcode']."<br>\n"; }
-		if (empty($enabled)) { $msg .= $text['message-required']." ".$text['label-enabled']."<br>\n"; }
 		//if (empty($description)) { $msg .= $text['message-required']." ".$text['label-description']."<br>\n"; }
 		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
@@ -116,9 +112,6 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 					$array['pin_numbers'][0]['enabled'] = $enabled;
 					$array['pin_numbers'][0]['description'] = $description;
 				//save data
-					$database = new database;
-					$database->app_name = 'pin_numbers';
-					$database->app_uuid = '4b88ccfb-cb98-40e1-a5e5-33389e14a388';
 					$database->save($array);
 					unset($array);
 				//redirect
@@ -137,7 +130,6 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 		$sql .= "and pin_number_uuid = :pin_number_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['pin_number_uuid'] = $pin_number_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$pin_number = $row["pin_number"];
@@ -162,12 +154,13 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-pin_number']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'pin_numbers.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','name'=>'action','value'=>'save']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'pin_numbers.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','name'=>'action','value'=>'save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -197,10 +190,17 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='enabled'>\n";
-	echo "		<option value='true'>".$text['label-true']."</option>\n";
-	echo "		<option value='false' ".($enabled == 'false' ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "	<select class='formfld' id='enabled' name='enabled'>\n";
+	echo "		<option value='true' ".($enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
 	echo "</td>\n";
@@ -217,15 +217,16 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "</table>";
-	echo "<br /><br />";
+	echo "</table>\n";
+	echo "</div>\n";
+	echo "<br /><br />\n";
 
 	if ($action == "update") {
 		echo "<input type='hidden' name='pin_number_uuid' value='".escape($pin_number_uuid)."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
-	echo "</form>";
+	echo "</form>\n";
 
 //include the footer
 	require_once "resources/footer.php";

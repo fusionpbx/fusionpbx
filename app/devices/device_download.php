@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('device_export')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('device_export')) {
 		echo "access denied";
 		exit;
 	}
@@ -44,7 +41,6 @@
 	$user_name = $_SESSION['username'] ?? '';
 
 //create database connection and settings object
-	$database = database::new();
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //add multi-lingual support
@@ -55,6 +51,21 @@
 	$label_required = $text['label-required'];
 
 //define the functions
+	/**
+	 * Converts a multi-dimensional array to CSV format.
+	 *
+	 * This function assumes that the input array is a collection of devices,
+	 * where each device has an array of columns. The function will take all
+	 * column headers from all devices and use them as the header row in the
+	 * generated CSV file.
+	 *
+	 * If any duplicate column headers are found, they will be removed by
+	 * truncating at the pipe character (|).
+	 *
+	 * @param array &$array A multi-dimensional array of device data.
+	 *
+	 * @return string The CSV formatted data as a string. Returns null if the input array is empty.
+	 */
 	function array2csv(array &$array) {
 		if (count($array) == 0) {
 			return null;
@@ -90,6 +101,15 @@
 		return ob_get_clean();
 	}
 
+	/**
+	 * Sends HTTP headers to force a file download.
+	 *
+	 * This function sets various HTTP headers to instruct the browser to download the file instead of displaying it in the browser window.
+	 *
+	 * @param string $filename The filename to use for the downloaded file.
+	 *
+	 * @return void No return value. This function only sends HTTP headers and does not generate any output.
+	 */
 	function download_send_headers($filename) {
 		// disable caching
 		$now = gmdate("D, d M Y H:i:s");
@@ -114,7 +134,6 @@
 	$available_columns['devices'][] = 'device_label';
 	$available_columns['devices'][] = 'device_vendor';
 	$available_columns['devices'][] = 'device_template';
-	$available_columns['devices'][] = 'device_enabled_date';
 	$available_columns['devices'][] = 'device_username';
 	$available_columns['devices'][] = 'device_password';
 	$available_columns['devices'][] = 'device_uuid_alternate';
@@ -239,8 +258,8 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-device_export']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'devices.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'devices.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-export'],'icon'=>$settings->get('theme', 'button_icon_export'),'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -252,6 +271,7 @@
 		$x = 0;
 		foreach ($available_columns as $table_name => $columns) {
 			$table_name_label = ucwords(str_replace(['-','_',],' ', $table_name));
+			echo "<div class='card'>\n";
 			echo "<div class='category'>\n";
 			echo "<b>".$table_name_label."</b>\n";
 			echo "<br>\n";
@@ -283,6 +303,7 @@
 			}
 			echo "</table>\n";
 			echo "<br>\n";
+			echo "</div>\n";
 			echo "</div>\n";
 		}
 	}

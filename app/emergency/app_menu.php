@@ -20,7 +20,7 @@
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Registos de Emergência";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Jurnale de Urgență";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Журналы Aварийных Cитуаций";
-	$apps[$x]['menu'][$y]['title']['sv-se'] = "Dnevniki za Nujne Primere";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "Nödsamtalsloggar";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Журнали Aварійних Cитуацій";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "紧急日志";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "緊急ログ";

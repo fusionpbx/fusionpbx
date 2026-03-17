@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('contact_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -46,12 +43,12 @@
 	$show = $_GET["show"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get posted data
 	if (!empty($_POST['contacts'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$contacts = $_POST['contacts'];
 	}
 
@@ -66,7 +63,7 @@
 				break;
 		}
 
-		header('Location: contacts.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: contacts.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -115,8 +112,9 @@
 		$sql .= ") ";
 	}
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$parameters['group_uuid'] = $_SESSION['group_uuid'] ?? '';
-	$database = new database;
+	if (!empty($_SESSION['group_uuid'])) {
+		$parameters['group_uuid'] = $_SESSION['group_uuid'];
+	}
 	$result = $database->select($sql, $parameters, 'all');
 	if (!empty($result)) {
 		foreach($result as $row) {
@@ -126,11 +124,12 @@
 	unset($sql, $parameters, $result);
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = $_REQUEST["order_by"] ?? '';
+	$order = $_REQUEST["order"] ?? '';
 
 //add the search term
-	$search = strtolower(trim($_GET["search"]) ?? '');
+	$search = $_REQUEST["search"] ?? '';
+	$search = strtolower(trim($search ?? ''));
 	if (!empty($search)) {
 		if (is_numeric($search)) {
 			$sql_search = "and contact_uuid in ( ";
@@ -228,11 +227,10 @@
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
 	$sql .= $sql_search ?? '';
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".urlencode($search);
 	if ($show == "all" && permission_exists('contact_all')) {
 		$param .= "&show=all";
@@ -245,7 +243,7 @@
 
 //get the list
 	$sql = "select *, ";
-	$sql .= "(select a.contact_attachment_uuid from v_contact_attachments as a where a.contact_uuid = c.contact_uuid and a.attachment_primary = 1) as contact_attachment_uuid ";
+	$sql .= "(select a.contact_attachment_uuid from v_contact_attachments as a where a.contact_uuid = c.contact_uuid and a.attachment_primary = true limit 1) as contact_attachment_uuid ";
 	$sql .= "from v_contacts as c ";
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('contact_all')) {
@@ -281,14 +279,13 @@
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
 	$sql .= $sql_search ?? '';
-	$database = new database;
 	if (!empty($order_by)) {
 		$sql .= order_by($order_by, $order);
 		$sql .= ", contact_organization asc ";
 	}
 	else {
-		$contact_default_sort_column = !empty($_SESSION['contacts']['default_sort_column']['text']) ? $_SESSION['contacts']['default_sort_column']['text'] : "last_mod_date";
-		$contact_default_sort_order = !empty($_SESSION['contacts']['default_sort_order']['text']) ? $_SESSION['contacts']['default_sort_order']['text'] : "desc";
+		$contact_default_sort_column = $settings->get('contact', 'default_sort_column', 'last_mod_date');
+		$contact_default_sort_order = $settings->get('contact', 'default_sort_order', 'desc');
 
 		$sql .= order_by($contact_default_sort_column, $contact_default_sort_order);
 		if ($db_type == "pgsql") {
@@ -296,7 +293,6 @@
 		}
 	}
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$contacts = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -328,13 +324,13 @@
 	echo "	<div class='heading'><b>".$text['header-contacts']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('contact_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'collapse'=>'hide-sm-dn','style'=>'margin-right: 15px;','link'=>'contact_import.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$settings->get('theme', 'button_icon_import'),'collapse'=>'hide-sm-dn','style'=>'margin-right: 15px;','link'=>'contact_import.php']);
 	}
 	if (permission_exists('contact_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','collapse'=>'hide-sm-dn','link'=>'contact_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','collapse'=>'hide-sm-dn','link'=>'contact_edit.php']);
 	}
 	if (permission_exists('contact_delete') && $contacts) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','collapse'=>'hide-sm-dn','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','collapse'=>'hide-sm-dn','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('contact_all')) {
@@ -342,12 +338,12 @@
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type=&show=all'.(!empty($search) ? "&search=".urlencode($search) : null)]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?type=&show=all'.(!empty($search) ? "&search=".urlencode($search) : null)]);
 		}
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','collapse'=>'hide-sm-dn']);
-	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','collapse'=>'hide-sm-dn','link'=>'contacts.php','style'=>($search == '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search','collapse'=>'hide-sm-dn']);
+	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','collapse'=>'hide-sm-dn','link'=>'contacts.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
@@ -387,7 +383,7 @@
 	echo th_order_by('contact_title', $text['label-contact_title'], $order_by, $order, null, "class='hide-sm-dn'");
 	echo th_order_by('contact_role', $text['label-contact_role'], $order_by, $order, null, "class='hide-sm-dn'");
 	echo "<th class='shrink hide-sm-dn'>&nbsp;</th>\n";
-	if ($list_row_edit_button == 'true') {
+	if ($list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -439,9 +435,9 @@
 				echo "&nbsp;";
 			}
 			echo "	</td>\n";
-			if ($list_row_edit_button == 'true') {
+			if ($list_row_edit_button) {
 				echo "	<td class='action-button'>";
-				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>$list_row_url]);
+				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$settings->get('theme', 'button_icon_view'),'link'=>$list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
@@ -472,5 +468,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
-

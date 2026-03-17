@@ -29,16 +29,13 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_extension_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_extension_view')) {
 		echo "access denied";
 		exit;
 	}
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get the extension list
 	$sql = "select e.extension_uuid, e.extension, e.enabled, e.description ";
@@ -50,7 +47,6 @@
 	$sql .= "order by e.extension asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_extensions = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -69,7 +65,7 @@
 			echo "<th>".$text['label-extension']."</th>\n";
 			echo "<th class='center'>".$text['label-enabled']."</th>\n";
 			echo "<th class='hide-md-dn'>".$text['label-description']."</th>\n";
-			if (permission_exists('extension_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('extension_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>&nbsp;</td>\n";
 			}
 			echo "</tr>\n";
@@ -95,9 +91,9 @@
 					echo "	</td>\n";
 					echo "	<td class='center'>".$text['label-'.escape($row['enabled'])]."&nbsp;</td>\n";
 					echo "	<td class='description overflow hide-md-dn'>".$row['description']."&nbsp;</td>\n";
-					if (permission_exists('extension_edit') && $list_row_edit_button == 'true') {
+					if (permission_exists('extension_edit') && $list_row_edit_button) {
 						echo "	<td class='action-button'>\n";
-						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 						echo "	</td>\n";
 					}
 					echo "</tr>\n";

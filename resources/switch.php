@@ -64,25 +64,33 @@ function event_socket_request_cmd($cmd) {
 	return event_socket::command($cmd);
 }
 
+/**
+ * Summary of remove_config_from_cache
+ * @param mixed $name
+ * @return void
+ */
 function remove_config_from_cache($name) {
 	$cache = new cache;
 	$cache->delete($name);
-	$hostname = trim(event_socket_request_cmd('api switchname'));
-	if($hostname){
-		$cache->delete($name . ':' . $hostname);
-	}
+	$cache->delete(gethostname() . ':' . $name);
+	$cache->delete($name . ':' . gethostname());
 }
 
+/**
+ * Summary of ListFiles
+ * @param mixed $dir
+ * @return array
+ */
 function ListFiles($dir) {
-	if($dh = opendir($dir)) {
+	if ($dh = opendir($dir)) {
 		$files = Array();
 		$inner_files = Array();
 
 		while($file = readdir($dh)) {
-			if($file != "." && $file != ".." && $file[0] != '.') {
-				if(is_dir($dir . "/" . $file)) {
+			if ($file != "." && $file != ".." && $file[0] != '.') {
+				if (is_dir($dir . "/" . $file)) {
 					//$inner_files = ListFiles($dir . "/" . $file); //recursive
-					if(is_array($inner_files)) $files = array_merge($files, $inner_files);
+					if (is_array($inner_files)) $files = array_merge($files, $inner_files);
 			} else {
 					array_push($files, $file);
 					//array_push($files, $dir . "/" . $file);
@@ -94,6 +102,11 @@ function ListFiles($dir) {
 	}
 }
 
+/**
+ * Summary of filename_safe
+ * @param mixed $filename
+ * @return string
+ */
 function filename_safe($filename) {
 	//lower case
 		$filename = strtolower($filename);
@@ -113,15 +126,19 @@ function filename_safe($filename) {
 		return $result;
 }
 
+/**
+ * Summary of save_gateway_xml
+ * @return void
+ */
 function save_gateway_xml() {
 
+	//declare the global variables
+		global $database, $settings, $domain_uuid, $config;
+
 	//skip saving the gateway xml if the directory is not set
-		if (empty($_SESSION['switch']['sip_profiles']['dir'])) {
+		if (empty($settings->get('switch', 'sip_profiles'))) {
 			return;
 		}
-
-	//declare the global variables
-		global $domain_uuid, $config;
 
 	//delete all old gateways to prepare for new ones
 		if (count($_SESSION["domains"]) > 1) {
@@ -130,7 +147,7 @@ function save_gateway_xml() {
 		else {
 			$v_needle = 'v_';
 		}
-		$gateway_list = glob($_SESSION['switch']['sip_profiles']['dir'] . "/*/".$v_needle."*.xml");
+		$gateway_list = glob($settings->get('switch', 'sip_profiles') . "/*/".$v_needle."*.xml");
 		foreach ($gateway_list as $gateway_file) {
 			unlink($gateway_file);
 		}
@@ -139,7 +156,6 @@ function save_gateway_xml() {
 		$sql = "select * from v_gateways ";
 		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
-		$database = new database;
 		$result = $database->select($sql, $parameters, 'all');
 		if (!empty($result)) {
 			foreach ($result as $row) {
@@ -150,7 +166,7 @@ function save_gateway_xml() {
 								$profile = "external";
 							}
 						//open the xml file
-							$fout = fopen($_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".strtolower($row['gateway_uuid']).".xml","w");
+							$fout = fopen($settings->get('switch', 'sip_profiles')."/".$profile."/v_".strtolower($row['gateway_uuid']).".xml","w");
 						//build the xml
 							$xml .= "<include>\n";
 							$xml .= "    <gateway name=\"" . strtolower($row['gateway_uuid']) . "\">\n";
@@ -254,68 +270,82 @@ function save_gateway_xml() {
 
 }
 
+/**
+ * Summary of save_var_xml
+ * @return bool
+ */
 function save_var_xml() {
-	if (!empty($_SESSION['switch']['conf']) && is_array($_SESSION['switch']['conf'])) {
-		global $config, $domain_uuid;
+	//declare the global variables
+	global $database, $config, $settings, $domain_uuid;
 
-		//skip this function if the conf directory is empty
-		if (empty($_SESSION['switch']['conf']['dir'])) {
-			return false;
-		}
-
-		//open the vars.xml file
-		$fout = fopen($_SESSION['switch']['conf']['dir']."/vars.xml","w");
-
-		//get the hostname
-		$hostname = trim(event_socket_request_cmd('api switchname'));
-		if (empty($hostname)){
-			$hostname = trim(gethostname());
-		}
-		if (empty($hostname)){
-			return;
-		}
-
-		//build the xml
-		$sql = "select * from v_vars ";
-		$sql .= "where var_enabled = 'true' ";
-		$sql .= "order by var_category, var_order asc ";
-		$database = new database;
-		$variables = $database->select($sql, null, 'all');
-		$prev_var_category = '';
-		$xml = '';
-		if (!empty($variables)) {
-			foreach ($variables as $row) {
-				if ($row['var_category'] != 'Provision') {
-					if ($prev_var_category != $row['var_category']) {
-						$xml .= "\n<!-- ".$row['var_category']." -->\n";
-					}
-					if (empty($row['var_command'])) { $row['var_command'] = 'set'; }
-					if ($row['var_category'] == 'Exec-Set') { $row['var_command'] = 'exec-set'; }
-					if (empty($row['var_hostname'])) {
-						$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
-					} elseif ($row['var_hostname'] == $hostname) {
-						$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
-					}
-				}
-				$prev_var_category = $row['var_category'];
-			}
-		}
-		$xml .= "\n";
-		fwrite($fout, $xml);
-		unset($sql, $variables, $xml);
-		fclose($fout);
-
-		//apply settings
-		$_SESSION["reload_xml"] = true;
-
-		//$cmd = "api reloadxml";
-		//event_socket_request_cmd($cmd);
-		//unset($cmd);
+	//skip this function if the conf directory is empty
+	$switch_conf_dir = $settings->get('switch', 'conf', $config->get('switch.conf.dir', ''));
+	if (empty($switch_conf_dir)) {
+		return false;
 	}
+
+	//open the vars.xml file
+	$fout = fopen($switch_conf_dir."/vars.xml","w");
+
+	//get the hostname
+	$hostname = trim(event_socket_request_cmd('api switchname'));
+	if (empty($hostname)) {
+		$hostname = trim(gethostname());
+	}
+	if (empty($hostname)) {
+		return;
+	}
+
+	//build the xml
+	$sql = "select * from v_vars ";
+	$sql .= "where var_enabled = true ";
+	$sql .= "order by var_category, var_order asc ";
+	$variables = $database->select($sql, null, 'all');
+	$prev_var_category = '';
+	$xml = '';
+	if (!empty($variables)) {
+		foreach ($variables as $row) {
+			if ($row['var_category'] != 'Provision') {
+				if ($prev_var_category != $row['var_category']) {
+					$xml .= "\n<!-- ".$row['var_category']." -->\n";
+				}
+				if (empty($row['var_command'])) { $row['var_command'] = 'set'; }
+				if ($row['var_category'] == 'Exec-Set') { $row['var_command'] = 'exec-set'; }
+				if (empty($row['var_hostname'])) {
+					$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
+				} elseif ($row['var_hostname'] == $hostname) {
+					$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
+				}
+			}
+			$prev_var_category = $row['var_category'];
+		}
+	}
+	$xml .= "\n";
+	fwrite($fout, $xml);
+	unset($sql, $variables, $xml);
+	fclose($fout);
+
+	//apply settings
+	$_SESSION["reload_xml"] = true;
+
+	//$cmd = "api reloadxml";
+	//event_socket_request_cmd($cmd);
+	//unset($cmd);
+
 }
 
-function outbound_route_to_bridge($domain_uuid, $destination_number, array $channel_variables=null) {
+/**
+ * Summary of outbound_route_to_bridge
+ * @param mixed $domain_uuid
+ * @param mixed $destination_number
+ * @param array $channel_variables
+ * @return array<array|string>
+ */
+function outbound_route_to_bridge($domain_uuid, $destination_number, array $channel_variables = []) {
+	//declare the global variables
+	global $database;
 
+	//validate the destination number
 	$destination_number = trim($destination_number);
 	preg_match('/^[\*\+0-9]*$/', $destination_number, $matches, PREG_OFFSET_CAPTURE);
 	if (count($matches) > 0) {
@@ -327,19 +357,25 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 		return $bridge_array;
 	}
 
+	//initialize the bridge array
+	$bridge_array = array();
+
 	//get the hostname
 	$hostname = trim(event_socket_request_cmd('api switchname'));
 	if (empty($hostname)) {
 		$hostname = 'unknown';
 	}
 
+	//get the outbound routes from the database, use the result to build the outbound_routes array
 	$sql = "select d.dialplan_uuid, ";
-	$sql .= "d.dialplan_name, "; 
+	$sql .= "d.dialplan_name, ";
+	$sql .= "d.dialplan_context, ";
+	$sql .= "d.dialplan_description, ";
 	$sql .= "dd.dialplan_detail_uuid, ";
 	$sql .= "dd.dialplan_detail_tag, ";
 	$sql .= "dd.dialplan_detail_type, ";
 	$sql .= "dd.dialplan_detail_data , ";
-	$sql .= "d.dialplan_continue ";
+	$sql .= "cast(d.dialplan_continue as text) ";
 	$sql .= "from v_dialplans d, v_dialplan_details dd  ";
 	$sql .= "where d.dialplan_uuid = dd.dialplan_uuid ";
 	if (is_uuid($domain_uuid)) {
@@ -351,84 +387,145 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 	}
 	$sql .= "and (hostname = :hostname or hostname is null) ";
 	$sql .= "and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
-	$sql .= "and d.dialplan_enabled = 'true' ";
-	$sql .= "and (dd.dialplan_detail_enabled = 'true' or dd.dialplan_detail_enabled is null) ";
-	$sql .= "order by d.domain_uuid,  d.dialplan_order, dd.dialplan_detail_order ";
+	$sql .= "and dd.dialplan_detail_type not in ('set', 'unset', 'export', 'limit', '\${user_exists}') ";
+	$sql .= "and d.dialplan_enabled = true ";
+	$sql .= "and (dd.dialplan_detail_enabled = true or dd.dialplan_detail_enabled is null) ";
+	$sql .= "order by d.domain_uuid, d.dialplan_uuid, d.dialplan_order, dd.dialplan_detail_order ";
 	$parameters['hostname'] = $hostname;
-	$database = new database;
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 	if (!empty($result)) {
+		$x = 0; $y = 0;
+		$previous_dialplan_uuid = '';
 		foreach ($result as $row) {
-			$dialplan_uuid = $row["dialplan_uuid"];
-			$dialplan_detail_uuid = $row["dialplan_detail_uuid"];
-			$outbound_routes[$dialplan_uuid][$dialplan_detail_uuid]["dialplan_detail_tag"] = $row["dialplan_detail_tag"];
-			$outbound_routes[$dialplan_uuid][$dialplan_detail_uuid]["dialplan_detail_type"] = $row["dialplan_detail_type"];
-			$outbound_routes[$dialplan_uuid][$dialplan_detail_uuid]["dialplan_detail_data"] = $row["dialplan_detail_data"];
-			$outbound_routes[$dialplan_uuid]["dialplan_continue"] = $row["dialplan_continue"];
+			//set the previous id and handle the array ordinal ids
+			if ($previous_dialplan_uuid != $row["dialplan_uuid"]) {
+				//set the previous dialplan uuid
+				$previous_dialplan_uuid = $row["dialplan_uuid"];
+
+				//increment the outbound route id
+				$x++;
+
+				//reset the dialplan detail row id
+				$y=0;
+			}
+
+			//build the outbound route array
+			$outbound_routes[$x]["dialplan_uuid"] = $row["dialplan_uuid"];
+			$outbound_routes[$x]["dialplan_name"] = $row["dialplan_name"];
+			$outbound_routes[$x]["dialplan_context"] = $row["dialplan_context"];
+			$outbound_routes[$x]["dialplan_continue"] = $row["dialplan_continue"];
+			$outbound_routes[$x]["dialplan_description"] = $row["dialplan_description"];
+			$outbound_routes[$x]["destination_number"] = $destination_number;
+			$outbound_routes[$x]['dialplan_details'][$y]["dialplan_detail_uuid"] = $row["dialplan_detail_uuid"];
+			$outbound_routes[$x]['dialplan_details'][$y]["dialplan_detail_tag"] = $row["dialplan_detail_tag"];
+			$outbound_routes[$x]['dialplan_details'][$y]["dialplan_detail_type"] = $row["dialplan_detail_type"];
+			$outbound_routes[$x]['dialplan_details'][$y]["dialplan_detail_data"] = $row["dialplan_detail_data"];
+
+			//increment the value
+			$y++;
 		}
 	}
-	
+
+	//channel variable toll allow provided - remove outbound routes that don't match
+	if (!empty($outbound_routes) && !empty($channel_variables['toll_allow'])) {
+		$x = 0;
+		foreach ($outbound_routes as $id => $row) {
+			//set the default to false
+			$match = false;
+
+			//loop through all dialplan details find outbounds routes that match the toll_allow
+			foreach ($row['dialplan_details'] as $key => $detail) {
+				//check toll allow to see if it matches
+				if ($detail["dialplan_detail_type"] == '${toll_allow}') {
+					$pattern = '/'.$detail["dialplan_detail_data"].'/';
+					preg_match($pattern, $channel_variables['toll_allow'], $matches, PREG_OFFSET_CAPTURE);
+					if (count($matches) > 0) {
+						$match = true;
+					}
+				}
+			}
+
+			//remove outbound routes that didn't match the toll_allow
+			if (!$match) {
+				unset($outbound_routes[$id]);
+			}
+		}
+	}
+
+	//channel variable empty - remove outbound routes with toll allow
+	if (!empty($outbound_routes) && empty($channel_variables['toll_allow'])) {
+		$x = 0;
+		foreach ($outbound_routes as $id => $row) {
+			//set the default to false
+			$match = false;
+
+			//loop through all dialplan details find outbounds routes that use toll_allow
+			foreach ($row['dialplan_details'] as $key => $detail) {
+				if ($detail["dialplan_detail_type"] == '${toll_allow}') {
+					$match = true;
+				}
+			}
+
+			//remove outbound routes
+			if ($match) {
+				unset($outbound_routes[$id]);
+			}
+		}
+	}
+
+	//find outbound routes that match the destination number
 	if (!empty($outbound_routes)) {
 		$x = 0;
-		foreach ($outbound_routes as $dialplan) {
-			$condition_match = [];
-			foreach ($dialplan as $dialplan_details) {
-				if (!empty($dialplan_details['dialplan_detail_tag']) && $dialplan_details['dialplan_detail_tag'] == "condition") {
-					if ($dialplan_details['dialplan_detail_type'] == "destination_number") {
-							$pattern = '/'.$dialplan_details['dialplan_detail_data'].'/';
-							preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
-							if (count($matches) == 0) {
-								$condition_match[] = 'false';
-							}
-							else {
-								$condition_match[] = 'true';
-								$regex_match_1 = $matches[1][0] ?? '';
-								$regex_match_2 = $matches[2][0] ?? '';
-								$regex_match_3 = $matches[3][0] ?? '';
-								$regex_match_4 = $matches[4][0] ?? '';
-								$regex_match_5 = $matches[5][0] ?? '';
-							}
+		foreach ($outbound_routes as $id => $row) {
+			//set the default to false
+			$match = false;
+
+			//set the default to an empty string
+			$dialplan_detail_data = '';
+
+			//loop through all dialplan details find outbounds routes that use toll_allow
+			foreach ($row['dialplan_details'] as $key => $detail) {
+				//find destination_number that matches the regular expression
+				if ($detail["dialplan_detail_type"] == "destination_number") {
+					$pattern = '/'.$detail["dialplan_detail_data"].'/';
+					preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
+					if (count($matches) > 0) {
+						$match = true;
+						$regex_match_1 = $matches[1][0] ?? '';
+						$regex_match_2 = $matches[2][0] ?? '';
+						$regex_match_3 = $matches[3][0] ?? '';
+						$regex_match_4 = $matches[4][0] ?? '';
+						$regex_match_5 = $matches[5][0] ?? '';
 					}
-					elseif ($dialplan_details['dialplan_detail_type'] == "\${toll_allow}") {
-						$pattern = '/'.$dialplan_details['dialplan_detail_data'].'/';
-						preg_match($pattern, $channel_variables['toll_allow'], $matches, PREG_OFFSET_CAPTURE);
-						if (count($matches) == 0) {
-							$condition_match[] = 'false';
-						} 
-						else {
-							$condition_match[] = 'true';
-						}
-					}
+				}
+
+				//find bridge statements to build the bridge_array
+				if ($match && !empty($detail['dialplan_detail_type']) && $detail['dialplan_detail_type'] == "bridge" && $dialplan_detail_data != "\${enum_auto_route}") {
+					$dialplan_detail_data = $detail['dialplan_detail_data'] ?? '';
+					$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
+					$dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
+					$dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
+					$dialplan_detail_data = str_replace("\$4", $regex_match_4, $dialplan_detail_data);
+					$dialplan_detail_data = str_replace("\$5", $regex_match_5, $dialplan_detail_data);
+					$bridge_array[$x] = $dialplan_detail_data;
+					$x++;
 				}
 			}
 
-			if (!in_array('false', $condition_match)) {
-				foreach ($dialplan as $dialplan_details) {
-					$dialplan_detail_data = $dialplan_details['dialplan_detail_data'] ?? '';
-					if (
-						!empty($dialplan_details['dialplan_detail_tag']) &&
-						$dialplan_details['dialplan_detail_tag'] == "action" &&
-						!empty($dialplan_details['dialplan_detail_type']) &&
-						$dialplan_details['dialplan_detail_type'] == "bridge" &&
-						$dialplan_detail_data != "\${enum_auto_route}"
-						) {
-						$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$4", $regex_match_4, $dialplan_detail_data);
-						$dialplan_detail_data = str_replace("\$5", $regex_match_5, $dialplan_detail_data);
-						$bridge_array[$x] = $dialplan_detail_data;
-						$x++;
-					}
-				}
+			// when dialplan_continue is set to false then skip the rest of the outbound routes
+			// if (!empty($bridge_array) && $dialplan["dialplan_continue"] === false) {
+			// 	break;
+			// }
 
-				if (!empty($bridge_array) && $dialplan["dialplan_continue"] == "false") {
-					break;
-				}
+			//remove outbound routes that didn't match the toll_allow
+			if (!$match) {
+				unset($outbound_routes[$id]);
 			}
 		}
 	}
+
+	//return the bridge array
 	return $bridge_array ?? [];
 }
 //$destination_number = '1231234';
@@ -437,8 +534,14 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 //	echo "bridge: ".$bridge."<br />";
 //}
 
+/**
+ * Summary of extension_exists
+ * @param mixed $extension
+ * @return bool
+ */
 function extension_exists($extension) {
-	global $domain_uuid;
+	//declare the global variables
+	global $database, $domain_uuid;
 
 	$sql = "select count(*) from v_extensions ";
 	$sql .= "where domain_uuid = :domain_uuid ";
@@ -446,17 +549,22 @@ function extension_exists($extension) {
 	$sql .= "extension = :extension ";
 	$sql .= "or number_alias = :extension ";
 	$sql .= ") ";
-	$sql .= "and enabled = 'true' ";
+	$sql .= "and enabled = true ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['extension'] = $extension;
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 	return $num_rows > 0 ? true : false;
 }
 
+/**
+ * Summary of extension_presence_id
+ * @param mixed $extension
+ * @param mixed $number_alias
+ */
 function extension_presence_id($extension, $number_alias = false) {
-	global $domain_uuid;
+	//declare the global variables
+	global $database, $domain_uuid, $settings;
 
 	if ($number_alias === false) {
 		$sql = "select extension, number_alias from v_extensions ";
@@ -467,7 +575,6 @@ function extension_presence_id($extension, $number_alias = false) {
 		$sql .= ") ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['extension'] = $extension;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$extension = $row['extension'];
@@ -480,22 +587,26 @@ function extension_presence_id($extension, $number_alias = false) {
 	}
 
 	if (!empty($number_alias)) {
-		if ($_SESSION['provision']['number_as_presence_id']['text'] === 'true') {
+		if ($settings->get('provision', 'number_as_presence_id') === 'true') {
 			return $number_alias;
 		}
 	}
 	return $extension;
 }
 
+/**
+ * Summary of get_recording_filename
+ * @param mixed $id
+ */
 function get_recording_filename($id) {
-	global $domain_uuid;
+	//declare the global variables
+	global $database, $domain_uuid;
 
 	$sql = "select * from v_recordings ";
 	$sql .= "where recording_uuid = :recording_uuid ";
 	$sql .= "and domain_uuid = :domain_uuid ";
 	$parameters['recording_uuid'] = $id;
 	$parameters['domain_uuid'] = $domain_uuid;
-	$database = new database;
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row)) {
 		//$filename = $row["filename"];
@@ -506,32 +617,12 @@ function get_recording_filename($id) {
 	unset($sql, $parameters, $row);
 }
 
-function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid) {
-	//build insert array
-		$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
-		$array['dialplans'][0]['domain_uuid'] = $domain_uuid;
-		if (is_uuid($app_uuid)) {
-			$array['dialplans'][0]['app_uuid'] = $app_uuid;
-		}
-		$array['dialplans'][0]['dialplan_name'] = $dialplan_name;
-		$array['dialplans'][0]['dialplan_order'] = $dialplan_order;
-		$array['dialplans'][0]['dialplan_context'] = $dialplan_context;
-		$array['dialplans'][0]['dialplan_enabled'] = $dialplan_enabled;
-		$array['dialplans'][0]['dialplan_description'] = $dialplan_description;
-	//grant temporary permissions
-		$p = permissions::new();
-		$p->add('dialplan_add', 'temp');
-	//execute insert
-		$database = new database;
-		$database->app_name = 'switch-function-dialplan_add';
-		$database->app_uuid = '2fa2243c-47a1-41a0-b144-eb2b609219e0';
-		$database->save($array);
-		unset($array);
-	//revoke temporary permissions
-		$p->delete('dialplan_add', 'temp');
-}
-
 if (!function_exists('phone_letter_to_number')) {
+	/**
+	 * Summary of phone_letter_to_number
+	 * @param mixed $tmp
+	 * @return int
+	 */
 	function phone_letter_to_number($tmp) {
 		$tmp = strtolower($tmp);
 		if ($tmp == "a" | $tmp == "b" | $tmp == "c") { return 2; }
@@ -546,14 +637,18 @@ if (!function_exists('phone_letter_to_number')) {
 }
 
 if (!function_exists('save_call_center_xml')) {
+	/**
+	 * Summary of save_call_center_xml
+	 * @return void
+	 */
 	function save_call_center_xml() {
-		global $domain_uuid;
+		//declare the global variables
+		global $database, $domain_uuid, $settings;
 
-		if (!empty($_SESSION['switch']['call_center']['dir'])) {
+		if (!empty($settings->get('switch', 'call_center'))) {
 
 			//get the call center queue array
 			$sql = "select * from v_call_center_queues ";
-			$database = new database;
 			$call_center_queues = $database->select($sql, null, 'all');
 			unset($sql);
 
@@ -625,7 +720,6 @@ if (!function_exists('save_call_center_xml')) {
 				//prepare Agent XML string
 					$v_agents = '';
 					$sql = "select * from v_call_center_agents ";
-					$database = new database;
 					$result = $database->select($sql, null, 'all');
 					unset($sql);
 
@@ -652,9 +746,9 @@ if (!function_exists('save_call_center_xml')) {
 								//$tmp_confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1";
 								//if you change this variable also change app/call_center/call_center_agent_edit.php
 								$tmp_confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout=".$agent_call_timeout;
-								if(strstr($agent_contact, '}') === FALSE) {
+								if (strstr($agent_contact, '}') === FALSE) {
 									//not found
-									if(stristr($agent_contact, 'sofia/gateway') === FALSE) {
+									if (stristr($agent_contact, 'sofia/gateway') === FALSE) {
 										//add the call_timeout
 										$tmp_agent_contact = "{call_timeout=".$agent_call_timeout."}".$agent_contact;
 									}
@@ -666,9 +760,9 @@ if (!function_exists('save_call_center_xml')) {
 								}
 								else {
 									//found
-									if(stristr($agent_contact, 'sofia/gateway') === FALSE) {
+									if (stristr($agent_contact, 'sofia/gateway') === FALSE) {
 										//not found
-										if(stristr($agent_contact, 'call_timeout') === FALSE) {
+										if (stristr($agent_contact, 'call_timeout') === FALSE) {
 											//add the call_timeout
 											$tmp_pos = strrpos($agent_contact, "}");
 											$tmp_first = substr($agent_contact, 0, $tmp_pos);
@@ -685,7 +779,7 @@ if (!function_exists('save_call_center_xml')) {
 										$tmp_pos = strrpos($agent_contact, "}");
 										$tmp_first = substr($agent_contact, 0, $tmp_pos);
 										$tmp_last = substr($agent_contact, $tmp_pos);
-										if(stristr($agent_contact, 'call_timeout') === FALSE) {
+										if (stristr($agent_contact, 'call_timeout') === FALSE) {
 											//add the call_timeout and confirm
 											$tmp_agent_contact = $tmp_first.','.$tmp_confirm.',call_timeout='.$agent_call_timeout.$tmp_last;
 										}
@@ -715,7 +809,6 @@ if (!function_exists('save_call_center_xml')) {
 				//prepare Tier XML string
 					$v_tiers = '';
 					$sql = "select * from v_call_center_tiers ";
-					$database = new database;
 					$result = $database->select($sql, null, 'all');
 					unset($sql);
 
@@ -741,7 +834,7 @@ if (!function_exists('save_call_center_xml')) {
 						$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 					}
 					else {
-						$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/switch/resources/conf";
+						$path = dirname(__DIR__, 1)."/app/switch/resources/conf";
 					}
 
 				//get the contents of the template
@@ -758,7 +851,7 @@ if (!function_exists('save_call_center_xml')) {
 					unset($v_tiers);
 
 				//write the XML config file
-					$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/callcenter.conf.xml","w");
+					$fout = fopen($settings->get('switch', 'conf')."/autoload_configs/callcenter.conf.xml","w");
 					fwrite($fout, $file_contents);
 					fclose($fout);
 
@@ -772,24 +865,31 @@ if (!function_exists('save_call_center_xml')) {
 }
 
 if (!function_exists('switch_conf_xml')) {
+	/**
+	 * Summary of switch_conf_xml
+	 * @return void
+	 */
 	function switch_conf_xml() {
+		//declare the global variables
+			global $settings;
+
 		//get the contents of the template
 			if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
 				$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 			}
 			else {
-				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/switch/resources/conf";
+				$path = dirname(__DIR__, 1)."/app/switch/resources/conf";
 			}
 			$file_contents = file_get_contents($path."/autoload_configs/switch.conf.xml");
 
 		//prepare the php variables
 			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 				$php_bin = win_find_php('php.exe');
-				if(!$php_bin){ // relay on system path
+				if (!$php_bin) { // relay on system path
 					$php_bin = 'php.exe';
 				}
 
-				$secure_path = path_join($_SERVER["DOCUMENT_ROOT"], PROJECT_PATH, 'secure');
+				$secure_path = path_join(dirname(__DIR__, 1), PROJECT_PATH, 'secure');
 
 				$v_mail_bat = path_join($secure_path, 'mailto.bat');
 				$v_mail_cmd = '@' .
@@ -806,7 +906,7 @@ if (!function_exists('switch_conf_xml')) {
 			}
 			else {
 				if (file_exists(PHP_BINDIR.'/php')) { define("PHP_BIN", "php"); }
-				$v_mailer_app = PHP_BINDIR."/".PHP_BIN." ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/v_mailto.php";
+				$v_mailer_app = PHP_BINDIR."/".PHP_BIN." ".dirname(__DIR__, 1)."/secure/v_mailto.php";
 				$v_mailer_app_args = "-t";
 			}
 
@@ -819,7 +919,7 @@ if (!function_exists('switch_conf_xml')) {
 			unset ($v_mailer_app_args);
 
 		//write the XML config file
-			$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/switch.conf.xml","w");
+			$fout = fopen($settings->get('switch', 'conf')."/autoload_configs/switch.conf.xml","w");
 			fwrite($fout, $file_contents);
 			fclose($fout);
 
@@ -829,13 +929,17 @@ if (!function_exists('switch_conf_xml')) {
 }
 
 if (!function_exists('xml_cdr_conf_xml')) {
+	/**
+	 * Summary of xml_cdr_conf_xml
+	 * @return void
+	 */
 	function xml_cdr_conf_xml() {
 		//get the contents of the template
 		 	if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
 				$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 			}
 			else {
-				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/switch/resources/conf";
+				$path = dirname(__DIR__, 1)."/app/switch/resources/conf";
 			}
 			$file_contents = file_get_contents($path."/autoload_configs/xml_cdr.conf.xml");
 
@@ -853,7 +957,7 @@ if (!function_exists('xml_cdr_conf_xml')) {
 			unset ($v_pass);
 
 		//write the XML config file
-			$switch_configuration_dir = !empty($_SESSION['switch']['conf']['dir']) ? $_SESSION['switch']['conf']['dir'] : '/etc/freeswitch';
+			$switch_configuration_dir = !empty($settings->get('switch', 'conf')) ? $settings->get('switch', 'conf') : '/etc/freeswitch';
 			$fout = fopen($switch_configuration_dir . "/autoload_configs/xml_cdr.conf.xml","w");
 			fwrite($fout, $file_contents);
 			fclose($fout);
@@ -864,21 +968,27 @@ if (!function_exists('xml_cdr_conf_xml')) {
 }
 
 if (!function_exists('save_sip_profile_xml')) {
+	/**
+	 * Summary of save_sip_profile_xml
+	 * @return void
+	 */
 	function save_sip_profile_xml() {
+		//declare the global variables
+			global $database, $settings;
+
 		//skip saving the sip profile xml if the directory is not set
-			if (empty($_SESSION['switch']['sip_profiles']['dir'])) {
+			if (empty($settings->get('switch', 'sip_profiles'))) {
 				return;
 			}
 
 		// make profile dir if needed
-			$profile_dir = $_SESSION['switch']['conf']['dir']."/sip_profiles";
+			$profile_dir = $settings->get('switch', 'conf')."/sip_profiles";
 			if (!is_readable($profile_dir)) {
 				mkdir($profile_dir, 0770, false);
 			}
 
 		//get the sip profiles from the database
 			$sql = "select * from v_sip_profiles";
-			$database = new database;
 			$result = $database->select($sql, null, 'all');
 			unset($sql);
 
@@ -888,7 +998,7 @@ if (!function_exists('save_sip_profile_xml')) {
 					$sip_profile_name = $row['sip_profile_name'];
 					$sip_profile_enabled = $row['sip_profile_enabled'];
 
-					if ($sip_profile_enabled == 'false') {
+					if (!$sip_profile_enabled) {
 						$fout = fopen($profile_dir.'/'.$sip_profile_name.".xml","w");
 						if ($fout) {
 							fclose($fout);
@@ -898,18 +1008,17 @@ if (!function_exists('save_sip_profile_xml')) {
 
 					//get the xml sip profile template
 						if ($sip_profile_name == "internal" || $sip_profile_name == "external" || $sip_profile_name == "internal-ipv6") {
-							$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/sip_profiles/resources/xml/sip_profiles/".$sip_profile_name.".xml");
+							$file_contents = file_get_contents(dirname(__DIR__, 1)."/app/sip_profiles/resources/xml/sip_profiles/".$sip_profile_name.".xml");
 						}
 						else {
-							$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/sip_profiles/resources/xml/sip_profiles/default.xml");
+							$file_contents = file_get_contents(dirname(__DIR__, 1)."/app/sip_profiles/resources/xml/sip_profiles/default.xml");
 						}
 
 					//get the sip profile settings
 						$sql = "select * from v_sip_profile_settings ";
 						$sql .= "where sip_profile_uuid = :sip_profile_uuid ";
-						$sql .= "and sip_profile_setting_enabled = 'true' ";
+						$sql .= "and sip_profile_setting_enabled = true ";
 						$parameters['sip_profile_uuid'] = $sip_profile_uuid;
-						$database = new database;
 						$result_2 = $database->select($sql, $parameters, 'all');
 						if (!empty($result_2)) {
 							$sip_profile_settings = '';
@@ -945,44 +1054,54 @@ if (!function_exists('save_sip_profile_xml')) {
 }
 
 if (!function_exists('save_switch_xml')) {
+	/**
+	 * Summary of save_switch_xml
+	 * @return void
+	 */
 	function save_switch_xml() {
-		if (is_readable($_SESSION['switch']['extensions']['dir'])) {
-			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/resources/classes/extension.php")) {
-				require_once $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."app/extensions/resources/classes/extension.php";
+		//define the global settings
+		global $settings;
+
+		if (is_readable($settings->get('switch', 'extensions'))) {
+			if (file_exists(dirname(__DIR__, 1)."/app/extensions/resources/classes/extension.php")) {
 				$extension = new extension;
 				$extension->xml();
 			}
 		}
-		if (is_readable($_SESSION['switch']['conf']['dir'])) {
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/settings/app_config.php")) {
+		if (is_readable($settings->get('switch', 'conf'))) {
+			if (file_exists(dirname(__DIR__, 1)."/app/settings/app_config.php")) {
 				save_setting_xml();
 			}
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/modules/app_config.php")) {
-				require_once $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/modules/resources/classes/modules.php";
+			if (file_exists(dirname(__DIR__, 1)."/app/modules/app_config.php")) {
 				$module = new modules;
 				$module->xml();
 				//$msg = $module->msg;
 			}
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/vars/app_config.php")) {
+			if (file_exists(dirname(__DIR__, 1)."/app/vars/app_config.php")) {
 				save_var_xml();
 			}
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/call_center/app_config.php")) {
+			if (file_exists(dirname(__DIR__, 1)."/app/call_center/app_config.php")) {
 				save_call_center_xml();
 			}
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/gateways/app_config.php")) {
+			if (file_exists(dirname(__DIR__, 1)."/app/gateways/app_config.php")) {
 				save_gateway_xml();
 			}
-			//if (file_exists($_SERVER["PROJECT_ROOT"]."/app/ivr_menu/app_config.php")) {
+			//if (file_exists(dirname(__DIR__, 1)."/app/ivr_menu/app_config.php")) {
 			//	save_ivr_menu_xml();
 			//}
-			if (file_exists($_SERVER["PROJECT_ROOT"]."/app/sip_profiles/app_config.php")) {
+			if (file_exists(dirname(__DIR__, 1)."/app/sip_profiles/app_config.php")) {
 				save_sip_profile_xml();
 			}
 		}
 	}
 }
 
-if(!function_exists('path_join')) {
+if (!function_exists('path_join')) {
+	/**
+	 * Summary of path_join
+	 * @param array $
+	 * @return string
+	 */
 	function path_join() {
 		$args = func_get_args();
 		$paths = array();
@@ -991,16 +1110,15 @@ if(!function_exists('path_join')) {
 		}
 
 		$prefix = null;
-		foreach ($paths as $path) {
-			if($prefix === null && !empty($path)) {
-				if(substr($path, 0, 1) == '/') $prefix = '/';
+		foreach ($paths as $index => $path) {
+			if ($prefix === null && !empty($path)) {
+				if (substr($path, 0, 1) == '/') $prefix = '/';
 				else $prefix = '';
 			}
-			$path = trim( $path, '/' );
-			$path = trim( $path, '\\' );
+			$paths[$index] = trim($path, '/\\');
 		}
 
-		if($prefix === null){
+		if ($prefix === null) {
 			return '';
 		}
 
@@ -1010,17 +1128,23 @@ if(!function_exists('path_join')) {
 	}
 }
 
-if(!function_exists('win_find_php')) {
-	function win_find_php_in_root($root, $bin){
+if (!function_exists('win_find_php')) {
+	/**
+	 * Summary of win_find_php_in_root
+	 * @param mixed $root
+	 * @param mixed $bin
+	 * @return bool|string
+	 */
+	function win_find_php_in_root($root, $bin) {
 		while(true) {
 			$php_bin = path_join($root, $bin);
-			if(file_exists($php_bin)){
+			if (file_exists($php_bin)) {
 				$php_bin = str_replace('/', '\\', $php_bin);
 				return $php_bin;
 			}
 			$prev_root = $root;
 			$root = dirname($root);
-			if((!$root)&&($prev_root == $root)){
+			if ((!$root)&&($prev_root == $root)) {
 				return false;
 			}
 		}
@@ -1028,56 +1152,81 @@ if(!function_exists('win_find_php')) {
 
 	//Tested on WAMP and OpenServer
 	//Can get wrong result if `extension_dir` set as relative path.
-	function win_find_php_by_extension($bin_name){
+	/**
+	 * Summary of win_find_php_by_extension
+	 * @param mixed $bin_name
+	 * @return bool|string
+	 */
+	function win_find_php_by_extension($bin_name) {
 		$bin_dir = get_cfg_var('extension_dir');
 		return win_find_php_in_root($bin_dir, $bin_name);
 	}
 
 	// Works since PHP 5.4
-	function win_find_php_by_binary($bin_name){
-		if(!defined('PHP_BINARY')){
+	/**
+	 * Summary of win_find_php_by_binary
+	 * @param mixed $bin_name
+	 * @return bool|string
+	 */
+	function win_find_php_by_binary($bin_name) {
+		if (!defined('PHP_BINARY')) {
 			return false;
 		}
 		$bin_dir = realpath(PHP_BINARY);
-		if(!$bin_dir){
+		if (!$bin_dir) {
 			$bin_dir = PHP_BINARY;
 		}
 		$bin_dir = dirname($bin_dir);
 		return win_find_php_in_root($bin_dir, $bin_name);
 	}
 
-	function win_find_php_by_phprc($bin_name){
+	/**
+	 * Summary of win_find_php_by_phprc
+	 * @param mixed $bin_name
+	 * @return bool|string
+	 */
+	function win_find_php_by_phprc($bin_name) {
 		$bin_dir = getenv(PHPRC);
-		if(!$bin_dir){
+		if (!$bin_dir) {
 			return false;
 		}
 		$bin_dir = realpath($bin_dir);
 		return win_find_php_in_root($bin_dir, $bin_name);
 	}
 
-	//on Windows PHP_BIN set in compile time to c:\php
-	//It possible redifine it in env, but not all installation do it
-	function win_find_php_by_bin($bin_name){
-		if(!defined('PHP_BIN')){
+	/**
+	 * Summary of win_find_php_by_bin
+	 * on Windows PHP_BIN set in compile time to c:\php
+	 * It possible redifine it in env, but not all installation do it
+	 * @param mixed $bin_name
+	 * @return bool|string
+	 */
+	function win_find_php_by_bin($bin_name) {
+		if (!defined('PHP_BIN')) {
 			return false;
 		}
 		$bin_dir = realpath(PHP_BIN);
-		if(!$bin_dir){
+		if (!$bin_dir) {
 			$bin_dir = PHP_BIN;
 		}
 		$bin_dir = dirname($bin_dir);
 		return win_find_php_in_root($bin_dir, $bin_name);
 	}
 
-	function win_find_php($bin_name){
+	/**
+	 * Summary of win_find_php
+	 * @param mixed $bin_name
+	 * @return bool|string
+	 */
+	function win_find_php($bin_name) {
 		$php_bin = win_find_php_by_binary($bin_name);
-		if($php_bin) return $php_bin;
+		if ($php_bin) return $php_bin;
 		$php_bin = win_find_php_by_extension($bin_name);
-		if($php_bin) return $php_bin;
+		if ($php_bin) return $php_bin;
 		$php_bin = win_find_php_by_bin($bin_name);
-		if($php_bin) return $php_bin;
+		if ($php_bin) return $php_bin;
 		$php_bin = win_find_php_by_phprc($bin_name);
-		if($php_bin) return $php_bin;
+		if ($php_bin) return $php_bin;
 		return false;
 	}
 }

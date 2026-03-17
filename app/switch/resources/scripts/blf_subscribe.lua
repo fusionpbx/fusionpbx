@@ -28,6 +28,7 @@ local find_voicemail do
 	inner join v_voicemails t3 on t1.voicemail_uuid = t3.voicemail_uuid
 	where t2.domain_name = :domain_name 
 	and t3.voicemail_id = :extension 
+	and t3.voicemail_enabled = true 
 	and (t1.message_status is null or message_status = '')]]
 	
 	function find_voicemail(user)
@@ -72,7 +73,9 @@ local find_dnd do
 
 	local find_dnd_sql = [[select t1.do_not_disturb
 	from v_extensions t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
-	where t2.domain_name = :domain_name and (t1.extension = :extension or t1.number_alias=:extension)]]
+	where t2.domain_name = :domain_name and (t1.extension = :extension or t1.number_alias=:extension
+	do_not_disturb = true
+	)]]
 	
 	find_dnd = function(user)
 		local ext, domain_name = split_first(user, '@', true)
@@ -101,7 +104,8 @@ local find_call_forward do
 		local row = dbh:first_row(find_call_forward_sql, {domain_name = domain_name, extension = ext})
 		dbh:release()
 		if not (row and row.forward_all_enabled) then return end
-		if row.forward_all_enabled ~= 'true' then return 'false' end
+		forward_all_enabled = row.forward_all_enabled and 'true' or 'false';
+		if not row.forward_all_enabled then return 'false' end
 		if number then
 			return number == row.forward_all_destination and 'true' or 'false',
 				row.forward_all_destination
@@ -252,7 +256,7 @@ end
 
 local service = BasicEventService.new(log, service_name)
 
--- FS receive SUBSCRIBE to BLF from device
+-- FS receives SUBSCRIBE to BLF from device
 service:bind("PRESENCE_PROBE", function(self, name, event)
 	local proto = event:getHeader('proto')
 	local handler = proto and protocols[proto]

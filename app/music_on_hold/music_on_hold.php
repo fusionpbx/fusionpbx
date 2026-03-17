@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('music_on_hold_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('music_on_hold_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -57,7 +54,6 @@
 		$sql .= "or domain_uuid is null ";
 	}
 	$sql .= "order by domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc";
-	$database = new database;
 	$streams = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -106,7 +102,7 @@
 			}
 
 		//replace the sounds_dir variable in the path
-			$stream_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
+			$stream_path = str_replace('$${sounds_dir}', $settings->get('switch', 'sounds'), $stream_path);
 			$stream_path = str_replace('..', '', $stream_path);
 
 		//get the file and sanitize it
@@ -207,19 +203,20 @@
 
 		//get remaining values
 			$stream_file_name_temp = $_FILES['file']['tmp_name'];
-			$stream_file_name = $_FILES['file']['name'];
-			$stream_file_ext = strtolower(pathinfo($stream_file_name, PATHINFO_EXTENSION));
+			$stream_file_name = pathinfo($_FILES['file']['name'], PATHINFO_FILENAME);
+			$stream_file_ext = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
 
 		//check file type
 			$valid_file_type = ($stream_file_ext == 'wav' || $stream_file_ext == 'mp3' || $stream_file_ext == 'ogg') ? true : false;
 
 		//proceed for valid file type
-			if ($stream_file_ext == 'wav' || $stream_file_ext == 'mp3' || $stream_file_ext == 'ogg') {
+			if ($valid_file_type) {
 
 				//strip slashes, replace spaces
 					$slashes = ["/","\\"];
 					$stream_file_name = str_replace($slashes, '', $stream_file_name);
 					$stream_file_name = str_replace(' ', '-', $stream_file_name);
+					$stream_file_name = $stream_file_name.'.'.$stream_file_ext;
 					if ($action == "add") {
 						$stream_name = str_replace($slashes, '', $stream_name);
 						$stream_name = str_replace(' ', '_', $stream_name);
@@ -237,7 +234,7 @@
 
 				//define default path
 					if ($action == "add") {
-						$stream_path = path_join($_SESSION['switch']['sounds']['dir'], 'music', $_SESSION['domain_name'], $stream_name, $path_rate);
+						$stream_path = path_join($settings->get('switch', 'sounds'), 'music', $_SESSION['domain_name'], $stream_name, $path_rate);
 						$stream_path = str_replace('.loc', '._loc', $stream_path); // 14.03.22 freeswitch bug
 					}
 
@@ -245,7 +242,7 @@
 					$stream_new_name = true;
 					if (!empty($streams) && @sizeof($streams) != 0) {
 						foreach ($streams as $row) {
-							$alternate_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $row['music_on_hold_path']);
+							$alternate_path = str_replace('$${sounds_dir}', $settings->get('switch', 'sounds'), $row['music_on_hold_path']);
 							if ($stream_path == $row['music_on_hold_path'] || $stream_path == $alternate_path) {
 								$stream_new_name = false;
 								break;
@@ -254,7 +251,7 @@
 					}
 
 				//set the variables
-					$stream_path = str_replace('$${sounds_dir}', $_SESSION['switch']['sounds']['dir'], $stream_path);
+					$stream_path = str_replace('$${sounds_dir}', $settings->get('switch', 'sounds'), $stream_path);
 
 				//add new path
 					if ($stream_new_name) {
@@ -275,9 +272,6 @@
 						$p = permissions::new();
 						$p->add('music_on_hold_add', 'temp');
 
-						$database = new database;
-						$database->app_name = 'music_on_hold';
-						$database->app_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81';
 						$database->save($array);
 						unset($array);
 
@@ -308,7 +302,6 @@
 					$cache = new cache;
 					$cache->delete("configuration:local_stream.conf");
 
-				//require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 					$music = new switch_music_on_hold;
 					$music->reload();
 
@@ -336,9 +329,10 @@
 
 	//file type check
 		echo "	function check_file_type(file_input) {\n";
-		echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2);\n";
+		echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2).toLowerCase();\n";
 		echo "		if (file_ext != 'mp3' && file_ext != 'wav' && file_ext != 'ogg' && file_ext != '') {\n";
 		echo "			display_message(\"".$text['message-unsupported_file_type']."\", 'negative', '2750');\n";
+		echo "			document.getElementById('form_upload').reset();\n";
 		echo "		}\n";
 		echo "	}\n";
 
@@ -374,9 +368,9 @@
 		echo 	"<form id='form_upload' class='inline' method='post' enctype='multipart/form-data'>\n";
 		echo 	"<input name='action' type='hidden' value='upload'>\n";
 		echo 	"<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','onclick'=>"$(this).fadeOut(250, function(){ ".$modify_add_action." $('span#form_upload').fadeIn(250); });"]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','onclick'=>"$(this).fadeOut(250, function(){ ".$modify_add_action." $('span#form_upload').fadeIn(250); });"]);
 		echo 	"<span id='form_upload' style='display: none;'>";
-		echo button::create(['label'=>$text['button-cancel'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'type'=>'button','id'=>'btn_upload_cancel','onclick'=>"$('span#form_upload').fadeOut(250, function(){ name_mode('select'); document.getElementById('form_upload').reset(); $('#btn_add').fadeIn(250) });"]);
+		echo button::create(['label'=>$text['button-cancel'],'icon'=>$settings->get('theme', 'button_icon_cancel'),'type'=>'button','id'=>'btn_upload_cancel','onclick'=>"$('span#form_upload').fadeOut(250, function(){ name_mode('select'); document.getElementById('form_upload').reset(); $('#btn_add').fadeIn(250) });"]);
 		//name (category)
 			echo 	"<select name='name' id='name_select' class='formfld' style='width: auto; margin: 0;'>\n";
 			echo "		<option value='' selected='selected' disabled='disabled'>".$text['label-category']."</option>\n";
@@ -430,14 +424,14 @@
 			echo "		<option value='32000'>32 kHz</option>\n";
 			echo "		<option value='48000'>48 kHz</option>\n";
 			echo 	"</select>";
-			echo button::create(['type'=>'button','title'=>!empty($text['label-new']),'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_new','onclick'=>"name_mode('new');"]);
+			echo button::create(['type'=>'button','title'=>!empty($text['label-new']),'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_new','onclick'=>"name_mode('new');"]);
 			echo button::create(['type'=>'button','title'=>$text['label-select'],'icon'=>'list','id'=>'btn_select','style'=>'display: none;','onclick'=>"name_mode('select');"]);
 		//file
 			echo 	"<input type='text' class='txt' style='width: 100px; cursor: pointer; margin: 0;' id='filename' placeholder='Select...' onclick=\"document.getElementById('file').click(); this.blur();\" onfocus='this.blur();'>";
 			echo 	"<input type='file' id='file' name='file' style='display: none;' accept='.wav,.mp3,.ogg' onchange=\"document.getElementById('filename').value = this.files.item(0).name; check_file_type(this);\">";
 		//submit
 			$margin_right = permission_exists('music_on_hold_delete') ? 'margin-right: 15px;' : null;
-			echo button::create(['type'=>'submit','label'=>$text['button-upload'],'style'=>$margin_right,'icon'=>$_SESSION['theme']['button_icon_upload']]);
+			echo button::create(['type'=>'submit','label'=>$text['button-upload'],'style'=>$margin_right,'icon'=>$settings->get('theme', 'button_icon_upload')]);
 		echo 	"</span>\n";
 		echo 	"</form>";
 	}
@@ -446,11 +440,11 @@
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?type=&show=all'.(!empty($search) ? "&search=".urlencode($search) : null)]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?type=&show=all'.(!empty($search) ? "&search=".urlencode($search) : null)]);
 		}
 	}
 	if (permission_exists('music_on_hold_delete') && $streams) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -473,6 +467,9 @@
 		//loop through the array
 			$x = 0;
 			foreach ($streams as $row) {
+
+				//hide global categories if not allowed
+					if (empty($row['domain_uuid']) && !permission_exists('music_on_hold_global') && !($show == 'all' && permission_exists('music_on_hold_all'))) { continue; }
 
 				//set the variables
 					$music_on_hold_name = $row['music_on_hold_name'];
@@ -527,7 +524,7 @@
 					}
 
 				//get the music on hold path and files
-					$stream_path = str_replace("\$\${sounds_dir}",$_SESSION['switch']['sounds']['dir'] ?? '', $row['music_on_hold_path']);
+					$stream_path = str_replace("\$\${sounds_dir}",$settings->get('switch', 'sounds') ?? '', $row['music_on_hold_path']);
 					if (file_exists($stream_path)) {
 						$stream_files = array_merge(glob($stream_path.'/*.wav'), glob($stream_path.'/*.mp3'), glob($stream_path.'/*.ogg'));
 					}
@@ -552,13 +549,24 @@
 					echo "		</tr>";
 					unset($stream_icons, $icons);
 
+				//set the time zone
+					date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
+
+				//set the time format options: 12h, 24h
+					if ($settings->get('domain', 'time_format') == '24h') {
+						$time_format = 'H:i:s';
+					}
+					else {
+						$time_format = 'h:i:s a';
+					}
+
 				//list the stream files
 					if (!empty($stream_files)) {
 						foreach ($stream_files as $stream_file_path) {
 							$row_uuid = uuid();
 							$stream_file = pathinfo($stream_file_path, PATHINFO_BASENAME);
 							$stream_file_size = byte_convert(filesize($stream_file_path));
-							$stream_file_date = date("M d, Y H:i:s", filemtime($stream_file_path));
+							$stream_file_date = date("M d, Y ".$time_format, filemtime($stream_file_path));
 							$stream_file_ext = pathinfo($stream_file, PATHINFO_EXTENSION);
 							switch ($stream_file_ext) {
 								case "wav" : $stream_file_type = "audio/wav"; break;
@@ -576,7 +584,7 @@
 								echo "		<input type='hidden' name='moh[".$row['music_on_hold_uuid']."][$x][file_name]' value=\"".escape($stream_file)."\" />\n";
 								echo "	</td>\n";
 							}
-							if ($show == "all" && permission_exists('music_on_hold_all')) {
+							if ($show == 'all' && permission_exists('music_on_hold_all')) {
 								if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 									$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 								}
@@ -588,8 +596,8 @@
 							echo "	<td class='overflow'>".escape($stream_file)."</td>\n";
 							echo "	<td class='button center no-link no-wrap'>";
 							echo 		"<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$row_uuid."')\" onended=\"recording_reset('".$row_uuid."');\" src='music_on_hold.php?action=download&id=".escape($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)."' type='".$stream_file_type."'></audio>";
-							echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.$row_uuid,'onclick'=>"recording_play('".$row_uuid."','".urlencode($stream_file)."');"]);
-							echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"?action=download&id=".urlencode($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)]);
+							echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$row_uuid,'onclick'=>"recording_play('".$row_uuid."','".urlencode($stream_file)."&moh_id=".urlencode($row['music_on_hold_uuid'])."');"]);
+							echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'link'=>"?action=download&id=".urlencode($row['music_on_hold_uuid'])."&file=".urlencode($stream_file)]);
 							echo "	</td>\n";
 							echo "	<td class='right no-wrap hide-xs'>".escape($stream_file_size)."</td>\n";
 							echo "	<td class='right no-wrap hide-sm-dn'>".escape($stream_file_date)."</td>\n";
@@ -617,6 +625,16 @@
 	require_once "resources/footer.php";
 
 //define the download function (helps safari play audio sources)
+	/**
+	 * Downloads a file in chunks as requested by the client.
+	 *
+	 * This function is used to handle byte-range requests, allowing clients
+	 * to request specific parts of the file.
+	 *
+	 * @param string $file The path to the file being downloaded.
+	 *
+	 * @return void
+	 */
 	function range_download($file) {
 		$fp = @fopen($file, 'rb');
 
@@ -645,7 +663,7 @@
 			$c_start = $start;
 			$c_end   = $end;
 			// Extract the range string
-			list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+			[, $range] = explode('=', $_SERVER['HTTP_RANGE'], 2);
 			// Make sure the client hasn't sent us a multibyte range
 			if (strpos($range, ',') !== false) {
 				// (?) Shoud this be issued here, or should the first

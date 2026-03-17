@@ -1,0 +1,394 @@
+<?php
+/*
+ FusionPBX
+ Version: MPL 1.1
+
+ The contents of this file are subject to the Mozilla Public License Version
+ 1.1 (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ http://www.mozilla.org/MPL/
+
+ Software distributed under the License is distributed on an "AS IS" basis,
+ WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ for the specific language governing rights and limitations under the
+ License.
+
+ The Original Code is FusionPBX
+
+ The Initial Developer of the Original Code is
+ Mark J Crane <markjcrane@fusionpbx.com>
+ Portions created by the Initial Developer are Copyright (C) 2016-2026
+ the Initial Developer. All Rights Reserved.
+*/
+
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
+
+//check permissions
+	if (!permission_exists('email_template_view')) {
+		echo "access denied";
+		exit;
+	}
+
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
+
+//get the settings and save as variables
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
+	$domain_language = $settings->get('domain', 'language', 'en-us');
+
+//get posted data
+	if (!empty($_POST['email_template_list'])) {
+		$action = $_POST['action'];
+		$category = $_POST['category'] ?? null;
+		$search = $_POST['search'] ?? '';
+		$email_template_list = $_POST['email_template_list'];
+	}
+
+//process the http post data by action
+	if (!empty($action) && !empty($email_template_list)) {
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('email_template_add')) {
+					$obj = new email_templates;
+					$obj->copy($email_template_list);
+				}
+				break;
+			case 'toggle':
+				if (permission_exists('email_template_edit')) {
+					$obj = new email_templates;
+					$obj->toggle($email_template_list);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('email_template_delete')) {
+					$obj = new email_templates;
+					$obj->delete($email_template_list);
+				}
+				break;
+		}
+
+		header('Location: email_templates.php?'.(!empty($search) ? '&search='.urlencode($search) : '').(!empty($category) ? '&category='.urlencode($category) : null));
+		exit;
+	}
+
+//get variables used to control the order
+	$order_by = $_GET["order_by"] ?? '';
+	$order = $_GET["order"] ?? '';
+
+//determine the template language
+	if (empty($_GET['template_language'])) {
+		$template_language = $domain_language;
+	}
+	elseif ($_GET['template_language'] == 'all') {
+		$template_language = '';
+	}
+	else {
+		$template_language = $_GET['template_language'];
+	}
+
+//add the category
+	$category = strtolower($_GET["category"] ?? '');
+	if ($category) {
+		$sql_category = "and (";
+		$sql_category .= " lower(template_category) = :category";
+		$sql_category .= ") ";
+		$parameters['category'] = $category;
+	}
+
+//add the search term
+	$search = strtolower($_GET["search"] ?? '');
+	if (!empty($search)) {
+		$sql_search = " (";
+		$sql_search .= " lower(template_language) like :search ";
+		//$sql_search .= " or lower(template_category) like :search ";
+		$sql_search .= " or lower(template_subcategory) like :search ";
+		$sql_search .= " or lower(template_subject) like :search ";
+		$sql_search .= " or lower(template_body) like :search ";
+		$sql_search .= " or lower(template_type) like :search ";
+		$sql_search .= " or lower(template_description) like :search ";
+		$sql_search .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
+
+//prepare to page the results
+	$sql = "select count(email_template_uuid) ";
+	$sql .= "from v_email_templates ";
+	$sql .= "where true ";
+	$sql .= "and template_type = 'html' ";
+	if (!empty($template_language)) {
+		$sql .= "and template_language = :template_language ";
+		$parameters['template_language'] = $template_language;
+	}
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('email_template_all')) {
+		if (!empty($sql_search)) {
+			$sql .= "and ".$sql_search;
+		}
+	}
+	else {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		if (!empty($sql_search)) {
+			$sql .= "and ".$sql_search;
+		}
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	$sql .= $sql_category ?? '';
+	$num_rows = $database->select($sql, $parameters ?? [], 'column');
+
+//prepare to page the results
+	$rows_per_page = $settings->get('domain', 'paging', 50);
+	$param = "&search=".$search;
+	if (!empty($_GET['show']) == "all" && permission_exists('email_template_all')) {
+		$param .= "&show=all";
+	}
+	$page = isset($_GET['page']) ? $_GET['page'] : 0;
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	$offset = $rows_per_page * $page;
+
+//get the list
+	$sql = "select ";
+	$sql .= "email_template_uuid, ";
+	$sql .= "domain_uuid, ";
+	$sql .= "template_language, ";
+	$sql .= "template_category, ";
+	$sql .= "template_subcategory, ";
+	$sql .= "template_subject, ";
+	$sql .= "template_body, ";
+	$sql .= "template_type, ";
+	$sql .= "cast(template_enabled as text), ";
+	$sql .= "template_description ";
+	$sql .= "from v_email_templates ";
+	$sql .= "where true ";
+	$sql .= "and template_type = 'html' ";
+	if (!empty($template_language)) {
+		$sql .= "and template_language = :template_language ";
+		$parameters['template_language'] = $template_language;
+	}
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('email_template_all')) {
+		if (!empty($sql_search)) {
+			$sql .= "and ".$sql_search;
+		}
+	}
+	else {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		if (!empty($sql_search)) {
+			$sql .= "and ".$sql_search;
+		}
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	$sql .= $sql_category ?? '';
+	if ($order_by) {
+		$sql .= order_by($order_by, $order);
+	}
+	else {
+		$sql .= "order by domain_uuid, template_language asc, template_category asc, template_subcategory asc, template_type asc, template_description asc ";
+	}
+	$sql .= limit_offset($rows_per_page, $offset);
+	$email_templates = $database->select($sql, $parameters ?? [], 'all');
+	unset($sql, $parameters);
+
+//get email template languages
+	$sql = "select distinct template_language from v_email_templates ";
+	$sql .= "order by template_language asc ";
+	$rows = $database->select($sql, $parameters ?? [], 'all');
+	$template_languages = [];
+	if (!empty($rows)) {
+		foreach ($rows as $row) {
+			$template_languages[$row['template_language']] = $row['template_language'];
+		}
+	}
+	unset($sql, $parameters);
+
+//get email template categories
+	$sql = "select distinct template_category from v_email_templates ";
+	$sql .= "order by template_category asc ";
+	$rows = $database->select($sql, $parameters ?? [], 'all');
+	$template_categories = [];
+	if (!empty($rows)) {
+		foreach ($rows as $row) {
+			$template_categories[$row['template_category']] = ucwords(str_replace('_',' ',$row['template_category']));
+		}
+	}
+	unset($sql, $parameters);
+
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//additional includes
+	$document['title'] = $text['title-email_templates'];
+	require_once "resources/header.php";
+
+//show the content
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title-email_templates']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
+	echo "	<div class='actions'>\n";
+	if (permission_exists('email_template_add')) {
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'email_template_edit.php']);
+	}
+	if (permission_exists('email_template_add') && $email_templates) {
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+	}
+	if (permission_exists('email_template_edit') && $email_templates) {
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+	}
+	if (permission_exists('email_template_delete') && $email_templates) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+	}
+	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	if (permission_exists('email_template_all')) {
+		if (!empty($_GET['show']) && $_GET['show'] == 'all') {
+			echo "		<input type='hidden' name='show' value='all'>";
+		}
+		else {
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
+		}
+	}
+
+	echo 		"<select name='template_language' id='template_language' class='formfld' style='margin-left: 18px;' onchange=\"$('#form_search').submit();\">\n";
+	echo 			"<option value='' ".(!$category ? "selected='selected'" : null)." disabled='disabled'>".$text['label-language']."...</option>\n";
+	echo 			"<option value='all'>".$text['label-all']."</option>\n";
+	if (!empty($template_languages)) {
+		foreach ($template_languages as $language) {
+			echo "<option value='".$language."' ".($template_language == $language ? "selected='selected'" : null).">".escape($language)."</option>\n";
+		}
+	}
+	echo 		"</select>\n";
+
+	echo 		"<select name='category' id='category' class='formfld' style='margin-left: 18px;' onchange=\"$('#form_search').submit();\">\n";
+	echo 			"<option value='' ".(!$category ? "selected='selected'" : null)." disabled='disabled'>".$text['label-category']."...</option>\n";
+	echo 			"<option value=''></option>\n";
+	if (!empty($template_categories)) {
+		foreach ($template_categories as $template_category_value => $template_category_label) {
+			echo "<option value='".$template_category_value."' ".($category == $template_category_value ? "selected='selected'" : null).">".escape($template_category_label)."</option>\n";
+		}
+	}
+	echo 		"</select>\n";
+	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
+	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'email_templates.php','style'=>($search == '' ? 'display: none;' : null)]);
+	if (!empty($paging_controls_mini)) {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+	}
+	echo "		</form>\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	if (permission_exists('email_template_add') && $email_templates) {
+		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('copy'); list_form_submit('form_list');"])]);
+	}
+	if (permission_exists('email_template_edit') && $email_templates) {
+		echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
+	}
+	if (permission_exists('email_template_delete') && $email_templates) {
+		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
+	}
+
+	echo $text['title_description-email_template']."\n";
+	echo "<br /><br />\n";
+
+	echo "<form id='form_list' method='post'>\n";
+	echo "<input type='hidden' id='action' name='action' value=''>\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
+
+	echo "<div class='card'>\n";
+	echo "<table class='list'>\n";
+	echo "<tr class='list-header'>\n";
+	if (permission_exists('email_template_add') || permission_exists('email_template_edit') || permission_exists('email_template_delete')) {
+		echo "	<th class='checkbox'>\n";
+		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($email_templates) ?: "style='visibility: hidden;'").">\n";
+		echo "	</th>\n";
+	}
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('email_template_all')) {
+		echo "<th>".$text['label-domain']."</th>\n";
+		//echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
+	}
+	echo th_order_by('template_language', $text['label-template_language'], $order_by, $order, null, "class='shrink'", $param);
+	echo th_order_by('template_category', $text['label-template_category'], $order_by, $order, null, "class='pct-15'", $param);
+	echo th_order_by('template_subcategory', $text['label-template_subcategory'], $order_by, $order, null, "class='pct-15'", $param);
+	echo th_order_by('template_subject', $text['label-template_subject'], $order_by, $order, null, "class='hide-xs pct-30'", $param);
+	echo th_order_by('template_type', $text['label-template_type'], $order_by, $order, null, null, $param);
+	echo th_order_by('template_enabled', $text['label-template_enabled'], $order_by, $order, null, "class='center pct-10'", $param);
+	echo th_order_by('template_description', $text['label-template_description'], $order_by, $order, null, "class='hide-sm-dn'", $param);
+	if (permission_exists('email_template_edit') && $list_row_edit_button) {
+		echo "	<td class='action-button'>&nbsp;</td>\n";
+	}
+	echo "</tr>\n";
+
+	if (!empty($email_templates)) {
+		$x = 0;
+		foreach($email_templates as $row) {
+			$list_row_url = '';
+			if (permission_exists('email_template_edit')) {
+				$list_row_url = "email_template_edit.php?id=".urlencode($row['email_template_uuid']);
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
+				}
+			}
+			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			if (permission_exists('email_template_add') || permission_exists('email_template_edit') || permission_exists('email_template_delete')) {
+				echo "	<td class='checkbox'>\n";
+				echo "		<input type='checkbox' name='email_template_list[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='email_template_list[$x][uuid]' value='".escape($row['email_template_uuid'])."' />\n";
+				echo "	</td>\n";
+			}
+			if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('email_template_all')) {
+				echo "	<td>";
+				if (is_uuid($row['domain_uuid'])) {
+					echo escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']);
+				}
+				else {
+					echo $text['label-global'];
+				}
+				echo "</td>\n";
+			}
+			echo "	<td>".escape($row['template_language'])."&nbsp;</td>\n";
+			echo "	<td>".escape($row['template_category'])."&nbsp;</td>\n";
+			echo "	<td>".escape($row['template_subcategory'])."&nbsp;</td>\n";
+			echo "	<td class='overflow hide-xs'>";
+			if (permission_exists('email_template_edit')) {
+				echo "<a href='".$list_row_url."'>".escape($row['template_subject'])."</a>";
+			}
+			else {
+				echo escape($row['template_subject']);
+			}
+			echo "	</td>\n";
+			echo "	<td>".escape($row['template_type'])."&nbsp;</td>\n";
+			if (permission_exists('email_template_edit')) {
+				echo "	<td class='no-link center'>";
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['template_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+			}
+			else {
+				echo "	<td class='center'>";
+				echo $text['label-'.$row['template_enabled']];
+			}
+			echo "	</td>\n";
+			echo "	<td class='description overflow hide-sm-dn'>".escape($row['template_description'])."</td>\n";
+			if (permission_exists('email_template_edit') && $list_row_edit_button) {
+				echo "	<td class='action-button'>";
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
+				echo "	</td>\n";
+			}
+			echo "</tr>\n";
+			$x++;
+		}
+	}
+
+	echo "</table>\n";
+	echo "</div>\n";
+	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
+
+	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	echo "</form>\n";
+
+//include the footer
+	require_once "resources/footer.php";
+
+?>

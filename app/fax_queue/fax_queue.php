@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2023
+	Portions created by the Initial Developer are Copyright (C) 2023-2025
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -27,16 +27,12 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('fax_queue_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('fax_queue_view')) {
 		echo "access denied";
 		exit;
 	}
 
 //set defaults
-	$database = database::new();
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
 	$user_uuid = $_SESSION['user_uuid'] ?? '';
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
@@ -78,12 +74,12 @@
 					$obj->copy($fax_queue);
 				}
 				break;
-			//case 'toggle':
-			//	if ($permission['fax_queue_edit']) {
-			//		$obj = new fax_queue;
-			//		$obj->toggle($fax_queue);
-			//	}
-			//	break;
+			case 'resend':
+				if ($permission['fax_queue_edit']) {
+					$obj = new fax_queue;
+					$obj->resend($fax_queue);
+				}
+				break;
 			case 'delete':
 				if ($permission['fax_queue_delete']) {
 					$obj = new fax_queue;
@@ -96,9 +92,6 @@
 		header('Location: fax_queue.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
-
-//set the time zone
-	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 
 //get order and order by
 	$order_by = $_GET["order_by"] ?? null;
@@ -156,6 +149,17 @@
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
+
 //get the list
 	$sql = "SELECT ";
 	$sql .= "d.domain_name, ";
@@ -164,7 +168,7 @@
 	$sql .= "q.fax_uuid, ";
 	$sql .= "q.fax_date, ";
 	$sql .= "to_char(timezone(:time_zone, q.fax_date), 'DD Mon YYYY') as fax_date_formatted, ";
-	$sql .= "to_char(timezone(:time_zone, q.fax_date), 'HH12:MI:SS am') as fax_time_formatted, ";
+	$sql .= "to_char(timezone(:time_zone, q.fax_date), '".$time_format."') as fax_time_formatted, ";
 	$sql .= "q.hostname, ";
 	$sql .= "q.fax_caller_id_name, ";
 	$sql .= "q.fax_caller_id_number, ";
@@ -176,10 +180,10 @@
 	$sql .= "q.fax_status, ";
 	$sql .= "q.fax_retry_date, ";
 	$sql .= "to_char(timezone(:time_zone, q.fax_retry_date), 'DD Mon YYYY') as fax_retry_date_formatted, ";
-	$sql .= "to_char(timezone(:time_zone, q.fax_retry_date), 'HH12:MI:SS am') as fax_retry_time_formatted, ";
+	$sql .= "to_char(timezone(:time_zone, q.fax_retry_date), '".$time_format."') as fax_retry_time_formatted, ";
 	$sql .= "q.fax_notify_date, ";
 	$sql .= "to_char(timezone(:time_zone, q.fax_notify_date), 'DD Mon YYYY') as fax_notify_date_formatted, ";
-	$sql .= "to_char(timezone(:time_zone, q.fax_notify_date), 'HH12:MI:SS am') as fax_notify_time_formatted, ";
+	$sql .= "to_char(timezone(:time_zone, q.fax_notify_date), '".$time_format."') as fax_notify_time_formatted, ";
 	$sql .= "q.fax_retry_count, ";
 	$sql .= "q.fax_accountcode, ";
 	$sql .= "q.fax_command ";
@@ -243,15 +247,15 @@
 	echo "	<div class='heading'><b>".$text['title-fax_queue']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'/app/fax/fax.php']);
-	if ($permission['fax_queue_add']) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'fax_queue_edit.php']);
+	// if ($permission['fax_queue_add']) {
+	// 	echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'fax_queue_edit.php']);
+	// }
+	// if ($permission['fax_queue_add'] && $fax_queue) {
+	// 	echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+	// }
+	if ($permission['fax_queue_edit'] && $fax_queue) {
+		echo button::create(['type'=>'button','label'=>$text['button-resend'],'icon'=>'fax','id'=>'btn_resend','name'=>'btn_resend','collapse'=>'hide-xs','style'=>'display: none;','class'=>'+revealed','onclick'=>"modal_open('modal-resend','btn_resend');"]);
 	}
-	if ($permission['fax_queue_add'] && $fax_queue) {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
-	}
-	//if ($permission['fax_queue_edit'] && $fax_queue) {
-	//	echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
-	//}
 	if ($permission['fax_queue_delete'] && $fax_queue) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
@@ -260,21 +264,21 @@
 			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'style'=>'margin-left: 15px;','link'=>'?show=all']);
 		}
 	}
-	echo			"<form id='form_search' class='inline' method='get'>\n";
-	echo "		<select class='formfld' name='fax_status' style='margin-left: 15px;'>\n";
-	echo "			<option value='' selected='selected' disabled hidden>".$text['label-fax_status']."...</option>";
-	echo "			<option value=''></option>\n";
-	echo "			<option value='waiting' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "waiting" ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
-	echo "			<option value='sending' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "sending" ? "selected='selected'" : null).">".ucwords($text['label-sending'])."</option>\n";
-	echo "			<option value='trying' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "trying" ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
-	echo "			<option value='sent' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "sent" ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
-	echo "			<option value='busy' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "busy" ? "selected='selected'" : null).">".ucwords($text['label-busy'])."</option>\n";
-	echo "			<option value='failed' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "failed" ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
-	echo "		</select>\n";
-	echo			"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" />";
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	echo "			<select class='formfld' name='fax_status' style='margin-left: 15px;'>\n";
+	echo "				<option value='' selected='selected' disabled hidden>".$text['label-fax_status']."...</option>";
+	echo "				<option value=''></option>\n";
+	echo "				<option value='waiting' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "waiting" ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
+	echo "				<option value='sending' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "sending" ? "selected='selected'" : null).">".ucwords($text['label-sending'])."</option>\n";
+	echo "				<option value='trying' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "trying" ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
+	echo "				<option value='sent' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "sent" ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
+	echo "				<option value='busy' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "busy" ? "selected='selected'" : null).">".ucwords($text['label-busy'])."</option>\n";
+	echo "				<option value='failed' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "failed" ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
+	echo "			</select>\n";
+	echo "			<input type='text' class='txt list-search' style='margin-left: 0;' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" />";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	if (!empty($paging_controls_mini)) {
 		echo		"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
@@ -287,9 +291,16 @@
 	if ($permission['fax_queue_add'] && $fax_queue) {
 		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('copy'); list_form_submit('form_list');"])]);
 	}
-	//if ($permission['fax_queue_edit'] && $fax_queue) {
-	//	echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
-	//}
+	if (permission_exists('fax_queue_edit') && $fax_queue) {
+		echo modal::create([
+			'id'=>'modal-resend',
+			'title'=>$text['modal_title-resend'],
+			'message'=>$text['modal_message-resend'],
+			'actions'=>
+				button::create(['type'=>'button','label'=>$text['button-cancel'],'icon'=>$settings->get('theme', 'button_icon_cancel'),'collapse'=>'hide-xs','onclick'=>'modal_close();']).
+				button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','collapse'=>'never','style'=>'float: right;','onclick'=>"modal_close(); list_action_set('resend'); list_form_submit('form_list');"])
+			]);
+	}
 	if ($permission['fax_queue_delete'] && $fax_queue) {
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
@@ -313,13 +324,15 @@
 	//echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order);
 	echo "<th class='center shrink'>".$text['label-date']."</th>\n";
 	echo "<th class='center shrink hide-md-dn'>".$text['label-time']."</th>\n";
-	echo th_order_by('hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-md-dn'");
+	if ($permission['fax_queue_all']) {
+		echo th_order_by('hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-md-dn'");
+	}
 	echo th_order_by('fax_caller_id_name', $text['label-fax_caller_id_name'], $order_by, $order, null, "class='hide-md-dn'");
 	echo th_order_by('fax_caller_id_number', $text['label-fax_caller_id_number'], $order_by, $order);
 	echo th_order_by('fax_number', $text['label-fax_number'], $order_by, $order);
 	echo th_order_by('fax_email_address', $text['label-fax_email_address'], $order_by, $order);
 	echo th_order_by('insert_user', $text['label-insert_user'], $order_by, $order);
-//	echo th_order_by('fax_file', $text['label-fax_file'], $order_by, $order);
+	//echo th_order_by('fax_file', $text['label-fax_file'], $order_by, $order);
 	echo th_order_by('fax_status', $text['label-fax_status'], $order_by, $order);
 	echo th_order_by('fax_retry_date', $text['label-fax_retry_date'], $order_by, $order);
 	echo th_order_by('fax_notify_date', $text['label-fax_notify_date'], $order_by, $order);
@@ -351,13 +364,15 @@
 			}
 			echo "	<td nowrap='nowrap'>".escape($row['fax_date_formatted'])."</td>\n";
 			echo "	<td class='hide-md-dn' nowrap='nowrap'>".escape($row['fax_time_formatted'])."</td>\n";
-			echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
+			if ($permission['fax_queue_all']) {
+				echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
+			}
 			echo "	<td class='hide-md-dn'>".escape($row['fax_caller_id_name'])."</td>\n";
 			echo "	<td>".escape($row['fax_caller_id_number'])."</td>\n";
 			echo "	<td>".escape($row['fax_number'])."</td>\n";
 			echo "	<td>".escape(str_replace(',', ' ', $row['fax_email_address'] ?? ''))."</td>\n";
 			echo "	<td>".escape($row['insert_user']) ."</td>\n";
-//			echo "	<td>".escape($row['fax_file'])."</td>\n";
+			//echo "	<td>".escape($row['fax_file'])."</td>\n";
 			echo "	<td>".ucwords($text['label-'.$row['fax_status']])."</td>\n";
 			echo "	<td>".escape($row['fax_retry_date_formatted'])." ".escape($row['fax_retry_time_formatted'])."</td>\n";
 			echo "	<td>".escape($row['fax_notify_date_formatted'])." ".escape($row['fax_notify_time_formatted'])."</td>\n";

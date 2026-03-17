@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists("registration_reload")) {
-		//access granted
-	}
-	else {
+	if (!permission_exists("registration_reload")) {
 		echo "access denied";
 		exit;
 	}

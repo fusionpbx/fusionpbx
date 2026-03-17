@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_note_edit') || permission_exists('contact_note_add')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('contact_note_edit') || permission_exists('contact_note_add'))) {
 		echo "access denied";
 		exit;
 	}
@@ -105,9 +102,6 @@
 					$p = permissions::new();
 					$p->add('contact_edit', 'temp');
 
-					$database = new database;
-					$database->app_name = 'contacts';
-					$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 					$database->save($array);
 					unset($array);
 
@@ -136,9 +130,6 @@
 						$array['contact_notes'][0]['last_mod_date'] = 'now()';
 						$array['contact_notes'][0]['last_mod_user'] = $_SESSION['username'];
 
-						$database = new database;
-						$database->app_name = 'contacts';
-						$database->app_uuid = '04481e0e-a478-c559-adad-52bd4174574c';
 						$database->save($array);
 						unset($array);
 					}
@@ -158,7 +149,6 @@
 		$sql .= "and contact_note_uuid = :contact_note_uuid ";
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['contact_note_uuid'] = $contact_note_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$contact_note = $row["contact_note"];
@@ -194,8 +184,8 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";

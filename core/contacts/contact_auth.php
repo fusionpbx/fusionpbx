@@ -26,10 +26,9 @@
 //includes files
 require_once dirname(__DIR__, 2) . "/resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('contact_add')) {
-	//access granted
-}
-else {
+
+//check permissions
+if (!permission_exists('contact_add')) {
 	echo "access denied";
 	exit;
 }
@@ -66,7 +65,7 @@ if ($_SESSION['contact_auth']['source'] == 'google') {
 	}
 
 	if ($_GET['code'] == '') {
-		header("Location: https://accounts.google.com/o/oauth2/auth?client_id=".$_SESSION['contact']['google_oauth_client_id']['text']."&redirect_uri=".(($_SERVER["HTTPS"] == "on") ? "https" : "http")."://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']."&scope=https://www.google.com/m8/feeds/&response_type=code");
+		header("Location: https://accounts.google.com/o/oauth2/auth?client_id=".$settings->get('contact', 'google_oauth_client_id')."&redirect_uri=".(($_SERVER["HTTPS"] == "on") ? "https" : "http")."://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']."&scope=https://www.google.com/m8/feeds/&response_type=code");
 		exit;
 	}
 	else {
@@ -78,8 +77,8 @@ if ($_SESSION['contact_auth']['source'] == 'google') {
 
 	$fields = array(
 		'code' => urlencode($auth_code),
-		'client_id' => urlencode($_SESSION['contact']['google_oauth_client_id']['text']),
-		'client_secret' => urlencode($_SESSION['contact']['google_oauth_client_secret']['text']),
+		'client_id' => urlencode($settings->get('contact', 'google_oauth_client_id')),
+		'client_secret' => urlencode($settings->get('contact', 'google_oauth_client_secret')),
 		'redirect_uri' => urlencode((($_SERVER["HTTPS"] == "on") ? "https" : "http")."://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']),
 		'grant_type' => urlencode('authorization_code')
 		);

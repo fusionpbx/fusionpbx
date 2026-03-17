@@ -1,7 +1,7 @@
 <?php
 /*
 	BSD-2-Clause License
-	Copyright (C) 2022-2023 Mark J Crane <markjcrane@fusionpbx.com>
+	Copyright (C) 2022-2025 Mark J Crane <markjcrane@fusionpbx.com>
 
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are met:
@@ -29,10 +29,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('event_guard_log_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('event_guard_log_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -44,7 +41,7 @@
 //get the http post data
 	if (!empty($_POST['event_guard_logs']) && is_array($_POST['event_guard_logs'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$search = $_POST['search'] ?? '';
 		$event_guard_logs = $_POST['event_guard_logs'];
 	}
 
@@ -73,7 +70,7 @@
 		}
 
 		//redirect the user
-		header('Location: event_guard_logs.php'.($search != '' ? '?search='.urlencode($search) : null));
+		header('Location: event_guard_logs.php'.($search != '' ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -105,12 +102,11 @@
 		$sql .= "and filter = :filter ";
 		$parameters['filter'] = $_GET["filter"];
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
 //prepare to page the results
-	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = !empty($search) ? "&search=".$search : null;
 	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
@@ -118,13 +114,15 @@
 	$offset = $rows_per_page * $page;
 
 //set the time zone
-	if (isset($_SESSION['domain']['time_zone']['name'])) {
-		$time_zone = $_SESSION['domain']['time_zone']['name'];
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
 	}
 	else {
-		$time_zone = date_default_timezone_get();
+		$time_format = 'HH12:MI:SS am';
 	}
-	$parameters['time_zone'] = $time_zone;
 
 //get the list
 	$sql = "select ";
@@ -132,7 +130,7 @@
 	$sql .= "hostname, ";
 	$sql .= "log_date, ";
 	$sql .= "to_char(timezone(:time_zone, log_date), 'DD Mon YYYY') as log_date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, log_date), 'HH12:MI:SS am') as log_time_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, log_date), '".$time_format."') as log_time_formatted, \n";
 	$sql .= "filter, ";
 	$sql .= "ip_address, ";
 	$sql .= "extension, ";
@@ -157,7 +155,7 @@
 	}
 	$sql .= order_by($order_by, $order, 'log_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
+	$parameters['time_zone'] = $time_zone;
 	$event_guard_logs = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -174,16 +172,16 @@
 	echo "	<div class='heading'><b>".$text['title-event_guard_logs']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('event_guard_log_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'event_guard_log_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'event_guard_log_edit.php']);
 	}
 	if (permission_exists('event_guard_log_add') && $event_guard_logs) {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
 	//if (permission_exists('event_guard_log_edit') && $event_guard_logs) {
-	//	echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+	//	echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	//}
 	if (permission_exists('event_guard_log_delete') && $event_guard_logs) {
-		echo button::create(['type'=>'button','label'=>$text['button-unblock'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-unblock'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo "		<select class='formfld' name='filter'>\n";
@@ -193,8 +191,8 @@
 	echo "			<option value='sip-auth-fail' ".(isset($_GET["filter"]) && $_GET["filter"] == "sip-auth-fail" ? "selected='selected'" : null).">".$text['option-authentication']."</option>\n";
 	echo "		</select>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search','style'=>(!empty($search) ? 'display: none;' : null)]);
-	echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'event_guard_logs.php','style'=>(empty($search) ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search','style'=>(!empty($search) ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'event_guard_logs.php','style'=>(empty($search) ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
@@ -236,7 +234,7 @@
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
 	echo "<th class='hide-md-dn'>".$text['label-user_agent']."</th>\n";
 	echo th_order_by('log_status', $text['label-log_status'], $order_by, $order);
-	if (permission_exists('event_guard_log_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('event_guard_log_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -247,7 +245,7 @@
 			$list_row_url = '';
 			if (permission_exists('event_guard_log_edit')) {
 				$list_row_url = "event_guard_log_edit.php?id=".urlencode($row['event_guard_log_uuid']);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}
@@ -274,12 +272,12 @@
 			}
 			echo "	<td style='text-align: center;'><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($filter)."</a></td>\n";
 			echo "	<td><a href=\"https://search.arin.net/rdap/?query=".escape($row['ip_address'])."\" target=\"_blank\">".escape($row['ip_address'])."</a></td>\n";
-			echo "	<td>".escape($row['extension'])."</td>\n";
-			echo "	<td class='hide-md-dn'>".escape($row['user_agent'])."</td>\n";
+			echo "	<td style='max-width: 275px;'>".escape($row['extension'])."</td>\n";
+			echo "	<td style='max-width: 300px;' class='hide-md-dn'>".escape($row['user_agent'])."</td>\n";
 			echo "	<td>".escape($text['label-'.$row['log_status']])."</td>\n";
-			if (permission_exists('event_guard_log_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('event_guard_log_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>\n";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";

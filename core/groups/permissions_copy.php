@@ -29,16 +29,10 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('group_permission_add')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('group_permission_add')) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -76,8 +70,6 @@
 			}
 			$array['groups'][0]['group_name'] = $new_group_name;
 			$array['groups'][0]['group_description'] = $new_group_desc;
-			$database->app_name = 'groups';
-			$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 			$database->save($array);
 			unset($array);
 
@@ -117,8 +109,6 @@
 					$p->add('group_permission_add', 'temp');
 
 					//execute insert
-					$database->app_name = 'groups';
-					$database->app_uuid = '2caf27b0-540a-43d5-bb9b-c9871a1e4f84';
 					$database->save($array);
 					unset($array);
 

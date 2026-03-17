@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2016
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,10 +28,10 @@
 
 	if ($domains_processed == 1) {
 		/*
-		$file_contents = file_get_contents($_SESSION['switch']['conf']['dir']."/autoload_configs/xml_cdr.conf.xml");
+		$file_contents = file_get_contents($settings->get('switch', 'conf')."/autoload_configs/xml_cdr.conf.xml");
 		$file_contents_new = str_replace("param name=\"prefix-a-leg\" value=\"false\"/", "param name=\"prefix-a-leg\" value=\"true\"/", $file_contents);
 		if ($file_contents != $file_contents_new) {
-			$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/xml_cdr.conf.xml","w");
+			$fout = fopen($settings->get('switch', 'conf')."/autoload_configs/xml_cdr.conf.xml","w");
 			fwrite($fout, $file_contents_new);
 			fclose($fout);
 			if ($display_type == "text") {

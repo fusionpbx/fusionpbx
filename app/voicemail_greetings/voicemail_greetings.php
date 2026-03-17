@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -41,8 +41,7 @@
 	$language = new text;
 	$text = $language->get();
 
-//add the settings object
-	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+//check for speech app
 	$speech_enabled = $settings->get('speech', 'enabled');
 
 //set the defaults
@@ -54,7 +53,7 @@
 	$order = $_GET["order"] ?? '';
 
 //set the back button url
-	$_SESSION['back'][$_SERVER['PHP_SELF']] = !empty($_GET['back']) ? urldecode($_GET['back']) : $_SESSION['back'][$_SERVER['PHP_SELF']];
+	$_SESSION['back'][$_SERVER['PHP_SELF']] = !empty($_GET['back']) ? urldecode($_GET['back']) : $_SESSION['back'][$_SERVER['PHP_SELF']] ?? '';
 
 //define order by default
 	if ($order_by == '') {
@@ -63,6 +62,13 @@
 	}
 
 //used (above) to search the array to determine if an extension is assigned to the user
+	/**
+	 * Checks if the given extension number is assigned to the user.
+	 *
+	 * @param string $number The extension number to check.
+	 *
+	 * @return bool True if the extension number is assigned, False otherwise.
+	 */
 	function extension_assigned($number) {
 		foreach ($_SESSION['user']['extension'] as $row) {
 			if ((is_numeric($row['number_alias']) && $row['number_alias'] == $number) || $row['user'] == $number) {
@@ -76,14 +82,14 @@
 	$sql = "select greeting_id from v_voicemails ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and voicemail_id = :voicemail_id ";
+	$parameters = [];
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['voicemail_id'] = $voicemail_id;
-	$database = new database;
 	$selected_greeting_id = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 
 //define greeting directory
-	$greeting_dir = $_SESSION['switch']['voicemail']['dir'].'/default/'.$_SESSION['domains'][$domain_uuid]['domain_name'].'/'.$voicemail_id;
+	$greeting_dir = $settings->get('switch', 'voicemail').'/default/'.$_SESSION['domains'][$domain_uuid]['domain_name'].'/'.$voicemail_id;
 
 //download the greeting
 	if (!empty($_GET['a']) && $_GET['a'] == "download" && (permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download'))) {
@@ -96,14 +102,14 @@
 			$sql .= "from v_voicemail_greetings ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and voicemail_greeting_uuid = :voicemail_greeting_uuid ";
+			$parameters = [];
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
-			$database = new database;
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
 				$greeting_filename = $row['greeting_filename'];
 				$greeting_id = $row['greeting_id'];
-				if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64' && $row['greeting_base64'] != '') {
+				if (!empty($settings->get('voicemail', 'storage_type')) && $settings->get('voicemail', 'storage_type') == 'base64' && $row['greeting_base64'] != '') {
 					$greeting_decoded = base64_decode($row['greeting_base64']);
 					file_put_contents($greeting_dir.'/'.$greeting_filename, $greeting_decoded);
 				}
@@ -143,12 +149,19 @@
 			}
 
 			//if base64, remove temp greeting file (if not currently selected greeting)
-			if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64' && $row['greeting_base64'] != '') {
+			if (!empty($settings->get('voicemail', 'storage_type')) && $settings->get('voicemail', 'storage_type') == 'base64' && $row['greeting_base64'] != '') {
 				if ($greeting_id != $selected_greeting_id) {
 					@unlink($greeting_dir.'/'.$greeting_filename);
 				}
 			}
 		}
+		exit;
+	}
+
+//greeting limit
+	if (!empty($_POST['limit_reached']) && $_POST['limit_reached'] == 'true'){
+		message::add($text['message-maximum_voicemail_greetings'].' 9', 'negative');
+		header('Location: voicemail_greetings.php?id='.urlencode($voicemail_id));
 		exit;
 	}
 
@@ -165,44 +178,54 @@
 		}
 
 		//get the file extension
-		$file_ext = $file_ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
 		$file_name = $_FILES['file']['name'];
+		$file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+		//define the allowed file extensions
+		$allowed_extensions = ['wav', 'mp3', 'ogg'];
 
 		//check file extension
-		if ($file_ext == 'wav' || $file_ext == 'mp3') {
+		if (in_array($file_ext, $allowed_extensions)) {
 
-			//find the next available
-			for ($i = 1; $i < 10; $i++) {
-				//set the file name
-				$file_name = 'greeting_'.$i.'.'.$file_ext;
+			//find the next available greeting id starting at 1
+			$greeting_id = 1;
+			for ($i = 1; $i <= 9; $i++) {
+				$found_existing_file = false;
 
-				//set the greeting id
-				if (!file_exists($greeting_dir.'/'.$file_name)) {
-					//set the greeting id
+				//check for wav, mp3, and ogg files with the current greeting id
+				foreach ($allowed_extensions as $extension) {
+					$potential_file_name = "greeting_{$i}.{$extension}";
+					if (file_exists($greeting_dir . '/' . $potential_file_name)) {
+						$found_existing_file = true;
+						break;
+					}
+				}
+
+				if (!$found_existing_file) {
+					//found an available greeting id
 					$greeting_id = $i;
-
-					//end the loop
 					break;
 				}
 			}
+
+			//set the greeting file name
+			$greeting_file_name = "greeting_{$greeting_id}.{$file_ext}";
 
 			//move the uploaded greeting
 			if (!empty($greeting_dir) && !file_exists($greeting_dir)) {
 				mkdir($greeting_dir, 0770, false);
 			}
-			if ($file_ext == 'wav' || $file_ext == 'mp3') {
-				move_uploaded_file($_FILES['file']['tmp_name'], $greeting_dir.'/'.$file_name);
-			}
+			move_uploaded_file($_FILES['file']['tmp_name'], $greeting_dir.'/'.$greeting_file_name);
 
 			//set newly uploaded greeting as active greeting for voicemail box
 			$sql = "update v_voicemails ";
 			$sql .= "set greeting_id = :greeting_id ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and voicemail_id = :voicemail_id ";
+			$parameters = [];
 			$parameters['greeting_id'] = $greeting_id;
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['voicemail_id'] = $voicemail_id;
-			$database = new database;
 			$database->execute($sql, $parameters);
 			unset($sql, $parameters);
 
@@ -213,10 +236,10 @@
 			$array['voicemail_greetings'][$x]['voicemail_id'] = $voicemail_id;
 			$array['voicemail_greetings'][$x]['greeting_id'] = $greeting_id;
 			$array['voicemail_greetings'][$x]['greeting_name'] = $text['label-greeting'].' '.$greeting_id;
-			$array['voicemail_greetings'][$x]['greeting_filename'] = $file_name;
+			$array['voicemail_greetings'][$x]['greeting_filename'] = $greeting_file_name;
 			$array['voicemail_greetings'][$x]['greeting_description'] = '';
-			if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
-				$array['voicemail_greetings'][$x]['greeting_base64'] = base64_encode(file_get_contents($greeting_dir.'/'.$file_name));
+			if (!empty($settings->get('voicemail', 'storage_type')) && $settings->get('voicemail', 'storage_type') == 'base64') {
+				$array['voicemail_greetings'][$x]['greeting_base64'] = base64_encode(file_get_contents($greeting_dir.'/'.$greeting_file_name));
 			}
 
 			//save the array
@@ -228,9 +251,6 @@
 				$p->add('voicemail_greeting_edit', 'temp');
 
 				//execute inserts/updates
-				$database = new database;
-				$database->app_name = 'voicemail_greetings';
-				$database->app_uuid = 'e4b4fbee-9e4d-8e46-3810-91ba663db0c2';
 				$database->save($array);
 				unset($array);
 
@@ -254,10 +274,7 @@
 	}
 
 //check the permission
-	if (permission_exists('voicemail_greeting_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('voicemail_greeting_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -272,10 +289,10 @@
 		$sql .= "set greeting_id = :greeting_id ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and voicemail_id = :voicemail_id ";
+		$parameters = [];
 		$parameters['greeting_id'] = $greeting_id;
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['voicemail_id'] = $voicemail_id;
-		$database = new database;
 		$database->execute($sql, $parameters);
 		unset($sql, $parameters);
 
@@ -311,7 +328,7 @@
 	}
 
 //get the greetings list
-	if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+	if (!empty($settings->get('voicemail', 'storage_type')) && $settings->get('voicemail', 'storage_type') == 'base64') {
 		switch ($db_type) {
 			case 'pgsql': $sql_file_size = ", length(decode(greeting_base64,'base64')) as greeting_size "; break;
 			case 'mysql': $sql_file_size = ", length(from_base64(greeting_base64)) as greeting_size "; break;
@@ -321,9 +338,9 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and voicemail_id = :voicemail_id ";
 	$sql .= order_by($order_by, $order);
+	$parameters = [];
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['voicemail_id'] = $voicemail_id;
-	$database = new database;
 	$greetings = $database->select($sql, $parameters, 'all');
 	$num_rows = is_array($greetings) ? @sizeof($greetings) : 0;
 	unset($sql, $parameters);
@@ -339,7 +356,7 @@
 //file type check script
 	echo "<script language='JavaScript' type='text/javascript'>\n";
 	echo "	function check_file_type(file_input) {\n";
-	echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2);\n";
+	echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2).toLowerCase();\n";
 	echo "		if (file_ext != 'mp3' && file_ext != 'wav' && file_ext != 'ogg' && file_ext != '') {\n";
 	echo "			display_message(\"".$text['message-unsupported_file_type']."\", 'negative', '2750');\n";
 	echo "			document.getElementById('form_upload').reset();\n";
@@ -351,30 +368,37 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>$_SESSION['back'][$_SERVER['PHP_SELF']]]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>$_SESSION['back'][$_SERVER['PHP_SELF']]]);
 	$margin_left = false;
-	if (permission_exists('voicemail_greeting_add') && is_array($greetings) && @sizeof($greetings) < 9 && $speech_enabled == 'true') {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','style'=>'margin-left: 15px;','link'=>'voicemail_greeting_edit.php?voicemail_id='.urlencode($voicemail_id)]);
+	if (permission_exists('voicemail_greeting_add') && is_array($greetings) && $speech_enabled == 'true') {
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','style'=>'margin-left: 15px;','link'=>'voicemail_greeting_edit.php?voicemail_id='.urlencode($voicemail_id)]);
 		$margin_left = true;
 	}
 	if (permission_exists('voicemail_greeting_upload') && is_array($greetings) && @sizeof($greetings) < 9) {
-		echo 	"<form id='form_upload' class='inline' method='post' enctype='multipart/form-data'>\n";
-		echo 	"<input name='a' type='hidden' value='upload'>\n";
-		echo 	"<input type='hidden' name='id' value='".escape($voicemail_id)."'>\n";
-		echo 	"<input type='hidden' name='type' value='rec'>\n";
-		echo 	"<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-		echo button::create(['type'=>'button','label'=>$text['button-upload'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_upload','style'=>(!$margin_left ? 'margin-left: 15px;' : null),'onclick'=>"$(this).fadeOut(250, function(){ $('span#form_upload').fadeIn(250); document.getElementById('ulfile').click(); });"]);
-		echo 	"<span id='form_upload' style='display: none;'>";
-		echo button::create(['label'=>$text['button-cancel'],'icon'=>$_SESSION['theme']['button_icon_cancel'],'type'=>'button','id'=>'btn_upload_cancel','style'=>'margin-left: 15px;','onclick'=>"$('span#form_upload').fadeOut(250, function(){ document.getElementById('form_upload').reset(); $('#btn_upload').fadeIn(250) });"]);
-		echo 		"<input type='text' class='txt' style='width: 100px; cursor: pointer;' id='filename' placeholder='Select...' onclick=\"document.getElementById('ulfile').click(); this.blur();\" onfocus='this.blur();'>";
-		echo 		"<input type='file' id='ulfile' name='file' style='display: none;' accept='.wav,.mp3,.ogg' onchange=\"document.getElementById('filename').value = this.files.item(0).name; check_file_type(this);\">";
-		echo button::create(['type'=>'submit','label'=>$text['button-upload'],'icon'=>$_SESSION['theme']['button_icon_upload']]);
-		echo 	"</span>\n";
-		echo 	"</form>";
+		echo "	<form id='form_upload' class='inline' method='post' enctype='multipart/form-data'>\n";
+		echo "	<input name='a' type='hidden' value='upload'>\n";
+		echo "	<input type='hidden' name='id' value='".escape($voicemail_id)."'>\n";
+		echo "	<input type='hidden' name='type' value='rec'>\n";
+		echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-upload'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_upload','style'=>(!$margin_left ? 'margin-left: 15px;' : null),'onclick'=>"$(this).fadeOut(250, function(){ $('span#form_upload').fadeIn(250); document.getElementById('ulfile').click(); });"]);
+		echo "	<span id='form_upload' style='display: none;'>";
+		echo button::create(['label'=>$text['button-cancel'],'icon'=>$settings->get('theme', 'button_icon_cancel'),'type'=>'button','id'=>'btn_upload_cancel','style'=>'margin-left: 15px;','onclick'=>"$('span#form_upload').fadeOut(250, function(){ document.getElementById('form_upload').reset(); $('#btn_upload').fadeIn(250) });"]);
+		echo "		<input type='text' class='txt' style='width: 100px; cursor: pointer;' id='filename' placeholder='Select...' onclick=\"document.getElementById('ulfile').click(); this.blur();\" onfocus='this.blur();'>";
+		echo "		<input type='file' id='ulfile' name='file' style='display: none;' accept='.wav,.mp3,.ogg' onchange=\"document.getElementById('filename').value = this.files.item(0).name; check_file_type(this);\">";
+		echo button::create(['type'=>'submit','label'=>$text['button-upload'],'icon'=>$settings->get('theme', 'button_icon_upload')]);
+		echo "	</span>\n";
+		echo "	</form>\n";
+		$margin_left = true;
+	}
+	else if (permission_exists('voicemail_greeting_upload') && is_array($greetings) && @sizeof($greetings) >= 9) {
+		echo "	<form class='inline' method='post'>\n";
+		echo "	<input type='hidden' name='limit_reached' value='true'>\n";
+		echo button::create(['type'=>'submit','label'=>$text['button-upload'],'icon'=>$settings->get('theme', 'button_icon_add')]);
+		echo "	</form>\n";
 		$margin_left = true;
 	}
 	if (permission_exists('voicemail_greeting_delete') && $greetings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; '.(!$margin_left ? 'margin-left: 15px;' : null),'onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; '.(!$margin_left ? 'margin-left: 15px;' : null),'onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		$margin_left = true;
 	}
 	echo "	</div>\n";
@@ -408,7 +432,7 @@
 	$col_count++;
 	echo th_order_by('greeting_name', $text['label-name'], $order_by, $order, null, null, "id=".urlencode($voicemail_id));
 	$col_count++;
-	if (empty($_SESSION['voicemail']['storage_type']['text']) || $_SESSION['voicemail']['storage_type']['text'] != 'base64') {
+	if (empty($settings->get('voicemail', 'storage_type')) || $settings->get('voicemail', 'storage_type') != 'base64') {
 		echo th_order_by('greeting_filename', $text['label-filename'], $order_by, $order, null, "class='hide-sm-dn'", "id=".urlencode($voicemail_id));
 		$col_count++;
 	}
@@ -418,13 +442,13 @@
 	}
 	echo "<th class='center no-wrap hide-xs'>".$text['label-size']."</th>\n";
 	$col_count++;
-	if (empty($_SESSION['voicemail']['storage_type']['text']) || $_SESSION['voicemail']['storage_type']['text'] != 'base64') {
+	if (empty($settings->get('voicemail', 'storage_type')) || $settings->get('voicemail', 'storage_type') != 'base64') {
 		echo "<th class='center no-wrap hide-xs'>".$text['label-uploaded']."</th>\n";
 		$col_count++;
 	}
 	echo th_order_by('greeting_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn pct-25'", "id=".urlencode($voicemail_id));
 	$col_count++;
-	if (permission_exists('voicemail_greeting_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+	if (permission_exists('voicemail_greeting_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -464,7 +488,7 @@
 				echo escape($row['greeting_name']);
 			}
 			echo "	</td>\n";
-			if (empty($_SESSION['voicemail']['storage_type']['text']) || $_SESSION['voicemail']['storage_type']['text'] != 'base64') {
+			if (empty($settings->get('voicemail', 'storage_type')) || $settings->get('voicemail', 'storage_type') != 'base64') {
 				echo "	<td class='hide-sm-dn'>".escape($row['greeting_filename'])."</td>\n";
 			}
 			if (permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download')) {
@@ -479,27 +503,40 @@
 						case "ogg" : $greeting_type = "audio/ogg"; break;
 					}
 					echo "<audio id='recording_audio_".escape($row['voicemail_greeting_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['voicemail_greeting_uuid'])."')\" onended=\"recording_reset('".escape($row['voicemail_greeting_uuid'])."');\" src=\"voicemail_greetings.php?id=".escape($voicemail_id)."&a=download&type=rec&uuid=".escape($row['voicemail_greeting_uuid'])."\" type='".$greeting_type."'></audio>";
-					echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$_SESSION['theme']['button_icon_play'],'id'=>'recording_button_'.escape($row['voicemail_greeting_uuid']),'onclick'=>"recording_play('".escape($row['voicemail_greeting_uuid'])."','".escape($voicemail_id).'|'.escape($row['voicemail_greeting_uuid'])."')"]);
+					echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.escape($row['voicemail_greeting_uuid']),'onclick'=>"recording_play('".escape($row['voicemail_greeting_uuid'])."','".escape($voicemail_id).'|'.escape($row['voicemail_greeting_uuid'])."')"]);
 				}
 				if (permission_exists('voicemail_greeting_download')) {
-					echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'link'=>"voicemail_greetings.php?a=download&type=rec&t=bin&id=".urlencode($voicemail_id)."&uuid=".escape($row['voicemail_greeting_uuid'])]);
+					echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'link'=>"voicemail_greetings.php?a=download&type=rec&t=bin&id=".urlencode($voicemail_id)."&uuid=".escape($row['voicemail_greeting_uuid'])]);
 				}
 				echo "	</td>\n";
 			}
-			if (!empty($_SESSION['voicemail']['storage_type']['text']) && $_SESSION['voicemail']['storage_type']['text'] == 'base64') {
+
+			if (!empty($settings->get('voicemail', 'storage_type')) && $settings->get('voicemail', 'storage_type') == 'base64') {
 				$file_size = byte_convert($row['greeting_size']);
 				echo "	<td class='center no-wrap hide-xs'>".$file_size."</td>\n";
 			}
 			else {
-				$file_size = byte_convert(filesize($greeting_dir.'/'.$row['greeting_filename']));
-				$file_date = date("M d, Y H:i:s", filemtime($greeting_dir.'/'.$row['greeting_filename']));
+				if (file_exists($greeting_dir.'/'.$row['greeting_filename'])) {
+					date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
+					if ($settings->get('domain', 'time_format') == '24h') {
+						$time_format = 'H:i:s';
+					}
+					else {
+						$time_format = 'h:i:s a';
+					}
+					$file_size = byte_convert(filesize($greeting_dir.'/'.$row['greeting_filename']));
+					$file_date = date("M d, Y ".$time_format, filemtime($greeting_dir.'/'.$row['greeting_filename']));
+				} else {
+					$file_size = 0;
+					$file_date = '';
+				}
 				echo "	<td class='center no-wrap hide-xs'>".$file_size."</td>\n";
 				echo "	<td class='center no-wrap hide-xs'>".$file_date."</td>\n";
 			}
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['greeting_description'])."&nbsp;</td>\n";
-			if (permission_exists('voicemail_greeting_edit') && !empty($_SESSION['theme']['list_row_edit_button']['boolean']) && $_SESSION['theme']['list_row_edit_button']['boolean'] == 'true') {
+			if (permission_exists('voicemail_greeting_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
@@ -518,6 +555,11 @@
 	require_once "resources/footer.php";
 
 //define the download function (helps safari play audio sources)
+	/**
+	 * Handles a range download request for the given file.
+	 *
+	 * @param string $file The path to the file being downloaded.
+	 */
 	function range_download($file) {
 		$fp = @fopen($file, 'rb');
 
@@ -546,7 +588,7 @@
 			$c_start = $start;
 			$c_end   = $end;
 			// Extract the range string
-			list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+			[, $range] = explode('=', $_SERVER['HTTP_RANGE'], 2);
 			// Make sure the client hasn't sent us a multibyte range
 			if (strpos($range, ',') !== false) {
 				// (?) Shoud this be issued here, or should the first
@@ -607,6 +649,3 @@
 
 		fclose($fp);
 	}
-
-?>
-

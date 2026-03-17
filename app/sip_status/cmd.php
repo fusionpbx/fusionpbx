@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (if_group("superadmin")) {
-		//access granted
-	}
-	else {
+	if (!permission_exists("sip_status_command")) {
 		echo "access denied";
 		exit;
 	}
@@ -46,7 +43,6 @@
 	$sql = "select sip_profile_name from v_sip_profiles ";
 	$sql .= "where sip_profile_name = :profile_name ";
 	$parameters['profile_name'] = $profile;
-	$database = new database;
 	$profile_name = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 
@@ -54,7 +50,7 @@
 	$sql = "select sip_profile_setting_value from v_sip_profile_settings ";
 	$sql .= "where sip_profile_uuid = (select sip_profile_uuid from v_sip_profiles where sip_profile_name = :profile_name limit 1) ";
 	$sql .= "and sip_profile_setting_name = 'sip-port' ";
-	$sql .= "and sip_profile_setting_enabled = 'true' ";
+	$sql .= "and sip_profile_setting_enabled = true ";
 	$sql .= "limit 1";
 	$parameters['profile_name'] = $profile;
 	$profile_port = $database->select($sql, $parameters, 'column');
@@ -64,7 +60,7 @@
 	$sql = "select sip_profile_setting_value from v_sip_profile_settings ";
 	$sql .= "where sip_profile_uuid = (select sip_profile_uuid from v_sip_profiles where sip_profile_name = :profile_name limit 1) ";
 	$sql .= "and sip_profile_setting_name = 'tls-sip-port' ";
-	$sql .= "and sip_profile_setting_enabled = 'true' ";
+	$sql .= "and sip_profile_setting_enabled = true ";
 	$sql .= "limit 1";
 	$parameters['profile_name'] = $profile;
 	$profile_tls_port = $database->select($sql, $parameters, 'column');
@@ -101,6 +97,10 @@
 		case "cache-flush":
 			$cache = new cache;
 			$response = $cache->flush();
+			//trigger clear cache for any classes that require it
+			foreach ($autoload->get_interface_list('clear_cache') as $class) {
+				$class::clear_cache();
+			}
 			message::add($response, 'alert');
 			break;
 		case "reloadxml":

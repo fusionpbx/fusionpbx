@@ -28,9 +28,9 @@ if ($domains_processed == 1) {
 
 	//create phrases folder and add include line in xml for each language found
 		/*
-		if (!empty($setting->get('switch','languages'))) {
-			if (is_readable($setting->get('switch','languages'))) {
-				$conf_lang_folders = glob($setting->get('switch','languages')."/*");
+		if (!empty($settings->get('switch','languages'))) {
+			if (is_readable($settings->get('switch','languages'))) {
+				$conf_lang_folders = glob($settings->get('switch','languages')."/*");
 				foreach ($conf_lang_folders as $conf_lang_folder) {
 					//create phrases folder, if necessary
 					if (!file_exists($conf_lang_folder."/phrases/")) {
@@ -65,7 +65,7 @@ if ($domains_processed == 1) {
 		*/
 
 	//if base64, convert existing incompatible phrases
-		if (!empty($setting->get('recordings','storage_type')) && $setting->get('recordings','storage_type') == 'base64') {
+		if (!empty($settings->get('recordings','storage_type')) && $settings->get('recordings','storage_type') == 'base64') {
 			$sql = "select phrase_detail_uuid, phrase_detail_data ";
 			$sql .= "from v_phrase_details where phrase_detail_function = 'play-file' ";
 			$result = $database->select($sql, null, 'all');
@@ -73,8 +73,8 @@ if ($domains_processed == 1) {
 				foreach ($result as $index => $row) {
 					$phrase_detail_uuid = $row['phrase_detail_uuid'];
 					$phrase_detail_data = $row['phrase_detail_data'];
-					if (substr_count($phrase_detail_data, $setting->get('switch','recordings').'/'.$domain_name) > 0) {
-						$phrase_detail_data = str_replace($setting->get('switch','recordings').'/'.$domain_name.'/', '', $phrase_detail_data);
+					if (substr_count($phrase_detail_data, $settings->get('switch','recordings').'/'.$domain_name) > 0) {
+						$phrase_detail_data = str_replace($settings->get('switch','recordings').'/'.$domain_name.'/', '', $phrase_detail_data);
 					}
 					//update function and data to be base64 compatible
 						$phrase_detail_data = "lua(streamfile.lua ".$phrase_detail_data.")";
@@ -86,8 +86,6 @@ if ($domains_processed == 1) {
 					$p = permissions::new();
 					$p->add('phrase_detail_edit', 'temp');
 
-					$database->app_name = 'phrases';
-					$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 					$database->save($array, false);
 					unset($array);
 
@@ -98,7 +96,7 @@ if ($domains_processed == 1) {
 		}
 
 	//if not base64, revert base64 phrases to standard method
-		else if (!empty($setting->get('recordings','storage_type')) && $setting->get('recordings','storage_type') != 'base64') {
+		else if (!empty($settings->get('recordings','storage_type')) && $settings->get('recordings','storage_type') != 'base64') {
 			$sql = "select phrase_detail_uuid, phrase_detail_data ";
 			$sql .= "from v_phrase_details where ";
 			$sql .= "phrase_detail_function = 'execute' ";
@@ -112,7 +110,7 @@ if ($domains_processed == 1) {
 						$phrase_detail_data = str_replace('lua(streamfile.lua ', '', $phrase_detail_data);
 						$phrase_detail_data = str_replace(')', '', $phrase_detail_data);
 						if (substr_count($phrase_detail_data, '/') === 0) {
-							$phrase_detail_data = $setting->get('switch','recordings').'/'.$domain_name.'/'.$phrase_detail_data;
+							$phrase_detail_data = $settings->get('switch','recordings').'/'.$domain_name.'/'.$phrase_detail_data;
 						}
 						$array['phrase_details'][$index]['phrase_detail_uuid'] = $phrase_detail_uuid;
 						$array['phrase_details'][$index]['phrase_detail_function'] = 'play-file';
@@ -122,8 +120,6 @@ if ($domains_processed == 1) {
 					$p = permissions::new();
 					$p->add('phrase_detail_edit', 'temp');
 
-					$database->app_name = 'phrases';
-					$database->app_uuid = '5c6f597c-9b78-11e4-89d3-123b93f75cba';
 					$database->save($array, false);
 					unset($array);
 

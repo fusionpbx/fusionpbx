@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('device_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('device_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -44,8 +41,7 @@
 	$user_uuid = $_SESSION['user_uuid'] ?? '';
 	$user_name = $_SESSION['username'] ?? '';
 
-//create database connection and settings object
-	$database = database::new();
+//create the settings object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //add multi-lingual support
@@ -57,10 +53,6 @@
 		$action = $_POST['action'];
 		$devices = $_POST['devices'];
 	}
-
-//get the search
-	$search = strtolower($_REQUEST["search"] ?? '');
-	$fields = strtolower($_REQUEST["fields"] ?? '');
 
 //process the http post data by action
 	if (!empty($action) && !empty($devices) && is_array($devices) && @sizeof($devices) != 0) {
@@ -79,7 +71,7 @@
 				break;
 		}
 
-		header('Location: devices.php'.($search != '' ? '?search='.urlencode($search).'&fields='.urlencode($fields) : null));
+		header('Location: devices.php'.(!empty($search) ? '?search='.urlencode($search).'&fields='.urlencode($fields) : null));
 		exit;
 	}
 
@@ -87,8 +79,9 @@
 	$order_by = $_GET["order_by"] ?? '';
 	$order = $_GET["order"] ?? '';
 
-//set the time zone
-	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+//get the search
+	$search = strtolower($_REQUEST["search"] ?? '');
+	$fields = strtolower($_REQUEST["fields"] ?? '');
 
 //get total devices count from the database
 	$sql = "select count(*) from v_devices ";
@@ -104,6 +97,7 @@
 //get the devices profiles
 	$sql = "select * from v_device_profiles ";
 	$sql .= "where true ";
+	$parameters = [];
 	if (!permission_exists('device_profile_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
@@ -111,7 +105,7 @@
 	$device_profiles = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
-//prepare to page the results
+//get the count
 	$sql = "select count(*) from v_devices as d ";
 	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		if (!empty($search)) {
@@ -135,7 +129,6 @@
 		$sql .= "	lower(d.device_address) like :search ";
 		$sql .= "	or lower(d.device_label) like :search ";
 		$sql .= "	or lower(d.device_vendor) like :search ";
-		$sql .= "	or lower(d.device_enabled) like :search ";
 		$sql .= "	or lower(d.device_template) like :search ";
 		$sql .= "	or lower(d.device_description) like :search ";
 		$sql .= "	or lower(d.device_provisioned_method) like :search ";
@@ -172,26 +165,70 @@
 //prepare to page the results
 	$rows_per_page = intval($settings->get('domain', 'paging', 50));
 	$param = '';
-	if ($search) {
-		$param = "&search=".$search;
-		$param .= "&fields=".$fields;
+	if (!empty($search)) {
+		$param .= "&search=".$search;
+		$param .= !empty($fields) ? "&fields=".$fields : null;
 	}
 	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		$param .= "&show=all";
 	}
-	$page = $_GET['page'] ?? 0;
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param ?? '', $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param ?? '', $rows_per_page, true);
+	if (!empty($order_by)) {
+		$param .= "&order_by=".$order_by;
+	}
+	if (!empty($order)) {
+		$param .= "&order=".$order;
+	}
+	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
+	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
+	if (!empty($order_by)) {
+		$param = str_replace("&order_by=".$order_by, '', $param);
+	}
+	if (!empty($order)) {
+		$param = str_replace("&order=".$order, '', $param);
+	}
+
+//set the time zone
+	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+//set the time format options: 12h, 24h
+	if ($settings->get('domain', 'time_format') == '24h') {
+		$time_format = 'HH24:MI:SS';
+	}
+	else {
+		$time_format = 'HH12:MI:SS am';
+	}
 
 //get the list
 	$sql = "select ";
 	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		$sql .= "d3.domain_name, ";
 	}
-	$sql .="d.*, d2.device_label as alternate_label, ";
+	$sql .= "d.device_uuid, ";
+	$sql .= "d.domain_uuid, ";
+	$sql .= "d.device_address, ";
+	$sql .= "d.device_label, ";
+	$sql .= "d.device_vendor, ";
+	$sql .= "d.device_model, ";
+	$sql .= "d.device_firmware_version, ";
+	$sql .= "d.device_template, ";
+	$sql .= "d.device_username, ";
+	$sql .= "d.device_password, ";
+	$sql .= "d.device_description, ";
+	$sql .= "d.device_profile_uuid, ";
+	$sql .= "d.device_uuid_alternate, ";
+	$sql .= "d.device_user_uuid, ";
+	$sql .= "d.device_provisioned_date, ";
+	$sql .= "d.device_provisioned_method, ";
+	$sql .= "d.device_provisioned_ip, ";
+	$sql .= "d.device_provisioned_agent, ";
+	$sql .= "d.device_location, ";
+	$sql .= "d.device_serial_number, ";
+	$sql .= "d.device_enabled, ";
+	$sql .= "d2.device_label as alternate_label, ";
 	$sql .= "to_char(timezone(:time_zone, d.device_provisioned_date), 'DD Mon YYYY') as provisioned_date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, d.device_provisioned_date), 'HH12:MI:SS am') as provisioned_time_formatted \n";
+	$sql .= "to_char(timezone(:time_zone, d.device_provisioned_date), '".$time_format."') as provisioned_time_formatted \n";
 	$sql .= "from v_devices as d, v_devices as d2 ";
 	if (isset($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		$sql .= ", v_domains as d3 ";
@@ -224,7 +261,6 @@
 		$sql .= "	lower(d.device_address) like :search ";
 		$sql .= "	or lower(d.device_label) like :search ";
 		$sql .= "	or lower(d.device_vendor) like :search ";
-		$sql .= "	or lower(d.device_enabled) like :search ";
 		$sql .= "	or lower(d.device_template) like :search ";
 		$sql .= "	or lower(d.device_description) like :search ";
 		$sql .= "	or lower(d.device_provisioned_method) like :search ";
@@ -302,7 +338,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-profiles'],'icon'=>'clone','link'=>'device_profiles.php']);
 	}
 	$margin_left = permission_exists('device_import') || permission_exists('device_export') || permission_exists('device_vendor_view') || permission_exists('device_profile_view') ? "margin-left: 15px;" : null;
-	if (permission_exists('device_add') && (empty($_SESSION['limit']['devices']['numeric']) || ($total_devices < $_SESSION['limit']['devices']['numeric']))) {
+	if (permission_exists('device_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','style'=>$margin_left,'link'=>'device_edit.php']);
 		unset($margin_left);
 	}
@@ -336,7 +372,7 @@
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' style='margin-left: 0 !important;' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'devices.php','style'=>($search == '' ? 'display: none;' : null)]);
-	if ($paging_controls_mini != '') {
+	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
 	echo "		</form>\n";
@@ -370,17 +406,17 @@
 	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('device_all')) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
-	echo th_order_by('device_address', $text['label-device_address'], $order_by, $order, null, null, $param ?? null);
-	echo th_order_by('device_label', $text['label-device_label'], $order_by, $order, null, null, $param ?? null);
+	echo th_order_by('device_address', $text['label-device_address'], $order_by, $order, null, null, $param);
+	echo th_order_by('device_label', $text['label-device_label'], $order_by, $order, null, null, $param);
 	if ($device_alternate) {
-		echo th_order_by('device_template', $text['label-device_uuid_alternate'], $order_by, $order, null, null, $param ?? null);
+		echo th_order_by('device_template', $text['label-device_uuid_alternate'], $order_by, $order, null, null, $param);
 	}
-	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order, null, null, $param ?? null);
-	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order, null, null, $param ?? null);
+	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order, null, null, $param);
+	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order, null, null, $param);
 	echo "<th>". $text['label-device_profiles']."</th>\n";
-	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order, null, "class='center'", $param ?? null);
-	echo th_order_by('device_provisioned_date', $text['label-device_status'], $order_by, $order, null, null, $param ?? null);
-	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order, null, "class='hide-sm-dn'", $param ?? null);
+	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order, null, "class='center'", $param);
+	echo th_order_by('device_provisioned_date', $text['label-device_status'], $order_by, $order, null, null, $param);
+	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order, null, "class='hide-sm-dn'", $param);
 	if (permission_exists('device_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -399,7 +435,7 @@
 
 			$list_row_url = '';
 			if (permission_exists('device_edit')) {
-				$list_row_url = "device_edit.php?id=".urlencode($row['device_uuid']);
+				$list_row_url = "device_edit.php?id=".urlencode($row['device_uuid']).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(is_numeric($page) ? '&page='.urlencode($page) : null).(!empty($search) ? '&search='.$search : null);
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
@@ -444,11 +480,11 @@
 			echo "	<td>".escape($device_profile_name)."&nbsp;</td>\n";
 			if (permission_exists('device_edit')) {
 				echo "	<td class='no-link center'>";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['device_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.(!empty($row['device_enabled']) ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			}
 			else {
 				echo "	<td class='center'>";
-				echo $text['label-'.$row['device_enabled']];
+				echo $text['label-'.(!empty($row['device_enabled']) ? 'true' : 'false')];
 			}
 			echo "	</td>\n";
 			echo "	<td class='no-link'><a title='".escape($row['device_provisioned_agent'])."' href='javascript:void(0)'>".escape($row['provisioned_date_formatted'])." ".escape($row['provisioned_time_formatted'])."</a> &nbsp; ".escape($device_provisioned_method)." &nbsp; <a href='".escape($device_provisioned_method)."://".escape($row['device_provisioned_ip'])."' target='_blank'>".escape($row['device_provisioned_ip'])."</a>&nbsp;</td>\n";
@@ -477,4 +513,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

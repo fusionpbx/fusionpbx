@@ -113,6 +113,7 @@
    <X-PRE-PROCESS cmd="set" data="vacant-us-tone=%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)" category="Tones" enabled="true" uuid="81e63d9e-d2d5-4691-a0f4-74dffb3b25dc"/>
    <X-PRE-PROCESS cmd="set" data="vacant-uk-tone=%(330,15,950);%(330,15,1400);%(330,1000,1800)" category="Tones" enabled="true" uuid="a59be835-1c69-4af0-974d-0995c1fb7ae3"/>
    <X-PRE-PROCESS cmd="set" data="busy-us-tone=%(500,500,480,620)" category="Tones" enabled="true" uuid="29b0bf45-a633-4b48-a2dc-4a6e78f73a13"/>
+   <X-PRE-PROCESS cmd="set" data="busy-us-tone-3x=%(500,500,480,620);%(500,500,480,620);%(500,500,480,620)" category="Tones" enabled="true" uuid="32ad6578-f9a7-47fa-a9e2-1b4b130bd032"/>
    <X-PRE-PROCESS cmd="set" data="busy-au-tone=v=-13;%(375,375,420);v=-23;%(375,375,420)" category="Tones" enabled="true" uuid="333c5a08-2389-4fb1-a398-a5a98e4f447a"/>
    <X-PRE-PROCESS cmd="set" data="bong-us-tone=v=-7;%(100,0,941.0,1477.0);v=-7;>=2;+=.1;%(1400,0,350,440)" category="Tones" enabled="true" uuid="4be3153c-5e8d-4b2e-82f0-c89ce7006a0d"/>
 

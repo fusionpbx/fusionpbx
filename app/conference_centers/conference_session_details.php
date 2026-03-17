@@ -29,23 +29,17 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('conference_session_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('conference_session_view')) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //set variables from the http values
 	$order_by = $_GET["order_by"] ?? '' ? $_GET["order_by"] : 'start_epoch';
@@ -88,7 +82,7 @@
 	unset($sql, $parameters);
 
 //prepare to page the results
-	$rows_per_page = (!empty($_SESSION['domain']['paging']['numeric'])) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = '';
 	$page = isset($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
@@ -113,8 +107,8 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-conference_session_details']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'conference_sessions.php']);
-	$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'conference_sessions.php']);
+	$tmp_dir = $settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 	$tmp_name = '';
 	if (!empty($row['conference_session_uuid']) && file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.mp3')) {
 		$tmp_name = $row['conference_session_uuid'].".mp3";
@@ -123,9 +117,9 @@
 		$tmp_name = $row['conference_session_uuid'].".wav";
 	}
 	if (!empty($tmp_name) && file_exists($tmp_dir.'/'.$tmp_name)) {
-		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$_SESSION['theme']['button_icon_download'],'style'=>'margin-left: 15px;','link'=>'../recordings/recordings.php?a=download&type=rec&t=bin&filename='.base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)]);
+		echo button::create(['type'=>'button','label'=>$text['button-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'style'=>'margin-left: 15px;','link'=>'../recordings/recordings.php?a=download&type=rec&t=bin&filename='.base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)]);
 		if (permission_exists('conference_session_play')) {
-			echo button::create(['type'=>'button','label'=>$text['button-play'],'icon'=>$_SESSION['theme']['button_icon_play'],'onclick'=>"window.open('".PROJECT_PATH."/app/recordings/recording_play.php?a=download&type=moh&filename=".urlencode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-play'],'icon'=>$settings->get('theme', 'button_icon_play'),'onclick'=>"window.open('".PROJECT_PATH."/app/recordings/recording_play.php?a=download&type=moh&filename=".urlencode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no');"]);
 		}
 	}
 	if (!empty($paging_controls_mini)) {
@@ -152,7 +146,7 @@
 	echo "<th>".$text['label-time']."</th>\n";
 	echo th_order_by('start_epoch', $text['label-start'], $order_by, $order);
 	echo th_order_by('end_epoch', $text['label-end'], $order_by, $order);
-	if (permission_exists('conference_session_details') && $list_row_edit_button == 'true') {
+	if (permission_exists('conference_session_details') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -191,9 +185,9 @@
 			echo "	<td>".$time_difference."&nbsp;</td>\n";
 			echo "	<td>".$start_date."&nbsp;</td>\n";
 			echo "	<td>".$end_date."&nbsp;</td>\n";
-			if (permission_exists('conference_session_details') && $list_row_edit_button == 'true') {
+			if (permission_exists('conference_session_details') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
-				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$_SESSION['theme']['button_icon_view'],'link'=>$list_row_url]);
+				echo button::create(['type'=>'button','title'=>$text['button-view'],'icon'=>$settings->get('theme', 'button_icon_view'),'link'=>$list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";

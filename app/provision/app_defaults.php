@@ -46,8 +46,6 @@ if ($domains_processed == 1) {
 				$p = permissions::new();
 				$p->add('device_add', 'temp');
 			//execute update
-				$database->app_name = 'provision';
-				$database->app_uuid = 'abf28ead-92ef-3de6-ebbb-023fbc2b6dd3';
 				$database->save($array, false);
 				unset($array);
 			//revoke temporary permissions
@@ -71,8 +69,6 @@ if ($domains_processed == 1) {
 			$p->add('default_setting_edit', 'temp');
 
 		//execute update
-			$database->app_name = 'provision';
-			$database->app_uuid = 'abf28ead-92ef-3de6-ebbb-023fbc2b6dd3';
 			$database->save($array, false);
 			unset($array);
 
@@ -133,6 +129,24 @@ if ($domains_processed == 1) {
 	$sql .= "default_setting_category = 'provision' ";
 	$sql .= "and default_setting_name = 'numeric' ";
 	$sql .= ") ";
+	$database->execute($sql);
+
+	//provision settings for templates should use type text
+	$sql = "update v_default_settings ";
+	$sql .= "set default_setting_name = 'text' ";
+	$sql .= "where default_setting_uuid in ( ";
+	$sql .= "	select default_setting_uuid ";
+	$sql .= "	from v_default_settings  ";
+	$sql .= "	where default_setting_category = 'provision' ";
+	$sql .= "	and default_setting_name = 'boolean' ";
+	$sql .= "	and ( ";
+	$sql .= "		default_setting_subcategory like 'yealink_%' ";
+	$sql .= "		or default_setting_subcategory like 'polycom_%' ";
+	$sql .= "		or default_setting_subcategory like 'grandstream_%' ";
+	$sql .= "		or default_setting_subcategory like 'cisco_%' ";
+	$sql .= "		or default_setting_subcategory like 'flyingvoice_%' ";
+	$sql .= "	) ";
+	$sql .= "); ";
 	$database->execute($sql);
 
 }

@@ -18,7 +18,7 @@
 
 	  The Initial Developer of the Original Code is
 	  Mark J Crane <markjcrane@fusionpbx.com>
-	  Portions created by the Initial Developer are Copyright (C) 2008-2024
+	  Portions created by the Initial Developer are Copyright (C) 2008-2025
 	  the Initial Developer. All Rights Reserved.
 
 	  Contributor(s):
@@ -34,17 +34,14 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb'))) {
 		echo "access denied";
 		exit;
 	}
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'app/call_forward');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/call_forward');
 
 //get posted data and set defaults
 	$action = $_POST['action'] ?? '';
@@ -123,12 +120,11 @@
 			$sql .= "and extension = 'disabled' ";
 		}
 	}
-	$database = new database;
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($parameters);
 
 //prepare the paging
-	$rows_per_page = !empty($_SESSION['domain']['paging']['numeric']) ? $_SESSION['domain']['paging']['numeric'] : 50;
+	$rows_per_page = !empty($settings->get('domain', 'paging')) ? $settings->get('domain', 'paging') : 50;
 
 	if ($search) {
 		$params[] = "search=" . $search;
@@ -190,7 +186,6 @@
 	}
 	$sql .= order_by($order_by, $order, 'extension', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
-	$database = new database;
 	$extensions = $database->select($sql, $parameters ?? null, 'all');
 	unset($parameters);
 
@@ -231,25 +226,25 @@
 
 		if (count($extensions) > 0) {
 			if (permission_exists('call_forward')) {
-				echo button::create(['type' => 'button', 'label' => $text['label-call_forward'], 'icon' => $_SESSION['theme']['button_icon_toggle'], 'collapse' => false, 'name' => 'btn_toggle_cfwd', 'onclick' => "list_action_set('toggle_call_forward'); modal_open('modal-toggle','btn_toggle');"]);
+				echo button::create(['type' => 'button', 'label' => $text['label-call_forward'], 'icon' => $settings->get('theme', 'button_icon_toggle'), 'collapse' => false, 'name' => 'btn_toggle_cfwd', 'onclick' => "list_action_set('toggle_call_forward'); modal_open('modal-toggle','btn_toggle');"]);
 			}
 			if (permission_exists('follow_me')) {
-				echo button::create(['type' => 'button', 'label' => $text['label-follow_me'], 'icon' => $_SESSION['theme']['button_icon_toggle'], 'collapse' => false, 'name' => 'btn_toggle_follow', 'onclick' => "list_action_set('toggle_follow_me'); modal_open('modal-toggle','btn_toggle');"]);
+				echo button::create(['type' => 'button', 'label' => $text['label-follow_me'], 'icon' => $settings->get('theme', 'button_icon_toggle'), 'collapse' => false, 'name' => 'btn_toggle_follow', 'onclick' => "list_action_set('toggle_follow_me'); modal_open('modal-toggle','btn_toggle');"]);
 			}
 			if (permission_exists('do_not_disturb')) {
-				echo button::create(['type' => 'button', 'label' => $text['label-dnd'], 'icon' => $_SESSION['theme']['button_icon_toggle'], 'collapse' => false, 'name' => 'btn_toggle_dnd', 'onclick' => "list_action_set('toggle_do_not_disturb'); modal_open('modal-toggle','btn_toggle');"]);
+				echo button::create(['type' => 'button', 'label' => $text['label-dnd'], 'icon' => $settings->get('theme', 'button_icon_toggle'), 'collapse' => false, 'name' => 'btn_toggle_dnd', 'onclick' => "list_action_set('toggle_do_not_disturb'); modal_open('modal-toggle','btn_toggle');"]);
 			}
 		}
 		if ($show !== 'all' && permission_exists('call_forward_all')) {
-			echo button::create(['type' => 'button', 'label' => $text['button-show_all'], 'icon' => $_SESSION['theme']['button_icon_all'], 'link' => '?show=all' . (!empty($params) ? '&'.implode('&', $params) : null)]);
+			echo button::create(['type' => 'button', 'label' => $text['button-show_all'], 'icon' => $settings->get('theme', 'button_icon_all'), 'link' => '?show=all' . (!empty($params) ? '&'.implode('&', $params) : null)]);
 		}
 		echo "<form id='form_search' class='inline' method='get'>\n";
 		if ($show == 'all' && permission_exists('call_forward_all')) {
 			echo "		<input type='hidden' name='show' value='all'>";
 		}
 		echo "<input type='text' class='txt list-search' name='search' id='search' value=\"" . escape($search) . "\" placeholder=\"" . $text['label-search'] . "\" onkeydown=''>";
-		echo button::create(['label' => $text['button-search'], 'icon' => $_SESSION['theme']['button_icon_search'], 'type' => 'submit', 'id' => 'btn_search']);
-		//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'call_forward.php','style'=>($search == '' ? 'display: none;' : null)]);
+		echo button::create(['label' => $text['button-search'], 'icon' => $settings->get('theme', 'button_icon_search'), 'type' => 'submit', 'id' => 'btn_search']);
+		//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'call_forward.php','style'=>($search == '' ? 'display: none;' : null)]);
 		if (!empty($paging_controls_mini)) {
 			echo "<span style='margin-left: 15px;'>" . $paging_controls_mini . "</span>";
 		}
@@ -296,8 +291,8 @@
 		echo "	<th>" . $text['label-dnd'] . "</th>\n";
 	}
 	echo "	<th class='" . ($is_included ? 'hide-md-dn' : 'hide-sm-dn') . "'>" . $text['label-description'] . "</th>\n";
-	$list_row_edit_button = $_SESSION['theme']['list_row_edit_button']['boolean'] ?? 'false';
-	if ( $list_row_edit_button === 'true') {
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
+	if ($list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -305,7 +300,7 @@
 	if (!empty($extensions)) {
 		$x = 0;
 		foreach ($extensions as $row) {
-			$list_row_url = PROJECT_PATH . "/app/call_forward/call_forward_edit.php?id=" . $row['extension_uuid'] . "&return_url=" . urlencode($_SERVER['REQUEST_URI']);
+			$list_row_url = PROJECT_PATH . "/app/call_forward/call_forward_edit.php?id=".$row['extension_uuid'];
 			if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 				$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 			}
@@ -341,19 +336,18 @@
 				//----------------------------------
 
 				echo "	<td>\n";
-				echo $row['forward_all_enabled'] == 'true' ? escape(format_phone($row['forward_all_destination'])) : '&nbsp;';
+				echo $row['forward_all_enabled'] == true ? escape(format_phone($row['forward_all_destination'])) : '&nbsp;';
 				echo "	</td>\n";
 			}
 			if (permission_exists('follow_me')) {
 				//-- inline toggle -----------------
 				//get destination count
-				//if ($row['follow_me_enabled'] == 'true' && is_uuid($row['follow_me_uuid'])) {
+				//if ($row['follow_me_enabled'] == true && is_uuid($row['follow_me_uuid'])) {
 				//	$sql = "select count(*) from v_follow_me_destinations ";
 				//	$sql .= "where follow_me_uuid = :follow_me_uuid ";
 				//	$sql .= "and domain_uuid = :domain_uuid ";
 				//	$parameters['follow_me_uuid'] = $row['follow_me_uuid'];
 				//	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-				//	$database = new database;
 				//	$follow_me_destination_count = $database->select($sql, $parameters, 'column');
 				//	$button_label = $follow_me_destination_count ? $text['label-enabled'].' ('.$follow_me_destination_count.')' : $text['label-invalid'];
 				//	unset($sql, $parameters);
@@ -370,13 +364,12 @@
 				//----------------------------------
 				//get destination count
 				$follow_me_destination_count = 0;
-				if ($row['follow_me_enabled'] == 'true' && is_uuid($row['follow_me_uuid'])) {
+				if ($row['follow_me_enabled'] == true && is_uuid($row['follow_me_uuid'])) {
 					$sql = "select count(*) from v_follow_me_destinations ";
 					$sql .= "where follow_me_uuid = :follow_me_uuid ";
 					$sql .= "and domain_uuid = :domain_uuid ";
 					$parameters['follow_me_uuid'] = $row['follow_me_uuid'];
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-					$database = new database;
 					$follow_me_destination_count = $database->select($sql, $parameters ?? null, 'column');
 					unset($sql, $parameters);
 				}
@@ -402,9 +395,9 @@
 				echo "	</td>\n";
 			}
 			echo "	<td class='description overflow " . ($is_included ? 'hide-md-dn' : 'hide-sm-dn') . "'>" . escape($row['description']) . "&nbsp;</td>\n";
-			if ($list_row_edit_button === 'true') {
+			if ($list_row_edit_button) {
 				echo "	<td class='action-button'>";
-				echo button::create(['type' => 'button', 'title' => $text['button-edit'], 'icon' => $_SESSION['theme']['button_icon_edit'], 'link' => $list_row_url]);
+				echo button::create(['type' => 'button', 'title' => $text['button-edit'], 'icon' => $settings->get('theme', 'button_icon_edit'), 'link' => $list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";

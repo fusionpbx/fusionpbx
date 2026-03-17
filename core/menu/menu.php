@@ -29,16 +29,10 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('menu_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('menu_view')) {
 		echo "access denied";
 		exit;
 	}
-
-//connect to the database
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -48,8 +42,8 @@
 	$search = $_GET["search"] ?? '';
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
-	$button_icon_add = !empty($_SESSION['theme']['button_icon_add']) ? $_SESSION['theme']['button_icon_add'] : '';
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
+	$button_icon_add = $settings->get('theme', 'button_icon_add') ?? '';
 
 //get the http post data
 	if (!empty($_POST['menus'])) {
@@ -69,7 +63,7 @@
 				break;
 		}
 
-		header('Location: menu.php'.(!empty($search) ? '?search='.urlencode($search) : null));
+		header('Location: menu.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
 		exit;
 	}
 
@@ -93,13 +87,13 @@
 	if (isset($sql_search)) {
 		$sql .= "where ".$sql_search;
 	}
-	$num_rows = $database->select($sql, $parameters ?? '', 'column');
+	$num_rows = $database->select($sql, $parameters ?? [], 'column');
 
 //get the list
 	$sql = str_replace('count(menu_uuid)', '*', $sql);
 	$sql .= order_by($order_by, $order, 'menu_name', 'asc');
 	$sql .= limit_offset($rows_per_page ?? '', $offset ?? '');
-	$menus = $database->select($sql, $parameters ?? '', 'all');
+	$menus = $database->select($sql, $parameters ?? [], 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -115,15 +109,15 @@
 	echo "	<div class='heading'><b>".$text['title-menus']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('menu_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','link'=>'menu_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'menu_edit.php']);
 	}
 	if (permission_exists('menu_delete') && $menus) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
-	//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>'menu.php','style'=>($search == '' ? 'display: none;' : null)]);
+	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
+	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'menu.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if (!empty($paging_controls_mini)) {
 		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
@@ -154,13 +148,14 @@
 	echo th_order_by('menu_name', $text['label-menu_name'], $order_by, $order);
 	echo th_order_by('menu_language', $text['label-menu_language'], $order_by, $order);
 	echo "	<th class='hide-sm-dn'>".$text['label-menu_description']."</th>\n";
-	if (permission_exists('menu_edit') && $list_row_edit_button == 'true') {
+	if (permission_exists('menu_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
 
 	if (!empty($menus)) {
 		$x = 0;
+		$button_icon_edit = $settings->get('theme', 'button_icon_edit');
 		foreach ($menus as $row) {
 			if (permission_exists('menu_edit')) {
 				$list_row_url = "menu_edit.php?id=".urlencode($row['menu_uuid']);
@@ -182,7 +177,7 @@
 			echo "	</td>\n";
 			echo "	<td>".escape($row['menu_language'])."</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['menu_description'])."</td>\n";
-			if (permission_exists('menu_edit') && $list_row_edit_button == 'true') {
+			if (permission_exists('menu_edit') && $list_row_edit_button) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$button_icon_edit,'link'=>$list_row_url]);
 				echo "	</td>\n";

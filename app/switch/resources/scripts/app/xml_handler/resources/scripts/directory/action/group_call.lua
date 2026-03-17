@@ -1,6 +1,6 @@
 --	xml_handler.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2025 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -28,14 +28,12 @@
 	local Xml = require "resources.functions.xml";
 
 --get the cache
-	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		XML_STRING = trim(api:execute("memcache", "get directory:groups:"..domain_name));
-	else
-		XML_STRING = "-ERR NOT FOUND";
-	end
+	local cache = require "resources.functions.cache"
+	local directory_groups_key = "directory:groups:"..domain_name;
+	XML_STRING, err = cache.get(directory_groups_key);
 
 --set the cache
-	if (XML_STRING == "-ERR NOT FOUND") then
+	if not XML_STRING then
 		--connect to the database
 			local Database = require "resources.functions.database";
 			local dbh = Database.new('system');
@@ -74,6 +72,7 @@
 			local sql = [[
 			select * from v_extensions
 			where domain_uuid = :domain_uuid
+			enabled = true
 			order by call_group asc
 			]];
 			local params = {domain_uuid = domain_uuid};
@@ -140,11 +139,18 @@
 			dbh:release();
 
 		--set the cache
-			result = trim(api:execute("memcache", "set directory:groups:"..domain_name.." '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
+			local ok, err = cache.set(directory_groups_key, XML_STRING, expire["directory"]);
+			if debug["cache"] then
+				if ok then
+					freeswitch.consoleLog("notice", "[xml_handler] " .. directory_groups_key .. " stored in the cache\n");
+				else
+					freeswitch.consoleLog("warning", "[xml_handler] " .. directory_groups_key .. " can not be stored in the cache: " .. tostring(err) .. "\n");
+				end
+			end
 
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] directory:groups:"..domain_name.." source: database\n");
+				freeswitch.consoleLog("notice", "[xml_handler] directory:groups:"..directory_groups_key.." source: database\n");
 			end
 
 	else
@@ -154,7 +160,7 @@
 		--send to the console
 			if (debug["cache"]) then
 				if (XML_STRING) then
-					freeswitch.consoleLog("notice", "[xml_handler] directory:groups:"..domain_name.." source: memcache\n");
+					freeswitch.consoleLog("notice", "[xml_handler] "..directory_groups_key.." source: cache\n");
 				end
 			end
 	end

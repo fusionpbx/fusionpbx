@@ -430,4 +430,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "Dark";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The UI theme defines the appearance of the phone UI on phones with color display with predefined color settings and depending on the theme a background image. Possible options are: Light, Dark, Colorful, Industrial";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5c8db58c-4d56-43b0-b901-bd057e95dd6d";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_multicast_address";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Multicast address to listen to when multicast listening is enabled. Must include port. Read here for more info (such as volume overrides and priority settings): https://service.snom.com/spaces/wiki/pages/234343129/mc_address";
 ?>

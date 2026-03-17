@@ -29,16 +29,13 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_attachment_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_attachment_view')) {
 		echo "access denied";
 		exit;
 	}
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get the contact attachment list
 	$sql = "select *, length(decode(attachment_content,'base64')) as attachment_size from v_contact_attachments ";
@@ -47,7 +44,6 @@
 	$sql .= "order by attachment_primary desc, attachment_filename asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_attachments = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -135,7 +131,7 @@
 					echo "	<td class='description overflow hide-md-dn'>".escape($row['attachment_description'])."</td>\n";
 					if (permission_exists('contact_attachment_edit') && $list_row_edit_button == 'true') {
 						echo "	<td class='action-button'>\n";
-						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 						echo "	</td>\n";
 					}
 					echo "</tr>\n";

@@ -53,7 +53,7 @@
 	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Gestor de Dialplan";
 	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Manager Dialplan";
 	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Управление планом нумерации";
-	$apps[$x]['menu'][$y]['title']['sv-se'] = "Nummerplan Inställningar";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "Inställningar för nummerplan";
 	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Керування маршрутизацією";
 	$apps[$x]['menu'][$y]['title']['zh-cn'] = "拨号方案管理器";
 	$apps[$x]['menu'][$y]['title']['ja-jp'] = "ダイヤルプラン マネージャー";

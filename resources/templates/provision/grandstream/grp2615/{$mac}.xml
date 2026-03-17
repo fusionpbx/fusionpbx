@@ -37,9 +37,9 @@
 		<!-- SIP Server -->
 		<!-- Pvalue P47 -->
 		{if isset($row.server_address_primary)}
-		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address_primary}</item>
+		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address_primary}:{$row.sip_port}</item>
 		{else}
-		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address}</item>
+		<item name="account.{$row.line_number}.sip.server.1.address">{$row.server_address}:{$row.sip_port}</item>
 		{/if}
 
 		<!-- Secondary SIP Server -->
@@ -65,9 +65,9 @@
 		<!-- BLF Server -->
 		<!-- Pvalue P2375 -->
 		{if isset($row.server_address_primary)}
-		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address_primary}</item>
+		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address_primary}:{$row.sip_port}</item>
 		{else}
-		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address}</item>
+		<item name="account.{$row.line_number}.sip.blf.server">{$row.server_address}:{$row.sip_port}</item>
 		{/if}
 
 		<!-- SIP User ID -->
@@ -76,7 +76,7 @@
 
 		<!-- SIP Authentication ID -->
 		<!-- Pvalue P36 -->
-		<item name="account.{$row.line_number}.sip.subscriber.userid">{$row.user_id}</item>
+		<item name="account.{$row.line_number}.sip.subscriber.userid">{$row.auth_id}</item>
 
 		<!-- SIP Authentication Password -->
 		<!-- Pvalue P34 -->
@@ -227,10 +227,10 @@
 		<!-- SIP Transport -->
 		<!-- UDP, TCP, Tls Or Tcp -->
 		<!-- Pvalue P130 -->
-		{if $row.sip_transport == ''}<item name="account.{$row.line_number}.sip.transport">TCP</item>{/if}
-		{if $row.sip_transport == 'UDP'}<item name="account.{$row.line_number}.sip.transport">UDP</item>{/if}
-		{if $row.sip_transport == 'TCP'}<item name="account.{$row.line_number}.sip.transport">TCP</item>{/if}
-		{if $row.sip_transport == 'TLS'}<item name="account.{$row.line_number}.sip.transport">Tls</item>{/if}
+		{if $row.sip_transport == ''}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
+		{if $row.sip_transport == 'udp'}<item name="account.{$row.line_number}.sip.transport">0</item>{/if}
+		{if $row.sip_transport == 'tcp'}<item name="account.{$row.line_number}.sip.transport">1</item>{/if}
+		{if $row.sip_transport == 'tls'}<item name="account.{$row.line_number}.sip.transport">2</item>{/if}
 
 		<!-- SIP Listening Mode -->
 		<!-- Transport_Only, Dual, Dual_BLF_Enforced, Dual_Secured -->
@@ -380,7 +380,11 @@
 		<!-- BLF Call-pickup  -->
 		<!-- Auto, Force, Disabled -->
 		<!-- Pvalue P6752 -->
-		<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">Auto</item>
+		{if isset($grandstream_blf_callpickup_force) }
+			<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">{$grandstream_blf_callpickup_force}</item>
+		{else}
+			<item name="account.{$row.line_number}.sip.blf.callPickup.forcePrefix">Auto</item>
+		{/if}
 
 		<!-- BLF Call-pickup Prefix -->
 		<!-- Pvalue P1347 -->
@@ -784,7 +788,7 @@
 
 		<!-- Matching Incoming Caller ID. Matching Rule 1 -->
 		<!-- Pvalue P1488 -->
-		<item name="account.{$row.line_number}.ring.match.1.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.1.callerId">{$grandstream_match_callerid_1}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P1489 -->
@@ -792,7 +796,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 2 -->
 		<!-- Pvalue P1490 -->
-		<item name="account.{$row.line_number}.ring.match.2.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.2.callerId">{$grandstream_match_callerid_2}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P1491 -->
@@ -800,7 +804,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 3 -->
 		<!-- Pvalue P1492 -->
-		<item name="account.{$row.line_number}.ring.match.3.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.3.callerId">{$grandstream_match_callerid_3}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P1493 -->
@@ -808,7 +812,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 4 -->
 		<!-- Pvalue P6716 -->
-		<item name="account.{$row.line_number}.ring.match.4.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.4.callerId">{$grandstream_match_callerid_4}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P6717 -->
@@ -816,7 +820,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 5 -->
 		<!-- Pvalue P6718 -->
-		<item name="account.{$row.line_number}.ring.match.5.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.5.callerId">{$grandstream_match_callerid_5}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P6719 -->
@@ -824,7 +828,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 6 -->
 		<!-- Pvalue P6720 -->
-		<item name="account.{$row.line_number}.ring.match.6.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.6.callerId">{$grandstream_match_callerid_6}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P6721 -->
@@ -832,7 +836,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 7 -->
 		<!-- Pvalue P26064 -->
-		<item name="account.{$row.line_number}.ring.match.7.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.7.callerId">{$grandstream_match_callerid_7}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P26065 -->
@@ -840,7 +844,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 8 -->
 		<!-- Pvalue P26066 -->
-		<item name="account.{$row.line_number}.ring.match.8.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.8.callerId">{$grandstream_match_callerid_8}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P26067 -->
@@ -848,7 +852,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 9 -->
 		<!-- Pvalue P26068 -->
-		<item name="account.{$row.line_number}.ring.match.9.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.9.callerId">{$grandstream_match_callerid_9}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P26069 -->
@@ -856,7 +860,7 @@
 
 		<!-- Match Incoming Caller ID. Matching Rule 10 -->
 		<!-- Pvalue P26096 -->
-		<item name="account.{$row.line_number}.ring.match.10.callerId"></item>
+		<item name="account.{$row.line_number}.ring.match.10.callerId">{$grandstream_match_callerid_10}</item>
 
 		<!-- Distinctive Ring Tone -->
 		<!-- Pvalue P26097 -->
@@ -907,21 +911,21 @@
 
 		<!-- DND Call Feature On -->
 		<!-- Pvalue P2344 -->
-		<item name="account.{$row.line_number}.featureCodes.dndOn"></item>
+		<item name="account.{$row.line_number}.featureCodes.dndOn">*78</item>
 
 		<!-- DND Call Feature Off  -->
 		<!-- Pvalue P2345 -->
-		<item name="account.{$row.line_number}.featureCodes.dndOff"></item>
+		<item name="account.{$row.line_number}.featureCodes.dndOff">*79</item>
 
 		<!-- #Call Forward Unconditionally (All) - On -->
 		<!-- # String -->
 		<!-- Pvalue P26013 -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOn"></item>
+		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOn">*72</item>
 
 		<!-- #Call Forward Unconditionally (All) - Off -->
 		<!-- # String -->
 		<!-- Pvalue P26014 -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOff"></item>
+		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOff">*73</item>
 
 		<!-- #Call Forward Unconditionally (All) - Target -->
 		<!-- # String -->
@@ -1478,28 +1482,41 @@
 		<!-- ########################################################################################## -->
 		<!-- ## Network/WiFi Settings         GRP2614/GRP2615/GRP2616/GRP2624/GRP2634/GRP2670/GRP2650/GRP2636           -->
 		<!-- ########################################################################################## -->
+		{if isset($grandstream_wifi_enabled) && $grandstream_wifi_enabled == 'Yes'}
 		<!-- # Enable/Disable WiFi -->
 		<!-- # No - Off, OffAndHideMenuFromLCD, Yes - On. -->
-<?comment		<!-- Pvalue P7800 -->
-		<item name="network.wifi.enable">Off</item>
+		<!-- Pvalue P7800 -->
+		<item name="network.wifi.enable">Yes</item>
 
 		<!-- # Access Point 1 -->
 		<!-- # SSID -->
 		<!-- # String -->
 		<!-- Pvalue P8403 -->
+{if isset($grandstream_wifi_ap1_ssid)}
+		<item name="network.wifi.ap.1.ssid">{$grandstream_wifi_ap1_ssid}</item>
+{else}
 		<item name="network.wifi.ap.1.ssid"></item>
+{/if}
 
 		<!-- # Access Point 1 -->
 		<!-- # Password -->
 		<!-- # String -->
 		<!-- Pvalue P8404 -->
+{if isset($grandstream_wifi_ap1_password)}
+		<item name="network.wifi.ap.1.password">{$grandstream_wifi_ap1_password}</item>
+{else}
 		<item name="network.wifi.ap.1.password"></item>
+{/if}
 
 		<!-- # Access Point 1 -->
 		<!-- # Security Type -->
 		<!-- #  None, WEP, WPA_WPA2 PSK, WPA_WPA2 EAP, Auto.  -->
 		<!-- Pvalue P8405 -->
+{if isset($grandstream_wifi_ap1_type)}
+		<item name="network.wifi.ap.1.type">{$grandstream_wifi_ap1_type}</item>
+{else}
 		<item name="network.wifi.ap.1.type">WPA_PSK</item>
+{/if}
 
 		<!-- # Access Point 1 -->
 		<!-- # EAP Method -->
@@ -1523,19 +1540,31 @@
 		<!-- # SSID -->
 		<!-- # String -->
 		<!-- Pvalue P8406 -->
+{if isset($grandstream_wifi_ap2_ssid)}
+		<item name="network.wifi.ap.2.ssid">{$grandstream_wifi_ap2_ssid}</item>
+{else}
 		<item name="network.wifi.ap.2.ssid"></item>
+{/if}
 
 		<!-- # Access Point 2 -->
 		<!-- # Password -->
 		<!-- # String -->
 		<!-- Pvalue P8407 -->
+{if isset($grandstream_wifi_ap2_password)}
+		<item name="network.wifi.ap.2.password">{$grandstream_wifi_ap2_password}</item>
+{else}
 		<item name="network.wifi.ap.2.password"></item>
+{/if}
 
 		<!-- # Access Point 2 -->
 		<!-- # Security Type -->
 		<!-- #  None, WEP, WPA/WPA2 PSK,  WPA/WPA2 EAP, Auto.  -->
 		<!-- Pvalue P8408 -->
+{if isset($grandstream_wifi_ap2_type)}
+		<item name="network.wifi.ap.2.type">{$grandstream_wifi_ap2_type}</item>
+{else}
 		<item name="network.wifi.ap.2.type">WPA_PSK</item>
+{/if}
 
 		<!-- # Access Point 2 -->
 		<!-- # EAP Method -->
@@ -1846,6 +1875,7 @@
 		<!-- # VoWLan Target Delay. Low, Medium, or High -->
 		<!-- Pvalue P82281 -->
 		<item name="wifi.vowlan_target_delay">Low</item>
+		{/if}
 
 		<!-- ############################################################################## -->
 		<!-- ##  Maintenance/ Web Access     ## -->
@@ -2002,7 +2032,14 @@
 		<!-- Firmware Upgrade Mode -->
 		<!-- TFTP, HTTP, HTTPS -->
 		<!-- Pvalue P6767 -->
-		<item name="provisioning.firmware.protocol">HTTP</item>
+    	{if isset($grandstream_firmware_upgrade_protocol) }
+    		{if $grandstream_firmware_upgrade_protocol=="0"}<item name="provisioning.firmware.protocol">TFTP</item>{/if}
+    		{if $grandstream_firmware_upgrade_protocol=="1"}<item name="provisioning.firmware.protocol">HTTP</item>{/if}
+    		{if $grandstream_firmware_upgrade_protocol=="2"}<item name="provisioning.firmware.protocol">HTTPS</item>{/if}
+    	{else}
+    	<item name="provisioning.firmware.protocol">HTTP</item>
+    	{/if}
+
 		<!-- Firmware Server Path -->
 		<!-- Pvalue P192 -->
 		{if isset($grandstream_firmware_path) && isset($firmware_version)}
@@ -3302,7 +3339,11 @@
 
 		<!-- # Enable Missed Call Notification. Yes or No -->
 		<!-- Pvalue P8393 -->
-		<item name="features.history.missedCallNotification">Yes</item>
+		{if isset($grandstream_missed_call_notification)}
+		<item name="features.history.missedCallNotification">{$grandstream_missed_call_notification}</item>
+		{else}
+		<item name="features.history.missedCallNotification">No</item>
+		{/if}
 
 		<!-- # Enable Call Completion Service. Yes or No -->
 		<!-- Pvalue P8391 -->
@@ -3754,12 +3795,20 @@
 		<!-- # System Settings -->
 		<!-- # NTP Server -->
 		<!-- Pvalue P30 -->
+		{if isset($ntp_server_primary)}
+		<item name="dateTime.ntp.server.1">{$ntp_server_primary}</item>
+		{else}
 		<item name="dateTime.ntp.server.1">pool.ntp.org</item>
+		{/if}
 
 		<!-- # Secondary NTP Server -->
 		<!-- # String -->
 		<!-- Pvalue P8333 -->
-		<item name="dateTime.ntp.server.2"></item>
+		{if isset($ntp_server_secondary)}
+		<item name="dateTime.ntp.server.2">{$ntp_server_secondary}</item>
+		{else}
+		<item name="dateTime.ntp.server.2">2.us.pool.ntp.org</item>
+		{/if}
 
 		<!-- # NTP Update Interval -->
 		<!-- # String -->
@@ -4558,7 +4607,7 @@
 
 		<!-- MPK Value -->
 		<!-- Pvalue P303 -->
-		<item name="pks.mpk.{$row.device_key_id}.value"></item>
+		<item name="pks.mpk.{$row.device_key_id}.value">{$row.device_key_value}</item>
 
 {/foreach}
 

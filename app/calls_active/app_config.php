@@ -29,7 +29,11 @@
 		$apps[$x]['description']['ru-ru'] = "Активные каналы в системе";
 		$apps[$x]['description']['sv-se'] = "";
 		$apps[$x]['description']['uk-ua'] = "";
-
+/*
+ *
+ * Permissions have been migrated to the active_calls app
+ *
+ *
 	//permission details
 		$y=0;
 		$apps[$x]['permissions'][$y]['name'] = "call_active_view";
@@ -56,5 +60,16 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_active_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-
-?>
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_active_profile";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_active_application";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_active_codec";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "call_active_secure";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+*/

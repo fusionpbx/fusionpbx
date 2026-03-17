@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2017-2023
+	Portions created by the Initial Developer are Copyright (C) 2017-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,26 +29,24 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('call_center_queue_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('call_center_queue_view')) {
 		echo "access denied";
 		exit;
 	}
 
+//convert to a key
+	$widget_key = str_replace(' ', '_', strtolower($widget_name));
+
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get($_SESSION['domain']['language']['code'], 'app/call_centers');
+	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/call_centers');
+
+//get the dashboard label
+	$widget_label = $text['label-'.$widget_key] ?? $widget_name;
 
 //get http variables and set as php variables
 	$order_by = $_GET["order_by"] ?? null;
 	$order = $_GET["order"] ?? null;
-
-//connect to the database
-	if (!isset($database)) {
-		$database = new database;
-	}
 
 //setup the event socket connection
 	$esl = event_socket::create();
@@ -86,13 +84,11 @@
 		$array['call_center_agents'][0]['call_center_agent_uuid'] = $agent_uuid;
 		$array['call_center_agents'][0]['domain_uuid'] = $_SESSION['user']['domain_uuid'];
 		$array['call_center_agents'][0]['agent_status'] = $agent_status;
-		$database->app_name = 'call_centers_dashboard';
-		$database->app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
 		$result = $database->save($array);
 
 		//send the agent status status to mod_call_center
 		$cmd = "callcenter_config agent set status ".$agent_uuid." '".$agent_status."'";
-    $response = event_socket::api($cmd);
+		$response = event_socket::api($cmd);
 
 		//add or delete agents from the queue assigned by the tier
 		foreach ($_POST['agents'] as $row) {
@@ -148,7 +144,7 @@
 	unset($sql, $parameters);
 
 //get the call center queues from the database
-	if (!empty($_SESSION['call_center']['queue_login']['text']) && $_SESSION['call_center']['queue_login']['text'] == 'dynamic') {
+	//if ($settings->get('call_center, queue_login', '') == 'dynamic') {
 		$sql = "select * from v_call_center_queues ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and call_center_queue_uuid in ( ";
@@ -161,7 +157,7 @@
 		$call_center_queues = $database->select($sql, $parameters, 'all');
 		$num_rows = !is_array($call_center_queues) ? 0 : @sizeof($call_center_queues);
 		unset($sql, $parameters);
-	}
+	//}
 
 //get the agent details from event socket
 	$switch_cmd = 'callcenter_config agent list '.($agent['call_center_agent_uuid'] ?? null);
@@ -258,21 +254,24 @@
 	echo "</script>\n";
 
 //show the content
-	echo "<div class='action_bar sub'>\n";
-	echo "	<div class='heading'><b>".$text['header-call_center_queues'].(!empty($agent['agent_name']) ? "&nbsp;&nbsp;&nbsp;</b> Agent: <strong>".$agent['agent_name']."</strong>" : "</b>")."</div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'collapse'=>false,'onclick'=>"document.getElementById('form_list_call_center_agent_dashboard').submit();"]);
+	echo "<div class='hud_box'>";
+
+	echo "<div class='hud_content' style='display: block;'>\n";
+	echo "	<div class='action_bar sub'>\n";
+	echo "		<div class='heading' style='padding-left: 5px;'><b>".escape($widget_label).(!empty($agent['agent_name']) ? "&nbsp;&nbsp;&nbsp;</b> Agent: <strong>".$agent['agent_name']."</strong>" : "</b>")."</div>\n";
+	echo "		<div class='actions' style='padding-top: 2px;'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'collapse'=>false,'onclick'=>"document.getElementById('form_list_call_center_agent_dashboard').submit();"]);
+	echo "		</div>\n";
+	echo "		<div style='clear: both;'></div>\n";
 	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
 
-	echo "<form id='form_list_call_center_agent_dashboard' method='post'>\n";
+	echo "	<form id='form_list_call_center_agent_dashboard' method='post'>\n";
 
-	echo "<table class='list'>\n";
-	echo "<tr class='list-header'>\n";
-	echo "	<th>".$text['label-queue_name']."</th>\n";
-	echo "	<th class='shrink'>".$text['label-status']."</th>\n";
-	echo "</tr>\n";
+	echo "	<table class='list' style='padding: 0 5px;'>\n";
+	echo "	<tr class='list-header'>\n";
+	echo "		<th>".$text['label-queue_name']."</th>\n";
+	echo "		<th class='shrink'>".$text['label-status']."</th>\n";
+	echo "	</tr>\n";
 
 	if (!empty($call_center_queues) && is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
 		$x = 0;
@@ -295,9 +294,12 @@
 		unset($call_center_queues);
 	}
 
-	echo "</table>\n";
-	echo "<br />\n";
-	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
-	echo "</form>\n";
+	echo "	</table>\n";
+	echo "	<br />\n";
+	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+	echo "	</form>\n";
+	echo "</div>\n";
+
+	echo "</div>\n";
 
 ?>

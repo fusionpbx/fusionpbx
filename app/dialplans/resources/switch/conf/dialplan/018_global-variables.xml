@@ -3,5 +3,6 @@
 		<action application="set" data="RFC2822_DATE=${strftime(%a, %d %b %Y %T %z)}"/>
 		<action application="set" data="ringback=$${us-ring}" inline="true" enabled="false"/>
 		<action application="set" data="transfer_ringback=$${us-ring}" inline="true" enabled="false"/>
+		<action application="set" data="record_ext=mp3" inline="true" enabled="true"/>
 	</condition>
 </extension>

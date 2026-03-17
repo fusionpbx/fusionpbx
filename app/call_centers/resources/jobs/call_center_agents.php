@@ -43,8 +43,6 @@
 	$sql .= "from v_call_center_agents as a, v_domains as d \n";
 	$sql .= "where a.domain_uuid = d.domain_uuid \n";
 	$sql .= "order by agent_name asc \n";
-	//echo $sql;
-	$database = new database;
 	$agents = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 

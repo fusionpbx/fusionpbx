@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('destination_import')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('destination_import')) {
 		echo "access denied";
 		exit;
 	}
@@ -40,18 +37,6 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
-
-//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduct the functionality but requirs PHP 5.1.0 or higher
-	if(!function_exists('str_getcsv')) {
-		function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
-			$fp = fopen("php://memory", 'r+');
-			fputs($fp, $input);
-			rewind($fp);
-			$data = fgetcsv($fp, null, $delimiter, $enclosure); // $escape only got added in 5.3.0
-			fclose($fp);
-			return $data;
-		}
-	}
 
 //get the http get values and set them as php variables
 	$action = $_POST["action"] ?? null;
@@ -64,15 +49,16 @@
 	$destination_record = $_POST["destination_record"] ?? null;
 
 //set the defaults
-	if (empty($destination_type)) { $destination_type = 'inbound'; }
-	if (empty($destination_context)) { $destination_context = 'public'; }
+	$destination_type = $destination_type ?? 'inbound';
+	$destination_context = $destination_context ?? 'public';
+	$from_row = $from_row ?? '2';
+	$destination_enabled = $destination_enabled ?? true;
 	if ($destination_type =="outbound" && $destination_context == "public") { $destination_context = $_SESSION['domain_name']; }
 	if ($destination_type =="outbound" && empty($destination_context)) { $destination_context = $_SESSION['domain_name']; }
-	if (empty($from_row)) { $from_row = '2'; }
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
-		$file = $_SESSION['server']['temp']['dir']."/destinations-".$_SESSION['domain_name'].".csv";
+		$file = $settings->get('server', 'temp')."/destinations-".$_SESSION['domain_name'].".csv";
 		file_put_contents($file, $_POST['data']);
 		$_SESSION['file'] = $file;
 		$_SESSION['file_name'] = $_FILES['ulfile']['name'];
@@ -82,11 +68,11 @@
 	//$_POST['submit'] == "Upload" &&
 	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('destination_upload')) {
 		if ($_POST['type'] == 'csv') {
-			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);
-			$save_msg = "Uploaded file to ".$_SESSION['server']['temp']['dir']."/". htmlentities($_FILES['ulfile']['name']);
-			//system('chmod -R 744 '.$_SESSION['server']['temp']['dir'].'*');
+			move_uploaded_file($_FILES['ulfile']['tmp_name'], $settings->get('server', 'temp').'/'.$_FILES['ulfile']['name']);
+			$save_msg = "Uploaded file to ".$settings->get('server', 'temp')."/". htmlentities($_FILES['ulfile']['name']);
+			//system('chmod -R 744 '.$settings->get('server', 'temp').'*');
 			unset($_POST['txtCommand']);
-			$file = $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name'];
+			$file = $settings->get('server', 'temp').'/'.$_FILES['ulfile']['name'];
 			$_SESSION['file'] = $file;
 		}
 	}
@@ -135,6 +121,14 @@
 	}
 
 //get the parent table
+	/**
+	 * Retrieves the parent table of a given table in a database schema.
+	 *
+	 * @param array  $schema     Database schema containing table information
+	 * @param string $table_name Name of the table for which to retrieve the parent
+	 *
+	 * @return mixed Parent table name, or null if no matching table is found
+	 */
 	function get_parent($schema,$table_name) {
 		foreach ($schema as $row) {
 			if ($row['table'] == $table_name) {
@@ -174,6 +168,9 @@
 
 				//loop through the array
 					while (($line = fgets($handle, 4096)) !== false) {
+						//convert the line to UTF-8
+						$line = mb_convert_encoding($line, 'UTF-8');
+
 						if ($from_row <= $row_number) {
 							//format the data
 								$y = 0;
@@ -215,20 +212,27 @@
 
 							//add the actions
 								foreach ($array['destinations'] as $row) {
-
 									//build the array
 										if (!empty($row['destination_actions']) && is_json($row['destination_actions'])) {
-											$destination_actions = $row['destination_actions']; // use json actions
-											$temp = json_decode($row['destination_actions'], true);
-											$row['destination_app'] = $temp[array_key_last($temp)]['destination_app'];
-											$row['destination_data'] = $temp[array_key_last($temp)]['destination_data'];
-											unset($temp);
+											// use destination_actions json
+											$destination_actions_json = $row['destination_actions']; 
+											$destination_actions = json_decode($row['destination_actions'], true);
+											$row['destination_app'] = $destination_actions[array_key_last($destination_actions)]['destination_app'];
+											$row['destination_data'] = $destination_actions[array_key_last($destination_actions)]['destination_data'];
 										}
 										else if (!empty($row['destination_app']) && !empty($row['destination_data'])) {
-											$actions[0]['destination_app'] = $row['destination_app'];
-											$actions[0]['destination_data'] = $row['destination_data'];
-											$destination_actions = json_encode($actions);
-											unset($actions);
+											// use destination app and data
+											$destination_actions[0]['destination_app'] = $row['destination_app'];
+											$destination_actions[0]['destination_data'] = $row['destination_data'];
+											$destination_actions_json = json_encode($destination_actions);
+										}
+
+									//determine if there is a bridge in the destination actions array
+										$bridge_exists = false;
+										foreach($destination_actions as $sub_row) {
+											if ($sub_row['destination_app'] == 'bridge') {
+												$bridge_exists = true;
+											}
 										}
 
 									//get the values
@@ -250,14 +254,14 @@
 
 									//add the additional fields
 										$dialplan_uuid = uuid();
-										$array["destinations"][$row_id]['destination_actions'] = $destination_actions;
+										$array["destinations"][$row_id]['destination_actions'] = $destination_actions_json;
 										$array["destinations"][$row_id]['destination_app'] = $destination_app;
 										$array["destinations"][$row_id]['destination_data'] = $destination_data;
 										$array["destinations"][$row_id]['destination_type'] = $destination_type;
 										$array["destinations"][$row_id]['destination_record'] = $destination_record;
 										$array["destinations"][$row_id]['destination_context'] = $destination_context;
 										$array["destinations"][$row_id]['destination_number_regex'] = $destination_number_regex;
-										$array["destinations"][$row_id]['destination_enabled'] = $destination_enabled;
+										$array["destinations"][$row_id]['destination_enabled'] = ($destination_enabled) ? 'true' : 'false';
 										$array["destinations"][$row_id]['dialplan_uuid'] = $dialplan_uuid;
 
 									//build the dialplan array
@@ -267,9 +271,9 @@
 										$array["dialplans"][$row_id]["dialplan_name"] = !empty($dialplan_name) ? $dialplan_name : format_phone($destination_number);
 										$array["dialplans"][$row_id]["dialplan_number"] = $destination_number;
 										$array["dialplans"][$row_id]["dialplan_context"] = $destination_context;
-										$array["dialplans"][$row_id]["dialplan_continue"] = "false";
+										$array["dialplans"][$row_id]["dialplan_continue"] = false;
 										$array["dialplans"][$row_id]["dialplan_order"] = "100";
-										$array["dialplans"][$row_id]["dialplan_enabled"] = $destination_enabled;
+										$array["dialplans"][$row_id]["dialplan_enabled"] = ($destination_enabled) ? 'true' : 'false';
 										$array["dialplans"][$row_id]["dialplan_description"] = $destination_description;
 										$dialplan_detail_order = 10;
 
@@ -277,8 +281,8 @@
 										$dialplan_detail_order = $dialplan_detail_order + 10;
 
 									//set the dialplan detail type
-										if (!empty($_SESSION['dialplan']['destination']['text'])) {
-											$dialplan_detail_type = $_SESSION['dialplan']['destination']['text'];
+										if (!empty($settings->get('dialplan', 'destination'))) {
+											$dialplan_detail_type = $settings->get('dialplan', 'destination');
 										}
 										else {
 											$dialplan_detail_type = "destination_number";
@@ -334,19 +338,20 @@
 										$array["dialplans"][$row_id]["dialplan_xml"] .= "</extension>\n";
 
 									//dialplan details
-										if ($_SESSION['destinations']['dialplan_details']['boolean'] == "true") {
+										if ($settings->get('destinations', 'dialplan_details', false)) {
 
 											//check the destination number
 												$array["dialplans"][$row_id]["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 												$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-												if (!empty($_SESSION['dialplan']['destination']['text'])) {
-													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = $_SESSION['dialplan']['destination']['text'];
+												if (!empty($settings->get('dialplan', 'destination'))) {
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = $settings->get('dialplan', 'destination');
 												}
 												else {
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
 												}
 												$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = $destination_number_regex;
 												$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+												$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 												$y++;
 
 											//increment the dialplan detail order
@@ -359,6 +364,7 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -366,13 +372,14 @@
 												}
 
 											//enable call recordings
-												if ($destination_record == "true") {
+												if ($destination_record === true) {
 
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "answer";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -384,6 +391,7 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "record_path=\${recordings_dir}/\${domain_name}/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -395,6 +403,7 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "record_name=\${uuid}.\${record_ext}";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -408,6 +417,7 @@
 													$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "recording_follow_transfer=true";
 													$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
 													$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -419,6 +429,7 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "\${record_path}/\${record_name}";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_inline"] = "false";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -432,19 +443,21 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "accountcode=".$destination_accountcode;
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
 													$dialplan_detail_order = $dialplan_detail_order + 10;
 												}
 
-											//add hangup_after_bridge and continue_on_fail
-												if (!empty($destination_data) && $destination_app == 'bridge') {
+											//add hangup_after_bridge and continue_on_fail when a bridge statement is used
+												if ($bridge_exists) {
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "hangup_after_bridge=true";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
@@ -455,20 +468,25 @@
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = "continue_on_fail=true";
 													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
 													$y++;
 
 													//increment the dialplan detail order
 													$dialplan_detail_order = $dialplan_detail_order + 10;
 												}
 
-											//set the destination app and data
-												if (strlen($destination_app) > 0 && !empty($destination_data)) {
-													$array["dialplans"][$row_id]["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
-													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = $destination_app;
-													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = $destination_data;
-													$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-													$y++;
+											//add the destination app and data
+												if (!empty($destination_actions)) {
+													//use the destination actions array to add the destination_app and destination_data
+													foreach($destination_actions as $sub_row) {
+														$array["dialplans"][$row_id]["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+														$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+														$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_type"] = $sub_row['destination_app'];
+														$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_data"] = $sub_row['destination_data'];
+														$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+														$array["dialplans"][$row_id]["dialplan_details"][$y]["dialplan_detail_enabled"] = 'true';
+														$y++;
+													}
 
 													//set inline to true
 													if (!empty($action_app) && ($action_app == 'set' || $action_app == 'export')) {
@@ -489,9 +507,6 @@
 								if ($row_id === 1000) {
 
 									//save to the data
-										$database = new database;
-										$database->app_name = 'destinations';
-										$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 										$database->save($array);
 										//$message = $database->message;
 
@@ -510,11 +525,8 @@
 
 				//save to the data
 					if (!empty($array) && is_array($array)) {
-						$database = new database;
-						$database->app_name = 'destinations';
-						$database->app_uuid = '5ec89622-b19c-3559-64f0-afde802ab139';
 						$database->save($array);
-						$message = $database->message;
+						//$message = $database->message;
 					}
 
 			}
@@ -608,7 +620,6 @@
 											$sql .= "and destination_number = :destination_number; ";
 											$parameters['domain_uuid'] = $domain_uuid;
 											$parameters['destination_number'] = $destination_number;
-											$database = new database;
 											$destinations = $database->select($sql, $parameters, 'all');
 											$row = $destinations[0];
 											unset($sql, $parameters);
@@ -636,14 +647,12 @@
 									$sql = "delete from v_dialplan_details ";
 									$sql .= "where dialplan_uuid = :dialplan_uuid ";
 									$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
-									$database = new database;
 									$database->execute($sql, $parameters);
 									unset($sql, $parameters);
 
 									$sql = "delete from v_dialplans ";
 									$sql .= "where dialplan_uuid = :dialplan_uuid ";
 									$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
-									$database = new database;
 									$database->execute($sql, $parameters);
 									unset($sql, $parameters);
 								}
@@ -653,7 +662,6 @@
 									$sql = "delete from v_destinations ";
 									$sql .= "where destination_uuid = :destination_uuid ";
 									$parameters['destination_uuid'] = $row['destination_uuid'];
-									$database = new database;
 									$database->execute($sql, $parameters);
 									unset($sql, $parameters);
 								}
@@ -679,14 +687,12 @@
 								$sql = "delete from v_dialplan_details ";
 								$sql .= "where dialplan_uuid = :dialplan_uuid ";
 								$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
-								$database = new database;
 								$database->execute($sql, $parameters);
 								unset($sql, $parameters);
 
 								$sql = "delete from v_dialplans ";
 								$sql .= "where dialplan_uuid = :dialplan_uuid ";
 								$parameters['dialplan_uuid'] = $row['dialplan_uuid'];
-								$database = new database;
 								$database->execute($sql, $parameters);
 								unset($sql, $parameters);
 							}
@@ -696,7 +702,6 @@
 								$sql = "delete from v_destinations ";
 								$sql .= "where destination_uuid = :destination_uuid ";
 								$parameters['destination_uuid'] = $row['destination_uuid'];
-								$database = new database;
 								$database->execute($sql, $parameters);
 								unset($sql, $parameters);
 							}
@@ -729,8 +734,8 @@
 			echo "<div class='action_bar' id='action_bar'>\n";
 			echo "	<div class='heading'><b>".$text['header-destination_import']."</b></div>\n";
 			echo "	<div class='actions'>\n";
-			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'destination_imports.php']);
-			echo button::create(['type'=>'submit','label'=>$text['button-import'],'icon'=>$_SESSION['theme']['button_icon_import'],'id'=>'btn_save']);
+			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'destination_imports.php']);
+			echo button::create(['type'=>'submit','label'=>$text['button-import'],'icon'=>$settings->get('theme', 'button_icon_import'),'id'=>'btn_save']);
 			echo "	</div>\n";
 			echo "	<div style='clear: both;'></div>\n";
 			echo "</div>\n";
@@ -810,16 +815,17 @@
 			echo "	".$text['label-destination_record']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<select class='formfld' name='destination_record' id='destination_record'>\n";
-			echo "	<option value=''></option>\n";
-			switch ($destination_record) {
-				case "true" : 	$selected[1] = "selected='selected'";	break;
-				case "false" : 	$selected[2] = "selected='selected'";	break;
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			echo "	<option value='true' ".($selected[1] ?? null).">".$text['option-true']."</option>\n";
-			echo "	<option value='false' ".($selected[2] ?? null).">".$text['option-false']."</option>\n";
-			unset($selected);
-			echo "	</select>\n";
+			echo "		<select class='formfld' id='destination_record' name='destination_record'>\n";
+			echo "			<option value='false' ".($destination_record == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "			<option value='true' ".($destination_record == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
+			}
 			echo "<br />\n";
 			echo ($text['description-destination_record'] ?? null)."\n";
 			echo "</td>\n";
@@ -888,17 +894,17 @@
 			echo "	".$text['label-destination_enabled']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-			echo "	<select class='formfld' name='destination_enabled'>\n";
-			if (!empty($destination_enabled)) {
-				switch ($destination_enabled) {
-					case "true": $selected[1] = "selected='selected'"; break;
-					case "false": $selected[2] = "selected='selected'"; break;
-				}
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch'>\n";
 			}
-			echo "	<option value='true' ".($selected[1] ?? null).">".$text['label-true']."</option>\n";
-			echo "	<option value='false' ".($selected[2] ?? null).">".$text['label-false']."</option>\n";
-			unset($selected);
-			echo "	</select>\n";
+			echo "		<select class='formfld' id='destination_enabled' name='destination_enabled'>\n";
+			echo "			<option value='true' ".($destination_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "			<option value='false' ".($destination_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "		</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
+			}
 			echo "<br />\n";
 			echo ($text['description-destination_enabled'] ?? null)."\n";
 			echo "</td>\n";
@@ -944,8 +950,8 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-destination_import']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'destinations.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>$_SESSION['theme']['button_icon_upload'],'id'=>'btn_save']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'destinations.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>$settings->get('theme', 'button_icon_upload'),'id'=>'btn_save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";

@@ -30,16 +30,10 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (permission_exists('access_control_node_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('access_control_node_view')) {
 		echo "access denied";
 		exit;
 	}
-
-//initialize the database object
-	$database = new database;
 
 //add multi-lingual support
 	$language = new text;
@@ -60,6 +54,13 @@
 	}
 
 //define the functions
+	/**
+	 * Converts an array to a CSV string.
+	 *
+	 * @param array &$array The input array. It should be a multidimensional array where the first level keys are column headers and the second level arrays are rows.
+	 *
+	 * @return string|null The CSV string representation of the input array, or null if the input array is empty.
+	 */
 	function array2csv(array &$array) {
 		if (count($array) == 0) {
 			return null;
@@ -75,7 +76,14 @@
 	}
 
 //send download headers
-	function download_send_headers($filename) {
+/**
+ * Sends HTTP headers to force a file download.
+ *
+ * @param string $filename The name of the file to be downloaded, excluding the path.
+ *
+ * @return void
+ */
+function download_send_headers($filename) {
 		// disable caching
 		$now = gmdate("D, d M Y H:i:s");
 		header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
@@ -141,8 +149,8 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-access_control_export']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'access_control_edit.php?id='.$access_control_uuid]);
-	echo button::create(['type'=>'submit','label'=>$text['button-export'],'icon'=>$_SESSION['theme']['button_icon_export'],'id'=>'btn_save','style'=>'margin-left: 15px;']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'access_control_edit.php?id='.$access_control_uuid]);
+	echo button::create(['type'=>'submit','label'=>$text['button-export'],'icon'=>$settings->get('theme', 'button_icon_export'),'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";

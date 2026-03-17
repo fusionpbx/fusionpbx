@@ -29,16 +29,13 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_address_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_address_view')) {
 		echo "access denied";
 		exit;
 	}
 
 //set from session variables
-	$list_row_edit_button = !empty($_SESSION['theme']['list_row_edit_button']['boolean']) ? $_SESSION['theme']['list_row_edit_button']['boolean'] : 'false';
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //set the uuid
 	if (!empty($_GET['id']) && is_uuid($_GET['id'])) {
@@ -52,7 +49,6 @@
 	$sql .= "order by address_primary desc, address_label asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$parameters['contact_uuid'] = $contact_uuid ?? '';
-	$database = new database;
 	$contact_addresses = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
@@ -111,7 +107,7 @@
 					echo "	<td class='description overflow hide-md-dn'>".escape($row['address_description'])."&nbsp;</td>\n";
 					if (permission_exists('contact_address_edit') && $list_row_edit_button == 'true') {
 						echo "	<td class='action-button'>\n";
-						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);
 						echo "	</td>\n";
 					}
 					echo "</tr>\n";

@@ -32,78 +32,42 @@
 class token {
 
 	/**
-	* Called when the object is created
-	*/
+	 * Called when the object is created
+	 */
 	//public $code;
 
 	/**
-	* Class constructor
-	*/
+	 * Class constructor
+	 */
 	public function __construct() {
 
 	}
 
 	/**
 	 * Create the token
+	 *
 	 * @var string $key
 	 */
 	public function create($key) {
 
 		//clear previously validated tokens
-			$this->clear_validated();
+		$this->clear_validated();
 
 		//allow only specific characters
-			$key = preg_replace('[^a-zA-Z0-9\-_@.\/]', '', $key);
+		$key = preg_replace('[^a-zA-Z0-9\-_@.\/]', '', $key);
 
 		//create a token for the key submitted
-			$token = [
-				'name'=>hash_hmac('sha256', $key, bin2hex(random_bytes(32))),
-				'hash'=>hash_hmac('sha256', $key, bin2hex(random_bytes(32))),
-				'validated'=>false
-				];
+		$token = [
+			'name' => hash_hmac('sha256', $key, bin2hex(random_bytes(32))),
+			'hash' => hash_hmac('sha256', $key, bin2hex(random_bytes(32))),
+			'validated' => false,
+		];
 
 		//save in the token session array
-			$_SESSION['tokens'][$key][] = $token;
+		$_SESSION['tokens'][$key][] = $token;
 
 		//send the hash
-			return $token;
-
-	}
-
-	/**
-	 * validate the token
-	 * @var string $key
-	 * @var string $value
-	 */
-	public function validate($key, $value = '') {
-
-		//allow only specific characters
-			$key = preg_replace('[^a-zA-Z0-9]', '', $key);
-
-		//get the token name
-			if (!empty($_SESSION['tokens']) && is_array($_SESSION['tokens'][$key]) && @sizeof($_SESSION['tokens'][$key]) != 0) {
-				foreach ($_SESSION['tokens'][$key] as $t => $token) {
-					$token_name = $token['name'];
-					if (isset($_REQUEST[$token_name])) {
-						$value = $_REQUEST[$token_name];
-						break;
-					}
-				}
-			}
-
-		//limit the value to specific characters
-			$value = preg_replace('[^a-zA-Z0-9]', '', $value);
-
-		//compare the hashed tokens
-			if (!empty($_SESSION['tokens']) && is_array($_SESSION['tokens'][$key]) && @sizeof($_SESSION['tokens'][$key]) != 0) {
-				foreach ($_SESSION['tokens'][$key] as $t => $token) {
-					if (hash_equals($token['hash'], $value)) {
-						$_SESSION['tokens'][$key][$t]['validated'] = true;
-						return true;
-					}
-				}
-			}
-			return false;
+		return $token;
 
 	}
 
@@ -122,6 +86,44 @@ class token {
 				}
 			}
 		}
+	}
+
+	/**
+	 * validate the token
+	 *
+	 * @var string $key
+	 * @var string $value
+	 */
+	public function validate($key, $value = '') {
+
+		//allow only specific characters
+		$key = preg_replace('[^a-zA-Z0-9]', '', $key);
+
+		//get the token name
+		if (!empty($_SESSION['tokens']) && is_array($_SESSION['tokens'][$key]) && @sizeof($_SESSION['tokens'][$key]) != 0) {
+			foreach ($_SESSION['tokens'][$key] as $t => $token) {
+				$token_name = $token['name'];
+				if (isset($_REQUEST[$token_name])) {
+					$value = $_REQUEST[$token_name];
+					break;
+				}
+			}
+		}
+
+		//limit the value to specific characters
+		$value = preg_replace('[^a-zA-Z0-9]', '', $value);
+
+		//compare the hashed tokens
+		if (!empty($_SESSION['tokens']) && is_array($_SESSION['tokens'][$key]) && @sizeof($_SESSION['tokens'][$key]) != 0) {
+			foreach ($_SESSION['tokens'][$key] as $t => $token) {
+				if (hash_equals($token['hash'], $value)) {
+					$_SESSION['tokens'][$key][$t]['validated'] = true;
+					return true;
+				}
+			}
+		}
+		return false;
+
 	}
 
 }
@@ -147,5 +149,3 @@ echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash'].
 //note: can use $_SERVER['PHP_SELF'] instead of actual file path
 
 */
-
-?>

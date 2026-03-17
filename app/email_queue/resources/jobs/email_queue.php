@@ -11,8 +11,7 @@
 
 //includes files
 	require_once "resources/pdo.php";
-	include "resources/classes/permissions.php";
-	require $_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/functions/transcribe.php";
+	require dirname(__DIR__, 4)."/app/email_queue/resources/functions/transcribe.php";
 
 //increase limits
 	set_time_limit(0);
@@ -70,11 +69,8 @@
 		exit;
 	}
 
-//get the email queue settings
-	$setting = new settings(["category" => "email_queue"]);
-
 //email queue enabled
-	if ($setting->get('email_queue', 'enabled') != 'true') {
+	if ($settings->get('email_queue', 'enabled') != 'true') {
 		echo "Email Queue is disabled in Default Settings\n";
 		exit;
 	}
@@ -103,20 +99,20 @@
 	}
 
 //get the call center settings
-	$interval = $setting->get('email_queue', 'interval');
+	$interval = $settings->get('email_queue', 'interval');
 
 //set the defaults
 	if (!is_numeric($interval)) { $interval = 30; }
 
 //set the email queue limit
-	if (!empty($setting->get('email_queue', 'limit'))) {
-		$email_queue_limit = $setting->get('email_queue', 'limit');
+	if (!empty($settings->get('email_queue', 'limit'))) {
+		$email_queue_limit = $settings->get('email_queue', 'limit');
 	}
 	else {
 		$email_queue_limit = '30';
 	}
-	if (!empty($setting->get('email_queue', 'debug'))) {
-		$debug = $setting->get('email_queue', 'debug');
+	if (!empty($settings->get('email_queue', 'debug'))) {
+		$debug = $settings->get('email_queue', 'debug');
 	}
 
 //get the messages waiting in the email queue
@@ -132,14 +128,13 @@
         $parameters['hostname'] = gethostname();
     }
     $parameters['limit'] = $email_queue_limit;
-    $database = new database;
     $email_queue = $database->select($sql, $parameters, 'all');
     unset($parameters);
 
     //process the messages
     if (is_array($email_queue) && @sizeof($email_queue) != 0) {
         foreach($email_queue as $row) {
-            $command = PHP_BINARY." ".$_SERVER['DOCUMENT_ROOT']."/app/email_queue/resources/jobs/email_send.php ";
+            $command = PHP_BINARY." ".dirname(__DIR__, 4)."/app/email_queue/resources/jobs/email_send.php ";
             $command .= "'action=send&email_queue_uuid=".$row["email_queue_uuid"]."&hostname=".$hostname."'";
             if (isset($debug)) {
                 //run process inline to see debug info

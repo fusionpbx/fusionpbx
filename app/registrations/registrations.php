@@ -30,10 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists("registration_domain") || permission_exists("registration_all") || if_group("superadmin")) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('registration_domain') || permission_exists('registration_all'))) {
 		echo "access denied";
 		exit;
 	}
@@ -45,7 +42,7 @@
 //get common submitted data
 	if (!empty($_REQUEST)) {
 		$show = $_REQUEST['show'] ?? null;
-		$search = $_REQUEST['search'] ?? null;
+		$search = $_REQUEST['search'] ?? '';
 		$profile = $_REQUEST['profile'] ?? null;
 	}
 
@@ -88,7 +85,6 @@
 	$registrations = $obj->get($profile ?? null);
 
 //order the array
-	require_once "resources/classes/array_order.php";
 	$order = new array_order();
 	$registrations = $order->sort($registrations, 'sip-auth-realm', 'user');
 
@@ -124,7 +120,7 @@
 	echo "	<div class='heading'><b>".$text['header-registrations']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (!$reload) {
-		echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$_SESSION['theme']['button_icon_refresh'],'link'=>$location.(!empty($qs) ? '?'.$qs['show'].$qs['search'].$qs['profile'] : null)]);
+		echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$settings->get('theme', 'button_icon_refresh'),'link'=>$location.(!empty($qs) ? '?'.$qs['show'].$qs['search'].$qs['profile'] : null)]);
 	}
 	if ($registrations) {
 		echo button::create(['type'=>'button','label'=>$text['button-unregister'],'title'=>$text['button-unregister'],'icon'=>'user-slash','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-unregister','btn_unregister');"]);
@@ -135,10 +131,10 @@
 	if (permission_exists('registration_all')) {
 		if (!empty($show) && $show == 'all') {
 			echo 	"<input type='hidden' name='show' value='".escape($show)."'>";
-			echo button::create(['type'=>'button','label'=>$text['button-show_local'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>$location.($qs['search'] || $qs['profile'] ? '?' : null).$qs['search'].$qs['profile']]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_local'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>$location.($qs['search'] || $qs['profile'] ? '?' : null).$qs['search'].$qs['profile']]);
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>$location.'?show=all'.(!empty($qs) ? $qs['search'].$qs['profile'] : null)]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>$location.'?show=all'.(!empty($qs) ? $qs['search'].$qs['profile'] : null)]);
 		}
 		if (!empty($profile)) {
 			echo 	"<input type='hidden' name='profile' value='".escape($profile)."'>";
@@ -147,8 +143,8 @@
 	}
 	if (!$reload) {
 		echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
-		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
-		//echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','id'=>'btn_reset','link'=>$location.($qs['show'] || $qs['profile'] ? '?' : null).$qs['show'].$qs['profile'],'style'=>($search == '' ? 'display: none;' : null)]);
+		echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
+		//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>$location.($qs['show'] || $qs['profile'] ? '?' : null).$qs['show'].$qs['profile'],'style'=>($search == '' ? 'display: none;' : null)]);
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
@@ -234,13 +230,13 @@
 				echo "	<td class='hide-md-dn'>".escape($row['ping-time'])."</td>\n";
 				echo "	<td class='hide-md-dn' nowrap='nowrap'>".escape($row['sip_profile_name'])."</td>\n";
 				echo "	<td class='action-button'>\n";
-				if (!empty($_SESSION['registrations']['list_row_button_unregister']['boolean']) && $_SESSION['registrations']['list_row_button_unregister']['boolean'] == 'true') {
+				if ($settings->get('registrations', 'list_row_button_unregister', false)) {
 					echo button::create(['type'=>'submit','title'=>$text['button-unregister'],'icon'=>'user-slash fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('unregister'); list_form_submit('form_list')"]);
 				}
-				if (!empty($_SESSION['registrations']['list_row_button_provision']['boolean']) && $_SESSION['registrations']['list_row_button_provision']['boolean'] == 'true') {
+				if ($settings->get('registrations', 'list_row_button_provision', false)) {
 					echo button::create(['type'=>'submit','title'=>$text['button-provision'],'icon'=>'fax fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('provision'); list_form_submit('form_list')"]);
 				}
-				if (!empty($_SESSION['registrations']['list_row_button_reboot']['boolean']) && $_SESSION['registrations']['list_row_button_reboot']['boolean'] == 'true') {
+				if ($settings->get('registrations', 'list_row_button_reboot', false)) {
 					echo button::create(['type'=>'submit','title'=>$text['button-reboot'],'icon'=>'power-off fa-fw','style'=>'margin-left: 2px; margin-right: 0;','onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('reboot'); list_form_submit('form_list')"]);
 				}
 				echo 	"</td>\n";

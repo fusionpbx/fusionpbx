@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('gateway_add') || permission_exists('gateway_edit')) {
-		//access granted
-	}
-	else {
+	if (!(permission_exists('gateway_add') || permission_exists('gateway_edit'))) {
 		echo "access denied";
 		exit;
 	}
@@ -40,6 +37,12 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//get order and order by, page
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_REQUEST["order_by"] ?? ''));
+	$order = $_REQUEST["order"] ?? 'asc';
+	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
+	$search = $_REQUEST['search'] ?? null;
 
 //action add or update
 	if (!empty($_REQUEST["id"])) {
@@ -57,19 +60,17 @@
 	}
 
 //get total gateway count from the database, check limit, if defined
-	if ($action == 'add') {
-		if (!empty($_SESSION['limit']['gateways']['numeric'])) {
-			$sql = "select count(gateway_uuid) from v_gateways ";
-			$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
-			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-			$database = new database;
-			$total_gateways = $database->select($sql, $parameters, 'column');
-			unset($sql, $parameters);
-			if ($total_gateways >= $_SESSION['limit']['gateways']['numeric']) {
-				message::add($text['message-maximum_gateways'].' '.$_SESSION['limit']['gateways']['numeric'], 'negative');
-				header('Location: gateways.php');
-				exit;
-			}
+	if ($action == 'add' && $settings->get('limit', 'gateways') != '') {
+		$sql = "select count(gateway_uuid) from v_gateways ";
+		$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$total_gateways = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
+
+		if ($total_gateways >= $settings->get('limit', 'gateways')) {
+			message::add($text['message-maximum_gateways'].' '.$settings->get('limit', 'gateways'), 'negative');
+			header('Location: gateways.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+			exit;
 		}
 	}
 
@@ -106,7 +107,7 @@
 		$context = $_POST["context"];
 		$profile = $_POST["profile"];
 		$hostname = $_POST["hostname"];
-		$enabled = $_POST["enabled"] ?? 'false';
+		$enabled = $_POST["enabled"];
 		$description = $_POST["description"];
 	}
 
@@ -122,20 +123,21 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: gateways.php');
+				header('Location: gateways.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
 				exit;
 			}
 
 		//check for all required data
 			$msg = '';
 			if (empty($gateway)) { $msg .= $text['message-required']." ".$text['label-gateway']."<br>\n"; }
-			if ($register == "true") {
-				if (empty($username)) { $msg .= $text['message-required']." ".$text['label-username']."<br>\n"; }
-				if (empty($password)) { $msg .= $text['message-required']." ".$text['label-password']."<br>\n"; }
-			}
+
 			if (empty($proxy)) { $msg .= $text['message-required']." ".$text['label-proxy']."<br>\n"; }
 			if (empty($expire_seconds)) { $msg .= $text['message-required']." ".$text['label-expire_seconds']."<br>\n"; }
 			if (empty($register)) { $msg .= $text['message-required']." ".$text['label-register']."<br>\n"; }
+			if ($register === 'true') {
+				if (empty($username)) { $msg .= $text['message-required']." ".$text['label-username']."<br>\n"; }
+				if (empty($password)) { $msg .= $text['message-required']." ".$text['label-password']."<br>\n"; }
+			}
 			if (empty($retry_seconds)) { $msg .= $text['message-required']." ".$text['label-retry_seconds']."<br>\n"; }
 			if (empty($channels)) {
 				//$msg .= $text['message-required']." ".$text['label-channels']."<br>\n";
@@ -198,7 +200,7 @@
 					$array['gateways'][$x]["description"] = $description;
 
 				//update gateway session variable
-					if ($enabled == 'true') {
+					if ($enabled) {
 						$_SESSION['gateways'][$gateway_uuid] = $gateway;
 					}
 					else {
@@ -206,9 +208,6 @@
 					}
 
 				//save to the data
-					$database = new database;
-					$database->app_name = 'gateways';
-					$database->app_uuid = '297ab33e-2c2f-8196-552c-f3567d2caaf8';
 					if (is_uuid($gateway_uuid)) {
 						$database->uuid($gateway_uuid);
 					}
@@ -216,8 +215,8 @@
 					$message = $database->message;
 
 				//remove xml file (if any) if not enabled
-					if ($enabled != 'true' && !empty($_SESSION['switch']['sip_profiles']['dir'])) {
-						$gateway_xml_file = $_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".$gateway_uuid.".xml";
+					if ($enabled != true && !empty($settings->get('switch', 'sip_profiles'))) {
+						$gateway_xml_file = $settings->get('switch', 'sip_profiles')."/".$profile."/v_".$gateway_uuid.".xml";
 						if (file_exists($gateway_xml_file)) {
 							unlink($gateway_xml_file);
 						}
@@ -227,10 +226,8 @@
 					save_gateway_xml();
 
 				//clear the cache
-					$esl = event_socket::create();
-					$hostname = trim(event_socket::api('switchname'));
 					$cache = new cache;
-					$cache->delete("configuration:sofia.conf:".$hostname);
+					$cache->delete(gethostname().":configuration:sofia.conf");
 
 				//rescan the external profile to look for new or stopped gateways
 					//create the event socket connection
@@ -250,7 +247,7 @@
 				if ($action == "update") {
 					message::add($text['message-update']);
 				}
-				header("Location: gateways.php");
+				header("Location: gateways.php?".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
 				exit;
 			}
 	}
@@ -261,7 +258,6 @@
 		$sql = "select * from v_gateways ";
 		$sql .= "where gateway_uuid = :gateway_uuid ";
 		$parameters['gateway_uuid'] = $gateway_uuid;
-		$database = new database;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$domain_uuid = $row["domain_uuid"];
@@ -285,10 +281,10 @@
 			$ping = $row["ping"];
 			$ping_min = $row["ping_min"];
 			$ping_max = $row["ping_max"];
-			$contact_in_ping = $row["contact_in_ping"];
+			$contact_in_ping = $row["contact_in_ping"] ?? false;
 			$channels = $row["channels"];
-			$caller_id_in_from = $row["caller_id_in_from"];
-			$supress_cng = $row["supress_cng"];
+			$caller_id_in_from = $row["caller_id_in_from"] ?? false;
+			$supress_cng = $row["supress_cng"] ?? false;
 			$sip_cid_type = $row["sip_cid_type"];
 			$codec_prefs = $row["codec_prefs"];
 			$extension_in_contact = $row["extension_in_contact"];
@@ -303,49 +299,45 @@
 
 //get the sip profiles
 	$sql = "select sip_profile_name from v_sip_profiles ";
-	$sql .= "where sip_profile_enabled = 'true' ";
+	$sql .= "where sip_profile_enabled = true ";
 	$sql .= "order by sip_profile_name asc ";
-	$database = new database;
 	$sip_profiles = $database->select($sql, null, 'all');
 	unset($sql);
 
-//set defaults
-	if (empty($gateway_uuid)) { $gateway_uuid = ""; }
-	if (empty($enabled)) { $enabled = "true"; }
-	if (empty($register)) { $register = "true"; }
-	if (empty($retry_seconds)) { $retry_seconds = "30"; }
-	if (empty($gateway)) { $gateway = ''; }
-	if (empty($username)) { $username = ''; }
-	if (empty($password)) { $password = ''; }
-	if (empty($distinct_to)) { $distinct_to = ''; }
-	if (empty($auth_username)) { $auth_username = ''; }
-	if (empty($realm)) { $realm = ''; }
-	if (empty($from_user)) { $from_user = ''; }
-	if (empty($from_domain)) { $from_domain = ''; }
-	if (empty($proxy)) { $proxy = ''; }
-	if (empty($register_proxy)) { $register_proxy = ''; }
-	if (empty($outbound_proxy)) { $outbound_proxy = ''; }
-	if (empty($expire_seconds)) { $expire_seconds = ''; }
-	if (empty($register)) { $register = ''; }
-	if (empty($register_transport)) { $register_transport = ''; }
-	if (empty($contact_params)) { $contact_params = ''; }
-	if (empty($retry_seconds)) { $retry_seconds = ''; }
-	if (empty($extension)) { $extension = ''; }
-	if (empty($ping)) { $ping = ''; }
-	if (empty($ping_min)) { $ping_min = ''; }
-	if (empty($ping_max)) { $ping_max = ''; }
-	if (empty($contact_in_ping)) { $contact_in_ping = ''; }
-	if (empty($channels)) { $channels = ''; }
-	if (empty($caller_id_in_from)) { $caller_id_in_from = ''; }
-	if (empty($supress_cng)) { $supress_cng = ''; }
-	if (empty($sip_cid_type)) { $sip_cid_type = ''; }
-	if (empty($codec_prefs)) { $codec_prefs = ''; }
-	if (empty($extension_in_contact)) { $extension_in_contact = ''; }
-	if (empty($context)) { $context = ''; }
-	if (empty($profile)) { $profile = ''; }
-	if (empty($hostname)) { $hostname = ''; }
-	if (empty($enabled)) { $enabled = 'true'; }
-	if (empty($description)) { $description = ''; }
+//set the defaults
+	$gateway_uuid = $gateway_uuid ?? '';
+	$retry_seconds = $retry_seconds ?? '30';
+	$gateway = $gateway ?? '';
+	$username = $username ?? '';
+	$password = $password ?? '';
+	$auth_username = $auth_username ?? '';
+	$realm = $realm ?? '';
+	$from_user = $from_user ?? '';
+	$from_domain = $from_domain ?? '';
+	$proxy = $proxy ?? '';
+	$register_proxy = $register_proxy ?? '';
+	$outbound_proxy = $outbound_proxy ?? '';
+	$expire_seconds = $expire_seconds ?? '';
+	$register_transport = $register_transport ?? '';
+	$contact_params = $contact_params ?? '';
+	$extension = $extension ?? '';
+	$ping = $ping ?? '';
+	$ping_min = $ping_min ?? '';
+	$ping_max = $ping_max ?? '';
+	$channels = $channels ?? '';
+	$sip_cid_type = $sip_cid_type ?? '';
+	$codec_prefs = $codec_prefs ?? '';
+	$extension_in_contact = $extension_in_contact ?? '';
+	$context = $context ?? '';
+	$profile = $profile ?? '';
+	$hostname = $hostname ?? '';
+	$description = $description ?? '';
+	$register = $register ?? false;
+	$distinct_to = $distinct_to ?? false;
+	$caller_id_in_from = $caller_id_in_from ?? false;
+	$supress_cng = $supress_cng ?? false;
+	$contact_in_ping = $contact_in_ping ?? false;
+	$enabled = $enabled ?? true;
 
 //create token
 	$object = new token;
@@ -358,27 +350,29 @@
 //show the content
 	echo "<script type=\"text/javascript\" language=\"JavaScript\">\n";
 	echo "\n";
-	echo "function enable_change(enable_over) {\n";
-	echo "	var endis;\n";
-	echo "	endis = !(document.iform.enable.checked || enable_over);\n";
-	echo "	document.iform.range_from.disabled = endis;\n";
-	echo "	document.iform.range_to.disabled = endis;\n";
-	echo "}\n";
+	echo "	function enable_change(enable_over) {\n";
+	echo "		var endis;\n";
+	echo "		endis = !(document.iform.enable.checked || enable_over);\n";
+	echo "		document.iform.range_from.disabled = endis;\n";
+	echo "		document.iform.range_to.disabled = endis;\n";
+	echo "	}\n";
 	echo "\n";
-	echo "function show_advanced_config() {\n";
-	echo "	$('#show_advanced_box').slideToggle();\n";
-	echo "	$('#show_advanced').slideToggle();\n";
-	echo "}\n";
+	echo "	function show_advanced_config() {\n";
+	echo "		const rows = document.querySelectorAll('.advanced-row');\n";
+	echo "		rows.forEach(row => {\n";
+	echo "			row.style.display = row.style.display == 'none' ? 'table-row' : 'none';\n";
+	echo "		});\n";
+	echo "	}\n";
 	echo "</script>";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-gateway']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'id'=>'btn_back','link'=>'gateways.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'gateways.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null)]);
 	if ($action == "update" && permission_exists('gateway_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'name'=>'btn_copy','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'name'=>'btn_copy','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$_SESSION['theme']['button_icon_save'],'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
+	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -423,7 +417,7 @@
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input type='password' style='display: none;' disabled='disabled'>\n"; //help defeat browser auto-fill
-	echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='new-password' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($password)."\">\n";
+	echo "    <input class='formfld password' type='password' name='password' id='password' autocomplete='new-password' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($password)."\">\n";
 	echo "    <br />\n";
 	echo "    ".$text['description-password']."\n";
 	echo "</td>\n";
@@ -490,20 +484,17 @@
 	echo "    ".$text['label-register']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='register'>\n";
-	if ($register == "true") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
+	echo "	<select class='formfld' id='register' name='register'>\n";
+	echo "		<option value='true' ".($register == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($register == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
-	if ($register == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-register']."\n";
 	echo "</td>\n";
@@ -520,50 +511,35 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	//--- begin: show_advanced -----------------------
 	echo "<tr>\n";
-	echo "<td style='padding: 0px;' colspan='2' class='' valign='top' align='left' nowrap>\n";
+	echo "	<td valign=\"top\" class=\"vncell\">&nbsp;</td>\n";
+	echo "	<td class=\"vtable\">\n";
+	echo "		".button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>'show_advanced_config();']);
+	echo "	</td>\n";
+	echo "</tr>\n";
 
-	echo "	<div id=\"show_advanced_box\">\n";
-	echo "		<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-	echo "		<tr>\n";
-	echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">&nbsp;</td>\n";
-	echo "		<td width=\"70%\" class=\"vtable\">\n";
-	echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','onclick'=>'show_advanced_config();']);
-	echo "		</td>\n";
-	echo "		</tr>\n";
-	echo "		</table>\n";
-	echo "	</div>\n";
-
-	echo "	<div id=\"show_advanced\" style=\"display:none\">\n";
-	echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-
-	echo "<tr>\n";
-	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-distinct_to']."\n";
 	echo "</td>\n";
-	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='distinct_to'>\n";
-	echo "    <option value=''></option>\n";
-	if ($distinct_to == "true") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	echo "<td class='vtable' align='left'>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
+	echo "	<select class='formfld' id='distinct_to' name='distinct_to'>\n";
+	echo "		<option value='true' ".($distinct_to == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($distinct_to == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
-	if ($distinct_to == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-distinct_to']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-auth_username']."\n";
 	echo "</td>\n";
@@ -574,7 +550,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-extension']."\n";
 	echo "</td>\n";
@@ -585,7 +561,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-register_transport']."\n";
 	echo "</td>\n";
@@ -616,7 +592,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-contact_params']."\n";
 	echo "</td>\n";
@@ -627,7 +603,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-register_proxy']."\n";
 	echo "</td>\n";
@@ -638,7 +614,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-outbound_proxy']."\n";
 	echo "</td>\n";
@@ -649,57 +625,49 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
+	echo "	<tr class='advanced-row' style='display: none;'>\n";
 	echo "	<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "		".$text['label-caller_id_in_from']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<select class='formfld' name='caller_id_in_from'>\n";
-	echo "		<option value=''></option>\n";
-	if ($caller_id_in_from == "true") {
-		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "		<option value='true'>".$text['label-true']."</option>\n";
-	}
-	if ($caller_id_in_from == "false") {
-		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "		<option value='false'>".$text['label-false']."</option>\n";
-	}
+	echo "	<select class='formfld' id='caller_id_in_from' name='caller_id_in_from'>\n";
+	echo "		<option value='true' ".($caller_id_in_from == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($caller_id_in_from == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+	}
 	echo "<br />\n";
 	echo $text['description-caller_id_in_from']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-supress_cng']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='supress_cng'>\n";
-	echo "    <option value=''></option>\n";
-	if ($supress_cng == "true") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
+	echo "	<select class='formfld' id='supress_cng' name='supress_cng'>\n";
+	echo "		<option value='true' ".($supress_cng == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($supress_cng == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
-	if ($supress_cng == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-supress_cng']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-sip_cid_type']."\n";
 	echo "</td>\n";
@@ -710,7 +678,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-codec_prefs']."\n";
 	echo "</td>\n";
@@ -721,7 +689,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-extension_in_contact']."\n";
 	echo "</td>\n";
@@ -746,7 +714,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-ping']."\n";
 	echo "</td>\n";
@@ -757,7 +725,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-ping_min']."\n";
 	echo "</td>\n";
@@ -768,7 +736,7 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-ping_max']."\n";
 	echo "</td>\n";
@@ -779,33 +747,29 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-contact_in_ping']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='contact_in_ping'>\n";
-	echo "    <option value=''></option>\n";
-	if ($contact_in_ping == "true") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
+	echo "	<select class='formfld' id='contact_in_ping' name='contact_in_ping'>\n";
+	echo "		<option value='true' ".($contact_in_ping == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($contact_in_ping == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
-	if ($contact_in_ping == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-contact_in_ping']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	if (permission_exists('gateway_channels')) {
-		echo "<tr>\n";
+		echo "<tr class='advanced-row' style='display: none;'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 		echo "    ".$text['label-channels']."\n";
 		echo "</td>\n";
@@ -817,7 +781,7 @@
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-hostname']."\n";
 	echo "</td>\n";
@@ -829,7 +793,7 @@
 	echo "</tr>\n";
 
 	if (permission_exists('gateway_domain')) {
-		echo "<tr>\n";
+		echo "<tr class='advanced-row' style='display: none;'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-domain']."\n";
 		echo "</td>\n";
@@ -856,12 +820,6 @@
 		echo "</tr>\n";
 	}
 
-	echo "	</table>\n";
-	echo "	</div>";
-
-	echo "</td>\n";
-	echo "</tr>\n";
-	//--- end: show_advanced -----------------------
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -901,17 +859,16 @@
 	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (substr($_SESSION['theme']['input_toggle_style']['text'], 0, 6) == 'switch') {
-		echo "	<label class='switch'>\n";
-		echo "		<input type='checkbox' id='enabled' name='enabled' value='true' ".($enabled == 'true' ? "checked='checked'" : null).">\n";
-		echo "		<span class='slider'></span>\n";
-		echo "	</label>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
 	}
-	else {
-		echo "	<select class='formfld' id='enabled' name='enabled'>\n";
-		echo "		<option value='true' ".($enabled == 'true' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-		echo "		<option value='false' ".($enabled == 'false' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "	</select>\n";
+	echo "	<select class='formfld' id='enabled' name='enabled'>\n";
+	echo "		<option value='true' ".($enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+	echo "		<option value='false' ".($enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+	echo "	</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
 	}
 	echo "<br />\n";
 	echo $text['description-enabled']."\n";
@@ -935,6 +892,7 @@
 	if ($action == "update") {
 		echo "<input type='hidden' name='gateway_uuid' value='".escape($gateway_uuid)."'>\n";
 	}
+	echo "<input type='hidden' name='search' id='search' value=\"".escape($search ?? '')."\" />\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";

@@ -29,10 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('contact_time_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('contact_time_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -46,7 +43,6 @@
 	$sql .= "order by ct.time_start desc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['contact_uuid'] = $contact_uuid;
-	$database = new database;
 	$contact_times = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
