@@ -564,18 +564,19 @@ class authentication {
 						}
 
 						//build the user array
-						$_SESSION['user']['extension'][$x]['user']                      = $row['extension'];
-						$_SESSION['user']['extension'][$x]['number_alias']              = $row['number_alias'];
-						$_SESSION['user']['extension'][$x]['destination']               = $destination;
-						$_SESSION['user']['extension'][$x]['extension_uuid']            = $row['extension_uuid'];
-						$_SESSION['user']['extension'][$x]['outbound_caller_id_name']   = $row['outbound_caller_id_name'];
+						$_SESSION['user']['extension'][$x]['domain_name']= $_SESSION["domain_name"];
+						$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
+						$_SESSION['user']['extension'][$x]['number_alias'] = $row['number_alias'];
+						$_SESSION['user']['extension'][$x]['destination'] = $destination;
+						$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
+						$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
 						$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
-						$_SESSION['user']['extension'][$x]['user_context']              = $row['user_context'];
-						$_SESSION['user']['extension'][$x]['description']               = $row['description'];
+						$_SESSION['user']['extension'][$x]['user_context'] = $row['user_context'];
+						$_SESSION['user']['extension'][$x]['description'] = $row['description'];
 
 						//set the context
 						$_SESSION['user']['user_context'] = $row["user_context"];
-						$_SESSION['user_context']         = $row["user_context"];
+						$_SESSION['user_context'] = $row["user_context"];
 					}
 				}
 			}
