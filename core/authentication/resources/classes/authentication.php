@@ -217,11 +217,6 @@ class authentication {
 
 		//use the authentication plugins
 		foreach ($_SESSION['authentication']['methods'] as $name) {
-			//skip the loop if already authorized
-			if (isset($result['authorized']) && $result['authorized']) {
-				break;
-			}
-
 			//already processed the plugin move to the next plugin
 			if (!empty($_SESSION['authentication']['plugin'][$name]['authorized']) && $_SESSION['authentication']['plugin'][$name]['authorized']) {
 				continue;
@@ -564,7 +559,7 @@ class authentication {
 						}
 
 						//build the user array
-						$_SESSION['user']['extension'][$x]['domain_name']= $_SESSION["domain_name"];
+						$_SESSION['user']['extension'][$x]['domain_name'] = $_SESSION["domain_name"];
 						$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
 						$_SESSION['user']['extension'][$x]['number_alias'] = $row['number_alias'];
 						$_SESSION['user']['extension'][$x]['destination'] = $destination;
