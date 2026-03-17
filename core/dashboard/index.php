@@ -310,7 +310,7 @@ div.hud_chart {
 	padding-top: 7px;
 }
 
-/* dashboard settings */
+/* Dashboard Settings */
 <?php
 foreach ($widgets as $row) {
 	$widget_id = 'id_'.md5(preg_replace('/[^-A-Fa-f0-9]/', '', $row['dashboard_widget_uuid']));
@@ -484,7 +484,7 @@ foreach ($widgets as $row) {
 }
 ?>
 
-/* Screen smaller than 575px? 1 columns */
+/* Screen smaller than 575px? 1 column */
 @media (max-width: 575px) {
 	.widgets { grid-template-columns: repeat(1, minmax(100px, 1fr)); }
 	.col-num { grid-column: span 1; }
@@ -558,6 +558,7 @@ foreach ($widgets as $row) {
 
 <script>
 
+// Widget details expand button
 document.addEventListener('click', function(event) {
 	let hud_content = event.target.closest('.hud_content');
 	let hud_expander = event.target.closest('.hud_expander');
@@ -589,7 +590,7 @@ function toggle_grid_row_span(widget_id) {
 let first_toggle = false;
 
 function toggle_grid_row_span_all() {
-	const widgets = document.querySelectorAll('div.widget, div.child_widget');
+	const widgets = document.querySelectorAll('div.widget');
 
 	widgets.forEach(widget => {
 		if (widget.classList.contains('details_disabled')) {
@@ -613,14 +614,15 @@ function toggle_grid_row_span_all() {
 	first_toggle = true;
 }
 
+// Automatically update parent widget height and row span based on content and window size
 function update_parent_height() {
-	const parent_widgets = document.querySelectorAll('.parent_widget');
+	const parent_widgets = document.querySelectorAll('.parent_widget > .hud_box > .hud_content');
 
 	parent_widgets.forEach(parent_widget => {
 		if (!parent_widget.dataset.originalHeight) {
 			parent_widget.dataset.originalHeight = parseFloat(window.getComputedStyle(parent_widget).height.replace('px', ''));
 		}
-		const widget = parent_widget.closest('.widget');
+		const widget = parent_widget.closest('.parent_widget');
 		const row_gap = parseInt(window.getComputedStyle(document.documentElement).getPropertyValue('--grid-gap').replace('px', ''));
 		const row_height = parseInt(window.getComputedStyle(document.documentElement).getPropertyValue('--row-height').replace('px', ''));
 		const original_row_span = parseInt(window.getComputedStyle(widget).getPropertyValue('--row-span').replace('span ', ''));
@@ -647,7 +649,7 @@ window.addEventListener('resize', update_parent_height);
 
 <?php
 
-//include the dashboards
+//include the widgets
 	echo "<div class='widgets' id='widgets' style='padding: 0 5px;'>\n";
 	$x = 0;
 	foreach ($widgets as $row) {
@@ -707,7 +709,10 @@ window.addEventListener('resize', update_parent_height);
 		$widget_path_name = $widget_path_array[1];
 		$path_array = glob(dirname(__DIR__, 2).'/*/'.$application_name.'/resources/dashboard/'.$widget_path_name.'.php');
 
-		echo "<div class='widget details_".$widget_details_state."' id='".$widget_id."' ".($widget_path == 'dashboard/parent' ? "data-is-parent='true'" : null)." draggable='false'>\n";
+		// Widget class
+		$widget_class = ($widget_path == 'dashboard/parent' ? 'parent_widget' : 'widget');
+
+		echo "<div class='".$widget_class." details_".$widget_details_state." draggable' id='".$widget_id."' draggable='false'>\n";
 		if (file_exists($path_array[0])) {
 			include $path_array[0];
 		}
@@ -730,20 +735,24 @@ window.addEventListener('resize', update_parent_height);
 			user-select: none;
 		}
 
-		div.widget.editable {
-			cursor: move;
+		.editable {
+  			position: relative;
+			cursor: grab;
 		}
 
 		.hud_box.editable {
 			transition: 0.2s;
-			border: 1px dashed rgba(0,0,0,0.4);
+			border: 1px dashed rgba(0,0,0,0.3);
 		}
 
 		.hud_box.editable:hover {
 			box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-			border: 1px dashed rgba(0,0,0,0.4);
-			transform: scale(1.03, 1.03);
+			border: 1px dashed rgba(0,0,0,0.3);
 			transition: 0.2s;
+		}
+
+		.widget > .hud_box.editable:hover {
+			transform: scale(1.03, 1.03);
 		}
 
 		.hud_box .hud_box.editable:hover {
@@ -760,57 +769,63 @@ window.addEventListener('resize', update_parent_height);
 			<?php unset($br); ?>
 			opacity: 0.2;
 		}
+
+		.widget_edit_actions {
+			z-index: 999;
+			position: absolute;
+			top: 0;
+			right: 0;
+			background: #ffffff75;
+			backdrop-filter: blur(5px);
+			border-bottom-left-radius: 5px;
+			overflow: hidden;
+			color: #000000aa;
+		}
+
+		.widget_edit_actions i {
+			padding: 8px 12px;
+			background: #00000020;
+			font-size: 16px;
+		}
 		</style>
 
 		<script>
 		const widgets = document.getElementById('widgets');
 		let sortable;
 
-		//make widgets draggable
 		function edit_mode(state) {
 
 			if (state == 'on') {
 				$('span#expand_contract, #btn_edit, #btn_add').hide();
 				$('.hud_box').addClass('editable');
 				$('#btn_back, #btn_save').show();
-				$('div.widget').attr('draggable',true).addClass('editable');
+				$('div.widget, div.parent_widget').attr('draggable',true).addClass('editable');
 				$('div.child_widget').attr('draggable',true).addClass('editable');
 
-				function update_widget_order() {
-					let widget_ids_list = [];
-					let order = 10;
+				// Widget edit actions
+				document.querySelectorAll('.parent_widget > .hud_box').forEach(widget => {
+					const container = document.createElement('div');
+					container.className = 'widget_edit_actions';
 
-					widgets.querySelectorAll(':scope > div.widget[id]').forEach(widget => {
-						const widget_id = widget.id;
+					// Drag handle
+					const grip_icon = document.createElement('i');
+					grip_icon.className = 'fa-solid fa-grip-lines';
 
-						//add the widgets to the list
-						widget_ids_list.push(`${widget_id}|null|${order}`);
-						order += 10;
+					container.appendChild(grip_icon);
+					widget.prepend(container);
+				});
 
-						//add the nested widgets to the list
-						const nested_container = widget.querySelector('.parent_widget');
-						if (nested_container) {
-							nested_container.querySelectorAll(':scope > div.child_widget[id]').forEach(nested => {
-								const child_id = nested.id;
-								widget_ids_list.push(`${child_id}|${widget_id}|${order}`);
-								order += 10;
-							});
-						}
-					});
-
-					document.getElementById('widget_order').value = widget_ids_list;
-				}
-
+				// Make widgets draggable
 				sortable = Sortable.create(widgets, {
 					group: {
 						name: 'shared',
 						pull: function(to, from, dragEl) {
-							return !dragEl.hasAttribute('data-is-parent');
+							return !dragEl.classList.contains('parent_widget');
 						},
 						put: true,
 					},
 					animation: 150,
-					draggable: '.widget',
+					draggable: '.draggable',
 					preventOnFilter: true,
 					ghostClass: 'ghost',
 					onSort: update_widget_order,
@@ -831,7 +846,7 @@ window.addEventListener('resize', update_parent_height);
 					},
 				});
 
-				document.querySelectorAll('.parent_widget').forEach(function(container) {
+				document.querySelectorAll('.parent_widget > .hud_box > .hud_content').forEach(function(container) {
 					Sortable.create(container, {
 						group: {
 							name: 'shared',
@@ -839,7 +854,7 @@ window.addEventListener('resize', update_parent_height);
 								return true;
 							},
 							put: function(to, from, dragEl) {
-								return !dragEl.hasAttribute('data-is-parent');
+								return !dragEl.classList.contains('parent_widget');
 							},
 						},
 						animation: 150,
@@ -870,18 +885,43 @@ window.addEventListener('resize', update_parent_height);
 					});
 				});
 
+				function update_widget_order() {
+					let widget_ids_list = [];
+					let order = 10;
+
+					widgets.querySelectorAll(':scope > div.widget[id]').forEach(widget => {
+						const widget_id = widget.id;
+
+						//add the widgets to the list
+						widget_ids_list.push(`${widget_id}|null|${order}`);
+						order += 10;
+
+						//add the nested widgets to the list
+						const nested_container = widget.querySelector('.parent_widget > .hud_box > .hud_content');
+						if (nested_container) {
+							nested_container.querySelectorAll(':scope > div.child_widget[id]').forEach(nested => {
+								const child_id = nested.id;
+								widget_ids_list.push(`${child_id}|${widget_id}|${order}`);
+								order += 10;
+							});
+						}
+					});
+
+					document.getElementById('widget_order').value = widget_ids_list;
+				}
 			}
 			else { // off
-
-				$('div.widget').attr('draggable',false).removeClass('editable');
-				$('div.child_widget').attr('draggable',false).removeClass('editable');
+				$('div.widget, div.parent_widget, div.child_widget').attr('draggable',false).removeClass('editable');
 				$('.hud_box').removeClass('editable');
 				$('#btn_back, #btn_save').hide();
 				$('span#expand_contract, #btn_edit, #btn_add').show();
 
+				document.querySelectorAll('.widget_edit_actions').forEach(element => element.remove());
+
 				sortable.option('disabled', true);
-				document.querySelectorAll('.parent_widget').forEach(el => {
-				const nested_sortable = Sortable.get(el);
+				document.querySelectorAll('.parent_widget > .hud_box > .hud_content').forEach(element => {
+					const nested_sortable = Sortable.get(element);
+
 					if (nested_sortable) {
 						nested_sortable.option('disabled', true);
 					}
