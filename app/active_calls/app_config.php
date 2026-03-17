@@ -1,11 +1,11 @@
 <?php
-	
+
 	//application details
 	$apps[$x]['name'] = "Active Calls";
 	$apps[$x]['uuid'] = "c43e956a-cd38-4b27-838b-db43dc3f3204";
 	$apps[$x]['category'] = "switch";
 	$apps[$x]['subcategory'] = "";
-	$apps[$x]['version'] = "1.0";
+	$apps[$x]['version'] = "1.1";
 	$apps[$x]['license'] = "Mozilla Public License 1.1";
 	$apps[$x]['url'] = "http://www.fusionpbx.com";
 	$apps[$x]['description']['en-us'] = "Show realtime view of active calls.";
@@ -55,6 +55,23 @@
 	$apps[$x]['default_settings'][$y]['default_setting_value'] = "80";
 	$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 	$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of characters to show in the application column data. Default value is 80. To disable truncating use 0.";
+	$y++;
+	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "777cbc2e-3bfe-4189-9774-b3951370d2d3";
+	$apps[$x]['default_settings'][$y]['default_setting_category'] = "active_calls";
+	$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "screen_pop_enabled";
+	$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+	$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+	$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+	$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable screen pop. On call ringing open the browser to search contacts by the caller ID number.";
+	$y++;
+	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "42e11c69-0c2a-4e71-b790-5b3be0dc5a39";
+	$apps[$x]['default_settings'][$y]['default_setting_category'] = "active_calls";
+	$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "screen_pop_url";
+	$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+	$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://tenant.domain.local/core/contacts/contacts.php?search=";
+	$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+	$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the screen pop URL. Defaults to current domain and search local contacts.";
+	$y++;
 
 	//permission details
 	$y=0;
