@@ -54,15 +54,15 @@
 	$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
 	$apps[$x]['default_settings'][$y]['default_setting_value'] = "80";
 	$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-	$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of characters to show in the application column data. Default value is 80. To disable truncating use 0.";
+	$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of characters to show in the application column data. The default value is 80. To disable truncating, use 0.";
 	$y++;
 	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "777cbc2e-3bfe-4189-9774-b3951370d2d3";
 	$apps[$x]['default_settings'][$y]['default_setting_category'] = "active_calls";
 	$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "screen_pop_enabled";
 	$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-	$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+	$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 	$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-	$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable screen pop. On call ringing open the browser to search contacts by the caller ID number.";
+	$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable screen pop. On call ringing, open the browser to search contacts by the caller ID number.";
 	$y++;
 	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "42e11c69-0c2a-4e71-b790-5b3be0dc5a39";
 	$apps[$x]['default_settings'][$y]['default_setting_category'] = "active_calls";
