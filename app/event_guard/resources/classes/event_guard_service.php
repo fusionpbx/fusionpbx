@@ -187,10 +187,10 @@ class event_guard_service extends service {
 					$x = 0;
 					foreach($event_guard_logs as $row) {
 						//unblock the ip address
-						$this->block_delete($row['ip_address'], $row['filter']);
+						$this->block_delete($row['ip_address'], 'all');
 
 						//debug info
-						$this->info("unblocked: [ip_address: ".$row['ip_address'].", filter: ".$row['filter'].", to-user: ".$row['extension'].", to-host: ".$row['hostname'].", line: ".__line__);
+						$this->info("unblocked: [ip_address: ".$row['ip_address'].", filter: all, to-user: ".$row['extension'].", to-host: ".$row['hostname'].", line: ".__line__);
 
 						//log the blocked ip address to the database
 						$array['event_guard_logs'][$x]['event_guard_log_uuid'] = $row['event_guard_log_uuid'];
