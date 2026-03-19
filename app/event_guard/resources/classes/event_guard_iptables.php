@@ -25,6 +25,12 @@ class event_guard_iptables implements event_guard_interface {
 	private $firewall_path;
 
 	/**
+	 * chains array
+	 * @var array
+	 */
+	private $chains;
+
+	/**
 	 * called when the object is created
 	 */
 	public function __construct(settings $settings) {
@@ -37,10 +43,15 @@ class event_guard_iptables implements event_guard_interface {
 		// Set firewall path
 		$this->firewall_path = trim(shell_exec('command -v iptables'));
 
+		// Set grep path
+		$this->grep_path = trim(shell_exec('command -v grep'));
+
 		// Create a chain array
-		$chains[] = 'sip-auth-ip';
-		$chains[] = 'sip-auth-fail';
-		foreach ($chains as $chain) {
+		$this->chains[] = 'sip-auth-ip';
+		$this->chains[] = 'sip-auth-fail';
+
+		// Add the chains to active iptables
+		foreach ($this->chains as $chain) {
 			shell_exec($this->firewall_path.' --new ' . $chain . ' >/dev/null 2>&1 &');
 			shell_exec($this->firewall_path.' -I INPUT -j '.$chain . ' >/dev/null 2>&1 &');
 		}
@@ -64,7 +75,7 @@ class event_guard_iptables implements event_guard_interface {
 
 		// Run the block command for iptables
 		// Example: iptables -I INPUT -s 127.0.0.1 -j DROP
-		$command = $this->firewall_path.' -I '.$filter.' -s '.$ip_address.' -j DROP';
+		$command = $this->firewall_path . ' -I ' . escapeshellarg($filter) . ' -s ' . $ip_address . ' -j DROP';
 		$result = shell_exec($command);
 		if (!empty($result)) {
 			return false;
@@ -83,21 +94,32 @@ class event_guard_iptables implements event_guard_interface {
 	 * @return bool True if the IP address was successfully unblocked, false otherwise.
 	 */
 	public function block_delete(string $ip_address, string $filter) : bool {
-		// Invalid ip address
+		// Invalid IP address
 		if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
 			return false;
 		}
 
+		// Remove from all chains or a specific one
+		if ($filter == 'all') {
+			$chains = $this->chains;
+		}
+		else {
+			$chains[] = $filter;
+		}
+
 		// Unblock the address
-		$command = $this->firewall_path.' -L '.$filter.' -n --line-numbers | grep "'.$ip_address.' " | cut -d " " -f1';
-		$line_number = trim(shell_exec($command));
-		echo "\n". $command . " line ".__line__."\n";
-		if (is_numeric($line_number)) {
-			//$result = shell_exec('iptables -D INPUT '.$line_number);
-			$command = $this->firewall_path.' -D '.$filter.' '.$line_number;
-			$result = shell_exec($command);
-			if (!empty($result)) {
-				return false;
+		$command = $this->firewall_path.' -S | '. $this->grep_path . ' ' . $ip_address;
+		$result = trim(shell_exec($command));
+		if (!empty($result)) {
+			//remove the IP address from each chain
+			foreach($chains as $chain) {
+				for ($i = 1; $i <= 999; $i++) {
+					$command = $this->firewall_path.' -D '. escapeshellarg($chain) . ' -s ' . $ip_address . ' -j DROP';
+					$result = shell_exec($command);
+					if (!empty($result)) {
+						break;
+					}
+				}
 			}
 			echo "Unblock address ".$ip_address ." line ".$line_number." command ".$command." result ".$result."\n";
 		}
@@ -114,6 +136,11 @@ class event_guard_iptables implements event_guard_interface {
 	 * @return bool True if the address is blocked, False otherwise
 	 */
 	public function block_exists(string $ip_address, string $filter) : bool {
+		// Invalid IP address
+		if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
+			return false;
+		}
+
 		// Determine whether to return true or false
 		// Check to see if the address is blocked
 		$command = $this->firewall_path.' -L -n --line-numbers | grep '.$ip_address;
