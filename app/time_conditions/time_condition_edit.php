@@ -315,7 +315,7 @@
 								//Use date-time to set the year, month, day and time
 								if (!empty($cond_start) && !empty($cond_stop) && $cond_var == 'date-time') {
 									// Extract components
-									$cond_start_datetime = DateTime::createFromFormat('Y-m-d h:i a', $_REQUEST['value'][$group_id][$cond_num]['start']);
+									$cond_start_datetime = DateTime::createFromFormat('Y-m-d H:i', $cond_start);
 									$cond_start_year   = $cond_start_datetime->format('Y');
 									$cond_start_month  = $cond_start_datetime->format('n');
 									$cond_start_day    = $cond_start_datetime->format('j');
@@ -323,7 +323,7 @@
 									$cond_start_minute = $cond_start_datetime->format('i');
 									$cond_start_minutes = ($cond_start_hour * 60) + $cond_start_minute + 1;
 
-									$cond_stop_datetime = DateTime::createFromFormat('Y-m-d h:i a', $_REQUEST['value'][$group_id][$cond_num]['stop']);
+									$cond_stop_datetime = DateTime::createFromFormat('Y-m-d H:i', $cond_stop);
 									$cond_stop_year   = $cond_stop_datetime->format('Y');
 									$cond_stop_month  = $cond_stop_datetime->format('n');
 									$cond_stop_day    = $cond_stop_datetime->format('j');
