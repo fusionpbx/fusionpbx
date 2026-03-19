@@ -734,6 +734,304 @@
 			}
 			{/literal}
 
+		//domain select: searchable picker
+			{literal}
+			(function() {
+				var domain_cache = null;
+				var domain_cache_loading = false;
+				var domain_cache_callbacks = [];
+				var domain_picker_styles_loaded = false;
+
+				function load_domain_picker_styles() {
+					if (domain_picker_styles_loaded) { return; }
+					var style = document.createElement('style');
+					style.type = 'text/css';
+					style.innerHTML = ""
+						+ ".domain-search-picker { position: relative; width: 100%; }"
+						+ ".domain-search-picker .domain-search-input { width: 100%; }"
+						+ ".domain-search-picker .domain-search-results {"
+						+ " position: absolute; z-index: 1200; left: 0; right: 0; margin-top: 2px;"
+						+ " border: 1px solid rgba(0,0,0,.2); border-radius: 4px;"
+						+ " background: #fff; box-shadow: 0 10px 20px rgba(0,0,0,.12);"
+						+ " max-height: 260px; overflow-y: auto; display: none;"
+						+ "}"
+						+ ".domain-search-picker .domain-search-result-item {"
+						+ " padding: 6px 10px; cursor: pointer; line-height: 1.3;"
+						+ "}"
+						+ ".domain-search-picker .domain-search-result-item:hover,"
+						+ ".domain-search-picker .domain-search-result-item.active {"
+						+ " background: #f1f4f8;"
+						+ "}"
+						+ ".domain-search-picker .domain-search-result-name { display: block; }"
+						+ ".domain-search-picker .domain-search-result-description {"
+						+ " display: block; color: #68727d; font-size: 90%; margin-top: 1px;"
+						+ "}"
+						+ ".domain-search-picker .domain-search-empty {"
+						+ " padding: 8px 10px; color: #68727d;"
+						+ "}";
+					document.head.appendChild(style);
+					domain_picker_styles_loaded = true;
+				}
+
+				function fetch_domains(callback) {
+					if (domain_cache !== null) {
+						callback(domain_cache);
+						return;
+					}
+					domain_cache_callbacks.push(callback);
+					if (domain_cache_loading) { return; }
+					domain_cache_loading = true;
+					var xhttp = new XMLHttpRequest();
+					xhttp.onreadystatechange = function() {
+						if (this.readyState === 4) {
+							var results = [];
+							if (this.status === 200) {
+								try { results = JSON.parse(this.responseText) || []; }
+								catch (error) { results = []; }
+							}
+							domain_cache = results;
+							domain_cache_loading = false;
+							while (domain_cache_callbacks.length) {
+								domain_cache_callbacks.shift()(domain_cache);
+							}
+						}
+					};
+					xhttp.open("GET", "/core/domains/domain_json.php?{/literal}{$domain_json_token_name}={$domain_json_token_hash}{literal}", true);
+					xhttp.send();
+				}
+
+				function init_domain_search_select(select) {
+					if (!select || select.dataset.domainSearchInit === 'true') { return; }
+					select.dataset.domainSearchInit = 'true';
+
+					var option_values = {};
+					var option_order = [];
+					for (var o = 0; o < select.options.length; o++) {
+						var option = select.options[o];
+						if (option.value === '') { continue; }
+						option_values[option.value] = option.text || option.innerText || '';
+						option_order.push(option.value);
+					}
+					if (option_order.length === 0) { return; }
+
+					var picker = document.createElement('div');
+					picker.className = 'domain-search-picker';
+					var input = document.createElement('input');
+					input.type = 'text';
+					input.className = 'formfld domain-search-input';
+					input.placeholder = 'Search domains...';
+					var results = document.createElement('div');
+					results.className = 'domain-search-results';
+					picker.appendChild(input);
+					picker.appendChild(results);
+					select.parentNode.insertBefore(picker, select.nextSibling);
+
+					select.style.position = 'absolute';
+					select.style.left = '-10000px';
+					select.style.width = '1px';
+					select.style.height = '1px';
+					select.style.opacity = '0';
+					select.style.pointerEvents = 'none';
+					select.setAttribute('tabindex', '-1');
+
+					var dataset = [];
+					var active_index = -1;
+					var current_items = [];
+
+					function get_selected_label() {
+						if (select.selectedIndex > -1) {
+							var selected_option = select.options[select.selectedIndex];
+							if (selected_option && selected_option.value !== '') {
+								return selected_option.text || selected_option.innerText || '';
+							}
+						}
+						return '';
+					}
+
+					function sync_input_to_select() {
+						input.value = get_selected_label();
+					}
+
+					function close_results() {
+						active_index = -1;
+						results.style.display = 'none';
+						results.innerHTML = '';
+					}
+
+					function open_results() {
+						results.style.display = 'block';
+					}
+
+					function score_item(item, query) {
+						if (!query) { return 1; }
+						var score = 0;
+						var name = item.domain_name_lc;
+						var description = item.domain_description_lc;
+						if (name === query) { score += 1000; }
+						if (name.indexOf(query) === 0) { score += 500; }
+						else if (name.indexOf(query) > -1) { score += 300; }
+						if (description && description.indexOf(query) > -1) { score += 100; }
+						return score;
+					}
+
+					function render_results() {
+						var query = (input.value || '').toLowerCase().trim();
+						var matches = [];
+						for (var i = 0; i < dataset.length; i++) {
+							var score = score_item(dataset[i], query);
+							if (score > 0) {
+								dataset[i].score = score;
+								matches.push(dataset[i]);
+							}
+						}
+
+						matches.sort(function(a, b) {
+							if (b.score !== a.score) { return b.score - a.score; }
+							return a.domain_name_lc.localeCompare(b.domain_name_lc);
+						});
+
+						current_items = matches.slice(0, 50);
+						results.innerHTML = '';
+						active_index = current_items.length > 0 ? 0 : -1;
+
+						if (current_items.length === 0) {
+							var empty = document.createElement('div');
+							empty.className = 'domain-search-empty';
+							empty.innerText = 'No matching domains';
+							results.appendChild(empty);
+							open_results();
+							return;
+						}
+
+						for (var r = 0; r < current_items.length; r++) {
+							var row = document.createElement('div');
+							row.className = 'domain-search-result-item' + (r === active_index ? ' active' : '');
+							row.setAttribute('data-index', r);
+							var name = document.createElement('span');
+							name.className = 'domain-search-result-name';
+							name.innerText = current_items[r].domain_name;
+							row.appendChild(name);
+							if (current_items[r].domain_description) {
+								var desc = document.createElement('span');
+								desc.className = 'domain-search-result-description';
+								desc.innerText = current_items[r].domain_description;
+								row.appendChild(desc);
+							}
+							results.appendChild(row);
+						}
+						open_results();
+					}
+
+					function update_active_row() {
+						var rows = results.querySelectorAll('.domain-search-result-item');
+						for (var i = 0; i < rows.length; i++) {
+							rows[i].classList.toggle('active', i === active_index);
+						}
+					}
+
+					function select_value(domain_uuid) {
+						select.value = domain_uuid;
+						select.dispatchEvent(new Event('change', { bubbles: true }));
+						sync_input_to_select();
+						close_results();
+					}
+
+					results.addEventListener('mousedown', function(event) {
+						var row = event.target.closest('.domain-search-result-item');
+						if (!row) { return; }
+						event.preventDefault();
+						var index = parseInt(row.getAttribute('data-index'), 10);
+						if (!isNaN(index) && current_items[index]) {
+							select_value(current_items[index].domain_uuid);
+						}
+					});
+
+					input.addEventListener('focus', function() {
+						render_results();
+					});
+
+					input.addEventListener('input', function() {
+						render_results();
+					});
+
+					input.addEventListener('keydown', function(event) {
+						if (results.style.display !== 'block') {
+							if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+								render_results();
+								event.preventDefault();
+							}
+							return;
+						}
+						if (event.key === 'ArrowDown') {
+							if (active_index < current_items.length - 1) { active_index++; }
+							update_active_row();
+							event.preventDefault();
+						}
+						else if (event.key === 'ArrowUp') {
+							if (active_index > 0) { active_index--; }
+							update_active_row();
+							event.preventDefault();
+						}
+						else if (event.key === 'Enter') {
+							if (active_index > -1 && current_items[active_index]) {
+								select_value(current_items[active_index].domain_uuid);
+								event.preventDefault();
+							}
+						}
+						else if (event.key === 'Escape') {
+							close_results();
+						}
+					});
+
+					select.addEventListener('change', function() {
+						sync_input_to_select();
+					});
+
+					document.addEventListener('mousedown', function(event) {
+						if (!picker.contains(event.target)) {
+							close_results();
+						}
+					});
+
+					fetch_domains(function(domains) {
+						var domains_by_uuid = {};
+						for (var i = 0; i < domains.length; i++) {
+							domains_by_uuid[domains[i].domain_uuid] = domains[i];
+						}
+						for (var x = 0; x < option_order.length; x++) {
+							var domain_uuid = option_order[x];
+							var domain = domains_by_uuid[domain_uuid] || {};
+							var domain_name = (domain.domain_name || option_values[domain_uuid] || '').trim();
+							if (!domain_name) { continue; }
+							var domain_description = (domain.domain_description || '').trim();
+							dataset.push({
+								domain_uuid: domain_uuid,
+								domain_name: domain_name,
+								domain_name_lc: domain_name.toLowerCase(),
+								domain_description: domain_description,
+								domain_description_lc: domain_description.toLowerCase(),
+								score: 0
+							});
+						}
+						sync_input_to_select();
+					});
+				}
+
+				window.init_domain_search_selects = function() {
+					load_domain_picker_styles();
+					var selectors = document.querySelectorAll("select[name='domain_uuid'], select[id='domain_uuid'], select[data-domain-search='true']");
+					for (var i = 0; i < selectors.length; i++) {
+						if (selectors[i].dataset.domainSearch === 'false') { continue; }
+						if (selectors[i].multiple) { continue; }
+						if (window.getComputedStyle(selectors[i]).display === 'none') { continue; }
+						init_domain_search_select(selectors[i]);
+					}
+				};
+			})();
+
+			window.init_domain_search_selects();
+			{/literal}
+
 		// Multi select box with search
 			{literal}
 			const container = document.querySelector('.multiselect_container');
