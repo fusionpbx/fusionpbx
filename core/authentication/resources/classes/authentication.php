@@ -116,15 +116,14 @@ class authentication {
 			$sql .= "and user_agent = :user_agent ";
 			$sql .= "and timestamp > NOW() - INTERVAL '7 days' ";
 			$sql .= "and result = 'success' ";
-			$sql .= "limit 1 ";
 			$parameters['remember_selector'] = $cookie_selector;
 			$parameters['remote_address'] = $remote_address;
 			$parameters['user_agent'] = $user_agent;
-			$user_logs = $this->database->select($sql, $parameters, 'row');
+			$user_log = $this->database->select($sql, $parameters, 'row');
 			unset($sql, $parameters);
 
 			//validate the token
-			if (!empty($user_logs) && password_verify($cookie_validator, $user_logs['remember_validator'])) {
+			if (!empty($user_log['remember_validator']) && password_verify($cookie_validator, $user_log['remember_validator'])) {
 				//get the user details
 				$sql = "select \n";
 				$sql .= "u.domain_uuid, \n";
@@ -136,7 +135,7 @@ class authentication {
 				$sql .= "where user_uuid = :user_uuid \n";
 				$sql .= "and u.domain_uuid = d.domain_uuid \n";
 				$sql .= "and u.user_enabled = 'true' \n";
-				$parameters['user_uuid'] = $user_logs['user_uuid'];
+				$parameters['user_uuid'] = $user_log['user_uuid'];
 				$row = $this->database->select($sql, $parameters, 'row');
 				unset($sql, $parameters);
 
@@ -172,15 +171,6 @@ class authentication {
 				//set the user_uuid
 				$this->user_uuid = $row["user_uuid"];
 
-				//save the result to the authentication plugin
-				$_SESSION['authentication']['methods'] = [];
-				$_SESSION['authentication']['methods'][] = $plugin_name;
-				$_SESSION['authentication']['plugin'] = [];
-				$_SESSION['authentication']['plugin'][$plugin_name] = $result;
-
-				//create the session
-				self::create_user_session($result, $this->settings);
-
 				//generate new token
 				$selector = uuid();
 				$validator = generate_password(32);
@@ -207,11 +197,25 @@ class authentication {
 					'samesite' => 'Strict'
 				]);
 
+				//create the session
+				self::create_user_session($result, $this->settings);
+
 				//set the session authorized to true
 				$_SESSION['authorized'] = true;
 
 				//return the result
 				return $result;
+			}
+			else {
+				//invalid token
+				unset($_COOKIE['remember']);
+				setcookie('remember', '', time() - 3600, '/');
+
+				//log the attempt
+				$log_array['domain_uuid'] = $_SESSION['domain_uuid'];
+				$log_array['authorized'] = false;
+				$failed_login_message = "Invalid remember me token";
+				user_logs::add($log_array, $failed_login_message);
 			}
 		}
 
