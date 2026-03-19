@@ -406,7 +406,6 @@
 				$array['users'][$x]['salt'] = null;
 
 				//remove remember me tokens
-				setcookie('remember', '', time() - 3600, '/');
 				$sql = "update v_user_logs ";
 				$sql .= "set remember_selector = null, ";
 				$sql .= "remember_validator = null ";
@@ -414,6 +413,10 @@
 				$parameters['user_uuid'] = $user_uuid;
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);
+
+				//unset remember me cookie
+				unset($_COOKIE['remember']);
+				setcookie('remember', '', time() - 3600, '/');
 
 				//send the password changed email
 				if (valid_email($user_email)) {
