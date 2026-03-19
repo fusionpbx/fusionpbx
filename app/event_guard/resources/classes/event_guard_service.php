@@ -293,9 +293,6 @@ class event_guard_service extends service {
 			$p->add('event_guard_log_add', 'temp');
 			$this->database->save($array, false);
 			$p->delete('event_guard_log_add', 'temp');
-
-			//send debug information to the console
-			$this->info("blocked address " . $ip_address . ", line " . __line__);
 		}
 
 		//return the result
@@ -310,10 +307,9 @@ class event_guard_service extends service {
 
 		//unblock the IP address
 		$result = $this->firewall->block_delete($ip_address, $filter);
-		if ($result) {
-			//send debug information to the console
-			$this->info("Unblock address " . $ip_address . ", line " . __line__);
-		}
+
+		//send debug information to the console
+		$this->warning("unblocked: [ip_address: ".$ip_address.", filter: ".$filter.", line: ".__line__."]");
 
 		//return the result
 		return $result;

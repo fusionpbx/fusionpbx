@@ -107,22 +107,41 @@ class event_guard_iptables implements event_guard_interface {
 			$chains[] = $filter;
 		}
 
-		// Unblock the address
-		$command = $this->firewall_path.' -S | '. $this->grep_path . ' ' . $ip_address;
-		$result = trim(shell_exec($command));
-		if (!empty($result)) {
-			//remove the IP address from each chain
-			foreach($chains as $chain) {
-				for ($i = 1; $i <= 999; $i++) {
-					$command = $this->firewall_path.' -D '. escapeshellarg($chain) . ' -s ' . $ip_address . ' -j DROP';
-					$result = shell_exec($command);
-					if (!empty($result)) {
+		//remove the IP address from each chain
+		foreach($chains as $chain) {
+			$i = 0;
+			while (true) {
+				// Remove the blocked IP address
+				$command = $this->firewall_path . ' -D ' . escapeshellarg($chain) . ' -s ' . $ip_address . ' -j DROP';
+				$descriptors = [
+					0 => ['pipe', 'r'],  // stdin
+					1 => ['pipe', 'w'],  // stdout
+					2 => ['pipe', 'w'],  // stderr
+				];
+				$process = proc_open($command, $descriptors, $pipes);
+				if (is_resource($process)) {
+					$stdout = stream_get_contents($pipes[1]);
+					$stderr = stream_get_contents($pipes[2]);
+					$exit_code = proc_close($process);
+
+					if ($exit_code !== 0 && strpos($stderr, "Bad rule") !== false) {
+						echo "exiting the loop\n";
 						break;
 					}
 				}
+
+				//added as a failsafe
+				if ($i > 1000) {
+					break;
+				}
+
+				//increment the iterator
+				$i++;
 			}
-			echo "Unblock address ".$ip_address ." line ".$line_number." command ".$command." result ".$result."\n";
 		}
+		
+		// Send information to the user
+		echo "Unblock address " . $ip_address . " line " . $line_number . " command " . $command . " result " . $result . "\n";
 
 		// Return success
 		return true;
