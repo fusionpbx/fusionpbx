@@ -194,6 +194,7 @@ function send_email(id, uuid)
 				else
 					sql = sql .. "AND template_subcategory = 'default' "
 				end
+				sql = sql .. "AND template_type = 'html' "
 				sql = sql .. "AND template_enabled = true "
 				sql = sql .. "ORDER BY domain_uuid DESC "
 				local params = {domain_uuid = domain_uuid, template_language = default_language.."-"..default_dialect};
@@ -337,7 +338,7 @@ function send_email(id, uuid)
 					smtp_from,
 					voicemail_mail_to,
 					{subject, body},
-					(voicemail_file == "attach") and voicemail_path,
+					voicemail_path,
 					voicemail_base64
 				);
 
