@@ -171,7 +171,7 @@
 		//$voicemail_sms_to  = $row["voicemail_sms_to "];
 		$voicemail_transcription_enabled = $row["voicemail_transcription_enabled"];
 		//$voicemail_attach_file = $row["voicemail_attach_file"];
-		//$voicemail_file = $row["voicemail_file"];
+		$voicemail_file = $row["voicemail_file"];
 		//$voicemail_local_after_email = $row["voicemail_local_after_email"];
 		//$voicemail_enabled = $row["voicemail_enabled"];
 		//$voicemail_description = $row["voicemail_description"];
@@ -338,7 +338,9 @@
 	$email->recipients = $email_to;
 	$email->subject = $email_subject;
 	$email->body = $email_body;
-	$email->attachments = $email_attachments;
+	if ($voicemail_file == 'attach') {
+		$email->attachments = $email_attachments;
+	}
 	$email->debug_level = 3;
 	$email->method = 'direct';
 	$email_status = $email->send();
