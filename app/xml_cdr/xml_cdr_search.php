@@ -187,7 +187,7 @@
 
 		echo "					<div id='no_results' class='no_results'>".$text['label-no_results']."</div>\n";
 
-		echo "					<div class='options_list' id='options_list'>\n";
+		echo "					<div class='options_list' id='options_list' name='extension_uuids[]'>\n";
 		if (is_array($extensions) && @sizeof($extensions) != 0) {
 			foreach ($extensions as $row) {
 				echo "					<label class='option_item' data-value='".escape($row['extension'])."'>\n";
