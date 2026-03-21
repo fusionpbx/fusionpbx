@@ -24,13 +24,13 @@
 	end
 	
 	if (cmd == "flush") then
-		os.execute("rm " .. cache_dir .. "/*");
+		os.execute("rm " .. shell_esc(cache_dir) .. "/*");
 	end
 	
 	if (cmd == "delete") then
 		if (file ~= nil) then
 			file = trim(file);
-			freeswitch.consoleLog("NOTICE","api_command: delete ".. cache_dir .. "/" .. file .. "\n");
+			freeswitch.consoleLog("NOTICE","api_command: delete ".. shell_esc(cache_dir .. "/" .. file) .. "\n");
 			os.remove(cache_dir.."/"..file);
 		end
 	
