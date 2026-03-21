@@ -328,6 +328,11 @@
 		}
 	}
 
+//clear the array if this is a voicemail and file attachment is not enabled
+	if (!empty($email_uuid) && !empty($voicemail_file) && $voicemail_file !== 'attach') {
+	    $email_attachments = '';
+	}
+
 //send the email
 	$email = new email;
 	$email->domain_uuid = $domain_uuid;
@@ -338,7 +343,7 @@
 	$email->recipients = $email_to;
 	$email->subject = $email_subject;
 	$email->body = $email_body;
-	if ($voicemail_file == 'attach') {
+	if (!empty($email_attachments)) {
 		$email->attachments = $email_attachments;
 	}
 	$email->debug_level = 3;
@@ -432,7 +437,6 @@
 				}
 			}
 		}
-
 
 		/*
 		//build insert array
