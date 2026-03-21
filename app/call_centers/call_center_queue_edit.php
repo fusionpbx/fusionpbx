@@ -216,7 +216,7 @@
 			}
 
 		//if the user doesn't have the correct permission then
-		//override domain_uuid and queue_context values
+			//override domain_uuid and queue_context values
 			if ($action == 'update' && is_uuid($call_center_queue_uuid)) {
 				$sql = "select * from v_call_center_queues ";
 				$sql .= "where call_center_queue_uuid = :call_center_queue_uuid ";
@@ -335,11 +335,11 @@
 			$array['call_center_queues'][0]['queue_extension'] = $queue_extension;
 			$array['call_center_queues'][0]['queue_greeting'] = $queue_greeting;
 			$array['call_center_queues'][0]['queue_language'] = $queue_language;
+			$array['call_center_queues'][0]['queue_dialect'] = $queue_dialect;
+			$array['call_center_queues'][0]['queue_voice'] = $queue_voice;
 			$array['call_center_queues'][0]['queue_strategy'] = $queue_strategy;
 			$array['call_center_queues'][0]['queue_moh_sound'] = $queue_moh_sound;
 			$array['call_center_queues'][0]['queue_record_template'] = $record_template;
-			$array['call_center_queues'][0]['queue_dialect'] = $queue_dialect;
-			$array['call_center_queues'][0]['queue_voice'] = $queue_voice;
 			$array['call_center_queues'][0]['queue_limit'] = $queue_limit;
 			$array['call_center_queues'][0]['queue_time_base_score'] = $queue_time_base_score;
 			$array['call_center_queues'][0]['queue_time_base_score_sec'] = $queue_time_base_score_sec;
@@ -400,11 +400,18 @@
 			}
 
 		//add definable export variables can be set in default settings
-			$export_variables = 'call_center_queue_uuid,sip_h_Alert-Info';
+			$export_variables = 'call_center_queue_uuid,sip_h_Alert-Info,sound_prefix';
 			if (!empty($settings->get('call_center','export_vars', []))) {
 				foreach ($settings->get('call_center','export_vars', []) as $export_variable) {
 					$export_variables .= ','.$export_variable;
 				}
+			}
+
+		//set the default language, dialect and voice
+			if (empty($queue_language) && empty($queue_dialect) && empty($queue_voice)) {
+				$queue_language = 'en';
+				$queue_dialect = 'us';
+				$queue_voice = 'callie';
 			}
 
 		//build the xml dialplan
@@ -419,6 +426,7 @@
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(callcenter\+)?".xml::sanitize($queue_extension)."$\">\n";
 			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"sound_prefix=".$settings->get('switch','sounds', '').'/'.xml::sanitize($queue_language)."/".xml::sanitize($queue_dialect)."/".xml::sanitize($queue_voice)."\"/>\n";
 			if (!empty($call_center_queue_uuid) && is_uuid($call_center_queue_uuid)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"call_center_queue_uuid=".xml::sanitize($call_center_queue_uuid)."\"/>\n";
 			}
@@ -1082,7 +1090,7 @@
 				echo "		<td class=''>";
 				if (permission_exists('call_center_tier_delete')) {
 					echo "			<a href=\"call_center_queue_edit.php?id=".escape($call_center_queue_uuid)."&call_center_tier_uuid=".escape($field['call_center_tier_uuid'])."&a=delete\" alt=\"".$text['button-delete']."\" onclick=\"return confirm('".$text['confirm-delete']."');\">$v_link_label_delete</a>";
-				}
+					}
 				echo "		</td>\n";
 				echo "	</tr>\n";
 				$assigned_agents[] = $field['agent_name'];
