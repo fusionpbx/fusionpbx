@@ -57,13 +57,10 @@ pin_number = "";
 max_tries = "3";
 digit_timeout = "3000";
 
---define the trim function
+--load the functions
+require "resources.functions.shell_esc"
 require "resources.functions.trim";
-
---define the explode function
 require "resources.functions.explode";
-
---define the split function
 require "resources.functions.split";
 
 --connect to the database
@@ -194,8 +191,13 @@ if (session:ready() and pressed_digit) then
 	end
 	dbh:query(sql, params);
 
-	--clear the cache
-	os.execute('rm -f /var/cache/fusionpbx/directory.*@'..domain_name);
+	--clear the cache for each extension in this domain
+	local sql = [[SELECT * FROM v_extensions
+		WHERE domain_uuid = :domain_uuid]];
+	local params = {domain_uuid = domain_uuid};
+	dbh:query(sql, params, function(row)
+		os.execute('rm -f '.. shell_esc('/var/cache/fusionpbx/directory.'.. row["extension"] ..'@'..domain_name));
+	end);
 
 end
 
@@ -211,4 +213,3 @@ if (session:ready()) then
 	session:sleep(2000);
 	audio_file = "tone_stream://%(200,0,500,600,700)"
 end
-
