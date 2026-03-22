@@ -64,6 +64,7 @@
 	require "resources.functions.explode";
 	require "resources.functions.format_seconds";
 	require "resources.functions.mkdir";
+	require "resources.functions.shell_esc"
 
 --get the session variables
 	uuid = session:getVariable("uuid");
@@ -353,7 +354,7 @@
 					--convert the wav to an mp3
 						if (record == "true") then
 							--cmd = "sox "..conference_recording..".wav -r 16000 -c 1 "..conference_recording..".mp3";
-							cmd = "/usr/bin/lame -b 32 --resample 8 -a "..conference_recording..".wav "..conference_recording..".mp3";
+							cmd = "/usr/bin/lame -b 32 --resample 8 -a " .. shell_esc(conference_recording .. ".wav") .. " ".. shell_esc(conference_recording .. ".mp3");
 							freeswitch.consoleLog("notice", "[conference center] cmd: " .. cmd .. "\n");
 							os.execute(cmd);
 							--if (file_exists(conference_recording..".mp3")) then
@@ -496,7 +497,7 @@
 					end
 				--use the pin_number to find the conference room
 					if (pin_number ~= "") then
-						local sql = [[SELECT * FROM v_conference_rooms 
+						local sql = [[SELECT * FROM v_conference_rooms
 							WHERE domain_uuid = :domain_uuid
 							AND (moderator_pin = :pin_number or participant_pin = :pin_number)
 							AND enabled = true
@@ -543,7 +544,7 @@
 				pin_number = get_pin_number(domain_uuid, conference_center_greeting);
 			end
 			if (pin_number ~= nil) then
-				local sql = [[SELECT 
+				local sql = [[SELECT
 					 conference_room_uuid,
 					 conference_room_name,
 					 cast(record as text),
@@ -662,7 +663,7 @@
 			end
 
 		--check if the conference is locked
-			if (string.find(result, [[locked="true"]]) == nil) then
+			if (result ~= nil and string.find(result, [[locked="true"]]) == nil) then
 				conference_locked = false;
 			else
 				conference_locked = true;
@@ -736,7 +737,7 @@
 					flags = flags .. "|mute";
 				end
 			end
-			
+
 			if (member_type == "moderator") then
 				--set as the moderator
 					flags = flags .. "|moderator";
