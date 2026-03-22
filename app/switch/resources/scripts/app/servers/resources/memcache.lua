@@ -37,6 +37,9 @@
 --includes config.lua which will include local.lua if it exists
 	require "resources.functions.config"
 
+--load the shell_esc function
+	require "resources.functions.shell_esc"
+
 --subscribe to the events
 	--events = freeswitch.EventConsumer("all");
 	events = freeswitch.EventConsumer("CUSTOM");
