@@ -1,6 +1,6 @@
 
 --escape shell arguments to prevent command injection
-	local function shell_esc(arg)
+	function shell_esc(arg)
 		if not arg or arg == "" then
 			return "''"
 		end
