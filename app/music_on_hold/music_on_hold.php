@@ -45,9 +45,9 @@
 
 //get the music_on_hold array
 	$sql = "select * from v_music_on_hold ";
-	$sql .= "where ";
+	$sql .= "where true ";
 	if ( permission_exists('music_on_hold_all')) {
-		$sql .= "true and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	elseif (permission_exists('music_on_hold_domain')) {
