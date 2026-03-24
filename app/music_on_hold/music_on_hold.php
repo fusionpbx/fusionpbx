@@ -51,7 +51,7 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	elseif (permission_exists('music_on_hold_domain')) {
-		$sql .= "domain_uuid = :domain_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	$sql .= "order by domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc";
