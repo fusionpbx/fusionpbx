@@ -42,7 +42,7 @@
 //get order and order by, page
 	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_REQUEST["order_by"] ?? ''));
 	$order = $_REQUEST["order"] ?? 'asc';
-	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
+	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : null;
 	$search = $_REQUEST['search'] ?? null;
 
 //get user uuid
