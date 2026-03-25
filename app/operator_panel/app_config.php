@@ -66,7 +66,20 @@
 //   operator_panel_record     - record calls
 //   operator_panel_call_details - view caller/callee details
 //   operator_panel_on_demand  - on-demand availability status
-// No new permissions are declared here.
+
+// Tab visibility permissions
+	$y = 0;
+	$apps[$x]['permissions'][$y]['name'] = "operator_panel_extensions";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "operator_panel_calls";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "operator_panel_conferences";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "operator_panel_agents";
 
 //default settings
 	$y = 0;

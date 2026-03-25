@@ -850,10 +850,10 @@ class operator_panel_service extends base_websocket_system_service implements we
 	 * @return array  ['success' => bool, 'message' => string]
 	 */
 	private function execute_action(string $action, array $payload): array {
-		$uuid        = $payload['uuid']        ?? '';
+		$uuid = $payload['uuid'] ?? '';
 		$destination = $payload['destination'] ?? '';
-		$context     = $payload['context']     ?? 'default';
 		$domain_name = $payload['domain_name'] ?? '';
+		$context = $payload['context'] ?? ($domain_name !== '' ? $domain_name : 'default');
 
 		try {
 			switch ($action) {
@@ -1006,20 +1006,28 @@ class operator_panel_service extends base_websocket_system_service implements we
 					if ($source === $dest) {
 						return ['success' => false, 'message' => 'Cannot call self'];
 					}
-					$context = trim((string)($payload['context'] ?? $domain_name ?? 'default'));
-					if ($context === '') {
-						$context = 'default';
+
+					// The destination gets routed through the domain's dialplan which handles bridging
+					$originate_cmd = "originate {sip_auto_answer=true,origination_caller_id_number=$source,sip_h_Call-Info=_undef_}user/$source@$domain_name $dest XML $context";
+
+					// Log the originate command attempt
+					$this->debug("Originate: from=$source to=$dest domain=$domain_name context=$context cmd=$originate_cmd");
+
+					$fs_response = event_socket::api($originate_cmd);
+
+					// Log the response from FreeSWITCH
+					$this->debug("Originate response: " . json_encode($fs_response));
+
+					if ($fs_response === false) {
+						$this->error("Failed to send originate command to FreeSWITCH");
+						return ['success' => false, 'message' => 'Failed to send originate command to FreeSWITCH'];
 					}
-					$context = preg_replace('/[^a-zA-Z0-9_\-.]/', '', $context);
-					if ($context === '') {
-						$context = 'default';
+					if (is_array($fs_response) && isset($fs_response['-ERR'])) {
+						$this->error("Originate error: " . $fs_response['-ERR']);
+						return ['success' => false, 'message' => 'FreeSWITCH error: ' . $fs_response['-ERR']];
 					}
 
-					// Route destination through dialplan so extension features (forward_all,
-					// follow_me, voicemail, etc.) are evaluated like a normal extension call.
-					$destination_route = 'loopback/' . $dest . '/' . $context;
-					event_socket::api("bgapi originate {sip_auto_answer=true,origination_caller_id_number=$source,sip_h_Call-Info=_undef_}user/$source@$domain_name $destination_route");
-					return ['success' => true, 'message' => 'Call originated'];
+					return ['success' => true, 'message' => 'Call originated', 'fs_response' => $fs_response];
 
 				case 'user_status':
 					$status       = $payload['status']    ?? '';
