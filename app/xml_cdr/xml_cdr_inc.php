@@ -65,6 +65,7 @@
 	$permission['xml_cdr_search_tta'] = permission_exists('xml_cdr_search_tta');
 	$permission['xml_cdr_search_hangup_cause'] = permission_exists('xml_cdr_search_hangup_cause');
 	$permission['xml_cdr_search_recording'] = permission_exists('xml_cdr_search_recording');
+	$permission['xml_cdr_search_cdr_uuid'] = permission_exists('xml_cdr_search_cdr_uuid');
 	$permission['xml_cdr_search_order'] = permission_exists('xml_cdr_search_order');
 	$permission['xml_cdr_extension'] = permission_exists('xml_cdr_extension');
 	$permission['xml_cdr_caller_id_name'] = permission_exists('xml_cdr_caller_id_name');
