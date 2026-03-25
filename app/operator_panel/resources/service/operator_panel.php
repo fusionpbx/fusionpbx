@@ -36,6 +36,7 @@
  *   systemctl start  operator_panel
  *   systemctl stop   operator_panel
  *   systemctl restart operator_panel
+ *   systemctl reload operator_panel
  *
  * Enable on boot:
  *   systemctl enable operator_panel

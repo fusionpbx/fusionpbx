@@ -269,6 +269,12 @@ class operator_panel_service extends base_websocket_system_service implements we
 	 * @return void
 	 */
 	protected function reload_settings(): void {
+		// Ensure reload is idempotent by removing stale listener/timers before re-registering.
+		if (!empty($this->switch_socket)) {
+			$this->remove_listener($this->switch_socket);
+		}
+		$this->clear_timers();
+
 		parent::$config->read();
 
 		$database   = database::new(['config' => parent::$config]);
@@ -286,7 +292,9 @@ class operator_panel_service extends base_websocket_system_service implements we
 			$this->warning('Failed to connect to switch server — real-time events will not be received');
 		}
 
-		$this->add_listener($this->switch_socket, [$this, 'handle_switch_events']);
+		if (!empty($this->switch_socket)) {
+			$this->add_listener($this->switch_socket, [$this, 'handle_switch_events']);
+		}
 
 		// Start the self-rescheduling agent-stats broadcast timer
 		if ($this->agent_stats_interval > 0) {
