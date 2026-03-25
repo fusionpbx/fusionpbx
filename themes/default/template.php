@@ -824,10 +824,12 @@
 
 					var picker = document.createElement('div');
 					picker.className = 'domain-search-picker';
+
 					var input = document.createElement('input');
 					input.type = 'text';
 					input.className = 'formfld domain-search-input';
-					input.placeholder = 'Search domains...';
+					input.placeholder = '{/literal}{$text.label_search_domains}{literal}...';
+
 					var results = document.createElement('div');
 					results.className = 'domain-search-results';
 					results.setAttribute('role', 'listbox');
@@ -956,7 +958,7 @@
 						if (current_items.length === 0) {
 							var empty = document.createElement('div');
 							empty.className = 'domain-search-empty';
-							empty.innerText = 'No matching domains';
+							empty.innerText = '{/literal}{$text.label_no_matching_domains}{literal}...';
 							results.appendChild(empty);
 							open_results();
 							window.requestAnimationFrame(position_results_panel);
