@@ -46,12 +46,13 @@
 //get the music_on_hold array
 	$sql = "select * from v_music_on_hold ";
 	$sql .= "where true ";
-	if ($show != "all" || !permission_exists('music_on_hold_all')) {
+	if ( permission_exists('music_on_hold_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (permission_exists('music_on_hold_domain')) {
-		$sql .= "or domain_uuid is null ";
+	elseif (permission_exists('music_on_hold_domain')) {
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	$sql .= "order by domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc";
 	$streams = $database->select($sql, $parameters ?? null, 'all');
