@@ -45,13 +45,16 @@
 
 // Gather user permissions for the JS side
 	$perm = [
-		'operator_panel_view'      => permission_exists('operator_panel_view'),
-		'operator_panel_manage'    => permission_exists('operator_panel_manage'),
-		'operator_panel_hangup'    => permission_exists('operator_panel_hangup'),
-		'operator_panel_eavesdrop' => permission_exists('operator_panel_eavesdrop'),
-		'operator_panel_coach'     => permission_exists('operator_panel_coach'),
-		'operator_panel_record'    => permission_exists('operator_panel_record'),
-		'operator_panel_originate' => permission_exists('operator_panel_originate'),
+		'operator_panel_view'        => permission_exists('operator_panel_view'),
+		'operator_panel_manage'      => permission_exists('operator_panel_manage'),
+		'operator_panel_hangup'      => permission_exists('operator_panel_hangup'),
+		'operator_panel_eavesdrop'   => permission_exists('operator_panel_eavesdrop'),
+		'operator_panel_record'      => permission_exists('operator_panel_record'),
+		'operator_panel_originate'   => permission_exists('operator_panel_originate'),
+		'operator_panel_extensions'  => permission_exists('operator_panel_extensions'),
+		'operator_panel_calls'       => permission_exists('operator_panel_calls'),
+		'operator_panel_conferences' => permission_exists('operator_panel_conferences'),
+		'operator_panel_agents'      => permission_exists('operator_panel_agents'),
 	];
 
 // WebSocket settings from default_settings
@@ -470,7 +473,6 @@ body.op-dragging, body.op-dragging * {
 #my_extensions_container:not(:empty) {
 	margin-bottom: 14px;
 	padding-bottom: 10px;
-	border-bottom: 1px solid #d0d8e5;
 }
 /* call group cards */
 .op-group-card {
@@ -502,6 +504,21 @@ body.op-dragging, body.op-dragging * {
 }
 #extensions_container.op-edit-mode .op-group-card.sortable-ghost {
 	opacity: .4;
+}
+/* In edit mode, force hidden headers visible so Sortable has a drag handle */
+#extensions_container.op-edit-mode .op-group-card[data-position="hidden"] .op-group-card-header {
+	display: flex;
+	min-width: 18px;
+	padding: 4px 2px;
+	cursor: grab;
+	background: #d0d8e5;
+	writing-mode: vertical-rl;
+	text-orientation: mixed;
+	transform: rotate(180deg);
+	align-items: center;
+	justify-content: center;
+	font-size: 11px;
+	color: #888;
 }
 /* Card header - default/left side orientation with vertical text */
 .op-group-card-header {
@@ -575,6 +592,7 @@ body.op-dragging, body.op-dragging * {
 
 <!-- Bootstrap tabs: Extensions | Calls | Conferences | Agents -->
 <ul class="nav nav-tabs" id="lop_tabs" role="tablist" style="margin-bottom:16px;">
+<?php if ($perm['operator_panel_extensions']): ?>
 	<li class="nav-item" role="presentation">
 		<button class="nav-link active" id="tab-extensions" data-bs-toggle="tab" data-bs-target="#panel-extensions"
 			type="button" role="tab" aria-controls="panel-extensions" aria-selected="true">
@@ -582,13 +600,17 @@ body.op-dragging, body.op-dragging * {
 			<span id="extensions_count" class="badge ms-1" style="background:#6c757d;color:#fff;">0</span>
 		</button>
 	</li>
+<?php endif; ?>
+<?php if ($perm['operator_panel_calls']): ?>
 	<li class="nav-item" role="presentation">
-		<button class="nav-link" id="tab-calls" data-bs-toggle="tab" data-bs-target="#panel-calls"
-			type="button" role="tab" aria-controls="panel-calls" aria-selected="false">
+		<button class="nav-link<?= !$perm['operator_panel_extensions'] ? ' active' : '' ?>" id="tab-calls" data-bs-toggle="tab" data-bs-target="#panel-calls"
+			type="button" role="tab" aria-controls="panel-calls" aria-selected="<?= !$perm['operator_panel_extensions'] ? 'true' : 'false' ?>">
 			<?= htmlspecialchars($text['tab-calls'] ?? 'Calls') ?>
 			<span id="calls_count" class="badge ms-1" style="background:#6c757d;color:#fff;">0</span>
 		</button>
 	</li>
+<?php endif; ?>
+<?php if ($perm['operator_panel_conferences']): ?>
 	<li class="nav-item" role="presentation">
 		<button class="nav-link" id="tab-conferences" data-bs-toggle="tab" data-bs-target="#panel-conferences"
 			type="button" role="tab" aria-controls="panel-conferences" aria-selected="false">
@@ -596,6 +618,8 @@ body.op-dragging, body.op-dragging * {
 			<span id="conferences_count" class="badge ms-1" style="background:#6c757d;color:#fff;">0</span>
 		</button>
 	</li>
+<?php endif; ?>
+<?php if ($perm['operator_panel_agents']): ?>
 	<li class="nav-item" role="presentation">
 		<button class="nav-link" id="tab-agents" data-bs-toggle="tab" data-bs-target="#panel-agents"
 			type="button" role="tab" aria-controls="panel-agents" aria-selected="false">
@@ -603,12 +627,14 @@ body.op-dragging, body.op-dragging * {
 			<span id="agents_count" class="badge ms-1" style="background:#6c757d;color:#fff;">0</span>
 		</button>
 	</li>
+<?php endif; ?>
 </ul>
 
 <div class="tab-content" id="lop_tab_content">
 
 	<!-- EXTENSIONS TAB -->
-	<div class="tab-pane fade show active" id="panel-extensions" role="tabpanel" aria-labelledby="tab-extensions">
+<?php if ($perm['operator_panel_extensions']): ?>
+	<div class="tab-pane fade<?= $perm['operator_panel_extensions'] ? ' show active' : '' ?>" id="panel-extensions" role="tabpanel" aria-labelledby="tab-extensions">
 		<!-- Group filter bar -->
 		<div id="extensions_filter_bar" class="op-filter-bar" style="display:none;">
 			<button type="button" class="op-edit-btn" id="edit_mode_btn" onclick="toggle_edit_mode()" title="<?= htmlspecialchars($text['label-edit_mode'] ?? 'Edit Mode') ?>">
@@ -622,9 +648,11 @@ body.op-dragging, body.op-dragging * {
 			<p class="text-muted"><?= htmlspecialchars($text['label-connecting'] ?? 'Connecting...') ?></p>
 		</div>
 	</div>
+<?php endif; ?>
 
 	<!-- CALLS TAB -->
-	<div class="tab-pane fade" id="panel-calls" role="tabpanel" aria-labelledby="tab-calls">
+<?php if ($perm['operator_panel_calls']): ?>
+	<div class="tab-pane fade<?= !$perm['operator_panel_extensions'] && $perm['operator_panel_calls'] ? ' show active' : '' ?>" id="panel-calls" role="tabpanel" aria-labelledby="tab-calls">
 		<div id="calls_filter_bar" class="op-filter-bar" style="display:none;">
 			<div id="group_filter_buttons_calls" class="op-group-filters"></div>
 			<input type="text" id="calls_text_filter" class="op-text-filter" placeholder="<?= htmlspecialchars($text['label-filter'] ?? 'Filter...') ?>" oninput="apply_calls_filters()">
@@ -633,8 +661,10 @@ body.op-dragging, body.op-dragging * {
 			<p class="text-muted"><?= htmlspecialchars($text['label-connecting'] ?? 'Connecting...') ?></p>
 		</div>
 	</div>
+<?php endif; ?>
 
 	<!-- CONFERENCES TAB -->
+<?php if ($perm['operator_panel_conferences']): ?>
 	<div class="tab-pane fade" id="panel-conferences" role="tabpanel" aria-labelledby="tab-conferences">
 		<div id="conferences_filter_bar" class="op-filter-bar" style="display:none;">
 			<div id="group_filter_buttons_conferences" class="op-group-filters"></div>
@@ -644,8 +674,10 @@ body.op-dragging, body.op-dragging * {
 			<p class="text-muted"><?= htmlspecialchars($text['label-connecting'] ?? 'Connecting...') ?></p>
 		</div>
 	</div>
+<?php endif; ?>
 
 	<!-- AGENTS TAB -->
+<?php if ($perm['operator_panel_agents']): ?>
 	<div class="tab-pane fade" id="panel-agents" role="tabpanel" aria-labelledby="tab-agents">
 		<div id="agents_filter_bar" class="op-filter-bar" style="display:none;">
 			<div id="group_filter_buttons_agents" class="op-group-filters"></div>
@@ -655,6 +687,7 @@ body.op-dragging, body.op-dragging * {
 			<p class="text-muted"><?= htmlspecialchars($text['label-connecting'] ?? 'Connecting...') ?></p>
 		</div>
 	</div>
+<?php endif; ?>
 
 </div>
 

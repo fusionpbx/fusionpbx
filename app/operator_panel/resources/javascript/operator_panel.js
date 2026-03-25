@@ -1895,8 +1895,11 @@ function toggle_edit_mode() {
 		if (typeof Sortable !== 'undefined') {
 			sortable_instance = Sortable.create(container, {
 				animation: 150,
+				draggable: '.op-group-card',
 				handle: '.op-group-card-header',
 				ghostClass: 'sortable-ghost',
+				filter: '.op-ext-block, .op-ext-action-icon',
+				preventOnFilter: false,
 				onEnd: function() {
 					save_card_order();
 				}
@@ -1972,12 +1975,11 @@ function render_extensions_tab() {
 
 	// Group remaining extensions by call_group (case-insensitive)
 	const groups = new Map();
-	const ungrouped_label = text['label-ungrouped'] || 'Ungrouped';
 	others.forEach(ext => {
 		const raw_group = (ext.call_group || '').trim();
 		const key = raw_group.toLowerCase() || '';
 		if (!groups.has(key)) {
-			groups.set(key, { display: raw_group ? to_title_case(raw_group) : ungrouped_label, exts: [] });
+			groups.set(key, { display: raw_group ? to_title_case(raw_group) : '', exts: [] });
 		}
 		groups.get(key).exts.push(ext);
 	});
@@ -2067,8 +2069,11 @@ function render_extensions_tab() {
 		if (sortable_instance) sortable_instance.destroy();
 		sortable_instance = Sortable.create(container, {
 			animation: 150,
+			draggable: '.op-group-card',
 			handle: '.op-group-card-header',
 			ghostClass: 'sortable-ghost',
+			filter: '.op-ext-block, .op-ext-action-icon',
+			preventOnFilter: false,
 			onEnd: function() { save_card_order(); }
 		});
 	}
