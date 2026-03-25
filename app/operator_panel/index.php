@@ -436,7 +436,7 @@ body.op-dragging, body.op-dragging * {
 /* user status: logged out — grey */
 .op-ext-logged-out               { border-color: #9da5ae; background-color: #e2e3e5; }
 .op-ext-logged-out .op-ext-icon  { background-color: #d6d8db; }
-.op-ext-logged-out .op-ext-icon .op-ext-status-icon  { color: #6c757d; }
+.op-ext-logged-out .op-ext-icon .op-ext-status-icon  { color: #1e7e34; }
 .op-ext-logged-out .op-ext-info  { background-color: #f0f1f2; }
 .op-ext-logged-out .op-ext-number { color: #888; }
 .op-ext-logged-out .op-ext-name  { color: #999; }

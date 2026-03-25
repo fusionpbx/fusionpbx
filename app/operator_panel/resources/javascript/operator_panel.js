@@ -1330,7 +1330,21 @@ function action_record(uuid) {
  * @param {string} status
  */
 function send_user_status(status) {
-	send_action('user_status', { status, user_uuid }).catch(console.error);
+	send_action('user_status', { status, user_uuid })
+		.then(() => {
+			// Update local extensions_map so the UI reflects the new status immediately
+			if (Array.isArray(user_own_extensions)) {
+				user_own_extensions.forEach(ext_num => {
+					const ext = extensions_map.get(ext_num);
+					if (ext) {
+						ext.user_status = status;
+						ext.do_not_disturb = (status === 'Do Not Disturb') ? 'true' : 'false';
+					}
+				});
+			}
+			render_extensions_tab();
+		})
+		.catch(console.error);
 }
 
 function action_agent_status(agent_name, status) {
@@ -1381,8 +1395,28 @@ function load_extensions_snapshot() {
 				if (ext.extension) extensions_map.set(ext.extension, ext);
 			});
 			render_extensions_tab();
+			sync_status_buttons();
 		})
 		.catch(console.error);
+}
+
+/**
+ * Highlight the status button that matches the logged-in user's current
+ * status (read from extensions_map for the user's own extension).
+ */
+function sync_status_buttons() {
+	if (!Array.isArray(user_own_extensions) || user_own_extensions.length === 0) return;
+	const ext = extensions_map.get(user_own_extensions[0]);
+	if (!ext) return;
+	const current = (ext.user_status || '').trim();
+	if (!current) return;
+	document.querySelectorAll('.op-status-btn').forEach(b => {
+		if (b.getAttribute('data-status') === current) {
+			b.classList.add('active');
+		} else {
+			b.classList.remove('active');
+		}
+	});
 }
 
 /**
@@ -1474,6 +1508,8 @@ function render_ext_block(ext, is_mine) {
 		css_state = 'op-ext-on-break';
 	} else if (user_status_raw === 'Available' || user_status_raw === 'Available (On Demand)') {
 		css_state = 'op-ext-available';
+	} else if (user_status_raw === 'Logged Out') {
+		css_state = 'op-ext-logged-out';
 	} else {
 		// Registered with no explicit/active status — blue
 		css_state = 'op-ext-registered';
@@ -1485,7 +1521,7 @@ function render_ext_block(ext, is_mine) {
 		'op-ext-on-break': '#8a6508',
 		'op-ext-dnd': '#a71d2a',
 		'op-ext-registered': '#2b6cb0',
-		'op-ext-logged-out': '#6c757d',
+		'op-ext-logged-out': '#1e7e34',
 		'op-ext-unregistered': '#6c757d',
 		'op-ext-ringing': '#0e6882',
 		'op-ext-active': '#2a7a2b',
@@ -1574,9 +1610,17 @@ function render_ext_block(ext, is_mine) {
 			status_icon = 'status_do_not_disturb';
 			status_hover = text['label-status_do_not_disturb'] || 'Do Not Disturb';
 			break;
+		case 'Logged Out':
+			// Use green icon when still registered to indicate the phone is online
+			if (reg) {
+				status_icon = 'status_available';
+			} else {
+				status_icon = 'status_logged_out';
+			}
+			status_hover = text['label-status_logged_out_or_unknown'] || text['label-status_logged_out'] || 'Logged Out';
+			break;
 		default:
 			if (reg) {
-				// In this panel, registered-without-explicit-status uses the same icon as Available.
 				status_icon = 'status_available';
 				status_hover = text['label-status_available'] || 'Available';
 			} else {
@@ -2228,7 +2272,11 @@ function on_ext_drop(ext_number, event) {
 		dragged_extension = null;
 		if (!uuid || !ext_number) return;
 		if (source_ext && source_ext === ext_number) return;
-		send_action('transfer', { uuid, destination: ext_number, context: domain_name })
+		// When dragged from an extension block the UUID is the extension's own
+		// leg; use -bleg so FreeSWITCH transfers the *other* leg (the caller).
+		const payload = { uuid, destination: ext_number, context: domain_name };
+		if (source_ext) payload.bleg = true;
+		send_action('transfer', payload)
 			.catch(console.error);
 	} else if (dragged_eavesdrop_uuid) {
 		// Eavesdrop an existing call using dropped extension as destination
