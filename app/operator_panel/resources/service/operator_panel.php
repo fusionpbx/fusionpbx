@@ -28,17 +28,33 @@
 */
 
 /**
+ * Debian/Ubuntu systemd service management:
+ *   Copy the operator_panel.service file to /etc/systemd/system/ using the commands:
+ *     sudo cp /path/to/operator_panel.service /etc/systemd/system/
+ *     sudo systemctl daemon-reload
  * Start/Stop:
- *   systemctl start  operator-panel
- *   systemctl stop   operator-panel
- *   systemctl restart operator-panel
- * Enable on boot:
- *   systemctl enable operator-panel
- * Disable on boot:
- *   systemctl disable operator-panel
+ *   systemctl start  operator_panel
+ *   systemctl stop   operator_panel
+ *   systemctl restart operator_panel
  *
- * Log watching:
- *   journalctl -u operator-panel -f
+ * Enable on boot:
+ *   systemctl enable operator_panel
+ *
+ * Disable on boot:
+ *   systemctl disable operator_panel
+ *
+ * Non-SystemD:
+ *   Normal Daemon Start:
+ *     ./operator_panel.php -u www-data -g www-data     # run as www-data user and group as root is prohibited for security reasons
+ *   Normal Daemon Stop:
+ *     ./operator_panel.php -x
+ *
+ * Debug Mode (runs in foreground with debug output):
+ *   ./operator_panel.php -x                            # exit first if already running the daemon
+ *   ./operator_panel.php -d 7 -u www-data -g www-data  # run in debug mode with log level 7 (debug)
+ *
+ * SystemD Log watching:
+ *   journalctl -u operator_panel -f
  */
 
 if (version_compare(PHP_VERSION, '7.1.0', '<')) {
