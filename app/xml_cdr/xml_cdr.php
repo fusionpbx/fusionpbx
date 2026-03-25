@@ -66,6 +66,7 @@
 	$permission['xml_cdr_search_tta'] = permission_exists('xml_cdr_search_tta');
 	$permission['xml_cdr_search_hangup_cause'] = permission_exists('xml_cdr_search_hangup_cause');
 	$permission['xml_cdr_search_recording'] = permission_exists('xml_cdr_search_recording');
+	$permission['xml_cdr_search_cdr_uuid'] = permission_exists('xml_cdr_search_cdr_uuid');
 	$permission['xml_cdr_search_order'] = permission_exists('xml_cdr_search_order');
 	$permission['xml_cdr_extension'] = permission_exists('xml_cdr_extension');
 	$permission['xml_cdr_caller_id_name'] = permission_exists('xml_cdr_caller_id_name');
@@ -555,6 +556,16 @@
 			echo "			</select>\n";
 			echo "		</div>\n";
 			echo "	</div>\n";
+		}
+		if ($permission['xml_cdr_search_cdr_uuid']) {
+		  echo "	<div class='form_set'>\n";
+		  echo "		<div class='label'>\n";
+		  echo "			".$text['label-uuid']."\n";
+		  echo "		</div>\n";
+		  echo "		<div class='field'>\n";
+		  echo "			<input type='text' class='formfld' style='width:250px;' name='xml_cdr_uuid' id='xml_cdr_uuid' value='".escape($xml_cdr_uuid ?? '')."'>\n";
+		  echo "		</div>\n";
+		  echo "	</div>\n";
 		}
 		if ($permission['xml_cdr_search_order']) {
 			echo "	<div class='form_set'>\n";
