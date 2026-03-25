@@ -1,5 +1,5 @@
 /**
- * Live Operator Panel — JavaScript controller
+ * Operator Panel — JavaScript controller
  *
  * Three-tab, fully WebSocket-driven panel: Calls | Conferences | Agents.
  * NO Ajax is used anywhere. All data arrives as WebSocket events, and all

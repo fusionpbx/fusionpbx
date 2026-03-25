@@ -27,9 +27,9 @@
 */
 
 /**
- * Live Operator Panel WebSocket Service
+ * Operator Panel WebSocket Service
  *
- * Unified backend service for the live operator panel.  Handles three real-time
+ * Unified backend service for the operator panel.  Handles three real-time
  * data streams:
  *
  *   1. Calls / Extensions  — FreeSWITCH channel events (CHANNEL_*, CALL_UPDATE,
@@ -236,7 +236,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 
 	/** @override */
 	protected static function display_version(): void {
-		echo "Live Operator Panel Service 1.0\n";
+		echo "Operator Panel Service 1.0\n";
 	}
 
 	/**
