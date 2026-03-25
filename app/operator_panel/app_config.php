@@ -27,7 +27,7 @@
 */
 
 //application details
-	$apps[$x]['name'] = "Live Operator Panel";
+	$apps[$x]['name'] = "Operator Panel";
 	$apps[$x]['uuid'] = "8493ad5d-9240-426c-b330-774ed0bd7ede";
 	$apps[$x]['category'] = "Switch";
 	$apps[$x]['subcategory'] = "";
@@ -78,6 +78,8 @@
 	$apps[$x]['permissions'][$y]['groups'][] = "admin";
 	$y++;
 	$apps[$x]['permissions'][$y]['name'] = "operator_panel_conferences";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
 	$y++;
 	$apps[$x]['permissions'][$y]['name'] = "operator_panel_agents";
 
