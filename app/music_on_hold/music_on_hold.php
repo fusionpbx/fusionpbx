@@ -45,14 +45,21 @@
 
 //get the music_on_hold array
 	$sql = "select * from v_music_on_hold ";
-	$sql .= "where true ";
-	if ( permission_exists('music_on_hold_all')) {
-		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	if (!empty($show) && $show == "all" && permission_exists('music_on_hold_all')) {
+		$sql .= "where true ";
 	}
-	elseif (permission_exists('music_on_hold_domain')) {
-		$sql .= "and domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	else {
+		$conditions = [];
+		$sql .= "where (";
+	    if (permission_exists('music_on_hold_domain')) {
+	        $conditions[] = "domain_uuid = :domain_uuid";
+	        $parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	    }
+	    if (permission_exists('music_on_hold_global')) {
+	        $conditions[] = "domain_uuid is null ";
+	    }
+	    $sql .= implode(" or ", $conditions);
+	    $sql .= ")";
 	}
 	$sql .= "order by domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc";
 	$streams = $database->select($sql, $parameters ?? null, 'all');
@@ -327,36 +334,39 @@
 
 //script
 	echo "<script language='JavaScript' type='text/javascript'>\n";
+	echo "\n";
 
 	//file type check
-		echo "	function check_file_type(file_input) {\n";
-		echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2).toLowerCase();\n";
-		echo "		if (file_ext != 'mp3' && file_ext != 'wav' && file_ext != 'ogg' && file_ext != '') {\n";
-		echo "			display_message(\"".$text['message-unsupported_file_type']."\", 'negative', '2750');\n";
-		echo "			document.getElementById('form_upload').reset();\n";
-		echo "		}\n";
-		echo "	}\n";
+	echo "	function check_file_type(file_input) {\n";
+	echo "		file_ext = file_input.value.substr((~-file_input.value.lastIndexOf('.') >>> 0) + 2).toLowerCase();\n";
+	echo "		if (file_ext != 'mp3' && file_ext != 'wav' && file_ext != 'ogg' && file_ext != '') {\n";
+	echo "			display_message(\"".$text['message-unsupported_file_type']."\", 'negative', '2750');\n";
+	echo "			document.getElementById('form_upload').reset();\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "\n";
 
 	//custom name (category)
-		echo "	function name_mode(mode) {\n";
-		echo "		if (mode == 'new') {\n";
-		echo "			document.getElementById('name_select').style.display='none';\n";
-		echo "			document.getElementById('btn_new').style.display='none';\n";
-		echo "			document.getElementById('name_new').style.display='';\n";
-		echo "			document.getElementById('btn_select').style.display='';\n";
-		echo "			document.getElementById('rate').style.display='';\n";
-		echo "			document.getElementById('name_new').focus();\n";
-		echo "		}\n";
-		echo "		else if (mode == 'select') {\n";
-		echo "			document.getElementById('name_new').style.display='none';\n";
-		echo "			document.getElementById('name_new').value = '';\n";
-		echo "			document.getElementById('rate').style.display='none';\n";
-		echo "			document.getElementById('btn_select').style.display='none';\n";
-		echo "			document.getElementById('name_select').selectedIndex = 0;\n";
-		echo "			document.getElementById('name_select').style.display='';\n";
-		echo "			document.getElementById('btn_new').style.display='';\n";
-		echo "		}\n";
-		echo "	}\n";
+	echo "	function name_mode(mode) {\n";
+	echo "		if (mode == 'new') {\n";
+	echo "			document.getElementById('name_select').style.display='none';\n";
+	echo "			document.getElementById('btn_new').style.display='none';\n";
+	echo "			document.getElementById('name_new').style.display='';\n";
+	echo "			document.getElementById('btn_select').style.display='';\n";
+	echo "			document.getElementById('rate').style.display='';\n";
+	echo "			document.getElementById('name_new').focus();\n";
+	echo "		}\n";
+	echo "		else if (mode == 'select') {\n";
+	echo "			document.getElementById('name_new').style.display='none';\n";
+	echo "			document.getElementById('name_new').value = '';\n";
+	echo "			document.getElementById('rate').style.display='none';\n";
+	echo "			document.getElementById('btn_select').style.display='none';\n";
+	echo "			document.getElementById('name_select').selectedIndex = 0;\n";
+	echo "			document.getElementById('name_select').style.display='';\n";
+	echo "			document.getElementById('btn_new').style.display='';\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "\n";
 
 	echo "</script>";
 
@@ -376,7 +386,7 @@
 			echo 	"<select name='name' id='name_select' class='formfld' style='width: auto; margin: 0;'>\n";
 			echo "		<option value='' selected='selected' disabled='disabled'>".$text['label-category']."</option>\n";
 
-			if (permission_exists('music_on_hold_domain')) {
+			if (permission_exists('music_on_hold_global')) {
 				echo "	<optgroup label='".$text['option-global']."'>\n";
 				if (!empty($streams) && @sizeof($streams) != 0) {
 					foreach ($streams as $row) {
@@ -468,9 +478,6 @@
 		//loop through the array
 			$x = 0;
 			foreach ($streams as $row) {
-
-				//hide global categories if not allowed
-					if (empty($row['domain_uuid']) && !permission_exists('music_on_hold_global') && !($show == 'all' && permission_exists('music_on_hold_all'))) { continue; }
 
 				//set the variables
 					$music_on_hold_name = $row['music_on_hold_name'];
