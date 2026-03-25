@@ -656,7 +656,7 @@
 				$email_body = str_replace('${fax_date}', date('Y-m-d H:i:s', $fax_epoch), $email_body);
 				$email_body = str_replace('${fax_duration}', $fax_duration, $email_body);
 				$email_body = str_replace('${fax_duration_formatted}', $fax_duration_formatted, $email_body);
-				$email_body = str_replace('${fax_retry_date}', $fax_retry_date, $email_body); //Replaces ${fax_retry_date} placeholder in email template
+				$email_body = str_replace('${fax_retry_date}', $fax_retry_date, $email_body);
 
 				//send the email
 				if (isset($fax_email_address) && !empty($fax_email_address)) {
