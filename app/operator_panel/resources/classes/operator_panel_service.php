@@ -872,7 +872,8 @@ class operator_panel_service extends base_websocket_system_service implements we
 					if (!preg_match('/^[0-9*#+]+$/', $destination)) {
 						return ['success' => false, 'message' => 'Invalid destination'];
 					}
-					event_socket::api("uuid_transfer $uuid $destination XML $context");
+					$bleg = !empty($payload['bleg']) ? '-bleg ' : '';
+					event_socket::api("uuid_transfer $uuid {$bleg}$destination XML $context");
 					return ['success' => true, 'message' => 'Call transferred'];
 
 				case 'eavesdrop':
@@ -1007,11 +1008,29 @@ class operator_panel_service extends base_websocket_system_service implements we
 						return ['success' => false, 'message' => 'Cannot call self'];
 					}
 
-					// The destination gets routed through the domain's dialplan which handles bridging
-					$originate_cmd = "originate {sip_auto_answer=true,origination_caller_id_number=$source,sip_h_Call-Info=_undef_}user/$source@$domain_name $dest XML $context";
+					// Look up the source extension's user_context for correct dialplan routing
+					$originate_context = $context;
+					try {
+						$database = database::new(['config' => parent::$config]);
+						$rows = $database->select(
+							"SELECT e.user_context FROM v_extensions AS e "
+							. "LEFT JOIN v_domains AS d ON e.domain_uuid = d.domain_uuid "
+							. "WHERE d.domain_name = :domain_name AND e.extension = :extension AND e.enabled = 'true' LIMIT 1",
+							[':domain_name' => $domain_name, ':extension' => $source],
+							'all'
+						);
+						if (!empty($rows[0]['user_context'])) {
+							$originate_context = $rows[0]['user_context'];
+						}
+					} catch (\Exception $e) {
+						$this->debug('Could not look up user_context for originate: ' . $e->getMessage());
+					}
+
+					// The destination gets routed through the extension's dialplan context
+					$originate_cmd = "originate {sip_auto_answer=true,origination_caller_id_number=$source}user/$source@$domain_name $dest XML $originate_context";
 
 					// Log the originate command attempt
-					$this->debug("Originate: from=$source to=$dest domain=$domain_name context=$context cmd=$originate_cmd");
+					$this->debug("Originate: from=$source to=$dest domain=$domain_name context=$originate_context cmd=$originate_cmd");
 
 					$fs_response = event_socket::api($originate_cmd);
 
