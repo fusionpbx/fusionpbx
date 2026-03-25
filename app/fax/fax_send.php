@@ -422,6 +422,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 
 			//add blank page
+			$total_pages = $fax_page_count; //Starts total count with attachment pages 
 			$pdf->AddPage('P', array($page_width, $page_height));
 
 			// content offset, if necessary
@@ -555,9 +556,12 @@ if (!function_exists('fax_split_dtmf')) {
 					$pdf->Write(0.3, format_phone($fax_caller_id_number));
 				}
 			}
-			if ($fax_page_count > 0) {
-				$pdf->Text($x + 2.0, $y + 2.6, $fax_page_count.' '.$text['label-fax-page'.(($fax_page_count > 1) ? 's' : null)]);
-			}
+			//if ($fax_page_count > 0) {
+				//$pdf->Text($x + 2.0, $y + 2.6, $fax_page_count.' '.$text['label-fax-page'.(($fax_page_count > 1) ? 's' : null)]);
+			//}
+			$total_pages = $fax_page_count + 1; // 1 = cover page add in the total
+			$pdf->Text($x + 2.0, $y + 2.6, $total_pages.' '.$text['label-fax-page'.(($total_pages > 1) ? 's' : null)]);
+
 			if (!empty($fax_subject)) {
 				$pdf->Text($x + 2.0, $y + 2.9, $fax_subject);
 			}
@@ -572,6 +576,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 
 			$pages = $pdf->getNumPages();
+			$total_pages += $pages; // If your cover page expands into multiple pages (long message), those pages are added to total
 
 			if ($pages > 1) {
 				//save ynew for last page
