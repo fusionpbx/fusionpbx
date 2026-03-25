@@ -560,11 +560,7 @@ if (!function_exists('fax_split_dtmf')) {
 				//$pdf->Text($x + 2.0, $y + 2.6, $fax_page_count.' '.$text['label-fax-page'.(($fax_page_count > 1) ? 's' : null)]);
 			//}
 			$total_pages = $fax_page_count + 1; // 1 = cover page add in the total
-						$pdf->Text(
-							$x + 2.0,
-							$y + 2.6,
-							$total_pages.' '.$text['label-fax-page'.(($total_pages > 1) ? 's' : null)]
-							);
+			$pdf->Text($x + 2.0, $y + 2.6, $total_pages.' '.$text['label-fax-page'.(($total_pages > 1) ? 's' : null)]);
 
 			if (!empty($fax_subject)) {
 				$pdf->Text($x + 2.0, $y + 2.9, $fax_subject);
