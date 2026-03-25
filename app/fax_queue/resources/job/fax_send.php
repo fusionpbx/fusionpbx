@@ -225,7 +225,7 @@
 		$fax_accountcode = $row["fax_accountcode"];
 		$fax_command = $row["fax_command"];
 		$fax_toll_allow = $row["fax_toll_allow"];
-		$fax_retry_date = $row["fax_retry_date"]; // fatch fax_retry_date
+		$fax_retry_date = $row["fax_retry_date"];
 	} else {
 		// Notify user using the system logs
 		syslog(E_WARNING, "Fax Send: UUID {$fax_queue_uuid} not found in fax queue");
