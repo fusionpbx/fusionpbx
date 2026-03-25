@@ -4137,6 +4137,60 @@ else { //default: white
 		color: <?=$input_text_placeholder_color?>;
 	}
 
+/* DOMAIN SEARCH DROPDOWN ********************************************************/
+
+	.domain-search-picker {
+		position: relative;
+		display: inline-block;
+		max-width: 100%;
+	}
+
+	.domain-search-picker .domain-search-input { max-width: 100%; }
+
+	.domain-search-results {
+		display: none;
+		position: fixed;
+		left: 0;
+		top: 0;
+		background: <?=$input_background_color?>;
+		border-width: <?=$input_border_size?>;
+		border-style: <?=$input_border_style?>;
+		border-color: <?=$input_border_color?>;
+		border-radius: 4px;
+		box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+		z-index: 10050;
+		max-height: 300px;
+		overflow-y: auto;
+		box-sizing: border-box;
+		text-align: left;
+	}
+
+	.domain-search-result-item {
+		padding: 6px 10px;
+		cursor: pointer;
+		line-height: 1.3;
+	}
+
+	.domain-search-result-item:hover {
+		background-color: <?=$table_row_background_color_hover?>;
+	}
+
+	.domain-search-result-name {
+		display: block;
+	}
+
+	.domain-search-result-description {
+		display: block;
+		opacity: 0.75;
+		font-size: 0.92em;
+		margin-top: 1px;
+	}
+
+	.domain-search-empty {
+		padding: 8px 10px;
+		color: <?=$input_text_placeholder_color?>;
+	};
+
 <?php
 
 //output custom css

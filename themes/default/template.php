@@ -740,39 +740,6 @@
 				var domain_cache = null;
 				var domain_cache_loading = false;
 				var domain_cache_callbacks = [];
-				var domain_picker_styles_loaded = false;
-
-				function load_domain_picker_styles() {
-					if (domain_picker_styles_loaded) { return; }
-					var style = document.createElement('style');
-					style.type = 'text/css';
-					style.innerHTML = ""
-						+ ".domain-search-picker { position: relative; display: inline-block; max-width: 100%; }"
-						+ ".domain-search-picker .domain-search-input { max-width: 100%; }"
-						+ ".domain-search-results {"
-						+ " position: fixed; z-index: 10050; left: 0; top: 0;"
-						+ " border: 1px solid rgba(0,0,0,.2); border-radius: 4px;"
-						+ " background: #fff; box-shadow: 0 10px 20px rgba(0,0,0,.12);"
-						+ " max-height: 260px; overflow-y: auto; display: none;"
-						+ " box-sizing: border-box; text-align: left;"
-						+ "}"
-						+ ".domain-search-result-item {"
-						+ " padding: 6px 10px; cursor: pointer; line-height: 1.3;"
-						+ "}"
-						+ ".domain-search-result-item:hover,"
-						+ ".domain-search-result-item.active {"
-						+ " background: #f1f4f8;"
-						+ "}"
-						+ ".domain-search-result-name { display: block; }"
-						+ ".domain-search-result-description {"
-						+ " display: block; opacity: 0.75; font-size: 0.92em; margin-top: 1px;"
-						+ "}"
-						+ ".domain-search-empty {"
-						+ " padding: 8px 10px; opacity: 0.85;"
-						+ "}";
-					document.head.appendChild(style);
-					domain_picker_styles_loaded = true;
-				}
 
 				function fetch_domains(callback) {
 					if (domain_cache !== null) {
@@ -1107,7 +1074,6 @@
 				};
 
 				window.init_domain_search_selects = function() {
-					load_domain_picker_styles();
 					var selectors = document.querySelectorAll("select[name='domain_uuid'], select[id='domain_uuid'], select[data-domain-search='true']");
 					for (var i = 0; i < selectors.length; i++) {
 						if (selectors[i].dataset.domainSearch === 'false') { continue; }
