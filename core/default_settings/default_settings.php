@@ -273,12 +273,14 @@
 		echo "		document.getElementById('btn_copy').style.display = 'none'; \n";
 		echo "		document.getElementById('btn_copy_cancel').style.display = 'inline'; \n";
 		echo "		document.getElementById('target_domain_uuid').style.display = 'inline'; \n";
+		echo "		if (typeof window.sync_domain_search_select_visibility === 'function') { window.sync_domain_search_select_visibility('target_domain_uuid'); }\n";
 		echo "		document.getElementById('btn_paste').style.display = 'inline'; \n";
 		echo "	}";
 		echo "	function hide_domains() {\n";
 		echo "		document.getElementById('action').value = '';\n";
 		echo "		document.getElementById('btn_copy_cancel').style.display = 'none'; \n";
 		echo "		document.getElementById('target_domain_uuid').style.display = 'none'; \n";
+		echo "		if (typeof window.sync_domain_search_select_visibility === 'function') { window.sync_domain_search_select_visibility('target_domain_uuid'); }\n";
 		echo "		document.getElementById('target_domain_uuid').selectedIndex = 0;\n";
 		echo "		document.getElementById('btn_paste').style.display = 'none'; \n";
 		echo "		document.getElementById('btn_copy').style.display = 'inline'; \n";
