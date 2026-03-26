@@ -548,7 +548,7 @@
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);
 
-				//unset remember me cookie
+				// Unset remember me cookie
 				if ($user_uuid == $_SESSION['user_uuid']) {
 					unset($_COOKIE['remember']);
 					setcookie('remember', '', time() - 3600, '/');
