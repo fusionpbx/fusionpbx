@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2025
+ Portions created by the Initial Developer are Copyright (C) 2008-2026
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -557,12 +557,6 @@
 		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
 		echo "    	<option value='24h' ".(($domain_setting_value == "24h") ? "selected='selected'" : null).">".$text['label-24-hour']."</option>\n";
 		echo "    	<option value='12h' ".(($domain_setting_value == "12h") ? "selected='selected'" : null).">".$text['label-12-hour']."</option>\n";
-		echo "	</select>\n";
-	}
-	elseif ($category == "domain" && $subcategory == "setting_value_input_type" && $name == "text" ) {
-		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
-		echo "    	<option value='input'>Input</option>\n";
-		echo "    	<option value='textarea' ".($domain_setting_value == "textarea" ? "selected='selected'" : null).">TextArea</option>\n";
 		echo "	</select>\n";
 	}
 	elseif ($subcategory == 'password' || (substr_count($subcategory, '_password') > 0 && $subcategory != 'input_text_font_password') || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
