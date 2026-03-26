@@ -1408,7 +1408,11 @@ function sync_status_buttons() {
 	if (!Array.isArray(user_own_extensions) || user_own_extensions.length === 0) return;
 	const ext = extensions_map.get(user_own_extensions[0]);
 	if (!ext) return;
-	const current = (ext.user_status || '').trim();
+	let current = (ext.user_status || '').trim();
+	// If user has no explicit status but is registered, treat as Available
+	if (!current && ext.user_uuid && ext.registered === true) {
+		current = 'Available';
+	}
 	if (!current) return;
 	document.querySelectorAll('.op-status-btn').forEach(b => {
 		if (b.getAttribute('data-status') === current) {
@@ -1510,8 +1514,11 @@ function render_ext_block(ext, is_mine) {
 		css_state = 'op-ext-available';
 	} else if (user_status_raw === 'Logged Out') {
 		css_state = 'op-ext-logged-out';
+	} else if (ext.user_uuid && user_status_raw === '') {
+		// Has a user but no explicit status set — treat as Available when registered
+		css_state = 'op-ext-available';
 	} else {
-		// Registered with no explicit/active status — blue
+		// Registered with no user attached or unknown status — blue
 		css_state = 'op-ext-registered';
 	}
 
@@ -1564,7 +1571,6 @@ function render_ext_block(ext, is_mine) {
 	}
 
 	const mine_cls   = is_mine ? ' op-ext-mine'   : '';
-	const mine_label = is_mine ? `<span class="op-ext-mine-label" title="${esc(text['label-your_extension'] || 'Your extension')}">&#9735;</span>` : '';
 	const data_uuid  = call_uuid ? ` data-call-uuid="${esc(call_uuid)}"` : '';
 	// Always allow extension-to-extension drag originate; backend routing handles
 	// availability, call forwarding, follow_me, and voicemail decisions.
@@ -1620,9 +1626,12 @@ function render_ext_block(ext, is_mine) {
 			status_hover = text['label-status_logged_out_or_unknown'] || text['label-status_logged_out'] || 'Logged Out';
 			break;
 		default:
-			if (reg) {
+			if (reg && ext.user_uuid) {
 				status_icon = 'status_available';
 				status_hover = text['label-status_available'] || 'Available';
+			} else if (reg) {
+				status_icon = 'status_available';
+				status_hover = text['label-status_registered'] || 'Registered';
 			} else {
 				status_icon = 'status_logged_out';
 				status_hover = text['label-status_logged_out_or_unknown'] || text['label-status_logged_out'] || 'Logged Out';
@@ -1686,7 +1695,6 @@ function render_ext_block(ext, is_mine) {
 		` ondrop="on_ext_drop('${esc(num)}', event)">` +
 		`<div class="op-ext-icon" title="${esc(status_hover)}"><img class="op-ext-status-icon" src="../operator_panel/resources/images/${status_icon}.png" width="28" height="28" alt="${esc(status_hover)}"></div>` +
 		`<div class="op-ext-info${has_live_call ? ' op-has-live-call' : ''}">` +
-		`${mine_label}` +
 		`<div class="op-ext-number">${esc(num)}</div>` +
 		dialpad_html +
 		(show_name ? `<div class="op-ext-name" title="${esc(raw_name)}">${esc(raw_name)}</div>` : '') +

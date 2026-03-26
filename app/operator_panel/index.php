@@ -428,11 +428,11 @@ body.op-dragging, body.op-dragging * {
 .op-ext-dnd .op-ext-icon  { background-color: #f1b0b7; }
 .op-ext-dnd .op-ext-icon .op-ext-status-icon  { color: #a71d2a; }
 .op-ext-dnd .op-ext-info  { background-color: #fce4e7; }
-/* registered (no explicit status) — green */
-.op-ext-registered               { border-color: #28a745; background-color: #d4edda; }
-.op-ext-registered .op-ext-icon  { background-color: #c3e6cb; }
-.op-ext-registered .op-ext-icon .op-ext-status-icon  { color: #1e7e34; }
-.op-ext-registered .op-ext-info  { background-color: #eaf6ec; }
+/* registered (no explicit status / no user attached) — blue */
+.op-ext-registered               { border-color: #4a8cdb; background-color: #d6e9f8; }
+.op-ext-registered .op-ext-icon  { background-color: #c3ddf2; }
+.op-ext-registered .op-ext-icon .op-ext-status-icon  { color: #2b6cb0; }
+.op-ext-registered .op-ext-info  { background-color: #eaf3fc; }
 /* user status: logged out — grey */
 .op-ext-logged-out               { border-color: #9da5ae; background-color: #e2e3e5; }
 .op-ext-logged-out .op-ext-icon  { background-color: #d6d8db; }
