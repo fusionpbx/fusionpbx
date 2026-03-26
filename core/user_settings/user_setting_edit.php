@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2023
+ Portions created by the Initial Developer are Copyright (C) 2008-2026
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -522,12 +522,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
 		echo "    	<option value='24h' ".(($user_setting_value == "24h") ? "selected='selected'" : null).">".$text['label-24-hour']."</option>\n";
 		echo "    	<option value='12h' ".(($user_setting_value == "12h") ? "selected='selected'" : null).">".$text['label-12-hour']."</option>\n";
-		echo "	</select>\n";
-	}
-	else if ($user_setting_category == "domain" && $user_setting_subcategory == "setting_value_input_type" && $user_setting_name == "text" ) {
-		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
-		echo "    	<option value='input'>Input</option>\n";
-		echo "    	<option value='textarea' ".($user_setting_value == "textarea" ? "selected='selected'" : null).">TextArea</option>\n";
 		echo "	</select>\n";
 	}
 	else if ($user_setting_subcategory == 'password' || (substr_count($user_setting_subcategory, '_password') > 0 && $user_setting_subcategory != 'input_text_font_password') || $user_setting_category == "login" && $user_setting_subcategory == "password_reset_key" && $user_setting_name == "text") {
