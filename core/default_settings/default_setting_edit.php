@@ -736,11 +736,19 @@
 		echo "	</select>\n";
 	}
 	else {
-		if (!empty($_SESSION['domain']['setting_value_input_type']) && $settings->get('domain', 'setting_value_input_type') == 'input') {
-			echo "	<input class='formfld' type='text' id='default_setting_value' name='default_setting_value' value=\"".escape($default_setting_value ?? '')."\">\n";
+		if (strlen($default_setting_value) > 25) {
+			echo "	<textarea class='formfld' style='width: 185px; height: auto; max-height: 300px;' id='default_setting_value' name='default_setting_value'>".($default_setting_value ?? '')."</textarea>\n";
+
+			echo "	<script>\n";
+			echo "	document.addEventListener('DOMContentLoaded', () => {\n";
+			echo "		let textarea = document.getElementById('default_setting_value');\n";
+			echo "		textarea.style.height = 'auto';\n";
+			echo "		textarea.style.height = textarea.scrollHeight + 'px';\n";
+			echo "	});\n";
+			echo "	</script>\n";
 		}
 		else {
-			echo "	<textarea class='formfld' id='default_setting_value' name='default_setting_value'>".($default_setting_value ?? '')."</textarea>\n";
+			echo "	<input class='formfld' type='text' id='default_setting_value' name='default_setting_value' value=\"".escape($default_setting_value ?? '')."\">\n";
 		}
 	}
 	echo "<br />\n";
