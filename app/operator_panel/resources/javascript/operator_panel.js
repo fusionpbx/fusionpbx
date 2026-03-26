@@ -496,6 +496,17 @@ function esc(text) {
 		.replace(/'/g, '&#039;');
 }
 
+function jsq(value) {
+	return JSON.stringify(value === null || value === undefined ? '' : String(value));
+}
+
+function get_conference_action_icon(name, fallback) {
+	if (conference_action_icons && conference_action_icons[name]) {
+		return conference_action_icons[name];
+	}
+	return fallback;
+}
+
 /** Format a Unix microsecond timestamp as elapsed time hh:mm:ss */
 function format_elapsed(us_timestamp) {
 	if (!us_timestamp || us_timestamp === '0') return '--:--:--';
@@ -571,7 +582,7 @@ function on_calls_snapshot_event(event) {
  * @param {object} event
  */
 function on_call_event(event) {
-	const name = (event.event_name || event.topic || '').toLowerCase();
+	const name = (event.topic || event.event_name || '').toLowerCase();
 	const uuid  = get_call_uuid(event);
 
 	if (!uuid) return;
@@ -881,7 +892,7 @@ function load_conferences_snapshot() {
  * @param {object} event
  */
 function on_conference_event(event) {
-	const action         = (event.event_name || event.topic || '').toLowerCase();
+	const action         = (event.topic || event.event_name || '').toLowerCase();
 	const conference_name = event.conference_name || event.channel_presence_id || '';
 
 	if (!conference_name) return;
@@ -1023,32 +1034,57 @@ function render_conferences_tab() {
 			html += `  </tr>\n`;
 
 			members.forEach(m => {
+				const conf_name_js = jsq(name);
+				const member_id_js = jsq(String(m.id || ''));
+				const uuid_js = jsq(m.uuid || '');
 				const mid     = esc(String(m.id || ''));
 				const muuid   = esc(m.uuid || '');
 				const cid     = esc(m.caller_id_name || '');
 				const cid_num = esc(m.caller_id_number || '');
 				const flags   = m.flags || {};
+				let flags_html = '';
+
+				if (flags.talking) {
+					flags_html += `      <span class="badge bg-info" title="${esc(text['label-talking'] || 'Talking')}" style="margin:0 3px;">${esc(text['label-talking'] || 'Talking')}</span>`;
+				}
+				if (flags.can_speak === false) {
+					flags_html += `      <span class="badge bg-warning text-dark" title="${esc(text['label-muted'] || 'Muted')}" style="margin:0 3px;">${esc(text['label-muted'] || 'Muted')}</span>`;
+				}
+				if (flags.can_hear === false) {
+					flags_html += `      <span class="badge bg-warning text-dark" title="${esc(text['label-deaf'] || 'Deaf')}" style="margin:0 3px;">${esc(text['label-deaf'] || 'Deaf')}</span>`;
+				}
+				if (flags.has_floor) {
+					flags_html += `      <span class="badge bg-warning text-dark" title="${esc(text['label-floor'] || 'Floor')}" style="margin:0 3px;">${esc(text['label-floor'] || 'Floor')}</span>`;
+				}
+				if (flags.is_moderator) {
+					flags_html += `      <span class="badge bg-primary" title="${esc(text['label-moderator'] || 'Moderator')}" style="margin:0 3px;">${esc(text['label-moderator'] || 'Moderator')}</span>`;
+				}
 
 				html += `  <tr class="list-row" id="conf_member_${muuid}">\n`;
 				html += `    <td>${cid ? `${cid}<br><small>${cid_num}</small>` : cid_num}</td>\n`;
 				html += `    <td>${mid}</td>\n`;
 				html += `    <td style="white-space:nowrap;">`;
-				html += `      <span class="badge bg-${flags.talking ? 'info' : 'secondary'}" title="${esc(text['label-talking'] || 'Talking')}" style="margin:0 3px;">${esc(text['label-talking'] || 'Talking')}</span>`;
-				html += `      <span class="badge bg-${flags.can_speak === false ? 'warning text-dark' : 'success'}" title="${esc(text['label-muted'] || 'Muted')}" style="margin:0 3px;">${esc(text['label-muted'] || 'Muted')}</span>`;
-				html += `      <span class="badge bg-${flags.can_hear === false ? 'warning text-dark' : 'success'}" title="${esc(text['label-deaf'] || 'Deaf')}" style="margin:0 3px;">${esc(text['label-deaf'] || 'Deaf')}</span>`;
-				if (flags.has_floor)    html += `      <span class="badge bg-warning text-dark" title="${esc(text['label-floor'] || 'Floor')}" style="margin:0 3px;">${esc(text['label-floor'] || 'Floor')}</span>`;
-				if (flags.is_moderator) html += `      <span class="badge bg-primary" title="${esc(text['label-moderator'] || 'Moderator')}" style="margin:0 3px;">${esc(text['label-moderator'] || 'Moderator')}</span>`;
+				html += flags_html;
 				html += `    </td>\n`;
 
 				if (permissions.operator_panel_hangup || permissions.operator_panel_manage) {
 					html += `    <td class="right">\n`;
 					if (permissions.operator_panel_hangup) {
-						html += `      <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-hangup'] || 'Hangup')}" onclick="action_hangup('${muuid}')">`
-							+ `<img class="op-ext-action-icon" src="../operator_panel/resources/images/kill.png" alt="${esc(text['button-hangup'] || 'Hangup')}"></a> `;
+						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['button-hangup'] || 'Hangup')}" onclick='action_conference_member("kick", ${conf_name_js}, ${member_id_js}, ${uuid_js})'><span class="${esc(get_conference_action_icon('kick', 'fas fa-ban'))}" aria-hidden="true"></span></button> `;
 					}
 					if (permissions.operator_panel_manage) {
-						html += `      <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-transfer'] || 'Transfer')}" onclick="open_transfer_modal('${muuid}')">`
-							+ `<img class="op-ext-action-icon" src="../operator_panel/resources/images/keypad_transfer.png" alt="${esc(text['button-transfer'] || 'Transfer')}"></a> `;
+						const mute_action = flags.can_speak === false ? 'unmute' : 'mute';
+						const mute_label = flags.can_speak === false ? (text['button-unmute'] || 'Unmute') : (text['button-mute'] || 'Mute');
+						const deaf_action = flags.can_hear === false ? 'undeaf' : 'deaf';
+						const deaf_label = flags.can_hear === false ? (text['button-undeaf'] || 'Undeaf') : (text['button-deaf'] || 'Deaf');
+						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(mute_label)}" onclick='action_conference_member(${jsq(mute_action)}, ${conf_name_js}, ${member_id_js}, ${uuid_js})'><span class="${esc(get_conference_action_icon(mute_action, mute_action === 'mute' ? 'fas fa-microphone-slash' : 'fas fa-microphone'))}" aria-hidden="true"></span></button> `;
+						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(deaf_label)}" onclick='action_conference_member(${jsq(deaf_action)}, ${conf_name_js}, ${member_id_js}, ${uuid_js})'><span class="${esc(get_conference_action_icon(deaf_action, deaf_action === 'deaf' ? 'fas fa-deaf' : 'fas fa-headphones'))}" aria-hidden="true"></span></button> `;
+						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-energy'] || 'Energy')}` + ` +" onclick='action_conference_member("energy", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "up")'><span class="${esc(get_conference_action_icon('energy_up', 'fas fa-plus'))}" aria-hidden="true"></span></button> `;
+						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-energy'] || 'Energy')}` + ` -" onclick='action_conference_member("energy", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "down")'><span class="${esc(get_conference_action_icon('energy_down', 'fas fa-minus'))}" aria-hidden="true"></span></button> `;
+						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-volume'] || 'Volume')}` + ` -" onclick='action_conference_member("volume_in", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "down")'><span class="${esc(get_conference_action_icon('volume_down', 'fas fa-volume-down'))}" aria-hidden="true"></span></button> `;
+						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-volume'] || 'Volume')}` + ` +" onclick='action_conference_member("volume_in", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "up")'><span class="${esc(get_conference_action_icon('volume_up', 'fas fa-volume-up'))}" aria-hidden="true"></span></button> `;
+						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-gain'] || 'Gain')}` + ` -" onclick='action_conference_member("volume_out", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "down")'><span class="${esc(get_conference_action_icon('gain_down', 'fas fa-sort-amount-down'))}" aria-hidden="true"></span></button> `;
+						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-gain'] || 'Gain')}` + ` +" onclick='action_conference_member("volume_out", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "up")'><span class="${esc(get_conference_action_icon('gain_up', 'fas fa-sort-amount-up'))}" aria-hidden="true"></span></button> `;
 					}
 					html += `    </td>\n`;
 				}
@@ -1349,6 +1385,22 @@ function send_user_status(status) {
 
 function action_agent_status(agent_name, status) {
 	send_action('agent_status', { agent_name, status }).catch(console.error);
+}
+
+function action_conference_member(action, conference_name, member_id, uuid, direction) {
+	const payload = { conference_name, member_id, uuid };
+	if (direction) {
+		payload.direction = direction;
+	}
+	send_action(action, payload)
+		.then(() => {
+			if (action === 'kick') {
+				show_toast(text['button-hangup'] || 'Member removed', 'success');
+				return;
+			}
+			show_toast(text['label-actions'] || 'Action executed', 'success');
+		})
+		.catch(console.error);
 }
 
 /**

@@ -27,33 +27,46 @@
 */
 
 /**
- * Filters conference events to only include keys relevant to the operator panel,
- * and drops messages from domains other than the subscriber's.
+ * Filters conference events using conference-aware domain detection.
  *
- * Passes only the keys listed in {@see operator_panel_service::conf_event_keys}
- * and enforces domain isolation using caller_context.
- *
- * @author Tim Fry <tim@fusionpbx.com>
+ * Conference maintenance events are not consistent about which field carries
+ * the domain. Accept a message when the domain can be proven from either the
+ * conference identifier or the caller context, and otherwise keep the message
+ * so operator panel conference updates are not dropped.
  */
 class operator_panel_conf_filter implements filter {
 
 	/**
-	 * Allowed domain names keyed for fast lookup
+	 * Allowed domain names keyed for fast lookup.
 	 *
 	 * @var array
 	 */
-	private $domains;
+	private $domains = [];
 
 	/**
-	 * Keys that are permitted through the filter
+	 * Keys that are permitted through the filter.
 	 *
 	 * @var array
 	 */
-	private $allowed_keys;
+	private $allowed_keys = [];
 
 	/**
-	 * @param array $domain_names  Domain names this subscriber is allowed to see.
-	 * @param array $allowed_keys  Event keys to include in the forwarded payload.
+	 * Whether the current event should be dropped.
+	 *
+	 * @var bool
+	 */
+	private $drop_message = false;
+
+	/**
+	 * Whether a matching domain has been positively identified.
+	 *
+	 * @var bool
+	 */
+	private $matched_domain = false;
+
+	/**
+	 * @param array $domain_names Domain names this subscriber is allowed to see.
+	 * @param array $allowed_keys Event keys to include in the forwarded payload.
 	 */
 	public function __construct(array $domain_names, array $allowed_keys) {
 		foreach ($domain_names as $name) {
@@ -68,15 +81,69 @@ class operator_panel_conf_filter implements filter {
 	 * @param string $key
 	 * @param mixed  $value
 	 *
-	 * @return bool|null  true to keep, false to skip this key, null to drop the entire message.
+	 * @return bool|null true to keep, false to skip this key, null to drop the entire message.
 	 */
 	public function __invoke($key, $value): ?bool {
-		// Domain guard — drop whole message if context is wrong
-		if ($key === 'caller_context') {
-			return isset($this->domains[$value]) ? true : null;
+		if ($this->drop_message) {
+			return null;
 		}
 
-		// Key allow-list
-		return isset($this->allowed_keys[$key]) ? true : false;
+		if ($this->is_domain_key($key)) {
+			$matched = $this->match_domain((string)$value, $key === 'caller_context');
+			if ($matched === false) {
+				$this->drop_message = true;
+				return null;
+			}
+		}
+
+		if ($this->matched_domain || !$this->is_domain_key($key)) {
+			return isset($this->allowed_keys[$key]) ? true : false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Determine whether the key can identify the conference domain.
+	 *
+	 * @param string $key
+	 *
+	 * @return bool
+	 */
+	private function is_domain_key(string $key): bool {
+		return in_array($key, ['caller_context', 'conference_name', 'channel_presence_id'], true);
+	}
+
+	/**
+	 * Match the event's domain against the allowed set.
+	 *
+	 * @param string $value
+	 * @param bool   $is_context
+	 *
+	 * @return bool|null false when the event belongs to another domain, true when it matches,
+	 *                   or null when the key does not conclusively identify a domain.
+	 */
+	private function match_domain(string $value, bool $is_context): ?bool {
+		$value = trim($value);
+		if ($value === '') {
+			return null;
+		}
+
+		$domain = $value;
+		if (!$is_context && strpos($value, '@') !== false) {
+			$parts = explode('@', $value);
+			$domain = end($parts) ?: '';
+		}
+
+		if ($domain === '') {
+			return null;
+		}
+
+		if (isset($this->domains[$domain])) {
+			$this->matched_domain = true;
+			return true;
+		}
+
+		return false;
 	}
 }
