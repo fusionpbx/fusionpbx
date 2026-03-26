@@ -517,7 +517,8 @@
 
 		// Delete setting_value_input_type
 			$sql = "delete from v_default_settings ";
-			$sql .= "where default_setting_subcategory = 'setting_value_input_type' ";
+			$sql .= "where default_setting_category = 'domain' ";
+			$sql .= "and default_setting_subcategory = 'setting_value_input_type' ";
 			$database->execute($sql, null);
 			unset($sql);
 
