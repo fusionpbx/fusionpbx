@@ -767,8 +767,16 @@
 		echo "	</select>\n";
 	}
 	else {
-		if (!empty($_SESSION['domain']['setting_value_input_type']) && $settings->get('domain', 'setting_value_input_type') == 'textarea') {
-			echo "	<textarea class='formfld' style='width: 185px; height: 80px;' id='domain_setting_value' name='domain_setting_value'>".($row['domain_setting_value'] ?? '')."</textarea>\n";
+		if (isset($row['domain_setting_value']) && strlen($row['domain_setting_value']) > 25) {
+			echo "	<textarea class='formfld' style='width: 185px; height: auto; max-height: 300px;' id='domain_setting_value' name='domain_setting_value'>".($row['domain_setting_value'] ?? '')."</textarea>\n";
+
+			echo "	<script>\n";
+			echo "	document.addEventListener('DOMContentLoaded', () => {\n";
+			echo "		let textarea = document.getElementById('domain_setting_value');\n";
+			echo "		textarea.style.height = 'auto';\n";
+			echo "		textarea.style.height = textarea.scrollHeight + 'px';\n";
+			echo "	});\n";
+			echo "	</script>\n";
 		}
 		else {
 			echo "	<input class='formfld' type='text' id='domain_setting_value' name='domain_setting_value' value=\"".escape($row['domain_setting_value'] ?? '')."\">\n";
