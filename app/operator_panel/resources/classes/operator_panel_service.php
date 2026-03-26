@@ -587,7 +587,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 			$ext['registered']          = isset($registered_map[$ext_num]);
 			$ext['registration_count']  = $registered_map[$ext_num] ?? 0;
 			$ext['user_uuid']           = $user_status_map[$ext_num]['user_uuid'] ?? null;
-			$ext['user_status']         = $user_status_map[$ext_num]['user_status'] ?? 'Logged Out';
+			$ext['user_status']         = $user_status_map[$ext_num]['user_status'] ?? '';
 		}
 		unset($ext);
 		$this->debug('extensions_active trace [step6] annotation complete: extensions=' . count($extensions));
