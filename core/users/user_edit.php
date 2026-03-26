@@ -548,6 +548,12 @@
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);
 
+				//unset remember me cookie
+				if ($user_uuid == $_SESSION['user_uuid']) {
+					unset($_COOKIE['remember']);
+					setcookie('remember', '', time() - 3600, '/');
+				}
+
 				//send the password changed email
 				if (valid_email($user_email)) {
 					//generate email and body variables
