@@ -512,6 +512,12 @@
 		echo "    	<option value='12h' ".(($default_setting_value == "12h") ? "selected='selected'" : null).">".$text['label-12-hour']."</option>\n";
 		echo "	</select>\n";
 	}
+	elseif ($category == "domain" && $subcategory == "setting_value_input_type" && $name == "text" ) {
+		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
+		echo "    	<option value='textarea'>TextArea</option>\n";
+		echo "    	<option value='input' ".($default_setting_value == "input" ? "selected='selected'" : null).">Input</option>\n";
+		echo "	</select>\n";
+	}
 	elseif ($subcategory == 'password' || (substr_count($subcategory, '_password') > 0 && $subcategory != 'input_text_font_password') || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
 		echo "	<input class='formfld password' type='password' id='default_setting_value' name='default_setting_value' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"".escape($default_setting_value)."\">\n";
 	}
