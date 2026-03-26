@@ -81,6 +81,19 @@
 		'disconnected' => $settings->get('theme', 'operator_panel_status_icon_disconnected', 'fa-solid fa-plug-circle-xmark'),
 		'connecting'   => $settings->get('theme', 'operator_panel_status_icon_connecting',   'fa-solid fa-plug fa-fade'),
 	];
+	$conference_action_icons = [
+		'mute'        => $settings->get('theme', 'operator_panel_conference_icon_mute', 'fas fa-microphone'),
+		'unmute'      => $settings->get('theme', 'operator_panel_conference_icon_unmute', 'fas fa-microphone-slash'),
+		'deaf'        => $settings->get('theme', 'operator_panel_conference_icon_deaf', 'fas fa-headphones'),
+		'undeaf'      => $settings->get('theme', 'operator_panel_conference_icon_undeaf', 'fas fa-deaf'),
+		'energy_up'   => $settings->get('theme', 'operator_panel_conference_icon_energy_up', 'fas fa-plus'),
+		'energy_down' => $settings->get('theme', 'operator_panel_conference_icon_energy_down', 'fas fa-minus'),
+		'volume_down' => $settings->get('theme', 'operator_panel_conference_icon_volume_down', 'fas fa-volume-down'),
+		'volume_up'   => $settings->get('theme', 'operator_panel_conference_icon_volume_up', 'fas fa-volume-up'),
+		'gain_down'   => $settings->get('theme', 'operator_panel_conference_icon_gain_down', 'fas fa-sort-amount-down'),
+		'gain_up'     => $settings->get('theme', 'operator_panel_conference_icon_gain_up', 'fas fa-sort-amount-up'),
+		'kick'        => $settings->get('theme', 'operator_panel_conference_icon_kick', 'fas fa-ban'),
+	];
 	$status_show_icon = $settings->get('theme', 'operator_panel_status_show_icon', 'true') === 'true';
 
 // Optional user status list for the presence dropdown
@@ -127,6 +140,7 @@
 	// Theme colors and icons for connection status indicator
 	const status_colors = <?= json_encode($status_colors, JSON_UNESCAPED_SLASHES) ?>;
 	const status_icons  = <?= json_encode($status_icons,  JSON_UNESCAPED_SLASHES) ?>;
+	const conference_action_icons = <?= json_encode($conference_action_icons, JSON_UNESCAPED_SLASHES) ?>;
 	const status_tooltips = {
 		connected:    <?= json_encode($text['status-connected']    ?? 'Connected') ?>,
 		warning:      <?= json_encode($text['status-warning']      ?? 'Warning') ?>,

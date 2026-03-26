@@ -180,6 +180,15 @@ class operator_panel_service extends base_websocket_system_service implements we
 		'recording_state' => 'operator_panel_record',
 		'registrations_state' => 'operator_panel_view',
 		'originate'    => 'operator_panel_originate',
+		// Conference member actions
+		'mute'         => 'operator_panel_manage',
+		'unmute'       => 'operator_panel_manage',
+		'deaf'         => 'operator_panel_manage',
+		'undeaf'       => 'operator_panel_manage',
+		'energy'       => 'operator_panel_manage',
+		'volume_in'    => 'operator_panel_manage',
+		'volume_out'   => 'operator_panel_manage',
+		'kick'         => 'operator_panel_hangup',
 		// User presence status (own status only, enforced inside handler)
 		'user_status'  => 'operator_panel_view',
 		// Call-center agent status (supervisor action)
@@ -854,6 +863,9 @@ class operator_panel_service extends base_websocket_system_service implements we
 		$destination = $payload['destination'] ?? '';
 		$domain_name = $payload['domain_name'] ?? '';
 		$context = $payload['context'] ?? ($domain_name !== '' ? $domain_name : 'default');
+		$conference_name = html_entity_decode(urldecode($payload['conference_name'] ?? ''));
+		$member_id = $payload['member_id'] ?? '';
+		$direction = $payload['direction'] ?? '';
 
 		try {
 			switch ($action) {
@@ -992,6 +1004,69 @@ class operator_panel_service extends base_websocket_system_service implements we
 						}
 					}
 					return ['success' => true, 'message' => 'Registrations state updated', 'states' => $states];
+
+				case 'mute':
+				case 'unmute':
+					if (empty($conference_name) || strpos($conference_name, '@') === false) {
+						return ['success' => false, 'message' => 'Invalid conference name'];
+					}
+					if (empty($member_id)) {
+						return ['success' => false, 'message' => 'Member ID required'];
+					}
+					event_socket::api("conference '$conference_name' $action $member_id");
+					if (!empty($uuid)) {
+						event_socket::api("uuid_setvar $uuid hand_raised false");
+					}
+					return ['success' => true, 'message' => 'Conference member updated'];
+
+				case 'deaf':
+				case 'undeaf':
+					if (empty($conference_name) || strpos($conference_name, '@') === false) {
+						return ['success' => false, 'message' => 'Invalid conference name'];
+					}
+					if (empty($member_id)) {
+						return ['success' => false, 'message' => 'Member ID required'];
+					}
+					event_socket::api("conference '$conference_name' $action $member_id");
+					return ['success' => true, 'message' => 'Conference member updated'];
+
+				case 'kick':
+					if (empty($uuid)) {
+						return ['success' => false, 'message' => 'UUID required'];
+					}
+					event_socket::api("uuid_kill $uuid");
+					return ['success' => true, 'message' => 'Conference member removed'];
+
+				case 'energy':
+					if (empty($conference_name) || strpos($conference_name, '@') === false) {
+						return ['success' => false, 'message' => 'Invalid conference name'];
+					}
+					if (empty($member_id) || empty($direction)) {
+						return ['success' => false, 'message' => 'Member ID and direction required'];
+					}
+					$current = trim((string) event_socket::api("conference '$conference_name' energy $member_id"));
+					if (preg_match('/=(\d+)/', $current, $matches)) {
+						$value = (int) $matches[1];
+						$value = ($direction === 'up') ? $value + 100 : $value - 100;
+						event_socket::api("conference '$conference_name' energy $member_id $value");
+					}
+					return ['success' => true, 'message' => 'Energy updated'];
+
+				case 'volume_in':
+				case 'volume_out':
+					if (empty($conference_name) || strpos($conference_name, '@') === false) {
+						return ['success' => false, 'message' => 'Invalid conference name'];
+					}
+					if (empty($member_id) || empty($direction)) {
+						return ['success' => false, 'message' => 'Member ID and direction required'];
+					}
+					$current = trim((string) event_socket::api("conference '$conference_name' $action $member_id"));
+					if (preg_match('/=(-?\d+)/', $current, $matches)) {
+						$value = (int) $matches[1];
+						$value = ($direction === 'up') ? $value + 1 : $value - 1;
+						event_socket::api("conference '$conference_name' $action $member_id $value");
+					}
+					return ['success' => true, 'message' => 'Volume updated'];
 
 				case 'originate':
 					$source      = $payload['source']      ?? '';
@@ -1282,7 +1357,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 			case 'energy_level':
 			case 'gain_level':
 			case 'volume_level':
-				$this->broadcast_call_event($event_message, $action);
+				$this->broadcast_conference_event($event_message, $action, $conference_name);
 				break;
 
 			case 'add_member':
@@ -1446,6 +1521,53 @@ class operator_panel_service extends base_websocket_system_service implements we
 	}
 
 	/**
+	 * Broadcast a conference event with a normalized conference identity.
+	 *
+	 * @param event_message $event_message
+	 * @param string        $action
+	 * @param string        $conference_name
+	 *
+	 * @return void
+	 */
+	private function broadcast_conference_event(event_message $event_message, string $action, string $conference_name): void {
+		$event_data = $event_message->to_array();
+		$event_data = $this->normalize_conference_payload($event_data, $conference_name);
+
+
+		$message = new websocket_message();
+		$message
+			->service_name(self::get_service_name())
+			->topic($action)
+			->payload($event_data)
+		;
+		websocket_client::send($this->ws_client->socket(), $message);
+	}
+
+	/**
+	 * Add a normalized conference identity and context to an event payload.
+	 *
+	 * @param array  $event_data
+	 * @param string $conference_name
+	 *
+	 * @return array
+	 */
+	private function normalize_conference_payload(array $event_data, string $conference_name): array {
+		$event_data['conference_name'] = $conference_name;
+		$event_data['conference_display_name'] = $this->lookup_conference_display_name($conference_name);
+
+		if (strpos($conference_name, '@') !== false) {
+			$parts = explode('@', $conference_name, 2);
+			$domain_name = $parts[1] ?? '';
+			if ($domain_name !== '') {
+				$event_data['domain_name'] = $domain_name;
+				$event_data['caller_context'] = $domain_name;
+			}
+		}
+
+		return $event_data;
+	}
+
+	/**
 	 * Send an action response back to the requesting client.
 	 *
 	 * @param websocket_message $message
@@ -1521,9 +1643,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 			];
 		}
 
-		$event_data['conference_name']         = $conference_name;
-		$event_data['conference_display_name'] = $this->lookup_conference_display_name($conference_name);
-		return $event_data;
+		return $this->normalize_conference_payload($event_data, $conference_name);
 	}
 
 	/**
@@ -1546,10 +1666,8 @@ class operator_panel_service extends base_websocket_system_service implements we
 				: 0;
 		}
 
-		$event_data['member_count']            = $member_count ?? 0;
-		$event_data['conference_name']         = $conference_name;
-		$event_data['conference_display_name'] = $this->lookup_conference_display_name($conference_name);
-		return $event_data;
+		$event_data['member_count'] = $member_count ?? 0;
+		return $this->normalize_conference_payload($event_data, $conference_name);
 	}
 
 	/**
@@ -1562,10 +1680,8 @@ class operator_panel_service extends base_websocket_system_service implements we
 	 */
 	private function enrich_conference_create_event(event_message $event_message, string $conference_name): array {
 		$event_data                            = $event_message->to_array();
-		$event_data['conference_name']         = $conference_name;
-		$event_data['conference_display_name'] = $this->lookup_conference_display_name($conference_name);
 		$event_data['member_count']            = 0;
-		return $event_data;
+		return $this->normalize_conference_payload($event_data, $conference_name);
 	}
 
 	/**
