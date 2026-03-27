@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2025
+ Portions created by the Initial Developer are Copyright (C) 2008-2026
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -559,12 +559,6 @@
 		echo "    	<option value='12h' ".(($domain_setting_value == "12h") ? "selected='selected'" : null).">".$text['label-12-hour']."</option>\n";
 		echo "	</select>\n";
 	}
-	elseif ($category == "domain" && $subcategory == "setting_value_input_type" && $name == "text" ) {
-		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
-		echo "    	<option value='input'>Input</option>\n";
-		echo "    	<option value='textarea' ".($domain_setting_value == "textarea" ? "selected='selected'" : null).">TextArea</option>\n";
-		echo "	</select>\n";
-	}
 	elseif ($subcategory == 'password' || (substr_count($subcategory, '_password') > 0 && $subcategory != 'input_text_font_password') || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
 		echo "	<input class='formfld password' type='password' id='domain_setting_value' name='domain_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($row['domain_setting_value'])."\">\n";
 	}
@@ -767,8 +761,16 @@
 		echo "	</select>\n";
 	}
 	else {
-		if (!empty($_SESSION['domain']['setting_value_input_type']) && $settings->get('domain', 'setting_value_input_type') == 'textarea') {
-			echo "	<textarea class='formfld' style='width: 185px; height: 80px;' id='domain_setting_value' name='domain_setting_value'>".($row['domain_setting_value'] ?? '')."</textarea>\n";
+		if (isset($row['domain_setting_value']) && strlen($row['domain_setting_value']) > 25) {
+			echo "	<textarea class='formfld' style='width: 185px; height: auto; max-height: 300px;' id='domain_setting_value' name='domain_setting_value'>".($row['domain_setting_value'] ?? '')."</textarea>\n";
+
+			echo "	<script>\n";
+			echo "	document.addEventListener('DOMContentLoaded', () => {\n";
+			echo "		let textarea = document.getElementById('domain_setting_value');\n";
+			echo "		textarea.style.height = 'auto';\n";
+			echo "		textarea.style.height = textarea.scrollHeight + 'px';\n";
+			echo "	});\n";
+			echo "	</script>\n";
 		}
 		else {
 			echo "	<input class='formfld' type='text' id='domain_setting_value' name='domain_setting_value' value=\"".escape($row['domain_setting_value'] ?? '')."\">\n";

@@ -42,7 +42,7 @@
 //get order and order by, page
 	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_REQUEST["order_by"] ?? ''));
 	$order = $_REQUEST["order"] ?? 'asc';
-	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
+	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : null;
 	$search = $_REQUEST['search'] ?? null;
 
 //get user uuid
@@ -547,6 +547,12 @@
 				$parameters['user_uuid'] = $user_uuid;
 				$database->execute($sql, $parameters);
 				unset($sql, $parameters);
+
+				// Unset remember me cookie
+				if ($user_uuid == $_SESSION['user_uuid']) {
+					unset($_COOKIE['remember']);
+					setcookie('remember', '', time() - 3600, '/');
+				}
 
 				//send the password changed email
 				if (valid_email($user_email)) {

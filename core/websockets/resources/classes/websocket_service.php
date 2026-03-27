@@ -159,8 +159,8 @@ class websocket_service extends service {
 	 * @access protected
 	 */
 	protected static function set_command_options() {
-		//TODO: ip address
-		//TODO: port
+		// TODO: ip address
+		// TODO: port
 	}
 
 	/**
@@ -314,6 +314,15 @@ class websocket_service extends service {
 					$this->info("Subscriber $ste->subscriber_id token expired");
 					// Subscriber token has expired so disconnect them
 					$this->handle_disconnect($subscriber->socket_id());
+				} catch (subscriber_not_subscribed_exception $snse) {
+					// Subscriber can issue requests to a service without being subscribed
+					// to service broadcasts; skip and continue fan-out.
+					$this->debug("Skipping subscriber {$snse->subscriber_id}: not subscribed to service '{$message->service_name}'");
+				} catch (socket_disconnected_exception $sde) {
+					$this->info("Subscriber $sde->id disconnected during broadcast");
+					$this->handle_disconnect($subscriber->socket_id());
+				} catch (\Throwable $e) {
+					$this->warning("Broadcast send failed for subscriber {$subscriber->id}: " . $e->getMessage());
 				}
 			}
 		} // Route a specific request from a service back to a subscriber
@@ -498,29 +507,29 @@ class websocket_service extends service {
 	 * @return void
 	 */
 	private function handle_client_message(subscriber $subscriber, websocket_message $message) {
-		//find the service with that name
+		// find the service with that name
 		foreach ($this->subscribers as $service) {
-			//when we find the service send the request
+			// when we find the service send the request
 			if ($service->service_equals($message->service_name())) {
-				//notify we found the service
+				// notify we found the service
 				$this->debug("Routing message to service '" . $message->service_name() . "' for topic '" . $message->topic() . "'");
 
-				//attach the current subscriber permissions so the service can verify
+				// attach the current subscriber permissions so the service can verify
 				$message->permissions($subscriber->get_permissions());
 
-				//attach the domain name
+				// attach the domain name
 				$message->domain_name($subscriber->get_domain_name());
 
-				//attach the domain uuid
+				// attach the domain uuid
 				$message->domain_uuid($subscriber->get_domain_uuid());
 
-				//attach the client id so we can track the request
+				// attach the client id so we can track the request
 				$message->resource_id = $subscriber->id;
 
-				//send the modified web socket message to the service
+				// send the modified web socket message to the service
 				$service->send((string)$message);
 
-				//continue searching for service providers
+				// continue searching for service providers
 				continue;
 			}
 		}
@@ -675,11 +684,11 @@ class websocket_service extends service {
 	 * @override service
 	 */
 	public function __destruct() {
-		//disconnect all clients
+		// disconnect all clients
 		foreach ($this->clients as $socket) {
 			$this->disconnect_client($socket);
 		}
-		//finish destruct using the parent
+		// finish destruct using the parent
 		parent::__destruct();
 	}
 

@@ -168,14 +168,14 @@
 		echo "	</tr>\n";
 
 		echo "	<tr>\n";
-		echo "		<td class='vncell'>".$text['label-caller_id']."</td>\n"; //source name
+		echo "		<td class='vncell'>".$text['label-caller_id']."</td>\n";
 		echo "		<td class='vtable'>\n";
 		echo "			<input type='text' class='formfld' name='caller_id_name' style='min-width: 115px; width: 115px;' placeholder=\"".$text['label-name']."\" value='".escape($caller_id_name)."'>\n";
 		echo "			<input type='text' class='formfld' name='caller_id_number' style='min-width: 115px; width: 115px;' placeholder=\"".$text['label-number']."\" value='".escape($caller_id_number)."'>\n";
 		echo "		</td>\n";
 		echo "	</tr>\n";
 		echo "	<tr>\n";
-		echo "		<td class='vncell'>".$text['label-extension']."</td>\n"; //source number
+		echo "		<td class='vncell'>".$text['label-extensions']."</td>\n";
 		echo "		<td class='vtable'>\n";
 		echo "			<div class='multiselect_container'>\n";
 		echo "				<div class='selected_values' id='selected_values'>\n";
@@ -187,7 +187,7 @@
 
 		echo "					<div id='no_results' class='no_results'>".$text['label-no_results']."</div>\n";
 
-		echo "					<div class='options_list' id='options_list'>\n";
+		echo "					<div class='options_list' id='options_list' name='extension_uuids[]'>\n";
 		if (is_array($extensions) && @sizeof($extensions) != 0) {
 			foreach ($extensions as $row) {
 				echo "					<label class='option_item' data-value='".escape($row['extension'])."'>\n";

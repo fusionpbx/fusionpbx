@@ -24,7 +24,10 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
---load libraries
+--load the functions
+require "resources.functions.shell_esc"
+
+--load the libraries
 local send_mail = require 'resources.functions.send_mail'
 local Database = require "resources.functions.database"
 local Settings = require "resources.functions.lazy_settings"
@@ -194,6 +197,7 @@ function send_email(id, uuid)
 				else
 					sql = sql .. "AND template_subcategory = 'default' "
 				end
+				sql = sql .. "AND template_type = 'html' "
 				sql = sql .. "AND template_enabled = true "
 				sql = sql .. "ORDER BY domain_uuid DESC "
 				local params = {domain_uuid = domain_uuid, template_language = default_language.."-"..default_dialect};
@@ -243,7 +247,7 @@ function send_email(id, uuid)
 				intro = voicemail_dir.."/"..id.."/intro_"..uuid.."."..vm_message_ext;
 				combined = voicemail_dir.."/"..id.."/intro_msg_"..uuid.."."..vm_message_ext;
 				if (file_exists(intro) and file_exists(file)) then
-					os.execute("sox "..intro.." "..file.." "..combined);
+					os.execute("sox "..intro.." "..shell_esc(file).." "..shell_esc(combined));
 				end
 
 			--prepare the subject
@@ -337,7 +341,7 @@ function send_email(id, uuid)
 					smtp_from,
 					voicemail_mail_to,
 					{subject, body},
-					(voicemail_file == "attach") and voicemail_path,
+					voicemail_path,
 					voicemail_base64
 				);
 

@@ -171,7 +171,7 @@
 		//$voicemail_sms_to  = $row["voicemail_sms_to "];
 		$voicemail_transcription_enabled = $row["voicemail_transcription_enabled"];
 		//$voicemail_attach_file = $row["voicemail_attach_file"];
-		//$voicemail_file = $row["voicemail_file"];
+		$voicemail_file = $row["voicemail_file"];
 		//$voicemail_local_after_email = $row["voicemail_local_after_email"];
 		//$voicemail_enabled = $row["voicemail_enabled"];
 		//$voicemail_description = $row["voicemail_description"];
@@ -328,6 +328,11 @@
 		}
 	}
 
+//clear the array if this is a voicemail and file attachment is not enabled
+	if (!empty($email_uuid) && !empty($voicemail_file) && $voicemail_file !== 'attach') {
+	    $email_attachments = '';
+	}
+
 //send the email
 	$email = new email;
 	$email->domain_uuid = $domain_uuid;
@@ -338,7 +343,9 @@
 	$email->recipients = $email_to;
 	$email->subject = $email_subject;
 	$email->body = $email_body;
-	$email->attachments = $email_attachments;
+	if (!empty($email_attachments)) {
+		$email->attachments = $email_attachments;
+	}
 	$email->debug_level = 3;
 	$email->method = 'direct';
 	$email_status = $email->send();
@@ -430,7 +437,6 @@
 				}
 			}
 		}
-
 
 		/*
 		//build insert array
