@@ -36,6 +36,7 @@ let duration_tick_timer = null;
 let extensions_reconcile_timer = null;
 let recording_state_timer = null;
 let registrations_state_timer = null;
+let parked_state_timer = null;
 
 /**
  * Live call map: uuid → call object.
@@ -43,6 +44,12 @@ let registrations_state_timer = null;
  * @type {Map<string, object>}
  */
 const calls_map = new Map();
+
+/**
+ * Parked call map: uuid -> normalized parked call object.
+ * @type {Map<string, object>}
+ */
+const parked_calls_map = new Map();
 
 /**
  * Live conference map: conference_name → conference object.
@@ -77,6 +84,12 @@ let dragged_extension = null;
 
 /** UUID of the call being dragged from eavesdrop icon onto an extension block. */
 let dragged_eavesdrop_uuid = null;
+
+/** UUID of the parked call being dragged onto an extension block. */
+let dragged_parked_uuid = null;
+
+/** UUIDs recently removed from parked state; suppressed from snapshots briefly. */
+const parked_suppress_map = new Map();
 
 /** Calls flagged as actively recording in UI state. */
 const recording_call_uuids = new Set();
@@ -246,7 +259,7 @@ function resolve_peer_number_for_leg(ch, ext_number, direction_raw) {
 }
 
 function set_filter_bar_visibility(show) {
-	['extensions_filter_bar', 'calls_filter_bar', 'conferences_filter_bar', 'agents_filter_bar'].forEach(id => {
+	['extensions_filter_bar', 'calls_filter_bar', 'parked_filter_bar', 'conferences_filter_bar', 'agents_filter_bar'].forEach(id => {
 		const bar = document.getElementById(id);
 		if (bar) bar.style.display = show ? '' : 'none';
 	});
@@ -335,6 +348,10 @@ function on_authenticated() {
 	if (recording_state_timer) clearInterval(recording_state_timer);
 	recording_state_timer = setInterval(sync_recording_state, 2000);
 
+	// Periodically refresh parked calls snapshot from FreeSWITCH valet_info.
+	if (parked_state_timer) clearInterval(parked_state_timer);
+	parked_state_timer = setInterval(load_parked_snapshot, 8000);
+
 	// Reconcile registration flags in case registration_change events are missed.
 	if (registrations_state_timer) clearInterval(registrations_state_timer);
 	if (typeof registrations_reconcile_enabled !== 'undefined' && registrations_reconcile_enabled) {
@@ -353,6 +370,7 @@ function on_authenticated() {
 	];
 	call_topics.forEach(t => ws.on_event(t, on_call_event));
 	ws.on_event('calls_active', on_calls_snapshot_event);
+	ws.on_event('parked_active', on_parked_snapshot_event);
 
 	// Conference events
 	const conf_topics = [
@@ -388,6 +406,7 @@ function on_authenticated() {
 
 	load_extensions_snapshot();
 	load_calls_snapshot();
+	load_parked_snapshot();
 	load_conferences_snapshot();
 	load_agents_snapshot();
 	sync_recording_state();
@@ -410,6 +429,7 @@ function _clear_timers() {
 	if (duration_tick_timer)    { clearInterval(duration_tick_timer);    duration_tick_timer    = null; }
 	if (extensions_reconcile_timer) { clearTimeout(extensions_reconcile_timer); extensions_reconcile_timer = null; }
 	if (recording_state_timer)  { clearInterval(recording_state_timer);  recording_state_timer  = null; }
+	if (parked_state_timer)         { clearInterval(parked_state_timer);         parked_state_timer         = null; }
 	if (registrations_state_timer) { clearInterval(registrations_state_timer); registrations_state_timer = null; }
 }
 
@@ -541,6 +561,149 @@ function get_call_uuid(ch) {
 	return ch.unique_id || ch.uuid || ch.channel_uuid || '';
 }
 
+function is_parked_call(ch) {
+	if (!ch || typeof ch !== 'object') return false;
+	const callstate = ((ch.channel_call_state || ch.answer_state || '') + '').toLowerCase();
+	const app = ((ch.application || ch.variable_current_application || '') + '').toLowerCase();
+	const event_name = ((ch.event_name || '') + '').toLowerCase();
+	const action = ((ch.action || '') + '').toLowerCase();
+	const topic = ((ch.topic || '') + '').toLowerCase();
+	return callstate === 'park'
+		|| app.indexOf('park') !== -1
+		|| event_name === 'channel_park'
+		|| action === 'hold'
+		|| (topic === 'valet_info' && !!((ch.valet_extension || '') + '').trim());
+}
+
+function get_parked_since_us(ch) {
+	const candidates = [
+		ch.parked_epoch_us,
+		ch.parked_epoch,
+		ch.variable_parked_epoch,
+		ch.variable_park_epoch,
+		ch.event_date_timestamp,
+		ch.caller_channel_created_time,
+	];
+	for (const value of candidates) {
+		if (!value) continue;
+		const raw = String(value).trim();
+		if (!raw) continue;
+		if (/^\d+$/.test(raw)) {
+			if (raw.length <= 10) return `${raw}000000`;
+			if (raw.length <= 13) return `${raw}000`;
+			return raw;
+		}
+	}
+	return '0';
+}
+
+function get_parking_lot(ch) {
+	const candidates = [
+		ch.valet_extension,
+		ch.variable_valet_extension,
+		ch.variable_parking_lot,
+		ch.parking_lot,
+		ch.parked_location,
+		ch.variable_parked_location,
+		ch.variable_parking_slot,
+		ch.variable_park_slot,
+		ch.caller_destination_number,
+	];
+	for (const value of candidates) {
+		const cleaned = ((value || '') + '').trim();
+		if (cleaned) return cleaned;
+	}
+	return '';
+}
+
+function get_parked_by(ch) {
+	const candidates = [
+		ch.parked_by,
+		ch.variable_parked_by,
+		ch.variable_referred_by_user,
+		ch.variable_last_sent_callee_id_number,
+		ch.channel_presence_id ? ch.channel_presence_id.split('@')[0] : '',
+		ch.presence_id ? ch.presence_id.split('@')[0] : '',
+		ch.caller_caller_id_number,
+		ch.caller_id_number,
+	];
+	for (const value of candidates) {
+		const cleaned = ((value || '') + '').trim();
+		if (cleaned && cleaned !== '_undef_') return cleaned;
+	}
+	return '';
+}
+
+function get_original_destination(ch) {
+	const candidates = [
+		ch.original_destination_number,
+		ch.variable_last_dialed_extension,
+		ch.variable_dialed_extension,
+		ch.caller_destination_number,
+		ch.destination_number,
+	];
+	for (const value of candidates) {
+		const cleaned = ((value || '') + '').trim();
+		if (cleaned) return cleaned;
+	}
+	return '';
+}
+
+function normalize_parked_call(ch) {
+	const uuid = get_call_uuid(ch);
+	if (!uuid) return null;
+	const caller_id_name = ((ch.variable_pre_transfer_caller_id_name || ch.caller_caller_id_name || ch.caller_id_name || '') + '').trim();
+	const caller_id_number = ((ch.caller_caller_id_number || ch.caller_id_number || '') + '').trim();
+	const parking_lot = get_parking_lot(ch);
+	const parked_by = get_parked_by(ch);
+	const original_destination = get_original_destination(ch);
+	const parked_since_us = get_parked_since_us(ch);
+	const group_key = get_call_group_key(ch);
+
+	return {
+		uuid,
+		caller_id_name,
+		caller_id_number,
+		parking_lot,
+		parked_by,
+		original_destination,
+		parked_since_us,
+		group_key,
+	};
+}
+
+function update_parked_badges() {
+	const badge = document.getElementById('parked_count');
+	if (badge) badge.textContent = parked_calls_map.size;
+}
+
+function upsert_parked_call(ch) {
+	const normalized = normalize_parked_call(ch);
+	if (!normalized) return;
+	// Skip if this UUID was recently unparked (race window suppression)
+	const suppress_until = parked_suppress_map.get(normalized.uuid);
+	if (suppress_until) {
+		if (Date.now() < suppress_until) return;
+		parked_suppress_map.delete(normalized.uuid);
+	}
+	const current = parked_calls_map.get(normalized.uuid) || {};
+	parked_calls_map.set(normalized.uuid, Object.assign(current, normalized));
+}
+
+function remove_parked_call_by_uuid(uuid) {
+	if (!uuid) return;
+	parked_calls_map.delete(uuid);
+	// Suppress this UUID from being re-added by snapshots for a short window
+	parked_suppress_map.set(uuid, Date.now() + 6000);
+}
+
+function rebuild_parked_calls_map() {
+	parked_calls_map.clear();
+	for (const ch of calls_map.values()) {
+		if (is_parked_call(ch)) upsert_parked_call(ch);
+	}
+}
+
 /**
  * Request a full calls snapshot from the service.
  * Snapshot response arrives as a topic='calls_active' event.
@@ -565,8 +728,11 @@ function apply_calls_snapshot(payload) {
 		const uuid = get_call_uuid(ch);
 		if (uuid) calls_map.set(uuid, ch);
 	});
+	rebuild_parked_calls_map();
 
 	render_calls_tab();
+	render_parked_side_card();
+	render_parked_tab();
 	// Re-render extensions so their active/idle state reflects calls snapshot.
 	schedule_extensions_render();
 }
@@ -575,6 +741,33 @@ function apply_calls_snapshot(payload) {
 function on_calls_snapshot_event(event) {
 	const payload = event.payload || event.data || event;
 	apply_calls_snapshot(payload);
+}
+
+function load_parked_snapshot() {
+	if (!ws || ws.ws.readyState !== WebSocket.OPEN) return;
+	ws.request('active.operator.panel', 'parked_active', {domain_name: domain_name})
+		.then(response => {
+			apply_parked_snapshot(response.payload || []);
+		})
+		.catch(console.error);
+}
+
+function apply_parked_snapshot(payload) {
+	const rows = Array.isArray(payload)
+		? payload
+		: ((payload && Array.isArray(payload.rows)) ? payload.rows : []);
+
+	parked_calls_map.clear();
+	rows.forEach(ch => {
+		upsert_parked_call(ch);
+	});
+	render_parked_side_card();
+	render_parked_tab();
+}
+
+function on_parked_snapshot_event(event) {
+	const payload = event.payload || event.data || event;
+	apply_parked_snapshot(payload);
 }
 
 /**
@@ -608,8 +801,127 @@ function on_call_event(event) {
 			break;
 	}
 
+	if (name === 'channel_unpark' || name === 'channel_destroy') {
+		remove_parked_call_by_uuid(uuid);
+	} else if (name === 'valet_info') {
+		const action = ((event.action || '') + '').toLowerCase();
+		if (action === 'hold') {
+			const call = calls_map.get(uuid);
+			if (call) upsert_parked_call(call);
+		} else {
+			// action=bridge or other means unparked
+			remove_parked_call_by_uuid(uuid);
+		}
+	} else {
+		const call = calls_map.get(uuid);
+		if (call && (name === 'channel_park' || is_parked_call(call))) {
+			upsert_parked_call(call);
+		}
+	}
+
 	schedule_extensions_render();
 	render_calls_tab();
+	render_parked_side_card();
+	render_parked_tab();
+}
+
+function get_sorted_parked_calls() {
+	return Array.from(parked_calls_map.values()).sort((a, b) => {
+		const a_ts = Number(a.parked_since_us || 0);
+		const b_ts = Number(b.parked_since_us || 0);
+		return a_ts - b_ts;
+	});
+}
+
+function render_parked_side_card() {
+	const container = document.getElementById('parked_side_container');
+	if (!container) return;
+
+	const parked_calls = get_sorted_parked_calls();
+	const title = esc(text['label-parked_calls'] || 'Parked Calls');
+	const no_parked = esc(text['label-no_parked_calls'] || 'No parked calls');
+
+	let html = `<div class="op-parked-card" ondragover="on_parked_dragover(event)" ondragleave="on_parked_dragleave(event)" ondrop="on_parked_drop(event)">`;
+	html += `<div class="op-parked-header">`;
+	html += `<span>${title}</span>`;
+	html += `<span class="op-parked-badge">${parked_calls.length}</span>`;
+	html += `</div>`;
+
+	if (!parked_calls.length) {
+		html += `<div class="op-parked-empty">${no_parked}</div>`;
+		html += `</div>`;
+		container.innerHTML = html;
+		update_parked_badges();
+		return;
+	}
+
+	html += `<div class="op-parked-list">`;
+	parked_calls.forEach(p => {
+		const uuid = esc(p.uuid);
+		const caller = esc((p.caller_id_name || '').trim() || (p.caller_id_number || 'Unknown'));
+		const caller_num = esc(p.caller_id_number || '-');
+		const lot = esc(p.parking_lot || '-');
+		const parked_by = esc(p.parked_by || '-');
+		const dest = esc(p.original_destination || '-');
+		html += `<div class="op-parked-item" draggable="true" data-uuid="${uuid}" data-group-key="${esc(p.group_key || '')}"`;
+		html += ` ondragstart="on_drag_parked('${uuid}', event)" ondragend="on_drag_end()">`;
+		html += `<div class="op-parked-main">${caller}</div>`;
+		html += `<div class="op-parked-sub">${esc(text['label-caller_id'] || 'Caller ID')}: ${caller_num}</div>`;
+		html += `<div class="op-parked-sub">${esc(text['label-parking_lot'] || 'Parking Lot')}: ${lot}</div>`;
+		html += `<div class="op-parked-sub">${esc(text['label-duration'] || 'Duration')}: <span class="mono" data-created="${esc(p.parked_since_us || '0')}">${esc(format_elapsed(p.parked_since_us || '0'))}</span></div>`;
+		html += `<div class="op-parked-sub">${esc(text['label-parked_by'] || 'Parked By')}: ${parked_by}</div>`;
+		html += `<div class="op-parked-sub">${esc(text['label-original_destination'] || 'Original Destination')}: ${dest}</div>`;
+		html += `</div>`;
+	});
+	html += `</div></div>`;
+
+	container.innerHTML = html;
+	update_parked_badges();
+}
+
+function render_parked_tab() {
+	const container = document.getElementById('parked_container');
+	if (!container) return;
+
+	const parked_calls = get_sorted_parked_calls();
+	update_parked_badges();
+
+	if (!parked_calls.length) {
+		container.innerHTML = `<p class="text-muted">${esc(text['label-no_parked_calls'] || 'No parked calls')}</p>`;
+		apply_parked_filters();
+		return;
+	}
+
+	let html = "<div class='card op-parked-drop-zone' ondragover=\"on_parked_dragover(event)\" ondragleave=\"on_parked_dragleave(event)\" ondrop=\"on_parked_drop(event)\">\n";
+	html += "<table class='list'>\n";
+	html += "<tr class='list-header'>\n";
+	html += `<th>${esc(text['label-caller_id'] || 'Caller ID')}</th>\n`;
+	html += `<th>${esc(text['label-parking_lot'] || 'Parking Lot')}</th>\n`;
+	html += `<th>${esc(text['label-duration'] || 'Duration')}</th>\n`;
+	html += `<th>${esc(text['label-parked_by'] || 'Parked By')}</th>\n`;
+	html += `<th>${esc(text['label-original_destination'] || 'Original Destination')}</th>\n`;
+	html += "</tr>\n";
+
+	parked_calls.forEach(p => {
+		const uuid = esc(p.uuid);
+		const caller_name = esc(p.caller_id_name || '');
+		const caller_num = esc(p.caller_id_number || '-');
+		const lot = esc(p.parking_lot || '-');
+		const parked_by = esc(p.parked_by || '-');
+		const dest = esc(p.original_destination || '-');
+		const group_key = esc(p.group_key || '');
+		html += `<tr class="list-row" draggable="true" data-uuid="${uuid}" data-group-key="${group_key}" ondragstart="on_drag_parked('${uuid}', event)" ondragend="on_drag_end(); document.querySelectorAll('.op-ext-block').forEach(b=>b.classList.remove('op-ext-drop-over'))">\n`;
+		html += `  <td>${caller_name ? `${caller_name}<br><small>${caller_num}</small>` : caller_num}</td>\n`;
+		html += `  <td>${lot}</td>\n`;
+		html += `  <td class="mono" data-created="${esc(p.parked_since_us || '0')}">${esc(format_elapsed(p.parked_since_us || '0'))}</td>\n`;
+		html += `  <td>${parked_by}</td>\n`;
+		html += `  <td>${dest}</td>\n`;
+		html += "</tr>\n";
+	});
+
+	html += "</table>\n</div>\n";
+	container.innerHTML = html;
+	apply_parked_filters();
 }
 
 function call_is_recording(ch, uuid) {
@@ -833,7 +1145,7 @@ function render_calls_tab() {
 			? '../operator_panel/resources/images/recording.png'
 			: '../operator_panel/resources/images/record.png';
 
-		html += `<tr class="list-row" id="call_row_${uuid}" draggable="true" data-uuid="${uuid}" data-group-key="${group_key}" ondragstart="on_drag_call('${uuid}', event)" ondragend="on_drag_end(); document.querySelectorAll('.op-ext-block').forEach(b=>b.classList.remove('op-ext-drop-over'))">\n`;
+		html += `<tr class="list-row" id="call_row_${uuid}" draggable="true" data-uuid="${uuid}" data-group-key="${group_key}" ondragstart="on_drag_call('${uuid}', event)" ondragend="on_drag_end(); document.querySelectorAll('.op-ext-block').forEach(b=>b.classList.remove('op-ext-drop-over'))" oncontextmenu="on_call_contextmenu(event, '${uuid}')">\n`;
 		const show_cid_name = raw_cid_name && raw_cid_name.toLowerCase() !== 'outbound call' && raw_cid_name.toLowerCase() !== 'inbound call';
 		html += `  <td class="mono">${direction_icon ? `<img src="${direction_icon}" width="12" height="12" alt="${direction}" title="${direction}" style="vertical-align:middle;">` : ''}</td>\n`;
 		html += `  <td>${show_cid_name ? `${cid_name}<br><small>${cid_number}</small>` : cid_number}</td>\n`;
@@ -1239,7 +1551,281 @@ function action_hangup(uuid) {
 	send_action('hangup', { uuid }).catch(console.error);
 }
 
-/** Open the transfer modal for the given UUID. */
+// ─── Transfer mode ────────────────────────────────────────────────────────────
+
+/** Current transfer mode: 'blind' or 'attended'. Persisted per page session. */
+let transfer_mode = 'blind';
+
+/** Toggle between blind and attended transfer modes and update the button. */
+function toggle_transfer_mode() {
+	transfer_mode = (transfer_mode === 'blind') ? 'attended' : 'blind';
+	const btn = document.getElementById('btn_transfer_mode_toggle');
+	if (!btn) return;
+	if (transfer_mode === 'attended') {
+		btn.textContent = text['label-attended_transfer'] || 'Attended';
+		btn.title       = text['label-attended_transfer_title'] || 'Attended transfer: destination is called first; connected to caller when answered';
+		btn.style.background   = '#198754';
+		btn.style.borderColor  = '#198754';
+		btn.style.color        = '#fff';
+	} else {
+		btn.textContent = text['label-blind_transfer'] || 'Blind';
+		btn.title       = text['label-blind_transfer_title'] || 'Blind transfer: immediately connect the call to the destination';
+		btn.style.background  = '';
+		btn.style.borderColor = '';
+		btn.style.color       = '';
+	}
+}
+
+// ─── Context menu ─────────────────────────────────────────────────────────────
+
+/** Hide the right-click context menu. */
+function hide_context_menu() {
+	const m = document.getElementById('op_context_menu');
+	if (m) m.style.display = 'none';
+}
+
+/**
+ * Build and display a right-click context menu at the cursor.
+ * @param {MouseEvent} event
+ * @param {Array}      items  Objects: {label, icon_class, fn, danger} | {separator:true} | {header:string}
+ */
+function show_context_menu(event, items) {
+	event.preventDefault();
+	event.stopPropagation();
+
+	const menu = document.getElementById('op_context_menu');
+	if (!menu || !items.length) return;
+
+	menu.innerHTML = '';
+	items.forEach(function (item) {
+		if (item.separator) {
+			const sep = document.createElement('div');
+			sep.className = 'op-ctx-separator';
+			menu.appendChild(sep);
+			return;
+		}
+		if (item.header) {
+			const hdr = document.createElement('div');
+			hdr.className = 'op-ctx-header';
+			hdr.textContent = item.header;
+			menu.appendChild(hdr);
+			return;
+		}
+		const btn = document.createElement('button');
+		btn.type = 'button';
+		btn.className = 'op-ctx-item' + (item.danger ? ' op-ctx-danger' : '');
+		if (item.icon_class) {
+			const ico = document.createElement('i');
+			ico.className = item.icon_class + ' op-ctx-icon';
+			btn.appendChild(ico);
+		}
+		const span = document.createElement('span');
+		span.textContent = item.label;
+		btn.appendChild(span);
+		btn.addEventListener('click', function () {
+			hide_context_menu();
+			if (typeof item.fn === 'function') item.fn();
+		});
+		menu.appendChild(btn);
+	});
+
+	// Estimate height before measuring and position to avoid off-screen overflow
+	menu.style.left    = '-9999px';
+	menu.style.top     = '-9999px';
+	menu.style.display = 'block';
+	const mw = menu.offsetWidth;
+	const mh = menu.offsetHeight;
+	const px = Math.min(event.clientX + window.scrollX, window.innerWidth  + window.scrollX - mw - 4);
+	const py = Math.min(event.clientY + window.scrollY, window.innerHeight + window.scrollY - mh - 4);
+	menu.style.left = px + 'px';
+	menu.style.top  = py + 'px';
+}
+
+// Close context menu on outside click or Escape
+document.addEventListener('click', hide_context_menu, true);
+document.addEventListener('keydown', function (e) {
+	if (e.key === 'Escape') hide_context_menu();
+});
+
+/**
+ * Right-click handler for extension blocks.
+ * @param {MouseEvent} event
+ * @param {string}     ext_num
+ */
+function on_ext_contextmenu(event, ext_num) {
+	const block = document.getElementById('ext_block_' + ext_num);
+	const uuid  = block ? (block.getAttribute('data-call-uuid') || '') : '';
+	const is_mine  = !!(block && block.classList.contains('op-ext-mine'));
+	const { state, call_info } = get_extension_call_state(ext_num);
+	const has_call  = !!uuid;
+
+	// Derive call direction for the ringing extension to suppress Reject on outbound calls.
+	const call_dest = ((call_info || {}).caller_destination_number || '').trim();
+	const call_cid  = ((call_info || {}).caller_caller_id_number  || '').trim();
+	let direction_raw = '';
+	if (call_dest === ext_num && call_cid !== ext_num) direction_raw = 'inbound';
+	else if (call_cid === ext_num && call_dest !== ext_num) direction_raw = 'outbound';
+	else direction_raw = (((call_info || {}).call_direction || (call_info || {}).variable_call_direction || '') + '').toLowerCase();
+	const is_outbound = direction_raw === 'outbound';
+
+	const items = [];
+	items.push({ header: ext_num });
+
+	if (!has_call) {
+		if (is_mine) {
+			// Own idle extension: open dialpad to originate from this extension
+			if (permissions.operator_panel_originate) {
+				items.push({ label: text['label-dial_number'] || 'Dial a Number', icon_class: 'fa-solid fa-phone',
+					fn: function () { toggle_ext_dialpad(ext_num, null); }
+				});
+			}
+		} else {
+			// Other idle extension: originate from one of my extensions TO this extension
+			if (permissions.operator_panel_originate) {
+				items.push({ label: text['button-call'] || 'Call', icon_class: 'fa-solid fa-phone',
+					fn: function () { action_call_extension(ext_num); }
+				});
+			}
+		}
+	} else if (state === 'ringing') {
+		if (is_mine) {
+			if (permissions.operator_panel_originate) {
+				items.push({ label: text['label-dial_number'] || 'Dial a Number', icon_class: 'fa-solid fa-phone',
+					fn: function () { toggle_ext_dialpad(ext_num, null); } });
+			}
+			if (permissions.operator_panel_hangup) {
+				if (permissions.operator_panel_originate) items.push({ separator: true });
+				if (!is_outbound) {
+					items.push({ label: text['button-reject'] || 'Reject', icon_class: 'fa-solid fa-phone-slash',
+						fn: function () { action_reject(uuid); } });
+				}
+				items.push({ label: text['button-hangup_caller'] || 'Hangup Caller', icon_class: 'fa-solid fa-xmark',
+					fn: function () { action_hangup_caller(uuid); }, danger: true });
+			}
+		} else {
+			if (permissions.operator_panel_manage) {
+				items.push({ label: text['button-intercept'] || 'Intercept', icon_class: 'fa-solid fa-phone-volume',
+					fn: function () { action_intercept_icon(uuid, ext_num); } });
+			}
+			if (permissions.operator_panel_hangup) {
+				items.push({ label: text['button-hangup_caller'] || 'Hangup Caller', icon_class: 'fa-solid fa-xmark',
+					fn: function () { action_hangup_caller(uuid); }, danger: true });
+			}
+		}
+	} else if (has_call) {
+		// active / held
+		if (is_mine && permissions.operator_panel_originate) {
+			items.push({ label: text['label-dial_number'] || 'Dial a Number', icon_class: 'fa-solid fa-phone',
+				fn: function () { toggle_ext_dialpad(ext_num, null); } });
+			items.push({ separator: true });
+		}
+		if (permissions.operator_panel_manage) {
+			items.push({ label: text['label-transfer'] || 'Transfer', icon_class: 'fa-solid fa-arrow-right-from-bracket',
+				fn: function () { open_transfer_modal(uuid); } });
+		}
+		if (permissions.operator_panel_eavesdrop) {
+			items.push({ label: text['button-eavesdrop'] || 'Eavesdrop', icon_class: 'fa-solid fa-ear-listen',
+				fn: function () { action_eavesdrop(uuid); } });
+		}
+		if (permissions.operator_panel_coach) {
+			items.push({ label: text['button-whisper'] || 'Whisper', icon_class: 'fa-solid fa-comment-dots',
+				fn: function () { action_whisper(uuid); } });
+			items.push({ label: text['button-barge'] || 'Barge', icon_class: 'fa-solid fa-volume-high',
+				fn: function () { action_barge(uuid); } });
+		}
+		if (permissions.operator_panel_record) {
+			items.push({ label: text['button-record'] || 'Record', icon_class: 'fa-solid fa-circle-dot',
+				fn: function () { action_record(uuid); } });
+		}
+		if (permissions.operator_panel_hangup) {
+			if (items.length > 1) items.push({ separator: true });
+			items.push({ label: text['label-hangup'] || 'Hangup', icon_class: 'fa-solid fa-phone-slash',
+				fn: function () { action_hangup(uuid); }, danger: true });
+		}
+	}
+
+	if (items.length <= 1) return; // nothing beyond the header
+	show_context_menu(event, items);
+}
+
+/**
+ * Right-click handler for call rows in the Calls tab.
+ * @param {MouseEvent} event
+ * @param {string}     uuid
+ */
+function on_call_contextmenu(event, uuid) {
+	if (!uuid) return;
+	const items = [];
+
+	if (permissions.operator_panel_manage) {
+		items.push({ label: text['label-transfer'] || 'Transfer', icon_class: 'fa-solid fa-arrow-right-from-bracket',
+			fn: function () { open_transfer_modal(uuid); } });
+	}
+	if (permissions.operator_panel_eavesdrop) {
+		items.push({ label: text['button-eavesdrop'] || 'Eavesdrop', icon_class: 'fa-solid fa-ear-listen',
+			fn: function () { action_eavesdrop(uuid); } });
+	}
+	if (permissions.operator_panel_coach) {
+		items.push({ label: text['button-whisper'] || 'Whisper', icon_class: 'fa-solid fa-comment-dots',
+			fn: function () { action_whisper(uuid); } });
+		items.push({ label: text['button-barge'] || 'Barge', icon_class: 'fa-solid fa-volume-high',
+			fn: function () { action_barge(uuid); } });
+	}
+	if (permissions.operator_panel_record) {
+		items.push({ label: text['button-record'] || 'Record', icon_class: 'fa-solid fa-circle-dot',
+			fn: function () { action_record(uuid); } });
+	}
+	if (permissions.operator_panel_hangup) {
+		if (items.length) items.push({ separator: true });
+		items.push({ label: text['label-hangup'] || 'Hangup', icon_class: 'fa-solid fa-phone-slash',
+			fn: function () { action_hangup(uuid); }, danger: true });
+	}
+
+	if (!items.length) return;
+	show_context_menu(event, items);
+}
+
+/** Reject a ringing call on user's own extension (kills B-leg, phone stops ringing). */
+function action_reject(uuid) {
+	if (!uuid) return;
+	send_action('hangup', { uuid }).catch(console.error);
+}
+
+/** Hangup the caller (A-leg) of a ringing call. */
+function action_hangup_caller(uuid) {
+	if (!uuid) return;
+	if (!confirm(text['label-confirm_hangup_caller'] || 'Hang up the caller?')) return;
+	send_action('hangup_caller', { uuid }).catch(console.error);
+}
+
+/** Intercept a ringing call from the icon (uses the ringing action modal). */
+/**
+ * Originate a call from one of the user's own extensions to the given extension number.
+ */
+function action_call_extension(ext_num) {
+	if (!Array.isArray(user_own_extensions) || user_own_extensions.length === 0) return;
+	const from_ext = user_own_extensions.length === 1
+		? user_own_extensions[0]
+		: prompt(text['label-your_extension'] || 'Your extension:');
+	if (!from_ext) return;
+	send_action('originate', { source: from_ext, destination: ext_num }).catch(console.error);
+}
+
+function action_intercept_icon(uuid, target_ext) {
+	if (!uuid) return;
+	const from_ext = (Array.isArray(user_own_extensions) && user_own_extensions.length === 1)
+		? user_own_extensions[0]
+		: null;
+	if (from_ext) {
+		show_ringing_action_modal(uuid, from_ext, target_ext);
+	} else if (Array.isArray(user_own_extensions) && user_own_extensions.length > 1) {
+		const ext = prompt(text['label-your_extension'] || 'Your extension to receive the call:');
+		if (!ext) return;
+		show_ringing_action_modal(uuid, ext, target_ext);
+	}
+}
+
+/** Open the transfer dialog for the given UUID. */
 function open_transfer_modal(uuid) {
 	const uuid_field = document.getElementById('transfer_uuid');
 	const dest_field = document.getElementById('transfer_destination');
@@ -1248,15 +1834,14 @@ function open_transfer_modal(uuid) {
 	uuid_field.value = uuid;
 	dest_field.value = '';
 
-	const modal_el = document.getElementById('transfer_modal');
-	if (!modal_el) return;
+	const dlg = document.getElementById('transfer_dialog');
+	if (!dlg) return;
 
-	const modal = bootstrap.Modal.getOrCreateInstance(modal_el);
-	modal.show();
-	setTimeout(() => dest_field.focus(), 350);
+	dlg.showModal();
+	setTimeout(() => dest_field.focus(), 100);
 }
 
-/** Called by the Transfer button inside the modal. */
+/** Called by the Transfer button inside the dialog. */
 function confirm_transfer() {
 	const uuid        = (document.getElementById('transfer_uuid')        || {}).value || '';
 	const destination = (document.getElementById('transfer_destination') || {}).value || '';
@@ -1266,11 +1851,110 @@ function confirm_transfer() {
 		return;
 	}
 
-	// Close modal
-	const modal_el = document.getElementById('transfer_modal');
-	if (modal_el) bootstrap.Modal.getInstance(modal_el)?.hide();
+	const dlg = document.getElementById('transfer_dialog');
+	if (dlg) dlg.close();
 
-	send_action('transfer', { uuid, destination, context: domain_name }).catch(console.error);
+	const action = (transfer_mode === 'attended' && permissions.operator_panel_transfer_attended)
+		? 'transfer_attended'
+		: 'transfer';
+	const payload = {
+		uuid,
+		destination,
+		context: domain_name,
+		transfer_mode,
+	};
+	console.debug('[OP] confirm_transfer', { action, transfer_mode, permitted: permissions.operator_panel_transfer_attended, payload });
+	send_action(action, payload).catch(console.error);
+}
+
+/**
+ * Show a modal with Intercept / Call / Eavesdrop choices when dropping
+ * an extension onto a ringing extension.
+ */
+function show_ringing_action_modal(target_uuid, from_ext, target_ext) {
+	const dlg = document.getElementById('ringing_action_dialog');
+	if (!dlg) return;
+
+	// Description text
+	const desc_el = document.getElementById('ringing_action_description');
+	if (desc_el) {
+		desc_el.textContent = (text['label-ringing_action_desc'] || 'Extension {target} is ringing. What would you like to do from {source}?')
+			.replace('{target}', target_ext)
+			.replace('{source}', from_ext);
+	}
+
+	function cleanup() {
+		dlg.close();
+		btn_intercept.removeEventListener('click', on_intercept);
+		btn_call.removeEventListener('click', on_call);
+		btn_eavesdrop.removeEventListener('click', on_eavesdrop);
+		dlg.removeEventListener('close', on_close);
+	}
+
+	const btn_intercept = document.getElementById('ringing_action_intercept');
+	const btn_call      = document.getElementById('ringing_action_call');
+	const btn_eavesdrop = document.getElementById('ringing_action_eavesdrop');
+
+	function on_intercept() {
+		cleanup();
+		const call = calls_map.get(target_uuid);
+		let a_leg = call && (call.other_leg_unique_id || call.variable_bridge_uuid || '');
+		// Reverse lookup: find the A-leg in calls_map whose other_leg points to target
+		if (!a_leg) {
+			for (const [uuid, ch] of calls_map) {
+				if (uuid !== target_uuid && (ch.other_leg_unique_id === target_uuid || ch.variable_bridge_uuid === target_uuid)) {
+					a_leg = uuid;
+					break;
+				}
+			}
+		}
+		if (a_leg) {
+			send_action('transfer', { uuid: a_leg, destination: from_ext, context: domain_name })
+				.then(() => show_toast(text['label-call_intercepted'] || 'Call intercepted', 'success'))
+				.catch((err) => {
+					console.error(err);
+					show_toast((err && err.message) || 'Intercept failed', 'danger');
+				});
+		} else {
+			// Server-side fallback: let PHP find the A-leg
+			send_action('intercept', { uuid: target_uuid, destination: from_ext, destination_extension: from_ext })
+				.then(() => show_toast(text['label-call_intercepted'] || 'Call intercepted', 'success'))
+				.catch((err) => {
+					console.error(err);
+					show_toast((err && err.message) || 'Intercept failed', 'danger');
+				});
+		}
+	}
+
+	function on_call() {
+		cleanup();
+		send_action('originate', { source: from_ext, destination: target_ext })
+			.catch(console.error);
+	}
+
+	function on_eavesdrop() {
+		cleanup();
+		send_action('eavesdrop', { uuid: target_uuid, destination: from_ext, destination_extension: from_ext })
+			.then(() => show_toast(text['button-eavesdrop'] || 'Eavesdrop started', 'success'))
+			.catch((err) => {
+				console.error(err);
+				show_toast((err && err.message) || 'Eavesdrop failed', 'danger');
+			});
+	}
+
+	function on_close() {
+		btn_intercept.removeEventListener('click', on_intercept);
+		btn_call.removeEventListener('click', on_call);
+		btn_eavesdrop.removeEventListener('click', on_eavesdrop);
+		dlg.removeEventListener('close', on_close);
+	}
+
+	btn_intercept.addEventListener('click', on_intercept);
+	btn_call.addEventListener('click', on_call);
+	btn_eavesdrop.addEventListener('click', on_eavesdrop);
+	dlg.addEventListener('close', on_close);
+
+	dlg.showModal();
 }
 
 function action_eavesdrop(uuid) {
@@ -1718,8 +2402,32 @@ function render_ext_block(ext, is_mine) {
 			`<span class="op-ext-call-duration" data-created="${(call_info || {}).caller_channel_created_time || '0'}">${esc(duration_raw)}</span>` +
 			`</div>`
 		: '';
-	const live_actions_html = has_live_call
-		? `<div class="op-ext-call-actions">` +
+	const is_ringing = state === 'ringing';
+	let live_actions_html = '';
+	if (has_live_call && is_ringing && is_mine) {
+		// Ringing on user's own extension: Reject (inbound only) + Hangup (A-leg)
+		const show_reject = direction_raw !== 'outbound';
+		live_actions_html = `<div class="op-ext-call-actions">` +
+			(permissions.operator_panel_hangup && show_reject
+				? `<img class="op-ext-action-icon" src="../operator_panel/resources/images/reject.svg" alt="${esc(text['button-reject'] || 'Reject')}" title="${esc(text['button-reject'] || 'Reject')}" onclick="action_reject('${call_uuid_js}')">`
+				: '') +
+			(permissions.operator_panel_hangup
+				? `<img class="op-ext-action-icon" src="../operator_panel/resources/images/kill.png" alt="${esc(text['button-hangup'] || 'Hangup')}" title="${esc(text['button-hangup_caller'] || 'Hangup Caller')}" onclick="action_hangup_caller('${call_uuid_js}')">`
+				: '') +
+			`</div>`;
+	} else if (has_live_call && is_ringing && !is_mine) {
+		// Ringing on another user's extension: Intercept icon
+		live_actions_html = `<div class="op-ext-call-actions">` +
+			(permissions.operator_panel_manage
+				? `<img class="op-ext-action-icon" src="../operator_panel/resources/images/intercept.svg" alt="${esc(text['button-intercept'] || 'Intercept')}" title="${esc(text['button-intercept'] || 'Intercept')}" onclick="action_intercept_icon('${call_uuid_js}', '${esc(num)}')">`
+				: '') +
+			(permissions.operator_panel_hangup
+				? `<img class="op-ext-action-icon" src="../operator_panel/resources/images/kill.png" alt="${esc(text['button-hangup'] || 'Hangup')}" title="${esc(text['button-hangup_caller'] || 'Hangup Caller')}" onclick="action_hangup_caller('${call_uuid_js}')">`
+				: '') +
+			`</div>`;
+	} else if (has_live_call) {
+		// Active/held call: normal action icons
+		live_actions_html = `<div class="op-ext-call-actions">` +
 			(permissions.operator_panel_record
 				? `<img class="op-ext-action-icon" src="${record_icon}" alt="${esc(text['button-record'] || 'Record')}" title="${esc(text['button-record'] || 'Record')}" onclick="action_record('${call_uuid_js}')">`
 				: '') +
@@ -1735,8 +2443,8 @@ function render_ext_block(ext, is_mine) {
 			(permissions.operator_panel_hangup
 				? `<img class="op-ext-action-icon" src="../operator_panel/resources/images/kill.png" alt="${esc(text['button-hangup'] || 'Hangup')}" title="${esc(text['button-hangup'] || 'Hangup')}" onclick="action_hangup('${call_uuid_js}')">`
 				: '') +
-			`</div>`
-		: '';
+			`</div>`;
+	}
 
 	return `<div class="op-ext-block ${css_state}${mine_cls}" id="ext_block_${esc(num)}"` +
 		` data-extension="${esc(num)}"${data_uuid}` +
@@ -1744,7 +2452,8 @@ function render_ext_block(ext, is_mine) {
 		drag_attrs +
 		` ondragover="on_ext_dragover(event)"` +
 		` ondragleave="event.currentTarget.classList.remove('op-ext-drop-over')"` +
-		` ondrop="on_ext_drop('${esc(num)}', event)">` +
+		` ondrop="on_ext_drop('${esc(num)}', event)"` +
+		` oncontextmenu="on_ext_contextmenu(event, '${esc(num)}')">` +
 		`<div class="op-ext-icon" title="${esc(status_hover)}"><img class="op-ext-status-icon" src="../operator_panel/resources/images/${status_icon}.png" width="28" height="28" alt="${esc(status_hover)}"></div>` +
 		`<div class="op-ext-info${has_live_call ? ' op-has-live-call' : ''}">` +
 		`<div class="op-ext-number">${esc(num)}</div>` +
@@ -1813,6 +2522,7 @@ function build_group_filter_buttons(group_keys) {
 	const targets = [
 		document.getElementById('group_filter_buttons'),
 		document.getElementById('group_filter_buttons_calls'),
+		document.getElementById('group_filter_buttons_parked'),
 		document.getElementById('group_filter_buttons_conferences'),
 		document.getElementById('group_filter_buttons_agents'),
 	].filter(Boolean);
@@ -1855,6 +2565,7 @@ function toggle_group_filter(btn) {
 
 	apply_extension_filters();
 	apply_calls_filters();
+	apply_parked_filters();
 	apply_conferences_filters();
 	apply_agents_filters();
 }
@@ -1915,6 +2626,36 @@ function apply_conferences_filters() {
 			empty = document.createElement('p');
 			empty.className = 'text-muted op-empty-filter-result';
 			empty.textContent = text['label-no_conferences_active'] || 'No active conferences.';
+			container.appendChild(empty);
+		}
+	} else if (empty) {
+		empty.remove();
+	}
+}
+
+function apply_parked_filters() {
+	const container = document.getElementById('parked_container');
+	if (!container) return;
+	const table = container.querySelector('table.list');
+	if (!table) return;
+
+	const filter_text = (((document.getElementById('parked_text_filter') || {}).value) || '').trim().toLowerCase();
+	let visible_count = 0;
+	table.querySelectorAll('tr.list-row').forEach(row => {
+		const group_key = row.getAttribute('data-group-key') || '';
+		const group_ok = matches_group_filter(group_key);
+		const text_ok = !filter_text || (row.textContent || '').toLowerCase().indexOf(filter_text) !== -1;
+		const show = group_ok && text_ok;
+		row.style.display = show ? '' : 'none';
+		if (show) visible_count++;
+	});
+
+	let empty = container.querySelector('.op-empty-filter-result');
+	if (visible_count === 0) {
+		if (!empty) {
+			empty = document.createElement('p');
+			empty.className = 'text-muted op-empty-filter-result';
+			empty.textContent = text['label-no_parked_calls'] || 'No parked calls';
 			container.appendChild(empty);
 		}
 	} else if (empty) {
@@ -2073,6 +2814,7 @@ function render_extensions_tab() {
 	if (all.length === 0) {
 		if (my_container) my_container.innerHTML = '';
 		container.innerHTML = `<p class="text-muted">${esc(text['label-no_extensions'] || 'No extensions found.')}</p>`;
+		render_parked_side_card();
 		set_filter_bar_visibility(false);
 		return;
 	}
@@ -2136,6 +2878,7 @@ function render_extensions_tab() {
 			my_container.innerHTML = '';
 		}
 	}
+	render_parked_side_card();
 
 	// Render other groups into the main container
 	let html = '';
@@ -2201,9 +2944,14 @@ function on_drag_call(uuid, event) {
 	dragged_call_source_extension = null;
 	dragged_extension = null; // Not dragging an extension
 	dragged_eavesdrop_uuid = null;
+	dragged_parked_uuid = null;
 	event.dataTransfer.setData('text/plain', uuid);
 	event.dataTransfer.effectAllowed = 'move';
 	set_drag_visual_state(true);
+}
+
+function can_drop_into_parked_box() {
+	return !!(dragged_call_uuid || dragged_eavesdrop_uuid === null && dragged_extension === null && dragged_parked_uuid === null);
 }
 
 /**
@@ -2232,11 +2980,85 @@ function on_ext_dragstart(ext_number, event) {
 	}
 
 	dragged_eavesdrop_uuid = null;
+	dragged_parked_uuid = null;
+	set_drag_visual_state(true);
+}
+
+/**
+ * Called on dragstart of a parked call row; stores the parked UUID.
+ * @param {string} uuid
+ * @param {DragEvent} event
+ */
+function on_drag_parked(uuid, event) {
+	dragged_parked_uuid = uuid;
+	dragged_call_uuid = null;
+	dragged_call_source_extension = null;
+	dragged_extension = null;
+	dragged_eavesdrop_uuid = null;
+	event.dataTransfer.setData('text/plain', uuid);
+	event.dataTransfer.effectAllowed = 'move';
 	set_drag_visual_state(true);
 }
 
 function on_drag_end() {
+	dragged_parked_uuid = null;
+	document.querySelectorAll('.op-parked-drop-over').forEach(el => el.classList.remove('op-parked-drop-over'));
 	set_drag_visual_state(false);
+}
+
+function on_parked_dragover(event) {
+	const can_drop = !!dragged_call_uuid;
+	if (!can_drop) return;
+	event.preventDefault();
+	event.dataTransfer.dropEffect = 'move';
+	const target = event.currentTarget;
+	if (target) target.classList.add('op-parked-drop-over');
+}
+
+function on_parked_dragleave(event) {
+	const target = event.currentTarget;
+	if (target) target.classList.remove('op-parked-drop-over');
+}
+
+function on_parked_drop(event) {
+	event.preventDefault();
+	const target = event.currentTarget;
+	if (target) target.classList.remove('op-parked-drop-over');
+	set_drag_visual_state(false);
+
+	if (!dragged_call_uuid || !park_destination) return;
+
+	const uuid = dragged_call_uuid;
+	const source_ext = dragged_call_source_extension;
+	dragged_call_uuid = null;
+	dragged_call_source_extension = null;
+	dragged_eavesdrop_uuid = null;
+	dragged_extension = null;
+	dragged_parked_uuid = null;
+
+	const payload = { uuid, destination: park_destination, context: domain_name };
+	// Determine whether to use -bleg based on call type.
+	// For internal ext-to-ext calls: transfer the dragged extension's own
+	// channel into the parking lot (no -bleg), so the dragged ext is parked
+	// and the other internal extension is freed.
+	// For inbound external calls: use -bleg to park the external caller
+	// and free the local extension.
+	if (source_ext) {
+		const call = calls_map.get(uuid);
+		const caller_num = (call && (call.caller_caller_id_number || call.caller_id_number || '')).toString().trim();
+		const is_internal = caller_num !== '' && extensions_map.has(caller_num);
+		if (!is_internal) {
+			payload.bleg = true;
+		}
+	}
+	send_action('transfer', payload)
+		.then(() => {
+			// Multiple retries: FreeSWITCH may need time to complete the park
+			setTimeout(load_parked_snapshot, 600);
+			setTimeout(load_parked_snapshot, 1500);
+			setTimeout(load_parked_snapshot, 3000);
+		})
+		.catch(console.error);
 }
 
 function set_drag_visual_state(is_dragging) {
@@ -2302,12 +3124,12 @@ function submit_ext_dial(ext_number, event) {
  */
 function on_ext_dragover(event) {
 	const can_receive_originate = event.currentTarget.dataset.canReceiveOriginate === 'true';
-	const can_drop = dragged_call_uuid || dragged_eavesdrop_uuid || (dragged_extension && can_receive_originate);
+	const can_drop = dragged_call_uuid || dragged_parked_uuid || dragged_eavesdrop_uuid || (dragged_extension && can_receive_originate);
 	if (!can_drop) return;
 
 	event.preventDefault();
 	// Determine drop effect based on what's being dragged
-	event.dataTransfer.dropEffect = dragged_call_uuid ? 'move' : 'copy';
+	event.dataTransfer.dropEffect = (dragged_call_uuid || dragged_parked_uuid) ? 'move' : 'copy';
 	event.currentTarget.classList.add('op-ext-drop-over');
 }
 
@@ -2321,6 +3143,25 @@ function on_ext_drop(ext_number, event) {
 	event.currentTarget.classList.remove('op-ext-drop-over');
 	set_drag_visual_state(false);
 
+	// When an extension block is dropped onto a ringing target, show the
+	// action chooser modal regardless of whether the source ext has a call.
+	const target_is_ringing = event.currentTarget.classList.contains('op-ext-ringing');
+	const target_call_uuid  = event.currentTarget.dataset.callUuid || '';
+	const from_ext_block    = dragged_extension || (dragged_call_uuid && dragged_call_source_extension) || '';
+
+	if (target_is_ringing && target_call_uuid && from_ext_block) {
+		const from_ext = dragged_extension || dragged_call_source_extension;
+		dragged_call_uuid = null;
+		dragged_call_source_extension = null;
+		dragged_extension = null;
+		dragged_eavesdrop_uuid = null;
+		dragged_parked_uuid = null;
+		if (from_ext && from_ext !== ext_number) {
+			show_ringing_action_modal(target_call_uuid, from_ext, ext_number);
+			return;
+		}
+	}
+
 	// Determine what was dropped and perform the appropriate action
 	if (dragged_call_uuid) {
 		// Transfer an existing call to the destination extension
@@ -2329,6 +3170,7 @@ function on_ext_drop(ext_number, event) {
 		dragged_call_uuid = null;
 		dragged_call_source_extension = null;
 		dragged_eavesdrop_uuid = null;
+		dragged_parked_uuid = null;
 		dragged_extension = null;
 		if (!uuid || !ext_number) return;
 		if (source_ext && source_ext === ext_number) return;
@@ -2338,12 +3180,31 @@ function on_ext_drop(ext_number, event) {
 		if (source_ext) payload.bleg = true;
 		send_action('transfer', payload)
 			.catch(console.error);
+	} else if (dragged_parked_uuid) {
+		const uuid = dragged_parked_uuid;
+		dragged_parked_uuid = null;
+		dragged_call_uuid = null;
+		dragged_call_source_extension = null;
+		dragged_eavesdrop_uuid = null;
+		dragged_extension = null;
+		if (!uuid || !ext_number) return;
+		// Remove from parked map immediately for responsive UI
+		remove_parked_call_by_uuid(uuid);
+		render_parked_side_card();
+		render_parked_tab();
+		send_action('transfer', { uuid, destination: ext_number, context: domain_name })
+			.then(() => {
+				setTimeout(load_parked_snapshot, 600);
+				setTimeout(load_parked_snapshot, 1500);
+			})
+			.catch(console.error);
 	} else if (dragged_eavesdrop_uuid) {
 		// Eavesdrop an existing call using dropped extension as destination
 		const uuid = dragged_eavesdrop_uuid;
 		dragged_eavesdrop_uuid = null;
 		dragged_call_uuid = null;
 		dragged_call_source_extension = null;
+		dragged_parked_uuid = null;
 		dragged_extension = null;
 		if (!uuid || !ext_number) return;
 		send_action('eavesdrop', { uuid, destination: ext_number, destination_extension: ext_number })
@@ -2358,8 +3219,10 @@ function on_ext_drop(ext_number, event) {
 		dragged_extension = null;
 		dragged_eavesdrop_uuid = null;
 		dragged_call_source_extension = null;
-		const can_receive_originate = event.currentTarget.dataset.canReceiveOriginate === 'true';
+		dragged_parked_uuid = null;
 		if (!from_ext || !ext_number || from_ext === ext_number) return; // Ignore self-drop
+
+		const can_receive_originate = event.currentTarget.dataset.canReceiveOriginate === 'true';
 		if (!can_receive_originate) {
 			show_toast(text['label-extension_unavailable'] || 'Destination extension is unavailable.', 'warning');
 			return;

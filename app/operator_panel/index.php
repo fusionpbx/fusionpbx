@@ -51,6 +51,10 @@
 		'operator_panel_eavesdrop'   => permission_exists('operator_panel_eavesdrop'),
 		'operator_panel_record'      => permission_exists('operator_panel_record'),
 		'operator_panel_originate'   => permission_exists('operator_panel_originate'),
+		'operator_panel_coach'       => permission_exists('operator_panel_coach'),
+		'operator_panel_call_details' => permission_exists('operator_panel_call_details'),
+		'operator_panel_on_demand'   => permission_exists('operator_panel_on_demand'),
+		'operator_panel_transfer_attended' => permission_exists('operator_panel_transfer_attended'),
 		'operator_panel_extensions'  => permission_exists('operator_panel_extensions'),
 		'operator_panel_calls'       => permission_exists('operator_panel_calls'),
 		'operator_panel_conferences' => permission_exists('operator_panel_conferences'),
@@ -107,6 +111,12 @@
 
 // Optional polling reconciliation of registration state (can be disabled).
 	$registrations_reconcile_enabled = $settings->get('operator_panel', 'registrations_reconcile_enabled', 'false') === 'true';
+
+// Default auto-park destination for drag/drop parking.
+	$park_destination = (string)$settings->get('operator_panel', 'park_destination', '*5900');
+	if (!preg_match('/^[0-9*#+]+$/', $park_destination)) {
+		$park_destination = '*5900';
+	}
 
 // Get the logged-in user's own extension numbers (shown at top of Extensions panel)
 // and primary eavesdrop destination extension
@@ -175,6 +185,9 @@
 
 	// Optional registrations-state reconciliation polling
 	const registrations_reconcile_enabled = <?= json_encode($registrations_reconcile_enabled) ?>;
+
+	// Default auto-park destination for drag/drop parking
+	const park_destination = <?= json_encode($park_destination) ?>;
 
 </script>
 
@@ -318,6 +331,79 @@
 }
 .op-edit-btn:hover { background: #e9ecef; }
 .op-edit-btn.active { background: #0d6efd; color: #fff; border-color: #0d6efd; }
+/* Transfer mode toggle */
+.op-transfer-mode {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	margin-left: auto;
+	font-size: 12px;
+	color: #555;
+	white-space: nowrap;
+}
+.op-transfer-mode-label {
+	font-weight: 600;
+	color: #444;
+}
+.op-transfer-mode-btn {
+	padding: 2px 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	background: #fff;
+	font-size: 11px;
+	font-weight: 600;
+	cursor: pointer;
+	color: #555;
+	transition: background .15s, color .15s, border-color .15s;
+}
+.op-transfer-mode-btn:hover { background: #e9ecef; }
+.op-transfer-mode-btn.active { background: #0d6efd; color: #fff; border-color: #0d6efd; }
+/* Context menu */
+.op-ctx-menu {
+	position: fixed;
+	z-index: 9990;
+	background: #fff;
+	border: 1px solid #d0d7de;
+	border-radius: 6px;
+	box-shadow: 0 8px 24px rgba(0,0,0,.18);
+	min-width: 165px;
+	padding: 4px 0;
+	display: none;
+	margin: 0;
+}
+.op-ctx-header {
+	font-size: 11px;
+	color: #888;
+	padding: 3px 14px 2px;
+	text-transform: uppercase;
+	letter-spacing: .5px;
+	font-weight: 600;
+	user-select: none;
+}
+.op-ctx-separator {
+	height: 1px;
+	background: #e0e0e0;
+	margin: 4px 0;
+}
+.op-ctx-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 7px 14px;
+	font-size: 13px;
+	cursor: pointer;
+	color: #24292f;
+	white-space: nowrap;
+	border: none;
+	background: none;
+	width: 100%;
+	text-align: left;
+	line-height: 1.3;
+}
+.op-ctx-item:hover { background: #f0f6ff; }
+.op-ctx-item .op-ctx-icon { font-size: 12px; opacity: .7; flex-shrink: 0; }
+.op-ctx-danger { color: #c9242d; }
+.op-ctx-danger:hover { background: #fff1f0; }
 .op-ext-block {
 	display: flex;
 	width: 235px;
@@ -602,6 +688,174 @@ body.op-dragging, body.op-dragging * {
 	padding: 10px 8px 4px;
 	flex: 1;
 }
+
+/* Top row in Extensions tab: My Extensions + Parked Calls */
+.op-top-row {
+	display: flex;
+	align-items: stretch;
+	gap: 14px;
+	flex-wrap: wrap;
+	margin-bottom: 14px;
+}
+#my_extensions_container,
+#parked_side_container {
+	flex: 1 1 420px;
+	min-width: 320px;
+}
+#my_extensions_container:not(:empty),
+#parked_side_container:not(:empty) {
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+/* Parked calls side panel */
+.op-parked-card {
+	border: 1px solid #d0d8e5;
+	border-radius: 5px;
+	background-color: #fff;
+	box-shadow: 0 1px 3px #d0d8e5;
+	overflow: hidden;
+}
+.op-parked-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background-color: #e5e9f0;
+	border-bottom: 1px solid #d0d8e5;
+	padding: 6px 10px;
+	font-size: 12px;
+	font-weight: 700;
+	color: #444;
+	text-transform: uppercase;
+	letter-spacing: .4px;
+}
+.op-parked-badge {
+	font-size: 11px;
+	font-weight: 600;
+	background: #6c757d;
+	color: #fff;
+	padding: 2px 6px;
+	border-radius: 10px;
+}
+.op-parked-list {
+	padding: 8px;
+	max-height: 280px;
+	overflow: auto;
+}
+.op-parked-item {
+	border: 1px solid #d0d8e5;
+	border-radius: 4px;
+	background: #f8fbff;
+	padding: 6px 8px;
+	margin-bottom: 7px;
+	cursor: grab;
+	user-select: none;
+	line-height: 1.25;
+}
+.op-parked-item:last-child { margin-bottom: 0; }
+.op-parked-item:hover { background: #eef5ff; border-color: #80bdff; }
+.op-parked-main { font-size: 12px; font-weight: 600; color: #2c3e50; }
+.op-parked-sub { font-size: 11px; color: #555; margin-top: 2px; }
+.op-parked-drop-over {
+	box-shadow: 0 0 0 3px #0d6efd;
+	border-color: #0d6efd;
+}
+.op-parked-empty {
+	padding: 10px;
+	font-size: 12px;
+	color: #6c757d;
+	font-style: italic;
+}
+
+@media (max-width: 980px) {
+	#my_extensions_container,
+	#parked_side_container {
+		flex-basis: 100%;
+		min-width: 0;
+	}
+}
+
+/* HTML5 dialog styles */
+.op-dialog {
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	padding: 0;
+	max-width: 400px;
+	width: 90%;
+	box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.op-dialog::backdrop {
+	background: rgba(0,0,0,0.4);
+}
+.op-dialog-sm {
+	max-width: 320px;
+}
+.op-dialog-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 16px;
+	border-bottom: 1px solid #ddd;
+}
+.op-dialog-header h5 {
+	margin: 0;
+	font-size: 1.1rem;
+}
+.op-dialog-close {
+	background: none;
+	border: none;
+	font-size: 1.4rem;
+	cursor: pointer;
+	line-height: 1;
+	padding: 0 4px;
+	opacity: 0.6;
+}
+.op-dialog-close:hover { opacity: 1; }
+.op-dialog-body {
+	padding: 16px;
+}
+.op-dialog-footer {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	padding: 12px 16px;
+	border-top: 1px solid #ddd;
+}
+.op-dialog-input {
+	width: 100%;
+	padding: 6px 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 0.95rem;
+	box-sizing: border-box;
+}
+.op-dialog-input:focus {
+	outline: 2px solid #0d6efd;
+	outline-offset: -1px;
+}
+.op-dialog-actions {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.op-dialog-btn {
+	display: block;
+	width: 100%;
+	padding: 8px 16px;
+	border: none;
+	border-radius: 4px;
+	font-size: 0.95rem;
+	cursor: pointer;
+	color: #fff;
+}
+.op-btn-primary   { background: #0d6efd; }
+.op-btn-primary:hover { background: #0b5ed7; }
+.op-btn-success   { background: #198754; }
+.op-btn-success:hover { background: #157347; }
+.op-btn-info      { background: #0dcaf0; color: #000; }
+.op-btn-info:hover { background: #31d2f2; }
+.op-btn-secondary { background: #6c757d; }
+.op-btn-secondary:hover { background: #5c636a; }
 </style>
 
 <!-- Bootstrap tabs: Extensions | Calls | Conferences | Agents -->
@@ -621,6 +875,15 @@ body.op-dragging, body.op-dragging * {
 			type="button" role="tab" aria-controls="panel-calls" aria-selected="<?= !$perm['operator_panel_extensions'] ? 'true' : 'false' ?>">
 			<?= htmlspecialchars($text['tab-calls'] ?? 'Calls') ?>
 			<span id="calls_count" class="badge ms-1" style="background:#6c757d;color:#fff;">0</span>
+		</button>
+	</li>
+<?php endif; ?>
+<?php if ($perm['operator_panel_extensions']): ?>
+	<li class="nav-item" role="presentation">
+		<button class="nav-link" id="tab-parked" data-bs-toggle="tab" data-bs-target="#panel-parked"
+			type="button" role="tab" aria-controls="panel-parked" aria-selected="false">
+			<?= htmlspecialchars($text['label-parked_calls'] ?? 'Parked Calls') ?>
+			<span id="parked_count" class="badge ms-1" style="background:#6c757d;color:#fff;">0</span>
 		</button>
 	</li>
 <?php endif; ?>
@@ -656,8 +919,28 @@ body.op-dragging, body.op-dragging * {
 			</button>
 			<div id="group_filter_buttons" class="op-group-filters"></div>
 			<input type="text" id="extensions_text_filter" class="op-text-filter" placeholder="<?= htmlspecialchars($text['label-filter'] ?? 'Filter...') ?>" oninput="apply_extension_filters()">
+		<?php if ($perm['operator_panel_manage']): ?>
+		<div class="op-transfer-mode" id="transfer_mode_control">
+			<span class="op-transfer-mode-label"><?= htmlspecialchars($text['label-transfer_mode'] ?? 'Transfer') ?>:</span>
+			<?php if ($perm['operator_panel_transfer_attended']): ?>
+			<button type="button" class="op-transfer-mode-btn active" id="btn_transfer_mode_toggle" onclick="toggle_transfer_mode()"
+				title="<?= htmlspecialchars($text['label-blind_transfer_title'] ?? 'Blind transfer: immediately connect the call to the destination') ?>">
+				<?= htmlspecialchars($text['label-blind_transfer'] ?? 'Blind') ?>
+			</button>
+			<?php else: ?>
+			<span class="op-transfer-mode-btn active" style="cursor:default;" title="<?= htmlspecialchars($text['label-blind_transfer_title'] ?? 'Blind transfer: immediately connect the call to the destination') ?>">
+				<?= htmlspecialchars($text['label-blind_transfer'] ?? 'Blind') ?>
+			</span>
+			<?php endif; ?>
 		</div>
-		<div id="my_extensions_container"></div>
+		<?php endif; ?>
+		</div>
+		<div class="op-top-row" id="extensions_top_row">
+			<div id="my_extensions_container"></div>
+			<div id="parked_side_container">
+				<p class="text-muted"><?= htmlspecialchars($text['label-connecting'] ?? 'Connecting...') ?></p>
+			</div>
+		</div>
 		<div id="extensions_container">
 			<p class="text-muted"><?= htmlspecialchars($text['label-connecting'] ?? 'Connecting...') ?></p>
 		</div>
@@ -672,6 +955,19 @@ body.op-dragging, body.op-dragging * {
 			<input type="text" id="calls_text_filter" class="op-text-filter" placeholder="<?= htmlspecialchars($text['label-filter'] ?? 'Filter...') ?>" oninput="apply_calls_filters()">
 		</div>
 		<div id="calls_container">
+			<p class="text-muted"><?= htmlspecialchars($text['label-connecting'] ?? 'Connecting...') ?></p>
+		</div>
+	</div>
+<?php endif; ?>
+
+	<!-- PARKED CALLS TAB -->
+<?php if ($perm['operator_panel_extensions']): ?>
+	<div class="tab-pane fade" id="panel-parked" role="tabpanel" aria-labelledby="tab-parked">
+		<div id="parked_filter_bar" class="op-filter-bar" style="display:none;">
+			<div id="group_filter_buttons_parked" class="op-group-filters"></div>
+			<input type="text" id="parked_text_filter" class="op-text-filter" placeholder="<?= htmlspecialchars($text['label-filter'] ?? 'Filter...') ?>" oninput="apply_parked_filters()">
+		</div>
+		<div id="parked_container">
 			<p class="text-muted"><?= htmlspecialchars($text['label-connecting'] ?? 'Connecting...') ?></p>
 		</div>
 	</div>
@@ -705,33 +1001,56 @@ body.op-dragging, body.op-dragging * {
 
 </div>
 
-<!-- Transfer modal -->
-<div class="modal fade" id="transfer_modal" tabindex="-1" aria-labelledby="transfer_modal_label" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content" style="background:var(--bs-body-bg);">
-			<div class="modal-header">
-				<h5 class="modal-title" id="transfer_modal_label"><?= htmlspecialchars($text['label-transfer'] ?? 'Transfer Call') ?></h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<label for="transfer_destination" class="form-label" style="font-weight:600;">
-					<?= htmlspecialchars($text['label-destination'] ?? 'Destination') ?>
-				</label>
-				<input type="text" id="transfer_destination" class="form-control" placeholder="1001"
-					autocomplete="off" autofocus>
-				<input type="hidden" id="transfer_uuid">
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-					<?= htmlspecialchars($text['button-cancel'] ?? 'Cancel') ?>
-				</button>
-				<button type="button" class="btn btn-primary" onclick="confirm_transfer()">
-					<?= htmlspecialchars($text['button-transfer'] ?? 'Transfer') ?>
-				</button>
-			</div>
+<!-- Right-click context menu -->
+<div id="op_context_menu" class="op-ctx-menu" role="menu" aria-label="<?= htmlspecialchars($text['label-actions'] ?? 'Actions') ?>"></div>
+
+<!-- Transfer dialog -->
+<dialog id="transfer_dialog" class="op-dialog">
+	<div class="op-dialog-header">
+		<h5><?= htmlspecialchars($text['label-transfer'] ?? 'Transfer Call') ?></h5>
+		<button type="button" class="op-dialog-close" onclick="document.getElementById('transfer_dialog').close()" aria-label="Close">&times;</button>
+	</div>
+	<div class="op-dialog-body">
+		<label for="transfer_destination" style="font-weight:600; display:block; margin-bottom:4px;">
+			<?= htmlspecialchars($text['label-destination'] ?? 'Destination') ?>
+		</label>
+		<input type="text" id="transfer_destination" class="op-dialog-input" placeholder="1001" autocomplete="off">
+		<input type="hidden" id="transfer_uuid">
+	</div>
+	<div class="op-dialog-footer">
+		<button type="button" class="op-dialog-btn op-btn-secondary" onclick="document.getElementById('transfer_dialog').close()">
+			<?= htmlspecialchars($text['button-cancel'] ?? 'Cancel') ?>
+		</button>
+		<button type="button" class="op-dialog-btn op-btn-primary" onclick="confirm_transfer()">
+			<?= htmlspecialchars($text['button-transfer'] ?? 'Transfer') ?>
+		</button>
+	</div>
+</dialog>
+
+<!-- Ringing Action dialog -->
+<dialog id="ringing_action_dialog" class="op-dialog op-dialog-sm">
+	<div class="op-dialog-header">
+		<h5><?= htmlspecialchars($text['label-choose_action'] ?? 'Choose Action') ?></h5>
+		<button type="button" class="op-dialog-close" onclick="document.getElementById('ringing_action_dialog').close()" aria-label="Close">&times;</button>
+	</div>
+	<div class="op-dialog-body" style="text-align:center;">
+		<p id="ringing_action_description" style="margin-bottom:12px;"></p>
+		<div class="op-dialog-actions">
+			<button type="button" class="op-dialog-btn op-btn-success" id="ringing_action_intercept">
+				<?= htmlspecialchars($text['button-intercept'] ?? 'Intercept') ?>
+			</button>
+			<button type="button" class="op-dialog-btn op-btn-primary" id="ringing_action_call">
+				<?= htmlspecialchars($text['button-call'] ?? 'Call') ?>
+			</button>
+			<button type="button" class="op-dialog-btn op-btn-info" id="ringing_action_eavesdrop">
+				<?= htmlspecialchars($text['label-eavesdrop'] ?? 'Eavesdrop') ?>
+			</button>
+			<button type="button" class="op-dialog-btn op-btn-secondary" onclick="document.getElementById('ringing_action_dialog').close()">
+				<?= htmlspecialchars($text['button-cancel'] ?? 'Cancel') ?>
+			</button>
 		</div>
 	</div>
-</div>
+</dialog>
 
 <br><br>
 
