@@ -404,6 +404,43 @@
 .op-ctx-item .op-ctx-icon { font-size: 12px; opacity: .7; flex-shrink: 0; }
 .op-ctx-danger { color: #c9242d; }
 .op-ctx-danger:hover { background: #fff1f0; }
+/* Attended transfer consultation bar */
+.op-att-bar {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 9980;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 20px;
+	background: #198754;
+	color: #fff;
+	font-size: 14px;
+	font-weight: 600;
+	box-shadow: 0 -2px 8px rgba(0,0,0,.2);
+}
+.op-att-icon { font-size: 18px; }
+.op-att-label { flex: 1; }
+.op-att-btn {
+	padding: 6px 16px;
+	border: none;
+	border-radius: 4px;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+}
+.op-att-complete {
+	background: #fff;
+	color: #198754;
+}
+.op-att-complete:hover { background: #e9ecef; }
+.op-att-cancel {
+	background: rgba(255,255,255,.2);
+	color: #fff;
+}
+.op-att-cancel:hover { background: rgba(255,255,255,.35); }
 .op-ext-block {
 	display: flex;
 	width: 235px;
@@ -919,21 +956,21 @@ body.op-dragging, body.op-dragging * {
 			</button>
 			<div id="group_filter_buttons" class="op-group-filters"></div>
 			<input type="text" id="extensions_text_filter" class="op-text-filter" placeholder="<?= htmlspecialchars($text['label-filter'] ?? 'Filter...') ?>" oninput="apply_extension_filters()">
-		<?php if ($perm['operator_panel_manage']): ?>
-		<div class="op-transfer-mode" id="transfer_mode_control">
-			<span class="op-transfer-mode-label"><?= htmlspecialchars($text['label-transfer_mode'] ?? 'Transfer') ?>:</span>
-			<?php if ($perm['operator_panel_transfer_attended']): ?>
-			<button type="button" class="op-transfer-mode-btn active" id="btn_transfer_mode_toggle" onclick="toggle_transfer_mode()"
-				title="<?= htmlspecialchars($text['label-blind_transfer_title'] ?? 'Blind transfer: immediately connect the call to the destination') ?>">
-				<?= htmlspecialchars($text['label-blind_transfer'] ?? 'Blind') ?>
-			</button>
-			<?php else: ?>
-			<span class="op-transfer-mode-btn active" style="cursor:default;" title="<?= htmlspecialchars($text['label-blind_transfer_title'] ?? 'Blind transfer: immediately connect the call to the destination') ?>">
-				<?= htmlspecialchars($text['label-blind_transfer'] ?? 'Blind') ?>
-			</span>
+			<?php if ($perm['operator_panel_manage']): ?>
+			<!-- <div class="op-transfer-mode" id="transfer_mode_control"> -->
+				<!-- <span class="op-transfer-mode-label"><?= htmlspecialchars($text['label-transfer_mode'] ?? 'Transfer') ?>:</span> -->
+				<?php if ($perm['operator_panel_transfer_attended']): ?>
+				<!-- <button type="button" class="op-transfer-mode-btn active" id="btn_transfer_mode_toggle" onclick="toggle_transfer_mode()" -->
+					<!-- title="<?= htmlspecialchars($text['label-blind_transfer_title'] ?? 'Blind transfer: immediately connect the call to the destination') ?>"> -->
+					<!-- <?= htmlspecialchars($text['label-blind_transfer'] ?? 'Blind') ?> -->
+				<!-- </button> -->
+				<?php else: ?>
+				<!-- <span class="op-transfer-mode-btn active" style="cursor:default;" title="<?= htmlspecialchars($text['label-blind_transfer_title'] ?? 'Blind transfer: immediately connect the call to the destination') ?>"> -->
+					<!-- <?= htmlspecialchars($text['label-blind_transfer'] ?? 'Blind') ?> -->
+				<!-- </span> -->
+				<?php endif; ?>
+			<!-- </div> -->
 			<?php endif; ?>
-		</div>
-		<?php endif; ?>
 		</div>
 		<div class="op-top-row" id="extensions_top_row">
 			<div id="my_extensions_container"></div>
@@ -1004,6 +1041,18 @@ body.op-dragging, body.op-dragging * {
 <!-- Right-click context menu -->
 <div id="op_context_menu" class="op-ctx-menu" role="menu" aria-label="<?= htmlspecialchars($text['label-actions'] ?? 'Actions') ?>"></div>
 
+<!-- Attended transfer consultation bar -->
+<div id="attended_transfer_bar" class="op-att-bar" style="display:none;">
+	<i class="fa-solid fa-phone-volume op-att-icon"></i>
+	<span class="op-att-label"></span>
+	<button type="button" class="op-att-btn op-att-complete" onclick="complete_attended_transfer()">
+		<i class="fa-solid fa-check"></i> <?= htmlspecialchars($text['button-complete_transfer'] ?? 'Complete Transfer') ?>
+	</button>
+	<button type="button" class="op-att-btn op-att-cancel" onclick="cancel_attended_transfer()">
+		<i class="fa-solid fa-xmark"></i> <?= htmlspecialchars($text['button-cancel_transfer'] ?? 'Cancel') ?>
+	</button>
+</div>
+
 <!-- Transfer dialog -->
 <dialog id="transfer_dialog" class="op-dialog">
 	<div class="op-dialog-header">
@@ -1016,6 +1065,7 @@ body.op-dragging, body.op-dragging * {
 		</label>
 		<input type="text" id="transfer_destination" class="op-dialog-input" placeholder="1001" autocomplete="off">
 		<input type="hidden" id="transfer_uuid">
+		<input type="hidden" id="transfer_source_extension">
 	</div>
 	<div class="op-dialog-footer">
 		<button type="button" class="op-dialog-btn op-btn-secondary" onclick="document.getElementById('transfer_dialog').close()">

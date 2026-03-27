@@ -598,10 +598,21 @@ $text['label-blind_transfer']['en-us'] = "Blind";
 $text['label-blind_transfer']['en-gb'] = "Blind";
 $text['label-blind_transfer_title']['en-us'] = "Blind transfer: immediately connect the call to the destination";
 $text['label-blind_transfer_title']['en-gb'] = "Blind transfer: immediately connect the call to the destination";
-$text['label-attended_transfer']['en-us'] = "Attended";
-$text['label-attended_transfer']['en-gb'] = "Attended";
-$text['label-attended_transfer_title']['en-us'] = "Attended transfer: destination is called first; connected to caller when answered";
-$text['label-attended_transfer_title']['en-gb'] = "Attended transfer: destination is called first; connected to caller when answered";
+$text['label-attended_transfer']['en-us'] = "Conference";
+$text['label-attended_transfer']['en-gb'] = "Conference";
+$text['label-attended_transfer_title']['en-us'] = "Conference transfer: destination is called while the caller is still connected; also called a warm transfer";
+$text['label-attended_transfer_title']['en-gb'] = "Conference transfer: destination is called while the caller is still connected; also called a warm transfer";
+
+$text['label-consulting_with']['en-us'] = "Consulting with";
+$text['label-consulting_with']['en-gb'] = "Consulting with";
+$text['message-transfer_completed']['en-us'] = "Transfer completed";
+$text['message-transfer_completed']['en-gb'] = "Transfer completed";
+$text['message-transfer_cancelled']['en-us'] = "Transfer cancelled";
+$text['message-transfer_cancelled']['en-gb'] = "Transfer cancelled";
+$text['button-complete_transfer']['en-us'] = "Complete Transfer";
+$text['button-complete_transfer']['en-gb'] = "Complete Transfer";
+$text['button-cancel_transfer']['en-us'] = "Cancel";
+$text['button-cancel_transfer']['en-gb'] = "Cancel";
 
 $text['label-hangup']['en-us'] = "Hangup";
 $text['label-hangup']['en-gb'] = "Hangup";

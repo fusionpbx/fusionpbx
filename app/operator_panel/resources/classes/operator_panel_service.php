@@ -175,6 +175,8 @@ class operator_panel_service extends base_websocket_system_service implements we
 		'hangup_caller' => 'operator_panel_hangup',
 		'transfer'     => 'operator_panel_manage',
 		'transfer_attended' => 'operator_panel_transfer_attended',
+		'transfer_attended_complete' => 'operator_panel_transfer_attended',
+		'transfer_attended_cancel' => 'operator_panel_transfer_attended',
 		'eavesdrop'    => 'operator_panel_eavesdrop',
 		'whisper'      => 'operator_panel_coach',
 		'barge'        => 'operator_panel_coach',
@@ -948,6 +950,9 @@ class operator_panel_service extends base_websocket_system_service implements we
 		$member_id = $payload['member_id'] ?? '';
 		$direction = $payload['direction'] ?? '';
 
+		// Debug action execution attempt with all relevant parameters
+		$this->debug("Executing action: $action, uuid: $uuid, destination: $destination, context: $context, conference_name: $conference_name, member_id: $member_id, direction: $direction");
+
 		try {
 			switch ($action) {
 				case 'hangup':
@@ -993,23 +998,77 @@ class operator_panel_service extends base_websocket_system_service implements we
 					if (!preg_match('/^[0-9*#+]+$/', $destination)) {
 						return ['success' => false, 'message' => 'Invalid destination'];
 					}
-					if (empty($domain_name)) {
-						return ['success' => false, 'message' => 'domain_name required for attended transfer'];
-					}
-					// Park the caller so they hear hold music while we dial the destination
-					event_socket::api("uuid_park $uuid");
-					// Originate the destination; &bridge($uuid) automatically bridges the
-					// parked caller to the new leg the moment the destination answers.
-					$originate_cmd = "bgapi originate {origination_caller_id_name=Transfer,origination_caller_id_number=transfer}user/{$destination}@{$domain_name} &bridge({$uuid})";
-					$reply = trim((string)event_socket::api($originate_cmd));
-					$this->info("Attended transfer: uuid=$uuid destination=$destination domain=$domain_name");
-					$this->debug("Attended transfer originate reply: $reply");
+					$xfer_domain = $domain_name !== '' ? $domain_name : $context;
+					$reply = trim((string)event_socket::api("uuid_broadcast $uuid att_xfer::user/$destination@$xfer_domain both"));
+					$this->debug("transfer_attended reply: $reply");
 					if (stripos($reply, '-ERR') !== false) {
-						// Destination unreachable — unpark the caller so they do not stay stranded
-						event_socket::api("uuid_transfer $uuid $destination XML $context");
-						return ['success' => false, 'message' => 'Destination unreachable; falling back to blind transfer'];
+						return ['success' => false, 'message' => $reply];
 					}
-					return ['success' => true, 'message' => 'Attended transfer initiated'];
+					return ['success' => true, 'message' => 'Attended transfer started'];
+				case 'transfer_attended_complete':
+					// Attended transfer — Step 2: Complete the transfer
+					// Bridge the parked caller to the destination (other side of operator's current call).
+					$parked_uuid = $payload['parked_uuid'] ?? '';
+					$operator_uuid_val = $payload['operator_uuid'] ?? '';
+					if (empty($parked_uuid) || empty($operator_uuid_val)) {
+						return ['success' => false, 'message' => 'parked_uuid and operator_uuid required'];
+					}
+
+					// Find the destination's channel (other side of operator's consultation call)
+					$dest_uuid = trim((string)event_socket::api("uuid_getvar $operator_uuid_val other_leg_unique_id"));
+					if (empty($dest_uuid) || stripos($dest_uuid, '-ERR') !== false || $dest_uuid === '_undef_') {
+						$dest_uuid = trim((string)event_socket::api("uuid_getvar $operator_uuid_val signal_bond"));
+					}
+
+					if (!empty($dest_uuid) && stripos($dest_uuid, '-ERR') === false && $dest_uuid !== '_undef_') {
+						// Destination answered — bridge parked caller to destination
+						event_socket::api("uuid_bridge $parked_uuid $dest_uuid");
+						// Disconnect operator cleanly
+						event_socket::api("uuid_kill $operator_uuid_val");
+						$this->info("Attended transfer complete: bridged $parked_uuid to $dest_uuid");
+						return ['success' => true, 'message' => 'Transfer completed'];
+					}
+
+					// Destination not yet answered — blind-transfer the parked caller instead
+					$dest_ext = $payload['destination'] ?? '';
+					if (!empty($dest_ext) && preg_match('/^[0-9*#+]+$/', $dest_ext)) {
+						event_socket::api("uuid_kill $operator_uuid_val");
+						$xfer_context = $payload['context'] ?? ($domain_name !== '' ? $domain_name : 'default');
+						event_socket::api("uuid_transfer $parked_uuid $dest_ext XML $xfer_context");
+						$this->info("Attended transfer complete (dest not answered): blind-transferred $parked_uuid to $dest_ext");
+						return ['success' => true, 'message' => 'Transfer completed (destination still ringing)'];
+					}
+
+					return ['success' => false, 'message' => 'Cannot find destination channel'];
+
+				case 'transfer_attended_cancel':
+					// Attended transfer — Cancel: hang up consultation, reconnect caller to operator
+					$parked_uuid = $payload['parked_uuid'] ?? '';
+					$operator_uuid_val = $payload['operator_uuid'] ?? '';
+					$source_ext = $payload['source_extension'] ?? '';
+					if (empty($parked_uuid)) {
+						return ['success' => false, 'message' => 'parked_uuid required'];
+					}
+
+					// Kill the operator's consultation call (also terminates the destination leg)
+					if (!empty($operator_uuid_val)) {
+						event_socket::api("uuid_kill $operator_uuid_val");
+					}
+
+					// Reconnect the parked caller back to the operator's extension
+					if (!empty($source_ext) && !empty($domain_name)) {
+						$originate_cmd = "bgapi originate user/{$source_ext}@{$domain_name} &bridge({$parked_uuid})";
+						$reply = trim((string)event_socket::api($originate_cmd));
+						if (stripos($reply, '-ERR') === false) {
+							$this->info("Attended transfer cancelled: reconnecting $parked_uuid via $source_ext");
+							return ['success' => true, 'message' => 'Transfer cancelled, reconnecting'];
+						}
+					}
+
+					// Fallback: could not reconnect — just kill the parked call
+					event_socket::api("uuid_kill $parked_uuid");
+					$this->warning("Attended transfer cancelled: could not reconnect, killed parked call $parked_uuid");
+					return ['success' => true, 'message' => 'Transfer cancelled'];
 
 				case 'eavesdrop':
 					if (empty($uuid) || empty($destination)) {

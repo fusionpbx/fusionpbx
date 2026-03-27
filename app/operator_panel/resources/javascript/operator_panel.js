@@ -1556,18 +1556,38 @@ function action_hangup(uuid) {
 /** Current transfer mode: 'blind' or 'attended'. Persisted per page session. */
 let transfer_mode = 'blind';
 
+/** Resolve transfer mode from the toggle button state. */
+function get_transfer_mode_from_button() {
+	const btn = document.getElementById('btn_transfer_mode_toggle');
+	if (!btn) return transfer_mode;
+	const mode = (btn.dataset && btn.dataset.transferMode) ? btn.dataset.transferMode : '';
+	if (mode === 'blind' || mode === 'attended') return mode;
+	return transfer_mode;
+}
+
+/** Resolve transfer action name from current transfer mode and permissions. */
+function get_transfer_action_from_button() {
+	const mode = get_transfer_mode_from_button();
+	if (mode === 'attended' && permissions.operator_panel_transfer_attended) {
+		return 'transfer_attended';
+	}
+	return 'transfer';
+}
+
 /** Toggle between blind and attended transfer modes and update the button. */
 function toggle_transfer_mode() {
 	transfer_mode = (transfer_mode === 'blind') ? 'attended' : 'blind';
 	const btn = document.getElementById('btn_transfer_mode_toggle');
 	if (!btn) return;
 	if (transfer_mode === 'attended') {
-		btn.textContent = text['label-attended_transfer'] || 'Attended';
+		btn.dataset.transferMode = 'attended';
+		btn.textContent = text['label-attended_transfer'] || 'Conference';
 		btn.title       = text['label-attended_transfer_title'] || 'Attended transfer: destination is called first; connected to caller when answered';
 		btn.style.background   = '#198754';
 		btn.style.borderColor  = '#198754';
 		btn.style.color        = '#fff';
 	} else {
+		btn.dataset.transferMode = 'blind';
 		btn.textContent = text['label-blind_transfer'] || 'Blind';
 		btn.title       = text['label-blind_transfer_title'] || 'Blind transfer: immediately connect the call to the destination';
 		btn.style.background  = '';
@@ -1575,6 +1595,14 @@ function toggle_transfer_mode() {
 		btn.style.color       = '';
 	}
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+	const btn = document.getElementById('btn_transfer_mode_toggle');
+	if (!btn) return;
+	if (!btn.dataset.transferMode) {
+		btn.dataset.transferMode = 'blind';
+	}
+});
 
 // ─── Context menu ─────────────────────────────────────────────────────────────
 
@@ -1721,7 +1749,7 @@ function on_ext_contextmenu(event, ext_num) {
 		}
 		if (permissions.operator_panel_manage) {
 			items.push({ label: text['label-transfer'] || 'Transfer', icon_class: 'fa-solid fa-arrow-right-from-bracket',
-				fn: function () { open_transfer_modal(uuid); } });
+				fn: function () { open_transfer_modal(uuid, ext_num); } });
 		}
 		if (permissions.operator_panel_eavesdrop) {
 			items.push({ label: text['button-eavesdrop'] || 'Eavesdrop', icon_class: 'fa-solid fa-ear-listen',
@@ -1826,13 +1854,15 @@ function action_intercept_icon(uuid, target_ext) {
 }
 
 /** Open the transfer dialog for the given UUID. */
-function open_transfer_modal(uuid) {
+function open_transfer_modal(uuid, source_ext) {
 	const uuid_field = document.getElementById('transfer_uuid');
 	const dest_field = document.getElementById('transfer_destination');
+	const src_field  = document.getElementById('transfer_source_extension');
 	if (!uuid_field || !dest_field) return;
 
 	uuid_field.value = uuid;
 	dest_field.value = '';
+	if (src_field) src_field.value = source_ext || '';
 
 	const dlg = document.getElementById('transfer_dialog');
 	if (!dlg) return;
@@ -1845,6 +1875,7 @@ function open_transfer_modal(uuid) {
 function confirm_transfer() {
 	const uuid        = (document.getElementById('transfer_uuid')        || {}).value || '';
 	const destination = (document.getElementById('transfer_destination') || {}).value || '';
+	const source_ext  = (document.getElementById('transfer_source_extension') || {}).value || '';
 
 	if (!uuid || !destination) {
 		show_toast(text['label-destination_required'] || 'Please enter a destination.', 'warning');
@@ -1854,17 +1885,74 @@ function confirm_transfer() {
 	const dlg = document.getElementById('transfer_dialog');
 	if (dlg) dlg.close();
 
-	const action = (transfer_mode === 'attended' && permissions.operator_panel_transfer_attended)
-		? 'transfer_attended'
-		: 'transfer';
+	const selected_mode = get_transfer_mode_from_button();
+	transfer_mode = selected_mode; // keep runtime state aligned with UI state
+	const action = get_transfer_action_from_button();
+
 	const payload = {
 		uuid,
 		destination,
 		context: domain_name,
-		transfer_mode,
+		source_extension: source_ext,
 	};
-	console.debug('[OP] confirm_transfer', { action, transfer_mode, permitted: permissions.operator_panel_transfer_attended, payload });
+
+	console.debug('[OP] confirm_transfer', { action, transfer_mode: selected_mode, payload });
 	send_action(action, payload).catch(console.error);
+}
+
+// ─── Attended transfer consultation bar ───────────────────────────────────────
+
+/** State for an in-progress attended transfer. */
+let attended_transfer = null; // { parked_uuid, operator_uuid, destination, source_ext }
+
+/**
+ * Show the floating attended-transfer bar so the operator can complete or cancel.
+ */
+function show_attended_transfer_bar(parked_uuid, operator_uuid, destination, source_ext) {
+	attended_transfer = { parked_uuid, operator_uuid, destination, source_ext };
+	const bar = document.getElementById('attended_transfer_bar');
+	if (!bar) return;
+	const label = bar.querySelector('.op-att-label');
+	if (label) {
+		label.textContent = (text['label-consulting_with'] || 'Consulting with {dest}...').replace('{dest}', destination);
+	}
+	bar.style.display = 'flex';
+}
+
+/** Hide the attended-transfer bar. */
+function hide_attended_transfer_bar() {
+	attended_transfer = null;
+	const bar = document.getElementById('attended_transfer_bar');
+	if (bar) bar.style.display = 'none';
+}
+
+/** Complete the attended transfer: bridge parked caller to destination. */
+function complete_attended_transfer() {
+	if (!attended_transfer) return;
+	const { parked_uuid, operator_uuid, destination, source_ext } = attended_transfer;
+	hide_attended_transfer_bar();
+	send_action('transfer_attended_complete', {
+		parked_uuid,
+		operator_uuid,
+		destination,
+		context: domain_name,
+	}).then(function() {
+		show_toast(text['message-transfer_completed'] || 'Transfer completed', 'success');
+	}).catch(console.error);
+}
+
+/** Cancel the attended transfer: hang up consultation, reconnect caller to operator. */
+function cancel_attended_transfer() {
+	if (!attended_transfer) return;
+	const { parked_uuid, operator_uuid, source_ext } = attended_transfer;
+	hide_attended_transfer_bar();
+	send_action('transfer_attended_cancel', {
+		parked_uuid,
+		operator_uuid,
+		source_extension: source_ext,
+	}).then(function() {
+		show_toast(text['message-transfer_cancelled'] || 'Transfer cancelled', 'success');
+	}).catch(console.error);
 }
 
 /**
@@ -3178,7 +3266,8 @@ function on_ext_drop(ext_number, event) {
 		// leg; use -bleg so FreeSWITCH transfers the *other* leg (the caller).
 		const payload = { uuid, destination: ext_number, context: domain_name };
 		if (source_ext) payload.bleg = true;
-		send_action('transfer', payload)
+		const action = get_transfer_action_from_button();
+		send_action(action, payload)
 			.catch(console.error);
 	} else if (dragged_parked_uuid) {
 		const uuid = dragged_parked_uuid;
