@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2025
+	Portions created by the Initial Developer are Copyright (C) 2018-2026
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -310,7 +310,7 @@
 			echo "	<td>".escape($row['date_formatted'])."</td>\n";
 			echo "	<td class='left hide-md-dn'>".escape($row['time_formatted'])."</td>\n";
 			echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
-			echo "	<td><div class='list-status-".$session_status."'></div></td>\n";
+			echo "	<td style='text-align: right; padding-right: 20px;'><div class='list-status-".$session_status."'></div></td>\n";
 			echo "	<td>".escape($row['username'])."</td>\n";
 			echo "	<td>".escape($row['type'])."</td>\n";
 			echo "	<td>".escape($row['result'])."</td>\n";
