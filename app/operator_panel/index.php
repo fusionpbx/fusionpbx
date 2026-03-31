@@ -194,6 +194,9 @@
 	// Default auto-park destination for drag/drop parking
 	const park_destination = <?= json_encode($park_destination) ?>;
 
+	// Session ID used in contact photo URLs for cache control
+	const contact_image_sid = <?= json_encode(session_id()) ?>;
+
 </script>
 
 <script src="resources/javascript/websocket_client.js?v=<?= $ws_client_hash ?>"></script>
@@ -478,6 +481,14 @@
 	line-height: 1;
 	color: inherit;
 }
+.op-ext-contact-photo {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
 .op-ext-info {
 	flex: 1;
 	padding: 5px 8px 5px 8px;
@@ -731,7 +742,7 @@ body.op-dragging, body.op-dragging * {
 	flex: 1;
 }
 
-/* Top row in Extensions tab: My Extensions + Parked Calls */
+/* Top row in Extensions tab: My Extensions + Parked */
 .op-top-row {
 	display: flex;
 	align-items: stretch;
@@ -750,34 +761,34 @@ body.op-dragging, body.op-dragging * {
 	padding-bottom: 0;
 }
 
-/* Parked calls side panel */
+/* Parked side panel */
 .op-parked-card {
 	border: 1px solid #d0d8e5;
 	border-radius: 5px;
 	background-color: #fff;
 	box-shadow: 0 1px 3px #d0d8e5;
 	overflow: hidden;
+	display: flex;
+	flex-direction: row;
 }
 .op-parked-header {
+	background-color: #e5e9f0;
+	padding: 8px 4px;
+	font-size: 12px;
+	font-weight: 600;
+	color: #444;
+	border-right: 1px solid #d0d8e5;
+	font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif;
+	writing-mode: vertical-rl;
+	text-orientation: mixed;
+	transform: rotate(180deg);
+	letter-spacing: .6px;
+	text-transform: uppercase;
+	white-space: nowrap;
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	background-color: #e5e9f0;
-	border-bottom: 1px solid #d0d8e5;
-	padding: 6px 10px;
-	font-size: 12px;
-	font-weight: 700;
-	color: #444;
-	text-transform: uppercase;
-	letter-spacing: .4px;
-}
-.op-parked-badge {
-	font-size: 11px;
-	font-weight: 600;
-	background: #6c757d;
-	color: #fff;
-	padding: 2px 6px;
-	border-radius: 10px;
+	justify-content: center;
+	min-width: 34px;
 }
 .op-parked-list {
 	padding: 8px;
@@ -955,7 +966,7 @@ body.op-dragging, body.op-dragging * {
 	<li class="nav-item" role="presentation">
 		<button class="nav-link" id="tab-parked" data-bs-toggle="tab" data-bs-target="#panel-parked"
 			type="button" role="tab" aria-controls="panel-parked" aria-selected="false">
-			<?= htmlspecialchars($text['label-parked_calls'] ?? 'Parked Calls') ?>
+			<?= htmlspecialchars($text['label-parked_calls'] ?? 'Parked') ?>
 			<span id="parked_count" class="badge ms-1" style="background:#6c757d;color:#fff;">0</span>
 		</button>
 	</li>
@@ -1033,7 +1044,7 @@ body.op-dragging, body.op-dragging * {
 	</div>
 <?php endif; ?>
 
-	<!-- PARKED CALLS TAB -->
+	<!-- PARKED TAB -->
 <?php if ($perm['operator_panel_extensions']): ?>
 	<div class="tab-pane fade" id="panel-parked" role="tabpanel" aria-labelledby="tab-parked">
 		<div id="parked_filter_bar" class="op-filter-bar" style="display:none;">
