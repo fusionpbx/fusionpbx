@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Reject">
+  <defs>
+    <linearGradient id="rg1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fc8181"/>
+      <stop offset="100%" stop-color="#e53e3e"/>
+    </linearGradient>
+  </defs>
+  <!-- Phone handset rotated to "hang up" position -->
+  <path d="M12 38 C12 28, 18 22, 32 20 C46 22, 52 28, 52 38 L48 40 C46 34, 40 30, 32 28 C24 30, 18 34, 16 40 Z" fill="url(#rg1)"/>
+  <!-- X mark overlay -->
+  <line x1="22" y1="42" x2="42" y2="54" stroke="#c53030" stroke-width="4" stroke-linecap="round"/>
+  <line x1="42" y1="42" x2="22" y2="54" stroke="#c53030" stroke-width="4" stroke-linecap="round"/>
+</svg>

@@ -56,19 +56,48 @@
 	$apps[$x]['description']['sv-se'] = "";
 	$apps[$x]['description']['uk-ua'] = "";
 
-// Permissions are inherited from the basic_operator_panel app (uuid: dd3d173a-5d51-4231-ab22-b18c5b712bb2).
-// The following permissions are reused:
-//   operator_panel_view       - view the panel
-//   operator_panel_manage     - supervisor: transfer, agent management
-//   operator_panel_originate  - originate calls via drag-and-drop
-//   operator_panel_eavesdrop  - listen to calls
-//   operator_panel_hangup     - disconnect calls
-//   operator_panel_record     - record calls
-//   operator_panel_call_details - view caller/callee details
-//   operator_panel_on_demand  - on-demand availability status
+// Core permissions (migrated from basic_operator_panel uuid: dd3d173a-5d51-4231-ab22-b18c5b712bb2)
+	$y = 0;
+	$apps[$x]['permissions'][$y]['name'] = "operator_panel_view";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "operator_panel_manage";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "operator_panel_originate";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "operator_panel_hangup";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "operator_panel_eavesdrop";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "operator_panel_coach";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "operator_panel_record";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "operator_panel_call_details";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "operator_panel_on_demand";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "operator_panel_transfer_attended";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
+	$y++;
 
 // Tab visibility permissions
-	$y = 0;
 	$apps[$x]['permissions'][$y]['name'] = "operator_panel_extensions";
 	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 	$apps[$x]['permissions'][$y]['groups'][] = "admin";

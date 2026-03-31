@@ -485,6 +485,15 @@ $text['label-no_parked_calls']['zh-cn'] = "没有已停泊通话";
 $text['label-no_parked_calls']['ja-jp'] = "保留中の通話はありません";
 $text['label-no_parked_calls']['ko-kr'] = "주차된 통화 없음";
 
+$text['label-parking_lot']['en-us'] = "Parking Lot";
+$text['label-parking_lot']['en-gb'] = "Parking Lot";
+
+$text['label-parked_by']['en-us'] = "Parked By";
+$text['label-parked_by']['en-gb'] = "Parked By";
+
+$text['label-original_destination']['en-us'] = "Original Destination";
+$text['label-original_destination']['en-gb'] = "Original Destination";
+
 $text['label-recording']['en-us'] = "Recording";
 $text['label-recording']['en-gb'] = "Recording";
 $text['label-recording']['ar-eg'] = "تسجيل";
@@ -565,6 +574,45 @@ $text['label-eavesdrop']['tr-tr'] = "Dinle";
 $text['label-eavesdrop']['zh-cn'] = "监听";
 $text['label-eavesdrop']['ja-jp'] = "聞く";
 $text['label-eavesdrop']['ko-kr'] = "듣기";
+
+$text['label-choose_action']['en-us'] = "Choose Action";
+$text['label-choose_action']['en-gb'] = "Choose Action";
+$text['label-ringing_action_desc']['en-us'] = "Extension {target} is ringing. What would you like to do from {source}?";
+$text['label-ringing_action_desc']['en-gb'] = "Extension {target} is ringing. What would you like to do from {source}?";
+$text['button-intercept']['en-us'] = "Intercept";
+$text['button-intercept']['en-gb'] = "Intercept";
+$text['button-call']['en-us'] = "Call";
+$text['button-call']['en-gb'] = "Call";
+$text['button-reject']['en-us'] = "Reject";
+$text['button-reject']['en-gb'] = "Reject";
+$text['button-hangup_caller']['en-us'] = "Hangup Caller";
+$text['button-hangup_caller']['en-gb'] = "Hangup Caller";
+$text['label-confirm_hangup_caller']['en-us'] = "Hang up the caller?";
+$text['label-confirm_hangup_caller']['en-gb'] = "Hang up the caller?";
+
+$text['label-transfer_mode']['en-us'] = "Transfer";
+$text['label-transfer_mode']['en-gb'] = "Transfer";
+$text['label-transfer_mode_title']['en-us'] = "Default transfer type used when transferring calls";
+$text['label-transfer_mode_title']['en-gb'] = "Default transfer type used when transferring calls";
+$text['label-blind_transfer']['en-us'] = "Blind";
+$text['label-blind_transfer']['en-gb'] = "Blind";
+$text['label-blind_transfer_title']['en-us'] = "Blind transfer: immediately connect the call to the destination";
+$text['label-blind_transfer_title']['en-gb'] = "Blind transfer: immediately connect the call to the destination";
+$text['label-attended_transfer']['en-us'] = "Conference";
+$text['label-attended_transfer']['en-gb'] = "Conference";
+$text['label-attended_transfer_title']['en-us'] = "Conference transfer: destination is called while the caller is still connected; also called a warm transfer";
+$text['label-attended_transfer_title']['en-gb'] = "Conference transfer: destination is called while the caller is still connected; also called a warm transfer";
+
+$text['label-consulting_with']['en-us'] = "Consulting with";
+$text['label-consulting_with']['en-gb'] = "Consulting with";
+$text['message-transfer_completed']['en-us'] = "Transfer completed";
+$text['message-transfer_completed']['en-gb'] = "Transfer completed";
+$text['message-transfer_cancelled']['en-us'] = "Transfer cancelled";
+$text['message-transfer_cancelled']['en-gb'] = "Transfer cancelled";
+$text['button-complete_transfer']['en-us'] = "Complete Transfer";
+$text['button-complete_transfer']['en-gb'] = "Complete Transfer";
+$text['button-cancel_transfer']['en-us'] = "Cancel";
+$text['button-cancel_transfer']['en-gb'] = "Cancel";
 
 $text['label-hangup']['en-us'] = "Hangup";
 $text['label-hangup']['en-gb'] = "Hangup";
@@ -1755,6 +1803,9 @@ $text['message-action_failed']['tr-tr'] = "İşlem başarısız oldu";
 $text['message-action_failed']['zh-cn'] = "操作失败";
 $text['message-action_failed']['ja-jp'] = "操作に失敗しました";
 $text['message-action_failed']['ko-kr'] = "작업에 실패했습니다";
+
+$text['label-dial_number']['en-us'] = "Dial a Number";
+$text['label-dial_number']['en-gb'] = "Dial a Number";
 
 $text['message-permission_denied']['en-us'] = "Permission denied";
 $text['message-permission_denied']['en-gb'] = "Permission denied";
