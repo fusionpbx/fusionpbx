@@ -172,7 +172,11 @@ class operator_panel_service extends base_websocket_system_service implements we
 	const permission_map = [
 		// Call actions
 		'hangup'       => 'operator_panel_hangup',
+		'hangup_caller' => 'operator_panel_hangup',
 		'transfer'     => 'operator_panel_manage',
+		'transfer_attended' => 'operator_panel_transfer_attended',
+		'transfer_attended_complete' => 'operator_panel_transfer_attended',
+		'transfer_attended_cancel' => 'operator_panel_transfer_attended',
 		'eavesdrop'    => 'operator_panel_eavesdrop',
 		'whisper'      => 'operator_panel_coach',
 		'barge'        => 'operator_panel_coach',
@@ -180,6 +184,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 		'recording_state' => 'operator_panel_record',
 		'registrations_state' => 'operator_panel_view',
 		'originate'    => 'operator_panel_originate',
+		'intercept'    => 'operator_panel_manage',
 		// Conference member actions
 		'mute'         => 'operator_panel_manage',
 		'unmute'       => 'operator_panel_manage',
@@ -262,6 +267,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 		$this->on_topic('calls_active',        [$this, 'request_calls_active']);
 		$this->on_topic('conferences_active',  [$this, 'request_conferences_active']);
 		$this->on_topic('agents_active',       [$this, 'request_agents_active']);
+		$this->on_topic('parked_active',       [$this, 'request_parked_active']);
 		// Action handler (all mutations)
 		$this->on_topic('action',              [$this, 'handle_action']);
 		// Keep-alive
@@ -443,7 +449,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 				$this->broadcast_call_event($event_message, $topic);
 				break;
 
-			case 'valet_parking':
+			case 'valet_parking::info':
 				$this->broadcast_call_event($event_message, 'valet_info');
 				break;
 
@@ -528,7 +534,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 		$user_status_map = [];
 		try {
 			$t_us0 = microtime(true);
-			$sql = "SELECT e.extension, eu.user_uuid, COALESCE(u.user_status, 'Logged Out') AS user_status "
+			$sql = "SELECT e.extension, eu.user_uuid, COALESCE(u.user_status, '') AS user_status "
 				 . "FROM v_extensions AS e "
 				 . "LEFT JOIN v_domains AS d ON e.domain_uuid = d.domain_uuid "
 				 . "LEFT JOIN ("
@@ -552,7 +558,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 				if ($ext_num === '') continue;
 				$user_status_map[$ext_num] = [
 					'user_uuid' => $row['user_uuid'] ?? null,
-					'user_status' => $row['user_status'] ?? 'Logged Out',
+					'user_status' => $row['user_status'] ?? '',
 				];
 			}
 
@@ -568,6 +574,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 		$registered_map = [];
 		try {
 			$t_reg0 = microtime(true);
+			$normalized_domain_name = preg_replace('/:\d+$/', '', (string) $domain_name);
 			$this->debug('extensions_active trace [step4] fetching registrations via show registrations as json');
 			$reg_json = trim(event_socket::api('show registrations as json'));
 			$this->debug('extensions_active trace [step4] registrations api returned: bytes=' . strlen($reg_json)
@@ -576,9 +583,16 @@ class operator_panel_service extends base_websocket_system_service implements we
 			$reg_data = json_decode($reg_json, true);
 			if (is_array($reg_data) && !empty($reg_data['rows'])) {
 				foreach ($reg_data['rows'] as $row) {
-					$ext_num    = $row['reg_user'] ?? '';
-					$reg_domain = $row['realm']    ?? '';
-					if (!empty($ext_num) && $reg_domain === $domain_name) {
+					$ext_num = trim((string) ($row['reg_user'] ?? ''));
+					$reg_domain = preg_replace('/:\d+$/', '', trim((string) ($row['realm'] ?? '')));
+					if (strpos($ext_num, '@') !== false) {
+						[$ext_num, $parsed_domain] = array_pad(explode('@', $ext_num, 2), 2, '');
+						$ext_num = trim((string) $ext_num);
+						if ($reg_domain === '' && $parsed_domain !== '') {
+							$reg_domain = preg_replace('/:\d+$/', '', trim((string) $parsed_domain));
+						}
+					}
+					if ($ext_num !== '' && $reg_domain === $normalized_domain_name) {
 						$registered_map[$ext_num] = ($registered_map[$ext_num] ?? 0) + 1;
 					}
 				}
@@ -718,6 +732,83 @@ class operator_panel_service extends base_websocket_system_service implements we
 	}
 
 	/**
+	 * Respond to a parked_active snapshot request.
+	 *
+	 * Uses valet_info to enumerate current parked slots for the subscriber's domain
+	 * and enriches each parked UUID with caller details.
+	 *
+	 * @param websocket_message $message
+	 *
+	 * @return void
+	 */
+	protected function request_parked_active(websocket_message $message): void {
+		$this->debug('parked_active snapshot requested');
+
+		$payload = $message->payload();
+		$domain_name = $payload['domain_name'] ?? '';
+		$parked = [];
+
+		if ($domain_name !== '') {
+			$valet_info = event_socket::api('valet_info park@' . $domain_name);
+			if ($valet_info !== false && is_string($valet_info)) {
+				$matches = [];
+				preg_match_all('/<extension uuid="(.*?)">(.*?)<\/extension>/s', $valet_info, $matches, PREG_SET_ORDER);
+				foreach ($matches as $row) {
+					$uuid = $row[1] ?? '';
+					$extension = trim((string)($row[2] ?? ''));
+					if ($uuid === '' || $extension === '') continue;
+
+					$caller_name = trim((string)event_socket::api('uuid_getvar ' . $uuid . ' caller_id_name'));
+					if ($caller_name === '_undef_') $caller_name = '';
+					$caller_number = trim((string)event_socket::api('uuid_getvar ' . $uuid . ' caller_id_number'));
+					if ($caller_number === '_undef_') $caller_number = '';
+					$parked_by = trim((string)event_socket::api('uuid_getvar ' . $uuid . ' referred_by_user'));
+					if ($parked_by === '' || $parked_by === '_undef_') {
+						$parked_by = trim((string)event_socket::api('uuid_getvar ' . $uuid . ' valet_parking_orbit_exten'));
+					}
+					if ($parked_by === '_undef_') $parked_by = '';
+					$original_destination = trim((string)event_socket::api('uuid_getvar ' . $uuid . ' destination_number'));
+					if ($original_destination === '_undef_') $original_destination = '';
+					$created_epoch = trim((string)event_socket::api('uuid_getvar ' . $uuid . ' caller_channel_created_time'));
+					if ($created_epoch === '' || $created_epoch === '_undef_') {
+						// Fall back to start_uepoch (microseconds) or start_epoch (seconds)
+						$created_epoch = trim((string)event_socket::api('uuid_getvar ' . $uuid . ' start_uepoch'));
+						if ($created_epoch === '' || $created_epoch === '_undef_') {
+							$created_epoch = trim((string)event_socket::api('uuid_getvar ' . $uuid . ' start_epoch'));
+							if ($created_epoch === '_undef_') $created_epoch = '';
+						}
+					}
+
+					$parked[] = [
+						'unique_id' => $uuid,
+						'event_name' => 'valet_parking::snapshot',
+						'action' => 'hold',
+						'valet_extension' => $extension,
+						'caller_caller_id_name' => $caller_name,
+						'caller_caller_id_number' => $caller_number,
+						'caller_destination_number' => $original_destination,
+						'variable_referred_by_user' => $parked_by,
+						'caller_channel_created_time' => $created_epoch,
+					];
+				}
+			}
+		}
+
+		$response = new websocket_message();
+		$response
+			->payload($parked)
+			->service_name(self::get_service_name())
+			->topic('parked_active')
+			->status_string('ok')
+			->status_code(200)
+			->request_id($message->request_id())
+			->resource_id($message->resource_id())
+		;
+
+		websocket_client::send($this->ws_client->socket(), $response);
+	}
+
+	/**
 	 * Respond to a conferences_active snapshot request.
 	 *
 	 * @param websocket_message $message
@@ -842,7 +933,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 			return;
 		}
 
-		$result = $this->execute_action($action, $payload, $permissions);
+		$result = $this->execute_action($action, $payload);
 		$status_message = isset($result['message']) ? (string)$result['message'] : '';
 		$success = (bool)($result['success'] ?? false);
 		$extra_payload = $result;
@@ -867,6 +958,9 @@ class operator_panel_service extends base_websocket_system_service implements we
 		$member_id = $payload['member_id'] ?? '';
 		$direction = $payload['direction'] ?? '';
 
+		// Debug action execution attempt with all relevant parameters
+		$this->debug("Executing action: $action, uuid: $uuid, destination: $destination, context: $context, conference_name: $conference_name, member_id: $member_id, direction: $direction");
+
 		try {
 			switch ($action) {
 				case 'hangup':
@@ -876,17 +970,113 @@ class operator_panel_service extends base_websocket_system_service implements we
 					event_socket::api("uuid_kill $uuid");
 					return ['success' => true, 'message' => 'Call terminated'];
 
+				case 'hangup_caller':
+					if (empty($uuid)) {
+						return ['success' => false, 'message' => 'UUID required'];
+					}
+					// Find the A-leg (caller) from the B-leg UUID
+					$a_leg = trim((string)event_socket::api("uuid_getvar $uuid other_leg_unique_id"));
+					if (empty($a_leg) || stripos($a_leg, '-ERR') !== false || $a_leg === '_undef_') {
+						$a_leg = trim((string)event_socket::api("uuid_getvar $uuid signal_bond"));
+					}
+					if (!empty($a_leg) && stripos($a_leg, '-ERR') === false && $a_leg !== '_undef_') {
+						event_socket::api("uuid_kill $a_leg");
+						$this->info("Hangup caller: killed A-leg $a_leg (B-leg was $uuid)");
+						return ['success' => true, 'message' => 'Caller terminated'];
+					}
+					// Fallback: kill the provided UUID
+					event_socket::api("uuid_kill $uuid");
+					return ['success' => true, 'message' => 'Call terminated'];
+
 				case 'transfer':
 					if (empty($uuid) || empty($destination)) {
 						return ['success' => false, 'message' => 'UUID and destination required'];
 					}
-					// Sanitize destination: digits, *, #, + only
 					if (!preg_match('/^[0-9*#+]+$/', $destination)) {
 						return ['success' => false, 'message' => 'Invalid destination'];
 					}
 					$bleg = !empty($payload['bleg']) ? '-bleg ' : '';
 					event_socket::api("uuid_transfer $uuid {$bleg}$destination XML $context");
 					return ['success' => true, 'message' => 'Call transferred'];
+
+				case 'transfer_attended':
+					if (empty($uuid) || empty($destination)) {
+						return ['success' => false, 'message' => 'UUID and destination required'];
+					}
+					if (!preg_match('/^[0-9*#+]+$/', $destination)) {
+						return ['success' => false, 'message' => 'Invalid destination'];
+					}
+					$xfer_domain = $domain_name !== '' ? $domain_name : $context;
+					$reply = trim((string)event_socket::api("uuid_broadcast $uuid att_xfer::user/$destination@$xfer_domain both"));
+					$this->debug("transfer_attended reply: $reply");
+					if (stripos($reply, '-ERR') !== false) {
+						return ['success' => false, 'message' => $reply];
+					}
+					return ['success' => true, 'message' => 'Attended transfer started'];
+				case 'transfer_attended_complete':
+					// Attended transfer — Step 2: Complete the transfer
+					// Bridge the parked caller to the destination (other side of operator's current call).
+					$parked_uuid = $payload['parked_uuid'] ?? '';
+					$operator_uuid_val = $payload['operator_uuid'] ?? '';
+					if (empty($parked_uuid) || empty($operator_uuid_val)) {
+						return ['success' => false, 'message' => 'parked_uuid and operator_uuid required'];
+					}
+
+					// Find the destination's channel (other side of operator's consultation call)
+					$dest_uuid = trim((string)event_socket::api("uuid_getvar $operator_uuid_val other_leg_unique_id"));
+					if (empty($dest_uuid) || stripos($dest_uuid, '-ERR') !== false || $dest_uuid === '_undef_') {
+						$dest_uuid = trim((string)event_socket::api("uuid_getvar $operator_uuid_val signal_bond"));
+					}
+
+					if (!empty($dest_uuid) && stripos($dest_uuid, '-ERR') === false && $dest_uuid !== '_undef_') {
+						// Destination answered — bridge parked caller to destination
+						event_socket::api("uuid_bridge $parked_uuid $dest_uuid");
+						// Disconnect operator cleanly
+						event_socket::api("uuid_kill $operator_uuid_val");
+						$this->info("Attended transfer complete: bridged $parked_uuid to $dest_uuid");
+						return ['success' => true, 'message' => 'Transfer completed'];
+					}
+
+					// Destination not yet answered — blind-transfer the parked caller instead
+					$dest_ext = $payload['destination'] ?? '';
+					if (!empty($dest_ext) && preg_match('/^[0-9*#+]+$/', $dest_ext)) {
+						event_socket::api("uuid_kill $operator_uuid_val");
+						$xfer_context = $payload['context'] ?? ($domain_name !== '' ? $domain_name : 'default');
+						event_socket::api("uuid_transfer $parked_uuid $dest_ext XML $xfer_context");
+						$this->info("Attended transfer complete (dest not answered): blind-transferred $parked_uuid to $dest_ext");
+						return ['success' => true, 'message' => 'Transfer completed (destination still ringing)'];
+					}
+
+					return ['success' => false, 'message' => 'Cannot find destination channel'];
+
+				case 'transfer_attended_cancel':
+					// Attended transfer — Cancel: hang up consultation, reconnect caller to operator
+					$parked_uuid = $payload['parked_uuid'] ?? '';
+					$operator_uuid_val = $payload['operator_uuid'] ?? '';
+					$source_ext = $payload['source_extension'] ?? '';
+					if (empty($parked_uuid)) {
+						return ['success' => false, 'message' => 'parked_uuid required'];
+					}
+
+					// Kill the operator's consultation call (also terminates the destination leg)
+					if (!empty($operator_uuid_val)) {
+						event_socket::api("uuid_kill $operator_uuid_val");
+					}
+
+					// Reconnect the parked caller back to the operator's extension
+					if (!empty($source_ext) && !empty($domain_name)) {
+						$originate_cmd = "bgapi originate user/{$source_ext}@{$domain_name} &bridge({$parked_uuid})";
+						$reply = trim((string)event_socket::api($originate_cmd));
+						if (stripos($reply, '-ERR') === false) {
+							$this->info("Attended transfer cancelled: reconnecting $parked_uuid via $source_ext");
+							return ['success' => true, 'message' => 'Transfer cancelled, reconnecting'];
+						}
+					}
+
+					// Fallback: could not reconnect — just kill the parked call
+					event_socket::api("uuid_kill $parked_uuid");
+					$this->warning("Attended transfer cancelled: could not reconnect, killed parked call $parked_uuid");
+					return ['success' => true, 'message' => 'Transfer cancelled'];
 
 				case 'eavesdrop':
 					if (empty($uuid) || empty($destination)) {
@@ -992,14 +1182,22 @@ class operator_panel_service extends base_websocket_system_service implements we
 					if (empty($domain_name)) {
 						return ['success' => false, 'message' => 'domain_name required'];
 					}
+					$normalized_domain_name = preg_replace('/:\d+$/', '', (string) $domain_name);
 					$states = [];
 					$reg_json = trim((string) event_socket::api('show registrations as json'));
 					$reg_data = json_decode($reg_json, true);
 					if (is_array($reg_data) && !empty($reg_data['rows']) && is_array($reg_data['rows'])) {
 						foreach ($reg_data['rows'] as $row) {
-							$ext_num = trim((string)($row['reg_user'] ?? ''));
-							$reg_domain = trim((string)($row['realm'] ?? ''));
-							if ($ext_num === '' || $reg_domain !== $domain_name) continue;
+							$ext_num = trim((string) ($row['reg_user'] ?? ''));
+							$reg_domain = preg_replace('/:\d+$/', '', trim((string) ($row['realm'] ?? '')));
+							if (strpos($ext_num, '@') !== false) {
+								[$ext_num, $parsed_domain] = array_pad(explode('@', $ext_num, 2), 2, '');
+								$ext_num = trim((string) $ext_num);
+								if ($reg_domain === '' && $parsed_domain !== '') {
+									$reg_domain = preg_replace('/:\d+$/', '', trim((string) $parsed_domain));
+								}
+							}
+							if ($ext_num === '' || $reg_domain !== $normalized_domain_name) continue;
 							$states[$ext_num] = ($states[$ext_num] ?? 0) + 1;
 						}
 					}
@@ -1067,6 +1265,40 @@ class operator_panel_service extends base_websocket_system_service implements we
 						event_socket::api("conference '$conference_name' $action $member_id $value");
 					}
 					return ['success' => true, 'message' => 'Volume updated'];
+
+				case 'intercept':
+					if (empty($uuid) || empty($destination)) {
+						return ['success' => false, 'message' => 'UUID and destination extension required'];
+					}
+					$dest_ext = $payload['destination_extension'] ?? $destination;
+					if (!preg_match('/^[0-9*#+]+$/', $dest_ext)) {
+						return ['success' => false, 'message' => 'Invalid destination extension'];
+					}
+					if (empty($domain_name)) {
+						return ['success' => false, 'message' => 'domain_name required'];
+					}
+					// Find the A-leg (caller) by querying the B-leg's other_leg_unique_id
+					$a_leg = trim((string)event_socket::api("uuid_getvar $uuid other_leg_unique_id"));
+					if (empty($a_leg) || stripos($a_leg, '-ERR') !== false || $a_leg === '_undef_') {
+						$a_leg = trim((string)event_socket::api("uuid_getvar $uuid bridge_uuid"));
+					}
+					if (empty($a_leg) || stripos($a_leg, '-ERR') !== false || $a_leg === '_undef_') {
+						$a_leg = trim((string)event_socket::api("uuid_getvar $uuid signal_bond"));
+					}
+					if (!empty($a_leg) && stripos($a_leg, '-ERR') === false && $a_leg !== '_undef_') {
+						// Transfer the A-leg to the interceptor's extension
+						$reply = trim((string)event_socket::api("uuid_transfer $a_leg $dest_ext XML $context"));
+						$this->info("Intercept via A-leg transfer: a_leg=$a_leg dest=$dest_ext@$domain_name");
+					} else {
+						// Last resort: transfer the B-leg itself to the interceptor
+						$reply = trim((string)event_socket::api("uuid_transfer $uuid $dest_ext XML $context"));
+						$this->info("Intercept via B-leg transfer: uuid=$uuid dest=$dest_ext@$domain_name");
+					}
+					$this->debug("Intercept command reply: $reply");
+					if (stripos($reply, '-ERR') !== false) {
+						return ['success' => false, 'message' => $reply];
+					}
+					return ['success' => true, 'message' => 'Call intercepted'];
 
 				case 'originate':
 					$source      = $payload['source']      ?? '';
