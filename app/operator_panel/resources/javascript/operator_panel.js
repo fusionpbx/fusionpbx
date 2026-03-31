@@ -91,6 +91,10 @@ let dragged_parked_uuid = null;
 /** UUIDs recently removed from parked state; suppressed from snapshots briefly. */
 const parked_suppress_map = new Map();
 
+/** Persistent store of the first valid parked_since_us seen per UUID.
+ *  Survives parked_calls_map.clear() so duration never resets on snapshot refresh. */
+const parked_since_known = new Map();
+
 /** Current user's status; this is the only status source for My Extensions cards. */
 let current_user_status = user_status.trim();
 
@@ -530,10 +534,44 @@ function get_conference_action_icon(name, fallback) {
 	return fallback;
 }
 
+/** Normalize epoch-like timestamps to Unix microseconds as a numeric string. */
+function normalize_epoch_us(raw_value) {
+	if (raw_value === null || raw_value === undefined) return '0';
+	const value = String(raw_value).trim();
+	if (!value) return '0';
+
+	// Fast path: pure integer string (seconds/ms/us/ns).
+	if (/^\d+$/.test(value)) {
+		if (value.length <= 10) return `${value}000000`; // seconds -> us
+		if (value.length <= 13) return `${value}000`; // ms -> us
+		if (value.length <= 16) return value; // already us
+		if (value.length <= 19) return String(Math.floor(Number(value) / 1000)); // ns -> us
+		return value.slice(0, 16);
+	}
+
+	// Common case from some APIs: decimal seconds (e.g. 1711864980.123456).
+	if (/^\d+\.\d+$/.test(value)) {
+		const float_val = Number(value);
+		if (Number.isFinite(float_val) && float_val > 0) {
+			return String(Math.floor(float_val * 1000000));
+		}
+	}
+
+	// Fallback: pull a 10-19 digit run from mixed strings.
+	const match = value.match(/(\d{10,19})/);
+	if (match && match[1]) {
+		return normalize_epoch_us(match[1]);
+	}
+
+	return '0';
+}
+
 /** Format a Unix microsecond timestamp as elapsed time hh:mm:ss */
 function format_elapsed(us_timestamp) {
-	if (!us_timestamp || us_timestamp === '0') return '--:--:--';
-	const start = Math.floor(Number(us_timestamp) / 1000000);
+	const normalized_us = normalize_epoch_us(us_timestamp);
+	if (!normalized_us || normalized_us === '0') return '--:--:--';
+	const start = Math.floor(Number(normalized_us) / 1000000);
+	if (!Number.isFinite(start) || start <= 0) return '--:--:--';
 	const now   = Math.floor(Date.now() / 1000);
 	let sec     = Math.max(0, now - start);
 	const h = Math.floor(sec / 3600); sec -= h * 3600;
@@ -545,7 +583,7 @@ function format_elapsed(us_timestamp) {
 function tick_durations() {
 	document.querySelectorAll('[data-created]').forEach(el => {
 		const ts = el.getAttribute('data-created');
-		if (ts && ts !== '0') {
+		if (normalize_epoch_us(ts) !== '0') {
 			el.textContent = format_elapsed(ts);
 		}
 	});
@@ -584,18 +622,16 @@ function get_parked_since_us(ch) {
 		ch.parked_epoch,
 		ch.variable_parked_epoch,
 		ch.variable_park_epoch,
-		ch.event_date_timestamp,
 		ch.caller_channel_created_time,
+		ch.variable_start_uepoch,
+		ch.start_uepoch,
+		ch.variable_start_epoch,
+		ch.start_epoch,
+		ch.event_date_timestamp,
 	];
 	for (const value of candidates) {
-		if (!value) continue;
-		const raw = String(value).trim();
-		if (!raw) continue;
-		if (/^\d+$/.test(raw)) {
-			if (raw.length <= 10) return `${raw}000000`;
-			if (raw.length <= 13) return `${raw}000`;
-			return raw;
-		}
+		const normalized = normalize_epoch_us(value);
+		if (normalized !== '0') return normalized;
 	}
 	return '0';
 }
@@ -690,12 +726,23 @@ function upsert_parked_call(ch) {
 		parked_suppress_map.delete(normalized.uuid);
 	}
 	const current = parked_calls_map.get(normalized.uuid) || {};
+
+	// Keep the first valid parked_since_us we ever saw for this UUID.
+	// parked_since_known persists across parked_calls_map.clear() so snapshot
+	// refreshes and rebuild_parked_calls_map cannot wipe the live duration.
+	if (normalized.parked_since_us && normalized.parked_since_us !== '0') {
+		parked_since_known.set(normalized.uuid, normalized.parked_since_us);
+	} else if (parked_since_known.has(normalized.uuid)) {
+		normalized.parked_since_us = parked_since_known.get(normalized.uuid);
+	}
+
 	parked_calls_map.set(normalized.uuid, Object.assign(current, normalized));
 }
 
 function remove_parked_call_by_uuid(uuid) {
 	if (!uuid) return;
 	parked_calls_map.delete(uuid);
+	parked_since_known.delete(uuid);
 	// Suppress this UUID from being re-added by snapshots for a short window
 	parked_suppress_map.set(uuid, Date.now() + 6000);
 }
@@ -862,18 +909,17 @@ function render_parked_side_card() {
 	parked_calls.forEach(p => {
 		const uuid = esc(p.uuid);
 		const caller = esc((p.caller_id_name || '').trim() || (p.caller_id_number || 'Unknown'));
-		const caller_num = esc(p.caller_id_number || '-');
 		const lot = esc(p.parking_lot || '-');
+		const dest = esc(p.original_destination || p.caller_id_number || '-');
 		const parked_by = esc(p.parked_by || '-');
-		const dest = esc(p.original_destination || '-');
+		const parked_since = esc(p.parked_since_us || '0');
 		html += `<div class="op-parked-item" draggable="true" data-uuid="${uuid}" data-group-key="${esc(p.group_key || '')}"`;
 		html += ` ondragstart="on_drag_parked('${uuid}', event)" ondragend="on_drag_end()">`;
-		html += `<div class="op-parked-main">${caller}</div>`;
-		html += `<div class="op-parked-sub">${esc(text['label-caller_id'] || 'Caller ID')}: ${caller_num}</div>`;
-		html += `<div class="op-parked-sub">${esc(text['label-parking_lot'] || 'Parking Lot')}: ${lot}</div>`;
-		html += `<div class="op-parked-sub">${esc(text['label-duration'] || 'Duration')}: <span class="mono" data-created="${esc(p.parked_since_us || '0')}">${esc(format_elapsed(p.parked_since_us || '0'))}</span></div>`;
+		html += `<span class="op-parked-duration mono" data-created="${parked_since}">${esc(format_elapsed(parked_since))}</span>`;
+		html += `<div class="op-parked-main">${lot}</div>`;
+		html += `<div class="op-parked-sub">${caller}</div>`;
+		html += `<div class="op-parked-sub">${esc(text['label-on_call'] || 'On Call')}: ${dest}</div>`;
 		html += `<div class="op-parked-sub">${esc(text['label-parked_by'] || 'Parked By')}: ${parked_by}</div>`;
-		html += `<div class="op-parked-sub">${esc(text['label-original_destination'] || 'Original Destination')}: ${dest}</div>`;
 		html += `</div>`;
 	});
 	html += `</div></div>`;
