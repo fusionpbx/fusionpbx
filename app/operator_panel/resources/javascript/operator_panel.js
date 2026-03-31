@@ -91,6 +91,9 @@ let dragged_parked_uuid = null;
 /** UUIDs recently removed from parked state; suppressed from snapshots briefly. */
 const parked_suppress_map = new Map();
 
+/** Current user's status; this is the only status source for My Extensions cards. */
+let current_user_status = user_status.trim();
+
 /** Calls flagged as actively recording in UI state. */
 const recording_call_uuids = new Set();
 
@@ -2140,6 +2143,7 @@ function action_record(uuid) {
 function send_user_status(status) {
 	send_action('user_status', { status, user_uuid })
 		.then(() => {
+			current_user_status = (status || '').trim();
 			// Update local extensions_map so the UI reflects the new status immediately
 			if (Array.isArray(user_own_extensions)) {
 				user_own_extensions.forEach(ext_num => {
@@ -2229,14 +2233,7 @@ function load_extensions_snapshot() {
  * status (read from extensions_map for the user's own extension).
  */
 function sync_status_buttons() {
-	if (!Array.isArray(user_own_extensions) || user_own_extensions.length === 0) return;
-	const ext = extensions_map.get(user_own_extensions[0]);
-	if (!ext) return;
-	let current = (ext.user_status || '').trim();
-	// If user has no explicit status but is registered, treat as Available
-	if (!current && ext.user_uuid && ext.registered === true) {
-		current = 'Available';
-	}
+	const current = current_user_status;
 	if (!current) return;
 	document.querySelectorAll('.op-status-btn').forEach(b => {
 		if (b.getAttribute('data-status') === current) {
@@ -2316,10 +2313,13 @@ function render_ext_block(ext, is_mine) {
 	const show_name = raw_name && raw_name !== num;
 	const dnd     = (ext.do_not_disturb || '') === 'true';
 	const reg     = ext.registered === true;
+	const is_own_extension = !!is_mine || (Array.isArray(user_own_extensions) && user_own_extensions.includes(num));
 	const voicemail_enabled = (ext.voicemail_enabled || '') === 'true';
 	const { state, call_uuid, call_info } = get_extension_call_state(num);
 
-	const user_status_raw = (ext.user_status || '').trim();
+	const user_status_raw = is_own_extension
+		? current_user_status
+		: (ext.user_status || '').trim();
 
 	let css_state;
 	if (!reg) {
@@ -2338,9 +2338,6 @@ function render_ext_block(ext, is_mine) {
 		css_state = 'op-ext-available';
 	} else if (user_status_raw === 'Logged Out') {
 		css_state = 'op-ext-logged-out';
-	} else if (ext.user_uuid && user_status_raw === '') {
-		// Has a user but no explicit status set — treat as Available when registered
-		css_state = 'op-ext-available';
 	} else {
 		// Registered with no user attached or unknown status — blue
 		css_state = 'op-ext-registered';
@@ -2420,7 +2417,7 @@ function render_ext_block(ext, is_mine) {
 		? '../operator_panel/resources/images/recording.png'
 		: '../operator_panel/resources/images/record.png';
 	const duration_raw = has_live_call ? format_elapsed((call_info || {}).caller_channel_created_time || '0') : '';
-	const user_status = (ext.user_status || '').trim();
+	const user_status = user_status_raw;
 	let status_icon = 'status_logged_out';
 	let status_hover = text['label-status_logged_out_or_unknown'] || text['label-status_logged_out'] || 'Logged Out';
 	switch (user_status) {
@@ -2450,7 +2447,7 @@ function render_ext_block(ext, is_mine) {
 			status_hover = text['label-status_logged_out_or_unknown'] || text['label-status_logged_out'] || 'Logged Out';
 			break;
 		default:
-			if (reg && ext.user_uuid) {
+			if (reg && (ext.user_uuid || is_own_extension)) {
 				status_icon = 'status_available';
 				status_hover = text['label-status_available'] || 'Available';
 			} else if (reg) {

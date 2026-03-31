@@ -534,7 +534,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 		$user_status_map = [];
 		try {
 			$t_us0 = microtime(true);
-			$sql = "SELECT e.extension, eu.user_uuid, COALESCE(u.user_status, 'Logged Out') AS user_status "
+			$sql = "SELECT e.extension, eu.user_uuid, COALESCE(u.user_status, '') AS user_status "
 				 . "FROM v_extensions AS e "
 				 . "LEFT JOIN v_domains AS d ON e.domain_uuid = d.domain_uuid "
 				 . "LEFT JOIN ("
@@ -558,7 +558,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 				if ($ext_num === '') continue;
 				$user_status_map[$ext_num] = [
 					'user_uuid' => $row['user_uuid'] ?? null,
-					'user_status' => $row['user_status'] ?? 'Logged Out',
+					'user_status' => $row['user_status'] ?? '',
 				];
 			}
 
@@ -574,6 +574,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 		$registered_map = [];
 		try {
 			$t_reg0 = microtime(true);
+			$normalized_domain_name = preg_replace('/:\d+$/', '', (string) $domain_name);
 			$this->debug('extensions_active trace [step4] fetching registrations via show registrations as json');
 			$reg_json = trim(event_socket::api('show registrations as json'));
 			$this->debug('extensions_active trace [step4] registrations api returned: bytes=' . strlen($reg_json)
@@ -582,9 +583,16 @@ class operator_panel_service extends base_websocket_system_service implements we
 			$reg_data = json_decode($reg_json, true);
 			if (is_array($reg_data) && !empty($reg_data['rows'])) {
 				foreach ($reg_data['rows'] as $row) {
-					$ext_num    = $row['reg_user'] ?? '';
-					$reg_domain = $row['realm']    ?? '';
-					if (!empty($ext_num) && $reg_domain === $domain_name) {
+					$ext_num = trim((string) ($row['reg_user'] ?? ''));
+					$reg_domain = preg_replace('/:\d+$/', '', trim((string) ($row['realm'] ?? '')));
+					if (strpos($ext_num, '@') !== false) {
+						[$ext_num, $parsed_domain] = array_pad(explode('@', $ext_num, 2), 2, '');
+						$ext_num = trim((string) $ext_num);
+						if ($reg_domain === '' && $parsed_domain !== '') {
+							$reg_domain = preg_replace('/:\d+$/', '', trim((string) $parsed_domain));
+						}
+					}
+					if ($ext_num !== '' && $reg_domain === $normalized_domain_name) {
 						$registered_map[$ext_num] = ($registered_map[$ext_num] ?? 0) + 1;
 					}
 				}
@@ -1174,14 +1182,22 @@ class operator_panel_service extends base_websocket_system_service implements we
 					if (empty($domain_name)) {
 						return ['success' => false, 'message' => 'domain_name required'];
 					}
+					$normalized_domain_name = preg_replace('/:\d+$/', '', (string) $domain_name);
 					$states = [];
 					$reg_json = trim((string) event_socket::api('show registrations as json'));
 					$reg_data = json_decode($reg_json, true);
 					if (is_array($reg_data) && !empty($reg_data['rows']) && is_array($reg_data['rows'])) {
 						foreach ($reg_data['rows'] as $row) {
-							$ext_num = trim((string)($row['reg_user'] ?? ''));
-							$reg_domain = trim((string)($row['realm'] ?? ''));
-							if ($ext_num === '' || $reg_domain !== $domain_name) continue;
+							$ext_num = trim((string) ($row['reg_user'] ?? ''));
+							$reg_domain = preg_replace('/:\d+$/', '', trim((string) ($row['realm'] ?? '')));
+							if (strpos($ext_num, '@') !== false) {
+								[$ext_num, $parsed_domain] = array_pad(explode('@', $ext_num, 2), 2, '');
+								$ext_num = trim((string) $ext_num);
+								if ($reg_domain === '' && $parsed_domain !== '') {
+									$reg_domain = preg_replace('/:\d+$/', '', trim((string) $parsed_domain));
+								}
+							}
+							if ($ext_num === '' || $reg_domain !== $normalized_domain_name) continue;
 							$states[$ext_num] = ($states[$ext_num] ?? 0) + 1;
 						}
 					}

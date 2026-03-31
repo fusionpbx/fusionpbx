@@ -43,6 +43,11 @@
 	$token = (new token())->create($_SERVER['PHP_SELF']);
 	subscriber::save_token($token, ['active.operator.panel']);
 
+// Get the status for the current user
+	$sql = 'select user_status from v_users where user_uuid = :user_uuid';
+	$parameters = ['user_uuid' => $_SESSION['user_uuid'] ?? ''];
+	$user_status = $database->select($sql, $parameters, 'column') ?? '';
+
 // Gather user permissions for the JS side
 	$perm = [
 		'operator_panel_view'        => permission_exists('operator_panel_view'),
@@ -172,7 +177,7 @@
 	const user_uuid = <?= json_encode($_SESSION['user_uuid'] ?? '') ?>;
 
 	// User status options
-	const user_statuses = <?= json_encode($user_statuses) ?>;
+	const user_status = <?= json_encode($user_status) ?>;
 
 	// The logged-in user's own extension numbers — shown first / highlighted in the Extensions panel
 	const user_own_extensions = <?= json_encode($user_own_extensions, JSON_UNESCAPED_SLASHES) ?>;
