@@ -514,7 +514,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 
 			$sql = "SELECT e.extension_uuid, e.extension, e.effective_caller_id_name, e.effective_caller_id_number, "
 				 . "e.description, e.call_group, e.do_not_disturb, e.user_context, e.enabled, "
-				 . "COALESCE(vm.voicemail_enabled, 'false') AS voicemail_enabled "
+				 . "COALESCE(vm.voicemail_enabled, false)::text AS voicemail_enabled "
 				 . "FROM v_extensions AS e "
 				 . "LEFT JOIN v_domains AS d ON e.domain_uuid = d.domain_uuid "
 				 . "LEFT JOIN v_voicemails AS vm ON vm.domain_uuid = e.domain_uuid "
