@@ -888,14 +888,11 @@ function render_parked_side_card() {
 	if (!container) return;
 
 	const parked_calls = get_sorted_parked_calls();
-	const title = esc(text['label-parked_calls'] || 'Parked Calls');
+	const title = esc(text['label-parked_calls'] || 'Parked');
 	const no_parked = esc(text['label-no_parked_calls'] || 'No parked calls');
 
 	let html = `<div class="op-parked-card" ondragover="on_parked_dragover(event)" ondragleave="on_parked_dragleave(event)" ondrop="on_parked_drop(event)">`;
-	html += `<div class="op-parked-header">`;
-	html += `<span>${title}</span>`;
-	html += `<span class="op-parked-badge">${parked_calls.length}</span>`;
-	html += `</div>`;
+html += `<div class="op-parked-header">${title}</div>`;
 
 	if (!parked_calls.length) {
 		html += `<div class="op-parked-empty">${no_parked}</div>`;
@@ -1735,6 +1732,8 @@ function on_ext_contextmenu(event, ext_num) {
 	const is_mine  = !!(block && block.classList.contains('op-ext-mine'));
 	const { state, call_info } = get_extension_call_state(ext_num);
 	const has_call  = !!uuid;
+	const ext_data = extensions_map.get(ext_num) || {};
+	const voicemail_enabled = (ext_data.voicemail_enabled || '') === 'true';
 
 	// Derive call direction for the ringing extension to suppress Reject on outbound calls.
 	const call_dest = ((call_info || {}).caller_destination_number || '').trim();
@@ -1762,6 +1761,11 @@ function on_ext_contextmenu(event, ext_num) {
 				items.push({ label: text['button-call'] || 'Call', icon_class: 'fa-solid fa-phone',
 					fn: function () { action_call_extension(ext_num); }
 				});
+				if (voicemail_enabled) {
+					items.push({ label: text['button-call_voicemail'] || 'Call Voicemail', icon_class: 'fa-solid fa-voicemail',
+						fn: function () { action_call_voicemail(ext_num); }
+					});
+				}
 			}
 		}
 	} else if (state === 'ringing') {
@@ -1886,6 +1890,15 @@ function action_call_extension(ext_num) {
 		: prompt(text['label-your_extension'] || 'Your extension:');
 	if (!from_ext) return;
 	send_action('originate', { source: from_ext, destination: ext_num }).catch(console.error);
+}
+
+function action_call_voicemail(ext_num) {
+	if (!Array.isArray(user_own_extensions) || user_own_extensions.length === 0) return;
+	const from_ext = user_own_extensions.length === 1
+		? user_own_extensions[0]
+		: prompt(text['label-your_extension'] || 'Your extension:');
+	if (!from_ext) return;
+	send_action('originate', { source: from_ext, destination: '*99' + ext_num }).catch(console.error);
 }
 
 function action_intercept_icon(uuid, target_ext) {
@@ -2585,7 +2598,9 @@ function render_ext_block(ext, is_mine) {
 		` ondragleave="event.currentTarget.classList.remove('op-ext-drop-over')"` +
 		` ondrop="on_ext_drop('${esc(num)}', event)"` +
 		` oncontextmenu="on_ext_contextmenu(event, '${esc(num)}')">` +
-		`<div class="op-ext-icon" title="${esc(status_hover)}"><img class="op-ext-status-icon" src="../operator_panel/resources/images/${status_icon}.png" width="28" height="28" alt="${esc(status_hover)}"></div>` +
+		(ext.contact_image
+			? `<div class="op-ext-icon" title="${esc(status_hover)}"><div class="op-ext-contact-photo" style="background-image: url('/core/contacts/contact_attachment.php?id=${esc(ext.contact_image)}&action=download&sid=${esc(contact_image_sid)}')"></div></div>`
+			: `<div class="op-ext-icon" title="${esc(status_hover)}"><img class="op-ext-status-icon" src="../operator_panel/resources/images/${status_icon}.png" width="28" height="28" alt="${esc(status_hover)}"></div>`) +
 		`<div class="op-ext-info${has_live_call ? ' op-has-live-call' : ''}">` +
 		`<div class="op-ext-number">${esc(num)}</div>` +
 		dialpad_html +

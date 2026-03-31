@@ -534,14 +534,19 @@ class operator_panel_service extends base_websocket_system_service implements we
 		$user_status_map = [];
 		try {
 			$t_us0 = microtime(true);
-			$sql = "SELECT e.extension, eu.user_uuid, COALESCE(u.user_status, '') AS user_status "
+			$sql = "SELECT e.extension, eu.user_uuid, COALESCE(u.user_status, '') AS user_status,"
+				 . " ca.contact_attachment_uuid AS contact_image "
 				 . "FROM v_extensions AS e "
 				 . "LEFT JOIN v_domains AS d ON e.domain_uuid = d.domain_uuid "
 				 . "LEFT JOIN ("
-				 . "SELECT extension_uuid, MIN(user_uuid) AS user_uuid "
-				 . "FROM v_extension_users GROUP BY extension_uuid"
+				 . "SELECT DISTINCT ON (extension_uuid) extension_uuid, user_uuid "
+				 . "FROM v_extension_users ORDER BY extension_uuid"
 				 . ") AS eu ON eu.extension_uuid = e.extension_uuid "
 				 . "LEFT JOIN v_users AS u ON u.user_uuid = eu.user_uuid "
+				 . "LEFT JOIN v_contact_attachments AS ca ON ca.contact_uuid = u.contact_uuid "
+				 . "AND ca.attachment_primary = true "
+				 . "AND ca.attachment_filename IS NOT NULL "
+				 . "AND ca.attachment_content IS NOT NULL "
 				 . "WHERE d.domain_name = :domain_name AND e.enabled = 'true'";
 
 			$rows = $database->select($sql, [':domain_name' => $domain_name], 'all');
@@ -557,8 +562,9 @@ class operator_panel_service extends base_websocket_system_service implements we
 				$ext_num = $row['extension'] ?? '';
 				if ($ext_num === '') continue;
 				$user_status_map[$ext_num] = [
-					'user_uuid' => $row['user_uuid'] ?? null,
-					'user_status' => $row['user_status'] ?? '',
+					'user_uuid'     => $row['user_uuid'] ?? null,
+					'user_status'   => $row['user_status'] ?? '',
+					'contact_image' => $row['contact_image'] ?? null,
 				];
 			}
 
@@ -611,6 +617,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 			$ext['registration_count']  = $registered_map[$ext_num] ?? 0;
 			$ext['user_uuid']           = $user_status_map[$ext_num]['user_uuid'] ?? null;
 			$ext['user_status']         = $user_status_map[$ext_num]['user_status'] ?? '';
+			$ext['contact_image']       = $user_status_map[$ext_num]['contact_image'] ?? null;
 		}
 		unset($ext);
 		$this->debug('extensions_active trace [step6] annotation complete: extensions=' . count($extensions));
