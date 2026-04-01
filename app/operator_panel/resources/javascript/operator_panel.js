@@ -2028,6 +2028,43 @@ function on_ext_contextmenu(event, ext_num) {
 }
 
 /**
+ * Infer the local extension for a call UUID (used for leg-aware actions).
+ * Prefers channel presence and then CID/destination fields when they map to known extensions.
+ * @param {string} uuid
+ * @returns {string}
+ */
+function get_call_source_extension(uuid) {
+	if (!uuid) return '';
+	const ch = calls_map.get(uuid);
+	if (!ch) return '';
+
+	const presence = (((ch.channel_presence_id || '').split('@')[0]) || '').trim();
+	if (presence && extensions_map.has(presence)) return presence;
+
+	const dest = ((ch.caller_destination_number || '') + '').trim();
+	if (dest && extensions_map.has(dest)) return dest;
+
+	const cid = ((ch.caller_caller_id_number || ch.caller_id_number || '') + '').trim();
+	if (cid && extensions_map.has(cid)) return cid;
+
+	return '';
+}
+
+/**
+ * Derive normalized panel call state for a single call row.
+ * @param {object|null} ch
+ * @returns {string}
+ */
+function get_call_row_state(ch) {
+	if (!ch) return 'unknown';
+	const cs = ((ch.channel_call_state || '') + '').toUpperCase();
+	const as = ((ch.answer_state || '') + '').toUpperCase();
+	if (cs === 'HELD' || as === 'HELD') return 'held';
+	if (cs.indexOf('RING') !== -1 || as.indexOf('RING') !== -1 || as === 'EARLY') return 'ringing';
+	return 'active';
+}
+
+/**
  * Right-click handler for call rows in the Calls tab.
  * @param {MouseEvent} event
  * @param {string}     uuid
@@ -2035,29 +2072,65 @@ function on_ext_contextmenu(event, ext_num) {
 function on_call_contextmenu(event, uuid) {
 	if (!uuid) return;
 	const items = [];
+	const call_info = calls_map.get(uuid) || null;
+	const source_ext = get_call_source_extension(uuid);
+	const is_mine = !!(source_ext && Array.isArray(user_own_extensions) && user_own_extensions.includes(source_ext));
+	const state = get_call_row_state(call_info);
 
-	if (permissions.operator_panel_manage) {
-		items.push({ label: text['label-transfer'] || 'Transfer', icon_class: 'fa-solid fa-arrow-right-from-bracket',
-			fn: function () { open_transfer_modal(uuid); } });
+	if (state === 'ringing' && source_ext) {
+		const call_dest = ((call_info || {}).caller_destination_number || '').trim();
+		const call_cid  = ((call_info || {}).caller_caller_id_number || (call_info || {}).caller_id_number || '').trim();
+		let direction_raw = '';
+		if (call_dest === source_ext && call_cid !== source_ext) direction_raw = 'inbound';
+		else if (call_cid === source_ext && call_dest !== source_ext) direction_raw = 'outbound';
+		else direction_raw = (((call_info || {}).call_direction || (call_info || {}).variable_call_direction || '') + '').toLowerCase();
+		const is_outbound = direction_raw === 'outbound';
+
+		if (is_mine) {
+			if (permissions.operator_panel_hangup) {
+				if (!is_outbound) {
+					items.push({ label: text['button-reject'] || 'Reject', icon_class: 'fa-solid fa-phone-slash',
+						fn: function () { action_reject(uuid); } });
+				}
+				items.push({ label: text['button-hangup_caller'] || 'Hangup Caller', icon_class: 'fa-solid fa-xmark',
+					fn: function () { action_hangup_caller(uuid); }, danger: true });
+			}
+		} else {
+			if (permissions.operator_panel_manage) {
+				items.push({ label: text['button-intercept'] || 'Intercept', icon_class: 'fa-solid fa-phone-volume',
+					fn: function () { action_intercept_icon(uuid, source_ext); } });
+			}
+			if (permissions.operator_panel_hangup) {
+				items.push({ label: text['button-hangup_caller'] || 'Hangup Caller', icon_class: 'fa-solid fa-xmark',
+					fn: function () { action_hangup_caller(uuid); }, danger: true });
+			}
+		}
 	}
-	if (permissions.operator_panel_eavesdrop) {
-		items.push({ label: text['button-eavesdrop'] || 'Eavesdrop', icon_class: 'fa-solid fa-ear-listen',
-			fn: function () { action_eavesdrop(uuid); } });
-	}
-	if (permissions.operator_panel_coach) {
-		items.push({ label: text['button-whisper'] || 'Whisper', icon_class: 'fa-solid fa-comment-dots',
-			fn: function () { action_whisper(uuid); } });
-		items.push({ label: text['button-barge'] || 'Barge', icon_class: 'fa-solid fa-volume-high',
-			fn: function () { action_barge(uuid); } });
-	}
-	if (permissions.operator_panel_record) {
-		items.push({ label: text['button-record'] || 'Record', icon_class: 'fa-solid fa-circle-dot',
-			fn: function () { action_record(uuid); } });
-	}
-	if (permissions.operator_panel_hangup) {
-		if (items.length) items.push({ separator: true });
-		items.push({ label: text['label-hangup'] || 'Hangup', icon_class: 'fa-solid fa-phone-slash',
-			fn: function () { action_hangup(uuid); }, danger: true });
+
+	if (!items.length) {
+		if (permissions.operator_panel_manage) {
+			items.push({ label: text['label-transfer'] || 'Transfer', icon_class: 'fa-solid fa-arrow-right-from-bracket',
+				fn: function () { open_transfer_modal(uuid, source_ext); } });
+		}
+		if (permissions.operator_panel_eavesdrop) {
+			items.push({ label: text['button-eavesdrop'] || 'Eavesdrop', icon_class: 'fa-solid fa-ear-listen',
+				fn: function () { action_eavesdrop(uuid); } });
+		}
+		if (permissions.operator_panel_coach) {
+			items.push({ label: text['button-whisper'] || 'Whisper', icon_class: 'fa-solid fa-comment-dots',
+				fn: function () { action_whisper(uuid); } });
+			items.push({ label: text['button-barge'] || 'Barge', icon_class: 'fa-solid fa-volume-high',
+				fn: function () { action_barge(uuid); } });
+		}
+		if (permissions.operator_panel_record) {
+			items.push({ label: text['button-record'] || 'Record', icon_class: 'fa-solid fa-circle-dot',
+				fn: function () { action_record(uuid); } });
+		}
+		if (permissions.operator_panel_hangup) {
+			if (items.length) items.push({ separator: true });
+			items.push({ label: text['label-hangup'] || 'Hangup', icon_class: 'fa-solid fa-phone-slash',
+				fn: function () { action_hangup(uuid); }, danger: true });
+		}
 	}
 
 	if (!items.length) return;
@@ -2155,6 +2228,7 @@ function confirm_transfer() {
 		context: domain_name,
 		source_extension: source_ext,
 	};
+	if (source_ext) payload.bleg = true;
 
 	console.debug('[OP] confirm_transfer', { action, transfer_mode: selected_mode, payload });
 	send_action(action, payload).catch(console.error);
