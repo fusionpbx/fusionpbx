@@ -269,7 +269,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "login";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "domain_name";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "pbx1.yourdomain.com";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "tenant.domain.local";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Domain select option displayed on the login box.";
 		$y++;
