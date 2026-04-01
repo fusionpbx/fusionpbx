@@ -220,7 +220,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "flyingvoice_firmware_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/flyingvoice/resources/firmware";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.domain.local/app/flyingvoice/resources/firmware";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Base URL for Flyingvoice Firmware. Download from http://support.flyingvoice.com";
 		$y++;
