@@ -44,7 +44,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_url";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/snom/resources/firmware";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://tenant.domain.local/app/snom/resources/firmware";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Base URL for Snom Firmware. Download from https://service.snom.com/display/wiki/Deskphones+Firmware";
 		$y++;

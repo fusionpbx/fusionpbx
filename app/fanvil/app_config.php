@@ -476,7 +476,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_firmware_upgrade_server_1";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/fanvil/resources/firmware";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.domain.local/app/fanvil/resources/firmware";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Auto upgrade firmware server 1.";
 		$y++;
@@ -484,7 +484,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_firmware_upgrade_server_2";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server2.yourdomain.com/app/fanvil/resources/firmware";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server2.domain.local/app/fanvil/resources/firmware";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Auto upgrade firmware server 2.";
 		$y++;
