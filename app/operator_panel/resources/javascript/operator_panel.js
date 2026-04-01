@@ -112,6 +112,51 @@ let sortable_instance = null;
 
 /** Saved card order (array of group keys). Persisted to localStorage. */
 let saved_card_order = null;
+const calls_layout_slot_keys = ['left', 'right_top', 'right_bottom'];
+const calls_layout_view_keys = ['all', 'incoming', 'outgoing'];
+let calls_layout_order = null;
+let dragged_calls_panel_view = '';
+let _op_calls_doc_drag_handler = null;
+let _op_calls_slot_rects = [];  /* [{el, rect}] cached on dragstart */
+let _op_calls_highlighted_slot = null;
+let _op_calls_render_deferred = false;  /* true when render_calls_tab was skipped during drag */
+
+function clear_calls_panel_slot_over() {
+	document.querySelectorAll('.op-calls-slot-over').forEach(el => el.classList.remove('op-calls-slot-over'));
+	_op_calls_highlighted_slot = null;
+}
+
+/**
+ * Find which .op-calls-slot the cursor (clientX/Y) is over using cached bounding rects.
+ * This avoids all e.target / pointer-events issues.
+ */
+function _op_calls_slot_from_point(x, y) {
+	for (let i = 0; i < _op_calls_slot_rects.length; i++) {
+		const r = _op_calls_slot_rects[i].rect;
+		if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
+			return _op_calls_slot_rects[i];
+		}
+	}
+	return null;
+}
+
+/**
+ * Document-level dragover handler attached only while a Calls panel header is being dragged.
+ * Uses bounding-rect hit testing to reliably find the destination slot.
+ */
+function _op_calls_panel_doc_drag(e) {
+	if (!dragged_calls_panel_view) return;
+	const hit = _op_calls_slot_from_point(e.clientX, e.clientY);
+	const slot = hit ? hit.el : null;
+	/* Allow drop when cursor is over any slot */
+	if (slot) e.preventDefault();
+	/* Update highlighted slot only when it changes */
+	if (slot !== _op_calls_highlighted_slot) {
+		if (_op_calls_highlighted_slot) _op_calls_highlighted_slot.classList.remove('op-calls-slot-over');
+		if (slot) slot.classList.add('op-calls-slot-over');
+		_op_calls_highlighted_slot = slot;
+	}
+}
 let all_group_keys_for_filters = [];
 let tabs_initialized = false;
 
@@ -206,6 +251,12 @@ function get_extension_group_key(ext_number) {
 	const ext = extensions_map.get((ext_number || '').toString());
 	if (!ext) return '';
 	return normalize_group_key(ext.call_group || '');
+}
+
+function get_extension_display_name(ext_number) {
+	const ext = extensions_map.get((ext_number || '').toString());
+	if (!ext) return '';
+	return ((ext.effective_caller_id_name || ext.description || '') + '').trim();
 }
 
 function get_call_group_key(call) {
@@ -1113,10 +1164,80 @@ function get_conversation_call_uuids(uuid) {
 	return all;
 }
 
+function normalize_calls_layout_order(raw_order) {
+	const normalized = [];
+	if (Array.isArray(raw_order)) {
+		raw_order.forEach(value => {
+			const view_key = ((value || '') + '').trim().toLowerCase();
+			if (calls_layout_view_keys.includes(view_key) && !normalized.includes(view_key)) {
+				normalized.push(view_key);
+			}
+		});
+	}
+	calls_layout_view_keys.forEach(view_key => {
+		if (!normalized.includes(view_key)) normalized.push(view_key);
+	});
+	return normalized.slice(0, calls_layout_slot_keys.length);
+}
+
+function load_calls_layout_order() {
+	try {
+		const raw = localStorage.getItem('op_calls_layout_' + domain_name);
+		calls_layout_order = raw
+			? normalize_calls_layout_order(JSON.parse(raw))
+			: normalize_calls_layout_order(null);
+	} catch (err) {
+		calls_layout_order = normalize_calls_layout_order(null);
+	}
+}
+
+function save_calls_layout_order() {
+	if (!Array.isArray(calls_layout_order)) return;
+	try {
+		localStorage.setItem('op_calls_layout_' + domain_name, JSON.stringify(calls_layout_order));
+	} catch (err) {
+		// Ignore storage access errors.
+	}
+}
+
+function get_calls_layout_view_for_slot(slot_key) {
+	if (!Array.isArray(calls_layout_order)) load_calls_layout_order();
+	const slot_index = calls_layout_slot_keys.indexOf(((slot_key || '') + '').toLowerCase());
+	if (slot_index === -1) return calls_layout_view_keys[0];
+	return calls_layout_order[slot_index] || calls_layout_view_keys[slot_index] || calls_layout_view_keys[0];
+}
+
+function move_calls_panel_view_to_slot(view_key, slot_key) {
+	if (!Array.isArray(calls_layout_order)) load_calls_layout_order();
+
+	const view = ((view_key || '') + '').trim().toLowerCase();
+	const slot = ((slot_key || '') + '').trim().toLowerCase();
+	const from_index = calls_layout_order.indexOf(view);
+	const to_index = calls_layout_slot_keys.indexOf(slot);
+
+	if (!calls_layout_view_keys.includes(view) || from_index === -1 || to_index === -1 || from_index === to_index) {
+		return false;
+	}
+
+	const displaced = calls_layout_order[to_index];
+	calls_layout_order[to_index] = view;
+	calls_layout_order[from_index] = displaced;
+	save_calls_layout_order();
+	return true;
+}
+
 /**
  * Render the Calls tab from the in-memory calls_map.
  */
 function render_calls_tab() {
+	/* While a Calls panel header is being dragged, defer rendering so the DOM
+	   isn't replaced mid-drag (which would orphan cached slot elements and wipe
+	   the destination-slot highlight class). The deferred render fires in
+	   on_calls_panel_drag_end(). */
+	if (dragged_calls_panel_view) {
+		_op_calls_render_deferred = true;
+		return;
+	}
 	const container = document.getElementById('calls_container');
 	if (!container) return;
 
@@ -1131,28 +1252,28 @@ function render_calls_tab() {
 		return;
 	}
 
-	let html = "<div class='card'>\n";
-	html += "<table class='list'>\n";
-	html += "<tr class='list-header'>\n";
-	html += `<th class="mono" style="width:28px"></th>\n`;
-	html += `<th>${esc(text['label-caller_id'] || 'Caller ID')}</th>\n`;
-	html += `<th>${esc(text['label-destination'] || 'Destination')}</th>\n`;
-	html += `<th>${esc(text['label-state'] || 'State')}</th>\n`;
-	html += `<th>${esc(text['label-duration'] || 'Duration')}</th>\n`;
-	html += `<th class="right">${esc(text['label-actions'] || 'Actions')}</th>\n`;
-	html += "</tr>\n";
+	const columns_html =
+		`<tr class="list-header">\n`
+		+ `<th class="mono" style="width:28px"></th>\n`
+		+ `<th>${esc(text['label-extension'] || 'Extension')}</th>\n`
+		+ `<th>${esc(text['label-name'] || 'Name')}</th>\n`
+		+ `<th>${esc(text['label-destination'] || 'Destination')}</th>\n`
+		+ `<th>${esc(text['label-state'] || 'State')}</th>\n`
+		+ `<th>${esc(text['label-duration'] || 'Duration')}</th>\n`
+		+ `<th class="right">${esc(text['label-actions'] || 'Actions')}</th>\n`
+		+ `</tr>\n`;
 
-	calls.forEach(ch => {
-		const uuid_raw      = get_call_uuid(ch);
-		if (!uuid_raw) return;
-		const uuid          = esc(uuid_raw);
-		const group_key     = esc(get_call_group_key(ch));
-		const ext_number    = ((ch.channel_presence_id || '').split('@')[0] || '').trim();
-		const raw_cid_name  = (ch.caller_caller_id_name   || ch.caller_id_name   || '').toString();
-		const raw_cid_num   = (ch.caller_caller_id_number || ch.caller_id_number || '').toString().trim();
-		const raw_dest_num  = (ch.caller_destination_number || '').toString().trim();
+	function build_call_row(ch) {
+		const uuid_raw = get_call_uuid(ch);
+		if (!uuid_raw) return null;
 
-		// Derive per-leg direction so B-leg rows do not incorrectly show outbound.
+		const uuid = esc(uuid_raw);
+		const group_key = esc(get_call_group_key(ch));
+		const ext_number = ((ch.channel_presence_id || '').split('@')[0] || '').trim();
+		const raw_cid_name = (ch.caller_caller_id_name || ch.caller_id_name || '').toString();
+		const raw_cid_num = (ch.caller_caller_id_number || ch.caller_id_number || '').toString().trim();
+		const raw_dest_num = (ch.caller_destination_number || '').toString().trim();
+
 		let direction_raw = (ch.call_direction || ch.variable_call_direction || '').toString().toLowerCase();
 		if (ext_number && raw_cid_num && raw_dest_num) {
 			if (ext_number === raw_cid_num && ext_number !== raw_dest_num) {
@@ -1163,11 +1284,9 @@ function render_calls_tab() {
 			}
 		}
 
-		const peer_number   = resolve_peer_number_for_leg(ch, ext_number, direction_raw);
+		const peer_number = resolve_peer_number_for_leg(ch, ext_number, direction_raw);
 		let caller_number_raw = (ext_number || raw_cid_num || '').toString().trim();
 
-		// If this leg is ambiguous (same number on both CID and destination),
-		// show the inferred peer as the leg owner for inbound perspective.
 		if (direction_raw === 'inbound' && raw_cid_num && raw_dest_num && raw_cid_num === raw_dest_num && peer_number && raw_cid_num !== peer_number) {
 			caller_number_raw = peer_number;
 		}
@@ -1176,54 +1295,133 @@ function render_calls_tab() {
 			else if (raw_cid_num && raw_cid_num !== peer_number) caller_number_raw = raw_cid_num;
 		}
 
-		const cid_name      = esc(raw_cid_name);
-		const cid_number    = esc(caller_number_raw);
-		const dest          = esc(peer_number || raw_dest_num || ext_number);
-		const state         = esc(ch.channel_call_state       || ch.answer_state    || '');
-		const direction     = esc(direction_raw);
+		const extension_number_raw = (ext_number || caller_number_raw || '').toString().trim();
+		let extension_name_raw = '';
+		if (extension_number_raw) {
+			extension_name_raw = get_extension_display_name(extension_number_raw);
+			if (!extension_name_raw && extension_number_raw === raw_cid_num) {
+				extension_name_raw = raw_cid_name;
+			}
+		}
+		if (extension_name_raw && extension_name_raw === extension_number_raw) {
+			extension_name_raw = '';
+		}
+		if (extension_name_raw) {
+			const n = extension_name_raw.toLowerCase();
+			if (n === 'outbound call' || n === 'inbound call') extension_name_raw = '';
+		}
+
+		const extension_number = esc(extension_number_raw);
+		const extension_name = esc(extension_name_raw);
+		const dest = esc(peer_number || raw_dest_num || ext_number);
+		const state = esc(ch.channel_call_state || ch.answer_state || '');
+		const direction = esc(direction_raw);
 		const direction_icon = direction_raw === 'inbound'
 			? '../operator_panel/resources/images/inbound.png'
 			: (direction_raw === 'outbound' ? '../operator_panel/resources/images/outbound.png' : '');
-		const created_ts    = ch.caller_channel_created_time  || '0';
-		const elapsed       = esc(format_elapsed(created_ts));
-		const is_recording  = call_is_recording(ch, uuid_raw);
-		const record_icon   = is_recording
+		const created_ts = ch.caller_channel_created_time || '0';
+		const elapsed = esc(format_elapsed(created_ts));
+		const is_recording = call_is_recording(ch, uuid_raw);
+		const record_icon = is_recording
 			? '../operator_panel/resources/images/recording.png'
 			: '../operator_panel/resources/images/record.png';
 
-		html += `<tr class="list-row" id="call_row_${uuid}" draggable="true" data-uuid="${uuid}" data-group-key="${group_key}" ondragstart="on_drag_call('${uuid}', event)" ondragend="on_drag_end(); document.querySelectorAll('.op-ext-block').forEach(b=>b.classList.remove('op-ext-drop-over'))" oncontextmenu="on_call_contextmenu(event, '${uuid}')">\n`;
-		const show_cid_name = raw_cid_name && raw_cid_name.toLowerCase() !== 'outbound call' && raw_cid_name.toLowerCase() !== 'inbound call';
-		html += `  <td class="mono">${direction_icon ? `<img src="${direction_icon}" width="12" height="12" alt="${direction}" title="${direction}" style="vertical-align:middle;">` : ''}</td>\n`;
-		html += `  <td>${show_cid_name ? `${cid_name}<br><small>${cid_number}</small>` : cid_number}</td>\n`;
-		html += `  <td>${dest}</td>\n`;
-		html += `  <td>${state}</td>\n`;
-		html += `  <td class="mono" data-created="${created_ts}">${elapsed}</td>\n`;
-		html += `  <td class="right">\n`;
+		let row_html = `<tr class="list-row" draggable="true" data-uuid="${uuid}" data-group-key="${group_key}" ondragstart="on_drag_call('${uuid}', event)" ondragend="on_drag_end(); document.querySelectorAll('.op-ext-block').forEach(b=>b.classList.remove('op-ext-drop-over'))" oncontextmenu="on_call_contextmenu(event, '${uuid}')">\n`;
+		row_html += `  <td class="mono">${direction_icon ? `<img src="${direction_icon}" width="12" height="12" alt="${direction}" title="${direction}" style="vertical-align:middle;">` : ''}</td>\n`;
+		row_html += `  <td>${extension_number}</td>\n`;
+		row_html += `  <td>${extension_name}</td>\n`;
+		row_html += `  <td>${dest}</td>\n`;
+		row_html += `  <td>${state}</td>\n`;
+		row_html += `  <td class="mono" data-created="${created_ts}">${elapsed}</td>\n`;
+		row_html += `  <td class="right">\n`;
 
 		if (permissions.operator_panel_hangup) {
-			html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-hangup'] || 'Hangup')}" onclick="action_hangup('${uuid}')">`
+			row_html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-hangup'] || 'Hangup')}" onclick="action_hangup('${uuid}')">`
 				+ `<img class="op-ext-action-icon" src="../operator_panel/resources/images/kill.png" alt="${esc(text['button-hangup'] || 'Hangup')}"></a> `;
 		}
 		if (permissions.operator_panel_eavesdrop) {
-			html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-eavesdrop'] || 'Eavesdrop')}" onclick="action_eavesdrop('${uuid}')">`
+			row_html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-eavesdrop'] || 'Eavesdrop')}" onclick="action_eavesdrop('${uuid}')">`
 				+ `<img class="op-ext-action-icon" src="../operator_panel/resources/images/eavesdrop.png" alt="${esc(text['button-eavesdrop'] || 'Eavesdrop')}"></a> `;
 		}
 		if (permissions.operator_panel_coach) {
-			html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-whisper'] || 'Whisper')}" onclick="action_whisper('${uuid}')">`
+			row_html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-whisper'] || 'Whisper')}" onclick="action_whisper('${uuid}')">`
 				+ `<img class="op-ext-action-icon" src="../operator_panel/resources/images/whisper.svg" alt="${esc(text['button-whisper'] || 'Whisper')}"></a> `;
-			html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-barge'] || 'Barge')}" onclick="action_barge('${uuid}')">`
+			row_html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-barge'] || 'Barge')}" onclick="action_barge('${uuid}')">`
 				+ `<img class="op-ext-action-icon" src="../operator_panel/resources/images/barge.svg" alt="${esc(text['button-barge'] || 'Barge')}"></a> `;
 		}
 		if (permissions.operator_panel_record) {
-			html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-record'] || 'Record')}" onclick="action_record('${uuid}')">`
+			row_html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-record'] || 'Record')}" onclick="action_record('${uuid}')">`
 				+ `<img class="op-ext-action-icon" src="${record_icon}" alt="${esc(text['button-record'] || 'Record')}"></a> `;
 		}
 
-		html += "  </td>\n";
-		html += "</tr>\n";
+		row_html += "  </td>\n";
+		row_html += "</tr>\n";
+
+		return {
+			row_html,
+			direction: direction_raw,
+		};
+	}
+
+	function render_calls_section(view_key, title, rows_html, empty_label, extra_class) {
+		return `<section class="card op-calls-card ${extra_class || ''}" data-calls-view="${esc(view_key)}">`
+			+ `<div class="op-calls-card-title" draggable="true" ondragstart="on_calls_panel_drag_start(event, '${view_key}')" ondragend="on_calls_panel_drag_end(event)" title="${esc(text['label-drag_to_rearrange'] || 'Drag to rearrange panel')}">${esc(title)}<span class="op-calls-drag-hint">DRAG</span></div>`
+			+ `<div class="op-calls-table-wrap">`
+			+ `<table class="list">`
+			+ columns_html
+			+ `<tbody>${rows_html.join('')}</tbody>`
+			+ `</table>`
+			+ `</div>`
+			+ `<p class="text-muted op-calls-empty"${rows_html.length ? ' style="display:none;"' : ''}>${esc(empty_label)}</p>`
+			+ `</section>`;
+	}
+
+	const all_rows = [];
+	const incoming_rows = [];
+	const outgoing_rows = [];
+
+	calls.forEach(ch => {
+		const rendered = build_call_row(ch);
+		if (!rendered) return;
+
+		all_rows.push(rendered.row_html);
+		if (rendered.direction === 'inbound') {
+			incoming_rows.push(rendered.row_html);
+		}
+		else if (rendered.direction === 'outbound') {
+			outgoing_rows.push(rendered.row_html);
+		}
 	});
 
-	html += "</table>\n</div>\n";
+	if (all_rows.length === 0) {
+		container.innerHTML = `<p class="text-muted">${esc(text['label-no_calls_active'] || 'No active calls.')}</p>`;
+		return;
+	}
+	if (!Array.isArray(calls_layout_order)) load_calls_layout_order();
+
+	const sections_by_view = {
+		all: render_calls_section('all', text['tab-calls'] || text['label-tab_calls'] || 'Calls', all_rows, text['label-no_calls_active'] || 'No active calls.', 'op-calls-card-all'),
+		incoming: render_calls_section('incoming', 'Incoming Calls', incoming_rows, 'No incoming calls.', 'op-calls-card-incoming'),
+		outgoing: render_calls_section('outgoing', 'Outgoing Calls', outgoing_rows, 'No outgoing calls.', 'op-calls-card-outgoing'),
+	};
+
+	const left_view = get_calls_layout_view_for_slot('left');
+	const right_top_view = get_calls_layout_view_for_slot('right_top');
+	const right_bottom_view = get_calls_layout_view_for_slot('right_bottom');
+
+	function render_calls_slot(slot_key, section_html, extra_class) {
+		const classes = `op-calls-pane op-calls-slot ${extra_class || ''}`.trim();
+		return `<div class="${classes}" data-slot-key="${esc(slot_key)}" ondrop="on_calls_panel_drop(event, '${slot_key}')">${section_html}</div>`;
+	}
+
+	let html = `<div class="op-calls-layout">`;
+	html += render_calls_slot('left', sections_by_view[left_view], 'op-calls-pane-left');
+	html += `<div class="op-calls-pane op-calls-pane-right">`;
+	html += render_calls_slot('right_top', sections_by_view[right_top_view], 'op-calls-pane-half');
+	html += render_calls_slot('right_bottom', sections_by_view[right_bottom_view], 'op-calls-pane-half');
+	html += `</div>`;
+	html += `</div>`;
+
 	container.innerHTML = html;
 	apply_calls_filters();
 }
@@ -2723,29 +2921,42 @@ function matches_group_filter(group_key) {
 function apply_calls_filters() {
 	const container = document.getElementById('calls_container');
 	if (!container) return;
-	const table = container.querySelector('table.list');
-	if (!table) return;
+	const rows = container.querySelectorAll('tr.list-row');
+	if (!rows.length) return;
 
 	const filter_text = (((document.getElementById('calls_text_filter') || {}).value) || '').trim().toLowerCase();
-	let visible_count = 0;
-	table.querySelectorAll('tr.list-row').forEach(row => {
+	let visible_total = 0;
+	rows.forEach(row => {
 		const group_key = row.getAttribute('data-group-key') || '';
 		const group_ok = matches_group_filter(group_key);
 		const text_ok = !filter_text || (row.textContent || '').toLowerCase().indexOf(filter_text) !== -1;
 		const show = group_ok && text_ok;
 		row.style.display = show ? '' : 'none';
-		if (show) visible_count++;
+		if (show) visible_total++;
+	});
+
+	container.querySelectorAll('.op-calls-card').forEach(card => {
+		const card_rows = card.querySelectorAll('tbody tr.list-row');
+		let card_visible = 0;
+		card_rows.forEach(row => {
+			if (row.style.display !== 'none') card_visible++;
+		});
+		const card_empty = card.querySelector('.op-calls-empty');
+		if (card_empty) {
+			card_empty.style.display = card_visible === 0 ? '' : 'none';
+		}
 	});
 
 	let empty = container.querySelector('.op-empty-filter-result');
-	if (visible_count === 0) {
+	if (visible_total === 0) {
 		if (!empty) {
 			empty = document.createElement('p');
 			empty.className = 'text-muted op-empty-filter-result';
 			empty.textContent = text['label-no_calls_active'] || 'No active calls.';
 			container.appendChild(empty);
 		}
-	} else if (empty) {
+	}
+	else if (empty) {
 		empty.remove();
 	}
 }
@@ -3078,6 +3289,82 @@ function render_extensions_tab() {
 function schedule_extensions_render() {
 	if (extensions_render_debounce) clearTimeout(extensions_render_debounce);
 	extensions_render_debounce = setTimeout(render_extensions_tab, 120);
+}
+
+function on_calls_panel_drag_start(event, view_key) {
+	dragged_calls_panel_view = ((view_key || '') + '').trim().toLowerCase();
+	if (!calls_layout_view_keys.includes(dragged_calls_panel_view)) {
+		dragged_calls_panel_view = '';
+		return;
+	}
+
+	if (event && event.dataTransfer) {
+		event.dataTransfer.effectAllowed = 'move';
+		event.dataTransfer.setData('text/plain', dragged_calls_panel_view);
+	}
+
+	const card = event && event.target ? event.target.closest('.op-calls-card') : null;
+	if (card) card.classList.add('op-calls-card-dragging');
+	const layout = document.querySelector('.op-calls-layout');
+	if (layout) layout.classList.add('op-calls-layout-dragging');
+
+	/* Cache bounding rects of all slot elements for hit-testing during drag.
+	 * This avoids relying on e.target / pointer-events which are unreliable during drag. */
+	_op_calls_slot_rects = [];
+	document.querySelectorAll('.op-calls-slot').forEach(function(el) {
+		_op_calls_slot_rects.push({ el: el, rect: el.getBoundingClientRect() });
+	});
+
+	/* Attach a single document-level dragover handler for destination-slot highlighting. */
+	if (_op_calls_doc_drag_handler) {
+		document.removeEventListener('dragover', _op_calls_doc_drag_handler);
+	}
+	_op_calls_doc_drag_handler = _op_calls_panel_doc_drag;
+	document.addEventListener('dragover', _op_calls_doc_drag_handler);
+}
+
+/* on_calls_panel_drag_enter / drag_over / drag_leave are no longer wired to slot elements.
+ * Highlighting is handled entirely by the document-level _op_calls_panel_doc_drag listener
+ * attached in on_calls_panel_drag_start and removed in on_calls_panel_drag_end.
+ * These stubs are kept so any legacy references do not throw. */
+function on_calls_panel_drag_enter(event) {}
+function on_calls_panel_drag_over(event) {}
+function on_calls_panel_drag_leave(event) {}
+
+function on_calls_panel_drop(event, slot_key) {
+	event.preventDefault();
+
+	if (!dragged_calls_panel_view) { clear_calls_panel_slot_over(); return; }
+	/* Resolve drop slot using bounding-rect hit test, fall back to inline slot_key */
+	const hit = _op_calls_slot_from_point(event.clientX, event.clientY);
+	const resolved_slot_key = (hit && hit.el && hit.el.dataset && hit.el.dataset.slotKey)
+		? hit.el.dataset.slotKey
+		: slot_key;
+	const moved = move_calls_panel_view_to_slot(dragged_calls_panel_view, resolved_slot_key);
+	on_calls_panel_drag_end(event);
+	if (moved) render_calls_tab();
+}
+
+function on_calls_panel_drag_end(event) {
+	const card = event && event.target ? event.target.closest('.op-calls-card') : null;
+	if (card) card.classList.remove('op-calls-card-dragging');
+	clear_calls_panel_slot_over();
+	document.querySelectorAll('.op-calls-card-dragging').forEach(el => el.classList.remove('op-calls-card-dragging'));
+	const layout = document.querySelector('.op-calls-layout');
+	if (layout) layout.classList.remove('op-calls-layout-dragging');
+	dragged_calls_panel_view = '';
+	/* Remove the document-level highlight listener added in on_calls_panel_drag_start */
+	if (_op_calls_doc_drag_handler) {
+		document.removeEventListener('dragover', _op_calls_doc_drag_handler);
+		_op_calls_doc_drag_handler = null;
+	}
+	_op_calls_slot_rects = [];
+	_op_calls_highlighted_slot = null;
+	/* Fire any render that was deferred while we were dragging */
+	if (_op_calls_render_deferred) {
+		_op_calls_render_deferred = false;
+		render_calls_tab();
+	}
 }
 
 /**
