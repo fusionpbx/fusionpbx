@@ -70,22 +70,21 @@
 
 //add the search string
 	$search = strtolower($_GET["search"] ?? '');
-	if (!empty($search)) {
-		$sql_search = " and (";
-		$sql_search .= "	lower(fax_result_text) like :search ";
-		$sql_search .= "	or lower(fax_file) like :search ";
-		$sql_search .= "	or lower(fax_local_station_id) like :search ";
-		$sql_search .= "	or fax_date::text like :search ";
-		$sql_search .= "	or fax_uri::text like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
 
 //get the count
 	$sql = "select count(fax_log_uuid) from v_fax_logs ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and fax_uuid = :fax_uuid ";
-	$sql .= $sql_search ?? '';
+	if (!empty($search)) {
+		$sql .= " and ( ";
+		$sql .= "	lower(fax_result_text) like :search ";
+		$sql .= "	or lower(fax_file) like :search ";
+		$sql .= "	or lower(fax_local_station_id) like :search ";
+		$sql .= "	or fax_date::text like :search ";
+		$sql .= "	or fax_uri::text like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['fax_uuid'] = $fax_uuid;
 	$num_rows = $database->select($sql, $parameters, 'column');
@@ -114,6 +113,7 @@
 
 //get the list
 	$sql = "select ";
+	$sql .= " fax_log_uuid, ";
 	$sql .= " fax_epoch, ";
 	$sql .= " to_char(timezone(:time_zone, to_timestamp(fax_epoch)), 'DD Mon YYYY') as fax_date_formatted, \n";
 	$sql .= " to_char(timezone(:time_zone, to_timestamp(fax_epoch)), '".$time_format."') as fax_time_formatted, \n";
@@ -136,7 +136,16 @@
 	$sql .= "from v_fax_logs ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and fax_uuid = :fax_uuid ";
-	$sql .= $sql_search ?? '';
+	if (!empty($search)) {
+		$sql .= " and ( ";
+		$sql .= "	lower(fax_result_text) like :search ";
+		$sql .= "	or lower(fax_file) like :search ";
+		$sql .= "	or lower(fax_local_station_id) like :search ";
+		$sql .= "	or fax_date::text like :search ";
+		$sql .= "	or fax_uri::text like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.$search.'%';
+	}
 	$sql .= order_by($order_by, $order, 'fax_epoch', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset ?? 0);
 	$parameters['domain_uuid'] = $domain_uuid;
