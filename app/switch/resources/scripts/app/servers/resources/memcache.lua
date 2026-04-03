@@ -37,6 +37,9 @@
 --includes config.lua which will include local.lua if it exists
 	require "resources.functions.config"
 
+--load the shell_esc function
+	require "resources.functions.shell_esc"
+
 --subscribe to the events
 	--events = freeswitch.EventConsumer("all");
 	events = freeswitch.EventConsumer("CUSTOM");
@@ -78,14 +81,14 @@
 						for key,row in pairs(servers) do
 							if (row.method == "ssh") then
 								api_command_argument = api_command_argument:gsub("%%20", " ");
-								cmd = [[ssh ]]..row.username..[[@]]..row.hostname..[[ "fs_cli -x 'memcache ]]..api_command_argument..[['"]];
+								cmd = [[ssh ]]..row.username..[[@]]..row.hostname..[[ "fs_cli -x 'memcache ]]..shell_esc(api_command_argument)..[['"]];
 								freeswitch.consoleLog("INFO", "[notice] command: ".. cmd .. "\n");
 								os.execute(cmd);
 							end
 							if (row.method == "curl") then
 								api_command_argument = api_command_argument:gsub(" ", "%%20");
 								url = [[http://]]..row.username..[[:]]..row.password..[[@]]..row.hostname..[[:]]..row.port..[[/webapi/memcache?]]..api_command_argument;
-								os.execute("curl "..url);
+								os.execute("curl "..shell_esc(url));
 								freeswitch.consoleLog("INFO", "[notice] curl ".. url .. " \n");
 							end
 						end
