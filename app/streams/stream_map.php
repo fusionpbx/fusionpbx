@@ -101,7 +101,7 @@
 	$sql .= " domain_name, ";
 	$sql .= " name, ";
 	$sql .= " number, ";
-	$sql .= " stream, ";
+	$sql .= " music, ";
 	$sql .= " description \n";
 	$sql .= "from view_stream_map \n";
 	$sql .= "where true \n";
@@ -117,7 +117,7 @@
 		$sql .= "	application like :search \n";
 		$sql .= "	or name like :search \n";
 		$sql .= "	or number like :search \n";
-		$sql .= "	or stream like :search \n";
+		$sql .= "	or music like :search \n";
 		$sql .= "	or description like :search \n";
 		$sql .= ") \n";
 		$parameters['search'] = '%'.$search.'%';
@@ -257,7 +257,7 @@
 			echo "	<td class=''>".escape($row['name'])."</td>\n";
 			echo "	<td class=''>".escape($row['type'])."</td>\n";
 			echo "	<td class=''>".escape($row['number'])."</td>\n";
-			echo "	<td class='hide-sm-dn'>".escape($row['stream'])."</td>\n";
+			echo "	<td class='hide-sm-dn'>".escape($row['music'])."</td>\n";
 			echo "	<td class='hide-sm-dn'>".escape($row['description'])."</td>\n";
 			if (permission_exists('extension_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>\n";
