@@ -59,6 +59,9 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_path";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "music_on_hold_map";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
 		$y=0;
