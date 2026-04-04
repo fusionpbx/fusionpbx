@@ -93,7 +93,7 @@
 	$excluded_applications = implode(',', $excluded_app_array);
 
 //get the music on hold map
-	$sql = "select ";
+	$sql = "SELECT ";
 	$sql .= " application, ";
 	$sql .= " type, ";
 	$sql .= " uuid, ";
@@ -103,18 +103,19 @@
 	$sql .= " number, ";
 	$sql .= " music, ";
 	$sql .= " description \n";
-	$sql .= "from view_music_on_hold_map \n";
-	$sql .= "where true \n";
+	$sql .= "FROM view_music_on_hold_map \n";
+	$sql .= "WHERE true \n";
 	if (!empty($show) && $show === "all" && permission_exists('dialplan_all')) {
 		//show all
 	}
 	else {
-		$sql .= "and domain_uuid = :domain_uuid \n";
+		$sql .= "AND domain_uuid = :domain_uuid \n";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!empty($search)) {
-		$sql .= "and ( \n";
+		$sql .= "AND ( \n";
 		$sql .= "	application like :search \n";
+		$sql .= "	or type like :search \n";
 		$sql .= "	or name like :search \n";
 		$sql .= "	or number like :search \n";
 		$sql .= "	or music like :search \n";
