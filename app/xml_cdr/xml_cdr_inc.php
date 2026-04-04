@@ -168,7 +168,7 @@
 		}
 		//$mos_comparison = $_REQUEST["mos_comparison"];
 		$mos_score = $_REQUEST["mos_score"] ?? '';
-		$leg = $_REQUEST["leg"] ?? 'a';
+		$leg = $_REQUEST["leg"] ?? '';
 	}
 
 //check to see if permission does not exist
