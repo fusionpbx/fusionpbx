@@ -29,6 +29,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'stream_map';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'stream_all';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
