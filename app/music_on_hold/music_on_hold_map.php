@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('music_on_hold_add)) {
+	if (!permission_exists('music_on_hold_map')) {
 		echo "access denied";
 		exit;
 	}
