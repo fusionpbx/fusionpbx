@@ -101,45 +101,99 @@ class authentication {
 		//check if contacts app exists
 		$contacts_exists = file_exists(dirname(__DIR__, 4) . '/core/contacts/');
 
-		//check for remember me cookie
+		// Check for remember me cookie
 		if (isset($_COOKIE['remember'])) {
-			//set variables
-			$plugin_name = 'remember';
+			// Validate cookie format
+			$parts = explode(':', $_COOKIE['remember'], 2);
+			if (count($parts) !== 2 || !is_uuid($parts[0])) {
+				// Invalid format
+				user_logs::add(['authorized' => false, 'domain_uuid' => $_SESSION['domain_uuid']], "Invalid remember me token format");
+
+				unset($_COOKIE['remember']);
+				setcookie('remember', '', time() - 3600, '/');
+				return false;
+			}
+
+			// Set variables
+			[$cookie_selector, $cookie_validator] = $parts;
 			$remote_address = $_SERVER['REMOTE_ADDR'] ?? '';
 			$user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-			list($cookie_selector, $cookie_validator) = explode(":", $_COOKIE['remember']);
 
-			//get user logs
-			$sql = "select user_uuid, remember_validator from v_user_logs ";
+			// Get the user log
+			$sql = "select \n";
+			$sql .= "user_uuid, \n";
+			$sql .= "remember_validator, \n";
+			$sql .= "(timestamp < now() - interval '7 days')::int as expired, \n";
+			$sql .= "(remote_address is distinct from :remote_address)::int as invalid_remote_address, \n";
+			$sql .= "(user_agent is distinct from :user_agent)::int as invalid_user_agent \n";
+			$sql .= "from v_user_logs \n";
 			$sql .= "where remember_selector = :remember_selector \n";
-			$sql .= "and remote_address = :remote_address ";
-			$sql .= "and user_agent = :user_agent ";
-			$sql .= "and timestamp > NOW() - INTERVAL '7 days' ";
-			$sql .= "and result = 'success' ";
 			$parameters['remember_selector'] = $cookie_selector;
 			$parameters['remote_address'] = $remote_address;
 			$parameters['user_agent'] = $user_agent;
 			$user_log = $this->database->select($sql, $parameters, 'row');
 			unset($sql, $parameters);
 
-			//validate the token
-			if (!empty($user_log['remember_validator']) && password_verify($cookie_validator, $user_log['remember_validator'])) {
-				//get the user details
+			// Check if a token was found
+			if (!empty($user_log['remember_validator'])) {
+
+				// Validate the token
+				if (!password_verify($cookie_validator, $user_log['remember_validator'])) {
+					// Invalid token
+					user_logs::add(['authorized' => false, 'domain_uuid' => $_SESSION['domain_uuid']], "Invalid remember me token");
+
+					unset($_COOKIE['remember']);
+					setcookie('remember', '', time() - 3600, '/');
+					return false;
+				}
+				else if ($user_log['expired'] || $user_log['invalid_remote_address'] || $user_log['invalid_user_agent']) {
+					unset($_COOKIE['remember']);
+					setcookie('remember', '', time() - 3600, '/');
+					return false;
+				}
+
+				// Generate new token
+				$selector = uuid();
+				$validator = generate_password(32);
+				$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
+				$token = $selector.':'.$validator;
+
+				// Update the user log
+				$sql = "update v_user_logs \n";
+				$sql .= "set remember_selector = :remember_selector, \n";
+				$sql .= "remember_validator = :remember_validator \n";
+				$sql .= "where remember_selector = :old_selector \n";
+				$parameters['remember_selector'] = $selector;
+				$parameters['remember_validator'] = $hashed_validator;
+				$parameters['old_selector'] = $cookie_selector;
+				$this->database->execute($sql, $parameters);
+				unset($sql, $parameters);
+
+				// Set the cookie
+				setcookie('remember', $token, [
+					'expires' => strtotime('+7 days'),
+					'path' => '/',
+					'secure' => true,
+					'httponly' => true,
+					'samesite' => 'Strict'
+				]);
+
+				// Get the user details
 				$sql = "select \n";
 				$sql .= "u.domain_uuid, \n";
 				$sql .= "d.domain_name, \n";
 				$sql .= "u.user_uuid, \n";
 				$sql .= "u.username, \n";
 				$sql .= "u.contact_uuid \n";
-				$sql .= "from v_users as u, v_domains as d \n";
-				$sql .= "where user_uuid = :user_uuid \n";
-				$sql .= "and u.domain_uuid = d.domain_uuid \n";
+				$sql .= "from v_users as u \n";
+				$sql .= "inner join v_domains as d on u.domain_uuid = d.domain_uuid \n";
+				$sql .= "where u.user_uuid = :user_uuid \n";
 				$sql .= "and u.user_enabled = 'true' \n";
 				$parameters['user_uuid'] = $user_log['user_uuid'];
 				$row = $this->database->select($sql, $parameters, 'row');
 				unset($sql, $parameters);
 
-				//get the contact details
+				// Get the contact details
 				if ($contacts_exists && !empty($row["contact_uuid"])) {
 					$sql = "select * from v_contacts \n";
 					$sql .= "where contact_uuid = :contact_uuid \n";
@@ -150,8 +204,8 @@ class authentication {
 					unset($sql, $parameters);
 				}
 
-				//build a result array
-				$result['plugin']       = $plugin_name;
+				// Build a result array
+				$result['plugin']       = 'remember';
 				$result['domain_name']  = $row["domain_name"];
 				$result['username']     = $row['username'];
 				$result['user_uuid']    = $row['user_uuid'];
@@ -165,57 +219,20 @@ class authentication {
 				$result['domain_uuid'] = $row['domain_uuid'];
 				$result['authorized']  = true;
 
-				//set the domain_uuid
+				// Set the domain_uuid
 				$this->domain_uuid = $row["domain_uuid"];
 
-				//set the user_uuid
+				// Set the user_uuid
 				$this->user_uuid = $row["user_uuid"];
 
-				//generate new token
-				$selector = uuid();
-				$validator = generate_password(32);
-				$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
-				$token = $selector.':'.$validator;
-
-				//update the user logs
-				$sql = "update v_user_logs ";
-				$sql .= "set remember_selector = :remember_selector, ";
-				$sql .= "remember_validator = :remember_validator ";
-				$sql .= "where remember_selector = :cookie_selector ";
-				$parameters['remember_selector'] = $selector;
-				$parameters['remember_validator'] = $hashed_validator;
-				$parameters['cookie_selector'] = $cookie_selector;
-				$this->database->execute($sql, $parameters);
-				unset($sql, $parameters);
-
-				//set the cookie
-				setcookie('remember', $token, [
-					'expires' => strtotime('+7 days'),
-					'path' => '/',
-					'secure' => true,
-					'httponly' => true,
-					'samesite' => 'Strict'
-				]);
-
-				//create the session
+				// Create the session
 				self::create_user_session($result, $this->settings);
 
-				//set the session authorized to true
+				// Set the session authorized to true
 				$_SESSION['authorized'] = true;
 
-				//return the result
+				// Return the result
 				return $result;
-			}
-			else {
-				//invalid token
-				unset($_COOKIE['remember']);
-				setcookie('remember', '', time() - 3600, '/');
-
-				//log the attempt
-				$log_array['domain_uuid'] = $_SESSION['domain_uuid'];
-				$log_array['authorized'] = false;
-				$failed_login_message = "Invalid remember me token";
-				user_logs::add($log_array, $failed_login_message);
 			}
 		}
 
@@ -330,13 +347,13 @@ class authentication {
 			}
 		}
 
-		//create remember me token
+		// Create remember me token
 		if ($authorized && isset($_SESSION['username']) && isset($_SESSION['remember'])) {
-			//set session variables
+			// Set session variables
 			$input_username = $_SESSION['username'];
 			$remember = $_SESSION['remember'];
 
-			//match the username
+			// Match the username
 			$sql = "select user_uuid from v_users ";
 			$sql .= "where username = :username";
 			$parameters['username'] = $input_username;
@@ -344,17 +361,17 @@ class authentication {
 			unset($sql, $parameters);
 
 			if ($remember && $user) {
-				//generate the token
+				// Generate the token
 				$selector = uuid();
 				$validator = generate_password(32);
 				$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
 				$token = $selector.':'.$validator;
 
-				//save token to the user log array
+				// Save token to the user log array
 				$_SESSION['authentication']['plugin'][$name]['remember_selector'] = $selector;
 				$_SESSION['authentication']['plugin'][$name]['remember_validator'] = $hashed_validator;
 
-				//set the cookie
+				// Set the cookie
 				setcookie('remember', $token, [
 					'expires' => strtotime('+7 days'),
 					'path' => '/',
