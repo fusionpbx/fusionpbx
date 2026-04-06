@@ -3540,6 +3540,33 @@ else { //default: white
 		overflow: hidden;
 		}
 
+	div.action_bar > div.actions > div.record-nav {
+		display: inline-flex;
+		align-items: center;
+		margin-left: 6px;
+		vertical-align: middle;
+		}
+
+	div.action_bar > div.actions > div.record-nav .record-nav-pos {
+		display: inline-block;
+		min-width: 52px;
+		text-align: center;
+		font-size: 87%;
+		color: inherit;
+		padding: 0 4px;
+		vertical-align: middle;
+		}
+
+	div.action_bar > div.actions > div.record-nav .btn {
+		padding: 4px 7px;
+		}
+
+	div.action_bar > div.actions > div.record-nav .btn.disabled,
+	div.action_bar > div.actions > div.record-nav .btn[disabled] {
+		opacity: 0.35;
+		cursor: not-allowed;
+		}
+
 	div.action_bar > div.actions > div.unsaved {
 		display: inline-block;
 		margin-right: 30px;
