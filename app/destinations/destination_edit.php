@@ -561,7 +561,7 @@
 								if (!empty($destination_cid_name_prefix)) {
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".xml::sanitize($destination_cid_name_prefix)."#\${caller_id_name}\" inline=\"true\"/>\n";
 								}
-								if (!empty($destination_record) && $destination_record === true) {
+								if (!empty($destination_record) && $destination_record == true) {
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_path=\${recordings_dir}/\${domain_name}/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}\" inline=\"true\"/>\n";
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_name=\${uuid}.".$record_extension."\" inline=\"true\"/>\n";
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_append=true\" inline=\"true\"/>\n";
@@ -987,7 +987,7 @@
 										}
 
 									//add option record to the dialplan
-										if ($destination_record === true) {
+										if ($destination_record == true) {
 
 											//add a variable
 												$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
