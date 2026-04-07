@@ -480,7 +480,7 @@ class active_calls_service extends service implements websocket_service_interfac
 
 		// Respond with bad command
 		if (empty($uuid)) {
-			websocket_client::send(websocket_message::request_is_bad($request_id, SERVICE_NAME, 'hangup'));
+			websocket_client::send($this->ws_client->socket(), websocket_message::request_is_bad($request_id, SERVICE_NAME, 'hangup'));
 		}
 
 		$host = self::$switch_host ?? parent::$config->get('switch.event_socket.host', '127.0.0.1');

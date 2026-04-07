@@ -108,7 +108,7 @@ class websocket_client {
 
 		// Put the blocking back to the previous state
 		if (!$is_blocking) {
-			$this->disable_block();
+			$this->set_blocking(false);
 		}
 	}
 
@@ -367,6 +367,10 @@ class websocket_client {
 
 			// Handle control frames
 			switch ($opcode) {
+				case 0x8: // CLOSE
+					echo "[INFO] Received CLOSE frame, disconnecting\n";
+					$this->disconnect();
+					return null;
 				case 0x9: // PING
 					// Respond with PONG using same payload
 					$this->send_control_frame(0xA, $payload);
