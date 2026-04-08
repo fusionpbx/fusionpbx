@@ -102,13 +102,24 @@ class ws_client {
 	 */
 	_dispatchEvent(service, env) {
 		// if service==='event', topic carries the real event name:
-		  let event = (typeof env === 'string')
-			? JSON.parse(env)
-			: env;
+		let event = null;
+		try {
+			event = (typeof env === 'string') ? JSON.parse(env) : env;
+		} catch (err) {
+			console.warn('Ignoring invalid event payload:', err);
+			return;
+		}
+
+		if (event === null || typeof event !== 'object') {
+			return;
+		}
 
 		// dispatch event handlers
 		if (service === 'active.calls') {
 			const topic = event.event_name;
+			if (!topic) {
+				return;
+			}
 
 			let handlers = this._eventHandlers.get(topic) || [];
 			if (handlers.length === 0) {

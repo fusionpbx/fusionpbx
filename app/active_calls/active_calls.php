@@ -173,7 +173,9 @@ if (permission_exists('call_active_profile')) {
 	echo "						<th class='hide-small'>" . $text['label-profile'] . "</th>\n";
 }
 echo "						<th>" . $text['label-duration'] . "</th>\n";
-echo "						<th id='th_domain' style='width: 185px; display: none;'>" . $text['label-domain'] . "</th>\n";
+if (permission_exists('call_active_all')) {
+	echo "						<th id='th_domain' style='width: 185px; display: none;'>" . $text['label-domain'] . "</th>\n";
+}
 echo "						<th class='hide-small'>" . $text['label-cid-name'] . "</th>\n";
 echo "						<th>" . $text['label-cid-number'] . "</th>\n";
 echo "						<th>" . $text['label-destination'] . "</th>\n";
@@ -242,7 +244,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 ?>
 <script>
 	const timers = [];
-	const callsMap = new Map();
+	const calls_map = new Map();
 
 	var showAll = false;
 	const websockets_domain_name = '<?= $_SESSION['domain_name'] ?>';
@@ -282,6 +284,17 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		HANGUP: 'red',
 		INACTIVE: 'black'
 	}
+
+	const arrow_color_key = {
+		[colors.RINGING]: 'blue',
+		[colors.CONNECTED]: 'green',
+		[colors.HANGUP]: 'red',
+		[colors.INACTIVE]: 'black',
+		blue: 'blue',
+		green: 'green',
+		red: 'red',
+		black: 'black'
+	};
 
 	const truncate_application_data_length = <?php echo $settings->get('active_calls', 'truncate_application_data_length', 80); ?>;
 	const truncate_application_data = truncate_application_data_length > 0;
@@ -323,11 +336,11 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	}
 
 	let client = null;
-	let reconnectAttempts = 0;
+	let reconnect_attempts = 0;
 
-	function connectWebsocket() {
-		const maxReconnectDelay = 30000; // 30 seconds
-		const baseReconnectDelay = 1000; // 1 second
+	function connect_websocket() {
+		const max_reconnect_delay = 30000; // 30 seconds
+		const base_reconnect_delay = 1000; // 1 second
 
 		client = new ws_client(`wss://${window.location.hostname}/websockets/`, authToken);
 
@@ -339,7 +352,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		client.ws.addEventListener("open", async () => {
 			try {
 				console.log('Connected');
-				reconnectAttempts = 0;
+				reconnect_attempts = 0;
 				const status = document.getElementById('calls_active_count');
 				status.style.backgroundColor = colors.INACTIVE;
 			} catch (err) {
@@ -358,7 +371,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 					await client.request('authentication');
 					console.log('Authentication sent');
 					const status = document.getElementById('calls_active_count');
-					bindEventHandlers(client);
+					bind_event_handlers(client);
 					console.log('Sent request for calls in progress');
 					client.request('active.calls', 'in.progress');
 					status.style.backgroundColor = colors.CONNECTED;
@@ -375,7 +388,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			console.warn("Websocket Disconnected");
 
 			// reconnect to web socket server
-			reconnectAttempts++;
+			reconnect_attempts++;
 
 			// delay timer to reload page
 			const auto_reload_seconds = <?php echo $settings->get('active_calls', 'auto_reload_seconds', 0); ?>;
@@ -387,10 +400,13 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			}
 		})
 
-		// wire up “select all” checkbox
-		document.getElementById("checkbox_all").addEventListener("change", e => {
-			document.querySelectorAll("#calls_active_body input[type=checkbox]").forEach(cb => cb.checked = e.target.checked);
-		});
+		// wire up "select all" checkbox only when hangup permission renders it
+		const checkbox_all = document.getElementById("checkbox_all");
+		if (checkbox_all) {
+			checkbox_all.addEventListener("change", e => {
+				document.querySelectorAll("#calls_active_body input[type=checkbox]").forEach(cb => cb.checked = e.target.checked);
+			});
+		}
 
 <?php if (permission_exists('call_active_all')): ?>
 		// Show all listener
@@ -447,7 +463,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	/////////////////////
 	// Event Functions //
 	/////////////////////
-	function bindEventHandlers(client) {
+	function bind_event_handlers(client) {
 		client.onEvent("CHANNEL_CALLSTATE", channel_callstate_event);
 		client.onEvent("CHANNEL_EXECUTE", channel_execute_event);
 <?php if (permission_exists('call_active_application')): ?>
@@ -470,6 +486,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		//create a row for the call
 		if (row === null) {
 			new_call(call);
+			row = document.getElementById(uuid) || null;
 		}
 		const other_leg_rdnis = call.other_leg_rdnis ?? '';
 		const other_leg_unique_id = call.other_leg_unique_id ?? '';
@@ -488,7 +505,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 				} else {
 					if (other_leg_unique_id !== '') {
 						const matched_call = document.getElementById(other_leg_unique_id);
-						if (matched_call.dataset.forced_direction) {
+						if (matched_call && matched_call.dataset.forced_direction) {
 							replace_arrow_icon(uuid, matched_call.dataset.forced_direction);
 						}
 					} else {
@@ -577,7 +594,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	function playback_start_event(call) {
 		//console.log(call.event_name, call.unique_id, call);
 		const tbody = document.getElementById("calls_active_body")
-		if (callsMap.has(call.unique_id)) {
+		if (calls_map.has(call.unique_id)) {
 			const uuid = call.unique_id;
 			const file = call.playback_file_path;
 			const file_basename = basename(file);
@@ -592,7 +609,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	function playback_stop_event(call) {
 		//console.log(call.event_name, call.unique_id, call);
 		const tbody = document.getElementById("calls_active_body")
-		if (callsMap.has(call.unique_id)) {
+		if (calls_map.has(call.unique_id)) {
 			const uuid = call.unique_id;
 
 			//update application cell
@@ -603,9 +620,9 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	//update the application cell
 	function channel_application_event(call) {
 		//console.log(call.event_name, call.unique_id, call);
-		const tbody = document.getElementById("calls_active_body");
-		if (!callsMap.has(call.unique_id)) {
-			update_call_element(`application_${uuid}`, call.application_name);
+		if (calls_map.has(call.unique_id)) {
+			const uuid = call.unique_id;
+			update_call_element(`application_${uuid}`, call.application_name ?? '');
 		}
 	}
 <?php endif; ?>
@@ -656,18 +673,19 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		//get the table cell
 		const span = document.getElementById(`arrow_${uuid}`) ?? null;
 		if (!span) { return; }
-		const icon = span.dataset.icon ?? 'local';
+		const icon = (span.dataset.icon && arrows[span.dataset.icon]) ? span.dataset.icon : 'local';
+		const normalized_color = arrow_color_key[color] ?? 'blue';
 
 		//nothing to do
-		if (color === span.dataset.color) {
+		if (normalized_color === (arrow_color_key[span.dataset.color] ?? span.dataset.color)) {
 			return;
 		}
 
 		span.dataset.icon = icon;
-		span.dataset.color = color;
+		span.dataset.color = normalized_color;
 
 		//copy the cached arrow
-		const cached_arrow = arrows[icon][color];
+		const cached_arrow = arrows[icon]?.[normalized_color] ?? arrows.local.blue;
 		const arrow = cached_arrow.cloneNode(true);
 
 		//check for exiting arrow and add or replace
@@ -687,7 +705,8 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		//get the table cell
 		const span = document.getElementById(`arrow_${uuid}`) ?? null;
 		if (!span) { return; }
-		const color = span.dataset.color ?? colors.RINGING;
+		const color = arrow_color_key[span.dataset.color] ?? 'blue';
+		const normalized_color = arrows[icon] ? icon : 'local';
 
 
 		if (span.dataset.icon === null) {
@@ -695,15 +714,15 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		}
 
 		//nothing to do
-		if (icon === span.dataset.icon) {
+		if (normalized_color === span.dataset.icon) {
 			return;
 		}
 
-		span.dataset.icon = icon;
+		span.dataset.icon = normalized_color;
 		span.dataset.color = color;
 
 		//copy the cached arrow
-		const cached_arrow = arrows[icon][color];
+		const cached_arrow = arrows[normalized_color]?.[color] ?? arrows.local.blue;
 		const arrow = cached_arrow.cloneNode(true);
 
 		const span_arrow = span.firstChild ?? null;
@@ -717,13 +736,13 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	function new_call(call) {
 		//console.log(call);
 		const tbody = document.getElementById("calls_active_body");
-		if (!callsMap.has(call.unique_id)) {
+		if (!calls_map.has(call.unique_id)) {
 			// create the row
 			const uuid = call.unique_id;
 
 			//set the profile
 <?php if (permission_exists('call_active_profile')): ?>
-			const profile = call?.caller_channel_name.split('/')[1] ?? '';
+			const profile = call?.caller_channel_name?.split('/')[1] ?? '';
 <?php endif; ?>
 
 <?php if (permission_exists('call_active_codec')): ?>
@@ -800,13 +819,17 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 
 			// Hide/show domain column
 			const domain = document.getElementById('th_domain');
-			document.getElementById(`caller_context_${call.unique_id}`).style.display = domain.style.display;
+			const caller_context = document.getElementById(`caller_context_${call.unique_id}`);
+			//console.debug('CONTEXT: ', domain, callerContext);
+			if (caller_context) {
+				caller_context.style.display = domain ? domain.style.display : 'none';
+			}
 
 			// start the timer
 			start_duration_timer(call.unique_id, call.caller_channel_created_time);
 
 			// add the uuid to the map
-			callsMap.set(call.unique_id, row);
+			calls_map.set(call.unique_id, row);
 
 <?php /* add hangup button */ if (permission_exists('call_active_hangup')): ?>
 				const hangup = document.getElementById('btn_hangup').cloneNode(true);
@@ -851,13 +874,13 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	function update_call(call) {
 
 		const tbody = document.getElementById("calls_active_body")
-		if (callsMap.has(call.unique_id)) {
+		if (calls_map.has(call.unique_id)) {
 
 			//set values
 			const uuid = call.unique_id;
 			const row = document.getElementById(uuid);
 			<?php if (permission_exists('call_active_profile')): ?>
-				const caller_channel_name = call?.caller_channel_name.split('/')[1] ?? '';
+				const caller_channel_name = call?.caller_channel_name?.split('/')[1] ?? '';
 			<?php endif; ?>
 			<?php if (permission_exists('call_active_all')): ?>
 				const caller_context = call.caller_context ?? '';
@@ -907,7 +930,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	}
 
 	function hangup_call(call) {
-		const row = callsMap.get(call.unique_id);
+		const row = calls_map.get(call.unique_id);
 		if (row) {
 			const uuid = call.unique_id;
 			remove_button_by_id(`span_hangup_${uuid}`);
@@ -921,7 +944,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			if (<?php /* DEBUGGING OPTION */ echo $settings->get('active_calls','remove_completed_calls', true) ? 'true': 'false'; ?>) {
 				row.remove();
 			}
-			callsMap.delete(uuid);
+			calls_map.delete(uuid);
 			stop_duration_timer_and_update_call_count(uuid);
 			updateCount();
 		}
@@ -977,21 +1000,21 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	}
 
 	function basename(path) {
-		return path.replace(/^.*[\\\/]/, '')
+		return path ? path.replace(/^.*[\\\/]/, '') : '';
 	}
 
 	function updateCount() {
 		const calls_active_count = document.getElementById('calls_active_count');
 
-		let visibleCount = 0;
-		callsMap.forEach((row) => {
+		let visible_count = 0;
+		calls_map.forEach((row) => {
 			if (row.style.display !== 'none') {
-				visibleCount++;
+				visible_count++;
 			}
 		});
 
-		const totalCount = callsMap.size;
-		calls_active_count.textContent = `${visibleCount}`;
+		const total_count = calls_map.size;
+		calls_active_count.textContent = `${visible_count}`;
 	}
 
 	function start_duration_timer(uuid, start_time) {
@@ -1018,12 +1041,12 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		}
 
 		render();
-		const timerId = setInterval(render, 1000);
+		const timer_id = setInterval(render, 1000);
 
-		timers[uuid] = timerId
+		timers[uuid] = timer_id
 
 		// Return stop function
-		return () => clearInterval(timerId);
+		return () => clearInterval(timer_id);
 	}
 
 	function stop_duration_timer_and_update_call_count(uuid) {
@@ -1040,7 +1063,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	//////////////////////////
 	// Start the connection //
 	//////////////////////////
-	connectWebsocket();
+	connect_websocket();
 </script>
 
 <?php require_once "resources/footer.php"; ?>
