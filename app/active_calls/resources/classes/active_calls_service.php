@@ -91,21 +91,26 @@ class active_calls_service extends service implements websocket_service_interfac
 		'content_type',
 	];
 
+	const PERMISSION_PREFIX = 'call_active_';
+
 	//
 	// Maps the event key to the permission name
 	//
 	const PERMISSION_MAP = [
-		'channel_read_codec_name'   => 'call_active_codec',
-		'channel_read_codec_rate'   => 'call_active_codec',
-		'channel_write_codec_name'  => 'call_active_codec',
-		'channel_write_codec_rate'  => 'call_active_codec',
-		'caller_channel_name'       => 'call_active_profile',
-		'secure'                    => 'call_active_secure',
-		'application'               => 'call_active_application',
-		'playback_file_path'        => 'call_active_application',
-		'variable_current_application'=> 'call_active_application',
-		'channel_presence_id'		=> 'call_active_view',
-		'caller_context'			=> 'call_active_domain',
+		'channel_read_codec_name'      => 'call_active_codec',
+		'channel_read_codec_rate'      => 'call_active_codec',
+		'channel_write_codec_name'     => 'call_active_codec',
+		'channel_write_codec_rate'     => 'call_active_codec',
+		'caller_channel_name'          => 'call_active_profile',
+		'secure'                       => 'call_active_secure',
+		'application'                  => 'call_active_application',
+		'application_data'             => 'call_active_application',
+		'playback_file_path'           => 'call_active_application',
+		'variable_current_application' => 'call_active_application',
+		'call_direction'               => 'call_active_direction',
+		'variable_call_direction'      => 'call_active_direction',
+		'channel_presence_id'          => 'call_active_view',
+		'caller_context'               => 'call_active_domain',
 	];
 
 	/**
@@ -181,6 +186,7 @@ class active_calls_service extends service implements websocket_service_interfac
 	public static function create_filter_chain_for(subscriber $subscriber): filter {
 		// Do not filter domain
 		if ($subscriber->has_permission('call_active_all') || $subscriber->is_service()) {
+			self::log("Subscriber $subscriber->id has permission to view all active calls", LOG_DEBUG);
 			return filter_chain::and_link([
 				new event_filter(self::SWITCH_EVENTS),
 				new permission_filter(self::PERMISSION_MAP, $subscriber->get_permissions()),
@@ -190,6 +196,7 @@ class active_calls_service extends service implements websocket_service_interfac
 
 		// Filter on single domain name
 		if ($subscriber->has_permission('call_active_domain')) {
+			self::log("Subscriber $subscriber->id has permission to view active calls for their domain", LOG_DEBUG);
 			return filter_chain::and_link([
 				new event_filter(self::SWITCH_EVENTS),
 				new permission_filter(self::PERMISSION_MAP, $subscriber->get_permissions()),
@@ -198,6 +205,7 @@ class active_calls_service extends service implements websocket_service_interfac
 			]);
 		}
 
+		self::log("Subscriber $subscriber->id does not have permission to view all active calls or active calls for their domain. Filtering on extensions.", LOG_DEBUG);
 		// Filter on extensions
 		return filter_chain::and_link([
 			new event_filter(self::SWITCH_EVENTS),
@@ -480,7 +488,7 @@ class active_calls_service extends service implements websocket_service_interfac
 
 		// Respond with bad command
 		if (empty($uuid)) {
-			websocket_client::send(websocket_message::request_is_bad($request_id, SERVICE_NAME, 'hangup'));
+			websocket_client::send($this->ws_client->socket(), websocket_message::request_is_bad($request_id, SERVICE_NAME, 'hangup'));
 		}
 
 		$host = self::$switch_host ?? parent::$config->get('switch.event_socket.host', '127.0.0.1');

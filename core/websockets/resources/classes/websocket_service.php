@@ -238,6 +238,7 @@ class websocket_service extends service {
 						$class_name         = $subscriber_service->service_class();
 						// Make sure we can call the 'create_filter_chain_for' method
 						if (is_a($class_name, 'websocket_service_interface', true)) {
+							$this->debug('Creating filter chain for subscriber ' . $subscriber->id . ' for service ' . $subscriber_service->service_name() . ' using class ' . $class_name);
 							try {
 								// Call the service class method to validate the subscriber
 								$filter = $class_name::create_filter_chain_for($subscriber);
