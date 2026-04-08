@@ -87,6 +87,7 @@
 				or session:getVariable("originate_disposition") == "failure"
 				or session:getVariable("originate_disposition") == "ORIGINATOR_CANCEL"
 				or session:getVariable("originate_disposition") == "UNALLOCATED_NUMBER"
+				or session:getVariable("originate_disposition") == "CALL_REJECTED"
 			) then
 				--set the status
 					status = 'missed'
@@ -1316,6 +1317,7 @@
 							or session:getVariable("originate_disposition") == "USER_BUSY"
 							or session:getVariable("originate_disposition") == "RECOVERY_ON_TIMER_EXPIRE"
 							or session:getVariable("originate_disposition") == "failure"
+							or session:getVariable("originate_disposition") == "CALL_REJECTED"
 						) then
 							--execute the time out action
 								if ring_group_timeout_app and #ring_group_timeout_app > 0 then
