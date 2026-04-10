@@ -57,6 +57,11 @@ class ws_client {
 			return;
 		}
 
+		// No pending request and empty payload is dropped
+		if (switch_event == null) {
+			return;
+		}
+
 		// Otherwise it's a server‑pushed event…
 		// e.g. env.service === 'event' or env.topic is your event name
 		this._dispatchEvent(message.service_name, switch_event);
