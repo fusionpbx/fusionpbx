@@ -611,7 +611,7 @@ class authentication {
 		}
 
 		//regenerate the session on login
-		//session_regenerate_id(true);
+		session_regenerate_id(true);
 
 		//add the username to the session - username session could be set so check_auth uses an authorized session variable instead
 		$_SESSION['username'] = $_SESSION['user']["username"];
