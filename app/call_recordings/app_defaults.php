@@ -3,11 +3,13 @@
 if ($domains_processed == 1) {
 
 	// Prompt to Install Zip
-	$ffmpeg_path = shell_exec('which zip');
-	if (empty($ffmpeg_path)) {
-	    echo "Please install zip\n";
-	    echo "On Debian / Ubuntu Linux install zip with this command.\n";
-	    echo "apt install zip\n";
+	if (PHP_SAPI === 'cli') {
+		$ffmpeg_path = shell_exec('which zip');
+		if (empty($ffmpeg_path)) {
+			echo "Please install zip\n";
+			echo "On Debian / Ubuntu Linux install zip with this command.\n";
+			echo "apt install zip\n";
+		}
 	}
 
 	// Load the email template
