@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -59,52 +59,6 @@
 	$broadcast_destination_data = '';
 	$broadcast_description = '';
 	$broadcast_toll_allow = '';
-
-//function to Upload CSV/TXT file
-/**
- * Uploads a file and prepares the SQL query for broadcasting phone numbers.
- *
- * @param string $sql                     The initial SQL query.
- * @param mixed  $broadcast_phone_numbers The phone numbers to broadcast, or an empty value if not applicable.
- *
- * @return array An array containing the result code ('code') and the prepared SQL query ('sql').
- */
-function upload_file($sql, $broadcast_phone_numbers) {
-		$upload_csv = $sql = '';
-		if (isset($_FILES['broadcast_phone_numbers_file']) && !empty($_FILES['broadcast_phone_numbers_file']) && $_FILES['broadcast_phone_numbers_file']['size'] > 0) {
-			$filename=$_FILES["broadcast_phone_numbers_file"]["tmp_name"];
-			$file_extension = array('application/octet-stream','application/vnd.ms-excel','text/plain','text/csv','text/tsv');
-			if (in_array($_FILES['broadcast_phone_numbers_file']['type'],$file_extension)) {
-				$file = fopen($filename, "r");
-				$count = 0;
-				while (($getData = fgetcsv($file, 0, "\n")) !== FALSE)
-				{
-					$count++;
-					if ($count == 1) { continue; }
-					$getData = preg_split('/[ ,|]/', $getData[0], '', PREG_SPLIT_NO_EMPTY);
-					$separator = $getData[0];
-					$separator .= (isset($getData[1]) && $getData[1] != '')? '|'.$getData[1] : '';
-					$separator .= (isset($getData[2]) && $getData[2] != '')? ','.$getData[2] : '';
-					$separator .= PHP_EOL;
-					$upload_csv .= $separator;
-				}
-				 fclose($file);
-			}
-			else {
-				return array('code'=>false,'sql'=>'');
-			}
-		}
-		if (!empty($broadcast_phone_numbers) && !empty($upload_csv)) {
-			$sql .= $broadcast_phone_numbers.'\n'.$upload_csv;
-		}
-		elseif (empty($broadcast_phone_numbers) && !empty($upload_csv)) {
-			$sql .= $upload_csv;
-		}
-		else {
-			$sql .= $broadcast_phone_numbers;
-		}
-		return array('code'=>true,'sql'=> $sql);
-	}
 
 //get the http post variables and set them to php variables
 	if (!empty($_POST)) {
@@ -226,15 +180,23 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		//execute
 			if (!empty($array)) {
 
+				//save the phone numbers upload the file
+					$upload_csv = $sql = '';
+					if (isset($_FILES['ulfile']) && !empty($_FILES['ulfile']) && $_FILES['ulfile']['size'] > 0) {
+						$file_name = $_FILES["ulfile"]["tmp_name"];
+						$allowed_file_extensions = array('application/octet-stream','application/vnd.ms-excel','text/plain','text/csv','text/tsv');
+						if (in_array($_FILES['ulfile']['type'], $allowed_file_extensions)) {
+							$broadcast_phone_numbers = file_get_contents($_FILES["ulfile"]["tmp_name"]);
+ 						}
+ 					}
+
 				//add file selection and download sample
-					$file_res = upload_file($sql ?? '', $broadcast_phone_numbers);
-					if ($file_res['code'] != true) {
+					if (empty($broadcast_phone_numbers)) {
 						$_SESSION["message_mood"] = "negative";
 						$_SESSION["message"] = $text['file-error'];
 						header("Location: ".$error_return_url);
 						exit;
 					}
-					$broadcast_phone_numbers = $file_res['sql'];
 
 				//build the database array
 					$array['call_broadcasts'][0]['domain_uuid'] = $domain_uuid;
@@ -523,7 +485,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		echo "	<textarea class='formfld' style='width: 300px; height: 200px;' type='text' name='broadcast_phone_numbers' placeholder=\"".$text['label-list_example']."\">".str_replace('\n', "\n", $broadcast_phone_numbers ?? '')."</textarea>";
 		echo "<br><br>";
-		echo " <input type='file' name='broadcast_phone_numbers_file' accept='.csv,.txt' style=\"display:inline-block;\"><a href='sample.csv' download><i class='fas fa-cloud-download-alt' style='margin-right: 5px;'></i>".$text['label-sample_file']."</a>";
+		echo " <input type='file' name='ulfile' accept='.csv,.txt' style=\"display:inline-block;\"><a href='sample.csv' download><i class='fas fa-cloud-download-alt' style='margin-right: 5px;'></i>".$text['label-sample_file']."</a>";
 		echo "<br /><br />";
 
 		echo "".$text['description-phone']." <br /><br />\n";
