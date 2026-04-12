@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -172,61 +172,65 @@
 						$tmp_value_array = explode ("|", $tmp_value);
 
 					//remove the number formatting
-						$phone_1 = preg_replace('{\D}', '', $tmp_value_array[0]);
+						$phone_number = preg_replace('{\D}', '', $tmp_value_array[0]);
 
-					if (is_numeric($phone_1)) {
-						//get the dialplan variables and bridge statement
-							//$dialplan = new dialplan;
-							//$dialplan->domain_uuid = $_SESSION['domain_uuid'];
-							//$dialplan->outbound_routes($phone_1);
-							//$dialplan_variables = $dialplan->variables;
-							//$bridge_array[0] = $dialplan->bridges;
+					//skip the number if its not numeric
+						if (empty($phone_number) || !is_numeric($phone_number)) {
+							continue;
+						}
 
-						//prepare the string
-							$channel_variables = "ignore_early_media=true";
-							$channel_variables .= ",origination_number=".$phone_1;
-							$channel_variables .= ",origination_caller_id_name='$broadcast_caller_id_name'";
-							$channel_variables .= ",origination_caller_id_number=$broadcast_caller_id_number";
-							$channel_variables .= ",domain_uuid=".$_SESSION['domain_uuid'];
-							$channel_variables .= ",domain=".$_SESSION['domain_name'];
-							$channel_variables .= ",domain_name=".$_SESSION['domain_name'];
-							$channel_variables .= ",accountcode='$broadcast_accountcode'";
-							$channel_variables .= ",toll_allow='$broadcast_toll_allow'";
-							if ($broadcast_avmd == "true") {
-								$channel_variables .= ",execute_on_answer='avmd start'";
+					//get the dialplan variables and bridge statement
+						//$dialplan = new dialplan;
+						//$dialplan->domain_uuid = $_SESSION['domain_uuid'];
+						//$dialplan->outbound_routes($phone_number);
+						//$dialplan_variables = $dialplan->variables;
+						//$bridge_array[0] = $dialplan->bridges;
+
+					//prepare the string
+						$channel_variables = "ignore_early_media=true";
+						$channel_variables .= ",origination_number=".$phone_number;
+						$channel_variables .= ",origination_caller_id_name='$broadcast_caller_id_name'";
+						$channel_variables .= ",origination_caller_id_number=$broadcast_caller_id_number";
+						$channel_variables .= ",domain_uuid=".$_SESSION['domain_uuid'];
+						$channel_variables .= ",domain=".$_SESSION['domain_name'];
+						$channel_variables .= ",domain_name=".$_SESSION['domain_name'];
+						$channel_variables .= ",accountcode='$broadcast_accountcode'";
+						$channel_variables .= ",toll_allow='$broadcast_toll_allow'";
+						if ($broadcast_avmd == "true") {
+							$channel_variables .= ",execute_on_answer='avmd start'";
+						}
+						//$origination_url = "{".$channel_variables."}".$bridge_array[0];
+						$origination_url = "{".$channel_variables."}loopback/".$phone_number.'/'.$_SESSION['domain_name'];
+
+					//get the context
+						$context =  $_SESSION['domain_name'];
+
+					//set the command
+						$command = "bgapi sched_api +".$sched_seconds." ".$call_broadcast_uuid." bgapi originate ".$origination_url." ".$broadcast_destination_data." XML $context";
+
+					//if the event socket connection is lost then re-connect
+						if (!$fp) {
+							$fp = event_socket::create();
+						}
+
+					//method 1
+						$response = event_socket::command($command);
+
+					//method 2
+						//cmd_async($settings->get('switch', 'bin')."/fs_cli -x \"".$command."\";");
+
+					//spread the calls out so that they are scheduled with different times
+						if (strlen($broadcast_concurrent_limit) > 0 && !empty($broadcast_timeout)) {
+							if ($broadcast_concurrent_limit == $count) {
+								$sched_seconds = $sched_seconds + $broadcast_timeout;
+								$count=0;
 							}
-							//$origination_url = "{".$channel_variables."}".$bridge_array[0];
-							$origination_url = "{".$channel_variables."}loopback/".$phone_1.'/'.$_SESSION['domain_name'];
+						}
 
-						//get the context
-							$context =  $_SESSION['domain_name'];
-
-						//set the command
-							$cmd = "bgapi sched_api +".$sched_seconds." ".$call_broadcast_uuid." bgapi originate ".$origination_url." ".$broadcast_destination_data." XML $context";
-
-						//if the event socket connection is lost then re-connect
-							if (!$fp) {
-								$fp = event_socket::create();
-							}
-
-						//method 1
-							$response = event_socket::command($cmd);
-
-						//method 2
-							//cmd_async($settings->get('switch', 'bin')."/fs_cli -x \"".$cmd."\";");
-
-						//spread the calls out so that they are scheduled with different times
-							if (strlen($broadcast_concurrent_limit) > 0 && !empty($broadcast_timeout)) {
-								if ($broadcast_concurrent_limit == $count) {
-									$sched_seconds = $sched_seconds + $broadcast_timeout;
-									$count=0;
-								}
-							}
-
-						$count++;
-					}
+					//increment the count
+					$count++;
 				}
-				
+
 				echo "<div align='center'>\n";
 				echo "<table width='50%'>\n";
 				echo "<tr>\n";
