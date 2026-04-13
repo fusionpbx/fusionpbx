@@ -185,7 +185,7 @@
 	if (!isset($page)) { $page = 0; $_GET['page'] = 0; }
 	[$paging_controls, $rows_per_page] = paging($num_rows, $param, $rows_per_page);
 	[$paging_controls_mini, $rows_per_page] = paging($num_rows, $param, $rows_per_page, true);
-	$offset = $rows_per_page * $page;
+	$offset = intval($rows_per_page) * intval($page);
 
 //get the list
 	$sql = "select ";
