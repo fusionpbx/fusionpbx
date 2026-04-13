@@ -8,7 +8,7 @@
 		<entry name="nat_policy_ref" overwrite="true">xrcNnzyREll46fF0</entry>
 	</section>
 	<section name="misc">
-		<entry name="transient_provisioning" overwrite="true">1</entry>
+		<entry name="transient_provisioning" overwrite="true">0</entry>
 		<!-- apply remote provisioning only once-->
 	</section>
 	<section name="nat_policy_default_values">
