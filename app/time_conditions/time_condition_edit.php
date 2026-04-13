@@ -1089,8 +1089,8 @@ echo "</tr>\n";
 /**
  * Adds a custom condition to the given group.
  *
- * @param object $destination	 The destination object being processed.
- * @param int	$group_id		The ID of the group to which the condition is being added.
+ * @param object $destination     The destination object being processed.
+ * @param int    $group_id        The ID of the group to which the condition is being added.
  * @param string $dialplan_action The dialplan action for the group (optional).
  */
 function add_custom_condition($destination, $group_id, $dialplan_action = '') {
