@@ -254,7 +254,7 @@
 	echo "		<input type='hidden' name='status' value='".escape($status ?? '')."'>\n";
 	echo "		<input type='hidden' name='caller_id_number' value='".escape($caller_id_number ?? '')."'>\n";
 	echo "		<input type='hidden' name='caller_destination' value='".escape($caller_destination ?? '')."'>\n";
-	echo "		<input type='hidden' name='extension_uuid' value='".escape($extension_uuid ?? '')."'>\n";
+	echo "		<input type='hidden' name='extension_uuids[]' value='".escape($extension_uuids ?? '')."'>\n";
 	echo "		<input type='hidden' name='destination_number' value='".escape($destination_number ?? '')."'>\n";
 	echo "		<input type='hidden' name='context' value='".escape($context ?? '')."'>\n";
 	echo "		<input type='hidden' name='answer_stamp_begin' value='".escape($answer_stamp_begin ?? '')."'>\n";
@@ -1123,7 +1123,7 @@
 						$content .= "	<td class='middle no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($hangup_cause)."</a></td>\n";
 					}
 					$content .= "</tr>\n";
-				//show the leg b only to those with the permission
+				//show the leg b only to those with permission
 					if ($row['leg'] == 'a') {
 						echo $content;
 					}
