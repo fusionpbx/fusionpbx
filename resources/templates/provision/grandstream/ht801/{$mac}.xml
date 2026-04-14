@@ -7,7 +7,6 @@
     <!-- ## Configuration template for HT80x firmware version 1.0.10.6                              ## -->
     <!-- ############################################################################################ -->
 
-
     <!-- ############################################################################## -->
     <!-- ##  Advanced Settings.                                                      ## -->
     <!-- ############################################################################## -->
@@ -17,8 +16,8 @@
     <!-- # Mandatory -->
     <P2>{$admin_password}</P2>
 
-<!-- End User Password, MaxLength 32 -->
-<P196>{$user_password}</P196>
+	<!-- End User Password, MaxLength 32 -->
+	<P196>{$user_password}</P196>
 
     <!-- # Layer 2 QoS.  -->
     <!-- #802.1Q/VLAN Tag (VLAN classification for RTP) -->
@@ -31,22 +30,22 @@
     <!-- # Number: 0 to 7 -->
     <!-- # Mandatory -->
 
-{if isset($grandstream_qos_sip)} <!-- Layer 2 QoS 802.1p Priority Value for SIP signaling, Number: 0 to 7 -->
+	{if isset($grandstream_qos_sip)} <!-- Layer 2 QoS 802.1p Priority Value for SIP signaling, Number: 0 to 7 -->
     <P5038>{$grandstream_qos_sip}</P5038>
     {else}
     <P5038>0</P5038>
-{/if}
+	{/if}
 
     <!-- # Layer 2 QoS.  -->
     <!-- # RTP 802.1p priority value (0 - 7) -->
     <!-- # Number: 0 to 7 -->
     <!-- # Mandatory -->
 
-{if isset($grandstream_qos_rtp)}   <!-- Layer 2 QoS 802.1p Priority Value for RTP media, Number: 0 to 7 -->
+	{if isset($grandstream_qos_rtp)}   <!-- Layer 2 QoS 802.1p Priority Value for RTP media, Number: 0 to 7 -->
     <P5042>{$grandstream_qos_rtp}</P5042>
     {else}
     <P5042>0</P5042>
-{/if}
+	{/if}
 
     <!-- # Black List for WAN Side Port -->
     <!-- # Number: 0 to 65535 -->
@@ -84,7 +83,7 @@
     <!-- # 0 - No, 1 - Yes (default is No) -->
     <P22030>0</P22030>
 
-    <!-- # Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade, 3 - FTP Upgrade, 4 - FTPS Upgrade. -->
+    <!-- # Firmware Upgrade and Provisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade, 3 - FTP Upgrade, 4 - FTPS Upgrade. -->
     <!-- # Number: 0, 1, 2, 3, 4 -->
     <!-- # Mandatory -->
     {if isset($grandstream_firmware_upgrade_protocol) }
@@ -93,38 +92,26 @@
     <P212>2</P212>
     {/if}
 
-    <!-- Firmware Server Path -->
-    <!-- Server address -->
-    {if isset($grandstream_firmware_path) && isset($firmware_version)}
-    <P192>{$grandstream_firmware_path}/ht801/{$firmware_version}</P192>
-    {elseif isset($grandstream_firmware_path)}
-    <P192>{$grandstream_firmware_path}/ht801/</P192>
-    {else}
-    <P192>{$domain_name}{$project_path}/app/provision</P192>
-    {/if}
+    <!-- # Firmware Server Path -->
+    <!-- # Server address -->
+    <P192>{$grandstream_firmware_path}/ht801</P192>
 
-    <!-- Config Server Path -->
-    <!-- Server address;  -->
-    {if $grandstream_config_server_path=="none"}
-    <P237></P237>
-    {elseif isset($grandstream_config_server_path)}
+    <!-- # Config Server Path -->
+    <!-- # Server address;  -->
     <P237>{$grandstream_config_server_path}</P237>
-    {elseif isset($domain_name)}
-    <P237>{$domain_name}{$project_path}/app/provision</P237>
-    {/if}
 
     <!-- # XML Config File Password -->
     <!-- # String; between ascii values 33 and 126 -->
     <!-- # Mandatory -->
     <P1359></P1359>
 
-<!--  HTTP/HTTPS User Name -->
-<!--  String; between ascii values 33 and 126 -->
-<P1360>{$http_auth_username}</P1360>
+	<!--  HTTP/HTTPS User Name -->
+	<!--  String; between ascii values 33 and 126 -->
+	<P1360>{$http_auth_username}</P1360>
 
-<!--  HTTP/HTTPS Password -->
-<!--  String; between ascii values 33 and 126 -->
-<P1361>{$http_auth_password}</P1361>
+	<!--  HTTP/HTTPS Password -->
+	<!--  String; between ascii values 33 and 126 -->
+	<P1361>{$http_auth_password}</P1361>
 
     <!-- # Firmware File Prefix -->
     <!-- # String; between ascii values 33 and 126 -->
@@ -151,16 +138,16 @@
     <!-- # 3CX Auto Provision. 0 - No, 1 - Yes. Default is Yes. -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1414>1</P1414>
+    <P1414>0</P1414>
 
     <!-- # Automatic Upgrade. 0 - No, 1 - Check daily, 2 - Check weekly, 3 - Check every () minutes. Default is No. -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-{if isset($grandstream_auto_upgrade)}
-<P194>{$grandstream_auto_upgrade}</P194>
-{else}
-<P194>0</P194>
-{/if}
+	{if isset($grandstream_auto_upgrade)}
+	<P194>{$grandstream_auto_upgrade}</P194>
+	{else}
+	<P194>0</P194>
+	{/if}
 
     <!-- # Check for new firmware/config file every () minutes, unit is in minute, minimum 60 minutes, default is 7 days. -->
     <!-- # Number: 60 to 5256000 -->
@@ -199,8 +186,6 @@
     <!-- # Mandatory -->
     <P4428>1</P4428>
 
-
-
     <!-- #Authenticate Conf File -->
     <!-- #Number: 0 No, 1 Yes  (cfg file would be authenticated before acceptance if set to Yes)  -->
     <!-- #Mandatory -->
@@ -219,19 +204,18 @@
     <!-- #String -->
     <!-- #P279= -->
 
-<!-- SSL Private Key Password -->
-<!-- String -->
-<!-- P281= -->
+	<!-- SSL Private Key Password -->
+	<!-- String -->
+	<!-- P281= -->
 
     <!-- # Enable TR-069. 0 - No, 1 - Yes (default is Yes) -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
     {if isset ($grandstream_tr069_enable)}
-<P1409>{$grandstream_tr069_enable}</P1409>
-{else}
-<P1409>0</P1409>
-{/if}
-
+	<P1409>{$grandstream_tr069_enable}</P1409>
+	{else}
+	<P1409>0</P1409>
+	{/if}
 
     <!-- # ACS URL -->
     {if isset($grandstream_acs_url)}<P4503>{$grandstream_acs_url}</P4503>{else}<P4503></P4503>{/if}
@@ -248,11 +232,10 @@
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
     {if isset ($grandstream_tr069_periodic_inform_enable)}
-<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
-{else}
-<P4506>0</P4506>
-{/if}
-
+	<P4506>{$grandstream_tr069_periodic_inform_enable}</P4506>
+	{else}
+	<P4506>0</P4506>
+	{/if}
 
     <!-- # Periodic Inform Interval (default is 300) -->
     <!-- # Number: 1-99999 -->
@@ -275,20 +258,20 @@
     <!-- # Enable SNMP. 0 - No, 1 - Yes, default value is 0. -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-{if isset($grandstream_snmp_enable)}
+	{if isset($grandstream_snmp_enable)}
     <P21896>{$grandstream_snmp_enable}</P21896>
     {else}
     <P21896>0</P21896>
-{/if}
+	{/if}
 
     <!-- # SNMP Version. 1 - Version 1, 2 - Version 2c, 3 - Version 3. Default value is 3. -->
     <!-- # Nmuber: 1, 2, 3 -->
     <!-- # Mandatory -->
-{if isset($grandstream_snmp_version)}
+	{if isset($grandstream_snmp_version)}
     <P21904>{$grandstream_snmp_version}</P21904>
     {else}
     <P21904>2</P21904>
-{/if}
+	{/if}
 
     <!-- # SNMP Port. Default is port 162 -->
     <!-- # Number: 162 or 1025 to 65535 -->
@@ -314,11 +297,11 @@
 
     <!-- # SNMPv1/v2c Community -->
     <!-- # Max Character Number: 64 -->
-{if isset($grandstream_snmp_community)}
+	{if isset($grandstream_snmp_community)}
     <P21902>{$grandstream_snmp_community}</P21902>
     {else}
     <P21902>public</P21902>
-{/if}
+	{/if}
 
     <!-- # SNMP Trap Community -->
     <!-- # Max String Length: 64 -->
@@ -473,7 +456,6 @@
     <!-- # String -->
     <P28133>f1=425@-15,c=600/600;</P28133>
 
-
     <!-- ############################################### -->
     <!-- # Lock keypad update.  0 - No, 1 - Yes, 2( invisible on web GUI, set to 2 for Reset button - ISP Data reset allowed only).  (configuration update via keypad is disabled if set to Yes). -->
     <!-- # Number: 0, 1, 2 -->
@@ -521,20 +503,20 @@
     <!-- # 0 - NONE, 1 - DEBUG, 2 - INFO, 3 - WARNING, 4 - ERROR, 5 - EXTRA DEBUG -->
     <!-- # Number: 0, 1, 2, 3, 4, 5 -->
     <!-- # Mandatory -->
-{if isset($grandstream_syslog_level)}
-<P208>{$grandstream_syslog_level}</P208>
-{else}
-<P208>0</P208>
-{/if}
+	{if isset($grandstream_syslog_level)}
+	<P208>{$grandstream_syslog_level}</P208>
+	{else}
+	<P208>0</P208>
+	{/if}
 
     <!-- # Send SIP Log. 0 - No, 1 - Yes. (If set to yes, The unit will replicate the received and send SIP packets on the syslog) -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-{if isset($grandstream_send_sip_log)}
-<P1387>{$grandstream_send_sip_log}</P1387>
-{else}
-<P1387>0</P1387>
-{/if}
+	{if isset($grandstream_send_sip_log)}
+	<P1387>{$grandstream_send_sip_log}</P1387>
+	{else}
+	<P1387>0</P1387>
+	{/if}
 
     <!-- #Automatic Reboot. 0 - No, 1 - Yes, reboot every day, 2 - Yes, reboot every week, 3 - Yes, reboot every month -->
     <!-- #Number: 0,1,2,3 -->
@@ -564,13 +546,13 @@
     <!-- # Mandatory -->
     <P271>1</P271>
 
-<!-- Primary SIP Server -->
-<!-- Server address -->
-{if $account.1.sip_transport != 'dns srv'}
-<P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
-{else}
-<P47>{$account.1.server_address}</P47>
-{/if}
+	<!-- Primary SIP Server -->
+	<!-- Server address -->
+	{if $account.1.sip_transport != 'dns srv'}
+	<P47>{$account.1.server_address}:{$account.1.sip_port}</P47>
+	{else}
+	<P47>{$account.1.server_address}</P47>
+	{/if}
 
     <!-- # Failover SIP Server -->
     <!-- # Server address -->
@@ -603,11 +585,11 @@
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
 
-{$tp=0}
-{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
-{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
-{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
-{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
+	{$tp=0}
+	{if $account.1.sip_transport == 'udp'}{$tp=0}{/if}
+	{if $account.1.sip_transport == 'tcp'}{$tp=1}{/if}
+	{if $account.1.sip_transport == 'tls'}{$tp=2}{/if}
+	{if $account.1.sip_transport == 'dns srv'}{$tp=1}{/if}
     <P130>{$tp}</P130>
 
     <!-- # SIP URI Scheme When Using TLS. 0 - No, 1 - Yes. -->
@@ -623,47 +605,47 @@
     <!-- # NAT Traversal (STUN) 0 - No, 2 - No but send keep-alive, 1 - Yes, 3 - UPnP -->
     <!-- # Number: 0, 1, 2, 3 -->
     <!-- # Mandatory -->
-{if isset($grandstream_nat_traversal_1)}
-<P52>{$grandstream_nat_traversal_1}</P52>
-{else}
-<P52>0</P52>
-{/if}
+	{if isset($grandstream_nat_traversal_1)}
+	<P52>{$grandstream_nat_traversal_1}</P52>
+	{else}
+	<P52>0</P52>
+	{/if}
 
-<!-- SIP User ID -->
-<!-- String -->
-<P35>{$account.1.user_id}</P35>
+	<!-- SIP User ID -->
+	<!-- String -->
+	<P35>{$account.1.user_id}</P35>
 
-<!-- Authentication ID -->
-<!-- String -->
-<P36>{$account.1.auth_id}</P36>
+	<!-- Authentication ID -->
+	<!-- String -->
+	<P36>{$account.1.auth_id}</P36>
 
-<!-- Authentication password -->
-<!-- String -->
-<P34>{$account.1.password}</P34>
+	<!-- Authentication password -->
+	<!-- String -->
+	<P34>{$account.1.password}</P34>
 
-<!-- Name (John Doe) -->
-<!-- String -->
-<P3>{$account.1.display_name}</P3>
+	<!-- Name (John Doe) -->
+	<!-- String -->
+	<P3>{$account.1.display_name}</P3>
 
-<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. -->
-<!-- Number: 0, 1, 2 -->
-<!-- Mandatory -->
+	<!-- DNS Mode. 0 - A Record, 1 - SRV, 2 - NAPTR/SRV. -->
+	<!-- Number: 0, 1, 2 -->
+	<!-- Mandatory -->
 
-{if isset($grandstream_dns_mode)}
+	{if isset($grandstream_dns_mode)}
     <P103>{$grandstream_dns_mode}</P103>
-{else}
+	{else}
     <P103>0</P103>
-{/if}
+	{/if}
 
-<!-- Tel URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled -->
-<!-- Number: 0, 1, 2 -->
-<!-- Mandatory -->
-<P63>0</P63>
+	<!-- Tel URI. 0 - Disabled, 1 - User=Phone, 2 - Enabled -->
+	<!-- Number: 0, 1, 2 -->
+	<!-- Mandatory -->
+	<P63>0</P63>
 
-<!-- SIP Registration. 0 - No, 1 - Yes -->
-<!-- Number: 0, 1 -->
-<!-- Mandatory -->
-<P31>1</P31>
+	<!-- SIP Registration. 0 - No, 1 - Yes -->
+	<!-- Number: 0, 1 -->
+	<!-- Mandatory -->
+	<P31>1</P31>
 
     <!-- # Unregister On Reboot. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
@@ -675,10 +657,10 @@
     <!-- # Mandatory -->
     <P109>1</P109>
 
-<!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
-<!-- Number: 1 to 64800 -->
-<!-- Mandatory -->
-<P32>{$account.1.register_expires}</P32>
+	<!-- Register Expiration (in minutes. default 1 hour, max 45 days) -->
+	<!-- Number: 1 to 64800 -->
+	<!-- Mandatory -->
+	<P32>{$account.1.register_expires}</P32>
 
     <!-- # Reregister before Expiration (in seconds. Default 0 second) -->
     <!-- # Number: 1 to 64800 -->
@@ -1061,22 +1043,22 @@
 
     <!-- Dial Plan -->
     <!--  String -->
-	
-{if isset($grandstream_dial_plan) }
+
+	{if isset($grandstream_dial_plan) }
     <P4200>{$grandstream_dial_plan}</P4200>
-{else}
+	{else}
     <P4200>{literal}{x+|*x+|*++|\p\a\r\k\+*x+|\p\a\r\k\+x+|\f\l\o\w\+*x+}{/literal}</P4200>
-{/if}
+	{/if}
 
     <!-- # SUBSCRIBE for MWI. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
 
-{if isset($subscribe_mwi)}
+	{if isset($subscribe_mwi)}
     <P99>1</P99>
-{else}
+	{else}
     <P99>0</P99>
-{/if}
+	{/if}
 
     <!-- # Send Anonymous. 0 - No, 1 - Yes  (caller ID will be blocked if set to Yes) -->
     <!-- # Number: 0, 1 -->
@@ -1240,11 +1222,11 @@
     <!-- # FAX Mode. 0 - T.38 (Auto Detect), 1 - Pass Through -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-{if isset($grandstream_fax_mode)}
+	{if isset($grandstream_fax_mode)}
     <P228>{$grandstream_fax_mode}</P228>
-{else}
+	{else}
     <P228>0</P228>
-{/if}
+	{/if}
 
     <!-- # Re-INVITE After Fax Tone Detected. 0 - Disabled, 1 - Enabled. -->
     <!-- # Number: 0, 1 -->
@@ -1268,11 +1250,11 @@
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
 
-{if isset($grandstream_srtp)}
+	{if isset($grandstream_srtp)}
     <P183>{$grandstream_srtp}</P183>
-{else}
+	{else}
     <P183>0</P183>
-{/if}
+	{/if}
 
     <!-- # Crypto Life Time -->
     <!-- # 0=Disabled -->
@@ -1410,9 +1392,9 @@
     <!-- # Disable Line Echo Canceller (LEC).  0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    {if isset($grandstream_line_echo_canceller)} 
+    {if isset($grandstream_line_echo_canceller)}
         <P824>{$grandstream_line_echo_canceller}</P824>
-    {elseif isset($grandstream_line_1_echo_canceller)} 
+    {elseif isset($grandstream_line_1_echo_canceller)}
         <P824>{$grandstream_line_1_echo_canceller}</P824>
     {else}
         <P824>0</P824>
@@ -1421,9 +1403,9 @@
     <!-- # Disable Network Echo Suppressor.  0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    {if isset($grandstream_line_echo_suppressor)} 
+    {if isset($grandstream_line_echo_suppressor)}
         <P4441>{$grandstream_line_echo_suppressor}</P4441>
-    {elseif isset($grandstream_line_1_echo_suppressor)} 
+    {elseif isset($grandstream_line_1_echo_suppressor)}
         <P4441>{$grandstream_line_1_echo_suppressor}</P4441>
     {else}
         <P4441>0</P4441>
@@ -1724,9 +1706,9 @@
     <!-- # Disable Line Echo Canceller (LEC).  0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-   {if isset($grandstream_line_echo_canceller)} 
+   {if isset($grandstream_line_echo_canceller)}
         <P825>{$grandstream_line_echo_canceller}</P825>
-    {elseif isset($grandstream_line_2_echo_canceller)} 
+    {elseif isset($grandstream_line_2_echo_canceller)}
         <P825>{$grandstream_line_2_echo_canceller}</P825>
     {else}
         <P825>0</P825>
@@ -1735,9 +1717,9 @@
     <!-- # Disable Network Echo Suppressor.  0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    {if isset($grandstream_line_echo_suppressor)} 
+    {if isset($grandstream_line_echo_suppressor)}
         <P4442>{$grandstream_line_echo_suppressor}</P4442>
-    {elseif isset($grandstream_line_2_echo_suppressor)} 
+    {elseif isset($grandstream_line_2_echo_suppressor)}
         <P4442>{$grandstream_line_2_echo_suppressor}</P4442>
     {else}
         <P4442>0</P4442>
