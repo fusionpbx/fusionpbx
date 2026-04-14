@@ -82,21 +82,7 @@ class event_guard_service extends service {
 		$this->hostname = gethostname();
 
 		// Connect to event socket
-		$this->socket = new event_socket;
-		if ($this->socket->connect()) {
-			// Loop through the switch events
-			$cmd = "event json ALL";
-			$result = $this->socket->request($cmd);
-			$this->debug('subscribe to ALL events '. print_r($result, true));
-
-			// Filter for specific events
-			$cmd = "filter Event-Name CUSTOM";
-			$result = $this->socket->request($cmd);
-			$this->debug('subscribe to CUSTOM events '. print_r($result, true));
-		}
-		else {
-			$this->warning('Unable to connect to event socket');
-		}
+		$this->socket = null;
 	}
 
 	public function run(): int {
@@ -122,9 +108,19 @@ class event_guard_service extends service {
 			}
 
 			// Reconnect to event socket
-			if (!$this->socket->connected()) {
-				$this->warning('Not connected to even socket');
-				if ($this->socket->connect()) {
+			while ($this->socket == null || !$this->socket->connected()) {
+				// Send a message to the log
+				$this->warning('Not connected to event socket');
+
+				// Create a new event socket object and then connect
+				$this->socket = new event_socket;
+				$this->socket->connect();
+
+				// Wait for the switch to connect
+				sleep(1);
+
+				// Check if connected
+				if ($this->socket->connected()) {
 					// Define the events
 					$switch_events = [
 						['Event-Subclass' => 'sofia::pre_register'],
@@ -141,15 +137,7 @@ class event_guard_service extends service {
 						$result = $this->socket->request($cmd);
 						$this->info('subscribe to CUSTOM events '. print_r($result, true));
 					}
-					$this->info('Re-connected to event socket');
-				}
-				else {
-					// Unable to connect to event socket
-					$this->warning('Unable to connect to event socket');
-
-					// Sleep and then attempt to reconnect
-					sleep(1);
-					continue;
+					$this->notice('Re-connected to event socket');
 				}
 			}
 
