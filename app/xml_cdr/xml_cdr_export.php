@@ -309,7 +309,7 @@
 					$data_body[$p] .= '<td align="right">'.number_format(round($fields['pdd_ms'] / 1000, 2), 2).'s</td>';
 				}
 				if (permission_exists('xml_cdr_mos')) {
-					$total['rtp_audio_in_mos'] += $fields['rtp_audio_in_mos'];
+					$total['rtp_audio_in_mos'] += (int)$fields['rtp_audio_in_mos'];
 					$data_body[$p] .= '<td align="center">'.($fields['rtp_audio_in_mos'] ?? '').'</td>';
 					if (!empty($fields['rtp_audio_in_mos']) && is_numeric($fields['rtp_audio_in_mos'])) { $z_mos++; }
 				}
