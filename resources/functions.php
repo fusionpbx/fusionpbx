@@ -18,7 +18,7 @@
 
   The Initial Developer of the Original Code is
   Mark J Crane <markjcrane@fusionpbx.com>
-  Portions created by the Initial Developer are Copyright (C) 2008-2025
+  Portions created by the Initial Developer are Copyright (C) 2008-2026
   the Initial Developer. All Rights Reserved.
 
   Contributor(s):
@@ -646,25 +646,14 @@ if (!function_exists('th_order_by')) {
 		// Sanitize field_name
 		$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
 
+		// Sanitize the parameters
 		$sanitized_parameters = '';
+		if (!empty($http_get_params)) {
+			$params = $http_get_params;
 
-		if (is_array($http_get_params)) {
-			foreach ($http_get_params as $key => $value) {
-				if ($key == 'order_by' && !empty($value)) {
-					// Validate order by
-					$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
-				} else if ($key == 'order' && !empty($value)) {
-					// Validate order
-					if (in_array(strtolower($value), ['asc', 'desc'])) {
-						$order = strtolower($value);
-					}
-				} else {
-					if (!is_string($value) || empty($value)) continue;
-					$sanitized_parameters .= "&" . preg_replace('#[^a-zA-Z0-9_\-]#', '', $key) . "=" . urlencode($value);
-				}
+			if (is_string($params)) {
+				parse_str($http_get_params, $params);
 			}
-		} else if (is_string($http_get_params)) {
-			parse_str($http_get_params, $params);
 
 			foreach ($params as $key => $value) {
 				if ($key == 'order_by' && !empty($value)) {
