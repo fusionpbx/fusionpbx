@@ -628,72 +628,85 @@ if (!function_exists('th_order_by')) {
 	 *
 	 * @param string $field_name      The name of the field used for ordering.
 	 * @param string $column_title    The title to display in the column header.
-	 * @param string|null $order_by        The current order by field.
-	 * @param string|null $order           The current sorting direction ('asc' or 'desc'). Default is 'asc'.
-	 * @param string|null $app_uuid        Optional application UUID parameter. Default is an empty string.
-	 * @param string|null $css             Optional CSS classes for the table header cell. Default is an empty string.
-	 * @param string|null $http_get_params Optional additional HTTP GET parameters to include in the ordering URL. Default is an empty string.
-	 * @param string|null $description     Optional description text to be included in the title attribute of the column header link. Default is an empty string.
+	 * @param string|null 	$order_by        The default order by field.
+	 * @param string|null 	$order           The current sorting direction ('asc' or 'desc'). Default is 'asc'.
+	 * @param string|null 	$app_uuid        Optional application UUID parameter. Default is an empty string.
+	 * @param string|null 	$css             Optional CSS classes for the table header cell. Default is an empty string.
+	 * @param string|array 	$http_get_params Optional additional HTTP GET parameters to include in the ordering URL. Default is an empty array.
+	 * @param string|null 	$description     Optional description text to be included in the title attribute of the column header link. Default is an empty string.
 	 *
 	 * @return string The generated HTML for the table header cell with ordering functionality.
 	 */
-	function th_order_by(string $field_name, string $column_title, ?string $order_by, ?string $order, ?string $app_uuid = '', ?string $css = '', ?string $http_get_params = '', ?string $description = ''): string {
+	function th_order_by(string $field_name, string $column_title, ?string $order_by, ?string $order = '', ?string $app_uuid = '', ?string $css = '', $http_get_params = [], ?string $description = ''): string {
 		global $text;
 		if (is_uuid($app_uuid) > 0) {
 			$app_uuid = "&app_uuid=" . urlencode($app_uuid);
-		} // accommodate the need to pass app_uuid where necessary (inbound/outbound routes lists)
+		} // Accommodate the need to pass app_uuid where necessary (inbound/outbound routes lists)
 
+		// Sanitize field_name
 		$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
-		$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value ?? '');
 
 		$sanitized_parameters = '';
-		if (!empty($http_get_params)) {
-			$parameters = explode('&', $http_get_params);
-			if (is_array($parameters)) {
-				foreach ($parameters as $parameter) {
-					if (substr_count($parameter, '=') != 0) {
-						$array = explode('=', $parameter);
-						$key = preg_replace('#[^a-zA-Z0-9_\-]#', '', $array['0']);
-						$value = urldecode($array['1']);
-						if ($key == 'order_by' && !empty($value)) {
-							//validate order by
-							$sanitized_parameters .= "&order_by=" . preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
-						} else if ($key == 'order' && !empty($value)) {
-							//validate order
-							switch ($value) {
-								case 'asc':
-									$sanitized_parameters .= "&order=asc";
-									break;
-								case 'desc':
-									$sanitized_parameters .= "&order=desc";
-									break;
-							}
-						} else if (!empty($value) && is_numeric($value)) {
-							$sanitized_parameters .= "&" . $key . "=" . $value;
-						} else {
-							$sanitized_parameters .= "&" . $key . "=" . urlencode($value);
-						}
+
+		if (is_array($http_get_params)) {
+			foreach ($http_get_params as $key => $value) {
+				if ($key == 'order_by' && !empty($value)) {
+					// Validate order by
+					$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
+				} else if ($key == 'order' && !empty($value)) {
+					// Validate order
+					if (in_array(strtolower($value), ['asc', 'desc'])) {
+						$order = strtolower($value);
 					}
+				} else {
+					if (!is_string($value) || empty($value)) continue;
+					$sanitized_parameters .= "&" . preg_replace('#[^a-zA-Z0-9_\-]#', '', $key) . "=" . urlencode($value);
+				}
+			}
+		} else if (is_string($http_get_params)) {
+			parse_str($http_get_params, $params);
+
+			foreach ($params as $key => $value) {
+				if ($key == 'order_by' && !empty($value)) {
+					// Validate order by
+					$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
+				} else if ($key == 'order' && !empty($value)) {
+					// Validate order
+					if (in_array(strtolower($value), ['asc', 'desc'])) {
+						$order = strtolower($value);
+					}
+				} else {
+					if (!is_string($value) || empty($value)) continue;
+					$sanitized_parameters .= "&" . preg_replace('#[^a-zA-Z0-9_\-]#', '', $key) . "=" . urlencode($value);
 				}
 			}
 		}
 
-		$html = "<th " . $css . " nowrap='nowrap'>";
-		$description = empty($description) ? '' : $description . ', ';
-		if (empty($order_by)) {
-			$order = 'asc';
+		// Default order to asc on first call and when order_by changes
+		if (empty($order_by) || $order_by !== $field_name) {
+			$next_order = 'asc';
 		}
-		if ($order_by == $field_name) {
-			if ($order == "asc") {
-				$description .= $text['label-order'] . ' ' . $text['label-descending'];
-				$html .= "<a href='?order_by=" . urlencode($field_name) . "&order=desc" . $app_uuid . $sanitized_parameters . "' title=\"" . escape($description) . "\">" . escape($column_title) . "</a>";
+		else {
+			// Toggle order direction
+			$next_order = ($order == 'asc') ? 'desc' : 'asc';
+		}
+
+		// Build the URL
+		$url_params = "?order_by=" . urlencode($field_name) . "&order=" . $next_order . $app_uuid . $sanitized_parameters;
+		if ($order_by === $field_name) {
+			if ($next_order == "asc") {
+				$description .= ', ' . $text['label-order'] . ' ' . $text['label-descending'];
 			} else {
-				$description .= $text['label-order'] . ' ' . $text['label-ascending'];
-				$html .= "<a href='?order_by=" . urlencode($field_name) . "&order=asc" . $app_uuid . $sanitized_parameters . "' title=\"" . escape($description) . "\">" . escape($column_title) . "</a>";
+				$description .= ', ' . $text['label-order'] . ' ' . $text['label-ascending'];
 			}
+		}
+
+		// Build the HTML
+		$html = "<th $css nowrap='nowrap'>";
+		if (!empty($description)) {
+			$html .= "<a href='$url_params' title=\"" . escape(trim($description, ', ')) . "\">" . escape($column_title) . "</a>";
 		} else {
-			$description .= $text['label-order'] . ' ' . $text['label-ascending'];
-			$html .= "<a href='?order_by=" . urlencode($field_name) . "&order=asc" . $app_uuid . $sanitized_parameters . "' title=\"" . escape($description) . "\">" . escape($column_title) . "</a>";
+			$html .= "<a href='$url_params'>" . escape($column_title) . "</a>";
 		}
 		$html .= "</th>";
 		return $html;
