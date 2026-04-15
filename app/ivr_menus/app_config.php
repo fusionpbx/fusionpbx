@@ -234,7 +234,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "local_stream://default";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for IVRs";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set a default ringback on ivr menus";
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${ivr_menu_context}";
