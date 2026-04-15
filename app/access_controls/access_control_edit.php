@@ -153,12 +153,10 @@
 			$y = 0;
 			if (!empty($access_control_nodes) && is_array($access_control_nodes)) {
 				foreach ($access_control_nodes as $row) {
-
 					//validate the data
 					if (!is_uuid($row["access_control_node_uuid"])) { continue; }
 					if ($row["node_type"] != 'allow' && $row["node_type"] != 'deny') { continue; }
 					if (isset($row["node_cidr"]) && $row["node_cidr"] != '') {
-
 						$cidr_array = explode("/", str_replace("\\", "/", $row["node_cidr"]));
 						if (filter_var($cidr_array[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
 							if (isset($cidr_array[1]) && is_numeric($cidr_array[1])) {
@@ -174,6 +172,14 @@
 							//valid IPv6 address
 							$node_cidr = $row["node_cidr"];
 						}
+						else {
+							//domains hostname to lookup 
+							$domains[] = [
+								'type'=>$row['node_type'],
+								'value'=>$row['node_cidr'],
+								'description'=>$row['node_description'],
+							];
+						}
 
 						//build the sub array
 						if (!empty($node_cidr)) {
@@ -186,45 +192,33 @@
 							//unset values
 							unset($cidr_array, $node_cidr);
 						}
-						//digs to attempt
-						else {
-							$digs[] = [
-								'type'=>$row['node_type'],
-								'value'=>$row['node_cidr'],
-								'description'=>$row['node_description'],
-							];
-						}
-
 					}
-
 				}
 
-				//attempt digs
-				if (!empty($digs) && is_array($digs)) {
-					foreach ($digs as $dig) {
-						$response = shell_exec("dig +noall +answer ".escapeshellarg(str_replace(' ', '', $dig['value']))." | awk '{ print $5 }'");
-						if (!empty($response)) {
-							$lines = explode("\n", $response);
-							foreach ($lines as $l => $line) {
-								if (!empty($line) && filter_var($line, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+				//use a domain lookup to find all IP addresses for a domain, add those to access control nodes array while preventing duplicates
+				if (!empty($domains) && is_array($domains)) {
+					foreach ($domains as $row) {
+						$ip_addresses = gethostbynamel($row['value']);
+						if (!empty($ip_addresses)) {
+							foreach ($ip_addresses as $ip_address) {
+								if (!empty($ip_address) && filter_var($ip_address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
 									//check for duplicate
 									if (!empty($array['access_controls'][0]['access_control_nodes']) && is_array($array['access_controls'][0]['access_control_nodes'])) {
 										foreach ($array['access_controls'][0]['access_control_nodes'] as $n => $node) {
-											if ($node['node_cidr'] == $line.'/32') { continue 2; }
+											if ($node['node_cidr'] == $ip_address.'/32') { continue 2; }
 										}
 									}
 									//add to array
 									$array['access_controls'][0]['access_control_nodes'][$y]['access_control_node_uuid'] = uuid();
-									$array['access_controls'][0]['access_control_nodes'][$y]['node_type'] = $dig['type'];
-									$array['access_controls'][0]['access_control_nodes'][$y]['node_cidr'] = $line.'/32';
-									$array['access_controls'][0]['access_control_nodes'][$y]['node_description'] = !empty($dig['description']) ? $dig['description'] : str_replace(' ', '', $dig['value']);
+									$array['access_controls'][0]['access_control_nodes'][$y]['node_type'] = $row['type'];
+									$array['access_controls'][0]['access_control_nodes'][$y]['node_cidr'] = $ip_address.'/32';
+									$array['access_controls'][0]['access_control_nodes'][$y]['node_description'] = !empty($row['description']) ? $row['description'] : str_replace(' ', '', $row['value']);
 									$y++;
 								}
 							}
 						}
 					}
 				}
-
 			}
 
 		//save the data
