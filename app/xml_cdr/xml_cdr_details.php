@@ -460,27 +460,21 @@
 //get the header
 	require_once "resources/header.php";
 
-//page title and description
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b><br><br></td>\n";
-	echo "<td width='70%' align='right' valign='top'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.urlencode($_SESSION['xml_cdr']['last_query']) : null)]);
+//page title, buttons and description
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "	<div class='heading'><b>".$text['title2']."</b></div>\n";
+	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.urlencode($_SESSION['xml_cdr']['last_query']) : null)]);
 	if (permission_exists('xml_cdr_call_log') && $call_log_enabled && isset($log_content) && !empty($log_content)) {
-		echo button::create(['type'=>'button','label'=>$text['button-call_log'],'icon'=>$settings->get('theme', 'button_icon_search'),'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$uuid]);
+		echo button::create(['type'=>'button','label'=>$text['button-call_log'],'icon'=>$settings->get('theme', 'button_icon_search'),'link'=>'xml_cdr_log.php?id='.$uuid]);
 	}
 	if ($transcribe_enabled && !empty($transcribe_engine) && !empty($record_path) && !empty($record_name) && file_exists($record_path.'/'.$record_name)) {
-		echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','collapse'=>'hide-xs','style'=>'margin-left: 15px;','onclick'=>"window.location.href='?id=".$uuid."&action=transcribe';"]);
+		echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','collapse'=>'hide-xs','onclick'=>"window.location.href='?id=".$uuid."&action=transcribe';"]);
 	}
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
-	echo "	".$text['description-details']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-	echo "<br /><br />\n";
+	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+	echo "<p>".$text['description-details']."</p>\n";
 
 //show the content
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
