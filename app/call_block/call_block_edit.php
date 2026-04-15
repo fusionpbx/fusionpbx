@@ -47,6 +47,32 @@
 	$call_block_number = '';
 	$call_block_description = '';
 
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'call_block_number'));
+	$order = ($_GET['order'] ?? '') == 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('call_block_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //set the time zone
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 	date_default_timezone_set($time_zone);
@@ -124,7 +150,7 @@
 						break;
 				}
 
-				header('Location: call_block.php');
+				header('Location: call_block.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -132,7 +158,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: call_block.php');
+				header('Location: call_block.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -211,7 +237,7 @@
 						unset($array);
 
 						message::add($text['label-add-complete']);
-						header("Location: call_block.php");
+						header("Location: call_block.php".($query_string ? '?'.$query_string : ''));
 						return;
 					}
 					if ($action == "update") {
@@ -258,14 +284,14 @@
 						unset($array);
 
 						message::add($text['label-update-complete']);
-						header("Location: call_block.php");
+						header("Location: call_block.php".($query_string ? '?'.$query_string : ''));
 						return;
 					}
 			}
 	}
 
 //pre-populate the form
-	if (!empty($_GET) && empty($_POST["persistformvar"])) {
+	if (!empty($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$call_block_uuid = $_GET["id"];
 		$sql = "select * from v_call_block ";
 		$sql .= "where ( ";
@@ -443,7 +469,7 @@
 
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'call_block.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'call_block.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == 'update' && permission_exists('call_block_delete')) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','collapse'=>'hide-xs','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
@@ -636,7 +662,7 @@
 		echo "		</select>\n";
 		echo "	</div>\n";
 		echo "	<div class='actions'>\n";
-		echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'collapse'=>'hide-xs','style'=>'display: none;','link'=>'call_block.php']);
+		echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'collapse'=>'hide-xs','style'=>'display: none;','link'=>'call_block.php'.($query_string ? '?'.$query_string : '')]);
 		if ($recent_calls) {
 			$select_margin = 'margin-left: 15px;';
 			if (permission_exists('call_block_extension')) {
