@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -39,9 +39,31 @@
 	$language = new text;
 	$text = $language->get();
 
-//set additional variables
-	$search = $_GET["search"] ?? '';
-	$show = $_GET["show"] ?? '';
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'bridge_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('bridge_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
@@ -49,7 +71,6 @@
 //get the http post data
 	if (!empty($_POST['bridges'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'] ?? '';
 		$bridges = $_POST['bridges'];
 	}
 
@@ -76,23 +97,18 @@
 				break;
 		}
 
-		header('Location: bridges.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
+		header('Location: bridges.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
 
-//get order and order by
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
-
 //add the search string
 	if (!empty($search)) {
-		$search =  strtolower($_GET["search"]);
 		$sql_search = " (";
 		$sql_search .= "	lower(bridge_name) like :search ";
 		$sql_search .= "	or lower(bridge_destination) like :search ";
 		$sql_search .= "	or lower(bridge_description) like :search ";
 		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
 
 //get the count
@@ -113,11 +129,8 @@
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = !empty($search) ? "&search=".$search : null;
-	$param = (isset($_GET['show']) && $_GET['show'] == 'all' && permission_exists('bridge_all')) ? "&show=all" : null;
-	$page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
@@ -157,7 +170,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$settings->get('theme', 'button_icon_import'),'style'=>'margin-right: 15px;','link'=>'bridge_imports.php']);
 	}
 	if (permission_exists('bridge_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'bridge_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'bridge_edit.php'.($query_string ? '?'.$query_string : '')]);
 	}
 	if (permission_exists('bridge_add') && $bridges) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
@@ -168,20 +181,20 @@
 	if (permission_exists('bridge_delete') && $bridges) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	if (permission_exists('bridge_all')) {
-		if (isset($show) && $show == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>\n";
-		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($param as $key => $value) {
+		if ($key !== 'search') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	if (permission_exists('bridge_all') && (!isset($show) || $show != 'all')) {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
+	}
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'bridges.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
@@ -204,7 +217,6 @@
 	echo "<div class='card'>\n";
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
@@ -214,11 +226,11 @@
 		echo "	</th>\n";
 	}
 	if (!empty($show) && $show == 'all' && permission_exists('bridge_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 	}
-	echo th_order_by('bridge_name', $text['label-bridge_name'], $order_by, $order);
-	echo th_order_by('bridge_destination', $text['label-bridge_destination'], $order_by, $order);
-	echo th_order_by('bridge_enabled', $text['label-bridge_enabled'], $order_by, $order, null, "class='center'");
+	echo th_order_by('bridge_name', $text['label-bridge_name'], $order_by, $order, null, null, $param);
+	echo th_order_by('bridge_destination', $text['label-bridge_destination'], $order_by, $order, null, null, $param);
+	echo th_order_by('bridge_enabled', $text['label-bridge_enabled'], $order_by, $order, null, "class='center'", $param);
 	echo "	<th class='hide-sm-dn'>".$text['label-bridge_description']."</th>\n";
 	if (permission_exists('bridge_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -230,7 +242,7 @@
 		foreach ($bridges as $row) {
 			$list_row_url = '';
 			if (permission_exists('bridge_edit')) {
-				$list_row_url = "bridge_edit.php?id=".urlencode($row['bridge_uuid']);
+				$list_row_url = "bridge_edit.php?id=".urlencode($row['bridge_uuid']).($query_string ? '&'.$query_string : '');
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}

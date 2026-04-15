@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2025
+	Portions created by the Initial Developer are Copyright (C) 2018-2026
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -34,6 +34,32 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'bridge_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('bridge_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -78,7 +104,7 @@
 						$obj = new bridges;
 						$obj->delete($array);
 					//redirect
-						header('Location: bridges.php');
+						header('Location: bridges.php'.($query_string ? '?'.$query_string : ''));
 						exit;
 				}
 			}
@@ -92,7 +118,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: bridges.php');
+				header('Location: bridges.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -182,14 +208,14 @@
 				if ($action == "update") {
 					$_SESSION["message"] = $text['message-update'];
 				}
-				header('Location: bridges.php');
+				header('Location: bridges.php'.($query_string ? '?'.$query_string : ''));
 				return;
 			}
 	}
 
 //pre-populate the form
-	if (!empty($_GET) && is_array($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
-		$bridge_uuid = $_GET["id"];
+	if (!empty($_GET['id']) && is_uuid($_GET['id']) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
+		$bridge_uuid = $_GET['id'];
 		$sql = "select * from v_bridges ";
 		$sql .= "where bridge_uuid = :bridge_uuid ";
 		$parameters['bridge_uuid'] = $bridge_uuid;
@@ -399,7 +425,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-bridge']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'bridges.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'bridges.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == 'update' && permission_exists('bridge_delete')) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','style'=>'margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
