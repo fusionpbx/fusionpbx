@@ -628,7 +628,7 @@ if (!function_exists('th_order_by')) {
 	 *
 	 * @param string       $field_name      The name of the field used for ordering.
 	 * @param string       $column_title    The title to display in the column header.
-	 * @param string|null  $order_by        The default order by field.
+	 * @param string|null  $order_by        The current order by field.
 	 * @param string|null  $order           The current sorting direction ('asc' or 'desc'). Default is 'asc'.
 	 * @param string|null  $app_uuid        Optional application UUID parameter. Default is an empty string.
 	 * @param string|null  $css             Optional CSS classes for the table header cell. Default is an empty string.
