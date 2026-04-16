@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -465,7 +465,7 @@
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.urlencode($_SESSION['xml_cdr']['last_query']) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.$_SESSION['xml_cdr']['last_query'] : null)]);
 	if (permission_exists('xml_cdr_call_log') && $call_log_enabled && isset($log_content) && !empty($log_content)) {
 		echo button::create(['type'=>'button','label'=>$text['button-call_log'],'icon'=>$settings->get('theme', 'button_icon_search'),'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$uuid]);
 	}
