@@ -39,6 +39,32 @@
 	$language = new text;
 	$text = $language->get();
 
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'broadcast_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('call_broadcast_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //set the action with add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -106,7 +132,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					$obj = new call_broadcast;
 					$obj->delete($call_broadcasts);
 				//redirect
-					header('Location: call_broadcast.php');
+					header('Location: call_broadcast.php'.($query_string ? '?'.$query_string : ''));
 					exit;
 			}
 		}
@@ -120,7 +146,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$token = new token;
 		if (!$token->validate($_SERVER['PHP_SELF'])) {
 			message::add($text['message-invalid_token'],'negative');
-			header('Location: call_broadcast.php');
+			header('Location: call_broadcast.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 
@@ -162,7 +188,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					message::add($text['confirm-add']);
 
 				//set return url on error
-					$error_return_url = "call_broadcast_edit.php";
+					$error_return_url = "call_broadcast_edit.php".($query_string ? '?'.$query_string : '');
 			}
 
 		//prep update
@@ -174,7 +200,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					message::add($text['confirm-update']);
 
 				//set return url on error
-					$error_return_url = "call_broadcast_edit.php?id=".urlencode($_GET['id']);
+					$error_return_url = "call_broadcast_edit.php?id=".urlencode($_GET['id']).($query_string ? '&'.$query_string : '');
 			}
 
 		//execute
@@ -237,7 +263,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					unset($array);
 
 				//redirect
-					header("Location: call_broadcast.php");
+					header("Location: call_broadcast.php".($query_string ? '?'.$query_string : ''));
 					exit;
 
 			}
@@ -298,10 +324,10 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-call_broadcast']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'call_broadcast.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'call_broadcast.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == "update") {
-		echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$settings->get('theme', 'button_icon_start'),'style'=>'margin-left: 15px;','link'=>'call_broadcast_send.php?id='.urlencode($call_broadcast_uuid)]);
-		echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$settings->get('theme', 'button_icon_stop'),'link'=>'call_broadcast_stop.php?id='.urlencode($call_broadcast_uuid)]);
+		echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$settings->get('theme', 'button_icon_start'),'style'=>'margin-left: 15px;','link'=>'call_broadcast_send.php?id='.urlencode($call_broadcast_uuid).($query_string ? '&'.$query_string : '')]);
+		echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$settings->get('theme', 'button_icon_stop'),'link'=>'call_broadcast_stop.php?id='.urlencode($call_broadcast_uuid).($query_string ? '&'.$query_string : '')]);
 		if (permission_exists('call_broadcast_delete')) {
 			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
