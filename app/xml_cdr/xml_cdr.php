@@ -710,10 +710,6 @@
 		echo "</form>";
 	}
 
-//mod paging parameters for inclusion in column sort heading links
-	$param = substr($param, 1); //remove leading '&'
-	$param = substr($param, 0, strrpos($param, '&order_by=')); //remove trailing order by
-
 //column overflow setting
 	echo "<style>\n";
 	if ($settings->get('cdr', 'column_overflow', 'hidden') == 'scroll') {
@@ -1145,7 +1141,7 @@
 	echo "</form>\n";
 
 //store last search/sort query parameters in session
-	$_SESSION['xml_cdr']['last_query'] = $_SERVER["QUERY_STRING"];
+	$_SESSION['xml_cdr']['last_query'] = $query_string;
 
 //show the footer
 	require_once "resources/footer.php";
