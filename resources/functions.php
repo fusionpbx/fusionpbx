@@ -1299,14 +1299,13 @@ function tail(string $file, int $num_to_get = 10): string {
 	return $ret;
 }
 
-//generate a random password with upper, lowercase and symbols
 /**
  * Generates a random password of specified length and strength.
  *
- * @param int $length   The desired length of the password. Defaults to 0 if not provided.
+ * @param int $length   The desired length of the password. Defaults to 20 if not provided.
  * @param int $strength The desired strength level of the password.
  *                      This defaults to 3 if not provided. The higher level includes the previous levels.
- *                      If the password_strength was set to 3, this would include numeric, lowercase, and uppercase letters.
+ *                      If the password_strength were set to 3, this would include numeric, lowercase, and uppercase letters.
  *                      - Level 1: Numeric
  *                      - Level 2: Lowercase letters
  *                      - Level 3: Uppercase letters
@@ -1315,7 +1314,7 @@ function tail(string $file, int $num_to_get = 10): string {
  * @return string The generated password.
  * @throws \Random\RandomException
  */
-function generate_password(int $length = 0, int $strength = 3): string {
+function generate_password(int $length = 20, int $strength = 3): string {
 	//define the global variables
 	global $settings;
 
