@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -39,13 +39,38 @@
 	$language = new text;
 	$text = $language->get();
 
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'agent_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('call_center_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get posted data
 	if (!empty($_POST['call_center_agents'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'] ?? '';
 		$call_center_agents = $_POST['call_center_agents'];
 	}
 
@@ -60,63 +85,47 @@
 				break;
 		}
 
-		header('Location: call_center_agents.php'.($search != '' ? '?search='.urlencode($search) : ''));
+		header('Location: call_center_agents.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
 
-//get http variables and set them to php variables
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
-
-//add the search and show variables
-	$search = $_GET["search"] ?? '';
-	$show = $_GET["show"] ?? '';
+//add the search term
+	if (!empty($search)) {
+		$sql_search = " (";
+		$sql_search .= "	lower(agent_name) like :search ";
+		$sql_search .= "	or lower(agent_id) like :search ";
+		$sql_search .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
+	}
 
 //get total call center agent count from the database
 	$sql = "select count(*) from v_call_center_agents ";
-	if ($show == "all" && permission_exists('call_center_all')) {
-		$sql .= "where true ";
-	}
-	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+	$sql .= "where true ";
+	if ($show != "all" || !permission_exists('call_center_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (!empty($search)) {
-		$sql .= "and (";
-		$sql .= "	lower(agent_name) like :search ";
-		$sql .= "	or lower(agent_id) like :search ";
-		$sql .= ") ";
-		$parameters['search'] = '%'.strtolower($search).'%';
+	if (!empty($sql_search)) {
+		$sql .= "and ".$sql_search;
 	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = "&search=".urlencode($search);
-	if ($show == "all" && permission_exists('call_center_all')) {
-		$param .= "&show=all";
-	}
-	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
 	$sql = "select * ";
 	$sql .= "from v_call_center_agents ";
-	if ($show == "all" && permission_exists('call_center_all')) {
-		$sql .= "where true ";
+	$sql .= "where true ";
+	if ($show != "all" || !permission_exists('call_center_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	}
-	if (!empty($search)) {
-		$sql .= "and (";
-		$sql .= "	lower(agent_name) like :search ";
-		$sql .= "	or lower(agent_id) like :search ";
-		$sql .= ") ";
-		$parameters['search'] = '%'.strtolower($search).'%';
+	if (!empty($sql_search)) {
+		$sql .= "and ".$sql_search;
 	}
 	$sql .= order_by($order_by, $order, 'agent_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
@@ -149,13 +158,13 @@
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>";
-	if (permission_exists('call_center_all')) {
-		if (!empty($_GET['show']) && $_GET['show'] == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>";
+	foreach ($param as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?type=&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
-		}
+	}
+	if (permission_exists('call_center_all') && (!isset($show) || $show != 'all')) {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?type=&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search','style'=>($search != '' ? 'display: none;' : null)]);
@@ -177,7 +186,6 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -188,19 +196,19 @@
 		echo "	</th>\n";
 	}
 	if ($show == "all" && permission_exists('call_center_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, "class='shrink'", $query_string);
 	}
-	//echo th_order_by('domain_uuid', 'domain_uuid', $order_by, $order);
-	echo th_order_by('agent_name', $text['label-agent_name'], $order_by, $order);
-	echo th_order_by('agent_id', $text['label-agent_id'], $order_by, $order);
-	echo th_order_by('agent_type', $text['label-type'], $order_by, $order);
-	echo th_order_by('agent_call_timeout', $text['label-call_timeout'], $order_by, $order);
-	echo th_order_by('agent_contact', $text['label-contact'], $order_by, $order);
-	echo th_order_by('agent_max_no_answer', $text['label-max_no_answer'], $order_by, $order);
-	echo th_order_by('agent_status', $text['label-default_status'], $order_by, $order);
-	//echo th_order_by('agent_wrap_up_time', $text['label-wrap_up_time'], $order_by, $order);
-	//echo th_order_by('agent_reject_delay_time', $text['label-reject_delay_time'], $order_by, $order);
-	//echo th_order_by('agent_busy_delay_time', $text['label-busy_delay_time'], $order_by, $order);
+	//echo th_order_by('domain_uuid', 'domain_uuid', $order_by, $order, null, null, $query_string);
+	echo th_order_by('agent_name', $text['label-agent_name'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('agent_id', $text['label-agent_id'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('agent_type', $text['label-type'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('agent_call_timeout', $text['label-call_timeout'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('agent_contact', $text['label-contact'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('agent_max_no_answer', $text['label-max_no_answer'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('agent_status', $text['label-default_status'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('agent_wrap_up_time', $text['label-wrap_up_time'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('agent_reject_delay_time', $text['label-reject_delay_time'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('agent_busy_delay_time', $text['label-busy_delay_time'], $order_by, $order, null, null, $query_string);
 	if (permission_exists('call_center_agent_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -211,7 +219,7 @@
 		foreach($result as $row) {
 			$list_row_url = '';
 			if (permission_exists('call_center_agent_edit')) {
-				$list_row_url = "call_center_agent_edit.php?id=".urlencode($row['call_center_agent_uuid']);
+				$list_row_url = "call_center_agent_edit.php?id=".urlencode($row['call_center_agent_uuid']).($query_string ? '&'.$query_string : '');
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
@@ -288,4 +296,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
