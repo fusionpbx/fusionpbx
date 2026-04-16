@@ -85,7 +85,7 @@
 				break;
 		}
 
-		header('Location: call_center_agents.php'.($query_string ? '?'.$$query_string : ''));
+		header('Location: call_center_agents.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
 
