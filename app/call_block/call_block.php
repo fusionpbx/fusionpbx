@@ -250,7 +250,7 @@
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	foreach ($param as $key => $value) {
-		if ($key !== 'search') {
+		if ($key !== 'search' && $key !== 'page') {
 			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}
