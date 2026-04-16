@@ -52,6 +52,33 @@
 	$queue_description = '';
 	$queue_timeout_action = '';
 
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'queue_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$sort = $order_by == 'queue_extension' ? 'natural' : null;
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('call_center_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -92,7 +119,7 @@
 
 		if ($total_call_center_queues >= $settings->get('limit','call_center_queues', 0)) {
 			message::add($text['message-maximum_queues'].' '.$settings->get('limit','call_center_queues', ''), 'negative');
-			header('Location: call_center_queues.php');
+			header('Location: call_center_queues.php'.($query_string ? '?'.$query_string : ''));
 			return;
 		}
 	}
@@ -238,7 +265,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: call_center_queues.php');
+				header('Location: call_center_queues.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -571,7 +598,7 @@
 
 		//redirect the user
 			if (is_uuid($call_center_queue_uuid)) {
-				header("Location: call_center_queue_edit.php?id=".urlencode($call_center_queue_uuid));
+				header("Location: call_center_queue_edit.php?id=".urlencode($call_center_queue_uuid).($query_string ? '&'.$query_string : ''));
 			}
 			return;
 
@@ -834,7 +861,7 @@
 	}
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme','button_icon_back', ''),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'call_center_queues.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme','button_icon_back', ''),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'call_center_queues.php'.($query_string ? '?'.$query_string : '')]);
 
 	if ($action == "update") {
 		if (permission_exists('call_center_wallboard')) {
