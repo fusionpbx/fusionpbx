@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2025
+	Portions created by the Initial Developer are Copyright (C) 2018-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,14 +45,37 @@
 	$transcribe_engine = $settings->get('transcribe', 'engine', '');
 
 //set additional variables
-	$search = $_GET["search"] ?? '';
-	$show = $_GET["show"] ?? '';
 	$result_count = 0;
+
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? ''));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('call_recording_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
 
 //get the http post data
 	if (!empty($_POST['call_recordings']) && is_array($_POST['call_recordings'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'] ?? '';
 		$call_recordings = $_POST['call_recordings'];
 	}
 
@@ -80,24 +103,23 @@
 		}
 
 		//redirect the user
-		header('Location: call_recordings.php'.($search != '' ? '?search='.urlencode($search) : ''));
+		header('Location: call_recordings.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
 
-//get order and order by
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
-
 //add the search string
 	if (!empty($search)) {
-		$search =  strtolower($_GET["search"]);
+		$sql_search = " (";
+		$sql_search .= "	lower(r.call_direction) like :search ";
+		$sql_search .= "	or lower(r.caller_id_name) like :search ";
+		$sql_search .= "	or lower(r.caller_id_number) like :search ";
+		$sql_search .= "	or lower(r.caller_destination) like :search ";
+		$sql_search .= "	or lower(r.destination_number) like :search ";
+		$sql_search .= "	or lower(r.call_recording_name) like :search ";
+		$sql_search .= "	or lower(r.call_recording_path) like :search ";
+		$sql_search .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
-
-//prepare some of the paging values
-	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$page = $_GET['page'] ?? '';
-	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
-	$offset = $rows_per_page * $page;
 
 //set the time zone
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
@@ -109,38 +131,6 @@
 	else {
 		$time_format = 'HH12:MI:SS am';
 	}
-
-//get the list
-	$sql = "select r.domain_uuid, d.domain_name, r.call_recording_uuid, r.call_direction, ";
-	$sql .= "r.call_recording_name, r.call_recording_path, r.call_recording_transcription, r.call_recording_length, ";
-	$sql .= "r.caller_id_name, r.caller_id_number, r.caller_destination, r.destination_number, ";
-	$sql .= "to_char(timezone(:time_zone, r.call_recording_date), 'DD Mon YYYY') as call_recording_date_formatted, \n";
-	$sql .= "to_char(timezone(:time_zone, r.call_recording_date), '".$time_format."') as call_recording_time_formatted \n";
-	$sql .= "from view_call_recordings as r, v_domains as d ";
-	//$sql .= "from v_call_recordings as r, v_domains as d ";
-	$sql .= "where true ";
-	if ($show != "all" || !permission_exists('call_recording_all')) {
-		$sql .= "and r.domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	}
-	$sql .= "and r.domain_uuid = d.domain_uuid ";
-	if (!empty($search)) {
-		$sql .= "and (";
-		$sql .= "	lower(r.call_direction) like :search ";
-		$sql .= "	or lower(r.caller_id_name) like :search ";
-		$sql .= "	or lower(r.caller_id_number) like :search ";
-		$sql .= "	or lower(r.caller_destination) like :search ";
-		$sql .= "	or lower(r.destination_number) like :search ";
-		$sql .= "	or lower(r.call_recording_name) like :search ";
-		$sql .= "	or lower(r.call_recording_path) like :search ";
-		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
-	$sql .= order_by($order_by, $order, 'r.call_recording_date', 'desc');
-	$sql .= limit_offset($rows_per_page, $offset);
-	$parameters['time_zone'] = $time_zone;
-	$call_recordings = $database->select($sql, $parameters ?? null, 'all');
-	unset($sql, $parameters);
 
 //detect if any transcriptions available
 	if ($transcribe_enabled && !empty($transcribe_engine) && !empty($call_recordings) && is_array($call_recordings)) {
@@ -156,12 +146,33 @@
 	}
 
 //prepare to page the results
-	$param = "&search=".urlencode($search);
-	if ($show == "all" && permission_exists('call_recording_all')) {
-		$param .= "&show=all";
+	$rows_per_page = $settings->get('domain', 'paging', 50);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows ?? null, $query_string, $rows_per_page, true, $result_count); //top
+	list($paging_controls, $rows_per_page) = paging($num_rows ?? null, $query_string, $rows_per_page, false, $result_count); //bottom
+	$offset = $rows_per_page * $page;
+
+//get the list
+	$sql = "select r.domain_uuid, d.domain_name, r.call_recording_uuid, r.call_direction, ";
+	$sql .= "r.call_recording_name, r.call_recording_path, r.call_recording_transcription, r.call_recording_length, ";
+	$sql .= "r.caller_id_name, r.caller_id_number, r.caller_destination, r.destination_number, ";
+	$sql .= "to_char(timezone(:time_zone, r.call_recording_date), 'DD Mon YYYY') as call_recording_date_formatted, \n";
+	$sql .= "to_char(timezone(:time_zone, r.call_recording_date), '".$time_format."') as call_recording_time_formatted \n";
+	$sql .= "from view_call_recordings as r, v_domains as d ";
+	//$sql .= "from v_call_recordings as r, v_domains as d ";
+	$sql .= "where true ";
+	if ($show != "all" || !permission_exists('call_recording_all')) {
+		$sql .= "and r.domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows ?? null, $param, $rows_per_page, true, $result_count); //top
-	list($paging_controls, $rows_per_page) = paging($num_rows ?? null, $param, $rows_per_page, false, $result_count); //bottom
+	$sql .= "and r.domain_uuid = d.domain_uuid ";
+	if (!empty($sql_search)) {
+		$sql .= "and ".$sql_search;
+	}
+	$sql .= order_by($order_by, $order, 'r.call_recording_date', 'desc');
+	$sql .= limit_offset($rows_per_page, $offset);
+	$parameters['time_zone'] = $time_zone;
+	$call_recordings = $database->select($sql, $parameters ?? null, 'all');
+	unset($sql, $parameters);
 
 //create token
 	$object = new token;
@@ -185,13 +196,13 @@
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','collapse'=>'hide-xs','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	if (permission_exists('call_recording_all')) {
-		if ($show == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>";
+	foreach ($param as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?type='.urlencode($destination_type ?? '').'&show=all'.(!empty($search) ? "&search=".urlencode($search) : null)]);
-		}
+	}
+	if ($show !== 'all' && permission_exists('call_recording_all')) {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?type='.urlencode($destination_type ?? '').'&show=all']);
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=\"$('#btn_reset').hide(); $('#btn_search').show();\">";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search','style'=>(!empty($search) ? 'display: none;' : null),'collapse'=>'hide-xs']);
@@ -213,7 +224,6 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -229,20 +239,20 @@
 		$col_count++;
 	}
 	if ($show == "all" && permission_exists('call_recording_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='hide-sm-dn shrink'");
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, "class='hide-sm-dn shrink'", $query_string);
 	}
-	echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order, null, "class='hide-sm-dn'");
-	echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order, null, "class='pct-15'");
-	echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, "class='pct-10 hide-sm-dn'");
-	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, null, "class='pct-10'");
-	echo th_order_by('call_recording_name', $text['label-call_recording_name'], $order_by, $order, null, "class='pct-20 hide-sm-dn'");
+	echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order, null, "class='hide-sm-dn'", $query_string);
+	echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order, null, "class='pct-15'", $query_string);
+	echo th_order_by('caller_destination', $text['label-caller_destination'], $order_by, $order, null, "class='pct-10 hide-sm-dn'", $query_string);
+	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, null, "class='pct-10'", $query_string);
+	echo th_order_by('call_recording_name', $text['label-call_recording_name'], $order_by, $order, null, "class='pct-20 hide-sm-dn'", $query_string);
 	if (permission_exists('call_recording_play') || permission_exists('call_recording_download')) {
 		echo "<th class='shrink center'>".$text['label-recording']."</th>\n";
 		$col_count++;
 	}
-	echo th_order_by('call_recording_length', $text['label-call_recording_length'], $order_by, $order, null, "class='right hide-sm-dn shrink'");
-	echo th_order_by('call_recording_date', $text['label-call_recording_date'], $order_by, $order, null, "class='pct-20 center'");
-	echo th_order_by('call_direction', $text['label-call_direction'], $order_by, $order, null, "class='hide-sm-dn shrink'");
+	echo th_order_by('call_recording_length', $text['label-call_recording_length'], $order_by, $order, null, "class='right hide-sm-dn shrink'", $query_string);
+	echo th_order_by('call_recording_date', $text['label-call_recording_date'], $order_by, $order, null, "class='pct-20 center'", $query_string);
+	echo th_order_by('call_direction', $text['label-call_direction'], $order_by, $order, null, "class='hide-sm-dn shrink'", $query_string);
 	if (permission_exists('xml_cdr_details')) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
