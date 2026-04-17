@@ -456,11 +456,13 @@
 					}
 					unset($sql, $parameters, $row);
 
-					//replace variables in email body
-					$email_body = str_replace('${domain}', $domain_name, $email_body);
+					if (!empty($email_subject) && !empty($email_body)) {
+						//replace variables in email body
+						$email_body = str_replace('${domain}', $domain_name, $email_body);
 
-					//send the email
-					send_email($user_email, $email_subject, $email_body, $eml_error);
+						//send the email
+						send_email($user_email, $email_subject, $email_body, $eml_error);
+					}
 
 					//get the username
 					$sql = "select username from v_users ";
