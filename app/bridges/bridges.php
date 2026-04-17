@@ -108,7 +108,7 @@
 		$sql_search .= "	or lower(bridge_destination) like :search ";
 		$sql_search .= "	or lower(bridge_description) like :search ";
 		$sql_search .= ") ";
-		$parameters['search'] = '%'.strtolower($search).'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 
 //get the count
