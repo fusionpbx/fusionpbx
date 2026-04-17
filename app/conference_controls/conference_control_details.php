@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2025
+	Portions created by the Initial Developer are Copyright (C) 2018-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -38,6 +38,28 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? ''));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	$query_string = http_build_query($param);
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
@@ -68,43 +90,17 @@
 				break;
 		}
 
-		header('Location: conference_control_edit.php?id='.urlencode($conference_control_uuid));
+		header('Location: conference_control_edit.php?id='.urlencode($conference_control_uuid).($query_string ? '&'.$query_string : ''));
 		exit;
-	}
-
-//get variables used to control the order
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
-
-//add the search term
-	$search = $_GET["search"] ?? '';
-	if (!empty($search)) {
-		$sql_search = "and (";
-		$sql_search .= "control_digits like :search";
-		$sql_search .= "or control_action like :search";
-		$sql_search .= "or control_data like :search";
-		$sql_search .= "or control_enabled like :search";
-		$sql_search .= ")";
-		$parameters['search'] = '%'.$search.'%';
 	}
 
 //prepare to page the results
 	$sql = "select count(conference_control_detail_uuid) ";
 	$sql .= "from v_conference_control_details ";
 	$sql .= "where conference_control_uuid = :conference_control_uuid ";
-	$sql .= $sql_search ?? '';
 	$parameters['conference_control_uuid'] = $conference_control_uuid ?? '';
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
-
-//prepare to page the results
-	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = "&id=".!empty($conference_control_uuid);
-	if (isset($_GET['page'])) {
-		$page = isset($_GET['page']) ? $_GET['page'] : 0;
-		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
-	}
 
 //get the list
 	$sql = "select ";
@@ -115,8 +111,7 @@
 	$sql .= "control_data, ";
 	$sql .= "cast(control_enabled as text) ";
 	$sql .= "from v_conference_control_details ";
-	$sql .= $sql_search ?? '';
-	$sql .= order_by($order_by, $order, 'control_digits', 'asc');
+	$sql .= order_by(null, null, 'control_digits', 'asc');
 	$sql .= limit_offset($rows_per_page, !empty($offset));
 	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
@@ -162,10 +157,10 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('control_digits', $text['label-control_digits'], $order_by, $order, null, "class='pct-5 center'", $param);
-	echo th_order_by('control_action', $text['label-control_action'], $order_by, $order, null, null, $param);
-	echo th_order_by('control_data', $text['label-control_data'], $order_by, $order, null, "class='pct-50 hide-xs'", $param);
-	echo th_order_by('control_enabled', $text['label-control_enabled'], $order_by, $order, null, "class='center'", $param);
+	echo "<th class='pct-5 center'>".$text['label-control_digits']."</th>\n";
+	echo "<th>".$text['label-control_action']."</th>\n";
+	echo "<th class='pct-50 hide-xs'>".$text['label-control_data']."</th>\n";
+	echo "<th class='center'>".$text['label-control_enabled']."</th>\n";
 	if (permission_exists('conference_control_detail_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -175,7 +170,7 @@
 		$x = 0;
 		foreach ($result as $row) {
 			if (permission_exists('conference_control_detail_edit')) {
-				$list_row_url = 'conference_control_detail_edit.php?conference_control_uuid='.urlencode($row['conference_control_uuid']).'&id='.urlencode($row['conference_control_detail_uuid']);
+				$list_row_url = 'conference_control_detail_edit.php?conference_control_uuid='.urlencode($row['conference_control_uuid']).'&id='.urlencode($row['conference_control_detail_uuid']).($query_string ? '&'.$query_string : '');
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('conference_control_detail_edit') || permission_exists('conference_control_detail_delete')) {
