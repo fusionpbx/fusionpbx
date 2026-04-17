@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -40,10 +40,30 @@
 	$text = $language->get();
 
 //set additional variables
-	$show = $_REQUEST["show"] ?? '';
 	$action = $_REQUEST['action'] ?? '';
-	$search = $_REQUEST['search'] ?? '';
 	$toggle_field = $_REQUEST['toggle_field'] ?? '';
+
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? ''));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	$query_string = http_build_query($param);
 
 //check if we are using websockets for the conference view
 	if ($settings->get('active_conferences', 'websockets_enabled', true)) {
@@ -79,7 +99,7 @@
 				break;
 		}
 
-		header('Location: conference_rooms.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
+		header('Location: conference_rooms.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
 
@@ -170,10 +190,6 @@
 		}
 	}
 
-//get variables used to control the order
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
-
 //get the conference room count
 	$conference_center = new conference_centers;
 	$conference_center->domain_uuid = $_SESSION['domain_uuid'];
@@ -183,12 +199,9 @@
 	$num_rows = $conference_center->room_count();
 
 //prepare to page the results
-	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = !empty($search) ? "&search=".$search : null;
 	if (isset($_GET['page'])) {
-		$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
-		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+		list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 		$offset = $rows_per_page * $page;
 	}
 
@@ -226,7 +239,7 @@
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'conference_centers.php']);
 	if (permission_exists('conference_room_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'conference_room_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'conference_room_edit.php'.($query_string ? '?'.$query_string : '')]);
 	}
 	if (permission_exists('conference_room_edit') && $result) {
 		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"toggle_select(); this.blur();"]);
@@ -245,12 +258,17 @@
 	if (permission_exists('conference_room_delete') && $result) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($param as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
+		}
+	}
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search','style'=>(!empty($search) ? 'display: none;' : null)]);
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'conference_rooms.php','style'=>(empty($search) ? 'display: none;' : null)]);
 	if (!empty($paging_controls_mini)) {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
@@ -270,7 +288,6 @@
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' id='toggle_field' name='toggle_field' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -280,26 +297,26 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	//echo th_order_by('conference_center_uuid', 'Conference UUID', $order_by, $order);
+	//echo th_order_by('conference_center_uuid', 'Conference UUID', $order_by, $order, null, null, $query_string);
 	echo "<th>".$text['label-name']."</th>\n";
 	echo "<th>".$text['label-moderator-pin']."</th>\n";
 	echo "<th>".$text['label-participant-pin']."</th>\n";
-	//echo th_order_by('profile', $text['label-profile'], $order_by, $order);
-	echo th_order_by('record', $text['label-record'], $order_by, $order, null, "class='center'");
-	//echo th_order_by('max_members', 'Max', $order_by, $order);
-	echo th_order_by('wait_mod', $text['label-wait_moderator'], $order_by, $order, null, "class='center'");
-	echo th_order_by('announce', $text['label-announce_name'], $order_by, $order, null, "class='center'");
-	echo th_order_by('announce', $text['label-announce_count'], $order_by, $order, null, "class='center'");
-	echo th_order_by('announce', $text['label-announce_recording'], $order_by, $order, null, "class='center'");
-	//echo th_order_by('enter_sound', 'Enter Sound', $order_by, $order);
-	echo th_order_by('mute', $text['label-mute'], $order_by, $order, null, "class='center'");
-	echo th_order_by('sounds', $text['label-sounds'], $order_by, $order, null, "class='center'");
+	//echo th_order_by('profile', $text['label-profile'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('record', $text['label-record'], $order_by, $order, null, "class='center'", $query_string);
+	//echo th_order_by('max_members', 'Max', $order_by, $order, null, null, $query_string);
+	echo th_order_by('wait_mod', $text['label-wait_moderator'], $order_by, $order, null, "class='center'", $query_string);
+	echo th_order_by('announce', $text['label-announce_name'], $order_by, $order, null, "class='center'", $query_string);
+	echo th_order_by('announce', $text['label-announce_count'], $order_by, $order, null, "class='center'", $query_string);
+	echo th_order_by('announce', $text['label-announce_recording'], $order_by, $order, null, "class='center'", $query_string);
+	//echo th_order_by('enter_sound', 'Enter Sound', $order_by, $order, null, null, $query_string);
+	echo th_order_by('mute', $text['label-mute'], $order_by, $order, null, "class='center'", $query_string);
+	echo th_order_by('sounds', $text['label-sounds'], $order_by, $order, null, "class='center'", $query_string);
 	echo "<th class='center'>".$text['label-members']."</th>\n";
 	echo "<th class='center'>".$text['label-tools']."</th>\n";
 	if (permission_exists('conference_room_enabled')) {
-		echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
+		echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $query_string);
 	}
-	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
+	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'", $query_string);
 	if (permission_exists('conference_room_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -321,7 +338,7 @@
 
 			$list_row_url = '';
 			if (permission_exists('conference_room_edit')) {
-				$list_row_url = "conference_room_edit.php?id=".urlencode($row['conference_room_uuid']);
+				$list_row_url = "conference_room_edit.php?id=".urlencode($row['conference_room_uuid']).($query_string ? '&'.$query_string : '');
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}

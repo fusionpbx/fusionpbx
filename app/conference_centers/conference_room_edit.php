@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,6 +45,28 @@
 	$stop_datetime = '';
 	$account_code = '';
 	$description = '';
+
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? ''));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	$query_string = http_build_query($param);
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -203,7 +225,7 @@
 		}
 
 		message::add($text['message-delete']);
-		header("Location: conference_room_edit.php?id=".escape($conference_room_uuid));
+		header("Location: conference_room_edit.php?id=".escape($conference_room_uuid).($query_string ? '&'.$query_string : ''));
 		return;
 	}
 
@@ -222,7 +244,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: conference_rooms.php');
+				header('Location: conference_rooms.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -436,7 +458,7 @@
 				}
 
 				//redirect
-				header("Location: conference_room_edit.php?id=".escape($conference_room_uuid));
+				header("Location: conference_room_edit.php?id=".escape($conference_room_uuid).($query_string ? '&'.$query_string : ''));
 				exit;
 			}
 	}
@@ -549,7 +571,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-conference_room']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'conference_rooms.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'conference_rooms.php'.($query_string ? '?'.$query_string : '')]);
 	if (!empty($conference_room_uuid) && is_uuid($conference_room_uuid)) {
 		if (permission_exists('conference_interactive_view')) {
 			echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$settings->get('theme', 'button_icon_view'),'style'=>'margin-left: 15px;','link'=>'../conferences_active/conference_interactive.php?c='.urlencode($conference_room_uuid)]);
