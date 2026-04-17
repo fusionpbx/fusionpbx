@@ -104,19 +104,6 @@
 		exit;
 	}
 
-//add the search string
-	if (!empty($search)) {
-		$sql_search = " (";
-		$sql_search .= "	lower(call_block_name) like :search ";
-		$sql_search .= "	or lower(call_block_direction) like :search ";
-		$sql_search .= "	or lower(call_block_number) like :search ";
-		$sql_search .= "	or lower(call_block_app) like :search ";
-		$sql_search .= "	or lower(call_block_data) like :search ";
-		$sql_search .= "	or lower(call_block_description) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.lower_case($search).'%';
-	}
-
 //get the count
 	$sql = "select count(*) from view_call_block ";
 	$sql .= "where true ";
@@ -143,10 +130,19 @@
 		}
 		$sql .= ") ";
 	}
-	if (!empty($sql_search)) {
-		$sql .= "and ".$sql_search;
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= " lower(call_block_name) like :search ";
+		$sql .= " or lower(call_block_direction) like :search ";
+		$sql .= " or lower(call_block_number) like :search ";
+		$sql .= " or lower(call_block_app) like :search ";
+		$sql .= " or lower(call_block_data) like :search ";
+		$sql .= " or lower(call_block_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
+	unset($parameters);
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
@@ -198,8 +194,16 @@
 		}
 		$sql .= ") ";
 	}
-	if (!empty($sql_search)) {
-		$sql .= "and ".$sql_search;
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= " lower(call_block_name) like :search ";
+		$sql .= " or lower(call_block_direction) like :search ";
+		$sql .= " or lower(call_block_number) like :search ";
+		$sql .= " or lower(call_block_app) like :search ";
+		$sql .= " or lower(call_block_data) like :search ";
+		$sql .= " or lower(call_block_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$sql .= order_by($order_by, $order, ['domain_uuid','call_block_country_code','call_block_number']);
 	$sql .= limit_offset($rows_per_page, $offset);
@@ -248,11 +252,11 @@
 	if ($show !== 'all' && permission_exists('call_block_all')) {
 		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'call_block.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if (!empty($paging_controls_mini)) {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
