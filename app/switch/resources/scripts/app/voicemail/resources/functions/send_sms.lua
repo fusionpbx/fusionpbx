@@ -39,6 +39,7 @@
 				db_voicemail_uuid = string.lower(row["voicemail_uuid"]);
 				voicemail_sms_to = row["voicemail_sms_to"];
 				voicemail_file = row["voicemail_file"];
+				voicemail_uuid = row["voicemail_uuid"];
 			end);
 
 		--get the sms_body template
@@ -92,6 +93,8 @@
 					sms_body = sms_body:gsub("${domain_name}", domain_name);
 					sms_body = sms_body:gsub("${sip_to_user}", id);
 					sms_body = sms_body:gsub("${dialed_user}", id);
+					sms_body = sms_body:gsub("${voicemail_uuid}", voicemail_uuid);
+					sms_body = sms_body:gsub("${message_uuid}", uuid);
 					if (transcription ~= nil) then
 						sms_body = sms_body:gsub("${message_text}", transcription);
 					end
