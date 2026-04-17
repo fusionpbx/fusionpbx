@@ -18,7 +18,7 @@
 
 	  The Initial Developer of the Original Code is
 	  Mark J Crane <markjcrane@fusionpbx.com>
-	  Portions created by the Initial Developer are Copyright (C) 2008-2025
+	  Portions created by the Initial Developer are Copyright (C) 2008-2026
 	  the Initial Developer. All Rights Reserved.
 
 	  Contributor(s):
@@ -43,9 +43,35 @@
 	$language = new text;
 	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/call_forward');
 
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'extension'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$sort = $order_by == 'extension' ? 'natural' : null;
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('call_forward_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //get posted data and set defaults
 	$action = $_POST['action'] ?? '';
-	$search = $_POST['search'] ?? '';
 	$extensions = $_POST['extensions'] ?? [];
 
 //process the http post data by action
@@ -71,20 +97,18 @@
 				break;
 		}
 
-		header('Location: call_forward.php' . ($search != '' ? '?search=' . urlencode($search) : null));
+		header('Location: call_forward.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
 
-//get order and order by
-	$order_by = $_GET["order_by"] ?? 'extension';
-	$order = $_GET["order"] ?? 'asc';
-	$sort = $order_by == 'extension' ? 'natural' : null;
-
-//get the search
-	$search = strtolower($_GET["search"] ?? '');
-
-//set the show variable
-	$show = $_GET['show'] ?? '';
+//add the search string
+	if (!empty($search)) {
+		$sql_search = " (";
+		$sql_search .= "	extension like :search ";
+		$sql_search .= "	or lower(description) like :search ";
+		$sql_search .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
+	}
 
 //define select count query
 	$sql = "select count(*) from v_extensions ";
@@ -95,12 +119,8 @@
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (!empty($search)) {
-		$sql .= "and ( ";
-		$sql .= "extension like :search ";
-		$sql .= "or lower(description) like :search ";
-		$sql .= ") ";
-		$parameters['search'] = '%' . $search . '%';
+	if (!empty($sql_search)) {
+		$sql .= "and ".$sql_search;
 	}
 	$sql .= "and enabled = 'true' ";
 	if (!permission_exists('extension_edit')) {
@@ -121,32 +141,11 @@
 		}
 	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
-	unset($parameters);
 
 //prepare the paging
 	$rows_per_page = !empty($settings->get('domain', 'paging')) ? $settings->get('domain', 'paging') : 50;
-
-	if ($search) {
-		$params[] = "search=" . $search;
-	}
-	if ($order_by) {
-		$params[] = "order_by=" . $order_by;
-	}
-	if ($order) {
-		$params[] = "order=" . $order;
-	}
-	if ($show == "all" && permission_exists('call_forward_all')) {
-		$params[] = "show=all";
-	}
-	$param = !empty($params) ? implode('&', $params) : '';
-	unset($params);
-	$page = $_GET['page'] ?? '';
-	if (empty($page)) {
-		$page = 0;
-		$_GET['page'] = 0;
-	}
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
@@ -158,12 +157,8 @@
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (!empty($search)) {
-		$sql .= "and ( ";
-		$sql .= "extension like :search ";
-		$sql .= "or lower(description) like :search ";
-		$sql .= ") ";
-		$parameters['search'] = '%' . $search . '%';
+	if (!empty($sql_search)) {
+		$sql .= "and ".$sql_search;
 	}
 	$sql .= "and enabled = 'true' ";
 	if (!permission_exists('extension_edit')) {
@@ -204,9 +199,6 @@
 	}
 	require_once "resources/header.php";
 
-//set the back button
-	$_SESSION['call_forward_back'] = $_SERVER['PHP_SELF'];
-
 //show the content
 	if ($is_included) {
 		echo "<div class='action_bar sub'>\n";
@@ -235,12 +227,14 @@
 				echo button::create(['type' => 'button', 'label' => $text['label-dnd'], 'icon' => $settings->get('theme', 'button_icon_toggle'), 'collapse' => false, 'name' => 'btn_toggle_dnd', 'onclick' => "list_action_set('toggle_do_not_disturb'); modal_open('modal-toggle','btn_toggle');"]);
 			}
 		}
-		if ($show !== 'all' && permission_exists('call_forward_all')) {
-			echo button::create(['type' => 'button', 'label' => $text['button-show_all'], 'icon' => $settings->get('theme', 'button_icon_all'), 'link' => '?show=all' . (!empty($params) ? '&'.implode('&', $params) : null)]);
-		}
 		echo "<form id='form_search' class='inline' method='get'>\n";
-		if ($show == 'all' && permission_exists('call_forward_all')) {
-			echo "		<input type='hidden' name='show' value='all'>";
+		foreach ($param as $key => $value) {
+			if ($key !== 'search' && $key !== 'page') {
+				echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
+			}
+		}
+		if ($show !== 'all' && permission_exists('call_forward_all')) {
+			echo button::create(['type' => 'button', 'label' => $text['button-show_all'], 'icon' => $settings->get('theme', 'button_icon_all'), 'link' => '?show=all']);
 		}
 		echo "<input type='text' class='txt list-search' name='search' id='search' value=\"" . escape($search) . "\" placeholder=\"" . $text['label-search'] . "\" onkeydown=''>";
 		echo button::create(['label' => $text['button-search'], 'icon' => $settings->get('theme', 'button_icon_search'), 'type' => 'submit', 'id' => 'btn_search']);
@@ -300,7 +294,7 @@
 	if (!empty($extensions)) {
 		$x = 0;
 		foreach ($extensions as $row) {
-			$list_row_url = PROJECT_PATH . "/app/call_forward/call_forward_edit.php?id=".$row['extension_uuid'];
+			$list_row_url = PROJECT_PATH . "/app/call_forward/call_forward_edit.php?id=".$row['extension_uuid'].($query_string ? '&'.$query_string : '');
 			if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 				$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 			}
