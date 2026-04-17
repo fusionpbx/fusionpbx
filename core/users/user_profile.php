@@ -456,6 +456,7 @@
 					}
 					unset($sql, $parameters, $row);
 
+					//send email if the subject and body are not empty
 					if (!empty($email_subject) && !empty($email_body)) {
 						//replace variables in email body
 						$email_body = str_replace('${domain}', $domain_name, $email_body);
