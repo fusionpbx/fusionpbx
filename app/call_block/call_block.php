@@ -104,9 +104,17 @@
 		exit;
 	}
 
-//add the search term
-	if (!empty($_GET["search"])) {
-		$search = strtolower($_GET["search"]);
+//add the search string
+	if (!empty($search)) {
+		$sql_search = " (";
+		$sql_search .= "	lower(call_block_name) like :search ";
+		$sql_search .= "	or lower(call_block_direction) like :search ";
+		$sql_search .= "	or lower(call_block_number) like :search ";
+		$sql_search .= "	or lower(call_block_app) like :search ";
+		$sql_search .= "	or lower(call_block_data) like :search ";
+		$sql_search .= "	or lower(call_block_description) like :search ";
+		$sql_search .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 
 //get the count
@@ -135,19 +143,10 @@
 		}
 		$sql .= ") ";
 	}
-	if (!empty($search)) {
-		$sql .= "and (";
-		$sql .= " lower(call_block_name) like :search ";
-		$sql .= " or lower(call_block_direction) like :search ";
-		$sql .= " or lower(call_block_number) like :search ";
-		$sql .= " or lower(call_block_app) like :search ";
-		$sql .= " or lower(call_block_data) like :search ";
-		$sql .= " or lower(call_block_description) like :search ";
-		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+	if (!empty($sql_search)) {
+		$sql .= "and ".$sql_search;
 	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
-	unset($parameters);
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
@@ -199,16 +198,8 @@
 		}
 		$sql .= ") ";
 	}
-	if (!empty($search)) {
-		$sql .= "and (";
-		$sql .= " lower(call_block_name) like :search ";
-		$sql .= " or lower(call_block_direction) like :search ";
-		$sql .= " or lower(call_block_number) like :search ";
-		$sql .= " or lower(call_block_app) like :search ";
-		$sql .= " or lower(call_block_data) like :search ";
-		$sql .= " or lower(call_block_description) like :search ";
-		$sql .= ") ";
-		$parameters['search'] = '%'.strtolower($search).'%';
+	if (!empty($sql_search)) {
+		$sql .= "and ".$sql_search;
 	}
 	$sql .= order_by($order_by, $order, ['domain_uuid','call_block_country_code','call_block_number']);
 	$sql .= limit_offset($rows_per_page, $offset);
