@@ -108,7 +108,7 @@
 		$sql_search .= "	or lower(bridge_destination) like :search ";
 		$sql_search .= "	or lower(bridge_description) like :search ";
 		$sql_search .= ") ";
-		$parameters['search'] = '%'.strtolower($search).'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 
 //get the count
@@ -187,7 +187,7 @@
 			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}
-	if (permission_exists('bridge_all') && (!isset($show) || $show != 'all')) {
+	if ($show !== 'all' && permission_exists('bridge_all')) {
 		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
 	}
 	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
