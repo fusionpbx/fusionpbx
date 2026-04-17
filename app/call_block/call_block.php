@@ -104,11 +104,6 @@
 		exit;
 	}
 
-//add the search term
-	if (!empty($_GET["search"])) {
-		$search = strtolower($_GET["search"]);
-	}
-
 //get the count
 	$sql = "select count(*) from view_call_block ";
 	$sql .= "where true ";
@@ -144,7 +139,7 @@
 		$sql .= " or lower(call_block_data) like :search ";
 		$sql .= " or lower(call_block_description) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($parameters);
@@ -208,7 +203,7 @@
 		$sql .= " or lower(call_block_data) like :search ";
 		$sql .= " or lower(call_block_description) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.strtolower($search).'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$sql .= order_by($order_by, $order, ['domain_uuid','call_block_country_code','call_block_number']);
 	$sql .= limit_offset($rows_per_page, $offset);
@@ -254,14 +249,14 @@
 			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}
-	if (permission_exists('call_block_all') && (!isset($show) || $show != 'all')) {
+	if ($show !== 'all' && permission_exists('call_block_all')) {
 		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'call_block.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if (!empty($paging_controls_mini)) {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
