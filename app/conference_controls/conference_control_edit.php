@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2025
+	Portions created by the Initial Developer are Copyright (C) 2018-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -41,6 +41,28 @@
 //set the defaults
 	$control_name = '';
 	$control_description = '';
+
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'control_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	$query_string = http_build_query($param);
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -70,7 +92,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: conference_controls.php');
+				header('Location: conference_controls.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -119,7 +141,7 @@
 				if ($action == "update") {
 					message::add($text['message-update']);
 				}
-				header("Location: conference_controls.php");
+				header("Location: conference_controls.php".($query_string ? '?'.$query_string : ''));
 				return;
 			}
 	} //(is_array($_POST) && empty($_POST["persistformvar"]))
@@ -157,7 +179,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-conference_control']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'conference_controls.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'conference_controls.php'.($query_string ? '?'.$query_string : '')]);
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
