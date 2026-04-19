@@ -122,6 +122,67 @@ class text implements clear_cache {
 	}
 
 	/**
+	 * Detect the application path from the current context
+	 *
+	 * @return string|null App path (e.g., "core/domains" or "app/maintenance") or null if not detected
+	 */
+	private function detect_path(): ?string {
+		$project_root = dirname(__DIR__, 2);
+		$prefix_array = ['core', 'app'];
+
+		// Method 1: Check SCRIPT_FILENAME
+		if (!empty($_SERVER['SCRIPT_FILENAME'])) {
+			$script_file = $_SERVER['SCRIPT_FILENAME'];
+			foreach ($prefix_array as $prefix) {
+				$directory_prefix = $project_root . '/' . $prefix . '/';
+				if (strpos($script_file, $directory_prefix) === 0) {
+					$relative = substr($script_file, strlen($directory_prefix));
+					$name = explode('/', $relative)[0];
+					if (preg_match('/^[a-zA-Z0-9_\-]+$/', $name)) {
+						return $prefix . '/' . $name;
+					}
+				}
+			}
+		}
+
+		// Method 2: Check REQUEST_URI
+		if (!empty($_SERVER['REQUEST_URI'])) {
+			$request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+			foreach ($prefix_array as $prefix) {
+				$uri_prefix = '/' . $prefix . '/';
+				if (strpos($request_uri, $uri_prefix) === 0) {
+					$offset = strlen($uri_prefix);
+					$relative = substr($request_uri, $offset);
+					$name = explode('/', $relative)[0];
+					if (preg_match('/^[a-zA-Z0-9_\-]+$/', $name)) {
+						return $prefix . '/' . $name;
+					}
+				}
+			}
+		}
+
+		// Method 3: Backtrace detection
+		$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10);
+		foreach ($backtrace as $frame) {
+			if (isset($frame['file'])) {
+				$file = $frame['file'];
+				foreach ($prefix_array as $prefix) {
+					$directory_prefix = $project_root . '/' . $prefix . '/';
+					if (strpos($file, $directory_prefix) === 0) {
+						$relative_path = substr($file, strlen($directory_prefix));
+						$name = explode('/', $relative_path)[0];
+						if (preg_match('/^[a-zA-Z0-9_\-]+$/', $name)) {
+							return $prefix . '/' . $name;
+						}
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * The clear_cache method is called automatically for any class that implements the clear_cache interface.
 	 * The function declared here ensures that all clear_cache methods have the same number of parameters being passed,
 	 * which in this case, are no parameters.
@@ -152,7 +213,7 @@ class text implements clear_cache {
 	 * Get a specific language from the language file
 	 *
 	 * @param string|null $language_code  examples: en-us, es-cl, fr-fr, pt-pt
-	 * @param string|null $app_path       examples: app/exec or core/domains
+	 * @param string|null $app_path       examples: core/domains or app/maintenance
 	 * @param bool        $exclude_global Exclude the global languages file
 	 *
 	 * @return array A flattened array containing the desired language
@@ -172,11 +233,23 @@ class text implements clear_cache {
 			$language_code = $this->legacy_map[$language_code];
 		}
 
+		//get the project root
+		$project_root = dirname(__DIR__, 2);
+
 		//get the app_languages.php
 		if ($app_path != null) {
-			$lang_path = dirname(__DIR__, 2) . "/" . $app_path;
+			$lang_path = $project_root . "/" . $app_path;
 		} else {
-			$lang_path = getcwd();
+			// Auto-detect app path from backtrace if caller is in an app directory
+			$detected_path = $this->detect_path();
+
+			// If app detected, construct full path
+			if ($detected_path !== null) {
+				$lang_path = $project_root . "/" . $detected_path;
+			} else {
+				// Fall back to getcwd()
+				$lang_path = getcwd();
+			}
 		}
 
 		//check the class cache
@@ -190,8 +263,8 @@ class text implements clear_cache {
 		}
 
 		//get the global app_languages.php
-		if (!$exclude_global && file_exists(dirname(__DIR__, 2) . "/resources/app_languages.php")) {
-			require dirname(__DIR__, 2) . "/resources/app_languages.php";
+		if (!$exclude_global && file_exists($project_root . "/resources/app_languages.php")) {
+			require $project_root . "/resources/app_languages.php";
 		}
 
 		if (file_exists($lang_path . "/app_languages.php") && ($lang_path != 'resources' or $exclude_global)) {
