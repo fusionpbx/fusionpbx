@@ -436,6 +436,12 @@
         <action function="play-file" data="voicemail/vm-$1.wav"/>
       </match>
     </input>
+        <input pattern="^(marked_new)$">
+      <match>
+        <action function="play-file" data="voicemail/vm-message.wav"/>
+        <action function="play-file" data="voicemail/vm-$1.wav"/>
+      </match>
+    </input>
     <input pattern="^(marked-urgent)$">
       <match>
         <action function="play-file" data="voicemail/vm-message.wav"/>
