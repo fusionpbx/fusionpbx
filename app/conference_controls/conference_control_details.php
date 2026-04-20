@@ -112,7 +112,6 @@
 	$sql .= "cast(control_enabled as text) ";
 	$sql .= "from v_conference_control_details ";
 	$sql .= order_by(null, null, 'control_digits', 'asc');
-	$sql .= limit_offset($rows_per_page, !empty($offset));
 	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -145,7 +144,7 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
-	echo "<form id='form_list' method='post' action='conference_control_details.php'>\n";
+	echo "<form id='form_list' method='post' action='conference_control_details.php".($query_string ? '?'.$query_string : '')."'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='conference_control_uuid' value=\"".escape($conference_control_uuid ?? '')."\">\n";
 
@@ -212,7 +211,7 @@
 	echo "</table>\n";
 	echo "</div>\n";
 	echo "<br />\n";
-	echo "<div align='center'>".!empty($paging_controls)."</div>\n";
+
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
 
