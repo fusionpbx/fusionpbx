@@ -170,6 +170,7 @@
 		$sql .= "and u.user_uuid = :user_uuid ";
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
+	$sql .= $sql_search ?? '';
 	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$conferences = $database->select($sql, $parameters ?? null, 'all');
