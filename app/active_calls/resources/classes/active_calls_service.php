@@ -804,7 +804,7 @@ class active_calls_service extends service implements websocket_service_interfac
 		$json_string = $this->ws_client->read();
 
 		// Nothing to do
-		if ($json_string === null) {
+		if (empty($json_string)) {
 			$this->warning('Message received from Websocket is empty');
 			return;
 		}

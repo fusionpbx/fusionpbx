@@ -203,7 +203,7 @@ function activate_tab(button) {
 			bootstrap.Tab.getOrCreateInstance(button).show();
 			return;
 		} catch (err) {
-			console.warn('[OP] Bootstrap tab show failed, using fallback:', err);
+            //console.warn('[OP] Bootstrap tab show failed, using fallback:', err);
 		}
 	}
 
@@ -1637,10 +1637,10 @@ function render_conferences_tab() {
 						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(deaf_label)}" onclick='action_conference_member(${jsq(deaf_action)}, ${conf_name_js}, ${member_id_js}, ${uuid_js})'><span class="${esc(get_conference_action_icon(deaf_action, deaf_action === 'deaf' ? 'fas fa-deaf' : 'fas fa-headphones'))}" aria-hidden="true"></span></button> `;
 						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-energy'] || 'Energy')}` + ` +" onclick='action_conference_member("energy", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "up")'><span class="${esc(get_conference_action_icon('energy_up', 'fas fa-plus'))}" aria-hidden="true"></span></button> `;
 						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-energy'] || 'Energy')}` + ` -" onclick='action_conference_member("energy", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "down")'><span class="${esc(get_conference_action_icon('energy_down', 'fas fa-minus'))}" aria-hidden="true"></span></button> `;
-						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-volume'] || 'Volume')}` + ` -" onclick='action_conference_member("volume_in", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "down")'><span class="${esc(get_conference_action_icon('volume_down', 'fas fa-volume-down'))}" aria-hidden="true"></span></button> `;
 						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-volume'] || 'Volume')}` + ` +" onclick='action_conference_member("volume_in", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "up")'><span class="${esc(get_conference_action_icon('volume_up', 'fas fa-volume-up'))}" aria-hidden="true"></span></button> `;
-						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-gain'] || 'Gain')}` + ` -" onclick='action_conference_member("volume_out", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "down")'><span class="${esc(get_conference_action_icon('gain_down', 'fas fa-sort-amount-down'))}" aria-hidden="true"></span></button> `;
+						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-volume'] || 'Volume')}` + ` -" onclick='action_conference_member("volume_in", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "down")'><span class="${esc(get_conference_action_icon('volume_down', 'fas fa-volume-down'))}" aria-hidden="true"></span></button> `;
 						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-gain'] || 'Gain')}` + ` +" onclick='action_conference_member("volume_out", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "up")'><span class="${esc(get_conference_action_icon('gain_up', 'fas fa-sort-amount-up'))}" aria-hidden="true"></span></button> `;
+						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-gain'] || 'Gain')}` + ` -" onclick='action_conference_member("volume_out", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "down")'><span class="${esc(get_conference_action_icon('gain_down', 'fas fa-sort-amount-down'))}" aria-hidden="true"></span></button> `;
 					}
 					html += `    </td>\n`;
 				}
@@ -2494,20 +2494,57 @@ function action_agent_status(agent_name, status) {
 	send_action('agent_status', { agent_name, status }).catch(console.error);
 }
 
+function get_conference_action_message(action, direction, success) {
+	const dir = (direction || '').toLowerCase();
+	const energy_label = text['label-energy'] || 'Energy';
+	const volume_label = text['label-volume'] || 'Volume';
+	const gain_label = text['label-gain'] || 'Gain';
+
+	switch (action) {
+		case 'kick':
+			return success ? 'Member removed' : 'Unable to remove member';
+		case 'mute':
+			return success ? 'Member muted' : 'Unable to mute member';
+		case 'unmute':
+			return success ? 'Member unmuted' : 'Unable to unmute member';
+		case 'deaf':
+			return success ? 'Member deafened' : 'Unable to deafen member';
+		case 'undeaf':
+			return success ? 'Member undeafened' : 'Unable to undeafen member';
+		case 'energy':
+			return success
+				? `${energy_label} ${dir === 'down' ? 'decreased' : 'increased'}`
+				: `Unable to ${dir === 'down' ? 'decrease' : 'increase'} ${energy_label.toLowerCase()}`;
+		case 'volume_in':
+			return success
+				? `Input ${volume_label.toLowerCase()} ${dir === 'down' ? 'decreased' : 'increased'}`
+				: `Unable to ${dir === 'down' ? 'decrease' : 'increase'} input ${volume_label.toLowerCase()}`;
+		case 'volume_out':
+			return success
+				? `${gain_label} ${dir === 'down' ? 'decreased' : 'increased'}`
+				: `Unable to ${dir === 'down' ? 'decrease' : 'increase'} ${gain_label.toLowerCase()}`;
+		default:
+			return success ? 'Action completed' : 'Action failed';
+	}
+}
+
 function action_conference_member(action, conference_name, member_id, uuid, direction) {
 	const payload = { conference_name, member_id, uuid };
 	if (direction) {
 		payload.direction = direction;
 	}
 	send_action(action, payload)
-		.then(() => {
-			if (action === 'kick') {
-				show_toast(text['button-hangup'] || 'Member removed', 'success');
-				return;
+		.then(response => {
+			const result = (response && response.payload) ? response.payload : response;
+			if (result && result.success === false) {
+				throw new Error(result.message || get_conference_action_message(action, direction, false));
 			}
-			show_toast(text['label-actions'] || 'Action executed', 'success');
+			show_toast(get_conference_action_message(action, direction, true), 'success');
 		})
-		.catch(console.error);
+		.catch(err => {
+			show_toast((err && err.message) || get_conference_action_message(action, direction, false), 'danger');
+			console.error(err);
+		});
 }
 
 /**
@@ -2520,9 +2557,17 @@ function show_toast(message, variant) {
 	let container = document.getElementById('lop_toast_container');
 	if (!container) {
 		container = document.createElement('div');
-		container.id             = 'lop_toast_container';
-		container.className      = 'toast-container position-fixed bottom-0 end-0 p-3';
-		container.style.zIndex   = '9999';
+		container.id = 'lop_toast_container';
+		container.className = 'toast-container position-fixed p-3';
+		container.style.top = '0';
+		container.style.left = '50%';
+		container.style.right = 'auto';
+		container.style.bottom = 'auto';
+		container.style.transform = 'translateX(-50%)';
+		container.style.zIndex = '9999';
+		container.style.display = 'flex';
+		container.style.flexDirection = 'column';
+		container.style.alignItems = 'center';
 		document.body.appendChild(container);
 	}
 
@@ -2533,7 +2578,6 @@ function show_toast(message, variant) {
 	toast_el.innerHTML = `
 		<div class="d-flex">
 			<div class="toast-body">${esc(message)}</div>
-			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 		</div>`;
 
 	container.appendChild(toast_el);
