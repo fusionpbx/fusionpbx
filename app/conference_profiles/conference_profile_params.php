@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2025
+	Portions created by the Initial Developer are Copyright (C) 2018-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -38,6 +38,28 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? ''));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	$query_string = http_build_query($param);
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
@@ -68,13 +90,9 @@
 				break;
 		}
 
-		header('Location: conference_profile_edit.php?id='.urlencode($conference_profile_uuid));
+		header('Location: conference_profile_edit.php?id='.urlencode($conference_profile_uuid).($query_string ? '&'.$query_string : ''));
 		exit;
 	}
-
-//get variables used to control the order
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
 
 //prepare to page the results
 	$sql = "select count(conference_profile_param_uuid) ";
@@ -83,15 +101,6 @@
 	$parameters['conference_profile_uuid'] = $conference_profile_uuid;
 	$num_rows = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
-
-//prepare to page the results
-	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = "&id=".$conference_profile_uuid;
-	if (isset($_GET['page'])) {
-		$page = isset($_GET['page']) ? $_GET['page'] : 0;
-		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
-	}
 
 //get the list
 	$sql = "select ";
@@ -104,8 +113,7 @@
 	$sql .= "from v_conference_profile_params ";
 	$sql .= "where conference_profile_uuid = :conference_profile_uuid ";
 	$parameters['conference_profile_uuid'] = $conference_profile_uuid;
-	$sql .= order_by($order_by, $order, 'profile_param_name', 'asc');
-	$sql .= limit_offset($rows_per_page ?? '', $offset ?? '');
+	$sql .= order_by(null, null, 'profile_param_name', 'asc');
 	$result = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -117,9 +125,9 @@
 	echo "<div class='action_bar' id='action_bar_sub'>\n";
 	echo "	<div class='heading'><b id='heading_sub'>".$text['title-conference_profile_params']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'conference_profiles.php']);
+	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'conference_profiles.php'.($query_string ? '?'.$query_string : '')]);
 	if (permission_exists('conference_profile_param_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','collapse'=>'hide-xs','link'=>'conference_profile_param_edit.php?conference_profile_uuid='.escape($_GET['id'])]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','collapse'=>'hide-xs','link'=>'conference_profile_param_edit.php?conference_profile_uuid='.escape($_GET['id']).($query_string ? '&'.$query_string : '')]);
 	}
 	if (permission_exists('conference_profile_param_edit') && $result) {
 		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'name'=>'btn_toggle','collapse'=>'hide-xs','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
@@ -141,7 +149,7 @@
 	echo $text['title_description-conference_profile_param']."\n";
 	echo "<br /><br />\n";
 
-	echo "<form id='form_list' method='post' action='conference_profile_params.php'>\n";
+	echo "<form id='form_list' method='post' action='conference_profile_params.php".($query_string ? '?'.$query_string : '')."'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='conference_profile_uuid' value=\"".escape($conference_profile_uuid)."\">\n";
 
@@ -153,10 +161,10 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle();' ".(!empty($result) ?: "style='visibility: hidden;'").">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('profile_param_name', $text['label-profile_param_name'], $order_by, $order, null, null, $param);
-	echo th_order_by('profile_param_value', $text['label-profile_param_value'], $order_by, $order, null, "class='pct-40'", $param);
-	echo th_order_by('profile_param_enabled', $text['label-profile_param_enabled'], $order_by, $order, null, "class='center'", $param);
-	echo th_order_by('profile_param_description', $text['label-profile_param_description'], $order_by, $order, null, "class='hide-sm-dn'", $param);
+	echo "	<th>".$text['label-profile_param_name']."</th>\n";
+	echo "	<th class='pct-40'>".$text['label-profile_param_value']."</th>\n";
+	echo "	<th class='center'>".$text['label-profile_param_enabled']."</th>\n";
+	echo "	<th class='hide-sm-dn'>".$text['label-profile_param_description']."</th>\n";
 	if (permission_exists('conference_profile_param_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -166,7 +174,7 @@
 		$x = 0;
 		foreach ($result as $row) {
 			if (permission_exists('conference_profile_param_edit')) {
-				$list_row_url = 'conference_profile_param_edit.php?conference_profile_uuid='.urlencode($row['conference_profile_uuid']).'&id='.urlencode($row['conference_profile_param_uuid']);
+				$list_row_url = 'conference_profile_param_edit.php?conference_profile_uuid='.urlencode($row['conference_profile_uuid']).'&id='.urlencode($row['conference_profile_param_uuid']).($query_string ? '&'.$query_string : $query_string);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('conference_profile_param_edit') || permission_exists('conference_profile_param_delete')) {
@@ -208,7 +216,7 @@
 	echo "</table>\n";
 	echo "</div>\n";
 	echo "<br />\n";
-	echo "<div align='center'>".!empty($paging_controls)."</div>\n";
+
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
 
