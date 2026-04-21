@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,6 +45,32 @@
 	$conference_flags = '';
 	$conference_account_code = '';
 	$conference_description = '';
+
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? ''));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('conference_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -102,7 +128,7 @@
 		$p->delete('conference_user_delete', 'temp');
 
 		message::add($text['confirm-delete']);
-		header("Location: conference_edit.php?id=".$conference_uuid);
+		header("Location: conference_edit.php?id=".$conference_uuid.($query_string ? '&'.$query_string : ''));
 		exit;
 	}
 
@@ -129,7 +155,7 @@
 
 		//send a message
 			message::add($text['confirm-add']);
-			header("Location: conference_edit.php?id=".urlencode($conference_uuid));
+			header("Location: conference_edit.php?id=".urlencode($conference_uuid).($query_string ? '&'.$query_string : ''));
 			exit;
 	}
 
@@ -149,7 +175,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: conferences.php');
+				header('Location: conferences.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -266,7 +292,7 @@
 					}
 
 				//redirect the browser
-					header("Location: conferences.php");
+					header("Location: conferences.php".($query_string ? '?'.$query_string : ''));
 					exit;
 
 			}
@@ -361,7 +387,7 @@
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
 
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'conferences.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'conferences.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == 'update') {
 		if (permission_exists('conference_cdr_view')) {
 			echo button::create(['type'=>'button','label'=>$text['button-cdr'],'icon'=>'list','link'=>PROJECT_PATH.'/app/conference_cdr/conference_cdr.php?id='.urlencode($conference_uuid)]);

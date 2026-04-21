@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -39,10 +39,35 @@
 	$language = new text;
 	$text = $language->get();
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? ''));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$sort = $order_by == 'conference_extension' ? 'natural' : null;
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('conference_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //set additional variables
-	$show = $_REQUEST["show"] ?? '';
 	$action = $_REQUEST['action'] ?? '';
-	$search = $_REQUEST['search'] ?? '';
 
 //check if we are using websockets for the conference view
 	if ($settings->get('active_conferences', 'websocket_enabled', true)) {
@@ -83,25 +108,8 @@
 				break;
 		}
 
-		header('Location: conferences.php'.($search != '' ? '?search='.urlencode($search) : ''));
+		header('Location: conferences.php'.($query_string ? '?'.$query_string : ''));
 		exit;
-	}
-
-//get variables used to control the order
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
-	$sort = $order_by == 'conference_extension' ? 'natural' : null;
-
-//add the search term
-	$search = strtolower($_GET["search"] ?? '');
-	if (!empty($search)) {
-		$sql_search = "and (";
-		$sql_search .= "lower(conference_name) like :search ";
-		$sql_search .= "or lower(conference_extension) like :search ";
-		$sql_search .= "or lower(conference_pin_number) like :search ";
-		$sql_search .= "or lower(conference_description) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
 	}
 
 //prepare to page the results
@@ -122,19 +130,22 @@
 		$sql .= "and u.user_uuid = :user_uuid ";
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
-	$sql .= $sql_search ?? '';
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(conference_name) like :search ";
+		$sql .= "	or lower(conference_extension) like :search ";
+		$sql .= "	or lower(conference_pin_number) like :search ";
+		$sql .= "	or lower(conference_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
+	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
+	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = "&search=".urlencode($search);
-	if ($show == "all" && permission_exists('conference_all')) {
-		$param .= "&show=all";
-	}
-	$page = $_GET['page'] ?? '';
-	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
@@ -170,7 +181,15 @@
 		$sql .= "and u.user_uuid = :user_uuid ";
 		$parameters['user_uuid'] = $_SESSION['user_uuid'];
 	}
-	$sql .= $sql_search ?? '';
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(conference_name) like :search ";
+		$sql .= "	or lower(conference_extension) like :search ";
+		$sql .= "	or lower(conference_pin_number) like :search ";
+		$sql .= "	or lower(conference_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
+	}
 	$sql .= order_by($order_by, $order, null, null, $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$conferences = $database->select($sql, $parameters ?? null, 'all');
@@ -192,7 +211,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-view_active'],'icon'=>'comments','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.$conference_view_page]);
 	}
 	if (permission_exists('conference_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'conference_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'conference_edit.php'.($query_string ? '?'.$query_string : '')]);
 	}
 	if (permission_exists('conference_add') && $conferences) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
@@ -203,20 +222,20 @@
 	if (permission_exists('conference_delete') && $conferences) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	if (permission_exists('conference_all')) {
-		if ($show == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>";
-		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?type=&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($param as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	if ($show !== 'all' && permission_exists('conference_all')) {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
+	}
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'conferences.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
@@ -238,7 +257,6 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -249,15 +267,15 @@
 		echo "	</th>\n";
 	}
 	if ($show == "all" && permission_exists('conference_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, "class='shrink'", $query_string);
 	}
-	echo th_order_by('conference_name', $text['table-name'], $order_by, $order);
-	echo th_order_by('conference_extension', $text['table-extension'], $order_by, $order);
-	echo th_order_by('conference_profile', $text['table-profile'], $order_by, $order);
-	echo th_order_by('conference_order', $text['table-order'], $order_by, $order, null, "class='center'");
+	echo th_order_by('conference_name', $text['table-name'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('conference_extension', $text['table-extension'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('conference_profile', $text['table-profile'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('conference_order', $text['table-order'], $order_by, $order, null, "class='center'", $query_string);
 	echo "<th style='text-align: center;'>".$text['label-tools']."</th>\n";
-	echo th_order_by('conference_enabled', $text['table-enabled'], $order_by, $order, null, "class='center'");
-	echo th_order_by('conference_description', $text['table-description'], $order_by, $order, null, "class='hide-sm-dn'");
+	echo th_order_by('conference_enabled', $text['table-enabled'], $order_by, $order, null, "class='center'", $query_string);
+	echo th_order_by('conference_description', $text['table-description'], $order_by, $order, null, "class='hide-sm-dn'", $query_string);
 	if (permission_exists('conference_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -268,7 +286,7 @@
 		foreach($conferences as $row) {
 			$list_row_url = '';
 			if (permission_exists('conference_edit')) {
-				$list_row_url = "conference_edit.php?id=".urlencode($row['conference_uuid']);
+				$list_row_url = "conference_edit.php?id=".urlencode($row['conference_uuid']).($query_string ? '&'.$query_string : '');
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
@@ -340,4 +358,3 @@
 	require_once "resources/footer.php";
 
 ?>
-
