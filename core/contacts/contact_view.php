@@ -38,7 +38,7 @@
 	$language = new text;
 	$text = $language->get();
 
-// Set variables from GET parameters
+// Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'last_mod_date'));
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
