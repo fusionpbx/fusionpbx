@@ -123,17 +123,17 @@ class event_guard_service extends service {
 				if ($this->socket->connected()) {
 					// Define the events
 					$switch_events = [
-						['Event-Subclass' => 'sofia::pre_register'],
-						['Event-Subclass' => 'sofia::register_failure'],
-						['Event-Subclass' => 'event_guard:unblock']
+						['category' => 'Event-Subclass', 'subcategory' => 'sofia::pre_register'],
+						['category' => 'Event-Subclass', 'subcategory' => 'sofia::register_failure'],
+						['category' => 'Event-Subclass', 'subcategory' => 'event_guard:unblock']
 					];
 
 					// Add the event filters
 					$cmd = "event json ALL";
 					$result = $this->socket->request($cmd);
 					$this->info('subscribe to ALL events '. print_r($result, true));
-					foreach($switch_events as $event_key => $event_value) {
-						$cmd = "filter ".$event_key." ".$event_value;
+					foreach($switch_events as $row) {
+						$cmd = "filter ".$row['category']." ".$row['subcategory'];
 						$result = $this->socket->request($cmd);
 						$this->info('subscribe to CUSTOM events '. print_r($result, true));
 					}
