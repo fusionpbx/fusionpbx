@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -38,12 +38,38 @@
 	$language = new text;
 	$text = $language->get();
 
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'last_mod_date'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('contact_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$contact_uuid = $_REQUEST["id"];
 	}
 	else {
-		header("Location: contacts.php");
+		header("Location: contacts.php".($query_string ? '?'.$query_string : null));
 	}
 
 //main contact details
@@ -232,7 +258,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".($contact_name ? $contact_name : $text['header-contact-edit'])."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-sm-dn','style'=>'margin-right: 15px;','link'=>'contacts.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-sm-dn','style'=>'margin-right: 15px;','link'=>'contacts.php'.($query_string ? '?'.$query_string : '')]);
 	if (permission_exists('contact_time_add')) {
 		//detect timer state (and start time)
 		$sql = "select ";
@@ -287,7 +313,7 @@
 		echo "		</select>";
 	}
 	if (permission_exists('contact_edit')) {
-		echo button::create(['type'=>'button','label'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'id'=>'btn_edit','style'=>'margin-left: 15px;','collapse'=>'hide-sm-dn','link'=>'contact_edit.php?id='.urlencode($contact_uuid)]);
+		echo button::create(['type'=>'button','label'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'id'=>'btn_edit','style'=>'margin-left: 15px;','collapse'=>'hide-sm-dn','link'=>'contact_edit.php?id='.urlencode($contact_uuid).($query_string ? '&'.$query_string : '')]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
