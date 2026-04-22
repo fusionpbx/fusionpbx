@@ -58,7 +58,6 @@
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'fifo_name'));
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
-	$sort = $order_by == 'fax_extension' ? 'natural' : null;
 	$search = $_GET['search'] ?? '';
 	$show = $_GET['show'] ?? '';
 
