@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2025
+	Portions created by the Initial Developer are Copyright (C) 2018-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -39,16 +39,35 @@
 	$language = new text;
 	$text = $language->get();
 
-//set the defaults
-	$sql_search = '';
-
-//add additional variables
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'phrase_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
 	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('phrase_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
 
 //get posted data
 	if (!empty($_POST['phrases'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'] ?? '';
 		$phrases = $_POST['phrases'];
 	}
 
@@ -78,22 +97,8 @@
 				break;
 		}
 
-		header('Location: phrases.php'.($search != '' ? '?search='.urlencode($search) : ''));
+		header('Location: phrases.php'.($query_string ? '?'.$query_string : ''));
 		exit;
-	}
-
-//get order and order by
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
-
-//add the search term
-	$search = strtolower($_GET["search"] ?? '');
-	if (!empty($search)) {
-		$sql_search = "and (";
-		$sql_search .= "lower(phrase_name) like :search ";
-		$sql_search .= "or lower(phrase_description) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
 	}
 
 //get phrases record count
@@ -103,18 +108,19 @@
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	$sql .= $sql_search;
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(phrase_name) like :search ";
+		$sql .= "	or lower(phrase_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
+	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = "&search=".urlencode($search);
-	if ($show == "all" && permission_exists('phrase_all')) {
-		$param .= "&show=all";
-	}
-	$page = isset($_GET['page']) ? $_GET['page'] : 0;
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
@@ -131,7 +137,13 @@
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	$sql .= $sql_search;
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(phrase_name) like :search ";
+		$sql .= "	or lower(phrase_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
+	}
 	$sql .= order_by($order_by, $order, 'phrase_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$phrases = $database->select($sql, $parameters ?? null, 'all');
@@ -150,7 +162,7 @@
 	echo "	<div class='heading'><b>".$text['header_phrases']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('phrase_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'phrase_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'phrase_edit.php'.($query_string ? '?'.$query_string : '')]);
 	}
 	if (permission_exists('phrase_add') && $phrases) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
@@ -161,20 +173,20 @@
 	if (permission_exists('phrase_delete') && $phrases) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	if (permission_exists('phrase_all')) {
-		if ($show == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>";
-		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?type=&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($param as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	if ($show !== 'all' && permission_exists('phrase_all')) {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
+	}
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'phrases.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
@@ -196,7 +208,6 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -207,12 +218,12 @@
 		echo "	</th>\n";
 	}
 	if ($show == "all" && permission_exists('phrase_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, "class='shrink'", $query_string);
 	}
-	echo th_order_by('phrase_name', $text['label-name'], $order_by, $order);
-	echo th_order_by('phrase_language', $text['label-language'], $order_by, $order);
-	echo th_order_by('phrase_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
-	echo th_order_by('phrase_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn' style='min-width: 40%;'");
+	echo th_order_by('phrase_name', $text['label-name'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('phrase_language', $text['label-language'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('phrase_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $query_string);
+	echo th_order_by('phrase_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn' style='min-width: 40%;'", $query_string);
 	if (permission_exists('phrase_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -223,7 +234,7 @@
 		foreach($phrases as $row) {
 			$list_row_url = '';
 			if (permission_exists('phrase_edit')) {
-				$list_row_url = "phrase_edit.php?id=".urlencode($row['phrase_uuid']);
+				$list_row_url = "phrase_edit.php?id=".urlencode($row['phrase_uuid']).($query_string ? '&'.$query_string : '');
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
