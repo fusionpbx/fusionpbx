@@ -59,7 +59,7 @@
 
 //add the search variable
 	if (!empty($_GET["search"])) {
-		$search = strtolower($_GET["search"]);
+		$search = $_GET["search"];
 	}
 
 //add the show variable
@@ -121,7 +121,7 @@
 		$sql .= "	or music like :search \n";
 		$sql .= "	or description like :search \n";
 		$sql .= ") \n";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	if (!empty($excluded_applications)) {
 	    $sql .= "AND application NOT IN ('" . implode("','", $excluded_app_array) . "') \n";
@@ -151,16 +151,16 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-stream_map']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo "		<form id='form_search' class='inline' method='get'>\n";
 	if (permission_exists('dialplan_all')) {
 		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all&search='.urlencode($search)]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all']);
 		}
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 	// if ($paging_controls_mini != '') {
 	// 	echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
@@ -175,7 +175,6 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search ?? '')."\">\n";
 
 	if (!empty($results) && is_array($results) && @sizeof($results) != 0) {
 		$previous_application = '';
