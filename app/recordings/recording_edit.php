@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -87,6 +87,32 @@
 		//$languages = $transcribe->get_languages();
 	}
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'recording_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('recording_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //get recording id
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$recording_uuid = $_REQUEST["id"];
@@ -145,7 +171,7 @@
 				$obj->delete($array);
 
 				//redirect
-				header('Location: recordings.php');
+				header('Location: recordings.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 		}
@@ -154,7 +180,7 @@
 		$token = new token;
 		if (!$token->validate($_SERVER['PHP_SELF'])) {
 			message::add($text['message-invalid_token'],'negative');
-			header('Location: recordings.php');
+			header('Location: recordings.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 
@@ -282,7 +308,7 @@
 				message::add($text['message-update']);
 
 				//redirect
-				header("Location: recording_edit.php?id=".$recording_uuid);
+				header("Location: recording_edit.php?id=".$recording_uuid.($query_string ? '&'.$query_string : ''));
 				exit;
 			}
 		}
@@ -323,7 +349,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-edit']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'recordings.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'recordings.php'.($query_string ? '?'.$query_string : '')]);
 	if (permission_exists('recording_delete') && !empty($recording_uuid) && is_uuid($recording_uuid)) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
