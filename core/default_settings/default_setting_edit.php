@@ -46,7 +46,6 @@
 	$default_setting_order = '';
 	$default_setting_enabled = true;
 	$default_setting_description = '';
-	$search = '';
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -55,11 +54,6 @@
 	}
 	else {
 		$action = "add";
-	}
-
-//get the search variable
-	if (!empty($_REQUEST['search'])) {
-		$search = $_REQUEST['search'] ?? '';
 	}
 
 //get http post variables and set them to php variables
@@ -73,23 +67,35 @@
 		$default_setting_description = $_POST["default_setting_description"] ?? '';
 	}
 
-//sanitize the variables
-	if (!empty($search)) {
-		$search = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $search);
-	}
-	if (!empty($domain_setting_category)) {
-		$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $default_setting_category);
-	}
+// Set variables from http GET parameters
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'default_setting_category'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+	$default_setting_category = $_GET['default_setting_category'] ?? '';
 
-//build the query string
-	$query_string = '';
+//sanitize the variables
+	$search = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $search);
+	$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $default_setting_category);
+
+// Build the query string
+	$param = [];
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
 	if (!empty($search)) {
-		$query_string .= 'search='.urlencode($search);
+		$param['search'] = $search;
 	}
-	if ($default_setting_category != '') {
-		if ($query_string == '') { $query_string = ''; } else { $query_string .= '&'; }
-		$query_string .= 'default_setting_category='.urlencode($default_setting_category);
+	if (!empty($show) && $show == 'all' && permission_exists('stream_all')) {
+		$param['show'] = $show;
 	}
+	if (!empty($default_setting_category)) {
+		$param['default_setting_category'] = $default_setting_category;
+	}
+	$query_string = http_build_query($param);
 
 //process the http post
 	if (!empty($_POST) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
@@ -106,7 +112,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: default_settings.php?'.$query_string);
+				header('Location: default_settings.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -283,7 +289,7 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'default_settings.php?'.$query_string]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'default_settings.php'.($query_string ? '?'.$query_string : '')]);
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','onclick'=>'submit_form();']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
