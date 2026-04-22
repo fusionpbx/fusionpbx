@@ -120,7 +120,7 @@
 	$sql = "select count(email_queue_uuid) ";
 	$sql .= "from v_email_queue ";
 	$sql .= "where true ";
-	if (isset($search)) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	lower(email_from) like :search ";
 		$sql .= "	or lower(email_to) like :search ";
@@ -130,9 +130,9 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.lower_case($search).'%';
 	}
-	if (isset($_GET["email_status"]) && $_GET["email_status"] != '') {
+	if (!empty($email_status)) {
 		$sql .= "and email_status = :email_status ";
-		$parameters['email_status'] = $_GET["email_status"];
+		$parameters['email_status'] = $email_status;
 	}
 	//else {
 	//	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
@@ -174,7 +174,7 @@
 	$sql .= "email_retry_count ";
 	$sql .= "from v_email_queue ";
 	$sql .= "where true ";
-	if (isset($search)) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	lower(email_from) like :search ";
 		$sql .= "	or lower(email_to) like :search ";
@@ -183,9 +183,9 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.lower_case($search).'%';
 	}
-	if (isset($_GET["email_status"]) && $_GET["email_status"] != '') {
+	if (!empty($email_status)) {
 		$sql .= "and email_status = :email_status ";
-		$parameters['email_status'] = $_GET["email_status"];
+		$parameters['email_status'] = $email_status;
 	}
 	$sql .= order_by($order_by, $order, 'email_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
@@ -262,10 +262,10 @@
 	echo "		<select class='formfld' style='margin-left: 15px;' name='email_status'>\n";
     echo "			<option value='' selected='selected' disabled hidden>".$text['label-email_status']."...</option>";
 	echo "			<option value=''></option>\n";
-	echo "			<option value='waiting' ".(!empty($_GET["email_status"]) && $_GET["email_status"] == "waiting" ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
-	echo "			<option value='trying' ".(!empty($_GET["email_status"]) && $_GET["email_status"] == "trying" ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
-	echo "			<option value='sent' ".(!empty($_GET["email_status"]) && $_GET["email_status"] == "sent" ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
-	echo "			<option value='failed' ".(!empty($_GET["email_status"]) && $_GET["email_status"] == "failed" ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
+	echo "			<option value='waiting' ".($email_status == "waiting" ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
+	echo "			<option value='trying' ".($email_status == "trying" ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
+	echo "			<option value='sent' ".($email_status == "sent" ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
+	echo "			<option value='failed' ".($email_status == "failed" ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
 	echo "		</select>\n";
 	foreach ($param as $key => $value) {
 		if ($key !== 'search' && $key !== 'page') {
@@ -310,7 +310,7 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($email_queue) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	//if ($_GET['show'] == 'all' && permission_exists('email_queue_all')) {
+	//if ($show == 'all' && permission_exists('email_queue_all')) {
 	//	echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	//}
 	//echo th_order_by('email_date', $text['label-email_date'], $order_by, $order);
@@ -346,7 +346,7 @@
 				echo "		<input type='hidden' name='email_queue[$x][email_queue_uuid]' value='".escape($row['email_queue_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			//if ($_GET['show'] == 'all' && permission_exists('email_queue_all')) {
+			//if ($show == 'all' && permission_exists('email_queue_all')) {
 			//	echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			//}
 			if (permission_exists('email_queue_edit')) {
