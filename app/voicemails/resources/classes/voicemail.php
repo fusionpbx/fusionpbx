@@ -1183,6 +1183,23 @@ class voicemail {
 			$transcribe->audio_filename = basename($voicemail_message_file);
 			$message_transcription      = $transcribe->transcribe('text');
 
+			if (!empty($message_transcription) && class_exists('transcribe_prompt')) {
+				$sql = "select voicemail_transcription_prompt_enabled, voicemail_transcription_prompt "
+						. "from v_voicemails where voicemail_uuid = :voicemail_uuid ";
+				$parameters['voicemail_uuid'] = $this->voicemail_uuid;
+				$vm_row = $this->database->select($sql, $parameters, 'row');
+				unset($sql, $parameters);
+				if (in_array($vm_row['voicemail_transcription_prompt_enabled'] ?? null, [true, 'true', 't'], true)
+					&& !empty($vm_row['voicemail_transcription_prompt'])
+				) {
+					$prompt_processor = new transcribe_prompt($settings);
+					$prompt_result = $prompt_processor->process($message_transcription, $vm_row['voicemail_transcription_prompt']);
+					if (!empty($prompt_result)) {
+						$message_transcription = $prompt_result;
+					}
+				}
+			}
+
 			//build voicemail message data array
 			if (!empty($message_transcription)) {
 				$array['voicemail_messages'][0]['voicemail_message_uuid'] = $this->voicemail_message_uuid;

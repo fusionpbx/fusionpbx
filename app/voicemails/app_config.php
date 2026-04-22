@@ -474,6 +474,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "If voicemail transcription is enabled for this user";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_transcription_prompt_enabled";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "If custom prompt post-processing of transcriptions is enabled";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_transcription_prompt";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Custom prompt template; use \${transcription} as placeholder for the raw STT text";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_attach_file";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Choose whether to attach the file to the email.";
