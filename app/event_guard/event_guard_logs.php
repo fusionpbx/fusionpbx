@@ -1,7 +1,7 @@
 <?php
 /*
 	BSD-2-Clause License
-	Copyright (C) 2022-2025 Mark J Crane <markjcrane@fusionpbx.com>
+	Copyright (C) 2022-2026 Mark J Crane <markjcrane@fusionpbx.com>
 
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are met:
@@ -38,10 +38,35 @@
 	$language = new text;
 	$text = $language->get();
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'log_date'));
+	$order = ($_GET['order'] ?? '') === 'asc' ? 'asc' : 'desc';
+	$search = $_GET['search'] ?? '';
+	$filter = $_GET['filter'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($filter)) {
+		$param['filter'] = $filter;
+	}
+	$query_string = http_build_query($param);
+
 //get the http post data
 	if (!empty($_POST['event_guard_logs']) && is_array($_POST['event_guard_logs'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'] ?? '';
 		$event_guard_logs = $_POST['event_guard_logs'];
 	}
 
@@ -70,24 +95,15 @@
 		}
 
 		//redirect the user
-		header('Location: event_guard_logs.php'.($search != '' ? '?search='.urlencode($search) : ''));
+		header('Location: event_guard_logs.php'.($query_string ? '?'.$query_string : ''));
 		exit;
-	}
-
-//get order and order by
-	$order_by = $_GET["order_by"] ?? null;
-	$order = $_GET["order"] ?? null;
-
-//add the search
-	if (!empty($_GET["search"])) {
-		$search = $_GET["search"];
 	}
 
 //get the count
 	$sql = "select count(event_guard_log_uuid) ";
 	$sql .= "from v_event_guard_logs ";
 	$sql .= "where true ";
-	if (isset($search)) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	lower(hostname) like :search ";
 		$sql .= "	or filter like :search ";
@@ -96,21 +112,19 @@
 		$sql .= "	or lower(user_agent) like :search ";
 		$sql .= "	or lower(log_status) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.strtolower($search).'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
-	if (isset($_GET["filter"]) && $_GET["filter"] != '') {
+	if (!empty($filter)) {
 		$sql .= "and filter = :filter ";
-		$parameters['filter'] = $_GET["filter"];
+		$parameters['filter'] = $filter;
 	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = !empty($search) ? "&search=".$search : null;
-	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //set the time zone
@@ -147,11 +161,11 @@
 		$sql .= "	or lower(user_agent) like :search ";
 		$sql .= "	or lower(log_status) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.strtolower($search).'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
-	if (!empty($_GET["filter"])) {
+	if (!empty($filter)) {
 		$sql .= "and filter = :filter ";
-		$parameters['filter'] = $_GET["filter"];
+		$parameters['filter'] = $filter;
 	}
 	$sql .= order_by($order_by, $order, 'log_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
@@ -172,7 +186,7 @@
 	echo "	<div class='heading'><b>".$text['title-event_guard_logs']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('event_guard_log_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'event_guard_log_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'event_guard_log_edit.php'.($query_string ? '?'.$query_string : '')]);
 	}
 	if (permission_exists('event_guard_log_add') && $event_guard_logs) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
@@ -183,14 +197,19 @@
 	if (permission_exists('event_guard_log_delete') && $event_guard_logs) {
 		echo button::create(['type'=>'button','label'=>$text['button-unblock'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($param as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
+		}
+	}
 	echo "		<select class='formfld' name='filter'>\n";
     echo "			<option value='' selected='selected' disabled='disabled'>".$text['label-filter']."...</option>";
 	echo "			<option value=''>".$text['label-all']."</option>\n";
-	echo "			<option value='sip-auth-ip' ".(isset($_GET["filter"]) && $_GET["filter"] == "sip-auth-ip" ? "selected='selected'" : null).">".$text['option-ip']."</option>\n";
-	echo "			<option value='sip-auth-fail' ".(isset($_GET["filter"]) && $_GET["filter"] == "sip-auth-fail" ? "selected='selected'" : null).">".$text['option-authentication']."</option>\n";
+	echo "			<option value='sip-auth-ip' ".($filter == "sip-auth-ip" ? "selected='selected'" : null).">".$text['option-ip']."</option>\n";
+	echo "			<option value='sip-auth-fail' ".($filter == "sip-auth-fail" ? "selected='selected'" : null).">".$text['option-authentication']."</option>\n";
 	echo "		</select>\n";
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" onkeydown='list_search_reset();'>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search','style'=>(!empty($search) ? 'display: none;' : null)]);
 	echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'event_guard_logs.php','style'=>(empty($search) ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
@@ -229,11 +248,11 @@
 	echo "<th class='hide-md-dn'>".$text['label-hostname']."</th>\n";
 	echo "<th>".$text['label-date']."</th>\n";
 	echo "<th class='hide-md-dn'>".$text['label-time']."</th>\n";
-	echo th_order_by('filter', $text['label-filter'], $order_by, $order, null, "style='text-align: center;'");
-	echo th_order_by('ip_address', $text['label-ip_address'], $order_by, $order);
-	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
+	echo th_order_by('filter', $text['label-filter'], $order_by, $order, null, "style='text-align: center;'", $query_string);
+	echo th_order_by('ip_address', $text['label-ip_address'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('extension', $text['label-extension'], $order_by, $order, null, null, $query_string);
 	echo "<th class='hide-md-dn'>".$text['label-user_agent']."</th>\n";
-	echo th_order_by('log_status', $text['label-log_status'], $order_by, $order);
+	echo th_order_by('log_status', $text['label-log_status'], $order_by, $order, null, null, $query_string);
 	if (permission_exists('event_guard_log_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -244,7 +263,7 @@
 		foreach ($event_guard_logs as $row) {
 			$list_row_url = '';
 			if (permission_exists('event_guard_log_edit')) {
-				$list_row_url = "event_guard_log_edit.php?id=".urlencode($row['event_guard_log_uuid']);
+				$list_row_url = "event_guard_log_edit.php?id=".urlencode($row['event_guard_log_uuid']).($query_string ? '&'.$query_string : '');
 				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
