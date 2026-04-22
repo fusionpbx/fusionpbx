@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -37,6 +37,32 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'fax_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('fax_extension_view_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
 
 //set the action as an add or an update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -69,7 +95,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: fax.php');
+				header('Location: fax.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -151,7 +177,7 @@
 					if ($action == "add" && permission_exists('fax_extension_add')) {
 						message::add($text['confirm-add']);
 					}
-					header("Location: fax_advanced.php?id=".$fax_uuid);
+					header("Location: fax_advanced.php?id=".$fax_uuid.($query_string ? '&'.$query_string : ''));
 					return;
 
 			}
@@ -244,7 +270,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['label-advanced_settings']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'fax_edit.php?id='.$fax_uuid]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'fax_edit.php?id='.$fax_uuid.($query_string ? '&'.$query_string : '')]);
 	echo button::create(['type'=>'button','label'=>$text['button-test'],'icon'=>'tools','id'=>'test_button','style'=>'margin-left: 15px;','onclick'=>"this.blur(); fax_advanced_test();"]);
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
@@ -478,7 +504,7 @@
 	echo "	function fax_advanced_test() {\n";
 	echo "		document.getElementById('test_button').innerHTML = \"<span class='fa-solid fa-gear fa-fw fa-spin'></span><span class='button-label pad'>".$text['label-testing']."</span>\";\n";
 	echo "		$.ajax({\n";
-	echo "			url: 'fax_advanced_test.php?id=".$fax_uuid."',\n";
+	echo "			url: 'fax_advanced_test.php?id=".$fax_uuid.($query_string ? '&'.$query_string : '')."',\n";
 	echo "			type: 'get',\n";
 	echo "			processData: false,\n";
 	echo "			contentType: false,\n";
