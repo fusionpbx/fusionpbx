@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2023-2025
+	Portions created by the Initial Developer are Copyright (C) 2023-2026
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -49,14 +49,39 @@
 	$language = new text;
 	$text = $language->get();
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'fax_date'));
+	$order = ($_GET['order'] ?? '') === 'asc' ? 'asc' : 'desc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+	$fax_status = $_GET['fax_status'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('fax_queue_all')) {
+		$param['show'] = $show;
+	}
+	if (!empty($fax_status)) {
+		$param['fax_status'] = $fax_status;
+	}
+	$query_string = http_build_query($param);
+
 //get the http post data
 	if (isset($_REQUEST['action'])) {
 		$action = $_REQUEST['action'];
-	}
-
-//add the search
-	if (isset($_REQUEST["search"])) {
-		$search = strtolower($_REQUEST["search"]);
 	}
 
 //get the fax_queue item checked
@@ -89,13 +114,9 @@
 		}
 
 		//redirect the user
-		header('Location: fax_queue.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
+		header('Location: fax_queue.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
-
-//get order and order by
-	$order_by = $_GET["order_by"] ?? null;
-	$order = $_GET["order"] ?? null;
 
 //get the count
 	$sql = "select count(fax_queue_uuid) ";
@@ -130,7 +151,7 @@
 		$sql .= "	OR LOWER(q.fax_status) LIKE :search ";
 		$sql .= "	OR LOWER(q.fax_accountcode) LIKE :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%' . $search . '%';
+		$parameters['search'] = '%' . lower_case($search) . '%';
 	}
 
 	if (isset($_GET["fax_status"]) && !empty($_GET["fax_status"])) {
@@ -142,11 +163,8 @@
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = !empty($search) ? "&search=".$search : null;
-	$param = (!empty($_GET['show']) && $_GET['show'] == 'all' && $permission['fax_queue_all']) ? "&show=all" : null;
-	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //set the time zone
@@ -220,7 +238,7 @@
 		$sql .= "	OR LOWER(q.fax_status) LIKE :search ";
 		$sql .= "	OR LOWER(q.fax_accountcode) LIKE :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%' . $search . '%';
+		$parameters['search'] = '%' . lower_case($search) . '%';
 	}
 
 	if (isset($_GET["fax_status"]) && !empty($_GET["fax_status"])) {
@@ -259,15 +277,15 @@
 	if ($permission['fax_queue_delete'] && $fax_queue) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	if ($permission['fax_queue_all']) {
-		if (!empty($_GET['show']) && $_GET['show'] == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>\n";
-		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'style'=>'margin-left: 15px;','link'=>'?show=all']);
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($param as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}
-	echo "		<form id='form_search' class='inline' method='get'>\n";
+	if ($show !== 'all' && permission_exists('fax_queue_all')) {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'style'=>'margin-left: 15px;','link'=>'?show=all']);
+	}
 	echo "			<select class='formfld' name='fax_status' style='margin-left: 15px;'>\n";
 	echo "				<option value='' selected='selected' disabled hidden>".$text['label-fax_status']."...</option>";
 	echo "				<option value=''></option>\n";
@@ -308,7 +326,6 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search ?? '')."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -325,18 +342,18 @@
 	echo "<th class='center shrink'>".$text['label-date']."</th>\n";
 	echo "<th class='center shrink hide-md-dn'>".$text['label-time']."</th>\n";
 	if ($permission['fax_queue_all']) {
-		echo th_order_by('hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-md-dn'");
+		echo th_order_by('hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-md-dn'", $query_string);
 	}
-	echo th_order_by('fax_caller_id_name', $text['label-fax_caller_id_name'], $order_by, $order, null, "class='hide-md-dn'");
-	echo th_order_by('fax_caller_id_number', $text['label-fax_caller_id_number'], $order_by, $order);
-	echo th_order_by('fax_number', $text['label-fax_number'], $order_by, $order);
-	echo th_order_by('fax_email_address', $text['label-fax_email_address'], $order_by, $order);
-	echo th_order_by('insert_user', $text['label-insert_user'], $order_by, $order);
+	echo th_order_by('fax_caller_id_name', $text['label-fax_caller_id_name'], $order_by, $order, null, "class='hide-md-dn'", $query_string);
+	echo th_order_by('fax_caller_id_number', $text['label-fax_caller_id_number'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('fax_number', $text['label-fax_number'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('fax_email_address', $text['label-fax_email_address'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('insert_user', $text['label-insert_user'], $order_by, $order, null, null, $query_string);
 	//echo th_order_by('fax_file', $text['label-fax_file'], $order_by, $order);
-	echo th_order_by('fax_status', $text['label-fax_status'], $order_by, $order);
-	echo th_order_by('fax_retry_date', $text['label-fax_retry_date'], $order_by, $order);
-	echo th_order_by('fax_notify_date', $text['label-fax_notify_date'], $order_by, $order);
-	echo th_order_by('fax_retry_count', $text['label-fax_retry_count'], $order_by, $order);
+	echo th_order_by('fax_status', $text['label-fax_status'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('fax_retry_date', $text['label-fax_retry_date'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('fax_notify_date', $text['label-fax_notify_date'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('fax_retry_count', $text['label-fax_retry_count'], $order_by, $order, null, null, $query_string);
 	if ($permission['fax_queue_edit'] && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -347,7 +364,7 @@
 		foreach ($fax_queue as $row) {
 			$list_row_url = '';
 			if ($permission['fax_queue_edit']) {
-				$list_row_url = "fax_queue_edit.php?id=".urlencode($row['fax_queue_uuid']);
+				$list_row_url = "fax_queue_edit.php?id=".urlencode($row['fax_queue_uuid']).($query_string ? '&'.$query_string : '');
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
