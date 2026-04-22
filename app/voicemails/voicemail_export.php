@@ -41,7 +41,7 @@
 
 //define available columns
 	$available_columns[] = 'domain_uuid';
-	$available_columns[] = 'voicemail_uuid ';
+	$available_columns[] = 'voicemail_uuid';
 	$available_columns[] = 'voicemail_id';
 	$available_columns[] = 'voicemail_password';
 	$available_columns[] = 'greeting_id';
