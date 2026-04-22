@@ -18,7 +18,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2024-2025
+	Portions created by the Initial Developer are Copyright (C) 2024-2026
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -53,6 +53,33 @@
 	$button_icon_delete = $settings->get('theme', 'button_icon_delete', '');
 	$button_icon_save = $settings->get('theme', 'button_icon_save', '');
 	$input_toggle_style = $settings->get('theme', 'input_toggle_style', 'switch round');
+
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'fifo_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$sort = $order_by == 'fax_extension' ? 'natural' : null;
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('fifo_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -90,7 +117,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: fifo.php');
+				header('Location: fifo.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -130,7 +157,7 @@
 
 				//redirect the user
 				if (in_array($_POST['action'], array('copy', 'delete', 'toggle'))) {
-					header('Location: fifo_edit.php?id='.$id);
+					header('Location: fifo_edit.php?id='.$id.($query_string ? '&'.$query_string : ''));
 					exit;
 				}
 			}
@@ -376,7 +403,7 @@
 				}
 
 				//header('Location: fifo.php');
-				header('Location: fifo_edit.php?id='.urlencode($fifo_uuid));
+				header('Location: fifo_edit.php?id='.urlencode($fifo_uuid).($query_string ? '&'.$query_string : ''));
 				return;
 			}
 	}
@@ -510,7 +537,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-fifo']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$button_icon_back,'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'fifo.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$button_icon_back,'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'fifo.php'.($query_string ? '?'.$query_string : '')]);
  	if ($action == 'update') {
  		if (permission_exists('fifo_member_delete')) {
  			echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$button_icon_delete,'id'=>'btn_delete','name'=>'action','value'=>'delete','style'=>'display: none; margin-right: 15px;']);
