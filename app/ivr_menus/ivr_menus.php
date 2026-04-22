@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -39,15 +39,40 @@
 	$language = new text;
 	$text = $language->get();
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'ivr_menu_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$sort = $order_by == 'ivr_menu_extension' ? 'natural' : null;
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('ivr_menu_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //define defaults
 	$action = '';
-	$search = '';
 	$ivr_menus = '';
 
 //get posted data
 	if (!empty($_POST['ivr_menus'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'] ?? '';
 		$ivr_menus = $_POST['ivr_menus'];
 	}
 
@@ -60,7 +85,7 @@
 
 		if ($action == 'copy' && $total_ivr_menus >= $settings->get('limit', 'ivr_menus')) {
 			message::add($text['message-maximum_ivr_menus'].' '.$settings->get('limit', 'ivr_menus'), 'negative');
-			header('Location: ivr_menus.php');
+			header('Location: ivr_menus.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 	}
@@ -88,18 +113,9 @@
 				break;
 		}
 
-		header('Location: ivr_menus.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
+		header('Location: ivr_menus.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
-
-//get order and order by
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
-	$sort = $order_by == 'ivr_menu_extension' ? 'natural' : null;
-
-//add the search variable
-	$search = $_GET["search"] ?? '';
-	$show = $_GET["show"] ?? '';
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
@@ -114,25 +130,19 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (!empty($search)) {
-		$search = strtolower($search);
 		$sql .= "and (";
 		$sql .= "	lower(ivr_menu_name) like :search ";
 		$sql .= "	or lower(ivr_menu_extension) like :search ";
 		$sql .= "	or lower(ivr_menu_description) like :search ";
 		$sql .= ")";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$num_rows = $database->select($sql, $parameters ?? [], 'column');
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = "&search=".urlencode($search);
-	if ($show == "all" && permission_exists('ivr_menu_all')) {
-		$param .= "&show=all";
-	}
-	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
@@ -152,13 +162,12 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (!empty($search)) {
-		$search = strtolower($search);
 		$sql .= "and (";
 		$sql .= "	lower(ivr_menu_name) like :search ";
 		$sql .= "	or lower(ivr_menu_extension) like :search ";
 		$sql .= "	or lower(ivr_menu_description) like :search ";
 		$sql .= ")";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$sql .= order_by($order_by, $order, 'ivr_menu_name', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
@@ -178,7 +187,7 @@
 	echo "	<div class='heading'><b>".$text['title-ivr_menus']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('ivr_menu_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'ivr_menu_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'ivr_menu_edit.php'.($query_string ? '?'.$query_string : '')]);
 	}
 	if (permission_exists('ivr_menu_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
@@ -190,13 +199,13 @@
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	if (permission_exists('ivr_menu_all')) {
-		if ($show == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>";
+	foreach ($param as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?type=&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
-		}
+	}
+	if ($show !== 'all' && permission_exists('ivr_menu_all')) {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
@@ -224,7 +233,6 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -235,12 +243,12 @@
 		echo "	</th>\n";
 	}
 	if ($show == "all" && permission_exists('ivr_menu_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, "class='shrink'", $query_string);
 	}
-	echo th_order_by('ivr_menu_name', $text['label-name'], $order_by, $order);
-	echo th_order_by('ivr_menu_extension', $text['label-extension'], $order_by, $order);
-	echo th_order_by('ivr_menu_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
-	echo th_order_by('ivr_menu_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
+	echo th_order_by('ivr_menu_name', $text['label-name'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('ivr_menu_extension', $text['label-extension'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('ivr_menu_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $query_string);
+	echo th_order_by('ivr_menu_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'", $query_string);
 	if (permission_exists('ivr_menu_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -251,7 +259,7 @@
 		foreach($ivr_menus as $row) {
 			$list_row_url = '';
 			if (permission_exists('ivr_menu_edit')) {
-				$list_row_url = "ivr_menu_edit.php?id=".urlencode($row['ivr_menu_uuid']);
+				$list_row_url = "ivr_menu_edit.php?id=".urlencode($row['ivr_menu_uuid']).($query_string ? '&'.$query_string : '');
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}

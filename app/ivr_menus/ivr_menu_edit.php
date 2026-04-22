@@ -66,6 +66,32 @@
 		$ivr_menu_ringback = '';
 	}
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'ivr_menu_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('ivr_menu_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"]) || !empty($_REQUEST["ivr_menu_uuid"]) &&  is_uuid($_REQUEST["ivr_menu_uuid"])) {
 		$action = "update";
@@ -87,7 +113,7 @@
 
 		if ($total_ivr_menus >= $settings->get('limit', 'ivr_menus')) {
 			message::add($text['message-maximum_ivr_menus'].' '.$settings->get('limit', 'ivr_menus'), 'negative');
-			header('Location: ivr_menus.php');
+			header('Location: ivr_menus.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 	}
@@ -115,7 +141,7 @@
 						break;
 				}
 
-				header('Location: ivr_menus.php');
+				header('Location: ivr_menus.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -203,7 +229,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: ivr_menus.php');
+				header('Location: ivr_menus.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -465,7 +491,7 @@
 					}
 
 				//redirect the user
-					header("Location: ivr_menu_edit.php?id=".urlencode($ivr_menu_uuid));
+					header("Location: ivr_menu_edit.php?id=".urlencode($ivr_menu_uuid).($query_string ? '&'.$query_string : ''));
 					return;
 
 			}
@@ -731,7 +757,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-ivr_menu']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'ivr_menus.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'ivr_menus.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == "update") {
 		if (permission_exists('ivr_menu_add') && (empty($settings->get('limit', 'ivr_menus')) || $total_ivr_menus < $settings->get('limit', 'ivr_menus'))) {
 			$button_margin = 'margin-left: 15px;';
