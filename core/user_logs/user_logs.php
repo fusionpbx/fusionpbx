@@ -51,10 +51,35 @@
 	$table_prefix = database::TABLE_PREFIX;
 	$has_column_detail = $database->column_exists("{$table_prefix}user_logs", 'detail');
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'timestamp'));
+	$order = ($_GET['order'] ?? '') === 'asc' ? 'asc' : 'desc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('user_log_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //get the http post data
 	if (!empty($_POST['user_logs']) && is_array($_POST['user_logs'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'] ?? '';
 		$user_logs = $_POST['user_logs'];
 	}
 
@@ -65,7 +90,7 @@
 		$token = new token;
 		if (!$token->validate($_SERVER['PHP_SELF'])) {
 			message::add($text['message-invalid_token'],'negative');
-			header('Location: user_logs.php');
+			header('Location: user_logs.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 
@@ -84,7 +109,7 @@
 		}
 
 		//redirect the user
-		header('Location: user_logs.php'.($search != '' ? '?search='.urlencode($search) : ''));
+		header('Location: user_logs.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
 
@@ -93,24 +118,6 @@
 
 //get the server hostname
 	$hostname = gethostname();
-
-//get order and order by
-	$order_by = $_GET["order_by"] ?? null;
-	$order = $_GET["order"] ?? null;
-
-//define the variables
-	$search = '';
-	$show = '';
-
-//add the search variable
-	if (!empty($_GET["search"])) {
-		$search = strtolower($_GET["search"]);
-	}
-
-//add the show variable
-	if (!empty($_GET["show"])) {
-		$show = $_GET["show"];
-	}
 
 //get the count
 	$sql = "select count(user_log_uuid) ";
@@ -130,36 +137,16 @@
 		$sql .= "	or lower(remote_address) like :search ";
 		$sql .= "	or lower(user_agent) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = '';
-	if (!empty($search)) {
-		$param .= "&search=".$search;
-	}
-	if (!empty($_GET['page']) && $show == 'all' && permission_exists('user_log_all')) {
-		$param .= "&show=all";
-	}
-	if (!empty($order_by)) {
-		$param .= "&order_by=".$order_by;
-	}
-	if (!empty($order)) {
-		$param .= "&order=".$order;
-	}
-	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
-	if (!empty($order_by)) {
-		$param = str_replace("&order_by=".$order_by, '', $param);
-	}
-	if (!empty($order)) {
-		$param = str_replace("&order=".$order, '', $param);
-	}
 
 //set the time zone
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
@@ -206,7 +193,7 @@
 		$sql .= "	or lower(remote_address) like :search ";
 		$sql .= "	or lower(user_agent) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$sql .= "and u.domain_uuid = d.domain_uuid ";
 	$sql .= order_by($order_by, $order, 'timestamp', 'desc');
@@ -236,7 +223,7 @@
 			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all&search='.$search]);
+			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
 		}
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
@@ -258,7 +245,6 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search ?? '')."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -269,20 +255,20 @@
 		echo "	</th>\n";
 	}
 	if ($show == 'all' && permission_exists('user_log_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $query_string);
 	}
 	echo "<th class='left'>".$text['label-date']."</th>\n";
 	echo "<th class='left hide-md-dn'>".$text['label-time']."</th>\n";
 	echo "<th class='shrink hide-md-dn'>".$text['label-hostname']."</th>\n";
 	echo "<th class='right'>".$text['label-status']."</th>\n";
-	echo th_order_by('username', $text['label-username'], $order_by, $order, null, null, $param);
-	echo th_order_by('type', $text['label-type'], $order_by, $order, null, null, $param);
-	echo th_order_by('result', $text['label-result'], $order_by, $order, null, null, $param);
+	echo th_order_by('username', $text['label-username'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('type', $text['label-type'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('result', $text['label-result'], $order_by, $order, null, null, $query_string);
 	if ($has_column_detail) {
-		echo th_order_by('detail', $text['label-detail'], $order_by, $order, null, null, $param);
+		echo th_order_by('detail', $text['label-detail'], $order_by, $order, null, null, $query_string);
 	}
-	echo th_order_by('remote_address', $text['label-remote_address'], $order_by, $order, null, null, $param);
-	echo th_order_by('user_agent', $text['label-user_agent'], $order_by, $order, null, null, $param);
+	echo th_order_by('remote_address', $text['label-remote_address'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('user_agent', $text['label-user_agent'], $order_by, $order, null, null, $query_string);
 	echo "</tr>\n";
 
 	if (!empty($user_logs) && is_array($user_logs) && @sizeof($user_logs) != 0) {
