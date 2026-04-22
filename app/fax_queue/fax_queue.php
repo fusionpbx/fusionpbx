@@ -122,7 +122,7 @@
 	$sql = "select count(fax_queue_uuid) ";
 	$sql .= "from v_fax_queue as q ";
 	$sql .= "LEFT JOIN v_users AS u ON q.insert_user = u.user_uuid ";
-	if (!empty($_GET['show']) && $_GET['show'] == "all" && $permission['fax_queue_all']) {
+	if ($show == "all" && $permission['fax_queue_all']) {
 		// show faxes for all domains
 		$sql .= "WHERE true ";
 	}
@@ -139,7 +139,7 @@
 		$parameters['user_uuid'] = $user_uuid;
 	}
 
-	if (isset($search)) {
+	if (!empty($search)) {
 		$sql .= "AND (";
 		$sql .= "	LOWER(q.hostname) LIKE :search ";
 		$sql .= "	OR LOWER(q.fax_caller_id_name) LIKE :search ";
@@ -154,9 +154,9 @@
 		$parameters['search'] = '%' . lower_case($search) . '%';
 	}
 
-	if (isset($_GET["fax_status"]) && !empty($_GET["fax_status"])) {
+	if (!empty($fax_status)) {
 			$sql .= "AND q.fax_status = :fax_status ";
-			$parameters['fax_status'] = $_GET["fax_status"];
+			$parameters['fax_status'] = $fax_status;
 	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
@@ -209,7 +209,7 @@
 	$sql .= "LEFT JOIN v_users AS u ON q.insert_user = u.user_uuid ";
 	$sql .= "JOIN v_domains AS d ON q.domain_uuid = d.domain_uuid ";
 
-	if (!empty($_GET['show']) && $_GET['show'] == "all" && $permission['fax_queue_all']) {
+	if ($show == "all" && $permission['fax_queue_all']) {
 		// show faxes for all domains
 		$sql .= "WHERE true ";
 	}
@@ -226,7 +226,7 @@
 		$parameters['user_uuid'] = $user_uuid;
 	}
 
-	if (isset($search)) {
+	if (!empty($search)) {
 		$sql .= "AND (";
 		$sql .= "	LOWER(q.hostname) LIKE :search ";
 		$sql .= "	OR LOWER(q.fax_caller_id_name) LIKE :search ";
@@ -241,9 +241,9 @@
 		$parameters['search'] = '%' . lower_case($search) . '%';
 	}
 
-	if (isset($_GET["fax_status"]) && !empty($_GET["fax_status"])) {
+	if (!empty($fax_status)) {
 			$sql .= "AND q.fax_status = :fax_status ";
-			$parameters['fax_status'] = $_GET["fax_status"];
+			$parameters['fax_status'] = $fax_status;
 	}
 
 	$sql .= order_by($order_by, $order, 'fax_date', 'desc');
@@ -289,12 +289,12 @@
 	echo "			<select class='formfld' name='fax_status' style='margin-left: 15px;'>\n";
 	echo "				<option value='' selected='selected' disabled hidden>".$text['label-fax_status']."...</option>";
 	echo "				<option value=''></option>\n";
-	echo "				<option value='waiting' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "waiting" ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
-	echo "				<option value='sending' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "sending" ? "selected='selected'" : null).">".ucwords($text['label-sending'])."</option>\n";
-	echo "				<option value='trying' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "trying" ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
-	echo "				<option value='sent' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "sent" ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
-	echo "				<option value='busy' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "busy" ? "selected='selected'" : null).">".ucwords($text['label-busy'])."</option>\n";
-	echo "				<option value='failed' ".(!empty($_GET["fax_status"]) && $_GET["fax_status"] == "failed" ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
+	echo "				<option value='waiting' ".($fax_status == "waiting" ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
+	echo "				<option value='sending' ".($fax_status == "sending" ? "selected='selected'" : null).">".ucwords($text['label-sending'])."</option>\n";
+	echo "				<option value='trying' ".($fax_status == "trying" ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
+	echo "				<option value='sent' ".($fax_status == "sent" ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
+	echo "				<option value='busy' ".($fax_status == "busy" ? "selected='selected'" : null).">".ucwords($text['label-busy'])."</option>\n";
+	echo "				<option value='failed' ".($fax_status == "failed" ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
 	echo "			</select>\n";
 	echo "			<input type='text' class='txt list-search' style='margin-left: 0;' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" />";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
@@ -335,7 +335,7 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($fax_queue) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	if (!empty($_GET['show']) && $_GET['show'] == 'all' && $permission['fax_queue_all']) {
+	if ($show == 'all' && $permission['fax_queue_all']) {
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	}
 	//echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order);
@@ -376,7 +376,7 @@
 				echo "		<input type='hidden' name='fax_queue[$x][fax_queue_uuid]' value='".escape($row['fax_queue_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			if (!empty($_GET['show']) && $_GET['show'] == 'all' && $permission['fax_queue_all']) {
+			if ($show == 'all' && $permission['fax_queue_all']) {
 				echo "	<td>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td nowrap='nowrap'>".escape($row['fax_date_formatted'])."</td>\n";
