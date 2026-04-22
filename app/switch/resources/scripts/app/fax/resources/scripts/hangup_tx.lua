@@ -177,18 +177,18 @@
 		fax_result_text = "FS_NOT_SET";
 	end
 
---fax sent successfully
-	if (fax_success == '1') then
-		fax_status = 'sent';
-	else
-		fax_status = 'trying';
-	end
-
---fax busy
+--fax busy - check this first
 	if (fax_result_code == "2" or fax_result_code == "3" or hangup_cause_q850 == 17) then
 		--do nothing. don't want to increment
 		freeswitch.consoleLog("INFO","[FAX] Last Fax was probably Busy, don't increment retry_attempts. \n");
 		fax_status = 'busy';
+	end
+
+--fax sent successfully - only if not already marked busy
+	if (fax_success == '1' and fax_status ~= 'busy') then
+		fax_status = 'sent';
+	elseif (fax_status ~= 'busy') then
+		fax_status = 'trying';
 	end
 
 --get the fax settings from the database
