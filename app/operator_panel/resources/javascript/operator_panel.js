@@ -1931,6 +1931,7 @@ function on_ext_contextmenu(event, ext_num) {
 	const { state, call_info } = get_extension_call_state(ext_num);
 	const has_call  = !!uuid;
 	const ext_data = extensions_map.get(ext_num) || {};
+	const is_registered = ext_data.registered === true;
 	const voicemail_enabled = (ext_data.voicemail_enabled || '') === 'true';
 
 	// Derive call direction for the ringing extension to suppress Reject on outbound calls.
@@ -1944,6 +1945,17 @@ function on_ext_contextmenu(event, ext_num) {
 
 	const items = [];
 	items.push({ header: ext_num });
+
+	if (!is_registered) {
+		if (permissions.operator_panel_originate) {
+			items.push({ label: text['button-call_voicemail'] || 'Call Voicemail', icon_class: 'fa-solid fa-voicemail',
+				fn: function () { action_call_voicemail(ext_num); }
+			});
+		}
+		if (items.length <= 1) return;
+		show_context_menu(event, items);
+		return;
+	}
 
 	if (!has_call) {
 		if (is_mine) {
