@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008 - 2024
+	Portions created by the Initial Developer are Copyright (C) 2008 - 2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -48,9 +48,6 @@
 	$text = $language->get();
 
 //set the variables
-	$search = $_REQUEST['search'] ?? '';
-	$show = $_REQUEST['show'] ?? '';
-	$default_setting_category = $_REQUEST['default_setting_category'] ?? '';
 	if (!empty($_POST['default_settings'])) {
 		$action = $_POST['action'];
 		$domain_uuid = $_POST['domain_uuid'];
@@ -60,6 +57,13 @@
 		$domain_uuid = '';
 		$default_settings = '';
 	}
+
+// Set variables from http GET parameters
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'default_setting_category'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+	$default_setting_category = $_GET['default_setting_category'] ?? '';
 
 //sanitize the variables
 	$action = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $action);
@@ -78,15 +82,24 @@
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
-//build the query string
-	$query_string = '';
+// Build the query string
+	$param = [];
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
 	if (!empty($search)) {
-		$query_string .= 'search='.urlencode($search);
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('stream_all')) {
+		$param['show'] = $show;
 	}
 	if (!empty($default_setting_category)) {
-		if ($query_string == '') { $query_string = ''; } else { $query_string .= '&'; }
-		$query_string .= 'default_setting_category='.urlencode($default_setting_category);
+		$param['default_setting_category'] = $default_setting_category;
 	}
+	$query_string = http_build_query($param);
 
 //process the http post data by action
 	if (!empty($action) && !empty($default_settings)) {
@@ -111,7 +124,7 @@
 				}
 				break;
 		}
-		header('Location: default_settings.php?'.(!empty($query_string) ? $query_string : null));
+		header('Location: default_settings.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
 
@@ -293,9 +306,9 @@
 	echo "	<div class='heading'><b>".$text['title-default_settings']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['label-domain'],'icon'=>$settings->get('theme', 'button_icon_domain'),'style'=>'','link'=>PROJECT_PATH.'/core/domain_settings/domain_settings.php?id='.$domain_uuid]);
-	echo button::create(['label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'type'=>'button','id'=>'button_reload','link'=>'default_settings_reload.php'.(!empty($search) ? '?search='.urlencode($search) : ''),'style'=>'margin-right: 15px;']);
+	echo button::create(['label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'type'=>'button','id'=>'button_reload','link'=>'default_settings_reload.php'.($query_string ? '?'.$query_string : ''),'style'=>'margin-right: 15px;']);
 	if ($permission['default_setting_add']) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'default_setting_edit.php?'.$query_string]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'default_setting_edit.php'.($query_string ? '?'.$query_string : '')]);
 	}
 	if ($permission['default_setting_add'] && !empty($default_settings)) {
 		if ($permission['domain_select'] && $permission['domain_setting_add']) {
@@ -317,7 +330,12 @@
 	if ($permission['default_setting_delete'] && $default_settings) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($param as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
+		}
+	}
 	if (!empty($categories)) {
 		echo 		"<select name='default_setting_category' class='formfld' style='width: auto; margin-left: 15px;' id='select_category' onchange='this.form.submit();'>\n";
 		echo "			<option value=''>".$text['label-category']."...</option>\n";
@@ -331,7 +349,7 @@
 		echo "			<option value=''>".$text['label-all']."</option>\n";
 		echo "		</select>";
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' style='margin-left: 0 !important;' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	echo "		<input type='text' class='txt list-search' name='search' id='search' style='margin-left: 0 !important;' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'default_settings.php','style'=>($search == '' ? 'display: none;' : null)]);
 	//if (!empty($paging_controls_mini)) {
@@ -354,7 +372,6 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 	echo "<input type='hidden' name='domain_uuid' id='domain_uuid'>";
 
 	if (!empty($default_settings)) {
@@ -442,12 +459,12 @@
 					echo "	</th>\n";
 				}
 				if ($show == 'all' && $permission['default_setting_all']) {
-					echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
+					echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $query_string);
 				}
-				echo th_order_by('default_setting_subcategory', $text['label-subcategory'], $order_by, $order, null, "class='pct-35'");
-				echo th_order_by('default_setting_name', $text['label-type'], $order_by, $order, null, "class='pct-10 hide-sm-dn'");
-				echo th_order_by('default_setting_value', $text['label-value'], $order_by, $order, null, "class='pct-30'");
-				echo th_order_by('default_setting_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
+				echo th_order_by('default_setting_subcategory', $text['label-subcategory'], $order_by, $order, null, "class='pct-35'", $query_string);
+				echo th_order_by('default_setting_name', $text['label-type'], $order_by, $order, null, "class='pct-10 hide-sm-dn'", $query_string);
+				echo th_order_by('default_setting_value', $text['label-value'], $order_by, $order, null, "class='pct-30'", $query_string);
+				echo th_order_by('default_setting_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $query_string);
 				echo "	<th class='pct-25 hide-sm-dn'>".$text['label-description']."</th>\n";
 				if ($permission['default_setting_edit'] && $list_row_edit_button) {
 					echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -455,7 +472,7 @@
 				echo "</tr>\n";
 			}
 			if ($permission['default_setting_edit']) {
-				$list_row_url = "default_setting_edit.php?id=".urlencode($row['default_setting_uuid']).'&'.$query_string;
+				$list_row_url = "default_setting_edit.php?id=".urlencode($row['default_setting_uuid']).($query_string ? '&'.$query_string : '');
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if ($permission['default_setting_add'] || $permission['default_setting_edit'] || $permission['default_setting_delete']) {
