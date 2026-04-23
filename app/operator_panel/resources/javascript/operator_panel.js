@@ -653,6 +653,46 @@ function get_call_uuid(ch) {
 	return ch.unique_id || ch.uuid || ch.channel_uuid || '';
 }
 
+function is_ringing_like_call(ch) {
+	if (!ch || typeof ch !== 'object') return false;
+	const channel_state = ((ch.channel_call_state || '') + '').toUpperCase();
+	const answer_state = ((ch.answer_state || '') + '').toUpperCase();
+	return channel_state.indexOf('RING') !== -1 || answer_state.indexOf('RING') !== -1 || answer_state === 'EARLY';
+}
+
+function remove_stale_linked_ringing_legs(destroyed_uuid, destroyed_event) {
+	if (!destroyed_uuid) return;
+
+	const destroyed_refs = [
+		destroyed_event && destroyed_event.other_leg_unique_id,
+		destroyed_event && destroyed_event.variable_bridge_uuid,
+		destroyed_event && destroyed_event.bridge_uuid,
+	]
+		.map(v => ((v || '') + '').trim())
+		.filter(Boolean);
+
+	for (const linked_uuid of get_linked_call_uuids(destroyed_uuid)) {
+		if (!linked_uuid || linked_uuid === destroyed_uuid) continue;
+
+		const linked_call = calls_map.get(linked_uuid);
+		if (!linked_call || !is_ringing_like_call(linked_call)) continue;
+
+		const linked_refs = [
+			linked_call.other_leg_unique_id,
+			linked_call.variable_bridge_uuid,
+			linked_call.bridge_uuid,
+		]
+			.map(v => ((v || '') + '').trim())
+			.filter(Boolean);
+
+		const directly_linked = linked_refs.includes(destroyed_uuid) || destroyed_refs.includes(linked_uuid);
+		if (directly_linked) {
+			recording_call_uuids.delete(linked_uuid);
+			calls_map.delete(linked_uuid);
+		}
+	}
+}
+
 function is_parked_call(ch) {
 	if (!ch || typeof ch !== 'object') return false;
 	const callstate = ((ch.channel_call_state || ch.answer_state || '') + '').toLowerCase();
@@ -895,6 +935,7 @@ function on_call_event(event) {
 		case 'channel_destroy':
 			recording_call_uuids.delete(uuid);
 			calls_map.delete(uuid);
+			remove_stale_linked_ringing_legs(uuid, event);
 			break;
 
 		default:
