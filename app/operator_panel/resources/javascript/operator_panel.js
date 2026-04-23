@@ -3231,7 +3231,8 @@ function apply_extension_filters() {
 	document.querySelectorAll('.op-group-card').forEach(card => {
 		const key = card.getAttribute('data-group-key') || '';
 		// Group filter
-		const group_visible = active_group_filters.size === 0 || active_group_filters.has(key);
+		const my_extensions_always_visible = key === '__my__' && !my_extensions_button_visible;
+		const group_visible = my_extensions_always_visible || active_group_filters.size === 0 || active_group_filters.has(key);
 		card.classList.toggle('op-hidden', !group_visible);
 
 		if (group_visible && filter_text) {
@@ -3367,7 +3368,7 @@ function render_extensions_tab() {
 
 	// Build the list of all group keys for filters (including "my_extensions")
 	const filter_keys = [];
-	if (own.length > 0) {
+	if (own.length > 0 && my_extensions_button_visible) {
 		filter_keys.push({ key: '__my__', display: text['label-my_extensions'] || 'My Extensions' });
 	}
 	sorted_keys.forEach(key => {
