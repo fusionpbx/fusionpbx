@@ -1961,6 +1961,18 @@ document.addEventListener('keydown', function (e) {
 });
 
 /**
+ * True when the originating caller of the given call is one of the logged-in
+ * user's own extensions.  Used to suppress Intercept UI when the operator is
+ * the one placing the call (you cannot intercept your own outgoing call).
+ */
+function is_call_originated_by_me(call_info) {
+	if (!call_info || !Array.isArray(user_own_extensions) || user_own_extensions.length === 0) return false;
+	const cid = ((call_info.caller_caller_id_number || call_info.caller_id_number || '') + '').trim();
+	if (!cid) return false;
+	return user_own_extensions.includes(cid);
+}
+
+/**
  * Right-click handler for extension blocks.
  * @param {MouseEvent} event
  * @param {string}     ext_num
@@ -2035,7 +2047,7 @@ function on_ext_contextmenu(event, ext_num) {
 					fn: function () { action_hangup_caller(uuid); }, danger: true });
 			}
 		} else {
-			if (permissions.operator_panel_manage) {
+			if (permissions.operator_panel_manage && !is_call_originated_by_me(call_info)) {
 				items.push({ label: text['button-intercept'] || 'Intercept', icon_class: 'fa-solid fa-phone-volume',
 					fn: function () { action_intercept_icon(uuid, ext_num); } });
 			}
@@ -2149,7 +2161,7 @@ function on_call_contextmenu(event, uuid) {
 					fn: function () { action_hangup_caller(uuid); }, danger: true });
 			}
 		} else {
-			if (permissions.operator_panel_manage) {
+			if (permissions.operator_panel_manage && !is_call_originated_by_me(call_info)) {
 				items.push({ label: text['button-intercept'] || 'Intercept', icon_class: 'fa-solid fa-phone-volume',
 					fn: function () { action_intercept_icon(uuid, source_ext); } });
 			}
@@ -2749,6 +2761,9 @@ function render_ext_block(ext, is_mine) {
 		? current_user_status
 		: (ext.user_status || '').trim();
 
+	// Unregistered extensions always render as unregistered (grey).  When they
+	// have an active call it is running on the voicemail leg; that is surfaced
+	// to the user via the state label + voicemail icon below, not a colour change.
 	let css_state;
 	if (!reg) {
 		css_state = 'op-ext-unregistered';
@@ -2787,8 +2802,22 @@ function render_ext_block(ext, is_mine) {
 
 	// Only show a state label when something notable is happening
 	let state_label = '';
+	let state_label_icon = ''; // optional leading Font Awesome icon class
 	if (dnd && reg) {
 		state_label = text['label-do_not_disturb'] || 'Do Not Disturb';
+	} else if (!reg && state !== 'idle' && call_info) {
+		// Unregistered extension with a live call: the call is on the voicemail leg.
+		const call_name = ((call_info.caller_caller_id_name || call_info.caller_id_name || '') + '').trim();
+		const call_cid  = ((call_info.caller_caller_id_number || call_info.caller_id_number || '') + '').trim();
+		const from_parts = [];
+		if (call_name && call_name.toLowerCase() !== 'outbound call' && call_name.toLowerCase() !== 'inbound call' && call_name !== call_cid) {
+			from_parts.push(call_name);
+		}
+		if (call_cid) from_parts.push(call_cid);
+		const from_text = from_parts.join(' ');
+		state_label_icon = 'fa-solid fa-voicemail';
+		state_label = (text['label-voicemail'] || 'Voicemail')
+			+ (from_text ? ' \u2014 ' + (text['label-from'] || 'From') + ': ' + esc(from_text) : '');
 	} else if (reg && state !== 'idle') {
 		switch (state) {
 			case 'ringing': state_label = text['label-ringing'] || 'Ringing\u2026'; break;
@@ -2829,13 +2858,21 @@ function render_ext_block(ext, is_mine) {
 	const call_uuid_js = (call_uuid || '').replace(/'/g, "\\'");
 	const call_dest = ((call_info || {}).caller_destination_number || '').trim();
 	const call_cid  = ((call_info || {}).caller_caller_id_number || '').trim();
+	const call_presence = (((call_info || {}).channel_presence_id || '').split('@')[0] || '').trim();
+	const fs_direction = (((call_info || {}).call_direction || (call_info || {}).variable_call_direction || '') + '').toLowerCase();
 	let direction_raw = '';
-	if (call_dest === num && call_cid !== num) {
+	if (call_dest === num && call_cid !== num && call_cid) {
 		direction_raw = 'inbound';
-	} else if (call_cid === num && call_dest !== num) {
+	} else if (call_cid === num && call_dest !== num && call_dest) {
 		direction_raw = 'outbound';
+	} else if (call_presence === num && fs_direction) {
+		// FS leg that belongs to this extension. FS direction is relative to the
+		// switch, not the extension, so invert it for the panel's viewpoint:
+		//   FS outbound => switch is dialing this phone => panel inbound
+		//   FS inbound  => phone dialed the switch      => panel outbound
+		direction_raw = (fs_direction === 'outbound') ? 'inbound' : 'outbound';
 	} else {
-		direction_raw = (((call_info || {}).call_direction || (call_info || {}).variable_call_direction || '') + '').toLowerCase();
+		direction_raw = fs_direction;
 	}
 	const direction_icon = direction_raw === 'inbound'
 		? '../operator_panel/resources/images/inbound.png'
@@ -2929,9 +2966,11 @@ function render_ext_block(ext, is_mine) {
 				: '') +
 			`</div>`;
 	} else if (has_live_call && is_ringing && !is_mine) {
-		// Ringing on another user's extension: Intercept icon
+		// Ringing on another user's extension: Intercept icon (hidden when the
+		// operator is the one placing the call).
+		const can_intercept = !is_call_originated_by_me(call_info);
 		live_actions_html = `<div class="op-ext-call-actions">` +
-			(permissions.operator_panel_manage
+			(permissions.operator_panel_manage && can_intercept
 				? `<img class="op-ext-action-icon" src="../operator_panel/resources/images/intercept.svg" alt="${esc(text['button-intercept'] || 'Intercept')}" title="${esc(text['button-intercept'] || 'Intercept')}" onclick="action_intercept_icon('${call_uuid_js}', '${esc(num)}')">`
 				: '') +
 			(permissions.operator_panel_hangup
@@ -2974,7 +3013,7 @@ function render_ext_block(ext, is_mine) {
 		`<div class="op-ext-number">${esc(num)}</div>` +
 		dialpad_html +
 		(show_name ? `<div class="op-ext-name" title="${esc(raw_name)}">${esc(raw_name)}</div>` : '') +
-		(state_label ? `<div class="op-ext-state-info">${state_label}</div>` : '') +
+		(state_label ? `<div class="op-ext-state-info">${state_label_icon ? `<i class="${esc(state_label_icon)} op-ext-state-icon" aria-hidden="true"></i> ` : ''}${state_label}</div>` : '') +
 		live_call_meta_html +
 		live_actions_html +
 		`</div>` +
