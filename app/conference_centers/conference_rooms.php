@@ -160,10 +160,7 @@
 //get conference array
 	$switch_cmd = "conference xml_list";
 	$esl = event_socket::create();
-	if (!$esl->is_connected()) {
-		trigger_error('Unable to connect to FreeSWITCH', E_USER_WARNING);
-	}
-	else {
+	if ($esl->is_connected()) {
 		$xml_str = trim(event_socket::api($switch_cmd));
 		try {
 			$xml = new SimpleXMLElement($xml_str, true);
