@@ -247,10 +247,34 @@ function normalize_group_key(raw_group) {
 	return key || '';
 }
 
-function get_extension_group_key(ext_number) {
+function parse_call_group_entries(raw_groups) {
+	const entries = [];
+	const seen = new Set();
+
+	((raw_groups || '') + '').split(',').forEach(part => {
+		const raw = (part + '').trim();
+		const key = normalize_group_key(raw);
+		if (!key || seen.has(key)) return;
+		seen.add(key);
+		entries.push({ key: key, display: to_title_case(raw) });
+	});
+
+	if (entries.length === 0) {
+		entries.push({ key: '', display: '' });
+	}
+
+	return entries;
+}
+
+function get_extension_group_entries(ext_number) {
 	const ext = extensions_map.get((ext_number || '').toString());
-	if (!ext) return '';
-	return normalize_group_key(ext.call_group || '');
+	if (!ext) return [{ key: '', display: '' }];
+	return parse_call_group_entries(ext.call_group || '');
+}
+
+function get_extension_group_key(ext_number) {
+	const groups = get_extension_group_entries(ext_number);
+	return groups.length ? (groups[0].key || '') : '';
 }
 
 function get_extension_display_name(ext_number) {
@@ -1978,7 +2002,7 @@ function is_call_originated_by_me(call_info) {
  * @param {string}     ext_num
  */
 function on_ext_contextmenu(event, ext_num) {
-	const block = document.getElementById('ext_block_' + ext_num);
+	const block = get_extension_block(ext_num, event);
 	const uuid  = block ? (block.getAttribute('data-call-uuid') || '') : '';
 	const is_mine  = !!(block && block.classList.contains('op-ext-mine'));
 	const { state, call_info } = get_extension_call_state(ext_num);
@@ -2998,7 +3022,7 @@ function render_ext_block(ext, is_mine) {
 			`</div>`;
 	}
 
-	return `<div class="op-ext-block ${css_state}${mine_cls}" id="ext_block_${esc(num)}"` +
+	return `<div class="op-ext-block ${css_state}${mine_cls}"` +
 		` data-extension="${esc(num)}"${data_uuid}` +
 		` data-can-receive-originate="${can_receive_originate ? 'true' : 'false'}"` +
 		drag_attrs +
@@ -3018,6 +3042,24 @@ function render_ext_block(ext, is_mine) {
 		live_actions_html +
 		`</div>` +
 		`</div>`;
+}
+
+function get_extension_block(ext_number, event) {
+	const target_num = ((ext_number || '') + '').trim();
+	if (!target_num) return null;
+
+	if (event && event.currentTarget && event.currentTarget.classList && event.currentTarget.classList.contains('op-ext-block')) {
+		const current_num = (event.currentTarget.getAttribute('data-extension') || '').trim();
+		if (current_num === target_num) return event.currentTarget;
+	}
+
+	const blocks = document.querySelectorAll('.op-ext-block[data-extension]');
+	for (const block of blocks) {
+		const candidate = (block.getAttribute('data-extension') || '').trim();
+		if (candidate === target_num) return block;
+	}
+
+	return null;
 }
 
 /**
@@ -3390,12 +3432,14 @@ function render_extensions_tab() {
 	// Group remaining extensions by call_group (case-insensitive)
 	const groups = new Map();
 	others.forEach(ext => {
-		const raw_group = (ext.call_group || '').trim();
-		const key = raw_group.toLowerCase() || '';
-		if (!groups.has(key)) {
-			groups.set(key, { display: raw_group ? to_title_case(raw_group) : '', exts: [] });
-		}
-		groups.get(key).exts.push(ext);
+		const group_entries = parse_call_group_entries(ext.call_group || '');
+		group_entries.forEach(group_entry => {
+			const key = group_entry.key;
+			if (!groups.has(key)) {
+				groups.set(key, { display: group_entry.display, exts: [] });
+			}
+			groups.get(key).exts.push(ext);
+		});
 	});
 
 	// Sort groups: named groups alphabetically, ungrouped last
@@ -3717,7 +3761,7 @@ function toggle_ext_dialpad(ext_number, event) {
 		event.stopPropagation();
 	}
 
-	const row = document.getElementById(`ext_block_${ext_number}`);
+	const row = get_extension_block(ext_number, event);
 	if (!row) return;
 
 	const input = row.querySelector('.op-ext-dial-input');
@@ -3741,7 +3785,7 @@ function submit_ext_dial(ext_number, event) {
 		event.stopPropagation();
 	}
 
-	const row = document.getElementById(`ext_block_${ext_number}`);
+	const row = get_extension_block(ext_number, event);
 	if (!row) return;
 
 	const input = row.querySelector('.op-ext-dial-input');
