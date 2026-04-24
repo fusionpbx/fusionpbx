@@ -121,6 +121,13 @@
 	$conference_centers = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//conference center to be setup first before adding a room
+	if (empty($conference_centers)) {
+		message::add($text['message-conference_center_required'], 'negative');
+		header("Location: conference_rooms.php");
+		exit;
+	}
+
 //get the conference profiles
 	$sql = "select * ";
 	$sql .= "from v_conference_profiles ";
@@ -196,6 +203,7 @@
 	unset($sql, $parameters);
 
 //generate the pin numbers
+	$pin_length = (empty($pin_length)) ? '9' : $pin_length;
 	if (empty($moderator_pin)) {
 		$moderator_pin = get_conference_pin($pin_length, $conference_room_uuid ?? null);
 	}
