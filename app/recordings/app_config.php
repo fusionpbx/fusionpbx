@@ -184,6 +184,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "recording_speed";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "decimal(4,2)";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Speech speed (0.25 to 4.0, default 1.0).";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "recording_message";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';

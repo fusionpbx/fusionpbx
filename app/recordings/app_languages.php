@@ -648,6 +648,11 @@ $text['description-voice']['zh-cn'] = "选择用于录音的声音。";
 $text['description-voice']['ja-jp'] = "録音に使用する音声を選択します。";
 $text['description-voice']['ko-kr'] = "녹음에 사용되는 음성을 선택합니다.";
 
+$text['label-speed']['en-us'] = "Speed";
+$text['label-speed']['en-gb'] = "Speed";
+$text['description-speed']['en-us'] = "Select the speech speed (1.0 is normal).";
+$text['description-speed']['en-gb'] = "Select the speech speed (1.0 is normal).";
+
 $text['label-message']['en-us'] = "Message";
 $text['label-message']['en-gb'] = "Message";
 $text['label-message']['ar-eg'] = "رسالة";

@@ -43,7 +43,10 @@
 	$recording_name = '';
 	$recording_message = '';
 	$recording_description = '';
+	$recording_speed = '1.0';
 	$recording_uuid = '';
+	$speed_enabled = false;
+	$speed_options = [];
 	$translate_enabled = false;
 	$language_enabled = false;
 
@@ -64,6 +67,8 @@
 		$speech = new speech($settings);
 		$voices = $speech->get_voices();
 		$recording_extension = $speech->get_format();
+		$speed_enabled = $speech->is_speed_enabled();
+		$speed_options = $speed_enabled ? $speech->get_speed_options() : [];
 		//$speech_models = $speech->get_models();
 		//$translate_enabled = $speech->get_translate_enabled();
 		//$language_enabled = $speech->get_language_enabled();
@@ -131,6 +136,8 @@
 		//$recording_language = $_POST["recording_language"];
 		//$translate = $_POST["translate"];
 		$recording_voice = $_POST["recording_voice"];
+		$recording_speed_allowed = array_keys($speed_options ?? []);
+		$recording_speed = (!empty($recording_speed_allowed) && in_array($_POST["recording_speed"] ?? '', $recording_speed_allowed)) ? $_POST["recording_speed"] : '1.0';
 		$recording_message = $_POST["recording_message"];
 		$recording_description = $_POST["recording_description"];
 
@@ -259,6 +266,9 @@
 					$speech->audio_filename = $recording_filename;
 					//$speech->audio_model = $recording_model ?? '';
 					$speech->audio_voice = $recording_voice;
+					if ($speed_enabled) {
+						$speech->audio_speed = (float)$recording_speed;
+					}
 					//$speech->audio_language = $recording_language;
 					//$speech->audio_translate = $translate;
 					$speech->audio_message = $recording_message;
@@ -276,6 +286,7 @@
 						}
 						unset($recording_filename_temp);
 					}
+
 				}
 
 				//audio to text - get the transcription from the audio file
@@ -296,6 +307,9 @@
 				}
 				if ($speech_enabled || $transcribe_enabled) {
 					$array['recordings'][0]['recording_voice'] = $recording_voice;
+					if ($speed_enabled) {
+						$array['recordings'][0]['recording_speed'] = $recording_speed;
+					}
 					$array['recordings'][0]['recording_message'] = $recording_message;
 				}
 				$array['recordings'][0]['recording_description'] = $recording_description;
@@ -318,7 +332,7 @@
 	if (!empty($_GET) && empty($_POST["persistformvar"])) {
 		$recording_uuid = $_GET["id"];
 		$sql = "select recording_name, recording_filename, ";
-		$sql .= "recording_voice, recording_message, recording_description ";
+		$sql .= "recording_voice, recording_speed, recording_message, recording_description ";
 		$sql .= "from v_recordings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and recording_uuid = :recording_uuid ";
@@ -329,6 +343,7 @@
 			$recording_filename = $row["recording_filename"];
 			$recording_name = $row["recording_name"];
 			$recording_voice = $row["recording_voice"];
+			$recording_speed = !empty($row["recording_speed"]) ? $row["recording_speed"] : '1.0';
 			$recording_message = $row["recording_message"];
 			$recording_description = $row["recording_description"];
 		}
@@ -477,6 +492,25 @@
 		echo $text['description-voice']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+
+		//speed
+		if ($speed_enabled) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+			echo "    ".($text['label-speed'] ?? 'Speed')."\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "	<select class='formfld' name='recording_speed' style='width: 120px;'>\n";
+			foreach ($speed_options as $speed_value => $speed_label) {
+				$selected = (string)$recording_speed === $speed_value ? "selected='selected'" : '';
+				echo "		<option value='".escape($speed_value)."' $selected>".escape($speed_label)."</option>\n";
+			}
+			echo "	</select>\n";
+			echo "<br />\n";
+			echo ($text['description-speed'] ?? 'Select the speech speed (1.0 is normal).')."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 
 		if ($language_enabled) {
 			echo "<tr>\n";
