@@ -74,23 +74,23 @@
 	$show = $_GET['show'] ?? '';
 
 // Build the query string
-	$param = [];
+	$url_params = [];
 	if (!empty($page)) {
-		$param['page'] = $page;
+		$url_params['page'] = $page;
 	}
 	if (!empty($_GET['order_by'])) {
-		$param['order_by'] = $order_by;
+		$url_params['order_by'] = $order_by;
 	}
 	if (!empty($_GET['order'])) {
-		$param['order'] = $order;
+		$url_params['order'] = $order;
 	}
 	if (!empty($search)) {
-		$param['search'] = $search;
+		$url_params['search'] = $search;
 	}
 	if (!empty($show) && $show == 'all' && permission_exists('domain_all')) {
-		$param['show'] = $show;
+		$url_params['show'] = $show;
 	}
-	$query_string = http_build_query($param);
+	$query_string = http_build_query($url_params);
 
 //process the data
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
