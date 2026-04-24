@@ -123,23 +123,23 @@
 	$show = $_GET['show'] ?? '';
 
 // Build the query string
-	$param = [];
+	$url_params = [];
 	if (!empty($page)) {
-		$param['page'] = $page;
+		$url_params['page'] = $page;
 	}
 	if (!empty($_GET['order_by'])) {
-		$param['order_by'] = $order_by;
+		$url_params['order_by'] = $order_by;
 	}
 	if (!empty($_GET['order'])) {
-		$param['order'] = $order;
+		$url_params['order'] = $order;
 	}
 	if (!empty($search)) {
-		$param['search'] = $search;
+		$url_params['search'] = $search;
 	}
 	if (!empty($show) && $show == 'all' && permission_exists('domain_all')) {
-		$param['show'] = $show;
+		$url_params['show'] = $show;
 	}
-	$query_string = http_build_query($param);
+	$query_string = http_build_query($url_params);
 
 //process the http post data by action
 	if (!empty($action) && !empty($domains)) {
@@ -216,7 +216,7 @@
 	echo "	<div class='heading'><b>".$text['title-domains']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('domain_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'domain_edit.php'.($query_string ? '?'.$query_string : '')]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'domain_edit.php']);
 	}
 	if (permission_exists('domain_edit') && $domains) {
 		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"modal_display_selected('modal-toggle'); modal_open('modal-toggle','btn_toggle');"]);
@@ -225,7 +225,7 @@
  		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_display_selected('modal-delete'); modal_open('modal-delete','btn_delete_domain');"]);
  	}
 	echo "		<form id='form_search' class='inline' method='get'>\n";
-	foreach ($param as $key => $value) {
+	foreach ($url_params as $key => $value) {
 		if ($key !== 'search' && $key !== 'page') {
 			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
