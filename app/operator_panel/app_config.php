@@ -186,6 +186,14 @@
 	$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 	$apps[$x]['default_settings'][$y]['default_setting_description'] = "Position of extension group card labels. Valid values: top, left, right, bottom, hidden.";
 	$y++;
+	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9a25fc04-4fc8-4027-97fe-9e4723346892";
+	$apps[$x]['default_settings'][$y]['default_setting_category'] = "operator_panel";
+	$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "my_extensions_button_visible";
+	$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+	$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+	$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+	$apps[$x]['default_settings'][$y]['default_setting_description'] = "Show the 'My Extensions' filter button. False hides the button and keeps the logged-in user's extensions visible in the Extensions tab.";
+	$y++;
 	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c4a7db2a-ec69-4aef-a95b-1a8f2d7d2de1";
 	$apps[$x]['default_settings'][$y]['default_setting_category'] = "operator_panel";
 	$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "registrations_reconcile_enabled";
