@@ -240,8 +240,13 @@
 .op-ext-number     { font-size: 12px; font-weight: bold; color: #3164AD; line-height: 1.4; }
 .op-ext-name       { font-size: 10px; color: #444; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .op-ext-state-info { font-size: 10px; color: #555; margin-top: 3px; }
-.op-ext-info.op-has-live-call { padding-right: 78px; padding-bottom: 15px; box-sizing: border-box; }
-.op-ext-info.op-has-live-call .op-ext-state-info { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.op-ext-info.op-has-live-call { padding-right: 18px; padding-bottom: 15px; box-sizing: border-box; }
+.op-ext-info.op-has-live-call .op-ext-state-info {
+	padding-right: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 .op-ext-mine-label { position: absolute; top: 2px; right: 4px; font-size: 9px; color: #0d6efd; font-weight: 600; }
 .op-ext-dial-wrap  { position: absolute; top: 22px; right: 3px; }
 .op-ext-dial-toggle {

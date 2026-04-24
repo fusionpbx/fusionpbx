@@ -708,7 +708,14 @@ class operator_panel_service extends base_websocket_system_service implements we
 			$mapped['channel_presence_id']           = $call['presence_id'] ?? '';
 			$mapped['caller_caller_id_name']         = $call['initial_cid_name'] ?? ($call['cid_name'] ?? '');
 			$mapped['caller_caller_id_number']       = $call['initial_cid_num'] ?? ($call['cid_num'] ?? '');
-			$mapped['caller_destination_number']     = $call['initial_dest'] ?? ($call['dest'] ?? '');
+			// Prefer the current destination (e.g. 104 for a voicemail leg) over
+			// the initial dialed number (e.g. 100 for a phone-originated leg).
+			// This matches what live CHANNEL_* events publish in
+			// caller_destination_number and lets the panel show calls routed to
+			// voicemail (or other redirects) going to the correct extension.
+			$current_dest = $call['dest'] ?? '';
+			$initial_dest = $call['initial_dest'] ?? '';
+			$mapped['caller_destination_number']     = ($current_dest !== '' ? $current_dest : $initial_dest);
 			$mapped['application']                   = $call['application'] ?? '';
 			$mapped['secure']                        = $call['secure'] ?? '';
 			$channels[] = $mapped;
