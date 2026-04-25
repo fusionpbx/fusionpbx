@@ -44,13 +44,6 @@ $user_uuid = $_SESSION['user_uuid'] ?? '';
 $language = new text;
 $text = $language->get();
 
-//get order and order by, page
-$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_REQUEST["order_by"] ?? 'extension'));
-$order = $_REQUEST["order"] ?? 'asc';
-$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
-$search = $_REQUEST['search'] ?? null;
-
-//return the first item if data type = array, returns value if data type = text
 /**
  * Returns the first item of a given value.
  *
@@ -61,8 +54,7 @@ $search = $_REQUEST['search'] ?? null;
  *
  * @return mixed The first item of the value.
  */
-function get_first_item($value)
-{
+function get_first_item($value) {
 	return is_array($value) ? $value[0] : $value;
 }
 
@@ -116,6 +108,32 @@ if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 	$action = "add";
 }
 
+// Set variables from http GET parameters
+$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'extension'));
+$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+$search = $_GET['search'] ?? '';
+$show = $_GET['show'] ?? '';
+
+// Build the query string
+$url_params = [];
+if (!empty($page)) {
+	$url_params['page'] = $page;
+}
+if (!empty($_GET['order_by'])) {
+	$url_params['order_by'] = $order_by;
+}
+if (!empty($_GET['order'])) {
+	$url_params['order'] = $order;
+}
+if (!empty($search)) {
+	$url_params['search'] = $search;
+}
+if (!empty($show) && $show == 'all' && permission_exists('extension_all')) {
+	$url_params['show'] = $show;
+}
+$query_string = http_build_query($url_params);
+
 //get total extension count from the database, check limit, if defined
 if ($action == 'add' && $limit_extensions != '') {
 	$sql = "select count(extension_uuid) ";
@@ -127,7 +145,7 @@ if ($action == 'add' && $limit_extensions != '') {
 
 	if ($total_extensions >= $limit_extensions) {
 		message::add($text['message-maximum_extensions'] . ' ' . $limit_extensions, 'negative');
-		header('Location: extensions.php?' . (!empty($order_by) ? '&order_by=' . $order_by . '&order=' . $order : null) . (isset($page) && is_numeric($page) ? '&page=' . $page : null) . (!empty($search) ? '&search=' . urlencode($search) : null));
+		header('Location: extensions.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
 }
@@ -327,7 +345,7 @@ if (!empty($_REQUEST["delete_type"]) && $_REQUEST["delete_type"] == "user" && is
 	$p->delete('extension_user_delete', 'temp');
 
 	//redirect
-	header("Location: extension_edit.php?id=" . $extension_uuid . (!empty($order_by) ? '&order_by=' . $order_by . '&order=' . $order : null) . (isset($page) && is_numeric($page) ? '&page=' . $page : null) . (!empty($search) ? '&search=' . urlencode($search) : null));
+	header("Location: extension_edit.php?id=".$extension_uuid.($query_string ? '&'.$query_string : ''));
 	exit;
 }
 
@@ -352,7 +370,7 @@ if (is_dir(dirname(__DIR__, 2) . '/app/devices')) {
 		$p->delete('device_line_delete', 'temp');
 
 		//redirect
-		header("Location: extension_edit.php?id=" . $extension_uuid . (!empty($order_by) ? '&order_by=' . $order_by . '&order=' . $order : null) . (isset($page) && is_numeric($page) ? '&page=' . $page : null) . (!empty($search) ? '&search=' . urlencode($search) : null));
+		header("Location: extension_edit.php?id=".$extension_uuid.($query_string ? '&'.$query_string : ''));
 		exit;
 	}
 }
@@ -369,7 +387,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	$token = new token;
 	if (!$token->validate($_SERVER['PHP_SELF'])) {
 		message::add($text['message-invalid_token'], 'negative');
-		header('Location: extensions.php?' . (!empty($order_by) ? '&order_by=' . $order_by . '&order=' . $order : null) . (isset($page) && is_numeric($page) ? '&page=' . $page : null) . (!empty($search) ? '&search=' . urlencode($search) : null));
+		header('Location: extensions.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
 
@@ -414,7 +432,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			message::add($text['message-required'] . implode(', ', $invalid), 'negative', 7500);
 		}
 		persistent_form_values('store', $_POST);
-		header("Location: extension_edit.php?" . (permission_exists('extension_edit') && $action != 'add' ? "&id=" . urlencode($extension_uuid) : null) . (!empty($order_by) ? '&order_by=' . $order_by : null) . (!empty($order) ? '&order=' . $order : null) . (!empty($page) ? '&page=' . $page : null) . (!empty($search) ? '&search=' . urlencode($search) : null));
+		header("Location: extension_edit.php?" . (permission_exists('extension_edit') && $action != 'add' ? "&id=" . urlencode($extension_uuid) : null) . ($query_string ? '&'.$query_string : ''));
 		exit;
 	} else {
 		persistent_form_values('clear');
@@ -916,9 +934,9 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			message::add($text['message-update']);
 		}
 		if ($range > 1) {
-			header("Location: extensions.php?" . (!empty($order_by) ? '&order_by=' . $order_by . '&order=' . $order : null) . (isset($page) && is_numeric($page) ? '&page=' . $page : null) . (!empty($search) ? '&search=' . urlencode($search) : null));
+			header("Location: extensions.php".($query_string ? '?'.$query_string : ''));
 		} else {
-			header("Location: extension_edit.php?id=" . $extension_uuid . (!empty($order_by) ? '&order_by=' . $order_by . '&order=' . $order : null) . (isset($page) && is_numeric($page) ? '&page=' . $page : null) . (!empty($search) ? '&search=' . urlencode($search) : null));
+			header("Location: extension_edit.php?id=".$extension_uuid.($query_string ? '&'.$query_string : ''));
 		}
 		exit;
 	}
@@ -1222,13 +1240,13 @@ echo "function copy_extension() {\n";
 echo "	var new_ext = prompt('" . $text['message-extension'] . "');\n";
 echo "	if (new_ext != null) {\n";
 echo "		if (!isNaN(new_ext)) {\n";
-echo "			document.location.href='extension_copy.php?id=" . escape($extension_uuid ?? '') . "&ext=' + new_ext + '" . (!empty($order_by) ? '&order_by=' . $order_by . '&order=' . $order : null) . (!empty($page) && is_numeric($page) ? '&page=' . $page : null) . (!empty($search) ? '&search=' . urlencode($search) : null) . "';\n";
+echo "			document.location.href='extension_copy.php?id=" . escape($extension_uuid ?? '') . "&ext=' + new_ext + '" . ($query_string ? '&'.$query_string : '') . "';\n";
 echo "		}\n";
 echo "		else {\n";
 echo "			var new_number_alias = prompt('" . $text['message-number_alias'] . "');\n";
 echo "			if (new_number_alias != null) {\n";
 echo "				if (!isNaN(new_number_alias)) {\n";
-echo "					document.location.href='extension_copy.php?id=" . escape($extension_uuid ?? '') . "&ext=' + new_ext + '&alias=' + new_number_alias + '" . (!empty($order_by) ? '&order_by=' . $order_by . '&order=' . $order : null) . (!empty($page) && is_numeric($page) ? '&page=' . $page : null) . (!empty($search) ? '&search=' . urlencode($search) : null) . "';\n";
+echo "					document.location.href='extension_copy.php?id=" . escape($extension_uuid ?? '') . "&ext=' + new_ext + '&alias=' + new_number_alias + '" . ($query_string ? '&'.$query_string : '') . "';\n";
 echo "				}\n";
 echo "			}\n";
 echo "		}\n";
@@ -1248,7 +1266,7 @@ if ($action == "update") {
 }
 echo 	"</div>\n";
 echo "	<div class='actions'>\n";
-echo button::create(['type' => 'button', 'label' => $text['button-back'], 'icon' => $settings->get('theme', 'button_icon_back'), 'id' => 'btn_back', 'link' => 'extensions.php?' . (!empty($order_by) ? '&order_by=' . $order_by . '&order=' . $order : null) . (isset($page) && is_numeric($page) ? '&page=' . $page : null) . (!empty($search) ? '&search=' . urlencode($search) : null)]);
+echo button::create(['type' => 'button', 'label' => $text['button-back'], 'icon' => $settings->get('theme', 'button_icon_back'), 'id' => 'btn_back', 'link' => 'extensions.php'.($query_string ? '?'.$query_string : '')]);
 if ($action == 'update') {
 	$button_margin = 'margin-left: 15px;';
 	if (permission_exists('xml_cdr_view')) {
