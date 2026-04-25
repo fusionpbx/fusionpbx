@@ -67,6 +67,33 @@
 	$destination_delay_max = $settings->get('ring_group', 'destination_delay_max', '');
 	$destination_timeout_max = $settings->get('ring_group', 'destination_timeout_max', '');
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'ring_group_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$sort = $order_by == 'ring_group_extension' ? 'natural' : null;
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('ring_group_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //get the domain_uuid
 	$domain_uuid = $_SESSION['domain_uuid'];
 	$domain_name = $_SESSION['domain_name'];
@@ -132,7 +159,7 @@
 			message::add($text['message-delete']);
 
 			//redirect the browser
-			header("Location: ring_group_edit.php?id=$ring_group_uuid");
+			header("Location: ring_group_edit.php?id=".$ring_group_uuid.($query_string ? '&'.$query_string : ''));
 			exit;
 	}
 
@@ -146,7 +173,7 @@
 
 		if (is_numeric($settings->get('limit', 'ring_groups', '')) && $total_ring_groups >= $settings->get('limit', 'ring_groups', '')) {
 			message::add($text['message-maximum_ring_groups'].' '.$settings->get('limit', 'ring_groups', ''), 'negative');
-			header('Location: ring_groups.php');
+			header('Location: ring_groups.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 	}
@@ -174,7 +201,7 @@
 						break;
 				}
 
-				header('Location: ring_groups.php');
+				header('Location: ring_groups.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -269,7 +296,7 @@
 		message::add($text['message-add']);
 
 		//redirect the browser
-		header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
+		header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid).($query_string ? '&'.$query_string : ''));
 		exit;
 	}
 
@@ -280,7 +307,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: ring_groups.php');
+				header('Location: ring_groups.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -544,7 +571,7 @@
 			}
 
 		//redirect the browser
-			header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
+			header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid).($query_string ? '&'.$query_string : ''));
 			exit;
 	}
 
@@ -746,7 +773,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-ring_group']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'ring_groups.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'ring_groups.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == 'update') {
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists('ring_group_add') && (empty($settings->get('limit', 'ring_groups', '')) || ($total_ring_groups < $settings->get('limit', 'ring_groups', '')))) {

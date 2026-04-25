@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2025
+ Portions created by the Initial Developer are Copyright (C) 2008-2026
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -66,6 +66,32 @@
 		$domain_description = $_POST["domain_description"];
 	}
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'domain_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$url_params = [];
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('domain_all')) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
+
 //process the data
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
@@ -89,7 +115,7 @@
 				$cache->flush();
 
 				//redirect
-				header('Location: domains.php');
+				header('Location: domains.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -97,7 +123,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: domains.php');
+				header('Location: domains.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -193,7 +219,7 @@
 					}
 					else {
 						message::add($text['message-domain_exists'],'negative');
-						header("Location: domains.php");
+						header("Location: domains.php".($query_string ? '?'.$query_string : ''));
 						exit;
 					}
 				}
@@ -514,15 +540,15 @@
 				if ($action == "update") {
 					message::add($text['message-update']);
 					if (!permission_exists('domain_add')) { //admin, updating own domain
-						header("Location: domain_edit.php");
+						header("Location: domain_edit.php".($query_string ? '?'.$query_string : ''));
 					}
 					else {
-						header("Location: domains.php"); //superadmin
+						header("Location: domains.php".($query_string ? '?'.$query_string : '')); //superadmin
 					}
 				}
 				if ($action == "add") {
 					message::add($text['message-add']);
-					header("Location: domains.php");
+					header("Location: domains.php".($query_string ? '?'.$query_string : ''));
 				}
 				exit;
 			}
@@ -619,7 +645,7 @@
 	echo "	<div class='actions'>\n";
 
 	if (permission_exists('domain_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'domains.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'domains.php'.($query_string ? '?'.$query_string : '')]);
 	}
 	if ($action == "update" && permission_exists('domain_setting_view')) {
 		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$settings->get('theme', 'button_icon_settings'),'id'=>'btn_back','style'=>'margin-right: 2px;','link'=>PROJECT_PATH.'/core/domain_settings/domain_settings.php?id='.urlencode($domain_uuid)]);

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2024
+	Portions created by the Initial Developer are Copyright (C) 2018-2026
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -34,6 +34,28 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'access_control_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	$query_string = http_build_query($param);
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -75,7 +97,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: access_controls.php');
+				header('Location: access_controls.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -121,7 +143,7 @@
 					event_socket::api("reloadacl");
 
 					//redirect the user
-					header('Location: access_control_edit.php?id='.$id);
+					header('Location: access_control_edit.php?id='.$id.($query_string ? '&'.$query_string : ''));
 					exit;
 				}
 			}
@@ -173,7 +195,7 @@
 							$node_cidr = $row["node_cidr"];
 						}
 						else {
-							//domains hostname to lookup 
+							//domains hostname to lookup
 							$domains[] = [
 								'type'=>$row['node_type'],
 								'value'=>$row['node_cidr'],
@@ -242,7 +264,7 @@
 					$_SESSION["message"] = $text['message-update'];
 				}
 				//header('Location: access_controls.php');
-				header('Location: access_control_edit.php?id='.urlencode($access_control_uuid));
+				header('Location: access_control_edit.php?id='.urlencode($access_control_uuid).($query_string ? '&'.$query_string : ''));
 				return;
 			}
 	}
@@ -311,7 +333,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-access_control']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'access_controls.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'access_controls.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == 'update') {
 		if (permission_exists('access_control_node_add')) {
 			echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$settings->get('theme', 'button_icon_import'),'style'=>'margin-right: 3px;','link'=>'access_control_import.php?id='.escape($access_control_uuid)]);

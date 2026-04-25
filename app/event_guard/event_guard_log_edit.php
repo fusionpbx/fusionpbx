@@ -1,6 +1,6 @@
 <?php
 /*
-	Copyright (C) 2022-2023 Mark J Crane <markjcrane@fusionpbx.com>
+	Copyright (C) 2022-2026 Mark J Crane <markjcrane@fusionpbx.com>
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are met:
 	1. Redistributions of source code must retain the above copyright notice,
@@ -34,6 +34,32 @@
 	$language = new text;
 	$text = $language->get();
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'log_date'));
+	$order = ($_GET['order'] ?? '') === 'asc' ? 'asc' : 'desc';
+	$search = $_GET['search'] ?? '';
+	$filter = $_GET['filter'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($filter)) {
+		$param['filter'] = $filter;
+	}
+	$query_string = http_build_query($param);
+
 //action add or update
 	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -62,7 +88,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: event_guard_logs.php');
+				header('Location: event_guard_logs.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -91,7 +117,7 @@
 
 				//redirect the user
 				if (in_array($_POST['action'], array('copy', 'delete', 'toggle'))) {
-					header('Location: event_guard_log_edit.php?id='.$id);
+					header('Location: event_guard_log_edit.php?id='.$id.($query_string ? '&'.$query_string : ''));
 					exit;
 				}
 			}
@@ -145,7 +171,7 @@
 					$_SESSION["message"] = $text['message-update'];
 				}
 				//header('Location: event_guard_logs.php');
-				header('Location: event_guard_log_edit.php?id='.urlencode($event_guard_log_uuid));
+				header('Location: event_guard_log_edit.php?id='.urlencode($event_guard_log_uuid).($query_string ? '&'.$query_string : ''));
 				return;
 			}
 	}
@@ -192,7 +218,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-event_guard_log']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'event_guard_logs.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'event_guard_logs.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == 'update') {
 		if (permission_exists('_add')) {
 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
@@ -286,7 +312,6 @@
 	echo $text['description-user_agent']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";

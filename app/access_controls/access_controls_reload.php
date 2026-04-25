@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2023
+ Portions created by the Initial Developer are Copyright (C) 2008-2026
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -34,8 +34,27 @@
 		exit;
 	}
 
-//set the variables
-	$search = $_REQUEST['search'] ?? '';
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'access_control_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	$query_string = http_build_query($param);
 
 //run the command
 	$result = rtrim(event_socket::api('reloadacl'));
@@ -44,8 +63,7 @@
 	message::add($result, 'alert');
 
 //redirect
-	$search = preg_replace('#[^a-zA-Z0-9_\-\.]# ', '', $search);
-	$location = 'access_controls.php'.($search != '' ? "?search=".urlencode($search) : null);
+	$location = 'access_controls.php'.($query_string ? "?".$query_string : null);
 
 	header("Location: ".$location);
 

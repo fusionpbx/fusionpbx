@@ -36,12 +36,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//get order and order by, page
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_REQUEST["order_by"] ?? ''));
-	$order = $_REQUEST["order"] ?? 'asc';
-	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
-	$search = $_REQUEST['search'] ?? null;
-
 //set the defaults
 	$device_model = '';
 	$device_firmware_version = '';
@@ -64,6 +58,36 @@
 		$device_uuid = uuid();
 	}
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'device_label'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$fields = $_GET['fields'] ?? '';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$url_params = [];
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($fields)) {
+		$url_params['fields'] = $fields;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('device_all')) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
+
 //get the total device count from the database, check the limit, if defined
 	if ($action == 'add' && $settings->get('limit', 'devices', '') != '') {
 		$sql = "select count(*) from v_devices where domain_uuid = :domain_uuid ";
@@ -71,7 +95,7 @@
 		$total_devices = $database->select($sql, $parameters, 'column');
 		if ($total_devices >= $settings->get('limit', 'devices', '')) {
 			message::add($text['message-maximum_devices'].' '.$settings->get('limit', 'devices', ''), 'negative');
-			header('Location: devices.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+			header('Location: devices.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 		unset($sql, $parameters, $total_devices);
@@ -94,7 +118,7 @@
 						break;
 				}
 
-				header('Location: devices.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+				header('Location: devices.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -185,7 +209,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: devices.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+				header('Location: devices.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -232,7 +256,7 @@
 				if ($device_domain_name != '') {
 					$message = $text['message-duplicate'].($device_domain_name != $domain_name ? ": ".$device_domain_name : null);
 					message::add($message,'negative');
-					header('Location: devices.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+					header('Location: devices.php'.($query_string ? '?'.$query_string : ''));
 					exit;
 				}
 				unset($sql, $parameters, $device_domain_name);
@@ -515,7 +539,7 @@
 							message::add($text['message-update']);
 						}
 						//redirect the browser
-						header("Location: device_edit.php?id=".urlencode($device_uuid).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+						header("Location: device_edit.php?id=".urlencode($device_uuid).($query_string ? '&'.$query_string : ''));
 						exit;
 					}
 
@@ -1042,7 +1066,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-device']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back', ''),'id'=>'btn_back','link'=>'devices.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back', ''),'id'=>'btn_back','link'=>'devices.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == 'update') {
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists("device_line_password") && $qr_code_enabled) {

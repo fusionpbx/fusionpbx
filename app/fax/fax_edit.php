@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -75,6 +75,32 @@
 
 	}
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'fax_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('fax_extension_view_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //set the action as an add or an update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -108,7 +134,7 @@
 						break;
 				}
 
-				header('Location: fax.php');
+				header('Location: fax.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -185,7 +211,7 @@
 
 		//redirect the browser
 			message::add($text['message-delete']);
-			header("Location: fax_edit.php?id=".$fax_uuid);
+			header("Location: fax_edit.php?id=".$fax_uuid.($query_string ? '&'.$query_string : ''));
 			return;
 	}
 
@@ -210,7 +236,7 @@
 
 		//redirect the browser
 			message::add($text['confirm-add']);
-			header("Location: fax_edit.php?id=".$fax_uuid);
+			header("Location: fax_edit.php?id=".$fax_uuid.($query_string ? '&'.$query_string : ''));
 			return;
 	}
 
@@ -229,7 +255,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: fax.php');
+				header('Location: fax.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -401,7 +427,7 @@
 					if ($action == "add" && permission_exists('fax_extension_add')) {
 						message::add($text['confirm-add']);
 					}
-					header("Location: fax.php");
+					header("Location: fax.php".($query_string ? '?'.$query_string : ''));
 					return;
 
 			}
@@ -496,13 +522,13 @@
 	echo "	<div class='heading'><b>".$text['header-fax_server_settings']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'fax.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'fax.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == "update") {
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists('fax_extension_advanced')) {
 			$button_margin = 'margin-left: 15px;';
 			if (function_exists("imap_open") && file_exists("fax_files_remote.php")) {
-				echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','style'=>($button_margin ?? ''),'link'=>'fax_advanced.php?id='.urlencode($fax_uuid)]);
+				echo button::create(['type'=>'button','label'=>$text['button-advanced'],'icon'=>'tools','style'=>($button_margin ?? ''),'link'=>'fax_advanced.php?id='.urlencode($fax_uuid).($query_string ? '&'.$query_string : '')]);
 			}
 			unset($button_margin);
 		}

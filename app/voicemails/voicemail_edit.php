@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2025
+ Portions created by the Initial Developer are Copyright (C) 2008-2026
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -62,6 +62,32 @@
 	$voicemail_mail_to = '';
 	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'voicemail_id'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('voicemail_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //set the domain variables
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
 	$domain_name = $_SESSION['domain_name'] ?? '';
@@ -85,7 +111,7 @@
 						break;
 				}
 
-				header('Location: voicemails.php');
+				header('Location: voicemails.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -128,7 +154,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: voicemails.php');
+				header('Location: voicemails.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -324,7 +350,7 @@
 						header("Location: voicemails.php");
 					}
 					else if ($action == "update") {
-						header("Location: voicemail_edit.php?id=".$voicemail_uuid);
+						header("Location: voicemail_edit.php?id=".$voicemail_uuid.($query_string ? '&'.$query_string : ''));
 					}
 					exit;
 			}
@@ -529,10 +555,10 @@
 
 //set the location for the back button
 	if (permission_exists('voicemail_view')) {
-		$back_button_location = "voicemails.php";
+		$back_button_location = "voicemails.php".($query_string ? '?'.$query_string : '');
 	}
 	else {
-		$back_button_location = "voicemail_messages.php?voicemail_uuid=".urlencode($voicemail_uuid);
+		$back_button_location = "voicemail_messages.php?voicemail_uuid=".urlencode($voicemail_uuid).($query_string ? '&'.$query_string : '');
 	}
 
 //show the content

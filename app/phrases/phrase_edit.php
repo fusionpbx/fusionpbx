@@ -43,6 +43,32 @@
 	$phrase_language = '';
 	$phrase_description = '';
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'phrase_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('phrase_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //set the action as an add or an update
 	if (!empty($_REQUEST["id"])) {
 		$action = "update";
@@ -69,7 +95,7 @@
 						break;
 				}
 
-				header('Location: phrases.php');
+				header('Location: phrases.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -99,7 +125,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: phrases.php');
+				header('Location: phrases.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -179,7 +205,7 @@
 
 					//send a redirect
 						message::add($text['message-add']);
-						header("Location: phrase_edit.php?id=".$phrase_uuid);
+						header("Location: phrase_edit.php?id=".$phrase_uuid.($query_string ? '&'.$query_string : ''));
 						exit;
 				}
 
@@ -264,7 +290,7 @@
 
 					//send a redirect
 						message::add($text['message-update']);
-						header("Location: phrase_edit.php?id=".$phrase_uuid);
+						header("Location: phrase_edit.php?id=".$phrase_uuid.($query_string ? '&'.$query_string : ''));
 						exit;;
 
 				}
@@ -459,7 +485,7 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'phrases.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'phrases.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == "update" && permission_exists('phrase_delete')) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}

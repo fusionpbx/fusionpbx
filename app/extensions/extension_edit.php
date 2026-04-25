@@ -1947,8 +1947,9 @@ if (permission_exists('voicemail_edit') && is_dir(dirname(__DIR__, 2) . '/app/vo
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
+}
 
-	if (permission_exists('voicemail_local_after_email')) {
+if (permission_exists('voicemail_local_after_email')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "    " . $text['label-voicemail_local_after_email'] . "\n";
