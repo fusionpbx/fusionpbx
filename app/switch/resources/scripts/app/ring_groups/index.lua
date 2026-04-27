@@ -250,7 +250,9 @@
 	sql = sql .. "cast(r.ring_group_call_forward_enabled as text), ";
 	sql = sql .. "cast(r.ring_group_follow_me_enabled as text), ";
 	sql = sql .. "r.ring_group_missed_call_app, ";
-	sql = sql .. "r.ring_group_missed_call_data ";
+	sql = sql .. "r.ring_group_missed_call_data, ";
+	sql = sql .. "r.ring_group_wait_announcement, ";
+	sql = sql .. "r.ring_group_wait_interval ";
 	sql = sql .. "FROM v_ring_groups as r, v_domains as d ";
 	sql = sql .. "WHERE r.ring_group_uuid = :ring_group_uuid ";
 	sql = sql .. "AND r.domain_uuid = d.domain_uuid ";
@@ -277,6 +279,8 @@
 		ring_group_follow_me_enabled = row["ring_group_follow_me_enabled"];
 		missed_call_app = row["ring_group_missed_call_app"];
 		missed_call_data = row["ring_group_missed_call_data"];
+		ring_group_wait_announcement = row["ring_group_wait_announcement"];
+		ring_group_wait_interval = row["ring_group_wait_interval"];
 	end);
 
 --create the settings object
@@ -344,6 +348,24 @@
 		else
 			session_answer = false
 		end
+	end
+
+--answer the call if not answered and there is wait announcement
+	if (ring_group_wait_announcement and #ring_group_wait_announcement > 0 and not session_answer) then
+		session:answer();
+		session_answer = true;
+	end
+
+--schedule wait announcements
+	if (ring_group_wait_announcement and #ring_group_wait_announcement > 0) then
+		local interval = ring_group_wait_interval or 30;
+		session:setVariable("ring_group_wait_announcement", ring_group_wait_announcement);
+		session:setVariable("ring_group_wait_interval", tostring(interval));
+		session:setVariable("ring_group_wait_domain_name", domain_name);
+		session:setVariable("ring_group_wait_domain_uuid", domain_uuid);
+		local wait_announcement_script = scripts_dir:gsub('\\','/') .. "/app/ring_groups/resources/scripts/wait_announcement.lua";
+		local command = "sched_api +" .. interval .. " " .. uuid .. " lua " .. wait_announcement_script .. " " .. uuid;
+		api:executeString(command);
 	end
 
 --call screen enabled
