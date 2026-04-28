@@ -38,12 +38,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//get order and order by, page
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_REQUEST["order_by"] ?? ''));
-	$order = $_REQUEST["order"] ?? 'asc';
-	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
-	$search = $_REQUEST['search'] ?? null;
-
 //action add or update
 	if (!empty($_REQUEST["id"])) {
 		$action = "update";
@@ -59,6 +53,32 @@
 		$gateway_uuid = uuid();
 	}
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'gateway'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$url_params = [];
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('gateway_all')) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
+
 //get total gateway count from the database, check limit, if defined
 	if ($action == 'add' && $settings->get('limit', 'gateways') != '') {
 		$sql = "select count(gateway_uuid) from v_gateways ";
@@ -69,7 +89,7 @@
 
 		if ($total_gateways >= $settings->get('limit', 'gateways')) {
 			message::add($text['message-maximum_gateways'].' '.$settings->get('limit', 'gateways'), 'negative');
-			header('Location: gateways.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+			header('Location: gateways.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 	}
@@ -123,7 +143,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: gateways.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+				header('Location: gateways.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -247,7 +267,7 @@
 				if ($action == "update") {
 					message::add($text['message-update']);
 				}
-				header("Location: gateways.php?".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+				header("Location: gateways.php".($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 	}
@@ -368,7 +388,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-gateway']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'gateways.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'gateways.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == "update" && permission_exists('gateway_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'name'=>'btn_copy','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
