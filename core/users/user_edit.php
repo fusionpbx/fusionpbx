@@ -39,12 +39,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//get order and order by, page
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_REQUEST["order_by"] ?? ''));
-	$order = $_REQUEST["order"] ?? 'asc';
-	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : null;
-	$search = $_REQUEST['search'] ?? null;
-
 //get user uuid
 	if (permission_exists('user_edit') && !empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$user_uuid = $_REQUEST["id"];
@@ -54,6 +48,32 @@
 		$user_uuid = uuid();
 		$action = 'add';
 	}
+
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'username'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$url_params = [];
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('user_all')) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
 
 //get total user count from the database, check limit, if defined
 	if (permission_exists('user_add') && $action == 'add' && $settings->get('limit', 'users') != '') {
@@ -66,7 +86,7 @@
 
 		if ($num_rows >= $settings->get('limit', 'users')) {
 			message::add($text['message-maximum_users'].' '.$settings->get('limit', 'users'), 'negative');
-			header('Location: users.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+			header('Location: users.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 	}
@@ -91,7 +111,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header("Location: users.php?".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+				header("Location: users.php".($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -103,7 +123,7 @@
 
 		//redirect the user
 			message::add($text['message-delete']);
-			header("Location: user_edit.php?id=".urlencode($user_uuid).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+			header("Location: user_edit.php?id=".urlencode($user_uuid).($query_string ? '&'.$query_string : ''));
 			exit;
 	}
 
@@ -158,7 +178,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: users.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+				header('Location: users.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -267,7 +287,7 @@
 			if (message::count() != 0 || !empty($invalid)) {
 				if ($invalid) { message::add($text['message-required'].implode(', ', $invalid), 'negative', 7500); }
 				persistent_form_values('store', $_POST);
-				header("Location: user_edit.php".(permission_exists('user_edit') && $action != 'add' ? "?id=".urlencode($user_uuid) : null).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+				header("Location: user_edit.php".(permission_exists('user_edit') && $action != 'add' ? "?id=".urlencode($user_uuid) : null).($query_string ? '&'.$query_string : ''));
 				exit;
 			}
 			else {
@@ -690,7 +710,7 @@
 			else {
 				message::add($text['message-add'],'positive');
 			}
-			header("Location: user_edit.php?id=".urlencode($user_uuid).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+			header("Location: user_edit.php?id=".urlencode($user_uuid).($query_string ? '&'.$query_string : ''));
 			exit;
 	}
 
@@ -730,7 +750,7 @@
 				}
 				else {
 					message::add($text['message-invalid_user'], 'negative', 7500);
-					header("Location: user_edit.php?id=".$_SESSION['user_uuid'].(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+					header("Location: user_edit.php?id=".$_SESSION['user_uuid'].($query_string ? '&'.$query_string : ''));
 					exit;
 				}
 				unset($sql, $parameters, $row);
@@ -816,7 +836,7 @@
 		echo "<div class='unsaved'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle'></i></div>";
 	}
 	if (permission_exists('user_add') || permission_exists('user_edit')) {
-		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'users.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null)]);
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'users.php'.($query_string ? '?'.$query_string : '')]);
 	}
 	$button_margin = 'margin-left: 15px;';
 	if (permission_exists('ticket_add') || permission_exists('ticket_edit')) {
