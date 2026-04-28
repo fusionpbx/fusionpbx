@@ -34,22 +34,29 @@ class ws_client {
 
 		// If this is the response to a pending request
 		if (rid && this._pending.has(rid)) {
-			// Destructure with defaults in case they're missing
-			const {
-				service,
-				topic = '',
-				status = 'ok',
-				code = 200,
-				payload = {}
-			} = message;
+			const service = message.service_name ?? message.service;
+			const topic = message.topic ?? '';
+			const status = message.status_string ?? message.status ?? 'ok';
+			const status_normalized = String(status).toLowerCase();
+			const code_raw = message.status_code ?? message.code ?? 200;
+			const code = Number.isFinite(Number(code_raw)) ? Number(code_raw) : parseInt(String(code_raw), 10);
+			const payload = message.payload ?? {};
+
+			// active.calls can return multiple rows for one request_id; the first row
+			// reaches this branch and would otherwise be dropped from UI rendering.
+			if (service === 'active.calls' && payload && typeof payload === 'object' && payload.event_name) {
+				this._dispatchEvent(service, payload);
+			}
 
 			const {resolve, reject} = this._pending.get(rid);
 			this._pending.delete(rid);
 
-			if (status === 'ok' && code >= 200 && code < 300) {
+			const ok_by_status = status_normalized === 'ok' || status_normalized.startsWith('ok') || status_normalized.includes('success');
+			const ok_by_code = !Number.isNaN(code) && code >= 200 && code < 300;
+			if (ok_by_status || ok_by_code) {
 				resolve({service, topic, payload, code, message});
 			} else {
-				const err = new Error(message || `Error ${code}`);
+				const err = new Error(message.message || `Error ${code}`);
 				err.code = code;
 				reject(err);
 			}

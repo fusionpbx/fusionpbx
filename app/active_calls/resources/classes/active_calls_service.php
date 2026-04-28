@@ -74,6 +74,7 @@ class active_calls_service extends service implements websocket_service_interfac
 		'secure',
 		// Application
 		'application',
+		'application_name',
 		'application_data',
 		'variable_current_application',
 		'playback_file_path',
@@ -104,6 +105,7 @@ class active_calls_service extends service implements websocket_service_interfac
 		'caller_channel_name'          => 'call_active_profile',
 		'secure'                       => 'call_active_secure',
 		'application'                  => 'call_active_application',
+		'application_name'             => 'call_active_application',
 		'application_data'             => 'call_active_application',
 		'playback_file_path'           => 'call_active_application',
 		'variable_current_application' => 'call_active_application',
@@ -750,7 +752,19 @@ class active_calls_service extends service implements websocket_service_interfac
 			$message->caller_caller_id_name = $call['initial_cid_name'];
 			$message->caller_caller_id_number = $call['initial_cid_num'];
 			$message->caller_destination_number = $call['initial_dest'];
-			$message->application = $call['application'] ?? '';
+			$application = $call['application'] ?? '';
+			$application_data = $call['application_data'] ?? '';
+			$message->application = $application;
+			$message->application_data = $application_data;
+			$application_name = '';
+			if (!empty($application_data)) {
+				$application_name = (!empty($application) && strpos($application_data, $application . ':') !== 0)
+					? $application . ':' . $application_data
+					: $application_data;
+			} elseif (!empty($application)) {
+				$application_name = $application;
+			}
+			$message->application_name = $application_name;
 			$message->secure = $call['secure'] ?? '';
 
 			if (true) {
