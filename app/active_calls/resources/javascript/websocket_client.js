@@ -49,6 +49,12 @@ class ws_client {
 			const response_status = status_string ?? status ?? 'ok';
 			const response_code = Number(status_code ?? code ?? 200);
 
+			// active.calls can return multiple rows for one request_id; the first row
+			// reaches this branch and would otherwise be dropped from UI rendering.
+			if (response_service === 'active.calls' && payload && typeof payload === 'object' && payload.event_name) {
+				this._dispatchEvent(response_service, payload);
+			}
+
 			const {resolve, reject} = this._pending.get(rid);
 			this._pending.delete(rid);
 
