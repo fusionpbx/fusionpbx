@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -39,19 +39,37 @@
 	$language = new text;
 	$text = $language->get();
 
-//set variables
-	$order_by = $_REQUEST["order_by"] ?? '';
-	$order = $_REQUEST["order"] ?? '';
-	$page = !empty($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
-	$search = $_REQUEST["search"] ?? '';
-	$show = $_REQUEST["show"] ?? '';
-	$context = $_REQUEST["context"] ?? '';
-
 //get the http post data
 	if (!empty($_POST['users'])) {
 		$action = $_POST['action'] ?? '';
 		$users = $_POST['users'] ?? '';
 	}
+
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'username'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$url_params = [];
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('user_all')) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
 
 //get total user count from the database, check limit, if defined
 	if (permission_exists('user_add') && !empty($action) && $action == 'copy' && !empty($settings->get('limit', 'users'))) {
@@ -64,7 +82,7 @@
 
 		if ($num_rows >= $settings->get('limit', 'users')) {
 			message::add($text['message-maximum_users'].' '.$settings->get('limit', 'users'), 'negative');
-			header('Location: users.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+			header('Location: users.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 	}
@@ -92,42 +110,29 @@
 				break;
 		}
 
-		header('Location: users.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+		header('Location: users.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
-//add the search string
-	if (!empty($search)) {
-		$search =  strtolower($_GET["search"]);
-		$sql_search = " (";
-		$sql_search .= "	lower(username) like :search ";
-		$sql_search .= "	or lower(group_names) like :search ";
-		$sql_search .= "	or lower(contact_organization) like :search ";
-		$sql_search .= "	or lower(contact_name) like :search ";
-		$sql_search .= "	or lower(contact_note) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
-
 //get the count
 	$sql = "select count(*) from view_users ";
-	if ($show == "all" && permission_exists('user_all')) {
-		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
-		}
-		else {
-			$sql.= "where true ";
-		}
-	}
-	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		if (!empty($sql_search)) {
-			$sql .= "and ".$sql_search;
-		}
+	$sql .= "where true ";
+	if (!($show == "all" && permission_exists('user_all'))) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(username) like :search ";
+		$sql .= "	or lower(group_names) like :search ";
+		$sql .= "	or lower(contact_organization) like :search ";
+		$sql .= "	or lower(contact_name) like :search ";
+		$sql .= "	or lower(contact_note) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$sql .= "and ( ";
 	$sql .= "	group_level <= :group_level ";
@@ -138,49 +143,29 @@
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = '';
-	if (!empty($search)) {
-		$param .= "&search=".$search;
-		$param .= !empty($fields) ? "&fields=".$fields : null;
-	}
-	if ($show == "all" && permission_exists('user_all')) {
-		$param .= "&show=all";
-	}
-	if (!empty($order_by)) {
-		$param .= "&order_by=".$order_by;
-	}
-	if (!empty($order)) {
-		$param .= "&order=".$order;
-	}
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
-	if (!empty($order_by)) {
-		$param = str_replace("&order_by=".$order_by, '', $param);
-	}
-	if (!empty($order)) {
-		$param = str_replace("&order=".$order, '', $param);
-	}
 
 //get the list
 	$sql = "select domain_name, domain_uuid, user_uuid, username, group_names, ";
 	$sql .= "contact_organization,contact_name,contact_note, ";
 	$sql .= "cast(user_enabled as text) ";
 	$sql .= "from view_users ";
-	if ($show == "all" && permission_exists('user_all')) {
-		if (isset($sql_search)) {
-			$sql .= "where ".$sql_search;
-		}
-		else {
-			$sql.= "where true ";
-		}
-	}
-	else {
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		if (isset($sql_search)) {
-			$sql .= "and ".$sql_search;
-		}
+	$sql .= "where true ";
+	if (!($show == "all" && permission_exists('user_all'))) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(username) like :search ";
+		$sql .= "	or lower(group_names) like :search ";
+		$sql .= "	or lower(contact_organization) like :search ";
+		$sql .= "	or lower(contact_name) like :search ";
+		$sql .= "	or lower(contact_note) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$sql .= "and ( ";
 	$sql .= "	group_level <= :group_level ";
@@ -219,20 +204,20 @@
 	if (permission_exists('user_delete') && $users) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	if (permission_exists('user_all')) {
-		if ($show == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>\n";
-		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($url_params as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	if ($show !== 'all' && permission_exists('user_all')) {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
+	}
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'users.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
@@ -254,10 +239,6 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='order_by' value=\"".escape($order_by)."\">\n";
-	echo "<input type='hidden' name='order' value=\"".escape($order)."\">\n";
-	echo "<input type='hidden' name='page' value=\"".escape($page)."\">\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -268,17 +249,17 @@
 		echo "	</th>\n";
 	}
 	if ($show == 'all' && permission_exists('user_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $query_string);
 	}
-	echo th_order_by('username', $text['label-username'], $order_by, $order, null, null, $param);
-	echo th_order_by('group_names', $text['label-groups'], $order_by, $order, null, null, $param);
-	echo th_order_by('contact_organization', $text['label-organization'], $order_by, $order, null, null, $param);
-	echo th_order_by('contact_name', $text['label-name'], $order_by, $order, null, null, $param);
-	//echo th_order_by('contact_name_family', $text['label-contact_name_family'], $order_by, $order);
-	//echo th_order_by('user_status', $text['label-user_status'], $order_by, $order);
-	//echo th_order_by('add_date', $text['label-add_date'], $order_by, $order);
-	echo th_order_by('contact_note', $text['label-contact_note'], $order_by, $order, null, "class='center'", $param);
-	echo th_order_by('user_enabled', $text['label-user_enabled'], $order_by, $order, null, "class='center'", $param);
+	echo th_order_by('username', $text['label-username'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('group_names', $text['label-groups'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('contact_organization', $text['label-organization'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('contact_name', $text['label-name'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('contact_name_family', $text['label-contact_name_family'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('user_status', $text['label-user_status'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('add_date', $text['label-add_date'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('contact_note', $text['label-contact_note'], $order_by, $order, null, "class='center'", $query_string);
+	echo th_order_by('user_enabled', $text['label-user_enabled'], $order_by, $order, null, "class='center'", $query_string);
 	if (permission_exists('user_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -288,7 +269,7 @@
 		foreach ($users as $row) {
 			$list_row_url = '';
 			if (permission_exists('user_edit')) {
-				$list_row_url = "user_edit.php?id=".urlencode($row['user_uuid']).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(is_numeric($page) ? '&page='.urlencode($page) : null).(!empty($search) ? '&search='.$search : null);
+				$list_row_url = "user_edit.php?id=".urlencode($row['user_uuid']).($query_string ? '&'.$query_string : '');
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
