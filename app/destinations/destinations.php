@@ -41,23 +41,41 @@
 
 //pre-defined variables
 	$action = '';
-	$search = '';
-	$show = '';
 	$destinations = '';
 
 //get http variables
 	if (isset($_REQUEST["action"]) && !empty($_REQUEST["action"])) {
 		$action =  $_REQUEST["action"];
 	}
-	if (isset($_REQUEST["search"]) && !empty($_REQUEST["search"])) {
-		$search =  strtolower($_REQUEST["search"]);
-	}
-	if (isset($_REQUEST["show"]) && !empty($_REQUEST["show"])) {
-		$show =  strtolower($_REQUEST["show"]);
-	}
 	if (isset($_REQUEST["destinations"]) && !empty($_REQUEST["destinations"])) {
 		$destinations =  $_REQUEST["destinations"];
 	}
+
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'destination_number'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$url_params = [];
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('destination_all')) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
 
 //process the http post data by action
 	if (!empty($action) && !empty($destinations)) {
@@ -70,7 +88,7 @@
 				break;
 		}
 
-		header('Location: destinations.php'.($search != '' ? '?search='.urlencode($search) : ''));
+		header('Location: destinations.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
 
@@ -136,10 +154,6 @@
 		}
 	}
 
-//get variables used to control the order
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
-
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
@@ -167,24 +181,19 @@
 		$sql .= "or lower(destination_description) like :search ";
 		$sql .= "or lower(destination_data) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$parameters['destination_type'] = $destination_type;
 	$num_rows = $database->select($sql, $parameters, 'column');
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = "&search=".urlencode($search);
-	$param .= "&type=".$destination_type;
-	if ($show == "all" && permission_exists('destination_all')) {
-		$param .= "&show=all";
+	$param = '';
+	if ($destination_type == 'outbound') {
+		$param .= '&type='.$destination_type;
 	}
-	if (!empty($_GET['page'])) {
-		$page = $_GET['page'];
-	}
-	if (!isset($page)) { $page = 0; $_GET['page'] = 0; }
-	[$paging_controls, $rows_per_page] = paging($num_rows, $param, $rows_per_page);
-	[$paging_controls_mini, $rows_per_page] = paging($num_rows, $param, $rows_per_page, true);
+	[$paging_controls, $rows_per_page] = paging($num_rows, $query_string.$param, $rows_per_page);
+	[$paging_controls_mini, $rows_per_page] = paging($num_rows, $query_string.$param, $rows_per_page, true);
 	$offset = intval($rows_per_page) * intval($page);
 
 //get the list
@@ -231,7 +240,7 @@
 		$sql .= " or lower(destination_description) like :search ";
 		$sql .= " or lower(destination_data) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$sql .= order_by($order_by, $order, 'destination_number, destination_order ', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
@@ -271,10 +280,10 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-destinations']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-inbound'],'icon'=>'location-arrow fa-rotate-90','link'=>'?type=inbound'.($show == 'all' ? '&show=all' : null).($search != '' ? "&search=".urlencode($search) : null)]);
-	echo button::create(['type'=>'button','label'=>$text['button-outbound'],'icon'=>'location-arrow','link'=>'?type=outbound'.($show == 'all' ? '&show=all' : null).($search != '' ? "&search=".urlencode($search) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-inbound'],'icon'=>'location-arrow fa-rotate-90','link'=>'?type=inbound']);
+	echo button::create(['type'=>'button','label'=>$text['button-outbound'],'icon'=>'location-arrow','link'=>'?type=outbound']);
 	if (permission_exists('destination_local')) {
-		echo button::create(['type'=>'button','label'=>$text['button-local'],'icon'=>'vector-square','link'=>'?type=local'.($show == 'all' ? '&show=all' : null).($search != '' ? "&search=".urlencode($search) : null)]);
+		echo button::create(['type'=>'button','label'=>$text['button-local'],'icon'=>'vector-square','link'=>'?type=local']);
 	}
 	if (permission_exists('destination_import')) {
 		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$settings->get('theme', 'button_icon_import'),'link'=>'destination_imports.php']);
@@ -288,16 +297,16 @@
 	if (permission_exists('destination_delete') && $destinations) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	if (permission_exists('destination_all')) {
-		if ($show == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>";
-		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?type='.urlencode($destination_type).'&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	echo "		<input type='hidden' name='type' value=\"".escape($destination_type)."\">\n";
+	foreach ($url_params as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}
-	echo "		<input type='hidden' name='type' value=\"".escape($destination_type)."\">\n";
+	if ($show !== 'all' && permission_exists('destination_all')) {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?type='.urlencode($destination_type).'&show=all']);
+	}
 	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'destinations.php','style'=>($search == '' ? 'display: none;' : null)]);
@@ -319,7 +328,6 @@
 	echo "<form id='form_list' method='POST'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='type' value=\"".escape($destination_type)."\">\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -330,32 +338,32 @@
 		echo "	</th>\n";
 	}
 	if ($show == "all" && permission_exists('destination_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, "class='shrink'", $query_string.$param);
 	}
-	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, $param, "class='shrink'");
-	echo th_order_by('destination_prefix', $text['label-destination_prefix'], $order_by, $order, $param, "class='shrink center'");
+	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order, null, "class='shrink'", $query_string.$param);
+	echo th_order_by('destination_prefix', $text['label-destination_prefix'], $order_by, $order, null, "class='shrink center'", $query_string.$param);
 	if (permission_exists('destination_trunk_prefix')) {
-		echo th_order_by('destination_trunk_prefix', $text['label-destination_trunk_prefix'], $order_by, $order, $param, "class='shrink'");
+		echo th_order_by('destination_trunk_prefix', $text['label-destination_trunk_prefix'], $order_by, $order, null, "class='shrink'", $query_string.$param);
 	}
 	if (permission_exists('destination_area_code')) {
-		echo th_order_by('destination_area_code', $text['label-destination_area_code'], $order_by, $order, $param, "class='shrink'");
+		echo th_order_by('destination_area_code', $text['label-destination_area_code'], $order_by, $order, null, "class='shrink'", $query_string.$param);
 	}
-	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, $param, "class='shrink'");
+	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order, null, "class='shrink'", $query_string.$param);
 	if (!$show == "all") {
 		echo  "<th>". $text['label-destination_actions']."</th>";
 	}
 	if (permission_exists('destination_cid_name_prefix')) {
-	    echo th_order_by('destination_cid_name_prefix', $text['label-destination_cid_name_prefix'], $order_by, $order, $param);
+	    echo th_order_by('destination_cid_name_prefix', $text['label-destination_cid_name_prefix'], $order_by, $order, null, null, $query_string.$param);
 	}
 	if (permission_exists("destination_context")) {
-		echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order, $param);
+		echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order, null, null, $query_string.$param);
 	}
 	if (permission_exists('outbound_caller_id_select')) {
-		echo th_order_by('destination_caller_id_name', $text['label-destination_caller_id_name'], $order_by, $order, $param);
-		echo th_order_by('destination_caller_id_number', $text['label-destination_caller_id_number'], $order_by, $order, $param);
+		echo th_order_by('destination_caller_id_name', $text['label-destination_caller_id_name'], $order_by, $order, null, null, $query_string.$param);
+		echo th_order_by('destination_caller_id_number', $text['label-destination_caller_id_number'], $order_by, $order, null, null, $query_string.$param);
 	}
-	echo th_order_by('destination_enabled', $text['label-destination_enabled'], $order_by, $order, $param);
-	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order, $param, "class='hide-sm-dn'");
+	echo th_order_by('destination_enabled', $text['label-destination_enabled'], $order_by, $order, null, null, $query_string.$param);
+	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order, null, "class='hide-sm-dn'", $query_string.$param);
 	if (permission_exists('destination_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -368,7 +376,7 @@
 			//create the row link
 			$list_row_url = '';
 			if (permission_exists('destination_edit')) {
-				$list_row_url = "destination_edit.php?id=".urlencode($row['destination_uuid']);
+				$list_row_url = "destination_edit.php?id=".urlencode($row['destination_uuid']).($query_string ? '&'.$query_string : '');
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}

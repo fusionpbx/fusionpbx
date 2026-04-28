@@ -55,6 +55,32 @@
 		$action = "add";
 	}
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'destination_number'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$url_params = [];
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('destination_all')) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
+
 //set the type
 	$destination_type = !empty($_GET['type']) ? $_GET['type'] : 'inbound';
 	switch ($destination_type) {
@@ -76,7 +102,7 @@
 
 		if ($total_destinations >= $settings->get('limit', 'destinations', '')) {
 			message::add($text['message-maximum_destinations'].' '.$settings->get('limit', 'destinations', ''), 'negative');
-			header('Location: destinations.php');
+			header('Location: destinations.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 	}
@@ -1345,7 +1371,7 @@
 			if ($action == "update") {
 				message::add($text['message-update']);
 			}
-			header("Location: destination_edit.php?id=".urlencode($destination_uuid)."&type=".urlencode($destination_type));
+			header("Location: destination_edit.php?id=".urlencode($destination_uuid)."&type=".urlencode($destination_type).($query_string ? '&'.$query_string : ''));
 			return;
 	}
 
@@ -1695,7 +1721,7 @@
 	}
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'destinations.php?type='.urlencode($destination_type)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'destinations.php?type='.urlencode($destination_type).($query_string ? '&'.$query_string : '')]);
 	if (permission_exists('destination_add') || permission_exists('destination_edit')) {
 		echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save']);
 	}
