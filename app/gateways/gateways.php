@@ -42,9 +42,34 @@
 //get posted data
 	if (!empty($_POST['gateways'])) {
 		$action = $_POST['action'] ?? '';
-		$search = $_POST['search'] ?? '';
 		$gateways = $_POST['gateways'] ?? '';
 	}
+
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'gateway'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$url_params = [];
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('gateway_all')) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
 
 //get total gateway count from the database, check limit, if defined
 	if (!empty($action) && $action == 'copy' && !empty($settings->get('limit', 'gateways'))) {
@@ -55,7 +80,7 @@
 		unset($sql, $parameters);
 		if ($total_gateways >= $settings->get('limit', 'gateways')) {
 			message::add($text['message-maximum_gateways'].' '.$settings->get('limit', 'gateways'), 'negative');
-			header('Location: gateways.php');
+			header('Location: gateways.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 	}
@@ -96,7 +121,7 @@
 				break;
 		}
 
-		header('Location: gateways.php'.($search != '' ? '?search='.urlencode($search) : ''));
+		header('Location: gateways.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
 
@@ -132,14 +157,6 @@
 		}
 	}
 
-//get order and order by
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
-
-//set additional variables
-	$search = !empty($_GET["search"]) ? $_GET["search"] : '';
-	$show = !empty($_GET["show"]) ? $_GET["show"] : '';
-
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
@@ -150,48 +167,27 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (!empty($search)) {
-		$search = strtolower($_GET["search"]);
 		$sql .= "and (";
-		$sql .= "lower(gateway) like :search ";
-		$sql .= "or lower(username) like :search ";
-		$sql .= "or lower(auth_username) like :search ";
-		$sql .= "or lower(from_user) like :search ";
-		$sql .= "or lower(from_domain) like :search ";
-		$sql .= "or lower(proxy) like :search ";
-		$sql .= "or lower(register_proxy) like :search ";
-		$sql .= "or lower(outbound_proxy) like :search ";
-		$sql .= "or lower(description) like :search ";
+		$sql .= "	lower(gateway) like :search ";
+		$sql .= "	or lower(username) like :search ";
+		$sql .= "	or lower(auth_username) like :search ";
+		$sql .= "	or lower(from_user) like :search ";
+		$sql .= "	or lower(from_domain) like :search ";
+		$sql .= "	or lower(proxy) like :search ";
+		$sql .= "	or lower(register_proxy) like :search ";
+		$sql .= "	or lower(outbound_proxy) like :search ";
+		$sql .= "	or lower(description) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$total_gateways = $database->select($sql, $parameters ?? [], 'column');
 	$num_rows = $total_gateways;
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = '';
-	if (!empty($search)) {
-		$param .= "&search=".urlencode($search);
-	}
-	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('gateway_all')) {
-		$param .= "&show=all";
-	}
-	if (!empty($order_by)) {
-		$param .= "&order_by=".$order_by;
-	}
-	if (!empty($order)) {
-		$param .= "&order=".$order;
-	}
-	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
-	if (!empty($order_by)) {
-		$param = str_replace("&order_by=".$order_by, '', $param);
-	}
-	if (!empty($order)) {
-		$param = str_replace("&order=".$order, '', $param);
-	}
 
 //get the list
 	$sql = "select ";
@@ -215,19 +211,18 @@
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (!empty($search)) {
-		$search = strtolower($_GET["search"]);
 		$sql .= "and (";
-		$sql .= "lower(gateway) like :search ";
-		$sql .= "or lower(username) like :search ";
-		$sql .= "or lower(auth_username) like :search ";
-		$sql .= "or lower(from_user) like :search ";
-		$sql .= "or lower(from_domain) like :search ";
-		$sql .= "or lower(proxy) like :search ";
-		$sql .= "or lower(register_proxy) like :search ";
-		$sql .= "or lower(outbound_proxy) like :search ";
-		$sql .= "or lower(description) like :search ";
+		$sql .= "	lower(gateway) like :search ";
+		$sql .= "	or lower(username) like :search ";
+		$sql .= "	or lower(auth_username) like :search ";
+		$sql .= "	or lower(from_user) like :search ";
+		$sql .= "	or lower(from_domain) like :search ";
+		$sql .= "	or lower(proxy) like :search ";
+		$sql .= "	or lower(register_proxy) like :search ";
+		$sql .= "	or lower(outbound_proxy) like :search ";
+		$sql .= "	or lower(description) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$sql .= order_by($order_by, $order, 'gateway', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
@@ -263,20 +258,20 @@
 	if (permission_exists('gateway_delete') && $gateways) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	if (permission_exists('gateway_all')) {
-		if ($show == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>";
-		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($url_params as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	if ($show !== 'all' && permission_exists('gateway_all')) {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
+	}
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'gateways.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
@@ -302,7 +297,6 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -313,12 +307,12 @@
 		echo "	</th>\n";
 	}
 	if ($show == "all" && permission_exists('gateway_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $query_string);
 	}
-	echo th_order_by('gateway', $text['label-gateway'], $order_by, $order, null, null, $param);
+	echo th_order_by('gateway', $text['label-gateway'], $order_by, $order, null, null, $query_string);
 	echo "<th class='hide-sm-dn'>".$text['label-proxy']."</th>\n";
-	echo th_order_by('context', $text['label-context'], $order_by, $order, null, null, $param);
-	echo th_order_by('register', $text['label-register'], $order_by, $order, null, null, $param);
+	echo th_order_by('context', $text['label-context'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('register', $text['label-register'], $order_by, $order, null, null, $query_string);
 	if ($esl->is_connected()) {
 		echo "<th class='hide-sm-dn'>".$text['label-status']."</th>\n";
 		if (permission_exists('gateway_edit')) {
@@ -326,9 +320,9 @@
 		}
 		echo "<th>".$text['label-state']."</th>\n";
 	}
-	echo th_order_by('hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-sm-dn'", $param);
-	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $param);
-	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'", $param);
+	echo th_order_by('hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-sm-dn'", $query_string);
+	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $query_string);
+	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'", $query_string);
 	if (permission_exists('gateway_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -339,7 +333,7 @@
 		foreach($gateways as $row) {
 			$list_row_url = '';
 			if (permission_exists('gateway_edit')) {
-				$list_row_url = "gateway_edit.php?id=".urlencode($row['gateway_uuid']).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(is_numeric($page) ? '&page='.urlencode($page) : null).(!empty($search) ? '&search='.$search : null);
+				$list_row_url = "gateway_edit.php?id=".urlencode($row['gateway_uuid']).($query_string ? '&'.$query_string : '');
 				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
