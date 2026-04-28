@@ -784,8 +784,11 @@ class active_calls_service extends service implements websocket_service_interfac
 
 	/**
 	 * Allows the service to register a callback so when the topic arrives the callable is called
-	 * @param type $topic
-	 * @param type $callable
+	 *
+	 * @param string   $topic
+	 * @param callable $callable
+	 *
+	 * @return void
 	 */
 	public function on_topic($topic, $callable) {
 		if (!isset($this->topics[$topic])) {
