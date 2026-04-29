@@ -96,6 +96,10 @@
 	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 	$apps[$x]['permissions'][$y]['groups'][] = "admin";
 	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "active_call_whisper";
+	$y++;
+	$apps[$x]['permissions'][$y]['name'] = "active_call_barge";
+	$y++;
 
 // Tab visibility permissions
 	$apps[$x]['permissions'][$y]['name'] = "operator_panel_extensions";
