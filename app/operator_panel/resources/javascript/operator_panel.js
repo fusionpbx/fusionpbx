@@ -1387,6 +1387,7 @@ function render_calls_tab() {
 		const created_ts = ch.caller_channel_created_time || '0';
 		const elapsed = esc(format_elapsed(created_ts));
 		const is_recording = call_is_recording(ch, uuid_raw);
+		const can_monitor_this_call = can_monitor_call_with_my_extensions(uuid_raw);
 		const record_icon = is_recording
 			? '../operator_panel/resources/images/recording.png'
 			: '../operator_panel/resources/images/record.png';
@@ -1408,9 +1409,11 @@ function render_calls_tab() {
 			row_html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-eavesdrop'] || 'Eavesdrop')}" onclick="action_eavesdrop('${uuid}')">`
 				+ `<img class="op-ext-action-icon" src="../operator_panel/resources/images/eavesdrop.png" alt="${esc(text['button-eavesdrop'] || 'Eavesdrop')}"></a> `;
 		}
-		if (permissions.operator_panel_coach) {
+		if (permissions.active_call_whisper && can_monitor_this_call) {
 			row_html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-whisper'] || 'Whisper')}" onclick="action_whisper('${uuid}')">`
 				+ `<img class="op-ext-action-icon" src="../operator_panel/resources/images/whisper.svg" alt="${esc(text['button-whisper'] || 'Whisper')}"></a> `;
+		}
+		if (permissions.active_call_barge && can_monitor_this_call) {
 			row_html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-barge'] || 'Barge')}" onclick="action_barge('${uuid}')">`
 				+ `<img class="op-ext-action-icon" src="../operator_panel/resources/images/barge.svg" alt="${esc(text['button-barge'] || 'Barge')}"></a> `;
 		}
@@ -2082,6 +2085,7 @@ function on_ext_contextmenu(event, ext_num) {
 		}
 	} else if (has_call) {
 		// active / held
+		const can_monitor_this_call = can_monitor_call_with_my_extensions(uuid);
 		if (is_mine && permissions.operator_panel_originate) {
 			items.push({ label: text['label-dial_number'] || 'Dial a Number', icon_class: 'fa-solid fa-phone',
 				fn: function () { toggle_ext_dialpad(ext_num, null); } });
@@ -2095,9 +2099,11 @@ function on_ext_contextmenu(event, ext_num) {
 			items.push({ label: text['button-eavesdrop'] || 'Eavesdrop', icon_class: 'fa-solid fa-ear-listen',
 				fn: function () { action_eavesdrop(uuid); } });
 		}
-		if (permissions.operator_panel_coach) {
+		if (permissions.active_call_whisper && can_monitor_this_call) {
 			items.push({ label: text['button-whisper'] || 'Whisper', icon_class: 'fa-solid fa-comment-dots',
 				fn: function () { action_whisper(uuid); } });
+		}
+		if (permissions.active_call_barge && can_monitor_this_call) {
 			items.push({ label: text['button-barge'] || 'Barge', icon_class: 'fa-solid fa-volume-high',
 				fn: function () { action_barge(uuid); } });
 		}
@@ -2161,6 +2167,7 @@ function get_call_row_state(ch) {
 function on_call_contextmenu(event, uuid) {
 	if (!uuid) return;
 	const items = [];
+	const can_monitor_this_call = can_monitor_call_with_my_extensions(uuid);
 	const call_info = calls_map.get(uuid) || null;
 	const source_ext = get_call_source_extension(uuid);
 	const is_mine = !!(source_ext && Array.isArray(user_own_extensions) && user_own_extensions.includes(source_ext));
@@ -2205,9 +2212,11 @@ function on_call_contextmenu(event, uuid) {
 			items.push({ label: text['button-eavesdrop'] || 'Eavesdrop', icon_class: 'fa-solid fa-ear-listen',
 				fn: function () { action_eavesdrop(uuid); } });
 		}
-		if (permissions.operator_panel_coach) {
+		if (permissions.active_call_whisper && can_monitor_this_call) {
 			items.push({ label: text['button-whisper'] || 'Whisper', icon_class: 'fa-solid fa-comment-dots',
 				fn: function () { action_whisper(uuid); } });
+		}
+		if (permissions.active_call_barge && can_monitor_this_call) {
 			items.push({ label: text['button-barge'] || 'Barge', icon_class: 'fa-solid fa-volume-high',
 				fn: function () { action_barge(uuid); } });
 		}
@@ -2500,11 +2509,73 @@ function action_barge(uuid) {
 	action_monitor_mode('barge', uuid, text['button-barge'] || 'Barge started');
 }
 
+function call_leg_has_extension(ch, ext_number) {
+	if (!ch || !ext_number) return false;
+	const ext = String(ext_number).trim();
+	if (!ext) return false;
+
+	const presence = (((ch.channel_presence_id || '').split('@')[0]) || '').trim();
+	if (presence && presence === ext) return true;
+
+	const dest = ((ch.caller_destination_number || '') + '').trim();
+	if (dest && dest === ext) return true;
+
+	const cid = ((ch.caller_caller_id_number || ch.caller_id_number || '') + '').trim();
+	if (cid && cid === ext) return true;
+
+	return false;
+}
+
+function extension_is_already_on_call(uuid, ext_number) {
+	if (!uuid || !ext_number) return false;
+	const related_uuids = get_conversation_call_uuids(uuid);
+	for (const call_uuid of related_uuids) {
+		const ch = calls_map.get(call_uuid);
+		if (call_leg_has_extension(ch, ext_number)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function get_monitor_eligible_extensions(uuid) {
+	if (!uuid || !Array.isArray(user_own_extensions)) return [];
+
+	const unique = [];
+	for (const raw_ext of user_own_extensions) {
+		const ext = String(raw_ext || '').trim();
+		if (!ext || unique.includes(ext)) continue;
+		if (!extension_is_already_on_call(uuid, ext)) unique.push(ext);
+	}
+
+	return unique;
+}
+
+function can_monitor_call_with_my_extensions(uuid) {
+	return get_monitor_eligible_extensions(uuid).length > 0;
+}
+
 function action_monitor_mode(mode, uuid, success_message) {
 	if (!uuid) return;
+	const eligible_extensions = get_monitor_eligible_extensions(uuid);
+	if (!eligible_extensions.length) {
+		show_toast(text['message-monitor_extension_on_call'] || 'Cannot monitor from an extension that is already on this call.', 'warning');
+		return;
+	}
 
 	if (Array.isArray(user_own_extensions) && user_own_extensions.length === 1) {
-		const ext = user_own_extensions[0];
+		const ext = eligible_extensions[0];
+		send_action(mode, { uuid, destination: ext, destination_extension: ext })
+			.then(() => show_toast(success_message, 'success'))
+			.catch((err) => {
+				console.error(err);
+				show_toast((err && err.message) || (mode + ' failed'), 'danger');
+			});
+		return;
+	}
+
+	if (eligible_extensions.length === 1) {
+		const ext = eligible_extensions[0];
 		send_action(mode, { uuid, destination: ext, destination_extension: ext })
 			.then(() => show_toast(success_message, 'success'))
 			.catch((err) => {
@@ -2516,6 +2587,10 @@ function action_monitor_mode(mode, uuid, success_message) {
 
 	const ext = prompt(text['label-your_extension'] || 'Your extension to receive the call:');
 	if (!ext) return;
+	if (!eligible_extensions.includes(String(ext).trim())) {
+		show_toast(text['message-monitor_extension_on_call'] || 'Cannot monitor from an extension that is already on this call.', 'warning');
+		return;
+	}
 
 	send_action(mode, { uuid, destination: ext, destination_extension: ext })
 		.then(() => show_toast(success_message, 'success'))
@@ -3002,6 +3077,7 @@ function render_ext_block(ext, is_mine) {
 				: '') +
 			`</div>`;
 	} else if (has_live_call) {
+		const can_monitor_this_call = can_monitor_call_with_my_extensions(call_uuid || '');
 		// Active/held call: normal action icons
 		live_actions_html = `<div class="op-ext-call-actions">` +
 			(permissions.operator_panel_record
@@ -3010,10 +3086,10 @@ function render_ext_block(ext, is_mine) {
 			(permissions.operator_panel_eavesdrop
 				? `<img class="op-ext-action-icon" src="../operator_panel/resources/images/eavesdrop.png" alt="${esc(text['button-eavesdrop'] || 'Eavesdrop')}" title="${esc(text['button-eavesdrop'] || 'Eavesdrop')}" draggable="true" ondragstart="on_eavesdrop_dragstart('${call_uuid_js}', event)" ondragend="on_drag_end()" onclick="action_eavesdrop('${call_uuid_js}')">`
 				: '') +
-			(permissions.operator_panel_coach
+			(permissions.active_call_whisper && can_monitor_this_call
 				? `<img class="op-ext-action-icon" src="../operator_panel/resources/images/whisper.svg" alt="${esc(text['button-whisper'] || 'Whisper')}" title="${esc(text['button-whisper'] || 'Whisper')}" onclick="action_whisper('${call_uuid_js}')">`
 				: '') +
-			(permissions.operator_panel_coach
+			(permissions.active_call_barge && can_monitor_this_call
 				? `<img class="op-ext-action-icon" src="../operator_panel/resources/images/barge.svg" alt="${esc(text['button-barge'] || 'Barge')}" title="${esc(text['button-barge'] || 'Barge')}" onclick="action_barge('${call_uuid_js}')">`
 				: '') +
 			(permissions.operator_panel_hangup
@@ -3725,17 +3801,37 @@ function on_parked_drop(event) {
 	dragged_parked_uuid = null;
 
 	const payload = { uuid, destination: park_destination, context: domain_name };
-	// Determine whether to use -bleg based on call type.
-	// For internal ext-to-ext calls: transfer the dragged extension's own
-	// channel into the parking lot (no -bleg), so the dragged ext is parked
-	// and the other internal extension is freed.
-	// For inbound external calls: use -bleg to park the external caller
-	// and free the local extension.
+	// Parking leg rules:
+	// - Inbound call: park A-leg
+	// - Outbound call: park B-leg
+	// - Local ext-to-ext: park dragged extension
 	if (source_ext) {
 		const call = calls_map.get(uuid);
-		const caller_num = (call && (call.caller_caller_id_number || call.caller_id_number || '')).toString().trim();
-		const is_internal = caller_num !== '' && extensions_map.has(caller_num);
-		if (!is_internal) {
+		const ext = String(source_ext || '').trim();
+		const caller_num = ((call && (call.caller_caller_id_number || call.caller_id_number || '')) + '').trim();
+		const dest_num = ((call && call.caller_destination_number) + '').trim();
+
+		const caller_is_extension = caller_num !== '' && extensions_map.has(caller_num);
+		const dest_is_extension = dest_num !== '' && extensions_map.has(dest_num);
+
+		const call_presence = (((call || {}).channel_presence_id || '').split('@')[0] || '').trim();
+		const fs_direction = ((((call || {}).call_direction || (call || {}).variable_call_direction || '') + '')).toLowerCase();
+		let direction_raw = '';
+		if (dest_num === ext && caller_num !== ext && caller_num) {
+			direction_raw = 'inbound';
+		} else if (caller_num === ext && dest_num !== ext && dest_num) {
+			direction_raw = 'outbound';
+		} else if (call_presence === ext && fs_direction) {
+			direction_raw = (fs_direction === 'outbound') ? 'inbound' : 'outbound';
+		} else {
+			direction_raw = fs_direction;
+		}
+
+		const peer_number = call ? resolve_peer_number_for_leg(call, ext, direction_raw) : '';
+		const peer_is_extension = peer_number !== '' && peer_number !== ext && extensions_map.has(peer_number);
+		const is_local_extension_call = (caller_is_extension && dest_is_extension) || peer_is_extension;
+
+		if (!is_local_extension_call) {
 			payload.bleg = true;
 		}
 	}

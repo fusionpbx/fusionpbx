@@ -35,6 +35,9 @@
 		exit;
 	}
 
+// Globals from require.php
+	global $config, $database, $settings;
+
 // Multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -54,6 +57,8 @@
 		'operator_panel_manage'      => permission_exists('operator_panel_manage'),
 		'operator_panel_hangup'      => permission_exists('operator_panel_hangup'),
 		'operator_panel_eavesdrop'   => permission_exists('operator_panel_eavesdrop'),
+		'active_call_whisper'        => permission_exists('active_call_whisper'),
+		'active_call_barge'          => permission_exists('active_call_barge'),
 		'operator_panel_record'      => permission_exists('operator_panel_record'),
 		'operator_panel_originate'   => permission_exists('operator_panel_originate'),
 		'operator_panel_coach'       => permission_exists('operator_panel_coach'),
