@@ -178,8 +178,8 @@ class operator_panel_service extends base_websocket_system_service implements we
 		'transfer_attended_complete' => 'operator_panel_transfer_attended',
 		'transfer_attended_cancel' => 'operator_panel_transfer_attended',
 		'eavesdrop'    => 'operator_panel_eavesdrop',
-		'whisper'      => 'operator_panel_coach',
-		'barge'        => 'operator_panel_coach',
+		'whisper'      => 'active_call_whisper',
+		'barge'        => 'active_call_barge',
 		'record'       => 'operator_panel_record',
 		'recording_state' => 'operator_panel_record',
 		'registrations_state' => 'operator_panel_view',
@@ -980,6 +980,102 @@ class operator_panel_service extends base_websocket_system_service implements we
 	}
 
 	/**
+	 * Normalize FreeSWITCH uuid_getvar output to a usable value.
+	 *
+	 * @param mixed $value
+	 *
+	 * @return string
+	 */
+	private function normalize_uuid_getvar($value): string {
+		$normalized = trim((string)$value);
+		if ($normalized === '' || $normalized === '_undef_') {
+			return '';
+		}
+		if (stripos($normalized, '-ERR') === 0) {
+			return '';
+		}
+		return $normalized;
+	}
+
+	/**
+	 * Resolve the peer leg UUID for a given leg UUID.
+	 *
+	 * @param string $uuid
+	 *
+	 * @return string
+	 */
+	private function get_peer_leg_uuid(string $uuid): string {
+		$refs = ['other_leg_unique_id', 'bridge_uuid', 'signal_bond'];
+		foreach ($refs as $ref) {
+			$peer_uuid = $this->normalize_uuid_getvar(event_socket::api("uuid_getvar $uuid $ref"));
+			if ($peer_uuid !== '' && $peer_uuid !== $uuid) {
+				return $peer_uuid;
+			}
+		}
+		return '';
+	}
+
+	/**
+	 * True when an extension appears on the specified leg (presence/CID/destination).
+	 *
+	 * @param string $uuid
+	 * @param string $extension
+	 *
+	 * @return bool
+	 */
+	private function uuid_leg_has_extension(string $uuid, string $extension): bool {
+		if ($uuid === '' || $extension === '') {
+			return false;
+		}
+
+		$presence = $this->normalize_uuid_getvar(event_socket::api("uuid_getvar $uuid channel_presence_id"));
+		if ($presence !== '') {
+			$presence_ext = explode('@', $presence)[0] ?? '';
+			if (trim($presence_ext) === $extension) {
+				return true;
+			}
+		}
+
+		$dest = $this->normalize_uuid_getvar(event_socket::api("uuid_getvar $uuid caller_destination_number"));
+		if ($dest !== '' && $dest === $extension) {
+			return true;
+		}
+
+		$cid = $this->normalize_uuid_getvar(event_socket::api("uuid_getvar $uuid caller_caller_id_number"));
+		if ($cid !== '' && $cid === $extension) {
+			return true;
+		}
+
+		$caller_id_number = $this->normalize_uuid_getvar(event_socket::api("uuid_getvar $uuid caller_id_number"));
+		if ($caller_id_number !== '' && $caller_id_number === $extension) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * True when an extension participates in either leg of the target call.
+	 *
+	 * @param string $uuid
+	 * @param string $extension
+	 *
+	 * @return bool
+	 */
+	private function extension_in_call(string $uuid, string $extension): bool {
+		if ($this->uuid_leg_has_extension($uuid, $extension)) {
+			return true;
+		}
+
+		$peer_uuid = $this->get_peer_leg_uuid($uuid);
+		if ($peer_uuid !== '' && $this->uuid_leg_has_extension($peer_uuid, $extension)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Execute a validated action.
 	 *
 	 * @param string $action  Action name (e.g. 'hangup', 'transfer', 'eavesdrop', etc.)
@@ -1150,6 +1246,9 @@ class operator_panel_service extends base_websocket_system_service implements we
 					}
 					if (empty($domain_name)) {
 						return ['success' => false, 'message' => 'domain_name required'];
+					}
+					if ($this->extension_in_call((string)$uuid, (string)$dest_ext)) {
+						return ['success' => false, 'message' => 'Cannot monitor a call from an extension already on that call'];
 					}
 
 					$mode_token = $action === 'whisper' ? 'whisper' : 'barge';
