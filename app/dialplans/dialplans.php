@@ -57,26 +57,44 @@
 	if (!empty($_POST['dialplans'])) {
 		$action = $_POST['action'];
 		$dialplans = $_POST['dialplans'];
-		$context = $_POST['context'];
-		$search = $_POST['search'] ?? '';
-		$order_by = $_POST['order_by'];
-		$order = $_POST['order'];
 	}
 
-//get the app uuid
-	$app_uuid = (!empty($_REQUEST["app_uuid"]) && is_uuid($_REQUEST["app_uuid"])) ? $_REQUEST["app_uuid"] : '';
+// Set variables from http GET parameters
+	$app_uuid = is_uuid($_GET['app_uuid'] ?? '') ? $_GET['app_uuid'] : '';
+	$context = $_GET['context'] ?? '';
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? ''));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$url_params = [];
+	if (!empty($app_uuid)) {
+		$url_params['app_uuid'] = $app_uuid;
+	}
+	if (!empty($context)) {
+		$url_params['context'] = $context;
+	}
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('dialplan_all')) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
 
 //process the http post data by action
 	if (!empty($action) && is_array($dialplans) && @sizeof($dialplans) != 0) {
-
-		//define redirect parameters and url
-			if (!empty($app_uuid)) { $params[] = "app_uuid=".urlencode($app_uuid); }
-			if ($context) { $params[] = "context=".urlencode($context); }
-			if ($search) { $params[] = "search=".urlencode($search); }
-			if ($order_by) { $params[] = "order_by=".urlencode($order_by); }
-			if ($order) { $params[] = "order=".urlencode($order); }
-			$list_page = 'dialplans.php'.(!empty($params) ? '?'.implode('&', $params) : null);
-			unset($params);
 
 		//process action
 			switch ($action) {
@@ -107,13 +125,9 @@
 			}
 
 		//redirect
-			header('Location: '.$list_page);
+			header('Location: dialplans.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 	}
-
-//get order and order by and sanitize the values
-	$order_by = (!empty($_GET["order_by"])) ? $_GET["order_by"] : '';
-	$order = (!empty($_GET["order"])) ? $_GET["order"] : '';
 
 //make sure all dialplans with context of public have the inbound route app_uuid
 	if (!empty($app_uuid) && $app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
@@ -124,11 +138,6 @@
 		$database->execute($sql);
 		unset($sql);
 	}
-
-//set additional variables
-	$context = !empty($_GET["context"]) ? $_GET["context"] : '';
-	$search = !empty($_GET["search"]) ? $_GET["search"] : '';
-	$show = !empty($_GET["show"]) ? $_GET["show"] : '';
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
@@ -175,7 +184,6 @@
 		$parameters['dialplan_context'] = $context;
 	}
 	if (!empty($search)) {
-		$search = strtolower($search);
 		$sql .= "and (";
 		$sql .= " 	lower(dialplan_context) like :search ";
 		$sql .= " 	or lower(dialplan_name) like :search ";
@@ -186,30 +194,14 @@
 			$parameters['search_numeric'] = $search;
 		}
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$num_rows = $database->select($sql, $parameters  ?? null, 'column');
 
 //prepare the paging
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	if (!empty($app_uuid)) { $params[] = "app_uuid=".urlencode($app_uuid); }
-	if (!empty($context)) { $params[] = "context=".urlencode($context); }
-	if (!empty($search)) { $params[] = "search=".urlencode($search); }
-	if (!empty($order_by)) { $params[] = "order_by=".urlencode($order_by); }
-	if (!empty($order)) { $params[] = "order=".urlencode($order); }
-	if ($show == "all" && permission_exists('dialplan_all')) {
-		$params[] = "show=all";
-	}
-	if (!empty($params)) {
-		$param = $params ? implode('&', $params) : null;
-	}
-	else {
-		$param = null;
-	}
-	unset($params);
-	if (empty($_GET['page'])) { $page = 0; } else { $page = $_GET['page']; }
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list of dialplans
@@ -271,7 +263,7 @@
 			$parameters['search_numeric'] = $search;
 		}
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	if (!empty($order_by)) {
 		if ($order_by == 'dialplan_name' || $order_by == 'dialplan_description') {
@@ -368,8 +360,8 @@
 		case "4b821450-926b-175a-af93-a03c441818b1": echo $text['header-time_conditions']; break;
 		default: echo $text['header-dialplan_manager'];
 	}
-	echo "</b><div class='count'>".number_format($num_rows)."</div>";
-	echo 	"</div>\n";
+	echo "	</b><div class='count'>".number_format($num_rows)."</div>";
+	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
 	$button_add_url = '';
 	if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" && permission_exists('inbound_route_add')) { $button_add_url = PROJECT_PATH."/app/dialplan_inbound/dialplan_inbound_add.php"; }
@@ -409,54 +401,22 @@
 			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
 		if (permission_exists('dialplan_xml')) {
-			$query_params = [];
-			if (!empty($app_uuid) && is_uuid($app_uuid)) {
-				$query_params[] = 'app_uuid='.$app_uuid;
-			}
-			if (!empty($context) && $context == 'global') {
-				$query_params[] = 'context='.$context;
-			}
-			$query_string = '';
-			if (count($query_params) > 0) {
-				$i = 0;
-				foreach($query_params as $query_param) {
-					$delimiter = ($i == 0) ? '?' : '&';
-					$query_string .= $delimiter. $query_param;
-					$i++;
-				}
-			}
-			echo button::create(['type'=>'button','label'=>$text['button-xml'],'icon'=>'code','style'=>'margin-left: 3px;','link'=>'dialplan_xml.php'.$query_string]);
-			unset($query_string);
+			echo button::create(['type'=>'button','label'=>$text['button-xml'],'icon'=>'code','style'=>'margin-left: 3px;','link'=>'dialplan_xml.php'.(!empty($app_uuid) ? '?app_uuid='.urlencode($app_uuid) : '')]);
 		}
 	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	if (permission_exists('dialplan_all')) {
-		if ($show == 'all' && permission_exists('dialplan_all')) {
-			echo "		<input type='hidden' name='show' value='all'>";
-		}
-		else {
-			if (!empty($app_uuid)) { $params[] = "app_uuid=".urlencode($app_uuid); }
-			if (!empty($context)) { $params[] = "context=".urlencode($context); }
-			if (!empty($search)) { $params[] = "search=".urlencode($search); }
-			if (!empty($order_by)) { $params[] = "order_by=".urlencode($order_by); }
-			if (!empty($order)) { $params[] = "order=".urlencode($order); }
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$button_icon_all,'link'=>'?show=all'.(!empty($params) ? '&'.implode('&', $params) : null)]);
-			unset($params);
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($url_params as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}
-	if (!empty($app_uuid)) {
-		echo 	"<input type='hidden' name='app_uuid' value='".escape($app_uuid)."'>";
-	}
-	if (!empty($order_by)) {
-		echo 	"<input type='hidden' name='order_by' value='".escape($order_by)."'>";
-	}
-	if (!empty($order)) {
-		echo 	"<input type='hidden' name='order' value='".escape($order)."'>";
+	if ($show !== 'all' && permission_exists('dialplan_all')) {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$button_icon_all,'link'=>'?show=all'.(!empty($app_uuid) ? '&app_uuid='.urlencode($app_uuid) : '')]);
 	}
 	if (permission_exists('dialplan_context')) {
-		echo 	"<select name='context' id='context' class='formfld' style='max-width: ".(empty($context) || $context == 'global' ? '80px' : '140px')."; margin-left: 18px;' onchange=\"$('#form_search').submit();\">\n";
-		echo 		"<option value='' ".(!$context ? "selected='selected'" : null)." disabled='disabled'>".$text['label-context']."...</option>\n";
-		echo 		"<option value=''></option>\n";
+		echo "	<select name='context' id='context' class='formfld' style='max-width: ".(empty($context) || $context == 'global' ? '80px' : '140px')."; margin-left: 18px;' onchange=\"$('#form_search').submit();\">\n";
+		echo "		<option value='' ".(!$context ? "selected='selected'" : null)." disabled='disabled'>".$text['label-context']."...</option>\n";
+		echo "		<option value=''></option>\n";
 		if (!empty($dialplan_contexts) && is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
 			foreach ($dialplan_contexts as $dialplan_context => $dialplan_subcontexts) {
 				if (is_array($dialplan_subcontexts) && @sizeof($dialplan_subcontexts) != 0) {
@@ -471,18 +431,13 @@
 				}
 			}
 		}
-		echo 	"</select>\n";
+		echo "	</select>\n";
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$button_icon_search,'type'=>'submit','id'=>'btn_search']);
-	$params[] = "app_uuid=".urlencode($app_uuid);
-	if (!empty($order_by)) { $params[] = "order_by=".urlencode($order_by); }
-	if (!empty($order)) { $params[] = "order=".urlencode($order); }
-	if (!empty($show) && permission_exists('dialplan_all')) { $params[] = "show=".urlencode($show); }
-	//echo button::create(['label'=>$text['button-reset'],'icon'=>$button_icon_reset,'type'=>'button','id'=>'btn_reset','link'=>'dialplans.php'.($params ? '?'.implode('&', $params) : null),'style'=>($search == '' ? 'display: none;' : null)]);
-	unset($params);
+	//echo button::create(['label'=>$text['button-reset'],'icon'=>$button_icon_reset,'type'=>'button','id'=>'btn_reset','link'=>'dialplans.php?app_uuid='.urlencode($app_uuid),'style'=>($search == '' ? 'display: none;' : null)]);
 	if (!empty($paging_controls_mini)) {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
@@ -532,10 +487,6 @@
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='app_uuid' name='app_uuid' value='".escape($app_uuid)."'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='context' value=\"".escape($context)."\">\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
-	echo "<input type='hidden' name='order_by' value=\"".escape($order_by)."\">\n";
-	echo "<input type='hidden' name='order' value=\"".escape($order)."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -554,18 +505,14 @@
 	if ($show == "all" && permission_exists('dialplan_all')) {
 		echo "<th>".$text['label-domain']."</th>\n";
 	}
-	if ($context) { $params[] = "context=".urlencode($context); }
-	if ($search) { $params[] = "search=".urlencode($search); }
-	if ($show == 'all' && permission_exists('dialplan_all')) { $params[] = "show=all"; }
-	echo th_order_by('dialplan_name', $text['label-name'], $order_by, $order, $app_uuid, null, (!empty($params) ? implode('&', $params) : null));
-	echo th_order_by('dialplan_number', $text['label-number'], $order_by, $order, $app_uuid, null, (!empty($params) ? implode('&', $params) : null));
+	echo th_order_by('dialplan_name', $text['label-name'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('dialplan_number', $text['label-number'], $order_by, $order, null, null, $query_string);
 	if (permission_exists('dialplan_context')) {
-		echo th_order_by('dialplan_context', $text['label-context'], $order_by, $order, $app_uuid, null, (!empty($params) ? implode('&', $params) : null));
+		echo th_order_by('dialplan_context', $text['label-context'], $order_by, $order, null, null, $query_string);
 	}
-	echo th_order_by('dialplan_order', $text['label-order'], $order_by, $order, $app_uuid, "class='center shrink'", (!empty($params) ? implode('&', $params) : null));
-	echo th_order_by('dialplan_enabled', $text['label-enabled'], $order_by, $order, $app_uuid, "class='center'", (!empty($params) ? implode('&', $params) : null));
-	echo th_order_by('dialplan_description', $text['label-description'], $order_by, $order, $app_uuid, "class='hide-sm-dn' style='min-width: 100px;'", (!empty($params) ? implode('&', $params) : null));
-	unset($params);
+	echo th_order_by('dialplan_order', $text['label-order'], $order_by, $order, null, "class='center shrink'", $query_string);
+	echo th_order_by('dialplan_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $query_string);
+	echo th_order_by('dialplan_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn' style='min-width: 100px;'", $query_string);
 	if ((
 		($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" && permission_exists('inbound_route_edit')) ||
 		($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3" && permission_exists('outbound_route_edit')) ||
@@ -587,7 +534,7 @@
 			$list_row_url = '';
 			if ($row['app_uuid'] == "4b821450-926b-175a-af93-a03c441818b1") {
 				if (permission_exists('time_condition_edit') || permission_exists('dialplan_edit')) {
-					$list_row_url = PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".urlencode($row['dialplan_uuid']).(is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null);
+					$list_row_url = PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".urlencode($row['dialplan_uuid']).($query_string ? '&'.$query_string : '');
 					if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 						$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 					}
@@ -599,7 +546,7 @@
 				($row['app_uuid'] == "16589224-c876-aeb3-f59f-523a1c0801f7" && permission_exists('fifo_edit')) ||
 				permission_exists('dialplan_edit')
 				) {
-				$list_row_url = "dialplan_edit.php?id=".urlencode($row['dialplan_uuid']).(is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null);
+				$list_row_url = "dialplan_edit.php?id=".urlencode($row['dialplan_uuid']).($query_string ? '&'.$query_string : '');
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid'] ?? '').'&domain_change=true';
 				}
