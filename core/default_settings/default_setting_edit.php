@@ -72,30 +72,25 @@
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 	$search = $_GET['search'] ?? '';
 	$show = $_GET['show'] ?? '';
-	$default_setting_category = $_GET['default_setting_category'] ?? '';
-
-//sanitize the variables
-	$search = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $search);
-	$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $default_setting_category);
 
 // Build the query string
-	$param = [];
+	$url_params = [];
 	if (!empty($_GET['order_by'])) {
-		$param['order_by'] = $order_by;
+		$url_params['order_by'] = $order_by;
 	}
 	if (!empty($_GET['order'])) {
-		$param['order'] = $order;
+		$url_params['order'] = $order;
 	}
 	if (!empty($search)) {
-		$param['search'] = $search;
+		$url_params['search'] = $search;
 	}
 	if (!empty($show) && $show == 'all' && permission_exists('stream_all')) {
-		$param['show'] = $show;
+		$url_params['show'] = $show;
 	}
 	if (!empty($default_setting_category)) {
-		$param['default_setting_category'] = $default_setting_category;
+		$url_params['default_setting_category'] = $default_setting_category;
 	}
-	$query_string = http_build_query($param);
+	$query_string = http_build_query($url_params);
 
 //process the http post
 	if (!empty($_POST) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
