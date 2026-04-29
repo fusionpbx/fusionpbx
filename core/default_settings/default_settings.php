@@ -83,23 +83,23 @@
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 // Build the query string
-	$param = [];
+	$url_params = [];
 	if (!empty($_GET['order_by'])) {
-		$param['order_by'] = $order_by;
+		$url_params['order_by'] = $order_by;
 	}
 	if (!empty($_GET['order'])) {
-		$param['order'] = $order;
+		$url_params['order'] = $order;
 	}
 	if (!empty($search)) {
-		$param['search'] = $search;
+		$url_params['search'] = $search;
 	}
 	if (!empty($show) && $show == 'all' && permission_exists('stream_all')) {
-		$param['show'] = $show;
+		$url_params['show'] = $show;
 	}
 	if (!empty($default_setting_category)) {
-		$param['default_setting_category'] = $default_setting_category;
+		$url_params['default_setting_category'] = $default_setting_category;
 	}
-	$query_string = http_build_query($param);
+	$query_string = http_build_query($url_params);
 
 //process the http post data by action
 	if (!empty($action) && !empty($default_settings)) {
@@ -308,7 +308,7 @@
 	echo button::create(['type'=>'button','label'=>$text['label-domain'],'icon'=>$settings->get('theme', 'button_icon_domain'),'style'=>'','link'=>PROJECT_PATH.'/core/domain_settings/domain_settings.php?id='.$domain_uuid]);
 	echo button::create(['label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'type'=>'button','id'=>'button_reload','link'=>'default_settings_reload.php'.($query_string ? '?'.$query_string : ''),'style'=>'margin-right: 15px;']);
 	if ($permission['default_setting_add']) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'default_setting_edit.php'.($query_string ? '?'.$query_string : '')]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'default_setting_edit.php']);
 	}
 	if ($permission['default_setting_add'] && !empty($default_settings)) {
 		if ($permission['domain_select'] && $permission['domain_setting_add']) {
@@ -331,13 +331,13 @@
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo "		<form id='form_search' class='inline' method='get'>\n";
-	foreach ($param as $key => $value) {
-		if ($key !== 'search' && $key !== 'page') {
+	foreach ($url_params as $key => $value) {
+		if ($key !== 'search' && $key !== 'page' && $key !== 'default_setting_category') {
 			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}
 	if (!empty($categories)) {
-		echo 		"<select name='default_setting_category' class='formfld' style='width: auto; margin-left: 15px;' id='select_category' onchange='this.form.submit();'>\n";
+		echo "		<select name='default_setting_category' class='formfld' style='width: auto; margin-left: 15px;' id='select_category' onchange='this.form.submit();'>\n";
 		echo "			<option value=''>".$text['label-category']."...</option>\n";
 		echo "			<option value=''>".$text['label-all']."</option>\n";
 		foreach ($categories as $category_name => $category) {
