@@ -144,13 +144,17 @@
 			}
 		}
 		if (is_array($selected_columns) && @sizeof($selected_columns) != 0) {
+			$show_all = (!empty($_REQUEST['show']) && $_REQUEST['show'] == 'all' && permission_exists('destination_all'));
 			$sql = "select ".implode(', ', $selected_columns)." from v_destinations ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$destinations = $database->select($sql, $parameters, 'all');
+			if (!$show_all) {
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
+			}
+			$destinations = $database->select($sql, $parameters ?? null, 'all');
 			unset($sql, $parameters, $selected_columns);
 
-			download_send_headers("destination_export_".date("Y-m-d").".csv");
+			$filename_suffix = $show_all ? '_all' : '';
+			download_send_headers("destination_export".$filename_suffix."_".date("Y-m-d").".csv");
 			echo array2csv($destinations);
 			exit;
 		}
@@ -166,6 +170,9 @@
 
 //show the content
 	echo "<form method='post' name='frm' id='frm'>\n";
+	if (!empty($_REQUEST['show']) && $_REQUEST['show'] == 'all' && permission_exists('destination_all')) {
+		echo "<input type='hidden' name='show' value='all'>\n";
+	}
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-destination_export']."</b></div>\n";
 	echo "	<div class='actions'>\n";
