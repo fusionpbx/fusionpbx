@@ -362,6 +362,12 @@ class device {
 			case "805ec0":
 				$device_vendor = "yealink";
 				break;
+			case "c4fc22":
+				$device_vendor = "yealink";
+				break;
+			case "44dbd2":
+				$device_vendor = "yealink";
+				break;
 			case "00268B":
 				$device_vendor = "escene";
 				break;
