@@ -43,13 +43,41 @@
 	if (!empty($_REQUEST['id']) && is_uuid($_REQUEST['id'])) {
 		$dialplan_uuid = $_REQUEST['id'];
 	}
-	if (!empty($_REQUEST['app_uuid']) && is_uuid($_REQUEST['app_uuid'])) {
-		$app_uuid = $_REQUEST['app_uuid'];
-	}
-	if (!empty($_REQUEST['context']) && $_REQUEST['context'] == 'public') {
-		$context = $_REQUEST['context'];
-	}
 	$dialplan_xml = $_REQUEST['dialplan_xml'] ?? '';
+
+// Set variables from http GET parameters
+	$app_uuid = is_uuid($_GET['app_uuid'] ?? '') ? $_GET['app_uuid'] : '';
+	$context = $_GET['context'] ?? '';
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? ''));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$url_params = [];
+	if (!empty($app_uuid)) {
+		$url_params['app_uuid'] = $app_uuid;
+	}
+	if (!empty($context)) {
+		$url_params['context'] = $context;
+	}
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('dialplan_all')) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
 
 //process the HTTP POST
 	if (!empty($_POST) && !empty($dialplan_uuid) && !empty($_REQUEST['app_uuid']) && !empty($_REQUEST['app_uuid'])) {
@@ -147,7 +175,7 @@
 			}
 
 		//redirect the user
-			header("Location: dialplan_edit.php?id=".$dialplan_uuid.(is_uuid($app_uuid) ? "&app_uuid=".$app_uuid : null));
+			header("Location: dialplan_edit.php?id=".$dialplan_uuid.($query_string ? '&'.$query_string : ''));
 			exit;
 
 	}
@@ -236,10 +264,10 @@
 
 //set the button back link
 	if (is_array($dialplan_uuid)) {
-		$button_back_link = 'dialplan_edit.php?id='.urlencode($dialplan_uuid).(!empty($app_uuid) && is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null);
+		$button_back_link = 'dialplan_edit.php?id='.urlencode($dialplan_uuid).($query_string ? '&'.$query_string : '');
 	}
 	else {
-		$button_back_link = 'dialplans.php';
+		$button_back_link = 'dialplans.php'.($query_string ? '?'.$query_string : '');
 	}
 
 //create token
@@ -394,7 +422,6 @@
 	echo "</div>\n";
 	echo "<br />\n";
 
-	echo "<input type='hidden' name='app_uuid' value='".escape($app_uuid ?? null)."'>\n";
 	echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid ?? null)."'>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
