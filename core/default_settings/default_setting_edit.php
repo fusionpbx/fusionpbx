@@ -73,6 +73,9 @@
 	$search = $_GET['search'] ?? '';
 	$show = $_GET['show'] ?? '';
 
+//sanitize the variables
+	$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $default_setting_category);
+
 // Build the query string
 	$url_params = [];
 	if (!empty($_GET['order_by'])) {
