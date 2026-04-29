@@ -1677,6 +1677,7 @@
 	{*//domain selector *}
 	function search_domains(element_id) {
 		var xhttp = new XMLHttpRequest();
+		var obj, domain_uuid, domain_name, link_label;
 		xhttp.onreadystatechange = function() {
 			//if (this.readyState == 4 && this.status == 200) {
 			//	document.getElementById(element_id).innerHTML = this.responseText;
@@ -1750,7 +1751,7 @@
 				}
 			}
 		};
-		search = document.getElementById('domains_search');
+		var search = document.getElementById('domains_search');
 		if (search.value) {
 			//xhttp.open("GET", "/core/domains/domain_list.php?search="+search.value, true);
 			xhttp.open("GET", "/core/domains/domain_json.php?search="+search.value+"&{$domain_json_token_name}={$domain_json_token_hash}", true);
