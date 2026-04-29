@@ -146,14 +146,11 @@
 		if (is_array($selected_columns) && @sizeof($selected_columns) != 0) {
 			$show_all = (!empty($_REQUEST['show']) && $_REQUEST['show'] == 'all' && permission_exists('destination_all'));
 			$sql = "select ".implode(', ', $selected_columns)." from v_destinations ";
-			if ($show_all) {
-				$parameters = [];
-			}
-			else {
+			if (!$show_all) {
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $domain_uuid;
 			}
-			$destinations = $database->select($sql, $parameters, 'all');
+			$destinations = $database->select($sql, $parameters ?? null, 'all');
 			unset($sql, $parameters, $selected_columns);
 
 			$filename_suffix = $show_all ? '_all' : '';
