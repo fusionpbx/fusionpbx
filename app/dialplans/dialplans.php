@@ -588,7 +588,7 @@
 			if ($row['app_uuid'] == "4b821450-926b-175a-af93-a03c441818b1") {
 				if (permission_exists('time_condition_edit') || permission_exists('dialplan_edit')) {
 					$list_row_url = PROJECT_PATH."/app/time_conditions/time_condition_edit.php?id=".urlencode($row['dialplan_uuid']).(is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null);
-					if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+					if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 						$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 					}
 				}
@@ -600,7 +600,7 @@
 				permission_exists('dialplan_edit')
 				) {
 				$list_row_url = "dialplan_edit.php?id=".urlencode($row['dialplan_uuid']).(is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid) : null);
-				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid'] ?? '').'&domain_change=true';
 				}
 			}
