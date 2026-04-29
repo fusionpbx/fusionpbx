@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,8 +50,6 @@
 	$limit = '';
 
 //get the http get values and set them as php variables
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
 	$action = $_GET["action"] ?? '';
 
 //initialize the destinations object
