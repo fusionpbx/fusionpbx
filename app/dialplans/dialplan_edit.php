@@ -80,13 +80,39 @@
 		$action = "add";
 	}
 
-//set the app_uuid
-	if (!empty($_REQUEST["app_uuid"]) && is_uuid($_REQUEST["app_uuid"])) {
-		$app_uuid = $_REQUEST["app_uuid"];
+// Set variables from http GET parameters
+	$app_uuid = is_uuid($_GET['app_uuid'] ?? '') ? $_GET['app_uuid'] : '';
+	$context = $_GET['context'] ?? '';
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? ''));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$url_params = [];
+	if (!empty($app_uuid)) {
+		$url_params['app_uuid'] = $app_uuid;
 	}
-	else {
-		$app_uuid = null;
+	if (!empty($context)) {
+		$url_params['context'] = $context;
 	}
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('dialplan_all')) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
 
 //get the http post values and set them as php variables
 	if (count($_POST) > 0) {
@@ -162,8 +188,6 @@
 				$array[0]['checked'] = 'true';
 				$array[0]['uuid'] = $_POST['dialplan_uuid'];
 
-				$list_page = 'dialplans.php'.(!empty($app_uuid) && is_uuid($app_uuid) ? '?app_uuid='.urlencode($app_uuid) : null);
-
 				switch ($_POST['action']) {
 					case 'copy':
 						if (
@@ -195,7 +219,7 @@
 						break;
 				}
 
-				header('Location: '.$list_page);
+				header('Location: dialplans.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -358,7 +382,7 @@
 			else if ($action == "update") {
 				message::add($text['message-update']);
 			}
-			header("Location: ?id=".escape($dialplan_uuid).(!empty($app_uuid) && is_uuid($app_uuid) ? "&app_uuid=".$app_uuid : null));
+			header("Location: ?id=".escape($dialplan_uuid).($query_string ? '&'.$query_string : ''));
 			exit;
 
 	} //(count($_POST)>0 && empty($_POST["persistformvar"]))
@@ -560,10 +584,10 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-dialplan_edit']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'dialplans.php'.(!empty($app_uuid) && is_uuid($app_uuid) ? "?app_uuid=".urlencode($app_uuid) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'dialplans.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == 'update') {
 		if (permission_exists('dialplan_xml')) {
-			echo button::create(['type'=>'button','label'=>$text['button-xml'],'icon'=>'code','style'=>'margin-left: 15px;','link'=>'dialplan_xml.php?id='.urlencode($dialplan_uuid ?? null).(!empty($app_uuid) && is_uuid($app_uuid) ? "&app_uuid=".urlencode($app_uuid ?? null) : null)]);
+			echo button::create(['type'=>'button','label'=>$text['button-xml'],'icon'=>'code','style'=>'margin-left: 15px;','link'=>'dialplan_xml.php?id='.urlencode($dialplan_uuid ?? null).($query_string ? '&'.$query_string : '')]);
 		}
 		$button_margin = 'margin-left: 15px;';
 		if (
@@ -1159,7 +1183,6 @@
 	</script>
 	<?php
 
-	echo "<input type='hidden' name='app_uuid' value='".escape($app_uuid ?? null)."'>\n";
 	if ($action == "update") {
 		echo "	<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	}
