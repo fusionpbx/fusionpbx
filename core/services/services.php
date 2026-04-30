@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2025
+	Portions created by the Initial Developer are Copyright (C) 2026
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -77,9 +77,8 @@
 		switch ($action) {
 			case 'toggle':
 				if (permission_exists('service_edit')) {
-					$database->toggle($array);
-					// $obj = new services;
-					// $obj->toggle($services);
+					$obj = new services;
+					$obj->toggle($services);
 				}
 				break;
 			case 'delete':
@@ -245,7 +244,7 @@
 			if (permission_exists('service_add') || permission_exists('service_edit') || permission_exists('service_delete')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='services[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-				echo "		<input type='hidden' name='services[$x][service_uuid]' value='".escape($row['service_uuid'])."' />\n";
+				echo "		<input type='hidden' name='services[$x][uuid]' value='".escape($row['service_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
 			echo "	<td>\n";
