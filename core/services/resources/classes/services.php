@@ -153,7 +153,7 @@ class services {
 	 */
 	public function toggle($records) {
 		// Permission not found
-		if (permission_exists($this->name.'_edit')) {
+		if (!permission_exists($this->name.'_edit')) {
 			return;
 		}
 
