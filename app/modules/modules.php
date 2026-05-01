@@ -114,7 +114,7 @@
 
 //show the msg
 	if ($msg) {
-		message::add($msg, 'negative', 5000);
+		message::add($msg, 'positive', 5000);
 	}
 
 //create token
