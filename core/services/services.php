@@ -50,30 +50,6 @@
 
 // process the http post data by action
 	if (!empty($action) && !empty($services) && is_array($services) && @sizeof($services) != 0) {
-
-		// validate the token
-		$token = new token;
-		if (!$token->validate($_SERVER['PHP_SELF'])) {
-			message::add($text['message-invalid_token'],'negative');
-			header('Location: services.php');
-			exit;
-		}
-
-		// prepare the array
-		if (!empty($services)) {
-			foreach ($services as $row) {
-				$array['services'][$x]['checked'] = $row['checked'];
-				$array['services'][$x]['service_uuid'] = $row['service_uuid'];
-				$array['services'][$x]['service_enabled'] = $row['service_enabled'];
-				$x++;
-			}
-		}
-
-		// prepare the database object
-		$database->app_name = 'services';
-		$database->app_uuid = '540c3ec2-4f0c-467f-a09d-d644439c96f2';
-
-		// send the array to the database class
 		switch ($action) {
 			case 'toggle':
 				if (permission_exists('service_edit')) {
@@ -83,9 +59,8 @@
 				break;
 			case 'delete':
 				if (permission_exists('service_delete')) {
-					$database->delete($array);
-					// $obj = new services;
-					// $obj->delete($services);
+					$obj = new services;
+					$obj->delete($services);
 				}
 				break;
 		}
