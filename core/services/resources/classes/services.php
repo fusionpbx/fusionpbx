@@ -136,7 +136,7 @@ class services {
 				unset($array);
 
 				// Set the message
-				message::add($text['message-delete']);
+				message::add($text['message-delete'], 'alert');
 			}
 			unset($records);
 		}
@@ -242,6 +242,7 @@ class services {
 
 		// reloaad the checked services
 		if (is_array($records) && @sizeof($records) != 0) {
+			$services = '';
 			// Get current reload state
 			foreach($records as $record) {
 				if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
@@ -261,19 +262,22 @@ class services {
 							if (method_exists($service_class_name, 'send_reload')) {
 								// Reload the service
 								$service_class_name::send_reload();
-								
-								// Add the service to an array
-								$services[] = $service_name;
+
+								// Add to the list of services that were reloaded
+								$services .= "<li>".$service_name."</li>\n";
 							}
 						}
 					}
 				}
 
-				// The list of services that were reloaded
-				$service_list = implode("<br />", $services);
-
 				// Set the message
-				message::add($text['message-reload']."<br />".$service_list);
+				$msg = "<strong>".$text['message-services_reloaded'].":</strong><br />\n";
+				$msg .= "<div style='display: flex; justify-content: center;'>\n";
+				$msg .= "	<ul style='text-align: left; margin: 0;'>\n";
+				$msg .= $services;
+				$msg .= "	</ul>\n";
+				$msg .= "</div>\n";
+				message::add($msg);
 			}
 		}
 	}
@@ -379,6 +383,10 @@ class services {
 	 * @return void No return value; this method modifies the database.
 	 */
 	public function add_missing() {
+		// Add multi-lingual support
+		$language = new text;
+		$text = $language->get();
+
 		// Get the list of services
 		$service_array = $this->get_services(false, 'files');
 
@@ -413,6 +421,8 @@ class services {
 		$service_names = array_column($database_services, 'service_name');
 
 		// Add services that are not in the database
+		$service_found = false;
+		$services_new  = '';
 		$i = 0;
 		$array = [];
 		foreach ($service_array as $service) {
@@ -433,6 +443,12 @@ class services {
 				if (empty($service_category)) {
 					$service_category = $service_map[$service_name];
 				}
+
+				// Set service found to true
+				$service_found = true;
+
+				// Append the service label
+				$services_new .= "<li>".$service_name."</li>\n";
 
 				// Prepare the array
 				$array['services'][$i]['service_uuid'] = uuid();
@@ -456,6 +472,15 @@ class services {
 
 			// Remove temporary permissions
 			$p->delete('service_add', 'temp');
+		}
+		if ($service_found) {
+			$msg = "<strong>".$text['message-added_new_services'].":</strong><br />\n";
+			$msg .= "<div style='display: flex; justify-content: center;'>\n";
+			$msg .= "	<ul style='text-align: left; margin: 0;'>\n";
+			$msg .= $services_new;
+			$msg .= "	</ul>\n";
+			$msg .= "</div>\n";
+			message::add($msg);
 		}
 	}
 
