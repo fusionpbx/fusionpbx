@@ -99,7 +99,7 @@ class services {
 	 */
 	public function delete($records) {
 		// Permission not found
-		if (permission_exists($this->name.'_delete')) {
+		if (!permission_exists($this->name.'_delete')) {
 			return;
 		}
 
@@ -237,7 +237,7 @@ class services {
 				foreach($service_files as $file) {
 					// Get the service name
 					$service_name = $this->find_service_name($file);
-					
+
 					// Get the service status
 					if ($details) {
 						$service_status = $this->is_running($service_name);
