@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2024
+ Portions created by the Initial Developer are Copyright (C) 2008-2026
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -847,6 +847,11 @@ class modules {
 	 */
 	public function synch() {
 		if (false !== ($handle = opendir($this->dir ?? ''))) {
+
+			//add multi-lingual support
+			$language = new text;
+			$text = $language->get();
+
 			$modules_new  = '';
 			$module_found = false;
 			$x            = 0;
@@ -896,10 +901,12 @@ class modules {
 			}
 			closedir($handle);
 			if ($module_found) {
-				$msg       = "<strong>Added New Modules:</strong><br />\n";
-				$msg       .= "<ul>\n";
-				$msg       .= $modules_new;
-				$msg       .= "</ul>\n";
+				$msg = "<strong>".$text['message-added_new_modules'].":</strong><br />\n";
+				$msg .= "<div style='display: flex; justify-content: center;'>\n";
+				$msg .= "	<ul style='text-align: left; margin: 0;'>\n";
+				$msg .= $modules_new;
+				$msg .= "	</ul>\n";
+				$msg .= "</div>\n";
 				$this->msg = $msg;
 			}
 		}
@@ -1152,7 +1159,7 @@ class modules {
 							$message .= "<br><strong>" . $response['module'] . "</strong>: " . $response['message'];
 						}
 					}
-					message::add($message, 'positive', 7000);
+					message::add($message, 'alert', 7000);
 
 				}
 			}
