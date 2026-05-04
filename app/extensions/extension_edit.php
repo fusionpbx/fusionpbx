@@ -831,12 +831,6 @@
 									$voicemail_id = $number_alias;
 								}
 
-								if (!empty($mwi_account)) {
-									$mwi_account_array = explode('@', $mwi_account);
-									$mwi_account_array[0]++;
-									$mwi_account = implode('@', $mwi_account_array);
-									unset($mwi_account_array);
-								}
 							}
 					}
 
