@@ -26,17 +26,19 @@
 
 /**
  * services class
- *
- * @method null delete
- * @method null toggle
- * @method null copy
  */
 class services {
 
 	/**
-	 * declare constant variables
+	 * The name of the application, used for permissions and other references.
+	 * @var string
 	 */
 	const app_name = 'services';
+
+	/**
+	 * The UUID of the application, used for permissions and other references.
+	 * @var string
+	 */
 	const app_uuid = '540c3ec2-4f0c-467f-a09d-d644439c96f2';
 
 	/**
@@ -47,13 +49,39 @@ class services {
 	private $database;
 
 	/**
-	 * declare private variables
+	 * Name of the service
+	 * @var string
 	 */
 	private $name;
+
+	/**
+	 * Name of the table in the database
+	 * @var string
+	 */
 	private $table;
+
+	/**
+	 * Name of the field used to toggle the state of the record
+	 * @var string
+	 */
 	private $toggle_field;
+
+	/**
+	 * Values used to toggle the state of the record
+	 * @var array
+	 */
 	private $toggle_values;
+
+	/**
+	 * Name of the field used for the description of the record
+	 * @var string
+	 */
 	private $description_field;
+
+	/**
+	 * Path of the services page for redirection after actions
+	 * @var string
+	 */
 	private $location;
 
 	/**
@@ -74,16 +102,6 @@ class services {
 		$this->toggle_values = ['true','false'];
 		$this->description_field = 'service_description';
 		$this->location = 'services.php';
-	}
-
-	/**
-	 * called when there are no references to a particular object
-	 * unset the variables used in the class
-	 */
-	public function __destruct() {
-		foreach ($this as $key => $value) {
-			unset($this->$key);
-		}
 	}
 
 	/**
@@ -115,6 +133,7 @@ class services {
 
 		// Delete multiple records
 		if (is_array($records) && @sizeof($records) != 0) {
+			$array = [];
 			// Build the delete array
 			$x = 0;
 			foreach ($records as $record) {
@@ -191,6 +210,7 @@ class services {
 			}
 
 			// Build the update array
+			$array = [];
 			$x = 0;
 			foreach($states as $uuid => $state) {
 				// Create the array
@@ -290,9 +310,12 @@ class services {
 	 * This function iterates through all service files found in the application's
 	 * core and app directories, and builds an array of the services
 	 *
+	 * @param bool $details Whether to include details about the service status (default: false)
+	 * @param string $source The source to retrieve services from, either 'database' or 'files' (default: 'database')
+	 *
 	 * @return array Return a list of services with name
 	 */
-	public function get_services($details = false, $source = 'database') {
+	public function get_services($details = false, $source = 'database'): array {
 		$services = [];
 
 		if ($source == 'files') {
@@ -305,6 +328,7 @@ class services {
 			$services = [];
 			if (stristr(PHP_OS, 'Linux')) {
 				$i = 0;
+				$service_status = [];
 				foreach($service_files as $file) {
 					// Get the service name
 					$service_name = $this->find_service_name($file);
@@ -348,6 +372,7 @@ class services {
 			$services = [];
 			if (stristr(PHP_OS, 'Linux')) {
 				$i = 0;
+				$service_status = [];
 				foreach($database_services as $row) {
 					// Get the service status
 					if ($details) {
@@ -502,6 +527,8 @@ class services {
 	 * core and app directories, copies each one to /etc/systemd/system, reloads
 	 * the daemon, and enables the service.
 	 *
+	 * @param string $name Service name to upgrade, or 'all' to upgrade all services. (default: 'all')
+	 *
 	 * @return void No return value;
 	 */
 	public function upgrade($name = 'all') {
@@ -564,7 +591,8 @@ class services {
 	 * This function iterates over all service files, extracts the service names,
 	 * and starts each service.
 	 *
-	 * @param string $name Service name to start, or 'all' to start all services
+	 * @param string $name Service name to start, or 'all' to start all services. (default: 'all')
+	 *
 	 * @return void
 	 */
 	public function start($name = 'all') {
@@ -619,6 +647,8 @@ class services {
 	 * Restarts all services
 	 *
 	 * This function restarts all core and app services.
+	 *
+	 * @param string $name Service name to restart, or 'all' to restart all services. (default: 'all')
 	 *
 	 * @return void No return value;
 	 */
@@ -675,6 +705,8 @@ class services {
 	 *
 	 * This function iterates over all service files, extracts the service names,
 	 * and stops each service.
+	 *
+	 * @param string $name Service name to stop, or 'all' to stop all services. (default: 'all')
 	 *
 	 * @return void No return value;
 	 */
@@ -778,7 +810,7 @@ class services {
 	 * @return array An array containing information about the process's status,
 	 *               including whether it's status, its PID, and how long it's been running.
 	 */
-	public function is_running(string $name) {
+	public function is_running(string $name): array {
 		$name = escapeshellarg($name);
 		$command = "ps -aux | grep $name | grep -v grep | awk '{print \$2}' | head -n 1";
 		$pid = trim(shell_exec($command ?? ''));
@@ -805,7 +837,7 @@ class services {
 	 *
 	 * @return string Formatted time duration string in human-readable format.
 	 */
-	public function format_etime($etime) {
+	public function format_etime($etime): string {
 		// Format: [[dd-]hh:]mm:ss
 		if (empty($etime)) return '-';
 
