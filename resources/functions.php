@@ -18,7 +18,7 @@
 
   The Initial Developer of the Original Code is
   Mark J Crane <markjcrane@fusionpbx.com>
-  Portions created by the Initial Developer are Copyright (C) 2008-2025
+  Portions created by the Initial Developer are Copyright (C) 2008-2026
   the Initial Developer. All Rights Reserved.
 
   Contributor(s):
@@ -648,6 +648,7 @@ if (!function_exists('th_order_by')) {
 
 		// Sanitize the parameters
 		$sanitized_parameters = '';
+		$has_order_by = false;
 		if (!empty($http_get_params)) {
 			$params = $http_get_params;
 
@@ -657,9 +658,11 @@ if (!function_exists('th_order_by')) {
 
 			foreach ($params as $key => $value) {
 				if ($key == 'order_by' && !empty($value)) {
+					$has_order_by = true;
 					// Validate order by
 					$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
 				} else if ($key == 'order' && !empty($value)) {
+					$has_order_by = true;
 					// Validate order
 					if (in_array(strtolower($value), ['asc', 'desc'])) {
 						$order = strtolower($value);
@@ -690,13 +693,19 @@ if (!function_exists('th_order_by')) {
 		}
 
 		// Build the HTML
-		$html = "<th $css nowrap='nowrap'>";
+		$html = "<th $css nowrap='nowrap'>\n";
 		if (!empty($description)) {
-			$html .= "<a href='$url_params' title=\"" . escape(trim($description, ', ')) . "\">" . escape($column_title) . "</a>";
+			$html .= "	<a href='$url_params' title=\"" . escape(trim($description, ', ')) . "\">" . escape($column_title) . "\n";
 		} else {
-			$html .= "<a href='$url_params'>" . escape($column_title) . "</a>";
+			$html .= "	<a href='$url_params'>" . escape($column_title) . "\n";
 		}
-		$html .= "</th>";
+		if ($has_order_by && $order_by === $field_name && $order == "desc") {
+			$html .= "		<i class='fa-solid fa-sort-down' style='position: absolute; padding: 0 0 6px 6px;'></i>\n";
+		} else if ($has_order_by && $order_by === $field_name) {
+			$html .= "		<i class='fa-solid fa-sort-up' style='position: absolute; padding: 6px 0 0 6px;'></i>\n";
+		}
+		$html .= "	</a>\n";
+		$html .= "</th>\n";
 		return $html;
 	}
 }
