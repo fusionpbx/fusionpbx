@@ -418,7 +418,10 @@ class services {
 		unset($sql, $parameters);
 
 		// Create an array to store service names from the database
-		$service_names = array_column($database_services, 'service_name');
+		$service_names = [];
+		if (!empty($database_services)) {
+			$service_names = array_column($database_services, 'service_name');
+		}
 
 		// Add services that are not in the database
 		$service_found = false;
