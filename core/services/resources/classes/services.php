@@ -68,8 +68,6 @@ class services {
 		$this->database = $setting_array['database'] ?? database::new();
 
 		// Assign the variables
-		$this->app_name = 'services';
-		$this->app_uuid = '540c3ec2-4f0c-467f-a09d-d644439c96f2';
 		$this->name = 'service';
 		$this->table = 'services';
 		$this->toggle_field = 'service_enabled';
@@ -171,6 +169,9 @@ class services {
 
 		// Toggle the checked records
 		if (is_array($records) && @sizeof($records) != 0) {
+			$uuids = [];
+			$states = [];
+			$services = '';
 			// Get current toggle state
 			foreach($records as $record) {
 				if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
@@ -180,7 +181,7 @@ class services {
 			if (is_array($uuids) && @sizeof($uuids) != 0) {
 				$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 				$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-				$rows = $this->database->select($sql, $parameters, 'all');
+				$rows = $this->database->select($sql, null, 'all');
 				if (is_array($rows) && @sizeof($rows) != 0) {
 					foreach ($rows as $row) {
 						$states[$row['uuid']] = $row['toggle'];
@@ -243,6 +244,7 @@ class services {
 		// reloaad the checked services
 		if (is_array($records) && @sizeof($records) != 0) {
 			$services = '';
+			$uuids = [];
 			// Get current reload state
 			foreach($records as $record) {
 				if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
@@ -253,7 +255,7 @@ class services {
 			if (is_array($uuids) && @sizeof($uuids) != 0) {
 				$sql = "select service_name as name from v_".$this->table." ";
 				$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-				$rows = $this->database->select($sql, $parameters, 'all');
+				$rows = $this->database->select($sql, null, 'all');
 				if (is_array($rows) && @sizeof($rows) != 0) {
 					foreach ($rows as $row) {
 						$service_name = $row['name'];
@@ -291,6 +293,7 @@ class services {
 	 * @return array Return a list of services with name
 	 */
 	public function get_services($details = false, $source = 'database') {
+		$services = [];
 
 		if ($source == 'files') {
 			// Get the list of services
@@ -386,6 +389,11 @@ class services {
 		// Add multi-lingual support
 		$language = new text;
 		$text = $language->get();
+
+		// Check for existing table - needed for first run when the table may not exist yet during command line upgrade
+		if (!$this->database->table_exists(database::TABLE_PREFIX . $this->table)) {
+			return;
+		}
 
 		// Get the list of services
 		$service_array = $this->get_services(false, 'files');
@@ -657,7 +665,7 @@ class services {
 				system("systemctl restart ".escapeshellarg($service_name));
 			}
 			if (stristr(PHP_OS, 'BSD')) {
-				system("service ".escapeshellarg(service_name). "restart");
+				system("service ".escapeshellarg($service_name). "restart");
 			}
 		}
 	}
@@ -779,7 +787,7 @@ class services {
 			$etime = trim(shell_exec($command) ?? '');
 			return ['status' => true, 'pid' => $pid, 'etime' => $etime];
 		}
-		return ['status' => false, 'pid' => $pid, 'etime' => $etime];
+		return ['status' => false, 'pid' => $pid, 'etime' => null];
 	}
 
 	/**
