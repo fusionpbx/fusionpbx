@@ -478,7 +478,8 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 
 	// Ringing, Answer, Hangup
 	function channel_callstate_event(call) {
-		const state = call.answer_state;
+		const state = normalize_answer_state(call);
+		call.answer_state = state;
 		//update color
 		const uuid = call.unique_id;
 		//console.log(call.event_name, call.unique_id, state, call);
@@ -526,6 +527,21 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 				hangup_call(call);
 				break;
 		}
+	}
+
+	function normalize_answer_state(call) {
+		const answer_state = String(call.answer_state ?? '').toLowerCase();
+		if (answer_state !== 'ringing') {
+			return answer_state;
+		}
+
+		// The in.progress bootstrap payload is currently synthesized as "ringing"
+		// even when a call is already established. Mark those request-seeded rows as answered.
+		if (call.__from_request === true) {
+			return 'answered';
+		}
+
+		return answer_state;
 	}
 
 	function channel_execute_event(call) {
