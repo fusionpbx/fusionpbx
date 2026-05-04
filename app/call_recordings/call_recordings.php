@@ -267,7 +267,7 @@
 				echo "	</td>\n";
 			}
 			if ($show == "all" && permission_exists('call_recording_all')) {
-				echo "	<td class='overflow hide-sm-dn shrink'>".escape($row['domain_name'])."</td>\n";
+				echo "	<td class='hide-sm-dn shrink'>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td class='hide-sm-dn shrink'>".escape($row['caller_id_name'])."</td>\n";
 			echo "	<td class='shrink'>".escape(format_phone(substr($row['caller_id_number'], 0, 20)))."</td>\n";
