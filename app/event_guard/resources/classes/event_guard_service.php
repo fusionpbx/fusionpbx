@@ -40,7 +40,7 @@ class event_guard_service extends service {
 	 *
 	 * @return void
 	 */
-	protected function reload_settings(): void {
+	public function reload_settings(): void {
 		// Re-read the config file to get any possible changes
 		parent::$config->read();
 

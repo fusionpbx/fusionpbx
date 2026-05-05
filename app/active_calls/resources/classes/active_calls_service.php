@@ -229,7 +229,7 @@ class active_calls_service extends service implements websocket_service_interfac
 	 * Reloads the settings for the service so the service does not have to be restarted
 	 * @return void
 	 */
-	protected function reload_settings(): void {
+	public function reload_settings(): void {
 		// re-read the config file to get any possible changes
 		parent::$config->read();
 

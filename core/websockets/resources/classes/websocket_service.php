@@ -115,7 +115,7 @@ class websocket_service extends service {
 	 * @throws \RuntimeException
 	 * @access protected
 	 */
-	protected function reload_settings(): void {
+	public function reload_settings(): void {
 		// Initialize tracking arrays
 		$this->listeners            = [];
 		$this->clients              = [];
