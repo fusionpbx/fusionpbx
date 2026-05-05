@@ -719,11 +719,11 @@ class active_calls_service extends service implements websocket_service_interfac
 		foreach ($json_array["rows"] as $call) {
 			$message = new event_message($call, $this->event_filter);
 			$this->debug("MESSAGE: $message");
-			// adjust basic info to match an event setting the callstate to ringing
-			// so that a row can be created for it
+			// Map the switch callstate to the answer_state used by CHANNEL_CALLSTATE events
 			$message->event_name = 'CHANNEL_CALLSTATE';
-			$message->answer_state = 'ringing';
-			$message->channel_call_state = 'RINGING';
+			$switch_callstate = strtolower($call['callstate'] ?? 'ringing');
+			$message->answer_state = ($switch_callstate === 'active') ? 'answered' : $switch_callstate;
+			$message->channel_call_state = strtoupper($switch_callstate);
 			$message->unique_id = $call['uuid'];
 			$message->call_direction = $call['direction'];
 
