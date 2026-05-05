@@ -840,4 +840,12 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Fanvil V-series dial-plan rule #5 (auto-send when matched). Empty by default - set per-deployment for international (011x.T) or feature codes.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "86bc7189-e315-428f-a2a0-12b848d265d7";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_sidekey_label_length";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "7";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of characters displayed on each Side DSS key label on Fanvil V-series phones (Sidekey_Label_Length). Firmware default is 2 (very compact); 7 makes labels like \"Park 1\" or \"Office\" actually readable. Valid range 1-10.";
+		$y++;
 ?>
