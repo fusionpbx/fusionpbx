@@ -218,7 +218,7 @@
 			$ring_group_timeout_action = $_POST["ring_group_timeout_action"];
 			$ring_group_exit_key = $_POST["ring_group_exit_key"] ?? null;
 			$ring_group_call_timeout = $_POST["ring_group_call_timeout"];
-			$ring_group_caller_id_name = $_POST["ring_group_caller_id_name"];
+			$ring_group_caller_id_name = str_replace(':', '', $_POST["ring_group_caller_id_name"]);
 			$ring_group_caller_id_number = $_POST["ring_group_caller_id_number"];
 			$ring_group_cid_name_prefix = $_POST["ring_group_cid_name_prefix"] ?? null;
 			$ring_group_cid_number_prefix = $_POST["ring_group_cid_number_prefix"] ?? null;
@@ -1183,7 +1183,7 @@
 		echo "	".$text['label-caller_id_name']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='ring_group_caller_id_name' maxlength='255' value='".escape($ring_group_caller_id_name)."'>\n";
+		echo "  <input class='formfld' type='text' name='ring_group_caller_id_name' maxlength='255' value='".escape($ring_group_caller_id_name)."' onkeydown=\"if(event.key===':'){event.preventDefault();}\" oninput=\"this.value=this.value.replace(/:/g,'');\">\n";
 		echo "<br />\n";
 		echo $text['description-caller_id_name']." \n";
 		echo "</td>\n";
