@@ -36,21 +36,43 @@ class ws_client {
 		if (rid && this._pending.has(rid)) {
 			// Destructure with defaults in case they're missing
 			const {
+				service_name,
 				service,
 				topic = '',
-				status = 'ok',
-				code = 200,
+				status_string,
+				status,
+				status_code,
+				code,
 				payload = {}
 			} = message;
+			const response_service = service_name ?? service ?? '';
+			const response_status = status_string ?? status ?? 'ok';
+			const response_code = Number(status_code ?? code ?? 200);
 
 			const {resolve, reject} = this._pending.get(rid);
 			this._pending.delete(rid);
 
-			if (status === 'ok' && code >= 200 && code < 300) {
-				resolve({service, topic, payload, code, message});
+			const status_normalized = String(response_status).toLowerCase();
+			const ok_by_status = status_normalized === 'ok' || status_normalized.startsWith('ok') || status_normalized.includes('success');
+			const ok_by_code = Number.isFinite(response_code) && response_code >= 200 && response_code < 300;
+			if (ok_by_status || ok_by_code) {
+				resolve({service: response_service, topic, payload, code: response_code, message});
+
+				// Some services stream event payloads while also echoing the request_id.
+				// Dispatch to event handlers so the first streamed event is not swallowed.
+				if (topic && this._eventHandlers.has(topic)) {
+					let event_payload = payload;
+					if (payload !== null && typeof payload === 'object' && !Array.isArray(payload)) {
+						event_payload = {
+							...payload,
+							__from_request: true
+						};
+					}
+					this._dispatchEvent(response_service, event_payload);
+				}
 			} else {
-				const err = new Error(message || `Error ${code}`);
-				err.code = code;
+				const err = new Error(message || `Error ${response_code}`);
+				err.code = response_code;
 				reject(err);
 			}
 

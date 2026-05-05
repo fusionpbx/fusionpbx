@@ -178,43 +178,43 @@ echo "<script src='/app/active_calls/resources/javascript/arrows.js?v=$version'>
                 }
             }
         });
-        
+
         // Create custom tooltip element
         const tooltipEl = document.createElement('div');
         tooltipEl.id = 'chartjs-tooltip';
         tooltipEl.style.cssText = 'position: absolute; background: rgba(0, 0, 0, 0.8); color: white; padding: 6px 10px; border-radius: 4px; font-size: 12px; pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 1000;';
         document.body.appendChild(tooltipEl);
-        
+
         // Manual hover detection on canvas
         const canvas = document.getElementById('active_calls_chart');
         canvas.addEventListener('mousemove', function(e) {
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            
+
             // Get the chart's scale information
             const chart = window.active_calls_chart;
             const xScale = chart.scales.x;
             const yScale = chart.scales.y;
-            
+
             // Find closest data point
             let closestPoint = null;
             let minDistance = Infinity;
             const threshold = 15; // pixels
-            
+
             chart.data.datasets[0].data.forEach((point, index) => {
                 if (point && typeof point.x !== 'undefined' && typeof point.y !== 'undefined') {
                     const pixelX = xScale.getPixelForValue(point.x);
                     const pixelY = yScale.getPixelForValue(point.y);
                     const distance = Math.sqrt(Math.pow(x - pixelX, 2) + Math.pow(y - pixelY, 2));
-                    
+
                     if (distance < minDistance && distance < threshold) {
                         minDistance = distance;
                         closestPoint = point;
                     }
                 }
             });
-            
+
             if (closestPoint && Number.isFinite(closestPoint.y)) {
                 tooltipEl.textContent = `Active Calls: ${closestPoint.y}`;
                 tooltipEl.style.opacity = '1';
@@ -224,7 +224,7 @@ echo "<script src='/app/active_calls/resources/javascript/arrows.js?v=$version'>
                 tooltipEl.style.opacity = '0';
             }
         });
-        
+
         canvas.addEventListener('mouseleave', function() {
             tooltipEl.style.opacity = '0';
         });
@@ -329,7 +329,7 @@ if (!empty($_SESSION['user']['extension'])) {
 					console.log('Authentication required - sending credentials');
 					await active_calls_widget_client.request('authentication');
 					console.log('Authentication sent');
-					
+
 					//bind active call event to function
 					active_calls_widget_client.onEvent("CHANNEL_CALLSTATE", channel_callstate_event);
 					console.log('Sent request for calls in progress');
@@ -361,7 +361,8 @@ if (!empty($_SESSION['user']['extension'])) {
 
 	// Ringing, Answer, Hangup
 	function channel_callstate_event(call) {
-		const state = call.answer_state;
+		const state = normalize_answer_state(call);
+		call.answer_state = state;
 		//update color
 		const uuid = call.unique_id;
 		//console.log(call.event_name, call.unique_id, state, call);
@@ -409,6 +410,21 @@ if (!empty($_SESSION['user']['extension'])) {
 				hangup_call(call);
 				break;
 		}
+	}
+
+	function normalize_answer_state(call) {
+		const answer_state = String(call.answer_state ?? '').toLowerCase();
+		if (answer_state !== 'ringing') {
+			return answer_state;
+		}
+
+		// The in.progress bootstrap payload is currently synthesized as "ringing"
+		// even when a call is already established. Mark those request-seeded rows as answered.
+		if (call.__from_request === true) {
+			return 'answered';
+		}
+
+		return answer_state;
 	}
 
 	//////////////////////
