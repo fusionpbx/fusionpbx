@@ -1183,7 +1183,7 @@
 		echo "	".$text['label-caller_id_name']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='ring_group_caller_id_name' maxlength='255' value='".escape($ring_group_caller_id_name)."' onkeydown=\"if(event.key===':'){event.preventDefault();}\" oninput=\"this.value=this.value.replace(/:/g,'');\">\n";
+		echo "  <input class='formfld' type='text' name='ring_group_caller_id_name' maxlength='255' value='".escape($ring_group_caller_id_name)."'>\n";
 		echo "<br />\n";
 		echo $text['description-caller_id_name']." \n";
 		echo "</td>\n";
