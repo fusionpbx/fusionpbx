@@ -394,10 +394,18 @@ class active_calls_service extends service implements websocket_service_interfac
 			if (!empty($read)) {
 				$write = $except = [];
 				// Wait for an event and timeout at 1/3 of a second so we can re-check all connections
-				if (false === stream_select($read, $write, $except, 0, 333333)) {
-					// severe error encountered so exit
+				$select_result = @stream_select($read, $write, $except, 0, 333333);
+				if ($select_result === false) {
+					// SIGUSR1/SIGHUP can interrupt stream_select during reload
+					$last_error = error_get_last();
+					$last_error_message = $last_error['message'] ?? '';
+					$error_message = strtolower((string)$last_error_message);
+					if (str_contains($error_message, 'interrupted system call')) {
+						continue;
+					}
+
+					// real fatal select error
 					$this->running = false;
-					// Exit with non-zero exit code
 					return 1;
 				}
 
