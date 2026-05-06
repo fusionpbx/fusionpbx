@@ -582,8 +582,15 @@ class websocket_service extends service {
 			//
 			// Wait for activity on the sockets and timeout about 3 times per second
 			//
-			$result = stream_select($read, $write, $except, 0, 333333);
+			$result = @stream_select($read, $write, $except, 0, 333333);
 			if ($result === false) {
+				// Reload signals (for example SIGUSR1) can interrupt stream_select.
+				// Do not treat as a fatal socket error without checking the error message for "interrupted system call" and retrying a few times.
+				$last_error = error_get_last();
+				$error_message = strtolower((string)($last_error['message'] ?? ''));
+				if (str_contains($error_message, 'interrupted system call')) {
+					continue;
+				}
 				// Check for error status 3 times in a row
 				if (++$stream_select_tries > 3) {
 					throw new \RuntimeException("Error occured reading socket");
