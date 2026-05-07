@@ -117,8 +117,20 @@ class ws_client {
 	 * @param {object} env
 	 */
 	_dispatchEvent(message) {
+		if (message === null || typeof message !== 'object') {
+			return;
+		}
+
 		const service = message.service_name;
 		const topic = message.topic;
+		if (!topic) {
+			return;
+		}
+
+		if (message.payload === null || typeof message.payload !== 'object') {
+			return;
+		}
+
 		const handlers = this._eventHandlers.get(topic) || [];
 		for (const fn of handlers) {
 			try {

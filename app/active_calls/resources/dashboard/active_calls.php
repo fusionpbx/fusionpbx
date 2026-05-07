@@ -361,6 +361,10 @@ if (!empty($_SESSION['user']['extension'])) {
 
 	// Ringing, Answer, Hangup
 	function channel_callstate_event(call) {
+		if (call === null || typeof call !== 'object') {
+			return;
+		}
+
 		const state = normalize_answer_state(call);
 		call.answer_state = state;
 		//update color
@@ -413,6 +417,10 @@ if (!empty($_SESSION['user']['extension'])) {
 	}
 
 	function normalize_answer_state(call) {
+		if (call === null || typeof call !== 'object') {
+			return '';
+		}
+
 		const answer_state = String(call.answer_state ?? '').toLowerCase();
 		if (answer_state !== 'ringing') {
 			return answer_state;
