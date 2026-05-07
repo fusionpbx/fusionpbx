@@ -199,12 +199,35 @@ class active_calls_service extends service implements websocket_service_interfac
 		}
 
 		// Filter on extensions
+		$extensions = $subscriber->get_user_setting('extension', []);
+		$contexts = self::get_extension_contexts($extensions, $subscriber->get_domain_name());
 		return filter_chain::and_link([
 			new event_filter(self::SWITCH_EVENTS),
-			new permission_filter(self::PERMISSION_MAP, $subscriber->get_permissions()),
 			new event_key_filter(self::EVENT_KEYS),
-			new extension_filter($subscriber->get_user_setting('extension', [])),
+			new caller_context_filter($contexts),
+			new extension_filter($extensions),
+			new permission_filter(self::PERMISSION_MAP, $subscriber->get_permissions()),
 		]);
+	}
+
+	/**
+	 * Build the list of caller_context values allowed for extension-scoped users.
+	 */
+	private static function get_extension_contexts(array $extensions, string $fallback_context = ''): array {
+		$contexts = [];
+
+		foreach ($extensions as $extension) {
+			$context = trim((string)($extension['user_context'] ?? ''));
+			if ($context !== '') {
+				$contexts[$context] = true;
+			}
+		}
+
+		if (empty($contexts) && $fallback_context !== '') {
+			$contexts[$fallback_context] = true;
+		}
+
+		return array_keys($contexts);
 	}
 
 	/**
@@ -432,6 +455,7 @@ class active_calls_service extends service implements websocket_service_interfac
 		if (!$websocket_message->has_permission('call_active_view')) {
 			$this->warning("Permission 'call_active_show' not found in subscriber request");
 			websocket_client::send($this->ws_client->socket(), websocket_message::request_forbidden($websocket_message->request_id, SERVICE_NAME, $websocket_message->topic));
+			return;
 		}
 
 		// Set up the response array
@@ -448,14 +472,9 @@ class active_calls_service extends service implements websocket_service_interfac
 		$count = count($calls);
 		$this->debug("Sending calls in progress ($count)");
 
-		// Use the subscribers permissions to filter out the event keys not permitted
-		$filter = filter_chain::or_link([new permission_filter(self::PERMISSION_MAP, $websocket_message->permissions())]);
-
 		/** @var event_message $event */
 		foreach ($calls as $event) {
-			// Remove keys that are not permitted by filter
-			$event->apply_filter($filter);
-			$response['payload'] = $event;
+			$response['payload'] = $event->to_array();
 			$response['topic'] = $event->name;
 			$websocket_response = new websocket_message($response);
 			websocket_client::send($this->ws_client->socket(), $websocket_response);
@@ -739,6 +758,19 @@ class active_calls_service extends service implements websocket_service_interfac
 
 			//domain or context
 			$message->caller_context = $call['context'];
+			// Ensure in.progress payloads include presence_id so extension filters can drop non-matching calls.
+			$message->channel_presence_id = $this->build_channel_presence_id([
+				'presence_id' => $call['presence_id'] ?? '',
+				'presence_data' => $call['presence_data'] ?? '',
+				'name' => $call['name'] ?? '',
+				'caller_channel_name' => $call['name'] ?? '',
+				'context' => $call['context'] ?? '',
+				'caller_context' => $call['context'] ?? '',
+				'initial_dest' => $call['initial_dest'] ?? '',
+				'initial_cid_num' => $call['initial_cid_num'] ?? '',
+				'caller_destination_number' => $call['initial_dest'] ?? '',
+				'caller_caller_id_number' => $call['initial_cid_num'] ?? '',
+			]);
 			$message->caller_caller_id_name = $call['initial_cid_name'];
 			$message->caller_caller_id_number = $call['initial_cid_num'];
 			$message->caller_destination_number = $call['initial_dest'];
@@ -755,6 +787,57 @@ class active_calls_service extends service implements websocket_service_interfac
 		}
 
 		return $calls;
+	}
+
+	/**
+	 * Build a channel_presence_id for in.progress rows.
+	 *
+	 * Prefer switch-provided presence fields, then fall back to extension-like fields with context.
+	 */
+	private function build_channel_presence_id(array $data): string {
+		$presence_id = trim((string)($data['channel_presence_id'] ?? ''));
+		if ($presence_id !== '') {
+			return $presence_id;
+		}
+
+		$presence_id = trim((string)($data['presence_id'] ?? ''));
+		if ($presence_id !== '') {
+			return $presence_id;
+		}
+
+		$presence_data = trim((string)($data['presence_data'] ?? ''));
+		if ($presence_data !== '') {
+			return $presence_data;
+		}
+
+		$channel_name = trim((string)($data['caller_channel_name'] ?? ''));
+		if ($channel_name === '') {
+			$channel_name = trim((string)($data['name'] ?? ''));
+		}
+		if ($channel_name !== '' && preg_match('/^[^\/]+\/[^^\/]+\/([^@\/:;>]+)@([^\/:;>]+).*$/', $channel_name, $matches)) {
+			return trim($matches[1]) . '@' . trim($matches[2]);
+		}
+
+		$context = trim((string)($data['caller_context'] ?? ''));
+		if ($context === '') {
+			$context = trim((string)($data['context'] ?? ''));
+		}
+		if ($context === '') {
+			return '';
+		}
+
+		foreach (['initial_dest', 'caller_destination_number', 'initial_cid_num', 'caller_caller_id_number'] as $field) {
+			$value = trim((string)($data[$field] ?? ''));
+			if ($value === '') {
+				continue;
+			}
+			if (strpos($value, '@') !== false) {
+				return $value;
+			}
+			return $value . '@' . $context;
+		}
+
+		return '';
 	}
 
 	/**
@@ -840,6 +923,10 @@ class active_calls_service extends service implements websocket_service_interfac
 
 		// Ensure it is an event that we are looking for
 		if (active_calls_service::event_exists($event->name)) {
+			if (empty($event->channel_presence_id)) {
+				$event->channel_presence_id = $this->build_channel_presence_id($event->to_array());
+			}
+
 			// Create a message to send on websocket
 			$message = new websocket_message();
 
