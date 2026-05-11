@@ -30,6 +30,8 @@
 		echo "access denied";
 		exit;
 	}
+	$has_feature_codes_export = permission_exists('feature_codes_export');
+	$has_feature_codes_raw = permission_exists('feature_codes_raw');
 
 //function to format feature name for display
 	function format_feature_name($name) {
@@ -62,22 +64,11 @@
 	$order_by = $_GET["order_by"] ?? '';
 	$order = $_GET["order"] ?? '';
 
-//get feature codes from dialplans
-	$sql = "SELECT dialplan_uuid, dialplan_name, dialplan_number, dialplan_description ";
-	if (permission_exists('feature_codes_raw')) {
-		$sql .= ", dialplan_xml ";
-	}
-	$sql .= "FROM v_dialplans ";
-	$sql .= "WHERE dialplan_enabled = 'true' ";
-	$sql .= "AND dialplan_number LIKE '*%' ";
-	$sql .= "AND (domain_uuid = :domain_uuid OR domain_uuid IS NULL) ";
-	$sql .= order_by($order_by, $order, 'dialplan_number', 'asc');
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$features = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
+//get feature codes from dialplans and call flows
+	$features = feature_codes::fetch_features($database, $has_feature_codes_raw);
 
 //handle PDF export
-	if (isset($_GET['export']) && $_GET['export'] == 'pdf' && permission_exists('feature_codes_export')) {
+	if (isset($_GET['export']) && $_GET['export'] == 'pdf' && $has_feature_codes_export) {
 
 		//include fpdf
 		require_once "resources/fpdf/fpdf.php";
@@ -100,7 +91,7 @@
 		$pdf->SetFont('Arial', 'B', 10);
 		$pdf->SetFillColor(240, 240, 240);
 
-		if (permission_exists('feature_codes_raw')) {
+		if ($has_feature_codes_raw) {
 			$col_widths = array(30, 50, 50, 60);
 			$pdf->Cell($col_widths[0], 8, $text['label-feature_code'], 1, 0, 'L', true);
 			$pdf->Cell($col_widths[1], 8, $text['label-feature_name'], 1, 0, 'L', true);
@@ -108,18 +99,20 @@
 			$pdf->Cell($col_widths[3], 8, $text['label-raw_dialplan'], 1, 1, 'L', true);
 		}
 		else {
+			$feature_code = $row['feature_code'] ?? '';
 			$col_widths = array(30, 50, 110);
 			$pdf->Cell($col_widths[0], 8, $text['label-feature_code'], 1, 0, 'L', true);
 			$pdf->Cell($col_widths[1], 8, $text['label-feature_name'], 1, 0, 'L', true);
 			$pdf->Cell($col_widths[2], 8, $text['label-description'], 1, 1, 'L', true);
 		}
 
+		$feature_code = $row['feature_code'] ?? '';
 		//table rows
 		$pdf->SetFont('Arial', '', 9);
 		if (is_array($features) && count($features) > 0) {
 			foreach ($features as $row) {
 				//set the feature dialing code eg. *67
-				$feature_code = $row['dialplan_number'] ?? '';
+				$feature_code = $row['feature_code'] ?? '';
 
 				$dialplan_name = $row['dialplan_name'] ?? '';
 
@@ -135,12 +128,13 @@
 				//replace the ${number} variable in the description with the dialed number used to activate the dialplan
 				$feature_description = str_replace('${number}', $feature_code, $feature_description);
 
-				if (permission_exists('feature_codes_raw')) {
+				if ($has_feature_codes_raw) {
 					$raw_value = isset($row['dialplan_xml']) ? substr($row['dialplan_xml'], 0, 50) : '';
 					if (strlen($row['dialplan_xml'] ?? '') > 50) {
 						$raw_value .= '...';
 					}
 
+					echo th_order_by('feature_code', $text['label-feature_code'], $order_by, $order);
 					//calculate row height by measuring actual text width
 					$desc_width = $col_widths[2] - 2; //account for cell padding
 					$line_height = 5;
@@ -267,7 +261,7 @@
 			}
 		}
 		else {
-			$col_span = permission_exists('feature_codes_raw') ? 190 : 190;
+			$col_span = $has_feature_codes_raw ? 190 : 190;
 			$pdf->Cell($col_span, 7, $text['label-no_features'], 1, 1, 'C');
 		}
 
@@ -296,7 +290,7 @@
 	echo "	<div class='heading'><b>".$text['title-feature_codes']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 
-	if (permission_exists('feature_codes_export')) {
+	if ($has_feature_codes_export) {
 		echo button::create(array('type'=>'button','label'=>$text['button-export'],'icon'=>$settings->get('theme', 'button_icon_export'),'onclick'=>"toggle_select('export_format'); this.blur();"));
 		echo "		<select class='formfld' style='display: none; width: auto;' name='export_format' id='export_format' onchange=\"toggle_select('export_format'); window.location.href='feature_codes.php?export=' + this.value;\">\n";
 		echo "			<option value='' disabled='disabled' selected='selected'>".$text['label-format']."</option>\n";
@@ -314,10 +308,10 @@
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	echo th_order_by('dialplan_number', $text['label-feature_code'], $order_by, $order);
+	echo th_order_by('feature_code', $text['label-feature_code'], $order_by, $order);
 	echo th_order_by('dialplan_name', $text['label-feature_name'], $order_by, $order);
 	echo "	<th class='hide-sm-dn'>".$text['label-description']."</th>\n";
-	if (permission_exists('feature_codes_raw')) {
+	if ($has_feature_codes_raw) {
 		echo "	<th class='hide-sm-dn'>".$text['label-raw_dialplan']."</th>\n";
 	}
 	echo "</tr>\n";
@@ -325,7 +319,7 @@
 	if (is_array($features) && count($features) > 0) {
 		foreach ($features as $row) {
 			//set the feature dialing code eg. *67
-			$feature_code = $row['dialplan_number'] ?? '';
+			$feature_code = $row['feature_code'] ?? '';
 
 			$dialplan_name = $row['dialplan_name'] ?? '';
 
@@ -348,7 +342,7 @@
 			echo "	<td class='description hide-sm-dn'>".escape($feature_description)."</td>\n";
 
 			//when raw permissions are enabled output the raw dialplan xml (first 100 characters) column
-			if (permission_exists('feature_codes_raw')) {
+			if ($has_feature_codes_raw) {
 				$raw_display = isset($row['dialplan_xml']) ? htmlspecialchars(substr($row['dialplan_xml'], 0, 100)) : '';
 				if (isset($row['dialplan_xml']) && strlen($row['dialplan_xml']) > 100) {
 					$raw_display .= '...';
@@ -358,7 +352,7 @@
 			echo "</tr>\n";
 		}
 	} else {
-		$colspan = permission_exists('feature_codes_raw') ? 4 : 3;
+		$colspan = $has_feature_codes_raw ? 4 : 3;
 		echo "<tr class='list-row'>\n";
 		echo "	<td colspan='".$colspan."' style='text-align: center;'>".$text['label-no_features']."</td>\n";
 		echo "</tr>\n";
