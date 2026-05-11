@@ -2466,6 +2466,7 @@ $text['label-destination_delay']['en-us'] = "Destination Delay";
 $text['description-destination_delay']['en-us'] = "Default delay (seconds) applied to each imported destination.";
 $text['label-destination_timeout']['en-us'] = "Destination Timeout";
 $text['description-destination_timeout']['en-us'] = "Default timeout (seconds) applied to each imported destination.";
+$text['description-destination_prompt']['en-us'] = "When enabled, the answering party must press 1 to accept the call.";
 
 $text['title-ring_group_export']['en-us'] = "Ring Group Export";
 $text['header-ring_group_export']['en-us'] = "Ring Group Export";

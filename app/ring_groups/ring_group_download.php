@@ -70,6 +70,7 @@
 		'ring_group_description',
 	];
 	$destination_column = 'destinations';
+	$destination_prompt_column = 'destination_prompt';
 
 //define the functions
 	function array2csv(array &$array) {
@@ -112,6 +113,7 @@
 		//validate submitted columns
 			$selected_columns = [];
 			$include_destinations = false;
+			$include_prompt = false;
 			foreach ($_REQUEST["column_group"] as $column_name) {
 				if (in_array($column_name, $available_columns)) {
 					$selected_columns[] = $column_name;
@@ -119,11 +121,14 @@
 				else if ($column_name === $destination_column) {
 					$include_destinations = true;
 				}
+				else if ($column_name === $destination_prompt_column) {
+					$include_prompt = true;
+				}
 			}
 
-		if (!empty($selected_columns) || $include_destinations) {
-			//ensure ring_group_uuid is selected when destinations are included
-			if ($include_destinations && !in_array('ring_group_uuid', $selected_columns)) {
+		if (!empty($selected_columns) || $include_destinations || $include_prompt) {
+			//ensure ring_group_uuid is selected when joins are needed
+			if (($include_destinations || $include_prompt) && !in_array('ring_group_uuid', $selected_columns)) {
 				array_unshift($selected_columns, 'ring_group_uuid');
 				$prepended_uuid = true;
 			}
@@ -135,8 +140,8 @@
 			$ring_groups = $database->select($sql, $parameters, 'all');
 			unset($sql, $parameters);
 
-			if ($include_destinations && is_array($ring_groups)) {
-				$sql = "select ring_group_uuid, destination_number from v_ring_group_destinations ";
+			if (($include_destinations || $include_prompt) && is_array($ring_groups)) {
+				$sql = "select ring_group_uuid, destination_number, destination_prompt from v_ring_group_destinations ";
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$sql .= "order by ring_group_uuid, destination_number ";
 				$parameters['domain_uuid'] = $domain_uuid;
@@ -144,14 +149,23 @@
 				unset($sql, $parameters);
 
 				$dest_map = [];
+				$prompt_map = [];
 				if (is_array($rows)) {
 					foreach ($rows as $r) {
 						$dest_map[$r['ring_group_uuid']][] = $r['destination_number'];
+						if ((string)$r['destination_prompt'] === '1') {
+							$prompt_map[$r['ring_group_uuid']] = true;
+						}
 					}
 				}
 
 				foreach ($ring_groups as $i => $rg) {
-					$ring_groups[$i][$destination_column] = isset($dest_map[$rg['ring_group_uuid']]) ? implode('|', $dest_map[$rg['ring_group_uuid']]) : '';
+					if ($include_destinations) {
+						$ring_groups[$i][$destination_column] = isset($dest_map[$rg['ring_group_uuid']]) ? implode('|', $dest_map[$rg['ring_group_uuid']]) : '';
+					}
+					if ($include_prompt) {
+						$ring_groups[$i][$destination_prompt_column] = !empty($prompt_map[$rg['ring_group_uuid']]) ? 'true' : 'false';
+					}
 				}
 
 				if (!empty($prepended_uuid)) {
@@ -200,6 +214,7 @@
 
 	$all_columns = $available_columns;
 	$all_columns[] = $destination_column;
+	$all_columns[] = $destination_prompt_column;
 
 	$x = 0;
 	foreach ($all_columns as $column_name) {

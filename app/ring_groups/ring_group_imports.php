@@ -48,6 +48,7 @@
 	$destination_separator = $_POST["destination_separator"] ?? '|';
 	$destination_delay = $_POST["destination_delay"] ?? '0';
 	$destination_timeout = $_POST["destination_timeout"] ?? '30';
+	$destination_prompt = ($_POST["destination_prompt"] ?? '') === '1' ? '1' : '';
 
 //save pasted data to a csv file
 	if (isset($_POST['data']) && !empty($_POST['data'])) {
@@ -205,6 +206,7 @@
 							$array['ring_groups'][$row_id]['ring_group_destinations'][$y]['destination_number'] = $destination_number;
 							$array['ring_groups'][$row_id]['ring_group_destinations'][$y]['destination_delay'] = $destination_delay;
 							$array['ring_groups'][$row_id]['ring_group_destinations'][$y]['destination_timeout'] = $destination_timeout;
+							$array['ring_groups'][$row_id]['ring_group_destinations'][$y]['destination_prompt'] = $destination_prompt;
 							$array['ring_groups'][$row_id]['ring_group_destinations'][$y]['destination_enabled'] = 'true';
 							$y++;
 						}
@@ -487,6 +489,18 @@
 			echo "	<td class='vtable' align='left'>\n";
 			echo "		<input class='formfld' type='number' name='destination_timeout' min='1' value=\"".escape($destination_timeout)."\">\n";
 			echo "		<br />".$text['description-destination_timeout']."\n";
+			echo "	</td>\n";
+			echo "</tr>\n";
+
+			//destination prompt (confirm)
+			echo "<tr>\n";
+			echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-destination_prompt']."</td>\n";
+			echo "	<td class='vtable' align='left'>\n";
+			echo "		<select class='formfld' name='destination_prompt'>\n";
+			echo "			<option value='' ".($destination_prompt === '' ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
+			echo "			<option value='1' ".($destination_prompt === '1' ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+			echo "		</select>\n";
+			echo "		<br />".$text['description-destination_prompt']."\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 
