@@ -319,39 +319,46 @@ class services {
 		$services = [];
 
 		if ($source == 'files') {
+			// Determine the search file name
+			if (stristr(PHP_OS, 'Linux')) {
+				$search_file_name = 'debian';
+			}
+			if (stristr(PHP_OS, 'FreeBSD')) {
+				$search_file_name = 'freebsd';
+			}
+
 			// Get the list of services
-			$core_files = glob(dirname(__DIR__, 4) . "/core/*/resources/service/*.service");
-			$app_files = glob(dirname(__DIR__, 4) . "/app/*/resources/service/*.service");
+			$core_files = glob(dirname(__DIR__, 4) . "/core/*/resources/service/".$search_file_name.".service");
+			$app_files = glob(dirname(__DIR__, 4) . "/app/*/resources/service/".$search_file_name.".service");
 			$service_files = array_merge($core_files, $app_files);
 
 			// Build the services array
 			$services = [];
-			if (stristr(PHP_OS, 'Linux')) {
-				$i = 0;
-				$service_status = [];
-				foreach($service_files as $file) {
-					// Get the service name
-					$service_name = $this->find_service_name($file);
 
-					// Get the service status
-					if ($details) {
-						$service_status = $this->is_running($service_name);
-					}
+			$i = 0;
+			$service_status = [];
+			foreach($service_files as $file) {
+				// Get the service name
+				$service_name = $this->find_service_name($file);
 
-					// Build the services array
-					$services[$i]['name'] = $service_name;
-					$services[$i]['file'] = $file;
-
-					// Add the service status to the array
-					if ($details) {
-						$services[$i]['pid'] = $service_status['pid'];
-						$services[$i]['status'] = $service_status['status'];
-						$services[$i]['etime'] = $service_status['etime'];
-					}
-
-					// Increment
-					$i++;
+				// Get the service status
+				if ($details) {
+					$service_status = $this->is_running($service_name);
 				}
+
+				// Build the services array
+				$services[$i]['name'] = $service_name;
+				$services[$i]['file'] = $file;
+
+				// Add the service status to the array
+				if ($details) {
+					$services[$i]['pid'] = $service_status['pid'];
+					$services[$i]['status'] = $service_status['status'];
+					$services[$i]['etime'] = $service_status['etime'];
+				}
+
+				// Increment
+				$i++;
 			}
 		}
 
@@ -370,32 +377,32 @@ class services {
 			unset($sql, $parameters);
 
 			$services = [];
-			if (stristr(PHP_OS, 'Linux')) {
-				$i = 0;
-				$service_status = [];
-				foreach($database_services as $row) {
-					// Get the service status
-					if ($details) {
-						$service_status = $this->is_running($row['service_name']);
-					}
 
-					// Build the services array
-					$services[$i]['name'] = $row['service_name'];
-					$services[$i]['file'] = $row['service_file'];
-					$services[$i]['enabled'] = $row['service_enabled'];
-					//$services[$i]['file'] = $file;
-
-					// Add the service status to the array
-					if ($details) {
-						$services[$i]['pid'] = $service_status['pid'];
-						$services[$i]['status'] = $service_status['status'];
-						$services[$i]['etime'] = $service_status['etime'];
-					}
-
-					// Increment
-					$i++;
+			$i = 0;
+			$service_status = [];
+			foreach($database_services as $row) {
+				// Get the service status
+				if ($details) {
+					$service_status = $this->is_running($row['service_name']);
 				}
+
+				// Build the services array
+				$services[$i]['name'] = $row['service_name'];
+				$services[$i]['file'] = $row['service_file'];
+				$services[$i]['enabled'] = $row['service_enabled'];
+				//$services[$i]['file'] = $file;
+
+				// Add the service status to the array
+				if ($details) {
+					$services[$i]['pid'] = $service_status['pid'];
+					$services[$i]['status'] = $service_status['status'];
+					$services[$i]['etime'] = $service_status['etime'];
+				}
+
+				// Increment
+				$i++;
 			}
+
 		}
 
 		// Return the service array
@@ -571,14 +578,20 @@ class services {
 
 			// Upgrade the service
 			if (stristr(PHP_OS, 'Linux')) {
-				system("cp " . escapeshellarg($service['file']) . " /etc/systemd/system/" . escapeshellarg($service['name']) . ".service");
+				system("cp " . escapeshellarg($service['file']) . " /etc/systemd/system/" . escapeshellarg($service_name) . ".service");
 				system("systemctl daemon-reload");
-				system("systemctl enable " . escapeshellarg($service['name']));
-				system("systemctl start " . escapeshellarg($service['name']));
+				system("systemctl enable " . escapeshellarg($service_name));
+				system("systemctl start " . escapeshellarg($service_name));
 			}
 			if (stristr(PHP_OS, 'BSD')) {
 				if ($service['enabled'] == 'true') {
-					system("service ".escapeshellarg($service['name']). "start");
+					// Install the service
+					system("cp " . $service['file'] . " /usr/local/etc/rc.d/".$service_name);
+					system("sysrc " . $service_name . "_enable=\"YES\"");
+					system("chmod 755 /usr/local/etc/rc.d/" . $service_name);
+
+					// Start the service
+					system("service ".escapeshellarg(service_name). "start");
 				}
 			}
 		}
@@ -761,13 +774,23 @@ class services {
 	 * @return string|null The service name if found, otherwise an empty string.
 	 */
 	public function find_service_name(string $file) {
-		$parsed = parse_ini_file($file);
-		$exec_cmd = $parsed['ExecStart'];
-		$parts = explode(' ', $exec_cmd);
-		$php_file = $parts[1] ?? '';
-		if (!empty($php_file)) {
-			$path_info = pathinfo($php_file);
-			return $path_info['filename'];
+		if (stristr(PHP_OS, 'Linux')) {
+			$parsed = parse_ini_file($file);
+			$exec_cmd = $parsed['ExecStart'];
+			$parts = explode(' ', $exec_cmd);
+			$php_file = $parts[1] ?? '';
+			if (!empty($php_file)) {
+				$path_info = pathinfo($php_file);
+				return $path_info['filename'];
+			}
+		}
+		if (stristr(PHP_OS, 'FreeBSD')) {
+			$service_content = file_get_contents($file);
+			if (preg_match('/^\s*name\s*=\s*["\']([^"\']+)["\']\s*$/m', $service_content, $name_matches)) {
+				if (!empty($name_matches[1])) {
+					return $name_matches[1];
+				}
+			}
 		}
 		return '';
 	}
