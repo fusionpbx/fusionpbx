@@ -65,6 +65,20 @@ class plugin_email {
 	 */
 	function email(authentication $auth, settings $settings) {
 
+		//add multi-lingual support
+		$language = new text;
+		$text     = $language->get(null, '/core/authentication');
+
+		//validate the token
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			$token = new token;
+			if (!$token->validate('login')) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: login.php');
+				exit;
+			}
+		}
+
 		//pre-process some settings
 		$theme_favicon           = $settings->get('theme', 'favicon', PROJECT_PATH . '/themes/default/favicon.ico');
 		$theme_logo              = $settings->get('theme', 'logo', PROJECT_PATH . '/themes/default/images/logo_login.png');
@@ -98,9 +112,9 @@ class plugin_email {
 		//request the username
 		if (!isset($_POST['username']) && !isset($_POST['authentication_code'])) {
 
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get(null, '/core/authentication');
+			//create token
+			$object = new token;
+			$token = $object->create('login');
 
 			//initialize a template object
 			$view               = new template();
@@ -126,6 +140,10 @@ class plugin_email {
 
 			//messages
 			$view->assign('messages', message::html(true, '		'));
+
+			//add the token name and hash to the view
+			$view->assign("token_name", $token['name']);
+			$view->assign("token_hash", $token['hash']);
 
 			//show the views
 			$content = $view->render('username.htm');
@@ -331,12 +349,8 @@ class plugin_email {
 			$domain_name  = $domain_array[0];
 
 			//create token
-			//$object = new token;
-			//$token = $object->create('login');
-
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get(null, '/core/authentication');
+			$object = new token;
+			$token = $object->create('login');
 
 			//initialize a template object
 			$view               = new template();
@@ -364,6 +378,10 @@ class plugin_email {
 
 			//messages
 			$view->assign('messages', message::html(true, '		'));
+
+			//add the token name and hash to the view
+			$view->assign("token_name", $token['name']);
+			$view->assign("token_hash", $token['hash']);
 
 			//show the views
 			$content = $view->render('email.htm');
