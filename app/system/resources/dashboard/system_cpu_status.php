@@ -33,22 +33,12 @@
 
 	//get the CPU details
 	if (stristr(PHP_OS, 'BSD') || stristr(PHP_OS, 'Linux')) {
-
-		$result = shell_exec('ps -A -o pcpu');
-		$percent_cpu = 0;
-		foreach (explode("\n", $result) as $value) {
-			if (is_numeric($value)) { $percent_cpu = $percent_cpu + $value; }
+		$system_information = system_information::new();
+		$percent_cpu = $system_information->get_cpu_percent();
+		$cpu_cores = $system_information->get_cpu_cores();
+		if ($cpu_cores < 1) {
+			$cpu_cores = 1;
 		}
-		if (stristr(PHP_OS, 'BSD')) {
-			$result = shell_exec("dmesg | grep -i --max-count 1 CPUs | sed 's/[^0-9]*//g'");
-			$cpu_cores = trim($result);
-		}
-		if (stristr(PHP_OS, 'Linux')) {
-			$result = @trim(shell_exec("grep -P '^processor' /proc/cpuinfo"));
-			$cpu_cores = count(explode("\n", $result));
-		}
-		if ($cpu_cores > 1) { $percent_cpu = $percent_cpu / $cpu_cores; }
-		$percent_cpu = round($percent_cpu, 2);
 
 		//uptime
 		$result = shell_exec('uptime');
