@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+# PROVIDE: email_queue
+# REQUIRE: DAEMON
+# KEYWORD: shutdown
+#
+# Add the following lines to /etc/rc.conf to enable email_queue:
+# email_queue_enable:      Set it to "YES" to enable email_queue.
+#                          Default is "NO".
+#
+
+. /etc/rc.subr
+name="email_queue"
+
+rcvar=${name}_enable
+load_rc_config $name
+
+# Set defaults
+: ${email_queue_enable="NO"}
+: ${email_queue_pidfile="/var/run/email_queue.pid"}
+
+# Prepare the variables
+start_cmd=${name}_start
+stop_cmd=${name}_stop
+status_cmd=${name}_status
+pidfile=${email_queue_pidfile}
+
+# Path to the PHP script
+script="/usr/local/www/fusionpbx/app/email_queue/resources/service/email_queue.php"
+
+# Command to run the script
+command="/usr/local/bin/php"
+command_args="$script > /dev/null 2>&1"
+
+email_queue_start() {
+    echo "Starting $name..."
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        echo "$name is already running."
+    else
+        $command $command_args &
+        echo $! > "$pidfile"
+        echo "$name started."
+    fi
+}
+
+email_queue_stop() {
+    echo "Stopping $name..."
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        kill "$(cat $pidfile)"
+        rm -f "$pidfile"
+        echo "$name stopped."
+    else
+        echo "$name is not running."
+    fi
+}
+
+email_queue_status() {
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        echo "$name is running with PID $(cat $pidfile)."
+    else
+        echo "$name is not running."
+    fi
+}
+
+run_rc_command "$1"

@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+# PROVIDE: active_calls
+# REQUIRE: DAEMON
+# KEYWORD: shutdown
+#
+# Add the following lines to /etc/rc.conf to enable active_calls:
+# active_calls_enable:      Set it to "YES" to enable active_calls.
+#                          Default is "NO".
+#
+
+. /etc/rc.subr
+name="active_calls"
+
+rcvar=${name}_enable
+load_rc_config $name
+
+# Set defaults
+: ${active_calls_enable="NO"}
+: ${active_calls_pidfile="/var/run/active_calls.pid"}
+
+# Prepare the variables
+start_cmd=${name}_start
+stop_cmd=${name}_stop
+status_cmd=${name}_status
+pidfile=${active_calls_pidfile}
+
+# Path to the PHP script
+script="/usr/local/www/fusionpbx/app/active_calls/resources/service/active_calls.php"
+
+# Command to run the script
+command="/usr/local/bin/php"
+command_args="$script > /dev/null 2>&1"
+
+active_calls_start() {
+    echo "Starting $name..."
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        echo "$name is already running."
+    else
+        $command $command_args &
+        echo $! > "$pidfile"
+        echo "$name started."
+    fi
+}
+
+active_calls_stop() {
+    echo "Stopping $name..."
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        kill "$(cat $pidfile)"
+        rm -f "$pidfile"
+        echo "$name stopped."
+    else
+        echo "$name is not running."
+    fi
+}
+
+active_calls_status() {
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        echo "$name is running with PID $(cat $pidfile)."
+    else
+        echo "$name is not running."
+    fi
+}
+
+run_rc_command "$1"
