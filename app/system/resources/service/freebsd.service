@@ -26,7 +26,7 @@ status_cmd=${name}_status
 pidfile=${system_status_pidfile}
 
 # Path to the PHP script
-script="/usr/local/www/fusionpbx/app/system_status/resources/service/system_status.php"
+script="/usr/local/www/fusionpbx/app/system/resources/service/system_status.php"
 
 # Command to run the script
 command="/usr/local/bin/php"
