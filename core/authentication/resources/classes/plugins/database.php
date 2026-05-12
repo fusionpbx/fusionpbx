@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2026
+	Portions created by the Initial Developer are Copyright (C) 2008-2025
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -54,6 +54,10 @@ class plugin_database {
 	 * @return array [authorized] => true or false
 	 */
 	function database(authentication $auth, settings $settings) {
+
+		//add multi-lingual support
+		$language = new text;
+		$text     = $language->get(null, '/core/authentication');
 
 		//pre-process some settings
 		$theme_favicon             = $settings->get('theme', 'favicon', PROJECT_PATH . '/themes/default/favicon.ico');
@@ -97,12 +101,8 @@ class plugin_database {
 			$domain_name  = $domain_array[0];
 
 			//create token
-			//$object = new token;
-			//$token = $object->create('login');
-
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get(null, '/core/authentication');
+			$object = new token;
+			$token = $object->create('login');
 
 			//initialize a template object
 			$view               = new template();
@@ -164,8 +164,8 @@ class plugin_database {
 			$view->assign('messages', message::html(true, '		'));
 
 			//add the token name and hash to the view
-			//$view->assign("token_name", $token['name']);
-			//$view->assign("token_hash", $token['hash']);
+			$view->assign("token_name", $token['name']);
+			$view->assign("token_hash", $token['hash']);
 
 			//show the views
 			$content = $view->render('login.htm');
@@ -174,12 +174,12 @@ class plugin_database {
 		}
 
 		//validate the token
-		//$token = new token;
-		//if (!$token->validate($_SERVER['PHP_SELF'])) {
-		//	message::add($text['message-invalid_token'],'negative');
-		//	header('Location: domains.php');
-		//	exit;
-		//}
+		$token = new token;
+		if (!$token->validate('login')) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: login.php');
+			exit;
+		}
 
 		//add the authentication details
 		if (isset($_REQUEST["username"])) {
