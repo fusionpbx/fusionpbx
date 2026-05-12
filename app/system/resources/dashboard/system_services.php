@@ -100,7 +100,6 @@
 
 	$files = glob(PROJECT_ROOT . '/*/*/resources/service/*.service');
 	$services = [];
-	$total_running = 0;
 
 	// Group files by module directory so debian/freebsd variants are counted once.
 	$grouped_service_files = [];
@@ -129,7 +128,6 @@
 					$info = $system->is_running($extra);
 					$info['label'] = $service_labels[$extra] ?? ucwords($extra);
 					$services[$extra] = $info;
-					if ($info['running']) $total_running++;
 				}
 			}
 		}
@@ -137,6 +135,9 @@
 
 //track total installed services for charts
 	$total_services = count($services);
+	$total_running = count(array_filter($services, function($service) {
+		return !empty($service['running']);
+	}));
 
 //convert to a key
 	$widget_key = str_replace(' ', '_', strtolower($widget_name));
