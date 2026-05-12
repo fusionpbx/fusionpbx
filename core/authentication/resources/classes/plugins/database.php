@@ -154,7 +154,7 @@ class plugin_database {
 
 			//assign user to the template
 			if (!empty($_SESSION['username'])) {
-				$view->assign("username", $_SESSION['username']);
+				$view->assign("username", escape($_SESSION['username']));
 			}
 
 			//messages
