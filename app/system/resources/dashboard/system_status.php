@@ -32,22 +32,17 @@
 
 //get the CPU details
 	if (stristr(PHP_OS, 'BSD') || stristr(PHP_OS, 'Linux')) {
-
-		$result = shell_exec('ps -A -o pcpu');
-		$percent_cpu = 0;
-		foreach (explode("\n", $result) as $value) {
-			if (is_numeric($value)) { $percent_cpu = $percent_cpu + $value; }
+		$system_information = system_information::new();
+		$percent_cpu = $system_information->get_cpu_percent();
+		$cpu_percent_per_core = $system_information->get_cpu_percent_per_core();
+		if (is_array($cpu_percent_per_core) && count($cpu_percent_per_core) > 0) {
+			$percent_cpu = array_sum($cpu_percent_per_core) / count($cpu_percent_per_core);
 		}
-		if (stristr(PHP_OS, 'BSD')) {
-			$result = shell_exec("dmesg | grep -i --max-count 1 CPUs | sed 's/[^0-9]*//g'");
-			$cpu_cores = trim($result);
+		$percent_cpu = round(max(0, min(100, (float) $percent_cpu)), 2);
+		$cpu_cores = $system_information->get_cpu_cores();
+		if ($cpu_cores < 1) {
+			$cpu_cores = 1;
 		}
-		if (stristr(PHP_OS, 'Linux')) {
-			$result = @trim(shell_exec("grep -P '^processor' /proc/cpuinfo"));
-			$cpu_cores = count(explode("\n", $result));
-		}
-		if ($cpu_cores > 1) { $percent_cpu = $percent_cpu / $cpu_cores; }
-		$percent_cpu = round($percent_cpu, 2);
 
 		//uptime
 		$result = shell_exec('uptime');
@@ -99,6 +94,15 @@
 
 						// call the update_system_cpu_status function when a cpu usage event occurs
 						system_status_client.onEvent('<?php echo system_dashboard_service::CPU_STATUS_TOPIC; ?>', update_system_cpu_status);
+
+						// Request immediate cpu status so the widget doesn't wait for the next timer tick.
+						const response = await system_status_client.request(
+							'<?php echo system_dashboard_service::get_service_name(); ?>',
+							'<?php echo system_dashboard_service::CPU_STATUS_TOPIC; ?>'
+						);
+						if (response?.payload) {
+							update_system_cpu_status(response.payload);
+						}
 					} catch (err) {
 						console.error("WS setup failed: ", err);
 						return;
@@ -115,10 +119,23 @@
 
 				if (!progress) return;
 
-				// Update progress bar
-				cpu_percent = Math.round(payload.cpu_status.total);
-				progress.style.width = `${cpu_percent}%`;
-				progress.innerHTML = `${cpu_percent}%`;
+				const cores = payload?.cpu_status?.per_core;
+				const total = Number(payload?.cpu_status?.total);
+				let cpuPercent = Number.isFinite(total) ? total : 0;
+
+				// Prefer per-core average because it matches the realtime CPU chart behavior.
+				if (Array.isArray(cores) && cores.length > 0) {
+					const numeric = cores
+						.map(v => Number(v))
+						.filter(v => Number.isFinite(v));
+					if (numeric.length > 0) {
+						cpuPercent = numeric.reduce((a, b) => a + b, 0) / numeric.length;
+					}
+				}
+
+				cpuPercent = Math.max(0, Math.min(100, Math.round(cpuPercent)));
+				progress.style.width = `${cpuPercent}%`;
+				progress.innerHTML = `${cpuPercent}%`;
 			}
 
 			connect_system_cpu_status_websocket();

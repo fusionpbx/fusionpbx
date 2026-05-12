@@ -32,6 +32,72 @@
 class linux_system_information extends system_information {
 
 	/**
+	 * Selects the preferred service definition file for Linux.
+	 *
+	 * @param array $module_files Service definition files for a module.
+	 *
+	 * @return string|null Preferred file path.
+	 */
+	protected function select_preferred_service_file(array $module_files): ?string {
+		$selected_file = $module_files[0] ?? null;
+		if ($selected_file === null) {
+			return null;
+		}
+
+		foreach ($module_files as $candidate) {
+			if (strpos(basename($candidate), 'debian') !== false) {
+				$selected_file = $candidate;
+				break;
+			}
+		}
+
+		return $selected_file;
+	}
+
+	/**
+	 * Retrieves a Linux service identifier from a systemd service definition.
+	 *
+	 * @param string $file Path to the service file.
+	 *
+	 * @return string Service identifier, or empty string if not found.
+	 */
+	protected function get_service_identifier(string $file): string {
+		if (!file_exists($file)) {
+			return '';
+		}
+
+		$content = file_get_contents($file);
+		if ($content === false) {
+			return '';
+		}
+
+		if (preg_match('/^ExecStart\s*=\s*.*?\s+([^\s]+\.php)\s*$/mi', $content, $matches)) {
+			return basename($matches[1], '.php');
+		}
+
+		return '';
+	}
+
+	/**
+	 * Checks if a process with the given name is currently running on Linux.
+	 *
+	 * @param string $name The name of the process to check for.
+	 *
+	 * @return array Process status including running flag, PID, and elapsed time.
+	 */
+	public function is_running(string $name): array {
+		$name = trim($name);
+		$safe_name = escapeshellarg($name);
+		$pid = trim((string)shell_exec("ps -aux | grep $safe_name | grep -v grep | awk '{print \$2}' | head -n 1"));
+		if ($pid !== '' && preg_match('/^\d+$/', $pid)) {
+			$etime = trim((string)shell_exec("ps -p $pid -o etime= | tr -d '\n'"));
+			return ['running' => true, 'pid' => $pid, 'etime' => $etime];
+		}
+
+		return ['running' => false, 'pid' => null, 'etime' => null];
+	}
+
+	/**
 	 * Returns the number of CPU cores available on the system.
 	 *
 	 * This method executes a shell command to parse the /proc/cpuinfo file and counts the number of processor entries found.
