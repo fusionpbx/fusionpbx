@@ -358,7 +358,7 @@ class plugin_email {
 			$view->assign("button_verify", $text['label-verify']);
 			$view->assign("message_delay", $theme_message_delay);
 			if (!empty($_SESSION['username'])) {
-				$view->assign("username", $_SESSION['username']);
+				$view->assign("username", escape($_SESSION['username']));
 				$view->assign("button_cancel", $text['button-cancel']);
 			}
 
