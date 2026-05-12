@@ -30,14 +30,14 @@ script="/usr/local/www/fusionpbx/app/websockets/resources/service/websockets.php
 
 # Command to run the script
 command="/usr/local/bin/php"
-command_args="$script > /dev/null 2>&1"
 
 websockets_start() {
     echo "Starting $name..."
     if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
         echo "$name is already running."
     else
-        $command $command_args &
+        # Fully detach from parent shell to prevent 'service' from blocking
+        nohup $command $script </dev/null >/dev/null 2>&1 &
         echo $! > "$pidfile"
         echo "$name started."
     fi
