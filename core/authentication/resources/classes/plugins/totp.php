@@ -237,7 +237,7 @@ class plugin_totp {
 			$view->assign("favicon", $theme_favicon);
 			$view->assign("background_video", $theme_background_video);
 			if (!empty($_SESSION['username'])) {
-				$view->assign("username", $_SESSION['username']);
+				$view->assign("username", escape($_SESSION['username']));
 				$view->assign("button_cancel", $text['button-cancel']);
 			}
 
