@@ -572,8 +572,8 @@ class services {
 			$service_name = preg_replace('/[^a-zA-Z0-9_-]/', '', $service['name']);
 
 			// Output to the console
-			if (PHP_SAPI === 'cli') {
-				echo "	".$service_name."\n";
+			if (PHP_SAPI === 'cli' && stristr(PHP_OS, 'Linux')) {
+				echo $service_name."\n";
 			}
 
 			// Upgrade the service
@@ -642,8 +642,8 @@ class services {
 			$service_name = preg_replace('/[^a-zA-Z0-9_-]/', '', $service['name']);
 
 			// Output to the console
-			if (PHP_SAPI === 'cli') {
-				echo "	".$service_name."\n";
+			if (PHP_SAPI === 'cli' && stristr(PHP_OS, 'Linux')) {
+				echo $service_name."\n";
 			}
 
 			// Run the start command
@@ -699,8 +699,8 @@ class services {
 			$service_name = preg_replace('/[^a-zA-Z0-9_-]/', '', $service['name']);
 
 			// Output to the console
-			if (PHP_SAPI === 'cli') {
-				echo "	".$service_name."\n";
+			if (PHP_SAPI === 'cli' && stristr(PHP_OS, 'Linux')) {
+				echo $service_name."\n";
 			}
 
 			// Run the restart command
@@ -752,8 +752,8 @@ class services {
 			$service_name = preg_replace('/[^a-zA-Z0-9_-]/', '', $service['name']);
 
 			// Output to the console
-			if (PHP_SAPI === 'cli') {
-				echo "	".$service_name."\n";
+			if (PHP_SAPI === 'cli' && stristr(PHP_OS, 'Linux')) {
+				echo $service_name."\n";
 			}
 
 			// Run the stop command
