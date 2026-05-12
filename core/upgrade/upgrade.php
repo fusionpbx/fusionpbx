@@ -85,7 +85,7 @@
 			system('mkdir -p '.$config_path);
 		}
 		else {
-			echo "config directory not found\n";
+			echo "Config directory not found\n";
 			exit;
 		}
 
@@ -236,7 +236,7 @@
 		$response = $schema->upgrade($format ?? '');
 		if ($display_type === 'text') {
 			foreach(explode("\n", $response) as $row) {
-				echo "        ".trim($row)."\n";
+				echo trim($row)."\n";
 			}
 		}
 	}
@@ -328,7 +328,7 @@
 			echo "Menu List\n";
 			foreach ($menus as $row) {
 				if (!empty($row) && sizeof($row) != 0) {
-					echo "  ".$row["menu_name"]."\n";
+					echo $row["menu_name"]."\n";
 				}
 			}
 			echo "\n";
@@ -424,7 +424,7 @@
 			$response = $schema->upgrade("text");
 			if ($display_type === 'text') {
 				foreach(explode("\n", $response) as $row) {
-					echo "        ".trim($row)."\n";
+					echo trim($row)."\n";
 				}
 			}
 
@@ -545,7 +545,7 @@
 			$project_root = dirname(__DIR__, 1);
 
 			//show the response
-			echo " $application\n";
+			echo "$application\n";
 
 			//pull the changes using git
 			$git_result = git_pull($repo);
@@ -666,7 +666,9 @@ function upgrade_services($text, settings $settings) {
 			// Sanitize the service name
 			$service_name = preg_replace('/[^a-zA-Z0-9_]/', '', $service_name);
 			// Send the service name to the console
-			echo "	Name: ".$service_name."\n";
+			if (stristr(PHP_OS, 'Linux')) {
+				echo "Name: ".$service_name."\n";
+			}
 			// Install and start the service
 			if (stristr(PHP_OS, 'Linux')) {
 				system("cp " . escapeshellarg($file) . " /etc/systemd/system/" . escapeshellarg($service_name) . ".service");
@@ -717,7 +719,9 @@ function stop_services($text, settings $settings) {
 		 	// Sanitize the service name
 		 	$service_name = preg_replace('/[^a-zA-Z0-9_]/', '', $service_name);
 		 	// Send the service name to the console
-		 	echo "	Name: " . $service_name . "\n";
+			if (stristr(PHP_OS, 'Linux')) {
+		 		echo "Name: " . $service_name . "\n";
+			}
 		 	// Stop the service
 			if (stristr(PHP_OS, 'Linux')) {
 		 		system("systemctl stop " . $service_name);
@@ -761,7 +765,9 @@ function restart_services($text, settings $settings) {
 		 	// Sanitize the service name
 		 	$service_name = preg_replace('/[^a-zA-Z0-9_]/', '', $service_name);
 		 	// Send the service name to the console
-			echo "	Name: ".$service_name."\n";
+			if (stristr(PHP_OS, 'Linux')) {
+				echo "Name: ".$service_name."\n";
+			}
 			// Restart the service
 			if (stristr(PHP_OS, 'Linux')) {
 				system("systemctl restart ".$service_name);
