@@ -30,8 +30,6 @@
 		echo "access denied";
 		exit;
 	}
-	$has_feature_codes_export = permission_exists('feature_codes_export');
-	$has_feature_codes_raw = permission_exists('feature_codes_raw');
 
 //function to format feature name for display
 	function format_feature_name($name) {
@@ -65,10 +63,10 @@
 	$order = $_GET["order"] ?? '';
 
 //get feature codes from dialplans and call flows
-	$features = feature_codes::fetch_features($database, $has_feature_codes_raw);
+	$features = feature_codes::fetch_features($database, permission_exists('feature_codes_raw'));
 
 //handle PDF export
-	if (isset($_GET['export']) && $_GET['export'] == 'pdf' && $has_feature_codes_export) {
+	if (isset($_GET['export']) && $_GET['export'] == 'pdf' && permission_exists('feature_codes_export')) {
 
 		//include fpdf
 		require_once "resources/fpdf/fpdf.php";
@@ -91,7 +89,7 @@
 		$pdf->SetFont('Arial', 'B', 10);
 		$pdf->SetFillColor(240, 240, 240);
 
-		if ($has_feature_codes_raw) {
+		if (permission_exists('feature_codes_raw')) {
 			$col_widths = array(30, 50, 50, 60);
 			$pdf->Cell($col_widths[0], 8, $text['label-feature_code'], 1, 0, 'L', true);
 			$pdf->Cell($col_widths[1], 8, $text['label-feature_name'], 1, 0, 'L', true);
@@ -128,7 +126,7 @@
 				//replace the ${number} variable in the description with the dialed number used to activate the dialplan
 				$feature_description = str_replace('${number}', $feature_code, $feature_description);
 
-				if ($has_feature_codes_raw) {
+				if (permission_exists('feature_codes_raw')) {
 					$raw_value = isset($row['dialplan_xml']) ? substr($row['dialplan_xml'], 0, 50) : '';
 					if (strlen($row['dialplan_xml'] ?? '') > 50) {
 						$raw_value .= '...';
@@ -261,7 +259,7 @@
 			}
 		}
 		else {
-			$col_span = $has_feature_codes_raw ? 190 : 190;
+			$col_span = permission_exists('feature_codes_raw') ? 190 : 190;
 			$pdf->Cell($col_span, 7, $text['label-no_features'], 1, 1, 'C');
 		}
 
@@ -290,7 +288,7 @@
 	echo "	<div class='heading'><b>".$text['title-feature_codes']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 
-	if ($has_feature_codes_export) {
+	if (permission_exists('feature_codes_export')) {
 		echo button::create(array('type'=>'button','label'=>$text['button-export'],'icon'=>$settings->get('theme', 'button_icon_export'),'onclick'=>"toggle_select('export_format'); this.blur();"));
 		echo "		<select class='formfld' style='display: none; width: auto;' name='export_format' id='export_format' onchange=\"toggle_select('export_format'); window.location.href='feature_codes.php?export=' + this.value;\">\n";
 		echo "			<option value='' disabled='disabled' selected='selected'>".$text['label-format']."</option>\n";
@@ -311,7 +309,7 @@
 	echo th_order_by('feature_code', $text['label-feature_code'], $order_by, $order);
 	echo th_order_by('dialplan_name', $text['label-feature_name'], $order_by, $order);
 	echo "	<th class='hide-sm-dn'>".$text['label-description']."</th>\n";
-	if ($has_feature_codes_raw) {
+	if (permission_exists('feature_codes_raw')) {
 		echo "	<th class='hide-sm-dn'>".$text['label-raw_dialplan']."</th>\n";
 	}
 	echo "</tr>\n";
@@ -342,7 +340,7 @@
 			echo "	<td class='description hide-sm-dn'>".escape($feature_description)."</td>\n";
 
 			//when raw permissions are enabled output the raw dialplan xml (first 100 characters) column
-			if ($has_feature_codes_raw) {
+			if (permission_exists('feature_codes_raw')) {
 				$raw_display = isset($row['dialplan_xml']) ? htmlspecialchars(substr($row['dialplan_xml'], 0, 100)) : '';
 				if (isset($row['dialplan_xml']) && strlen($row['dialplan_xml']) > 100) {
 					$raw_display .= '...';
@@ -352,7 +350,7 @@
 			echo "</tr>\n";
 		}
 	} else {
-		$colspan = $has_feature_codes_raw ? 4 : 3;
+		$colspan = permission_exists('feature_codes_raw') ? 4 : 3;
 		echo "<tr class='list-row'>\n";
 		echo "	<td colspan='".$colspan."' style='text-align: center;'>".$text['label-no_features']."</td>\n";
 		echo "</tr>\n";
