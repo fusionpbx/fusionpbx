@@ -1031,11 +1031,12 @@ class database {
 	 * @depends connect()
 	 */
 	public function table_exists(string $table_name) {
-		// Add a prefix if it is not there
-		if (!str_starts_with($table_name, self::TABLE_PREFIX)) {
+		// Only add prefix if it's not already prefixed AND prefix is not empty
+		if (!empty(self::TABLE_PREFIX) && !str_starts_with($table_name, self::TABLE_PREFIX)) {
 			$table_name = self::TABLE_PREFIX . $table_name;
 		}
 
+		// Check to see if the table was sanitized
 		if (self::sanitize($table_name) != $table_name) {
 			trigger_error('Table Name must be sanitized', E_USER_WARNING);
 			return false;
