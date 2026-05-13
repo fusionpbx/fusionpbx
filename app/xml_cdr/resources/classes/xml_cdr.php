@@ -2428,21 +2428,21 @@ class xml_cdr {
 			$xml_cdr_retention_days = $domain_settings->get('cdr', 'database_retention_days', '');
 
 			//get the retention days for xml cdr flow table
-			if ($database->table_exists('xml_cdr_flow')) {
+			if ($database->table_exists(database::TABLE_PREFIX . 'xml_cdr_flow')) {
 				$xml_cdr_flow_retention_days = $domain_settings->get('cdr', 'flow_database_retention_days', $xml_cdr_retention_days);
 			} else {
 				$xml_cdr_flow_retention_days = null;
 			}
 
 			//get the retention days for xml cdr json table
-			if ($database->table_exists('xml_cdr_json')) {
+			if ($database->table_exists(database::TABLE_PREFIX . 'xml_cdr_json')) {
 				$xml_cdr_json_retention_days = $domain_settings->get('cdr', 'json_database_retention_days', $xml_cdr_retention_days);
 			} else {
 				$xml_cdr_json_retention_days = null;
 			}
 
 			//get the retention days for xml cdr logs table
-			if ($database->table_exists('xml_cdr_logs')) {
+			if ($database->table_exists(database::TABLE_PREFIX . 'xml_cdr_logs')) {
 				$xml_cdr_logs_retention_days = $domain_settings->get('cdr', 'logs_database_retention_days', $xml_cdr_retention_days);
 			} else {
 				$xml_cdr_logs_retention_days = null;
@@ -2467,7 +2467,7 @@ class xml_cdr {
 				//clear out old xml_cdr_flow records
 				if (!empty($xml_cdr_flow_retention_days)) {
 					$sql = "delete from v_xml_cdr_flow WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_flow_retention_days} days'"
-						. " and domain_uuid = '{$domain_uuid}";
+						. " and domain_uuid = '{$domain_uuid}'";
 					$database->execute($sql);
 					$code = $database->message['code'] ?? 0;
 					//record result
@@ -2482,7 +2482,7 @@ class xml_cdr {
 				//clear out old xml_cdr_json records
 				if (!empty($xml_cdr_json_retention_days)) {
 					$sql = "DELETE FROM v_xml_cdr_json WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_json_retention_days} days'"
-						. " and domain_uuid = '{$domain_uuid}";
+						. " and domain_uuid = '{$domain_uuid}'";
 					$database->execute($sql);
 					$code = $database->message['code'] ?? 0;
 					//record result
