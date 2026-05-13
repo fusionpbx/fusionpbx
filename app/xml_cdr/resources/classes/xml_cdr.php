@@ -286,7 +286,7 @@ class xml_cdr {
 		if (!empty($this->settings->get('cdr', 'field'))) {
 			foreach ($this->settings->get('cdr', 'field') as $field) {
 				$fields = explode(',', $field);
-				$field_name     = end($fields);
+				$field_name = end($fields);
 				$this->fields[] = $field_name;
 			}
 		}
