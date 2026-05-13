@@ -62,19 +62,8 @@
 	$order_by = $_GET["order_by"] ?? '';
 	$order = $_GET["order"] ?? '';
 
-//get feature codes from dialplans
-	$sql = "SELECT dialplan_uuid, dialplan_name, dialplan_number, dialplan_description ";
-	if (permission_exists('feature_codes_raw')) {
-		$sql .= ", dialplan_xml ";
-	}
-	$sql .= "FROM v_dialplans ";
-	$sql .= "WHERE dialplan_enabled = 'true' ";
-	$sql .= "AND dialplan_number LIKE '*%' ";
-	$sql .= "AND (domain_uuid = :domain_uuid OR domain_uuid IS NULL) ";
-	$sql .= order_by($order_by, $order, 'dialplan_number', 'asc');
-	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$features = $database->select($sql, $parameters, 'all');
-	unset($sql, $parameters);
+//get feature codes from dialplans and call flows
+	$features = feature_codes::fetch_features($database, permission_exists('feature_codes_raw'));
 
 //handle PDF export
 	if (isset($_GET['export']) && $_GET['export'] == 'pdf' && permission_exists('feature_codes_export')) {
@@ -108,18 +97,20 @@
 			$pdf->Cell($col_widths[3], 8, $text['label-raw_dialplan'], 1, 1, 'L', true);
 		}
 		else {
+			$feature_code = $row['feature_code'] ?? '';
 			$col_widths = array(30, 50, 110);
 			$pdf->Cell($col_widths[0], 8, $text['label-feature_code'], 1, 0, 'L', true);
 			$pdf->Cell($col_widths[1], 8, $text['label-feature_name'], 1, 0, 'L', true);
 			$pdf->Cell($col_widths[2], 8, $text['label-description'], 1, 1, 'L', true);
 		}
 
+		$feature_code = $row['feature_code'] ?? '';
 		//table rows
 		$pdf->SetFont('Arial', '', 9);
 		if (is_array($features) && count($features) > 0) {
 			foreach ($features as $row) {
 				//set the feature dialing code eg. *67
-				$feature_code = $row['dialplan_number'] ?? '';
+				$feature_code = $row['feature_code'] ?? '';
 
 				$dialplan_name = $row['dialplan_name'] ?? '';
 
@@ -141,6 +132,7 @@
 						$raw_value .= '...';
 					}
 
+					echo th_order_by('feature_code', $text['label-feature_code'], $order_by, $order);
 					//calculate row height by measuring actual text width
 					$desc_width = $col_widths[2] - 2; //account for cell padding
 					$line_height = 5;
@@ -314,7 +306,7 @@
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	echo th_order_by('dialplan_number', $text['label-feature_code'], $order_by, $order);
+	echo th_order_by('feature_code', $text['label-feature_code'], $order_by, $order);
 	echo th_order_by('dialplan_name', $text['label-feature_name'], $order_by, $order);
 	echo "	<th class='hide-sm-dn'>".$text['label-description']."</th>\n";
 	if (permission_exists('feature_codes_raw')) {
@@ -325,7 +317,7 @@
 	if (is_array($features) && count($features) > 0) {
 		foreach ($features as $row) {
 			//set the feature dialing code eg. *67
-			$feature_code = $row['dialplan_number'] ?? '';
+			$feature_code = $row['feature_code'] ?? '';
 
 			$dialplan_name = $row['dialplan_name'] ?? '';
 
