@@ -2299,7 +2299,7 @@ class database {
 	 *                     Second dimension in the row value as int. Third dimension is the column name.
 	 * @param bool  $transaction_save
 	 *
-	 * @return returns an array with result details
+	 * @return array|false an array with result details
 	 */
 	public function save(array &$array, bool $transaction_save = true) {
 		// prepare the values
