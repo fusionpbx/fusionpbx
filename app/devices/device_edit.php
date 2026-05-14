@@ -525,6 +525,7 @@
 					if (!empty($settings->get('provision', 'path'))) {
 						$prov = new provision(['settings' => $settings]);
 						$prov->domain_uuid = $domain_uuid;
+						$prov->device_uuid = $device_uuid;
 						$response = $prov->write();
 					}
 

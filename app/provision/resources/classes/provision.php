@@ -54,6 +54,7 @@ class provision {
 	/**
 	 * declare public variables
 	 */
+	public $device_uuid;
 	public $template_dir;
 	public $device_address;
 	public $device_template;
@@ -1521,9 +1522,11 @@ class provision {
 
 		// get the devices from database
 		$sql = 'select * from v_devices ';
-		// $sql .= "where domain_uuid = :domain_uuid ";
-		// $parameters['domain_uuid'] = $this->domain_uuid;
-		$result = $this->database->select($sql, null, 'all');
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and device_uuid = :device_uuid ";
+		$parameters['domain_uuid'] = $this->domain_uuid;
+		$parameters['device_uuid'] = $this->device_uuid;
+		$result = $this->database->select($sql, $parameters, 'all');
 
 		// process each device
 		if (is_array($result)) {
