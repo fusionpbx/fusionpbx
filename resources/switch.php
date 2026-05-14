@@ -284,6 +284,11 @@ function save_var_xml() {
 		return false;
 	}
 
+	//skip if the directory doesn't exist
+	if (!file_exists($switch_conf_dir)) {
+		return false;
+	}
+
 	//open the vars.xml file
 	$fout = fopen($switch_conf_dir."/vars.xml","w");
 
