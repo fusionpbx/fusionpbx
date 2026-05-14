@@ -137,6 +137,11 @@ class cache {
 			closelog();
 		}
 
+		//key is required return false if empty
+		if (empty($key)) {
+			return false;
+		}
+
 		//cache method memcache
 		if ($this->method === "memcache") {
 			//connect to event socket
