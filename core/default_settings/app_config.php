@@ -281,6 +281,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Location for the file cache.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "55e9def3-f8d4-4201-84b7-3b30cb4f21ab";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "cache";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "syslog";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Log cache requests to syslog.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "31b60c5f-e501-4982-893b-b56ef4ef5b56";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "log";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "enabled";
