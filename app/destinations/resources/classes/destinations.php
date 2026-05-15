@@ -400,17 +400,20 @@
 				$response .= "		<option value='' ".(!empty($placeholder) ? "selected='selected' disabled='disabled'" : null).">".(!empty($placeholder) ? $placeholder : null)."</option>\n";
 				foreach ($this->destinations as $row) {
 
+					//set variables to simplify the code
 					$name = $row['name'];
 					$label = $row['label'];
-					$destination = $row['field']['destination'] ?? '';
 
 					//add multi-lingual support
 					if (file_exists(dirname(__DIR__, 4)."/app/".$name."/app_languages.php")) {
 						$text2 = $language2->get($this->language, 'app/'.$name);
 					}
 
+					//set the group label
+					$group_label = ($text2['label-'.$name] ?? $text2['title-'.$name]);
+
 					if (!empty($row['result']['data']) && !empty($row['select_value'][$destination_type])) {
-						$response .= "		<optgroup label='".$text2['title-'.$name]."'>\n";
+						$response .= "		<optgroup label='".$group_label."'>\n";
 						$label2 = $label;
 						foreach ($row['result']['data'] as $data) {
 							$select_value = $row['select_value'][$destination_type];
@@ -530,6 +533,9 @@
 				//add the language object
 				$language2 = new text;
 
+				//pre-define the array
+				$text2 = [];
+
 				//build the destination select list in html
 				$response .= "	<select id='{$destination_id}_type' class='formfld' style='".$select_style."' onchange=\"get_destinations('".$destination_id."', '".$destination_type."', this.value);\">\n";
 				$response .= " 		<option value=''></option>\n";
@@ -547,8 +553,12 @@
 						if ($key == 'other') {
 							$text2 = $language2->get($this->language, 'app/dialplans');
 						}
+
+						//set the group label
+						$group_label = ($text2['label-'.$key] ?? $text2['title-'.$key]);
+
 						//add the application to the select list
-						$response .= "		<option id='{$singular}' class='{$key}' value='".$key."' $selected>".$text2['title-'.$key]."</option>\n";
+						$response .= "		<option id='{$singular}' class='{$key}' value='".$key."' $selected>".$group_label."</option>\n";
 					}
 				}
 				$response .= "	</select>\n";
