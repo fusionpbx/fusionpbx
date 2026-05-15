@@ -289,17 +289,21 @@ function save_var_xml() {
 		return false;
 	}
 
-	//open the vars.xml file
-	$fout = fopen($switch_conf_dir."/vars.xml","w");
+//get the hostname first before opening the file
+$hostname = trim(event_socket_request_cmd('api switchname'));
+if (empty($hostname)) {
+    $hostname = trim(gethostname());
+}
+if (empty($hostname)) {
+    return false;
+}
 
-	//get the hostname
-	$hostname = trim(event_socket_request_cmd('api switchname'));
-	if (empty($hostname)) {
-		$hostname = trim(gethostname());
-	}
-	if (empty($hostname)) {
-		return;
-	}
+//open the vars.xml file
+$fout = fopen($switch_conf_dir."/vars.xml","w");
+if ($fout === false) {
+    error_log("FusionPBX save_var_xml: Cannot write to " . $switch_conf_dir . "/vars.xml - check permissions");
+    return false;
+}
 
 	//build the xml
 	$sql = "select * from v_vars ";
