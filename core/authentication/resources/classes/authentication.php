@@ -639,7 +639,7 @@ class authentication {
 
 		//if the username
 		if (!empty($_REQUEST["username"])) {
-			$_SESSION['username'] = $_REQUEST["username"];
+			$_SESSION['username'] = trim($_REQUEST["username"]);
 		}
 
 		//set a default value for unqiue
