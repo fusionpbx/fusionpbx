@@ -289,25 +289,20 @@ function save_var_xml() {
 		return false;
 	}
 
-	//open the vars.xml file
-	$fout = fopen($switch_conf_dir."/vars.xml","w");
+	//get the server hostname
+	$hostname = gethostname();
 
-	//get the hostname
-	$hostname = trim(event_socket_request_cmd('api switchname'));
-	if (empty($hostname)) {
-		$hostname = trim(gethostname());
-	}
-	if (empty($hostname)) {
-		return;
-	}
+	//preset the variables
+	$prev_var_category = '';
+	$xml = '';
 
 	//build the xml
 	$sql = "select * from v_vars ";
 	$sql .= "where var_enabled = true ";
+	$sql .= "and (var_hostname is null or var_hostname = :hostname) ";
 	$sql .= "order by var_category, var_order asc ";
-	$variables = $database->select($sql, null, 'all');
-	$prev_var_category = '';
-	$xml = '';
+	$parameters['hostname'] = $hostname;
+	$variables = $database->select($sql, $parameters, 'all');
 	if (!empty($variables)) {
 		foreach ($variables as $row) {
 			if ($row['var_category'] != 'Provision') {
@@ -316,27 +311,24 @@ function save_var_xml() {
 				}
 				if (empty($row['var_command'])) { $row['var_command'] = 'set'; }
 				if ($row['var_category'] == 'Exec-Set') { $row['var_command'] = 'exec-set'; }
-				if (empty($row['var_hostname'])) {
-					$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
-				} elseif ($row['var_hostname'] == $hostname) {
-					$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
-				}
+				$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
 			}
 			$prev_var_category = $row['var_category'];
 		}
 	}
 	$xml .= "\n";
-	fwrite($fout, $xml);
-	unset($sql, $variables, $xml);
-	fclose($fout);
+	unset($sql, $variables);
+
+	//write the file to the file system if it fails show the error
+	if (file_put_contents($switch_conf_dir."/vars.xml", $xml) === false) {
+		echo "<pre>\n";
+		print_r(error_get_last());
+		echo "</pre>\n";
+		exit;
+	}
 
 	//apply settings
 	$_SESSION["reload_xml"] = true;
-
-	//$cmd = "api reloadxml";
-	//event_socket_request_cmd($cmd);
-	//unset($cmd);
-
 }
 
 /**
