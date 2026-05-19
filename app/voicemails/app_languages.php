@@ -2672,4 +2672,10 @@ $text['message-emails_resent']['zh-cn'] = "电子邮件已重新发送";
 $text['message-emails_resent']['ja-jp'] = "再送信メール";
 $text['message-emails_resent']['ko-kr'] = "이메일 재전송";
 
+$text['label-alternate_voicemail']['en-us'] = "Alternate Voicemail Location";
+$text['label-alternate_voicemail']['en-gb'] = "Alternate Voicemail Location";
+
+$text['description-alternate_voicemail']['en-us'] = "When enabled, callers reaching this voicemail box are routed to this destination instead of leaving a message. The original Caller ID is preserved.";
+$text['description-alternate_voicemail']['en-gb'] = "When enabled, callers reaching this voicemail box are routed to this destination instead of leaving a message. The original Caller ID is preserved.";
+
 ?>

@@ -60,6 +60,8 @@
 	$voicemail_option_digits = '';
 	$voicemail_option_description = '';
 	$voicemail_mail_to = '';
+	$alternate_voicemail_enabled = false;
+	$alternate_voicemail_destination = '';
 	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
 
 // Set variables from http GET parameters
@@ -130,6 +132,8 @@
 			$voicemail_destination = $_POST["voicemail_destination"];
 			$voicemail_enabled = $_POST["voicemail_enabled"];
 			$voicemail_description = $_POST["voicemail_description"];
+			$alternate_voicemail_enabled = filter_var($_POST["alternate_voicemail_enabled"] ?? false, FILTER_VALIDATE_BOOLEAN);
+			$alternate_voicemail_destination = $_POST["alternate_voicemail_destination"] ?? '';
 			$voicemail_tutorial = $_POST["voicemail_tutorial"];
 			$voicemail_recording_instructions = $_POST["voicemail_recording_instructions"];
 			$voicemail_recording_options = $_POST["voicemail_recording_options"];
@@ -138,6 +142,9 @@
 
 		//remove the space
 			$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
+
+		//sanitise the alternate voicemail destination — digits and * only (matches forward_*_destination)
+			$alternate_voicemail_destination = preg_replace('#[^\*0-9]#', '', $alternate_voicemail_destination);
 	}
 
 //process the data
@@ -212,6 +219,8 @@
 					}
 					$array['voicemails'][0]['voicemail_enabled'] = $voicemail_enabled;
 					$array['voicemails'][0]['voicemail_description'] = $voicemail_description;
+					$array['voicemails'][0]['alternate_voicemail_enabled'] = $alternate_voicemail_enabled ? 'true' : 'false';
+					$array['voicemails'][0]['alternate_voicemail_destination'] = $alternate_voicemail_destination;
 
 				//create permissions object
 					$p = permissions::new();
@@ -367,7 +376,9 @@
 		$sql .= "voicemail_file, ";
 		$sql .= "voicemail_local_after_email, ";
 		$sql .= "voicemail_enabled, ";
-		$sql .= "voicemail_description ";
+		$sql .= "voicemail_description, ";
+		$sql .= "alternate_voicemail_enabled, ";
+		$sql .= "alternate_voicemail_destination ";
 		$sql .= "from v_voicemails ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and voicemail_uuid = :voicemail_uuid ";
@@ -389,6 +400,8 @@
 			$voicemail_local_after_email = $row["voicemail_local_after_email"];
 			$voicemail_enabled = $row["voicemail_enabled"];
 			$voicemail_description = $row["voicemail_description"];
+			$alternate_voicemail_enabled = filter_var($row["alternate_voicemail_enabled"] ?? false, FILTER_VALIDATE_BOOLEAN);
+			$alternate_voicemail_destination = $row["alternate_voicemail_destination"] ?? '';
 		}
 		unset($sql, $parameters, $row);
 	}
@@ -851,6 +864,28 @@
 	echo "	<input class='formfld' type='text' name='voicemail_mail_to' maxlength='255' value=\"".escape($voicemail_mail_to)."\">\n";
 	echo "<br />\n";
 	echo $text['description-voicemail_mail_to']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-alternate_voicemail']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "		<select class='formfld' id='alternate_voicemail_enabled' name='alternate_voicemail_enabled'>\n";
+	echo "			<option value='true' ".($alternate_voicemail_enabled === true ? "selected='selected'" : '').">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($alternate_voicemail_enabled === false ? "selected='selected'" : '').">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+		echo "&nbsp;";
+	}
+	echo "	<input class='formfld' type='text' name='alternate_voicemail_destination' id='alternate_voicemail_destination' ".($input_toggle_style_switch ? "style='margin-top: -21px;'" : null)." maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".escape($alternate_voicemail_destination ?? '')."\">\n";
+	echo "	<br />".$text['description-alternate_voicemail']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

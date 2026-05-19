@@ -503,6 +503,61 @@
 		--valid voicemail
 			if (voicemail_uuid ~= nil) then
 
+				--check for an alternate voicemail location on this voicemail box; when
+				--enabled, divert the caller to that destination instead of leaving a
+				--message. caller id is preserved (session:transfer keeps channel vars).
+				--
+				--this is a per-voicemail-box setting (v_voicemails table) — it only
+				--fires when a call actually reaches this script with action=save, so
+				--it does NOT interfere with the dialplan's forward-on-no-answer or
+				--with call-center/ring-group/fifo no-answer handling. Those paths
+				--never enter this script in the first place if they're configured to
+				--route elsewhere before voicemail.
+				--
+				--the cc_side / ring_group_uuid / fifo_role / dialed_extension guard
+				--is kept as a safety net: if for any reason a call-center or
+				--ring-group leg lands here, we don't want a session:transfer to yank
+				--it out of the queue's control.
+					do
+						local group_signals = {
+							cc_side          = session:getVariable("cc_side"),
+							cc_queue         = session:getVariable("cc_queue"),
+							dialed_extension = session:getVariable("dialed_extension"),
+							ring_group_uuid  = session:getVariable("ring_group_uuid"),
+							fifo_role        = session:getVariable("fifo_role"),
+						};
+						local in_group_call = false;
+						for signal_name, signal_value in pairs(group_signals) do
+							if (signal_value ~= nil and signal_value ~= '') then
+								in_group_call = true;
+								freeswitch.consoleLog("notice", "[voicemail] alternate voicemail divert skipped: " .. signal_name .. "=" .. tostring(signal_value) .. " (call-center / ring-group / fifo leg)\n");
+								break;
+							end
+						end
+						if (not in_group_call) then
+							local alt_sql = [[SELECT
+								cast(alternate_voicemail_enabled as text) as alt_enabled,
+								alternate_voicemail_destination
+								FROM v_voicemails
+								WHERE voicemail_uuid = :voicemail_uuid
+								LIMIT 1]];
+							local alt_params = {voicemail_uuid = voicemail_uuid};
+							local alt_enabled = false;
+							local alt_destination = nil;
+							dbh:query(alt_sql, alt_params, function(row)
+								alt_enabled = (row["alt_enabled"] == "true");
+								alt_destination = row["alternate_voicemail_destination"];
+							end);
+							if (alt_enabled and alt_destination ~= nil and alt_destination ~= '') then
+								freeswitch.consoleLog("notice", "[voicemail] alternate voicemail location enabled — diverting caller " .. (caller_id_number or '') .. " to " .. alt_destination .. " instead of leaving a message for " .. voicemail_id .. "\n");
+								if (session ~= nil and session:ready()) then
+									session:transfer(alt_destination, "XML", context);
+								end
+								return;
+							end
+						end
+					end
+
 				--play the greeting
 					timeouts = 0;
 					play_greeting();
