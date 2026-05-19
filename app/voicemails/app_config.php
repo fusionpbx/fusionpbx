@@ -501,6 +501,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "alternate_voicemail_destination";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "When set together with alternate_voicemail_enabled, callers reaching this voicemail box are transferred to this destination before the greeting plays. Caller ID is preserved.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "alternate_voicemail_enabled";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "When true and alternate_voicemail_destination is set, the call is diverted instead of leaving a message.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_name_base64";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
