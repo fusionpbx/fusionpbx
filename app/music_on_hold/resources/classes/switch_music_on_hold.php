@@ -444,7 +444,8 @@ class switch_music_on_hold {
 
 							//delete name (category) folder, if empty
 							$name_path = dirname($stream_path);
-							if (@sizeof(scandir($name_path)) == 2) { //empty (only /.. and /. remaining)
+							$name_path_contents = @scandir($name_path);
+							if (is_array($name_path_contents) && count($name_path_contents) == 2) { //empty (only /.. and /. remaining)
 								@rmdir($name_path);
 							}
 						}

@@ -288,7 +288,17 @@
 
 				//check target folder, move uploaded file
 					if (!is_dir($stream_path)) {
-						mkdir($stream_path, 0770, true);
+						if (!@mkdir($stream_path, 0770, true)) {
+							$err = error_get_last();
+							if (stripos($err['message'] ?? '', 'read-only') !== false) {
+								message::add("Failed to create directory: the file system is read-only. Check the systemd ProtectSystem setting for PHP-FPM.", 'negative');
+							}
+							else {
+								message::add("Failed to create directory: ".($err['message'] ?? 'unknown error'), 'negative');
+							}
+							header("Location: music_on_hold.php");
+							exit;
+						}
 
 						// 14.03.22 freeswitch bug - shouldn't be needed with freeswitch 1.10.8
 			                       if (preg_match('|^(/usr/share/freeswitch/sounds/music/(.*?\._loc.*?))/|', $stream_path, $m)) {
@@ -534,6 +544,7 @@
 
 				//get the music on hold path and files
 					$stream_path = str_replace("\$\${sounds_dir}",$settings->get('switch', 'sounds') ?? '', $row['music_on_hold_path']);
+					$stream_files = [];
 					if (file_exists($stream_path)) {
 						$stream_files = array_merge(glob($stream_path.'/*.wav'), glob($stream_path.'/*.mp3'), glob($stream_path.'/*.ogg'));
 					}
