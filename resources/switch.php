@@ -321,10 +321,16 @@ function save_var_xml() {
 
 	//write the file to the file system if it fails show the error
 	if (file_put_contents($switch_conf_dir."/vars.xml", $xml) === false) {
-		echo "<pre>\n";
-		print_r(error_get_last());
-		echo "</pre>\n";
-		exit;
+		$last_error_message = error_get_last()['message'] ?? 'Failed to write to file';
+		$last_error_file = error_get_last()['file'] ?? '';
+		$last_error_line = error_get_last()['line'] ?? '';
+		if (is_cli()) {
+			echo "Error: " . $last_error_file . " (line " . $last_error_line . "): " . $last_error_message . "\n";
+			return;
+		}
+		else {
+			message::add($last_error_file . " (line " . $last_error_line . "): " . $last_error_message, 'negative');
+		}
 	}
 
 	//apply settings
