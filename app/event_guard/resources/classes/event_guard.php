@@ -34,6 +34,7 @@ class event_guard {
 	 */
 	const app_name = 'event_guard';
 	const app_uuid = 'c5b86612-1514-40cb-8e2c-3f01a8f6f637';
+	const app_category = 'switch';
 
 	/**
 	 * Set in the constructor. Must be a database object and cannot be null.
@@ -96,6 +97,15 @@ class event_guard {
 		$this->toggle_field  = '';
 		$this->toggle_values = ['block', 'pending'];
 		$this->location      = 'event_guard_logs.php';
+	}
+
+	/**
+	 * Get the category of this class.
+	 *
+	 * @return string The constant category value.
+	 */
+	public static function get_category(): string {
+		return self::app_category;
 	}
 
 	/**
