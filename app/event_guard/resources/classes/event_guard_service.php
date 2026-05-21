@@ -155,14 +155,15 @@ class event_guard_service extends service {
 
 			// Registration failed - block IP address unless they are registered
 			if (is_array($json_array) && $json_array['Event-Subclass'] == 'sofia::register_failure') {
+				// Debug info
+				$this->debug("sofia::register_failure network-ip ".$json_array['network-ip'].", to-host ".$json_array['to-host']);
+
 				// Not registered so block the address
 				$is_valid_ip = filter_var($json_array['network-ip'], FILTER_VALIDATE_IP);
 				if ($is_valid_ip && !$this->allow_access($json_array['network-ip'])) {
 					$this->block_add($json_array['network-ip'], 'sip-auth-fail', $json_array);
+					continue;
 				}
-
-				// Debug info
-				$this->debug("sofia::register_failure network-ip ".$json_array['network-ip'].", to-host ".$json_array['to-host']);
 			}
 
 			// Sendevent CUSTOM event_guard:unblock
@@ -202,17 +203,18 @@ class event_guard_service extends service {
 
 			// Registration to the IP address
 			if (is_array($json_array) && $json_array['Event-Subclass'] == 'sofia::pre_register') {
-				if (isset($json_array['network-ip'])) {
-					// Validate the IP address
-					$is_valid_ip = filter_var($json_array['network-ip'], FILTER_VALIDATE_IP);
+				if (isset($json_array['to-host'])) {
+					// Debug info
+					$this->debug("sofia::pre_register network-ip ".$json_array['network-ip'].", to-host ".$json_array['to-host']);
+
+					// Validate the to-host IP address
+					$is_valid_ip = filter_var($json_array['to-host'], FILTER_VALIDATE_IP);
 
 					// If not registered block the address
 					if ($is_valid_ip && !$this->allow_access($json_array['network-ip'])) {
 						$this->block_add($json_array['network-ip'], 'sip-auth-ip', $json_array);
+						continue;
 					}
-
-					// Debug info
-					$this->debug("sofia::pre_register network-ip ".$json_array['network-ip'].", to-host ".$json_array['to-host']);
 				}
 			}
 
