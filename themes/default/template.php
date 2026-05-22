@@ -19,7 +19,7 @@
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-tempusdominus.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-colorpicker.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/fontawesome/css/all.min.css.php'>
-	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202603110200'>
+	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202605220330'>
 {*//link to custom css file *}
 	{if !empty($settings.theme.custom_css)}
 		<link rel='stylesheet' type='text/css' href='{$settings.theme.custom_css}'>
@@ -795,7 +795,24 @@
 					var input = document.createElement('input');
 					input.type = 'text';
 					input.className = 'formfld domain-search-input';
-					input.placeholder = '{/literal}{$text.label_search_domains}{literal}...';
+					input.placeholder = '{/literal}{$text.label_search_domains}{literal}..';
+
+					var clear_button = document.createElement('button');
+					clear_button.type = 'button';
+					clear_button.className = 'domain-search-clear';
+					clear_button.innerHTML = '&times;';
+					clear_button.setAttribute('aria-label', 'Clear search');
+					picker.appendChild(clear_button);
+
+					clear_button.addEventListener('click', function(e) {
+						e.preventDefault();
+						e.stopPropagation();
+						input.value = '';
+						active_index = -1;
+						clear_button.style.display = 'none';
+						render_results();
+						input.focus();
+					});
 
 					var results = document.createElement('div');
 					results.className = 'domain-search-results';
@@ -831,6 +848,7 @@
 
 					function sync_input_to_select() {
 						input.value = get_selected_label();
+						clear_button.style.display = (input.value.trim() !== '') ? 'inline-flex' : 'none';
 					}
 
 					// Results panel is on document.body; match .formfld / theme input typography
@@ -948,6 +966,9 @@
 							}
 							results.appendChild(row);
 						}
+						// Toggle clear button visibility based on current input
+						clear_button.style.display = (input.value.trim() !== '') ? 'inline-flex' : 'none';
+
 						open_results();
 						window.requestAnimationFrame(position_results_panel);
 					}
