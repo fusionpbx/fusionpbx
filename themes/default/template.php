@@ -842,6 +842,9 @@
 							if (selected_option && selected_option.value !== '') {
 								return selected_option.text || selected_option.innerText || '';
 							}
+							if (selected_option && selected_option.value === '' && selected_option.innerText == '{/literal}{$text.label_global}{literal}') {
+								return selected_option.text || selected_option.innerText || '';
+							}
 						}
 						return '';
 					}
