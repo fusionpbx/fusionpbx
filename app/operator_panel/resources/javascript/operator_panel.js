@@ -2299,7 +2299,207 @@ function open_transfer_modal(uuid, source_ext) {
 	if (!dlg) return;
 
 	dlg.showModal();
+	init_contact_autocomplete(dest_field);
 	setTimeout(() => dest_field.focus(), 100);
+}
+
+/**
+ * Initialize contact autocomplete for an input field.
+ * @param {HTMLInputElement} input_field The input element to attach autocomplete to
+ */
+function init_contact_autocomplete(input_field) {
+	if (!input_field) return;
+
+	// Assign a stable ID so we can scope cleanup to this specific input
+	if (!input_field.dataset.acId) input_field.dataset.acId = 'ac_' + Math.random().toString(36).slice(2);
+	const ac_id = input_field.dataset.acId;
+
+	// Remove any existing autocomplete list tied to this input
+	document.querySelectorAll('.op-autocomplete-list[data-for="' + ac_id + '"]').forEach(el => el.remove());
+
+	let autocomplete_list = null;
+	let autocomplete_items = [];
+	let selected_index = -1;
+
+	/**
+	 * Fetch contact/extension suggestions from the server.
+	 */
+	function fetch_suggestions(term) {
+		if (term.length === 0) {
+			hide_autocomplete();
+			return;
+		}
+
+		fetch('autocomplete.php?term=' + encodeURIComponent(term))
+			.then(response => response.json())
+			.then(data => {
+				autocomplete_items = data || [];
+				display_autocomplete_suggestions(autocomplete_items);
+			})
+			.catch(err => {
+				console.error('[OP] Autocomplete error:', err);
+				hide_autocomplete();
+			});
+	}
+
+	/**
+	 * Display the autocomplete dropdown with suggestions.
+	 */
+	function display_autocomplete_suggestions(items) {
+		if (!autocomplete_list) {
+			autocomplete_list = document.createElement('ul');
+			autocomplete_list.className = 'op-autocomplete-list';
+			autocomplete_list.dataset.for = ac_id;
+			document.body.appendChild(autocomplete_list);
+		}
+
+		if (items.length === 0) {
+			hide_autocomplete();
+			return;
+		}
+
+		autocomplete_list.innerHTML = '';
+		selected_index = -1;
+
+		items.forEach((item, index) => {
+			const li = document.createElement('li');
+			li.className = 'op-autocomplete-item';
+			li.innerHTML = `<div class="op-autocomplete-label">${esc(item.label)}</div>`;
+			li.dataset.value = item.value;
+			li.dataset.index = index;
+
+			li.addEventListener('click', function() {
+				select_autocomplete_item(item);
+			});
+
+			li.addEventListener('mouseenter', function() {
+				set_autocomplete_selected(index);
+			});
+
+			autocomplete_list.appendChild(li);
+		});
+
+		autocomplete_list.style.display = 'block';
+		reposition_dropdown();
+	}
+
+	/**
+	 * Position the dropdown directly below the input using fixed coordinates.
+	 */
+	function reposition_dropdown() {
+		if (!autocomplete_list) return;
+		const rect    = input_field.getBoundingClientRect();
+		const min_w   = 420;
+		const max_w   = window.innerWidth - rect.left - 8;
+		const width   = Math.min(Math.max(rect.width, min_w), max_w);
+		autocomplete_list.style.top   = (rect.bottom + 2) + 'px';
+		autocomplete_list.style.left  = rect.left + 'px';
+		autocomplete_list.style.width = width + 'px';
+	}
+
+	/**
+	 * Select an autocomplete item and fill the input field.
+	 */
+	function select_autocomplete_item(item) {
+		input_field.value = item.value;
+		hide_autocomplete();
+		// Trigger change event in case there are listeners
+		input_field.dispatchEvent(new Event('change'));
+	}
+
+	/**
+	 * Set the selected/highlighted item in the autocomplete list.
+	 */
+	function set_autocomplete_selected(index) {
+		if (!autocomplete_list) return;
+
+		const items = autocomplete_list.querySelectorAll('.op-autocomplete-item');
+		items.forEach((item, i) => {
+			item.classList.toggle('op-autocomplete-selected', i === index);
+		});
+
+		selected_index = index;
+	}
+
+	/**
+	 * Hide the autocomplete dropdown.
+	 */
+	function hide_autocomplete() {
+		if (autocomplete_list) {
+			autocomplete_list.style.display = 'none';
+		}
+	}
+
+	/**
+	 * Handle arrow keys and Enter in the input field.
+	 */
+	function handle_keyboard(event) {
+		if (!autocomplete_list || autocomplete_list.style.display === 'none') {
+			if (event.key === 'Enter') {
+				event.preventDefault();
+				return;
+			}
+			return;
+		}
+
+		const items = autocomplete_list.querySelectorAll('.op-autocomplete-item');
+
+		switch (event.key) {
+			case 'ArrowDown':
+				event.preventDefault();
+				selected_index = Math.min(selected_index + 1, items.length - 1);
+				set_autocomplete_selected(selected_index);
+				break;
+			case 'ArrowUp':
+				event.preventDefault();
+				selected_index = Math.max(selected_index - 1, -1);
+				if (selected_index >= 0) {
+					set_autocomplete_selected(selected_index);
+				} else {
+					items.forEach(item => item.classList.remove('op-autocomplete-selected'));
+				}
+				break;
+			case 'Enter':
+				event.preventDefault();
+				if (selected_index >= 0 && autocomplete_items[selected_index]) {
+					select_autocomplete_item(autocomplete_items[selected_index]);
+				}
+				break;
+			case 'Escape':
+				event.preventDefault();
+				hide_autocomplete();
+				break;
+		}
+	}
+
+	// Debounce timer for input
+	let autocomplete_timer = null;
+
+	// Input event listener with debouncing
+	input_field.addEventListener('input', function(e) {
+		if (autocomplete_timer) clearTimeout(autocomplete_timer);
+
+		const term = (e.target.value || '').trim();
+
+		if (term.length < 1) {
+			hide_autocomplete();
+		} else {
+			// Debounce the API call
+			autocomplete_timer = setTimeout(() => {
+				fetch_suggestions(term);
+			}, 300);
+		}
+	});
+
+	// Keyboard event listener
+	input_field.addEventListener('keydown', handle_keyboard);
+
+	// Hide autocomplete when input loses focus
+	input_field.addEventListener('blur', function() {
+		setTimeout(() => {
+			hide_autocomplete();
+		}, 150);
+	});
 }
 
 /** Called by the Transfer button inside the dialog. */
@@ -3871,6 +4071,7 @@ function toggle_ext_dialpad(ext_number, event) {
 	}
 
 	input.classList.remove('d-none');
+		init_contact_autocomplete(input);
 	setTimeout(() => input.focus(), 10);
 }
 
