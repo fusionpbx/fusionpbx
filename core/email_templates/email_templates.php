@@ -163,7 +163,6 @@
 	$sql .= "template_description ";
 	$sql .= "from v_email_templates ";
 	$sql .= "where true ";
-	$sql .= "and template_type = 'html' ";
 	if (!empty($template_language)) {
 		$sql .= "and template_language = :template_language ";
 		$parameters['template_language'] = $template_language;
