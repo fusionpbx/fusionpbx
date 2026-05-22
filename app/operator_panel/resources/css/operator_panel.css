@@ -1,3 +1,49 @@
+/* Contact Autocomplete Dropdown */
+.op-autocomplete-list {
+	position: fixed;
+	margin: 0;
+	padding: 0;
+	background: #fff;
+	border: 1px solid #d0d7de;
+	border-radius: 6px;
+	box-shadow: 0 8px 24px rgba(0,0,0,.15);
+	list-style: none;
+	z-index: 9995;
+	max-height: 300px;
+	overflow-y: auto;
+	display: none;
+}
+
+.op-autocomplete-item {
+	padding: 8px 12px;
+	cursor: pointer;
+	border-bottom: 1px solid #f0f0f0;
+	transition: background-color .15s;
+}
+
+.op-autocomplete-item:last-child {
+	border-bottom: none;
+}
+
+.op-autocomplete-item:hover {
+	background-color: #f6f8fa;
+}
+
+.op-autocomplete-item.op-autocomplete-selected {
+	background-color: #e7f1ff;
+	color: #0d6efd;
+}
+
+.op-autocomplete-label {
+	font-size: 13px;
+	color: #24292f;
+	word-break: break-word;
+}
+
+.op-autocomplete-item.op-autocomplete-selected .op-autocomplete-label {
+	color: #0d6efd;
+	font-weight: 500;
+}
 /* Active Operator Panel — extension blocks */
 .op-ext-grid {
 	display: flex;
