@@ -4189,7 +4189,24 @@ else { //default: white
 	.domain-search-empty {
 		padding: 8px 10px;
 		color: <?=$input_text_placeholder_color?>;
-	};
+	}
+
+	.domain-search-clear {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: 14px;
+		color: #333;
+		opacity: 0.6;
+		padding: 0;
+		line-height: 1;
+		pointer-events: auto;
+		z-index: 2;
+	}
 
 <?php
 
