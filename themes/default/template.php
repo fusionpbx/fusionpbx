@@ -1098,7 +1098,7 @@
 				};
 
 				window.init_domain_search_selects = function() {
-					var selectors = document.querySelectorAll("select[data-domain-search='true']");
+					var selectors = document.querySelectorAll("select[name='domain_uuid'], select[id='domain_uuid'], select[data-domain-search='true']");
 					for (var i = 0; i < selectors.length; i++) {
 						if (selectors[i].dataset.domainSearch === 'false') { continue; }
 						if (selectors[i].multiple) { continue; }
