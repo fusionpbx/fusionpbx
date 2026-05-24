@@ -191,10 +191,6 @@
 		echo "\n";
 	}
 
-//add missing services
-	$service = new services();
-	$service->add_missing();
-
 //show the help menu
 	if ($upgrade_type == 'help' or $upgrade_type == '-h' or $upgrade_type == '--help') {
 
@@ -470,6 +466,10 @@
 
 //update main software source
 	if ($upgrade_type == 'services' or $upgrade_type == '-u' or $upgrade_type == '--service' or $upgrade_type == '--services') {
+
+		//add missing services
+		$service = new services();
+		$service->add_missing();
 
 		if (empty($argv[2]) || $argv[2] == 'update') {
 			//send a message to the console
