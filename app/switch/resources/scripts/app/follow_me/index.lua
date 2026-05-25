@@ -542,8 +542,16 @@
 		--execute the bridge
 			if (app_data ~= nil) then
 				if (follow_me_strategy == "enterprise") then
-					app_data = app_data:gsub("%[", "{");
-					app_data = app_data:gsub("%]", "}");
+					app_data = app_data:gsub("(%b[])", function(segment)
+						-- preserve IPv6 literals only
+						if segment:match("^%[[0-9A-Fa-f:]+%]$") and segment:match(":") then
+							return segment
+						end
+						-- convert enterprise variable blocks
+						segment = segment:gsub("^%[", "{")
+						segment = segment:gsub("%]$", "}")
+						return segment
+					end)
 				end
 				freeswitch.consoleLog("NOTICE", "[follow me] app_data: "..app_data.."\n");
 				session:execute("bridge", app_data);
