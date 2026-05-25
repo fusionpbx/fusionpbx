@@ -542,8 +542,14 @@
 		--execute the bridge
 			if (app_data ~= nil) then
 				if (follow_me_strategy == "enterprise") then
-					app_data = app_data:gsub("%[", "{");
-					app_data = app_data:gsub("%]", "}");
+					app_data = app_data:gsub("(%b[])", function(segment)
+                        if segment:match("%[[0-9A-Fa-f:]+%]") then
+                            return segment
+                        end
+                        segment = segment:gsub("^%[", "{")
+                        segment = segment:gsub("%]$", "}")
+                        return segment
+            		end)
 				end
 				freeswitch.consoleLog("NOTICE", "[follow me] app_data: "..app_data.."\n");
 				session:execute("bridge", app_data);
