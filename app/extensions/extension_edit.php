@@ -1280,6 +1280,9 @@ if ($action == 'update') {
 if (permission_exists('extension_add') || permission_exists('extension_edit')) {
 	echo button::create(['type' => 'button', 'label' => $text['button-save'], 'icon' => $settings->get('theme', 'button_icon_save'), 'id' => 'btn_save', 'style' => 'margin-left: 15px;', 'onclick' => 'submit_form();']);
 }
+if ($action == 'update' && !empty($extension_uuid) && is_uuid($extension_uuid)) {
+	echo edit_nav::render(['module_key' => 'extensions', 'script' => 'extension_edit.php', 'id' => $extension_uuid]);
+}
 echo "	</div>\n";
 echo "	<div style='clear: both;'></div>\n";
 echo "</div>\n";
