@@ -182,6 +182,9 @@
 	$sql .= order_by($order_by, $order, 'extension', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$extensions = $database->select($sql, $parameters ?? null, 'all');
+
+	//snapshot the rendered uuids so call_forward_edit.php can offer Previous/Next arrows
+	edit_nav::snapshot('call_forward', $extensions, 'extension_uuid');
 	unset($parameters);
 
 	//if there are no extensions then set to empty array
