@@ -462,6 +462,7 @@
 	}
 
 //get the header
+	$document['title'] = $text['title2'];
 	require_once "resources/header.php";
 
 //page title and description
