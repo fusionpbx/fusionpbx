@@ -102,8 +102,8 @@ class switch_files {
 			recursive_copy($source_directory, $destination_directory);
 			unset($source_directory);
 
-			//copy the app/*/resource/install/scripts
-			$app_scripts = glob(dirname(__DIR__, 4) . 'app/*/resource/scripts');
+			//copy the app/*/resources/install/scripts
+			$app_scripts = glob(dirname(__DIR__, 4) . 'app/*/resources/scripts');
 			foreach ($app_scripts as $app_script) {
 				recursive_copy($app_script, $destination_directory);
 			}
