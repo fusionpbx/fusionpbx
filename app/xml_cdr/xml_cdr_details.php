@@ -350,6 +350,10 @@
 	else {
 		$start_time = date("Y-m-d g:i:s a", (int) $start_epoch);
 		$end_time = date("Y-m-d g:i:s a", (int) $end_epoch);
+		foreach($call_flow_summary as $x => $row) {
+			$call_flow_summary[$x]["start_stamp"] = date("Y-m-d g:i:s a", (int) $call_flow_summary[$x]["start_epoch"]);
+			$call_flow_summary[$x]["end_stamp"] = date("Y-m-d g:i:s a", (int) $call_flow_summary[$x]["end_epoch"]);
+		}
 	}
 
 //set the year, month and date
