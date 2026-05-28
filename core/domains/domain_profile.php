@@ -47,7 +47,6 @@
 	$languages = $database->select($sql, null, 'all');
 
 //get domain settings
-
 	$sql = "select * from v_domain_settings ";
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$sql .= "and domain_setting_enabled = true ";
@@ -330,7 +329,9 @@
 	if (!empty($unsaved)) {
 		echo "<div class='unsaved'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle'></i></div>";
 	}
-
+	if (permission_exists('domain_setting_view')) {
+		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$settings->get('theme', 'button_icon_settings'),'id'=>'btn_back','style'=>'margin-right: 2px;','link'=>PROJECT_PATH.'/core/domain_settings/domain_settings.php?id='.urlencode($domain_uuid)]);
+	}
 	$button_margin = 'margin-left: 15px;';
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
 
