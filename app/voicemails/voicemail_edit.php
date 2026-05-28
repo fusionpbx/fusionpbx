@@ -943,10 +943,17 @@
 		echo "	".$text['label-voicemail_transcription_prompt_enabled']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' name='voicemail_transcription_prompt_enabled' id='voicemail_transcription_prompt_enabled' onchange=\"document.getElementById('voicemail_transcription_prompt_row').style.display = (this.value === 'true') ? '' : 'none';\">\n";
-		echo "		<option value='false' ".(!in_array($voicemail_transcription_prompt_enabled, [true, 'true', 't'], true) ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-		echo "		<option value='true' ".(in_array($voicemail_transcription_prompt_enabled, [true, 'true', 't'], true) ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
+		}
+		echo "	<select class='formfld' id='voicemail_transcription_prompt_enabled' name='voicemail_transcription_prompt_enabled' onchange=\"document.getElementById('voicemail_transcription_prompt_row').style.display = (this.value === 'true') ? '' : 'none';\">\n";
+		echo "		<option value='true' " . ($voicemail_transcription_prompt_enabled == true ? "selected='selected'" : null) . ">" . $text['option-true'] . "</option>\n";
+		echo "		<option value='false' " . ($voicemail_transcription_prompt_enabled == false ? "selected='selected'" : null) . ">" . $text['option-false'] . "</option>\n";
 		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
+		}
 		echo "<br />\n";
 		echo $text['description-voicemail_transcription_prompt_enabled']."\n";
 		echo "</td>\n";
@@ -958,7 +965,7 @@
 		echo "	".$text['label-voicemail_transcription_prompt']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea class='formfld' name='voicemail_transcription_prompt' rows='4' style='width:100%;'>".escape($voicemail_transcription_prompt)."</textarea>\n";
+		echo "	<textarea class='formfld' name='voicemail_transcription_prompt' style='width:280px; height: 80px;'>".escape($voicemail_transcription_prompt)."</textarea>\n";
 		echo "<br />\n";
 		echo $text['description-voicemail_transcription_prompt']."\n";
 		echo "</td>\n";
