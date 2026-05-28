@@ -600,7 +600,7 @@
 		echo "			</td>\n";
 		echo "			<td class='formfld'>\n";
 		//echo "				<input class='formfld' type='text' name='device_profile_keys[$x][profile_key_type]' maxlength='255' value=\"".escape($row["profile_key_type"])."\">\n";
-		echo "				<select class='formfld' name='device_profile_keys[".$x."][profile_key_type]' id='key_type_".$x."'>\n";
+		echo "				<select class='formfld' name='device_profile_keys[".$x."][profile_key_type]' id='key_type_".$x."' onchange=\"document.getElementById('key_vendor_".$x."').value = this.options[this.selectedIndex].getAttribute('vendor');\">\n";
 		echo "					<option value=''></option>\n";
 		$previous_vendor = '';
 		$i = 0;
