@@ -24,15 +24,15 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//include file
+// Include file
 	require dirname(__DIR__, 2) . "/resources/require.php";
 
-//if the config file doesn't exist and the config.php does exist use it to write a new config file
+// If the config file doesn't exist and the config.php does exist use it to write a new config file
 	if (isset($config_exists) && !$config_exists && file_exists("/etc/fusionpbx/config.php")) {
-		//include the config.php
+		// Include the config.php
 		include("/etc/fusionpbx/config.php");
 
-		//set the default config file location
+		// Set the default config file location
 		if (stristr(PHP_OS, 'BSD')) {
 			$config_path = '/usr/local/etc/fusionpbx';
 			$config_file = $config_path.'/config.conf';
@@ -80,7 +80,7 @@
 			$cache_location = dirname(dirname(__DIR__, 2)).DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'fusionpbx';
 		}
 
-		//make the config directory
+		// Make the config directory
 		if (isset($config_path)) {
 			system('mkdir -p '.$config_path);
 		}
@@ -89,7 +89,7 @@
 			exit;
 		}
 
-		//build the config file
+		// Build the config file
 		$conf = "\n";
 		$conf .= "#database system settings\n";
 		$conf .= "database.0.type = ".$db_type."\n";
@@ -139,14 +139,14 @@
 		$conf .= "#error reporting hide show all errors except notices and warnings\n";
 		$conf .= "error.reporting = 'E_ALL ^ E_NOTICE ^ E_WARNING'\n";
 
-		//write the config file
+		// Write the config file
 		$file_handle = fopen($config_file,"w");
 		if (!$file_handle){ return; }
 		fwrite($file_handle, $conf);
 		fclose($file_handle);
 	}
 
-//check the permission
+// Check the permission
 	if (defined('STDIN')) {
 		$display_type = 'text'; //html, text
 	}
@@ -159,42 +159,42 @@
 		$display_type = 'html'; //html, text
 	}
 
-//set the default as an empty string
+// Set the default as an empty string
 	$upgrade_type = '';
 
-//get the command line arguments
+// Get the command line arguments
 	if (defined('STDIN')) {
 		if (!empty($argv[1])) {
 			$upgrade_type = $argv[1];
 		}
 	}
 
-//initiliaze the schema object
+// Initiliaze the schema object
 	$schema = new schema(['database' => $database]);
 
-//use upgrade language file
+// Use upgrade language file
 	$language = new text;
 	$text = $language->get(null, 'core/upgrade');
 
-//always update the now global autoload cache just-in-case the source files have updated
+// Always update the now global autoload cache just-in-case the source files have updated
 	$autoload->update();
 
-//trigger clear cache for any classes that require it
+// Trigger clear cache for any classes that require it
 	foreach ($autoload->get_interface_list('clear_cache') as $class) {
 		$class::clear_cache();
 	}
 
-//show the title
+// Show the title
 	if ($display_type == 'text') {
 		//echo "\n";
 		//echo $text['label-upgrade']."\n";
 		echo "\n";
 	}
 
-//show the help menu
+// Show the help menu
 	if ($upgrade_type == 'help' or $upgrade_type == '-h' or $upgrade_type == '--help') {
 
-		//send the help message to the console
+		// Send the help message to the console
 		echo "Usage:\n";
 		echo "  upgrade.php [-hvnostdmpgfui] [--menu [default|list]] [--services [update|restart]]\n";
 		echo "  A terminal-based upgrade tool used to simplify or automate the upgrade.\n";
@@ -216,19 +216,19 @@
 
 	}
 
-//get the version of the software
+// Get the version of the software
 	if ($upgrade_type == 'version' or $upgrade_type == '-v' or $upgrade_type == '--version') {
 		echo software::version()."\n";
 	}
 
-//upgrade the schema and data_types
+// Upgrade the schema and data_types
 	if ($upgrade_type == 'schema' or $upgrade_type == '-s' or $upgrade_type == '--schema') {
-		//send a message to the console
+		// Send a message to the console
 		if ($display_type === 'text') {
 			echo "[ Update ] Table and field structure.\n";
 		}
 
-		//get the database schema put it into an array then compare and update the database as needed.
+		// Get the database schema put it into an array then compare and update the database as needed.
 		$response = $schema->upgrade($format ?? '');
 		if ($display_type === 'text') {
 			foreach(explode("\n", $response) as $row) {
@@ -237,22 +237,21 @@
 		}
 	}
 
-
-//run all application defaults - add missing defaults
+// Run all application defaults - add missing defaults
 	if ($upgrade_type == 'defaults' or $upgrade_type == '-d' or $upgrade_type == '--defaults') {
-		//send a message to the console
+		// Send a message to the console
 		if ($display_type === 'text') {
 			echo "[ Update ] Restore application defaults.\n";
 		}
 
-		//run for command line only
+		// Run for command line only
 		if (defined('STDIN')) {
 			$nginx_path = '/etc/nginx/sites-enabled/fusionpbx';
 			if (file_exists($nginx_path)) {
-				//get the nginx configuration
+				// Get the nginx configuration
 				$nginx_config = file_get_contents($nginx_path);
 
-				// define the location block to add if it doesn't exist
+				// Define the location block to add if it doesn't exist
 				$websocket_settings = "        #redirect websockets to port 8080\n";
 				$websocket_settings .= "                location /websockets/ {\n";
 				$websocket_settings .= "                proxy_pass http://127.0.0.1:8080;\n";
@@ -263,32 +262,32 @@
 				$websocket_settings .= "        }\n";
 				$websocket_settings .= "\n";
 
-				// search array
+				// Search array
 				$search_array['0'] = 'listen 443 ssl;';
 				$search_array['1'] = '#redirect letsencrypt to dehydrated';
 
-				// add the websocket settings if it is not in the config
+				// Add the websocket settings if it is not in the config
 				if (strpos($nginx_config, '/websockets/') === false) {
 
-					// find the position where websockets string should be added.
+					// Find the position where websockets string should be added.
 					$ssl_found = false;
 					$character_count = 0;
 					$i = 1;
 					foreach(explode("\n", $nginx_config) as $line) {
-						// count each line and add an additional character for the line feed
+						// Count each line and add an additional character for the line feed
 						$character_count += strlen($line) + 1;
 
-						// find the section for ssl on port 443
+						// Find the section for ssl on port 443
 						if (trim($line) == $search_array[0]) {
 							$ssl_found = true;
 						}
 
-						// find the second search string inside the ssl section
+						// Find the second search string inside the ssl section
 						if ($ssl_found && trim($line) == $search_array[1]) {
-							// use substr_replace to add the string at the correct position
+							// Use substr_replace to add the string at the correct position
 							$new_config = substr_replace($nginx_config, $websocket_settings, $character_count - strlen($line."\n"), 0);
 
-							// write the updated configuration back to the file
+							// Write the updated configuration back to the file
 							if (file_put_contents($nginx_path, $new_config) !== false) {
 								echo "Websockets configuration updated.\n";
 							}
@@ -299,14 +298,14 @@
 			}
 		}
 
-		// upgrade application defaults
+		// Upgrade application defaults
 		$domain = new domains;
 		$domain->upgrade();
 	}
 
-//restore the default menu
+// Restore the default menu
 	if ($upgrade_type == 'menu' or $upgrade_type == '-m' or $upgrade_type == '--menu') {
-		//get the menu_uuid and language
+		// Get the menu_uuid and language
 		$sql = "select menu_uuid, menu_name, menu_language ";
 		$sql .= "from v_menus ";
 		$menus = $database->select($sql, null, 'all');
@@ -319,7 +318,7 @@
 		}
 		unset($sql, $row);
 
-		//show the menu
+		// Show the menu
 		if (isset($argv[2]) && $argv[2] == 'list') {
 			echo "Menu List\n";
 			foreach ($menus as $row) {
@@ -330,80 +329,80 @@
 			echo "\n";
 		}
 
-		//set the menu back to default
+		// Set the menu back to default
 		if (empty($argv[2]) || $argv[2] == 'default') {
-			//send a message to the console
+			// Send a message to the console
 			echo "[ Update ] Restore the default menu\n";
 
-			//restore the menu
+			// Restore the menu
 			$included = true;
 			require_once("core/menu/menu_restore_default.php");
 			echo "\n";
 		}
 	}
 
-//restore the default permissions
+// Restore the default permissions
 	if ($upgrade_type == 'permissions' or $upgrade_type == '-p' or $upgrade_type == '--permissions') {
 
 		if (empty($argv[2]) || $argv[2] == 'default') {
-			//send a message to the console
+			// Send a message to the console
 			echo "[ Update ] Restore the file permissions\n";
 
-			//restore default file permissions.
+			// Restore default file permissions.
 			update_file_permissions($text, $settings);
 		}
 
 		if (empty($argv[2]) || $argv[2] == 'default') {
-			//send a message to the console
+			// Send a message to the console
 			echo "[ Update ] Restore the group permissions\n";
 
-			//default the groups in case they are missing
+			// Default the groups in case they are missing
 			$groups = new groups;
 			$groups->defaults();
 		}
 
-		//default the permissions
+		// Default the permissions
 		$included = true;
 		require_once("core/groups/permissions_default.php");
 
-		//add a line feed
+		// Add a line feed
 		echo "\n";
 
 	}
 
-//restore the file permissions
+// Restore the file permissions
 	if ($upgrade_type == 'file' or $upgrade_type == '-f' or $upgrade_type == '--file') {
-		//send a message to the console
+		// Send a message to the console
 		echo "[ Update ] Restore the file permissions\n";
 
-		//restore default file permissions.
+		// Restore default file permissions.
 		update_file_permissions($text, $settings);
 
-		//add a line feed
+		// Add a line feed
 		echo "\n";
 	}
 
-//restore the group permissions
+// Restore the group permissions
 	if ($upgrade_type == 'group' or $upgrade_type == '-g' or $upgrade_type == '--group') {
-		//send a message to the console
+		// Send a message to the console
 		echo "[ Update ] Restore the group permissions\n";
 
-		//default the groups in case they are missing
+		// Default the groups in case they are missing
 		$groups = new groups;
 		$groups->defaults();
 
-		//default the permissions
+		// Default the permissions
 		$included = true;
 		require_once("core/groups/permissions_default.php");
 
-		//add a line feed
+		// Add a line feed
 		echo "\n";
 	}
 
-//default upgrade schema and app defaults
+// Default upgrade schema and app defaults
 	if (empty($upgrade_type)) {
 
-		//set the display type
+		// Set the display type
 			if (defined('STDIN')) {
 				$display_type = 'text';
 			}
@@ -411,12 +410,12 @@
 				$display_type = 'html';
 			}
 
-		//send a message to the console
+		// Send a message to the console
 			if ($display_type === 'text') {
 				echo "[ Update ] Table and field structure.\n";
 			}
 
-		//Update the table and field structure.
+		// Update the table and field structure.
 			$response = $schema->upgrade("text");
 			if ($display_type === 'text') {
 				foreach(explode("\n", $response) as $row) {
@@ -424,16 +423,16 @@
 				}
 			}
 
-		//send a message to the console
+		// Send a message to the console
 			if ($display_type === 'text') {
 				echo "[ Update ] Application defaults.\n";
 			}
 
-		//run all app_defaults.php files
+		// Run all app_defaults.php files
 			$domain = new domains;
 			$domain->upgrade();
 
-		//show the content
+		// Show the content
 			if ($display_type == 'html') {
 				echo "<div align='center'>\n";
 				echo "<table width='40%'>\n";
@@ -458,61 +457,61 @@
 				echo "\n";
 			}
 
-		//include the footer
+		// Include the footer
 			if ($display_type == "html") {
 				require_once "resources/footer.php";
 			}
 	}
 
-//update main software source
+// Update main software source
 	if ($upgrade_type == 'services' or $upgrade_type == '-u' or $upgrade_type == '--service' or $upgrade_type == '--services') {
 
-		//add missing services
+		// Add missing services
 		$service = new services();
 		$service->add_missing();
 
 		if (empty($argv[2]) || $argv[2] == 'update') {
-			//send a message to the console
+			// Send a message to the console
 			echo "[ Update ] Update default services\n";
 			//echo ($text['description-upgrade_services'] ?? "")."\n";
 
-			//add or update all the services
+			// Add or update all the services
 			$object = new services();
 			$object->upgrade('all');
 		}
 
-		//send a message to the console
+		// Send a message to the console
 		if (empty($argv[2]) || $argv[2] == 'stop') {
 			echo "[ Update ] Stop services\n";
 			//echo ($text['description-stop_services'] ?? "")."\n";
 
-			//stop all the services
+			// Stop all the services
 			$object = new services();
 			$object->stop('all');
 		}
 
-		//send a message to the console
+		// Send a message to the console
 		if (empty($argv[2]) || $argv[2] == 'restart') {
 			echo "[ Update ] Restart services\n";
 			//echo ($text['description-restart_services'] ?? "")."\n";
 
-			//restart all the services
+			// Restart all the services
 			$object = new services();
 			$object->restart('all');
 		}
 
 	}
 
-//check for the upgrade menu option first
+// Check for the upgrade menu option first
 	if ($upgrade_type == 'interactive' or $upgrade_type == '-i' or $upgrade_type == '--interactive') {
 		require __DIR__ . '/upgrade_menu.php';
 		exit();
 	}
 
-//update main software source
+// Update main software source
 	if ($upgrade_type == 'main' or $upgrade_type == '-n'  or $upgrade_type == '--main') {
 
-		//send a message to the console
+		// Send a message to the console
 		echo "[ Update ] The main application\n";
 
 		$git_result = git_pull(dirname(__DIR__, 2));
@@ -522,35 +521,35 @@
 
 	}
 
-//update optional applications
+// Update optional applications
 	if ($upgrade_type == 'optional' or $upgrade_type == '-o'  or $upgrade_type == '--optional') {
 
-		//set the $text array as global
+		// Set the $text array as global
 		global $text;
 
-		//get the list of updateable repos
+		// Get the list of updateable repos
 		$updateable_repos = git_find_repos(dirname(__DIR__, 2)."/app");
 
-		//send a message to the console
+		// Send a message to the console
 		echo "[Update ] The optional applications\n";
 
-		//update the optional repos
+		// Update the optional repos
 		$messages = [];
 		foreach ($updateable_repos as $repo => $row) {
 
-			//set the application name
+			// Set the application name
 			$application = $row[0];
 
 			// Set the project root
 			$project_root = dirname(__DIR__, 1);
 
-			//show the response
+			// Show the response
 			echo "$application\n";
 
-			//pull the changes using git
+			// Pull the changes using git
 			$git_result = git_pull($repo);
 
-			//set the response message array
+			// Set the response message array
 			if ($git_result['result']) {
 				$messages[$repo] = $text['message-optional_apps_upgrade_source_cli'] . (!empty($git_result['message']) && is_array($git_result['message']) ? ' - '.implode("\n", $git_result['message']) : '');
 			}
@@ -582,16 +581,16 @@
 function update_file_permissions($text, settings $settings) {
 
 	if (is_root()) {
-		//initialize the array
+		// Initialize the array
 		$directories = [];
 
-		//get the fusionpbx folder
+		// Get the fusionpbx folder
 		$project_root = dirname(__DIR__, 2);
 
-		//adjust the project root
+		// Adjust the project root
 		$directories[] = $project_root;
 
-		//adjust the /etc/freeswitch
+		// Adjust the /etc/freeswitch
 		$directories[] = $settings->get('switch', 'conf', null);
 		$directories[] = $settings->get('switch', 'call_center', null); //normally in conf but can be different
 		$directories[] = $settings->get('switch', 'dialplan', null); //normally in conf but can be different
@@ -599,33 +598,33 @@ function update_file_permissions($text, settings $settings) {
 		$directories[] = $settings->get('switch', 'languages', null); //normally in conf but can be different
 		$directories[] = $settings->get('switch', 'sip_profiles', null); //normally in conf but can be different
 
-		//adjust the /usr/share/freeswitch/{scripts,sounds}
+		// Adjust the /usr/share/freeswitch/{scripts,sounds}
 		$directories[] = $settings->get('switch', 'scripts', null);
 		$directories[] = $settings->get('switch', 'sounds', null);
 
-		//adjust the /var/lib/freeswitch/{db,recordings,storage,voicemail}
+		// Adjust the /var/lib/freeswitch/{db,recordings,storage,voicemail}
 		$directories[] = $settings->get('switch', 'db', null);
 		$directories[] = $settings->get('switch', 'recordings', null);
 		$directories[] = $settings->get('switch', 'storage', null);
 		$directories[] = $settings->get('switch', 'voicemail', null); //normally included in storage but can be different
 
-		//only set the xml_cdr directory permissions
+		// Only set the xml_cdr directory permissions
 		$log_directory = $settings->get('switch', 'log', null);
 		if ($log_directory !== null) {
 			$directories[] = $log_directory . '/xml_cdr';
 		}
 
-		//execute chown command for each directory
+		// Run chown command for each directory
 		foreach ($directories as $dir) {
-			//skip empty directories
+			// Skip empty directories
 			if (empty($dir)) { continue; }
 
-			//skip /dev/shm directory
+			// Skip /dev/shm directory
 			if (strpos($dir, '/dev/shm') !== false) {
 				continue;
 			}
 
-			//execute
+			// Update the file ownership to use the web server user
 			exec("chown -R www-data:www-data $dir");
 		}
 	} else {
@@ -644,7 +643,7 @@ function update_file_permissions($text, settings $settings) {
  * @param settings $settings Application settings
  */
 function upgrade_services($text, settings $settings) {
-	//echo ($text['description-upgrade_services'] ?? "")."\n";
+	// echo ($text['description-upgrade_services'] ?? "")."\n";
 
 	// Determine the search file name
 	if (stristr(PHP_OS, 'Linux')) {
@@ -696,7 +695,7 @@ function upgrade_services($text, settings $settings) {
  * @param settings $settings
  */
 function stop_services($text, settings $settings) {
-	//echo ($text['description-stop_services'] ?? "")."\n";
+	// echo ($text['description-stop_services'] ?? "")."\n";
 
 	// Determine the search file name
 	if (stristr(PHP_OS, 'Linux')) {
@@ -742,7 +741,7 @@ function stop_services($text, settings $settings) {
  * @param settings $settings Settings object
  */
 function restart_services($text, settings $settings) {
-	//echo ($text['description-restart_services'] ?? "")."\n";
+	// echo ($text['description-restart_services'] ?? "")."\n";
 
 	// Determine the search file name
 	if (stristr(PHP_OS, 'Linux')) {
@@ -800,9 +799,9 @@ function find_service_name(string $file) {
 	if (stristr(PHP_OS, 'FreeBSD')) {
 		$service_content = file_get_contents($file);
 		if (preg_match('/^\s*name\s*=\s*["\']([^"\']+)["\']\s*$/m', $service_content, $name_matches)) {
-		    if (!empty($name_matches[1])) {
-		    	return $name_matches[1];
-		    }
+			if (!empty($name_matches[1])) {
+				return $name_matches[1];
+			}
 		}
 	}
 	return '';
