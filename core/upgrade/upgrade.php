@@ -428,6 +428,50 @@
 				echo "[ Update ] Application defaults.\n";
 			}
 
+		// Update the php-fpm.service file
+			if (PHP_OS === 'Linux') {
+				$php_version = implode('.', array_slice(explode('.', PHP_VERSION), 0, 2));
+				$line_to_insert = "ReadWritePaths=/tmp /etc/freeswitch /usr/share/freeswitch /var/lib/freeswitch /var/cache/fusionpbx";
+				$service_file = "/usr/lib/systemd/system/php".$php_version."-fpm.service";
+				if (file_exists($service_file)) {
+					// Get the file contents
+					$file_contents = file_get_contents($service_file);
+
+					// Check if "/etc/freeswitch" exists in the file contents
+					$file_updated = strpos($file_contents, '/etc/freeswitch') !== false;
+
+					// Check if the service file is writable
+					$file_writable = is_writable($service_file);
+
+					// Find the empty line befor the Install
+					if (!$file_updated && $file_writable) {
+						$lines = explode("\n", $file_contents);
+						$insert_index = -1;
+						for ($i = 0; $i < count($lines); $i++) {
+							if (trim($lines[$i]) === '[Install]') {
+								// Find empty line before [Install]
+								for ($j = $i - 1; $j >= 0; $j--) {
+									if (trim($lines[$j]) === '') {
+										$insert_index = $j;
+										break;
+									}
+								}
+								break;
+							}
+						}
+
+						// Add the new content
+						array_splice($lines, $insert_index, 0, $line_to_insert);
+						$new_contents = implode("\n", $lines) . "\n";
+						file_put_contents($service_file, $new_contents);
+
+						// Prepared systemd to use the update
+						system('systemctl daemon-reload');
+						system('systemctl restart php'.$php_version.'-fpm');
+					}
+				}
+			}
+
 		// Run all app_defaults.php files
 			$domain = new domains;
 			$domain->upgrade();
