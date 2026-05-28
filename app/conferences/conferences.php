@@ -211,7 +211,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-view_active'],'icon'=>'comments','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.$conference_view_page]);
 	}
 	if (permission_exists('conference_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'conference_edit.php'.($query_string ? '?'.$query_string : '')]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'conference_edit.php']);
 	}
 	if (permission_exists('conference_add') && $conferences) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
