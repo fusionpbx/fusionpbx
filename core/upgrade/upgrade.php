@@ -431,7 +431,7 @@
 		// Update the php-fpm.service file
 			if (PHP_OS === 'Linux') {
 				$php_version = implode('.', array_slice(explode('.', PHP_VERSION), 0, 2));
-				$line_to_insert = "ReadWritePaths=/tmp /etc/freeswitch /usr/share/freeswitch /var/lib/freeswitch /var/cache/fusionpbx";
+				$line_to_insert = "ReadWritePaths=/tmp /etc/freeswitch /usr/share/freeswitch /var/lib/freeswitch /usr/share/fusionpbx /var/cache/fusionpbx";
 				$service_file = "/usr/lib/systemd/system/php".$php_version."-fpm.service";
 				if (file_exists($service_file)) {
 					// Get the file contents
