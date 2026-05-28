@@ -796,8 +796,8 @@ function restart_services($text, settings $settings) {
 	}
 
 	// Get the list of services
-	$core_files = glob(dirname(__DIR__, 4) . "/core/*/resources/service/".$search_file_name.".service");
-	$app_files = glob(dirname(__DIR__, 4) . "/app/*/resources/service/".$search_file_name.".service");
+	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/".$search_file_name.".service");
+	$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/".$search_file_name.".service");
 	$service_files = array_merge($core_files, $app_files);
 
 	// Restart each of the services
