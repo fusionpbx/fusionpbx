@@ -127,7 +127,7 @@
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'conference_profiles.php'.($query_string ? '?'.$query_string : '')]);
 	if (permission_exists('conference_profile_param_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','collapse'=>'hide-xs','link'=>'conference_profile_param_edit.php?conference_profile_uuid='.escape($_GET['id']).($query_string ? '&'.$query_string : '')]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','collapse'=>'hide-xs','link'=>'conference_profile_param_edit.php?conference_profile_uuid='.escape($_GET['id'])]);
 	}
 	if (permission_exists('conference_profile_param_edit') && $result) {
 		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'name'=>'btn_toggle','collapse'=>'hide-xs','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);

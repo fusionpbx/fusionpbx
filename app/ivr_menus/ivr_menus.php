@@ -187,7 +187,7 @@
 	echo "	<div class='heading'><b>".$text['title-ivr_menus']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('ivr_menu_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'ivr_menu_edit.php'.($query_string ? '?'.$query_string : '')]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'ivr_menu_edit.php']);
 	}
 	if (permission_exists('ivr_menu_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);

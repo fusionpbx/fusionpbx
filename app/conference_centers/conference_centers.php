@@ -177,7 +177,7 @@
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-rooms'],'icon'=>'door-open','style'=>'margin-right: 15px;','link'=>'conference_rooms.php']);
 	if (permission_exists('conference_center_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'conference_center_edit.php'.($query_string ? '?'.$query_string : '')]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'conference_center_edit.php']);
 	}
 	if (permission_exists('conference_center_edit') && $conference_centers) {
 		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);

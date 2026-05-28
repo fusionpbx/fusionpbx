@@ -442,7 +442,7 @@
 	echo "	<div class='heading'><b>".$text['title-recordings']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('recording_add') && $speech_enabled == 'true') {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$theme_button_icon_add,'id'=>'btn_add','link'=>'recording_edit.php'.($query_string ? '?'.$query_string : '')]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$theme_button_icon_add,'id'=>'btn_add','link'=>'recording_edit.php']);
 	}
 	if (permission_exists('recording_upload')) {
 		echo 	"<form id='form_upload' class='inline' method='post' enctype='multipart/form-data'>\n";

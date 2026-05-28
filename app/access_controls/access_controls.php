@@ -144,7 +144,7 @@
 	echo "	<div class='actions'>\n";
 	echo button::create(['label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'type'=>'button','id'=>'button_reload','link'=>'access_controls_reload.php'.($query_string ? '?'.$query_string : ''),'style'=>'margin-right: 15px;']);
 	if (permission_exists('access_control_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'access_control_edit.php'.($query_string ? '?'.$query_string : '')]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'access_control_edit.php']);
 	}
 	if (permission_exists('access_control_add') && $access_controls) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
