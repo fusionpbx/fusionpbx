@@ -337,7 +337,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$settings->get('theme', 'button_icon_import'),'collapse'=>'hide-sm-dn','style'=>'margin-right: 15px;','link'=>'contact_import.php']);
 	}
 	if (permission_exists('contact_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','collapse'=>'hide-sm-dn','link'=>'contact_edit.php'.($query_string ? '?'.$query_string : '')]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','collapse'=>'hide-sm-dn','link'=>'contact_edit.php']);
 	}
 	if (permission_exists('contact_delete') && $contacts) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','collapse'=>'hide-sm-dn','onclick'=>"modal_open('modal-delete','btn_delete');"]);
