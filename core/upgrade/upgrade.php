@@ -437,8 +437,8 @@
 					// Get the file contents
 					$file_contents = file_get_contents($service_file);
 
-					// Check if "/etc/freeswitch" exists in the file contents
-					$file_updated = strpos($file_contents, '/etc/freeswitch') !== false;
+					// Check if "ReadWritePaths" exists in the file contents
+					$file_updated = strpos($file_contents, 'ReadWritePaths') !== false;
 
 					// Check if the service file is writable
 					$file_writable = is_writable($service_file);
