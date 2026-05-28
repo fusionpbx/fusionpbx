@@ -273,81 +273,43 @@ if (!function_exists('is_xml')) {
 }
 
 if (!function_exists('recursive_copy')) {
-	if (file_exists('/bin/cp')) {
-
-		/**
-		 * Recursively copies the source directory or file to the destination location.
-		 *
-		 * @param string $source      The path of the source directory or file to copy.
-		 * @param string $destination The path where the source will be copied.
-		 * @param string $options     Optional command-line options for the 'cp' command. Defaults to an empty string.
-		 *
-		 * @return void
-		 */
-		function recursive_copy($source, $destination, $options = '') {
-			if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') {
-				//copy -R recursive, preserve attributes for SUN
-				$cmd = 'cp -Rp ' . $source . '/* ' . $destination;
+	/**
+	 * Recursively copies a source directory to a destination directory.
+	 *
+	 * @param string $source      The path of the source directory.
+	 * @param string $destination The path where the copy will be created.
+	 * @param array  $options     An associative array of options. Currently not used.
+	 *
+	 * @return void
+	 * @throws Exception If the source directory does not exist or if it fails to create the destination directory.
+	 */
+	function recursive_copy($source, $destination, $options = '') {
+		$dir = opendir($source);
+		// Source must exist
+		if (!$dir) {
+			throw new Exception("recursive_copy() source directory '" . $source . "' does not exist.");
+		}
+		if (!is_dir($destination)) {
+			// Make directory with permissions set to 02770 so that the group can write to the directory and new files will inherit the group
+			if (!mkdir($destination, 02770, true)) {
+				throw new Exception("recursive_copy() failed to create destination directory '" . $destination . "'");
+			}
+		}
+		while (false !== ( $file = readdir($dir))) {
+			// Skip directory pointers
+			if ($file == '.' || $file == '..' ) {
+				continue;
+			}
+			// Check for directory or file and copy accordingly
+			if (is_dir($source . DIRECTORY_SEPARATOR . $file)) {
+				// Call this function to copy files in a subdirectory
+				recursive_copy($source . DIRECTORY_SEPARATOR . $file, $destination . DIRECTORY_SEPARATOR . $file, $options);
 			} else {
-				//copy -R recursive, -L follow symbolic links, -p preserve attributes for other Posix systemss
-				$cmd = 'cp -RLp ' . $options . ' ' . $source . '/* ' . $destination;
+				// Copy the file
+				copy($source . DIRECTORY_SEPARATOR . $file, $destination . DIRECTORY_SEPARATOR . $file);
 			}
-			exec($cmd);
 		}
-
-	} elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-
-		/**
-		 * Recursively copies a source directory to a destination directory.
-		 *
-		 * @param string $source      The path of the source directory to copy.
-		 * @param string $destination The path of the destination directory where the source will be copied.
-		 * @param array  $options     An associative array of options:
-		 *                            - overwrite (bool) Whether to overwrite existing files. Default is false.
-		 *                            - preserve_permissions (bool) Whether to preserve file permissions. Default is true.
-		 *
-		 * @return bool True if the copy was successful, false otherwise.
-		 */
-		function recursive_copy($source, $destination, $options = '') {
-			$source = normalize_path_to_os($source);
-			$destination = normalize_path_to_os($destination);
-			exec("xcopy /E /Y \"$source\" \"$destination\"");
-		}
-
-	} else {
-
-		/**
-		 * Recursively copies a source directory to a destination directory.
-		 *
-		 * @param string $source      The path of the source directory.
-		 * @param string $destination The path where the copy will be created.
-		 * @param array  $options     An associative array of options. Currently not used.
-		 *
-		 * @return void
-		 * @throws Exception If the source directory does not exist or if it fails to create the destination directory.
-		 */
-		function recursive_copy($source, $destination, $options = '') {
-			$dir = opendir($source);
-			if (!$dir) {
-				throw new Exception("recursive_copy() source directory '" . $source . "' does not exist.");
-			}
-			if (!is_dir($destination)) {
-				if (!mkdir($destination, 02770, true)) {
-					throw new Exception("recursive_copy() failed to create destination directory '" . $destination . "'");
-				}
-			}
-			while (false !== ( $file = readdir($dir))) {
-				if (( $file != '.' ) && ( $file != '..' )) {
-					if (is_dir($source . '/' . $file)) {
-						recursive_copy($source . '/' . $file, $destination . '/' . $file);
-					} else {
-						copy($source . '/' . $file, $destination . '/' . $file);
-					}
-				}
-			}
-			closedir($dir);
-		}
-
+		closedir($dir);
 	}
 }
 
