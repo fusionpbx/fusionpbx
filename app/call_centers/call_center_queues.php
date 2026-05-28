@@ -171,7 +171,7 @@
 	}
 	$margin_left = permission_exists('call_center_agent_view') || permission_exists('call_center_wallboard') ? 'margin-left: 15px;' : null;
 	if (permission_exists('call_center_queue_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','style'=>$margin_left,'link'=>'call_center_queue_edit.php'.($query_string ? '?'.$query_string : '')]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','style'=>$margin_left,'link'=>'call_center_queue_edit.php']);
 		unset($margin_left);
 	}
 	if (permission_exists('call_center_queue_add') && $result) {
