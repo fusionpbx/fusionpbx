@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -137,6 +137,7 @@
 		echo "		$('#btn_copy').fadeOut(fade_speed, function() {\n";
 		echo "			$('#btn_copy_cancel').fadeIn(fade_speed);\n";
 		echo "			$('#target_domain').fadeIn(fade_speed);\n";
+		echo "			if (typeof window.sync_domain_search_select_visibility === 'function') { window.sync_domain_search_select_visibility('target_domain'); }\n";
 		echo "			$('#btn_paste').fadeIn(fade_speed);\n";
 		echo "			document.getElementById('domain_uuid_target').value = '';\n";
 		echo "		});";
@@ -145,6 +146,7 @@
 		echo "		$('#btn_copy_cancel').fadeOut(fade_speed);\n";
 		echo "		$('#target_domain').fadeOut(fade_speed);\n";
 		echo "		$('#btn_paste').fadeOut(fade_speed, function() {\n";
+		echo "			if (typeof window.sync_domain_search_select_visibility === 'function') { window.sync_domain_search_select_visibility('target_domain'); }\n";
 		echo "			$('#btn_copy').fadeIn(fade_speed);\n";
 		echo "			document.getElementById('target_domain').selectedIndex = 0;\n";
 		echo "			document.getElementById('domain_uuid_target').value = '';\n";
@@ -168,7 +170,7 @@
 	if (permission_exists("domain_select") && permission_exists("domain_setting_add") && $num_rows) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'id'=>'btn_copy','icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','onclick'=>'show_domains();']);
 		echo button::create(['type'=>'button','label'=>$text['button-cancel'],'id'=>'btn_copy_cancel','icon'=>$settings->get('theme', 'button_icon_cancel'),'style'=>'display: none;','onclick'=>'hide_domains();']);
-		echo 	"<select class='formfld' style='display: none; width: auto;' id='target_domain' onchange=\"document.getElementById('domain_uuid_target').value = this.options[this.selectedIndex].value;\">\n";
+		echo "	<select class='formfld' style='display: none; width: auto;' id='target_domain' onchange=\"document.getElementById('domain_uuid_target').value = this.options[this.selectedIndex].value;\" data-domain-search='true'>\n";
 		echo "		<option value='".$domain_uuid."'>(".$text['label-duplicate'].")</option>\n";
 		echo "		<option value='' selected='selected' disabled='disabled'>".$text['label-domain']."...</option>\n";
 		foreach ($_SESSION['domains'] as $domain) {
