@@ -430,8 +430,28 @@
 
 		// Update the php-fpm.service file
 			if (PHP_OS === 'Linux') {
-				$php_version = implode('.', array_slice(explode('.', PHP_VERSION), 0, 2));
-				$line_to_insert = "ReadWritePaths=/tmp /etc/freeswitch /usr/share/freeswitch /var/lib/freeswitch /usr/share/fusionpbx /var/cache/fusionpbx";
+				// Get the PHP version
+				$php_version =  PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;
+
+				// Make sure the /usr/share/fusionpbx directory exists
+				if (!file_exists('/usr/share/fusionpbx')) {
+					mkdir('/usr/share/fusionpbx', 0755, true);
+				}
+
+				// Build the read write paths array
+				$read_write_paths[] = '/etc/freeswitch';
+				$read_write_paths[] = '/usr/share/freeswitch';
+				$read_write_paths[] = '/var/lib/freeswitch';
+				$read_write_paths[] = $settings->get('cache', 'location', '/var/cache/fusionpbx');
+				$read_write_paths[] = '/usr/share/fusionpbx';
+
+				// Build the line to add to the service file
+				$line_to_insert = "ReadWritePaths=/tmp";
+				foreach($read_write_paths as $read_write_path) {
+					if (file_exists($read_write_path)) {
+						$line_to_insert .= ' '.$read_write_path;
+					}
+				}
 				$service_file = "/usr/lib/systemd/system/php".$php_version."-fpm.service";
 				if (file_exists($service_file)) {
 					// Get the file contents
