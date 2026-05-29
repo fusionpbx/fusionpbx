@@ -578,7 +578,20 @@
 					'icon'=>'external-link-alt',
 					'id'=>'btn_dest_go',
 					'title'=>$text2['button-edit'],
-					'onclick'=>"let types = document.getElementById('{$destination_id}_type').options; let opts = document.getElementById('{$destination_id}').options; if(opts[opts.selectedIndex].id && opts[opts.selectedIndex].id.length > 0) {window.open('/app/'+types[types.selectedIndex].className+'/'+types[types.selectedIndex].id+'_edit.php?id='+opts[opts.selectedIndex].id, '_blank');}"
+					'onclick'=>"
+						let types = document.getElementById('{$destination_id}_type').options;
+						let opts = document.getElementById('{$destination_id}').options;
+						let selected_type = types[types.selectedIndex].className;
+						let selected_id = opts[opts.selectedIndex].id;
+						if (selected_id && selected_id.length > 0) {
+							// Special case for call_center_queue
+							if (selected_type === 'call_centers') {
+								window.open('/app/'+selected_type+'/call_center_queue_edit.php?id='+selected_id, '_blank');
+							} else {
+								window.open('/app/'+selected_type+'/'+selected_id+'_edit.php?id='+selected_id, '_blank');
+							}
+						}
+					"
 				])."\n";
 
 				//debug information
