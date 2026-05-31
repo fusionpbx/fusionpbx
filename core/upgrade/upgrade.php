@@ -298,6 +298,9 @@
 			}
 		}
 
+		// Update php fpm service
+		update_php_fpm($settings);
+
 		// Upgrade application defaults
 		$domain = new domains;
 		$domain->upgrade();
@@ -428,69 +431,8 @@
 				echo "[ Update ] Application defaults.\n";
 			}
 
-		// Update the php-fpm.service file
-			if (PHP_OS === 'Linux') {
-				// Get the PHP version
-				$php_version =  PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;
-
-				// Make sure the /usr/share/fusionpbx directory exists
-				if (!file_exists('/usr/share/fusionpbx')) {
-					mkdir('/usr/share/fusionpbx', 0755, true);
-				}
-
-				// Build the read write paths array
-				$read_write_paths[] = '/etc/freeswitch';
-				$read_write_paths[] = '/usr/share/freeswitch';
-				$read_write_paths[] = '/var/lib/freeswitch';
-				$read_write_paths[] = $settings->get('cache', 'location', '/var/cache/fusionpbx');
-				$read_write_paths[] = '/usr/share/fusionpbx';
-
-				// Build the line to add to the service file
-				$line_to_insert = "ReadWritePaths=/tmp";
-				foreach($read_write_paths as $read_write_path) {
-					if (file_exists($read_write_path)) {
-						$line_to_insert .= ' '.$read_write_path;
-					}
-				}
-				$service_file = "/usr/lib/systemd/system/php".$php_version."-fpm.service";
-				if (file_exists($service_file)) {
-					// Get the file contents
-					$file_contents = file_get_contents($service_file);
-
-					// Check if "ReadWritePaths" exists in the file contents
-					$file_updated = strpos($file_contents, 'ReadWritePaths') !== false;
-
-					// Check if the service file is writable
-					$file_writable = is_writable($service_file);
-
-					// Find the empty line befor the Install
-					if (!$file_updated && $file_writable) {
-						$lines = explode("\n", $file_contents);
-						$insert_index = -1;
-						for ($i = 0; $i < count($lines); $i++) {
-							if (trim($lines[$i]) === '[Install]') {
-								// Find empty line before [Install]
-								for ($j = $i - 1; $j >= 0; $j--) {
-									if (trim($lines[$j]) === '') {
-										$insert_index = $j;
-										break;
-									}
-								}
-								break;
-							}
-						}
-
-						// Add the new content
-						array_splice($lines, $insert_index, 0, $line_to_insert);
-						$new_contents = implode("\n", $lines) . "\n";
-						file_put_contents($service_file, $new_contents);
-
-						// Prepared systemd to use the update
-						system('systemctl daemon-reload');
-						system('systemctl restart php'.$php_version.'-fpm');
-					}
-				}
-			}
+		// Update php fpm service
+			update_php_fpm($settings);
 
 		// Run all app_defaults.php files
 			$domain = new domains;
@@ -631,6 +573,80 @@
 		}
 
 	}
+
+/**
+ * Update PHP FPM service a ReadWritePaths
+ *
+ * This function updates PHP FPM servie add ReadWritePaths to allow writing to specific directories
+ *
+ * @param settings $settings The current application settings instance.
+ */
+function update_php_fpm(settings $settings) {
+
+	// Update the php-fpm.service file
+	if (PHP_OS === 'Linux') {
+		// Get the PHP version
+		$php_version =  PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;
+
+		// Make sure the /usr/share/fusionpbx directory exists
+		if (!file_exists('/usr/share/fusionpbx')) {
+			mkdir('/usr/share/fusionpbx', 0755, true);
+		}
+
+		// Build the read write paths array
+		$read_write_paths[] = '/etc/freeswitch';
+		$read_write_paths[] = '/usr/share/freeswitch';
+		$read_write_paths[] = '/var/lib/freeswitch';
+		$read_write_paths[] = $settings->get('cache', 'location', '/var/cache/fusionpbx');
+		$read_write_paths[] = '/usr/share/fusionpbx';
+
+		// Build the line to add to the service file
+		$line_to_insert = "ReadWritePaths=/tmp";
+		foreach($read_write_paths as $read_write_path) {
+			if (file_exists($read_write_path)) {
+				$line_to_insert .= ' '.$read_write_path;
+			}
+		}
+		$service_file = "/usr/lib/systemd/system/php".$php_version."-fpm.service";
+		if (file_exists($service_file)) {
+			// Get the file contents
+			$file_contents = file_get_contents($service_file);
+
+			// Check if "ReadWritePaths" exists in the file contents
+			$file_updated = strpos($file_contents, 'ReadWritePaths') !== false;
+
+			// Check if the service file is writable
+			$file_writable = is_writable($service_file);
+
+			// Find the empty line befor the Install
+			if (!$file_updated && $file_writable) {
+				$lines = explode("\n", $file_contents);
+				$insert_index = -1;
+				for ($i = 0; $i < count($lines); $i++) {
+					if (trim($lines[$i]) === '[Install]') {
+						// Find empty line before [Install]
+						for ($j = $i - 1; $j >= 0; $j--) {
+							if (trim($lines[$j]) === '') {
+								$insert_index = $j;
+								break;
+							}
+						}
+						break;
+					}
+				}
+
+				// Add the new content
+				array_splice($lines, $insert_index, 0, $line_to_insert);
+				$new_contents = implode("\n", $lines) . "\n";
+				file_put_contents($service_file, $new_contents);
+
+				// Prepared systemd to use the update
+				system('systemctl daemon-reload');
+				system('systemctl restart php'.$php_version.'-fpm');
+			}
+		}
+	}
+}
 
 /**
  * Update file permissions for a FusionPBX installation.
