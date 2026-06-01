@@ -2,7 +2,17 @@
 
 if ($domains_processed == 1) {
 
-	//build the array
+	// Prompt to Install Zip
+	if (PHP_SAPI === 'cli') {
+		$ffmpeg_path = shell_exec('which zip');
+		if (empty($ffmpeg_path)) {
+			echo "Please install zip\n";
+			echo "On Debian / Ubuntu Linux install zip with this command.\n";
+			echo "apt install zip\n";
+		}
+	}
+
+	// Load the email template
 	$x = 0;
 	$array['email_templates'][$x]['email_template_uuid'] = 'e591db34-0f35-47a5-aaa0-23e7285a0d7e';
 	$array['email_templates'][$x]['template_language'] = 'en-us';

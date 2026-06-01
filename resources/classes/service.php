@@ -1003,7 +1003,7 @@ abstract class service {
 	/**
 	 * Child classes must provide a mechanism to reload settings
 	 */
-	abstract protected function reload_settings(): void;
+	abstract public function reload_settings(): void;
 
 	/**
 	 * Logs a message at the DEBUG level.
@@ -1137,7 +1137,7 @@ abstract class service {
 //
 class simple_example extends service {
 
-	protected function reload_settings(): void {
+	public function reload_settings(): void {
 
 	}
 
@@ -1190,7 +1190,7 @@ class child_service extends service {
 	//
 	// This function is required from the base service class because it is used when the reload command line option is used
 	//
-	protected function reload_settings(): void {
+	public function reload_settings(): void {
 		//informing the user in this example is simple but can use the parent class log functions
 		echo "Reloading settings\n";
 

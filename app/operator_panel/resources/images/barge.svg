@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Barge">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4a5568"/>
+      <stop offset="100%" stop-color="#2d3748"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f6ad55"/>
+      <stop offset="100%" stop-color="#dd6b20"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="6" y="26" width="10" height="12" rx="2" fill="url(#g1)"/>
+  <polygon points="16,22 38,14 38,50 16,42" fill="url(#g2)"/>
+  <rect x="38" y="14" width="6" height="36" rx="2" fill="#2d3748"/>
+
+  <path d="M46 24 C52 27, 52 37, 46 40" fill="none" stroke="#2d3748" stroke-width="3" stroke-linecap="round"/>
+  <path d="M50 19 C59 24, 59 40, 50 45" fill="none" stroke="#2d3748" stroke-width="3" stroke-linecap="round"/>
+</svg>

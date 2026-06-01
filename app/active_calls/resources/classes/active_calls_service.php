@@ -74,6 +74,7 @@ class active_calls_service extends service implements websocket_service_interfac
 		'secure',
 		// Application
 		'application',
+		'application_name',
 		'application_data',
 		'variable_current_application',
 		'playback_file_path',
@@ -91,21 +92,27 @@ class active_calls_service extends service implements websocket_service_interfac
 		'content_type',
 	];
 
+	const PERMISSION_PREFIX = 'call_active_';
+
 	//
 	// Maps the event key to the permission name
 	//
 	const PERMISSION_MAP = [
-		'channel_read_codec_name'   => 'call_active_codec',
-		'channel_read_codec_rate'   => 'call_active_codec',
-		'channel_write_codec_name'  => 'call_active_codec',
-		'channel_write_codec_rate'  => 'call_active_codec',
-		'caller_channel_name'       => 'call_active_profile',
-		'secure'                    => 'call_active_secure',
-		'application'               => 'call_active_application',
-		'playback_file_path'        => 'call_active_application',
-		'variable_current_application'=> 'call_active_application',
-		'channel_presence_id'		=> 'call_active_view',
-		'caller_context'			=> 'call_active_domain',
+		'channel_read_codec_name'      => 'call_active_codec',
+		'channel_read_codec_rate'      => 'call_active_codec',
+		'channel_write_codec_name'     => 'call_active_codec',
+		'channel_write_codec_rate'     => 'call_active_codec',
+		'caller_channel_name'          => 'call_active_profile',
+		'secure'                       => 'call_active_secure',
+		'application'                  => 'call_active_application',
+		'application_name'             => 'call_active_application',
+		'application_data'             => 'call_active_application',
+		'playback_file_path'           => 'call_active_application',
+		'variable_current_application' => 'call_active_application',
+		'call_direction'               => 'call_active_direction',
+		'variable_call_direction'      => 'call_active_direction',
+		'channel_presence_id'          => 'call_active_view',
+		'caller_context'               => 'call_active_domain',
 	];
 
 	/**
@@ -181,6 +188,7 @@ class active_calls_service extends service implements websocket_service_interfac
 	public static function create_filter_chain_for(subscriber $subscriber): filter {
 		// Do not filter domain
 		if ($subscriber->has_permission('call_active_all') || $subscriber->is_service()) {
+			self::log("Subscriber $subscriber->id has permission to view all active calls", LOG_DEBUG);
 			return filter_chain::and_link([
 				new event_filter(self::SWITCH_EVENTS),
 				new permission_filter(self::PERMISSION_MAP, $subscriber->get_permissions()),
@@ -190,6 +198,7 @@ class active_calls_service extends service implements websocket_service_interfac
 
 		// Filter on single domain name
 		if ($subscriber->has_permission('call_active_domain')) {
+			self::log("Subscriber $subscriber->id has permission to view active calls for their domain", LOG_DEBUG);
 			return filter_chain::and_link([
 				new event_filter(self::SWITCH_EVENTS),
 				new permission_filter(self::PERMISSION_MAP, $subscriber->get_permissions()),
@@ -198,6 +207,7 @@ class active_calls_service extends service implements websocket_service_interfac
 			]);
 		}
 
+		self::log("Subscriber $subscriber->id does not have permission to view all active calls or active calls for their domain. Filtering on extensions.", LOG_DEBUG);
 		// Filter on extensions
 		return filter_chain::and_link([
 			new event_filter(self::SWITCH_EVENTS),
@@ -229,7 +239,7 @@ class active_calls_service extends service implements websocket_service_interfac
 	 * Reloads the settings for the service so the service does not have to be restarted
 	 * @return void
 	 */
-	protected function reload_settings(): void {
+	public function reload_settings(): void {
 		// re-read the config file to get any possible changes
 		parent::$config->read();
 
@@ -384,10 +394,18 @@ class active_calls_service extends service implements websocket_service_interfac
 			if (!empty($read)) {
 				$write = $except = [];
 				// Wait for an event and timeout at 1/3 of a second so we can re-check all connections
-				if (false === stream_select($read, $write, $except, 0, 333333)) {
-					// severe error encountered so exit
+				$select_result = @stream_select($read, $write, $except, 0, 333333);
+				if ($select_result === false) {
+					// SIGUSR1/SIGHUP can interrupt stream_select during reload
+					$last_error = error_get_last();
+					$last_error_message = $last_error['message'] ?? '';
+					$error_message = strtolower((string)$last_error_message);
+					if (str_contains($error_message, 'interrupted system call')) {
+						continue;
+					}
+
+					// real fatal select error
 					$this->running = false;
-					// Exit with non-zero exit code
 					return 1;
 				}
 
@@ -480,7 +498,7 @@ class active_calls_service extends service implements websocket_service_interfac
 
 		// Respond with bad command
 		if (empty($uuid)) {
-			websocket_client::send(websocket_message::request_is_bad($request_id, SERVICE_NAME, 'hangup'));
+			websocket_client::send($this->ws_client->socket(), websocket_message::request_is_bad($request_id, SERVICE_NAME, 'hangup'));
 		}
 
 		$host = self::$switch_host ?? parent::$config->get('switch.event_socket.host', '127.0.0.1');
@@ -742,7 +760,19 @@ class active_calls_service extends service implements websocket_service_interfac
 			$message->caller_caller_id_name = $call['initial_cid_name'];
 			$message->caller_caller_id_number = $call['initial_cid_num'];
 			$message->caller_destination_number = $call['initial_dest'];
-			$message->application = $call['application'] ?? '';
+			$application = $call['application'] ?? '';
+			$application_data = $call['application_data'] ?? '';
+			$message->application = $application;
+			$message->application_data = $application_data;
+			$application_name = '';
+			if (!empty($application_data)) {
+				$application_name = (!empty($application) && strpos($application_data, $application . ':') !== 0)
+					? $application . ':' . $application_data
+					: $application_data;
+			} elseif (!empty($application)) {
+				$application_name = $application;
+			}
+			$message->application_name = $application_name;
 			$message->secure = $call['secure'] ?? '';
 
 			if (true) {
@@ -776,8 +806,11 @@ class active_calls_service extends service implements websocket_service_interfac
 
 	/**
 	 * Allows the service to register a callback so when the topic arrives the callable is called
-	 * @param type $topic
-	 * @param type $callable
+	 *
+	 * @param string   $topic
+	 * @param callable $callable
+	 *
+	 * @return void
 	 */
 	public function on_topic($topic, $callable) {
 		if (!isset($this->topics[$topic])) {
@@ -796,7 +829,7 @@ class active_calls_service extends service implements websocket_service_interfac
 		$json_string = $this->ws_client->read();
 
 		// Nothing to do
-		if ($json_string === null) {
+		if (empty($json_string)) {
 			$this->warning('Message received from Websocket is empty');
 			return;
 		}

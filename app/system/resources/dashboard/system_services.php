@@ -36,51 +36,6 @@
 		exit;
 	}
 
-//function to parse a FusionPBX service from a .service file
-	if (!function_exists('get_classname')) {
-		/**
-		 * Retrieves the name of a PHP class from an ExecStart directive in a service file.
-		 *
-		 * @param string $file Path to the service file.
-		 *
-		 * @return string The name of the PHP class, or empty string if not found.
-		 */
-		function get_classname(string $file) {
-			if (!file_exists($file)) {
-				return '';
-			}
-			$parsed = parse_ini_file($file);
-			$exec_cmd = $parsed['ExecStart'] ?? '';
-			$parts = explode(' ', $exec_cmd ?? '');
-			$php_file = $parts[1] ?? '';
-			if (!empty($php_file)) {
-				return $php_file;
-			}
-			return '';
-		}
-	}
-
-//function to check for running process: returns [running, pid, etime]
-	if (!function_exists('is_running')) {
-		/**
-		 * Checks if a process with the given name is currently running.
-		 *
-		 * @param string $name The name of the process to check for.
-		 *
-		 * @return array An array containing information about the process's status,
-		 *               including whether it's running, its PID, and how long it's been running.
-		 */
-		function is_running(string $name) {
-			$name = escapeshellarg($name);
-			$pid = trim(shell_exec("ps -aux | grep $name | grep -v grep | awk '{print \$2}' | head -n 1") ?? '');
-			if ($pid && is_numeric($pid)) {
-				$etime = trim(shell_exec("ps -p $pid -o etime= | tr -d '\n'") ?? '');
-				return ['running' => true, 'pid' => $pid, 'etime' => $etime];
-			}
-			return ['running' => false, 'pid' => null, 'etime' => null];
-		}
-	}
-
 //function to format etime into friendly display
 	if (!function_exists('format_etime')) {
 		/**
@@ -133,31 +88,29 @@
 		'event_guard'	 => 'Event Guard',
 		'fax_queue'		 => 'Fax Queue',
 		'maintenance_service' => 'Maintenance Service',
-		'message_events'			=> 'Message Events',
-		'message_queue'			 => 'Message Queue',
-		'xml_cdr'			 => 'XML CDR',
-		'freeswitch'		=> 'FreeSWITCH',
-		'nginx'				 => 'Nginx',
-		'postgresql'		=> 'PostgreSQL',
-		'event_guard'	 => 'Event Guard',
-		'sshd'		=> 'SSH Server'
+		'message_events' => 'Message Events',
+		'message_queue'  => 'Message Queue',
+		'xml_cdr'        => 'XML CDR',
+		'freeswitch'     => 'FreeSWITCH',
+		'nginx'          => 'Nginx',
+		'postgresql'     => 'PostgreSQL',
+		'event_guard'    => 'Event Guard',
+		'sshd'		     => 'SSH Server'
 	];
 
 	$files = glob(PROJECT_ROOT . '/*/*/resources/service/*.service');
 	$services = [];
-	$total_running = 0;
 
-	// load FusionPBX installed services
+	// Group files by module directory so debian/freebsd variants are counted once.
+	$grouped_service_files = [];
 	foreach ($files as $file) {
-		$service = get_classname($file);
-		//check if the service name was found
-		if (!empty($service)) {
-			$basename = basename($service, '.php');
-			$info = is_running($service);
-			$info['label'] = $service_labels[$basename] ?? ucwords(str_replace('_', ' ', $basename));
-			$services[$basename] = $info;
-			if ($info['running']) $total_running++;
-		}
+		$grouped_service_files[dirname($file)][] = $file;
+	}
+
+	// load FusionPBX installed services using OS-specific class handling
+	$system = system_information::new();
+	if ($system !== null) {
+		$services = $system->get_installed_services($grouped_service_files, $service_labels);
 	}
 
 	// Get extra system services from default settings
@@ -171,11 +124,10 @@
 		// Loop through extra services if array is not empty
 		if (!empty($extra_services)) {
 			foreach ($extra_services as $extra) {
-				if (!isset($services[$extra])) {
-					$info = is_running($extra);
+				if (!isset($services[$extra]) && $system !== null) {
+					$info = $system->is_running($extra);
 					$info['label'] = $service_labels[$extra] ?? ucwords($extra);
 					$services[$extra] = $info;
-					if ($info['running']) $total_running++;
 				}
 			}
 		}
@@ -183,6 +135,9 @@
 
 //track total installed services for charts
 	$total_services = count($services);
+	$total_running = count(array_filter($services, function($service) {
+		return !empty($service['running']);
+	}));
 
 //convert to a key
 	$widget_key = str_replace(' ', '_', strtolower($widget_name));

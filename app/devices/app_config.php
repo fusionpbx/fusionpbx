@@ -1676,6 +1676,14 @@
 		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
 		$vendors[$y]['functions'][$z]['groups'][] = "admin";
 		$z++;
+		$vendors[$y]['functions'][$z]['uuid'] = "731602b0-acf7-4178-aae7-be25deb4832a";
+		$vendors[$y]['functions'][$z]['label'] = "label-mobile_line";
+		$vendors[$y]['functions'][$z]['type'] = "mobile_line";
+		$vendors[$y]['functions'][$z]['subtype'] = "";
+		$vendors[$y]['functions'][$z]['value'] = "77";
+		$vendors[$y]['functions'][$z]['groups'][] = "superadmin";
+		$vendors[$y]['functions'][$z]['groups'][] = "admin";
+		$z++;
 
 	//snom details
 		$y++;

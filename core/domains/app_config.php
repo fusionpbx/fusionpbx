@@ -51,6 +51,10 @@
 		$apps[$x]['permissions'][$y]['name'] = "domain_select";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "domain_profile";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 
 	//default settings
 		$y=0;
@@ -66,7 +70,7 @@
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_domains";
 		$apps[$x]['db'][$y]['table']['parent'] = "";
-		$z=0;	
+		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2024
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -70,6 +70,20 @@ class plugin_totp {
 	 */
 	function totp(authentication $auth, settings $settings) {
 
+		//add multi-lingual support
+		$language = new text;
+		$text     = $language->get(null, '/core/authentication');
+
+		//validate the token
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			$token = new token;
+			if (!$token->validate('login')) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: login.php');
+				exit;
+			}
+		}
+
 		//pre-process some settings
 		$theme_favicon           = $settings->get('theme', 'favicon', PROJECT_PATH . '/themes/default/favicon.ico');
 		$theme_logo              = $settings->get('theme', 'logo', PROJECT_PATH . '/themes/default/images/logo_login.png');
@@ -83,6 +97,7 @@ class plugin_totp {
 		$theme_background_video  = (isset($background_videos) && is_array($background_videos)) ? $background_videos[0] : null;
 		//$login_domain_name_visible = $settings->get('login', 'domain_name_visible');
 		//$login_domain_name = $settings->get('login', 'domain_name');
+		$login_remember_me = $settings->get('login', 'remember_me', true);
 		$login_destination = $settings->get('login', 'destination');
 		$users_unique      = $settings->get('users', 'unique', '');
 
@@ -94,6 +109,9 @@ class plugin_totp {
 			$this->username       = $_POST['username'];
 			$_SESSION["username"] = $this->username;
 		}
+		if (isset($_POST["remember"])) {
+			$_SESSION['remember'] = $_POST["remember"];
+		}
 
 		//request the username
 		if (!$this->username && !isset($_POST['authentication_code'])) {
@@ -103,12 +121,8 @@ class plugin_totp {
 			$domain_name  = $domain_array[0];
 
 			//create token
-			//$object = new token;
-			//$token = $object->create('login');
-
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get(null, '/core/authentication');
+			$object = new token;
+			$token = $object->create('login');
 
 			//initialize a template object
 			$view               = new template();
@@ -126,12 +140,18 @@ class plugin_totp {
 			$view->assign("login_logo_width", $theme_login_logo_width);
 			$view->assign("login_logo_height", $theme_login_logo_height);
 			$view->assign("login_logo_source", $theme_logo);
+			$view->assign("login_remember_me", $login_remember_me);
+			$view->assign("label_remember_me", $text['label-remember_me']);
 			$view->assign("button_login", $text['button-login']);
 			$view->assign("favicon", $theme_favicon);
 			$view->assign("message_delay", $theme_message_delay);
 
 			//messages
 			$view->assign('messages', message::html(true, '		'));
+
+			//add the token name and hash to the view
+			$view->assign("token_name", $token['name']);
+			$view->assign("token_hash", $token['hash']);
 
 			//show the views
 			$content = $view->render('username.htm');
@@ -204,12 +224,8 @@ class plugin_totp {
 			$domain_name  = $domain_array[0];
 
 			//create token
-			//$object = new token;
-			//$token = $object->create('login');
-
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get(null, '/core/authentication');
+			$object = new token;
+			$token = $object->create('login');
 
 			//initialize a template object
 			$view               = new template();
@@ -231,9 +247,13 @@ class plugin_totp {
 			$view->assign("favicon", $theme_favicon);
 			$view->assign("background_video", $theme_background_video);
 			if (!empty($_SESSION['username'])) {
-				$view->assign("username", $_SESSION['username']);
+				$view->assign("username", escape($_SESSION['username']));
 				$view->assign("button_cancel", $text['button-cancel']);
 			}
+
+			//add the token name and hash to the view
+			$view->assign("token_name", $token['name']);
+			$view->assign("token_hash", $token['hash']);
 
 			//show the views
 			if (!empty($_SESSION['authentication']['plugin']['database']['authorized']) && empty($this->user_totp_secret)) {

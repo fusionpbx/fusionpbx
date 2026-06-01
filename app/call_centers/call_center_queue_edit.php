@@ -52,6 +52,33 @@
 	$queue_description = '';
 	$queue_timeout_action = '';
 
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'queue_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$sort = $order_by == 'queue_extension' ? 'natural' : null;
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('call_center_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -92,7 +119,7 @@
 
 		if ($total_call_center_queues >= $settings->get('limit','call_center_queues', 0)) {
 			message::add($text['message-maximum_queues'].' '.$settings->get('limit','call_center_queues', ''), 'negative');
-			header('Location: call_center_queues.php');
+			header('Location: call_center_queues.php'.($query_string ? '?'.$query_string : ''));
 			return;
 		}
 	}
@@ -238,7 +265,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: call_center_queues.php');
+				header('Location: call_center_queues.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -336,11 +363,11 @@
 			$array['call_center_queues'][0]['queue_extension'] = $queue_extension;
 			$array['call_center_queues'][0]['queue_greeting'] = $queue_greeting;
 			$array['call_center_queues'][0]['queue_language'] = $queue_language;
+			$array['call_center_queues'][0]['queue_dialect'] = $queue_dialect;
+			$array['call_center_queues'][0]['queue_voice'] = $queue_voice;
 			$array['call_center_queues'][0]['queue_strategy'] = $queue_strategy;
 			$array['call_center_queues'][0]['queue_moh_sound'] = $queue_moh_sound;
 			$array['call_center_queues'][0]['queue_record_template'] = $record_template;
-			$array['call_center_queues'][0]['queue_dialect'] = $queue_dialect;
-			$array['call_center_queues'][0]['queue_voice'] = $queue_voice;
 			$array['call_center_queues'][0]['queue_limit'] = $queue_limit;
 			$array['call_center_queues'][0]['queue_time_base_score'] = $queue_time_base_score;
 			$array['call_center_queues'][0]['queue_time_base_score_sec'] = $queue_time_base_score_sec;
@@ -401,11 +428,18 @@
 			}
 
 		//add definable export variables can be set in default settings
-			$export_variables = 'call_center_queue_uuid,sip_h_Alert-Info';
+			$export_variables = 'call_center_queue_uuid,sip_h_Alert-Info,sound_prefix';
 			if (!empty($settings->get('call_center','export_vars', []))) {
 				foreach ($settings->get('call_center','export_vars', []) as $export_variable) {
 					$export_variables .= ','.$export_variable;
 				}
+			}
+
+		//set the default language, dialect and voice
+			if (empty($queue_language) && empty($queue_dialect) && empty($queue_voice)) {
+				$queue_language = 'en';
+				$queue_dialect = 'us';
+				$queue_voice = 'callie';
 			}
 
 		//build the xml dialplan
@@ -420,6 +454,7 @@
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^(callcenter\+)?".xml::sanitize($queue_extension)."$\">\n";
 			$dialplan_xml .= "		<action application=\"answer\" data=\"\"/>\n";
+			$dialplan_xml .= "		<action application=\"set\" data=\"sound_prefix=".$settings->get('switch','sounds', '').'/'.xml::sanitize($queue_language)."/".xml::sanitize($queue_dialect)."/".xml::sanitize($queue_voice)."\"/>\n";
 			if (!empty($call_center_queue_uuid) && is_uuid($call_center_queue_uuid)) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"call_center_queue_uuid=".xml::sanitize($call_center_queue_uuid)."\"/>\n";
 			}
@@ -563,7 +598,7 @@
 
 		//redirect the user
 			if (is_uuid($call_center_queue_uuid)) {
-				header("Location: call_center_queue_edit.php?id=".urlencode($call_center_queue_uuid));
+				header("Location: call_center_queue_edit.php?id=".urlencode($call_center_queue_uuid).($query_string ? '&'.$query_string : ''));
 			}
 			return;
 
@@ -826,7 +861,7 @@
 	}
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme','button_icon_back', ''),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'call_center_queues.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme','button_icon_back', ''),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'call_center_queues.php'.($query_string ? '?'.$query_string : '')]);
 
 	if ($action == "update") {
 		if (permission_exists('call_center_wallboard')) {

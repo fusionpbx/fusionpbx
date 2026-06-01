@@ -36,12 +36,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//get order and order by, page
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_REQUEST["order_by"] ?? ''));
-	$order = $_REQUEST["order"] ?? 'asc';
-	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
-	$search = $_REQUEST['search'] ?? null;
-
 //set the defaults
 	$device_model = '';
 	$device_firmware_version = '';
@@ -64,6 +58,36 @@
 		$device_uuid = uuid();
 	}
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'device_label'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$fields = $_GET['fields'] ?? '';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$url_params = [];
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($fields)) {
+		$url_params['fields'] = $fields;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('device_all')) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
+
 //get the total device count from the database, check the limit, if defined
 	if ($action == 'add' && $settings->get('limit', 'devices', '') != '') {
 		$sql = "select count(*) from v_devices where domain_uuid = :domain_uuid ";
@@ -71,7 +95,7 @@
 		$total_devices = $database->select($sql, $parameters, 'column');
 		if ($total_devices >= $settings->get('limit', 'devices', '')) {
 			message::add($text['message-maximum_devices'].' '.$settings->get('limit', 'devices', ''), 'negative');
-			header('Location: devices.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+			header('Location: devices.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 		unset($sql, $parameters, $total_devices);
@@ -94,7 +118,7 @@
 						break;
 				}
 
-				header('Location: devices.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+				header('Location: devices.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -185,7 +209,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: devices.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+				header('Location: devices.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -232,7 +256,7 @@
 				if ($device_domain_name != '') {
 					$message = $text['message-duplicate'].($device_domain_name != $domain_name ? ": ".$device_domain_name : null);
 					message::add($message,'negative');
-					header('Location: devices.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+					header('Location: devices.php'.($query_string ? '?'.$query_string : ''));
 					exit;
 				}
 				unset($sql, $parameters, $device_domain_name);
@@ -501,6 +525,7 @@
 					if (!empty($settings->get('provision', 'path'))) {
 						$prov = new provision(['settings' => $settings]);
 						$prov->domain_uuid = $domain_uuid;
+						$prov->device_uuid = $device_uuid;
 						$response = $prov->write();
 					}
 
@@ -515,7 +540,7 @@
 							message::add($text['message-update']);
 						}
 						//redirect the browser
-						header("Location: device_edit.php?id=".urlencode($device_uuid).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+						header("Location: device_edit.php?id=".urlencode($device_uuid).($query_string ? '&'.$query_string : ''));
 						exit;
 					}
 
@@ -1042,7 +1067,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-device']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back', ''),'id'=>'btn_back','link'=>'devices.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back', ''),'id'=>'btn_back','link'=>'devices.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == 'update') {
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists("device_line_password") && $qr_code_enabled) {
@@ -1612,13 +1637,16 @@
 						echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
 					}
 					if ($vendor_count > 1 && !empty($row['device_key_vendor'])) {
-						echo "				<td class='vtable'><i>".ucwords($row['device_key_vendor'])."</i></td>\n";
+						// echo "				<td class='vtable'><i>".ucwords($row['device_key_vendor'])."</i></td>\n";
+						echo "				<td class='vtable'>".$text['label-device_vendor']."</td>\n";
+						echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
 						if ($show_key_subtype) {
 							echo "				<td class='vtable'>".$text['label-device_key_subtype']."</td>\n";
 						}
 					}
 					else {
 						$device_keys_generic_header_displayed = true;
+						echo "				<td class='vtable'>".$text['label-device_vendor']."</td>\n";
 						echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
 						if ($show_key_subtype) {
 							echo "				<td class='vtable'>".$text['label-device_key_subtype']."</td>\n";
@@ -1699,15 +1727,26 @@
 				}
 
 				echo "<td align='left' nowrap='nowrap'>\n";
-				//echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_type]' style='width: 120px;' maxlength='255' value=\"$row['device_key_type']\">\n";
-				if (!empty($row['device_key_vendor'])) {
-					$device_key_vendor = $row['device_key_vendor'];
+				echo "	<select class='formfld' name='device_keys[".$x."][device_key_vendor]' id='key_vendor_".$x."'>\n";
+				echo "		<option value=''></option>\n";
+				$device_key_vendor = $row['device_key_vendor'] ?? '';
+				foreach ($device_vendors as $vendor) {
+					$selected = '';
+					if ($device_key_vendor == $vendor['name']) {
+						$selected = "selected='selected'";
+					}
+					if (!empty($vendor['name'])) {
+						echo "		<option value='".escape($vendor['name'])."' $selected >".escape(ucwords($vendor['name']))."</option>\n";
+					}
 				}
-				else {
+				echo "	</select>\n";
+				echo "</td>\n";
+
+				echo "<td align='left' nowrap='nowrap'>\n";
+				//echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_type]' style='width: 120px;' maxlength='255' value=\"$row['device_key_type']\">\n";
+				if (empty($row['device_key_vendor'])) {
 					$device_key_vendor = $device_vendor;
 				}
-
-				echo "<input type='hidden' id='key_vendor_".$x."' name='device_keys[".$x."][device_key_vendor]' value=\"".$device_key_vendor."\" />\n";
 
 				echo "<select class='formfld' name='device_keys[".$x."][device_key_type]' id='key_type_".$x."' onchange=\"document.getElementById('key_vendor_".$x."').value = this.options[this.selectedIndex].getAttribute('vendor');\">\n";
 				echo "	<option value=''></option>\n";
@@ -1805,6 +1844,87 @@
 		echo "		</td>";
 		echo "	</tr>";
 	}
+
+	// Filter device key types when a vendor is selected
+	echo "<select id='hidden_device_key_types' style='display: none;'>\n";
+	$prev_vendor = '';
+	foreach ($vendor_functions as $function) {
+		if ($function['vendor_name'] != $prev_vendor) {
+			if ($prev_vendor !== '') {
+				echo "	</optgroup>\n";
+			}
+			echo "	<optgroup label='".escape(ucwords($function['vendor_name']))."'>\n";
+			$prev_vendor = $function['vendor_name'];
+		}
+		echo "	<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."'>".($text['label-'.$function['type'] ?? ''] ?? $function['value'])."</option>\n";
+	}
+	if ($prev_vendor !== '') {
+		echo "	</optgroup>\n";
+	}
+	echo "</select>\n";
+	?>
+	<script>
+	const hidden_select = document.getElementById('hidden_device_key_types');
+
+	if (hidden_select) {
+		function populate_type_select(type_select, vendor_value) {
+			// Clear current options
+			type_select.innerHTML = '<option value=""></option>';
+
+			const options = hidden_select.querySelectorAll('option');
+			const selected_vendor = (vendor_value || '').trim().toLowerCase();
+
+			let last_label = null;
+			let current_group = null;
+
+			for (const option of options) {
+				const option_vendor = (option.getAttribute('vendor') || '').trim().toLowerCase();
+
+				// Filter by vendor if one is selected
+				if (selected_vendor !== '' && option_vendor !== selected_vendor) {
+					continue;
+				}
+
+				if (selected_vendor === '') {
+					// When no vendor selected, append all options with optgroups
+					const option_group = option.closest('optgroup');
+					const option_label = option_group ? option_group.getAttribute('label') : null;
+
+					if (option_label && option_label !== last_label) {
+						if (current_group) type_select.appendChild(current_group);
+						current_group = document.createElement('optgroup');
+						current_group.setAttribute('label', option_label);
+						last_label = option_label;
+					}
+
+					if (current_group) {
+						current_group.appendChild(option.cloneNode(true));
+					} else {
+						type_select.appendChild(option.cloneNode(true));
+					}
+				} else {
+					// When a vendor is selected, append options without optgroups
+					type_select.appendChild(option.cloneNode(true));
+				}
+			}
+
+			// Append the final group if it exists
+			if (current_group) type_select.appendChild(current_group);
+		}
+
+		// Attach listener to every vendor select in the table
+		document.querySelectorAll('select[name*="[device_key_vendor]"]').forEach(vendor_select => {
+			vendor_select.addEventListener('change', function() {
+				const type_select = this.closest('tr').querySelector('select[name*="[device_key_type]"]');
+				if (!type_select) return;
+
+				populate_type_select(type_select, this.value);
+				type_select.value = ''; // Reset selection when vendor changes
+			});
+		});
+	}
+	</script>
+	<?php
 
 //device settings
 	if (permission_exists('device_setting_edit')) {

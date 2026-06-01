@@ -384,6 +384,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable video codec on sip lines (Only h264 currently supported)";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "b8abb3db-5c57-4c13-9fac-71e9743ca3e9";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_output_device";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Output device allows an empty value (default), syslog and stdout";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "be8c1341-3cb6-4aa8-bef5-642ff11199e8";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_syslog_enable";
@@ -468,7 +476,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_firmware_upgrade_server_1";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.yourdomain.com/app/fanvil/resources/firmware";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.domain.local/app/fanvil/resources/firmware";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Auto upgrade firmware server 1.";
 		$y++;
@@ -476,7 +484,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "fanvil_firmware_upgrade_server_2";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server2.yourdomain.com/app/fanvil/resources/firmware";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server2.domain.local/app/fanvil/resources/firmware";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Auto upgrade firmware server 2.";
 		$y++;

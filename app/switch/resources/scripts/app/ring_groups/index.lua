@@ -87,6 +87,7 @@
 				or session:getVariable("originate_disposition") == "failure"
 				or session:getVariable("originate_disposition") == "ORIGINATOR_CANCEL"
 				or session:getVariable("originate_disposition") == "UNALLOCATED_NUMBER"
+				or session:getVariable("originate_disposition") == "CALL_REJECTED"
 			) then
 				--set the status
 					status = 'missed'
@@ -249,7 +250,9 @@
 	sql = sql .. "cast(r.ring_group_call_forward_enabled as text), ";
 	sql = sql .. "cast(r.ring_group_follow_me_enabled as text), ";
 	sql = sql .. "r.ring_group_missed_call_app, ";
-	sql = sql .. "r.ring_group_missed_call_data ";
+	sql = sql .. "r.ring_group_missed_call_data, ";
+	sql = sql .. "r.ring_group_wait_announcement, ";
+	sql = sql .. "r.ring_group_wait_interval ";
 	sql = sql .. "FROM v_ring_groups as r, v_domains as d ";
 	sql = sql .. "WHERE r.ring_group_uuid = :ring_group_uuid ";
 	sql = sql .. "AND r.domain_uuid = d.domain_uuid ";
@@ -276,6 +279,8 @@
 		ring_group_follow_me_enabled = row["ring_group_follow_me_enabled"];
 		missed_call_app = row["ring_group_missed_call_app"];
 		missed_call_data = row["ring_group_missed_call_data"];
+		ring_group_wait_announcement = row["ring_group_wait_announcement"];
+		ring_group_wait_interval = row["ring_group_wait_interval"];
 	end);
 
 --create the settings object
@@ -343,6 +348,24 @@
 		else
 			session_answer = false
 		end
+	end
+
+--answer the call if not answered and there is wait announcement
+	if (ring_group_wait_announcement and #ring_group_wait_announcement > 0 and not session_answer) then
+		session:answer();
+		session_answer = true;
+	end
+
+--schedule wait announcements
+	if (ring_group_wait_announcement and #ring_group_wait_announcement > 0) then
+		local interval = ring_group_wait_interval or 30;
+		session:setVariable("ring_group_wait_announcement", ring_group_wait_announcement);
+		session:setVariable("ring_group_wait_interval", tostring(interval));
+		session:setVariable("ring_group_wait_domain_name", domain_name);
+		session:setVariable("ring_group_wait_domain_uuid", domain_uuid);
+		local wait_announcement_script = scripts_dir:gsub('\\','/') .. "/app/ring_groups/resources/scripts/wait_announcement.lua";
+		local command = "sched_api +" .. interval .. " " .. uuid .. " lua " .. wait_announcement_script .. " " .. uuid;
+		api:executeString(command);
 	end
 
 --call screen enabled
@@ -1084,6 +1107,7 @@
 
 							--send to user
 							local dial_string_user = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..",";
+							dial_string_user = dial_string_user .. "domain_name="..domain_name..",domain_uuid="..domain_uuid..",";
 							dial_string_user = dial_string_user .. group_confirm..","..timeout_name.."="..destination_timeout..",";
 							dial_string_user = dial_string_user .. delay_name.."="..destination_delay..",";
 							dial_string_user = dial_string_user .. "dialed_extension=" .. row.destination_number .. ",";
@@ -1104,7 +1128,7 @@
 							end
 						elseif (tonumber(destination_number) == nil) then
 							--sip uri
-							dial_string = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
+							dial_string = "[sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
 						else
 							--external number
 								-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal externsions, but not external calls.
@@ -1315,6 +1339,7 @@
 							or session:getVariable("originate_disposition") == "USER_BUSY"
 							or session:getVariable("originate_disposition") == "RECOVERY_ON_TIMER_EXPIRE"
 							or session:getVariable("originate_disposition") == "failure"
+							or session:getVariable("originate_disposition") == "CALL_REJECTED"
 						) then
 							--execute the time out action
 								if ring_group_timeout_app and #ring_group_timeout_app > 0 then

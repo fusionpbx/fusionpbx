@@ -68,6 +68,9 @@ $c = 0;
 $row_style["0"] = "row_style0";
 $row_style["1"] = "row_style1";
 
+// From the include statement
+global $widget_chart_type;
+
 //icon and count
 echo "<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_active_calls_details').slideToggle('fast');\"").">\n";
 	echo "<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/active_calls/active_calls.php'\">".escape($widget_label)."</a></span>\n";
@@ -178,43 +181,43 @@ echo "<script src='/app/active_calls/resources/javascript/arrows.js?v=$version'>
                 }
             }
         });
-        
+
         // Create custom tooltip element
         const tooltipEl = document.createElement('div');
         tooltipEl.id = 'chartjs-tooltip';
         tooltipEl.style.cssText = 'position: absolute; background: rgba(0, 0, 0, 0.8); color: white; padding: 6px 10px; border-radius: 4px; font-size: 12px; pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 1000;';
         document.body.appendChild(tooltipEl);
-        
+
         // Manual hover detection on canvas
         const canvas = document.getElementById('active_calls_chart');
         canvas.addEventListener('mousemove', function(e) {
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            
+
             // Get the chart's scale information
             const chart = window.active_calls_chart;
             const xScale = chart.scales.x;
             const yScale = chart.scales.y;
-            
+
             // Find closest data point
             let closestPoint = null;
             let minDistance = Infinity;
             const threshold = 15; // pixels
-            
+
             chart.data.datasets[0].data.forEach((point, index) => {
                 if (point && typeof point.x !== 'undefined' && typeof point.y !== 'undefined') {
                     const pixelX = xScale.getPixelForValue(point.x);
                     const pixelY = yScale.getPixelForValue(point.y);
                     const distance = Math.sqrt(Math.pow(x - pixelX, 2) + Math.pow(y - pixelY, 2));
-                    
+
                     if (distance < minDistance && distance < threshold) {
                         minDistance = distance;
                         closestPoint = point;
                     }
                 }
             });
-            
+
             if (closestPoint && Number.isFinite(closestPoint.y)) {
                 tooltipEl.textContent = `Active Calls: ${closestPoint.y}`;
                 tooltipEl.style.opacity = '1';
@@ -224,7 +227,7 @@ echo "<script src='/app/active_calls/resources/javascript/arrows.js?v=$version'>
                 tooltipEl.style.opacity = '0';
             }
         });
-        
+
         canvas.addEventListener('mouseleave', function() {
             tooltipEl.style.opacity = '0';
         });
@@ -235,6 +238,7 @@ $user['extensions'] = [];
 if (!empty($_SESSION['user']['extension'])) {
 	echo "const extension = {\n";
 	foreach ($_SESSION['user']['extension'] as $user) {
+		echo "		domain_name: '" . $user['domain_name'] . "',\n";
 		echo "		extension_uuid: '" . $user['extension_uuid'] . "',\n";
 		echo "		extension: '" . $user['user'] . "',\n";
 		if (!empty($user['number_alias'])) {
@@ -329,7 +333,7 @@ if (!empty($_SESSION['user']['extension'])) {
 					console.log('Authentication required - sending credentials');
 					await active_calls_widget_client.request('authentication');
 					console.log('Authentication sent');
-					
+
 					//bind active call event to function
 					active_calls_widget_client.onEvent("CHANNEL_CALLSTATE", channel_callstate_event);
 					console.log('Sent request for calls in progress');
@@ -361,7 +365,8 @@ if (!empty($_SESSION['user']['extension'])) {
 
 	// Ringing, Answer, Hangup
 	function channel_callstate_event(call) {
-		const state = call.answer_state;
+		const state = normalize_answer_state(call);
+		call.answer_state = state;
 		//update color
 		const uuid = call.unique_id;
 		//console.log(call.event_name, call.unique_id, state, call);
@@ -409,6 +414,21 @@ if (!empty($_SESSION['user']['extension'])) {
 				hangup_call(call);
 				break;
 		}
+	}
+
+	function normalize_answer_state(call) {
+		const answer_state = String(call.answer_state ?? '').toLowerCase();
+		if (answer_state !== 'ringing') {
+			return answer_state;
+		}
+
+		// The in.progress bootstrap payload is currently synthesized as "ringing"
+		// even when a call is already established. Mark those request-seeded rows as answered.
+		if (call.__from_request === true) {
+			return 'answered';
+		}
+
+		return answer_state;
 	}
 
 	//////////////////////
@@ -543,6 +563,17 @@ echo '<td id="duration_${uuid}"></td>'.PHP_EOL;
 			const caller_caller_id_number = call.caller_caller_id_number ?? '';
 			const caller_destination_number = call.caller_destination_number ?? '';
 			const answer_state = call.answer_state ?? '';
+
+			<?php
+			//screen pop - search for contact using the caller ID number
+			if ($settings->get('active_calls', 'screen_pop_enabled', 'true')) {
+				$default_url = 'https://' . $_SESSION['user']['domain_name'] . '/core/contacts/contacts.php?search=';
+				echo "if (answer_state == 'ringing' && call.channel_presence_id == extension.extension_destination + '@' + extension.domain_name) {\n";
+				echo "	url = '" . $settings->get('active_calls', 'screen_pop_url', $default_url)."' + caller_caller_id_number;\n";
+				echo "	window.open(url, '_blank');\n";
+				echo "}\n";
+			}
+			?>
 
 			//update table cells
 			update_call_element(`caller_id_number_${uuid}`, caller_caller_id_number);

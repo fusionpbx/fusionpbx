@@ -173,7 +173,7 @@ class event_message implements filterable_payload {
 		}
 		foreach ($json_array["rows"] as $call) {
 			$message = new event_message($call);
-			// adjust basic info to match an event setting the callstate to ringing
+			// Adjust basic info to match an event setting the callstate to ringing
 			// so that a row can be created for it
 			$message['event_name'] = 'CHANNEL_CALLSTATE';
 			$message['answer_state'] = 'ringing';
@@ -181,23 +181,39 @@ class event_message implements filterable_payload {
 			$message['unique_id'] = $call['uuid'];
 			$message['call_direction'] = $call['direction'];
 
-			//set the codecs
+			// Set the codecs
 			$message['caller_channel_created_time'] = intval($call['created_epoch']) * 1000000;
 			$message['channel_read_codec_name'] = $call['read_codec'];
 			$message['channel_read_codec_rate'] = $call['read_rate'];
 			$message['channel_write_codec_name'] = $call['write_codec'];
 			$message['channel_write_codec_rate'] = $call['write_rate'];
 
-			//get the profile name
+			// Get the profile name
 			$message['caller_channel_name'] = $call['name'];
 
-			//domain or context
+			// Domain or context
 			$message['caller_context'] = $call['context'];
 			$message['caller_caller_id_name'] = $call['initial_cid_name'];
 			$message['caller_caller_id_number'] = $call['initial_cid_num'];
 			$message['caller_destination_number'] = $call['initial_dest'];
-			$message['application'] = $call['application'] ?? '';
 			$message['secure'] = $call['secure'] ?? '';
+
+			// Application may or may not have data
+			$application = $call['application'] ?? '';
+			$application_data = $call['application_data'] ?? '';
+			$message['application'] = $application;
+			$message['application_data'] = $application_data;
+			$application_name = '';
+			if (!empty($application_data)) {
+				$application_name = (!empty($application) && strpos($application_data, $application . ':') !== 0)
+					? $application . ':' . $application_data
+					: $application_data;
+			} elseif (!empty($application)) {
+				$application_name = $application;
+			}
+			$message['application_name'] = $application_name;
+
+			// Add the message to the list of calls
 			$calls[] = $message;
 		}
 		return $calls;

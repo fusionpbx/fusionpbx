@@ -31,14 +31,21 @@
 	$logout_destination = $settings->get('login', 'logout_destination', PROJECT_PATH.'/');
 
 //remove remember me token
-	setcookie('remember', '', time() - 3600, '/');
-	$sql = "update v_user_logs ";
-	$sql .= "set remember_selector = null, ";
-	$sql .= "remember_validator = null ";
-	$sql .= "where user_uuid = :user_uuid ";
-	$parameters['user_uuid'] = $_SESSION['user_uuid'];
-	$database->execute($sql, $parameters);
-	unset($sql, $parameters);
+	if ($_COOKIE['remember']) {
+		$cookie_selector = explode(":", $_COOKIE['remember'])[0];
+
+		$sql = "update v_user_logs ";
+		$sql .= "set remember_selector = null, ";
+		$sql .= "remember_validator = null ";
+		$sql .= "where remember_selector = :remember_selector ";
+		$parameters['remember_selector'] = $cookie_selector;
+		$database->execute($sql, $parameters);
+		unset($sql, $parameters);
+
+		//unset cookie
+		unset($_COOKIE['remember']);
+		setcookie('remember', '', time() - 3600, '/');
+	}
 
 //destroy session
 	session_unset();

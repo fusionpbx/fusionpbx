@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -66,6 +66,7 @@
 	$permission['xml_cdr_search_tta'] = permission_exists('xml_cdr_search_tta');
 	$permission['xml_cdr_search_hangup_cause'] = permission_exists('xml_cdr_search_hangup_cause');
 	$permission['xml_cdr_search_recording'] = permission_exists('xml_cdr_search_recording');
+	$permission['xml_cdr_search_cdr_uuid'] = permission_exists('xml_cdr_search_cdr_uuid');
 	$permission['xml_cdr_search_order'] = permission_exists('xml_cdr_search_order');
 	$permission['xml_cdr_extension'] = permission_exists('xml_cdr_extension');
 	$permission['xml_cdr_caller_id_name'] = permission_exists('xml_cdr_caller_id_name');
@@ -141,8 +142,8 @@
 	if ($permission['xml_cdr_search_extension']) {
 		$sql = "select extension_uuid, extension, number_alias from v_extensions ";
 		$sql .= "where domain_uuid = :domain_uuid ";
-		if (!$permission['xml_cdr_domain'] && is_array($extension_uuids) && @sizeof($extension_uuids != 0)) {
-			$sql .= "and extension_uuid in ('".implode("','",$extension_uuids)."') "; //only show the user their extensions
+		if (!$permission['xml_cdr_domain'] && is_array($assigned_extension_uuids) && @sizeof($assigned_extension_uuids) != 0) {
+			$sql .= "and extension_uuid in ('".implode("','",$assigned_extension_uuids)."') "; //only show the user their extensions
 		}
 		$sql .= "order by extension asc, number_alias asc ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -253,7 +254,7 @@
 	echo "		<input type='hidden' name='status' value='".escape($status ?? '')."'>\n";
 	echo "		<input type='hidden' name='caller_id_number' value='".escape($caller_id_number ?? '')."'>\n";
 	echo "		<input type='hidden' name='caller_destination' value='".escape($caller_destination ?? '')."'>\n";
-	echo "		<input type='hidden' name='extension_uuid' value='".escape($extension_uuid ?? '')."'>\n";
+	echo "		<input type='hidden' name='extension_uuids[]' value='".escape($extension_uuids ?? '')."'>\n";
 	echo "		<input type='hidden' name='destination_number' value='".escape($destination_number ?? '')."'>\n";
 	echo "		<input type='hidden' name='context' value='".escape($context ?? '')."'>\n";
 	echo "		<input type='hidden' name='answer_stamp_begin' value='".escape($answer_stamp_begin ?? '')."'>\n";
@@ -393,12 +394,12 @@
 			echo "			".$text['label-extension']."\n";
 			echo "		</div>\n";
 			echo "		<div class='field'>\n";
-			echo "			<select class='formfld' name='extension_uuid' id='extension_uuid'>\n";
-			echo "				<option value=''></option>";
+			echo "			<select class='formfld' name='extension_uuids[]' id='extension_uuid'>\n";
+			echo "				<option value=''></option>\n";
 			if (is_array($extensions) && @sizeof($extensions) != 0) {
 				foreach ($extensions as $row) {
-					$selected = ($row['extension_uuid'] == $extension_uuid) ? "selected" : null;
-					echo "		<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>";
+					$selected = ($row['extension_uuid'] == $extension_uuids[0]) ? "selected" : null;
+					echo "		<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>\n";
 				}
 			}
 			echo "			</select>\n";
@@ -556,6 +557,16 @@
 			echo "		</div>\n";
 			echo "	</div>\n";
 		}
+		if ($permission['xml_cdr_search_cdr_uuid']) {
+		  echo "	<div class='form_set'>\n";
+		  echo "		<div class='label'>\n";
+		  echo "			".$text['label-uuid']."\n";
+		  echo "		</div>\n";
+		  echo "		<div class='field'>\n";
+		  echo "			<input type='text' class='formfld' style='width:250px;' name='xml_cdr_uuid' id='xml_cdr_uuid' value='".escape($xml_cdr_uuid ?? '')."'>\n";
+		  echo "		</div>\n";
+		  echo "	</div>\n";
+		}
 		if ($permission['xml_cdr_search_order']) {
 			echo "	<div class='form_set'>\n";
 			echo "		<div class='label'>\n";
@@ -698,10 +709,6 @@
 		echo "<br />\n";
 		echo "</form>";
 	}
-
-//mod paging parameters for inclusion in column sort heading links
-	$param = substr($param, 1); //remove leading '&'
-	$param = substr($param, 0, strrpos($param, '&order_by=')); //remove trailing order by
 
 //column overflow setting
 	echo "<style>\n";
@@ -1112,7 +1119,7 @@
 						$content .= "	<td class='middle no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($hangup_cause)."</a></td>\n";
 					}
 					$content .= "</tr>\n";
-				//show the leg b only to those with the permission
+				//show the leg b only to those with permission
 					if ($row['leg'] == 'a') {
 						echo $content;
 					}
@@ -1134,7 +1141,7 @@
 	echo "</form>\n";
 
 //store last search/sort query parameters in session
-	$_SESSION['xml_cdr']['last_query'] = $_SERVER["QUERY_STRING"];
+	$_SESSION['xml_cdr']['last_query'] = $query_string;
 
 //show the footer
 	require_once "resources/footer.php";

@@ -86,7 +86,10 @@
 
 //get the count
 	$sql = "select count(*) from view_groups \n";
-	$sql .= "where true \n";
+	$sql .= "where ( ";
+	$sql .= "	group_level <= :group_level ";
+	$sql .= "	or group_level is null ";
+	$sql .= ") ";
 	if ($show == 'all' && permission_exists('group_all')) {
 		$sql .= "and (domain_uuid is not null or domain_uuid is null) ";
 	}
@@ -101,6 +104,7 @@
 		$sql .= ") \n";
 		$parameters['search'] = '%'.$search.'%';
 	}
+	$parameters['group_level'] = $_SESSION['user']['group_level'];
 	$num_rows = $database->select($sql, $parameters ?? [], 'column');
 
 //prepare to page the results
@@ -124,7 +128,10 @@
 	$sql .= "group_level, ";
 	$sql .= "group_description ";
 	$sql .= "from view_groups ";
-	$sql .= "where true \n";
+	$sql .= "where ( ";
+	$sql .= "	group_level <= :group_level ";
+	$sql .= "	or group_level is null ";
+	$sql .= ") ";
 	if ($show == 'all' && permission_exists('group_all')) {
 		$sql .= "and (domain_uuid is not null or domain_uuid is null) ";
 	}
@@ -141,6 +148,7 @@
 	}
 	$sql .= order_by($order_by, $order, 'group_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
+	$parameters['group_level'] = $_SESSION['user']['group_level'];
 	$groups = $database->select($sql, $parameters ?? [], 'all');
 	unset($sql, $parameters);
 

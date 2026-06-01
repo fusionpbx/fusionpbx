@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2025
+ Portions created by the Initial Developer are Copyright (C) 2008-2026
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -46,7 +46,6 @@
 	$default_setting_order = '';
 	$default_setting_enabled = true;
 	$default_setting_description = '';
-	$search = '';
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -55,11 +54,6 @@
 	}
 	else {
 		$action = "add";
-	}
-
-//get the search variable
-	if (!empty($_REQUEST['search'])) {
-		$search = $_REQUEST['search'] ?? '';
 	}
 
 //get http post variables and set them to php variables
@@ -73,23 +67,33 @@
 		$default_setting_description = $_POST["default_setting_description"] ?? '';
 	}
 
-//sanitize the variables
-	if (!empty($search)) {
-		$search = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $search);
-	}
-	if (!empty($domain_setting_category)) {
-		$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\. ]#', '', $default_setting_category);
-	}
+// Set variables from http GET parameters
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'default_setting_category'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
 
-//build the query string
-	$query_string = '';
+//sanitize the variables
+	$default_setting_category = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $default_setting_category);
+
+// Build the query string
+	$url_params = [];
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
 	if (!empty($search)) {
-		$query_string .= 'search='.urlencode($search);
+		$url_params['search'] = $search;
 	}
-	if ($default_setting_category != '') {
-		if ($query_string == '') { $query_string = ''; } else { $query_string .= '&'; }
-		$query_string .= 'default_setting_category='.urlencode($default_setting_category);
+	if (!empty($show) && $show == 'all' && permission_exists('stream_all')) {
+		$url_params['show'] = $show;
 	}
+	if (!empty($default_setting_category)) {
+		$url_params['default_setting_category'] = $default_setting_category;
+	}
+	$query_string = http_build_query($url_params);
 
 //process the http post
 	if (!empty($_POST) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
@@ -106,7 +110,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: default_settings.php?'.$query_string);
+				header('Location: default_settings.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -283,7 +287,7 @@
 	}
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'default_settings.php?'.$query_string]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'default_settings.php'.($query_string ? '?'.$query_string : '')]);
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','onclick'=>'submit_form();']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -512,12 +516,6 @@
 		echo "    	<option value='12h' ".(($default_setting_value == "12h") ? "selected='selected'" : null).">".$text['label-12-hour']."</option>\n";
 		echo "	</select>\n";
 	}
-	elseif ($category == "domain" && $subcategory == "setting_value_input_type" && $name == "text" ) {
-		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
-		echo "    	<option value='input'>Input</option>\n";
-		echo "    	<option value='textarea' ".($default_setting_value == "textarea" ? "selected='selected'" : null).">TextArea</option>\n";
-		echo "	</select>\n";
-	}
 	elseif ($subcategory == 'password' || (substr_count($subcategory, '_password') > 0 && $subcategory != 'input_text_font_password') || $category == "login" && $subcategory == "password_reset_key" && $name == "text") {
 		echo "	<input class='formfld password' type='password' id='default_setting_value' name='default_setting_value' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"".escape($default_setting_value)."\">\n";
 	}
@@ -736,8 +734,16 @@
 		echo "	</select>\n";
 	}
 	else {
-		if (!empty($_SESSION['domain']['setting_value_input_type']) && $settings->get('domain', 'setting_value_input_type') == 'textarea') {
-			echo "	<textarea class='formfld' style='width: 185px; height: 80px;' id='default_setting_value' name='default_setting_value'>".($default_setting_value ?? '')."</textarea>\n";
+		if (strlen($default_setting_value) > 25) {
+			echo "	<textarea class='formfld' style='width: 185px; height: auto; max-height: 300px;' id='default_setting_value' name='default_setting_value'>".($default_setting_value ?? '')."</textarea>\n";
+
+			echo "	<script>\n";
+			echo "	document.addEventListener('DOMContentLoaded', () => {\n";
+			echo "		let textarea = document.getElementById('default_setting_value');\n";
+			echo "		textarea.style.height = 'auto';\n";
+			echo "		textarea.style.height = textarea.scrollHeight + 'px';\n";
+			echo "	});\n";
+			echo "	</script>\n";
 		}
 		else {
 			echo "	<input class='formfld' type='text' id='default_setting_value' name='default_setting_value' value=\"".escape($default_setting_value ?? '')."\">\n";

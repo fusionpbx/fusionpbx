@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+# PROVIDE: event_guard
+# REQUIRE: DAEMON
+# KEYWORD: shutdown
+#
+# Add the following lines to /etc/rc.conf to enable event_guard:
+# event_guard_enable:      Set it to "YES" to enable event_guard.
+#                          Default is "NO".
+#
+
+. /etc/rc.subr
+name="event_guard"
+
+rcvar=${name}_enable
+load_rc_config $name
+
+# Set defaults
+: ${event_guard_enable="NO"}
+: ${event_guard_pidfile="/var/run/event_guard.pid"}
+
+# Prepare the variables
+start_cmd=${name}_start
+stop_cmd=${name}_stop
+status_cmd=${name}_status
+pidfile=${event_guard_pidfile}
+
+# Path to the PHP script
+script="/usr/local/www/fusionpbx/app/event_guard/resources/service/event_guard.php"
+
+# Command to run the script
+command="/usr/local/bin/php"
+
+event_guard_start() {
+    echo "Starting $name..."
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        echo "$name is already running."
+    else
+        # Fully detach from parent shell to prevent 'service' from blocking
+        nohup $command $script </dev/null >/dev/null 2>&1 &
+        echo $! > "$pidfile"
+        echo "$name started."
+    fi
+}
+
+event_guard_stop() {
+    echo "Stopping $name..."
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        kill "$(cat $pidfile)"
+        rm -f "$pidfile"
+        echo "$name stopped."
+    else
+        echo "$name is not running."
+    fi
+}
+
+event_guard_status() {
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        echo "$name is running with PID $(cat $pidfile)."
+    else
+        echo "$name is not running."
+    fi
+}
+
+run_rc_command "$1"

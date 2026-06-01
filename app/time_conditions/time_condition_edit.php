@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -53,6 +53,32 @@
 		}
 	}
 	unset($preset_region);
+
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'dialplan_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('time_condition_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
 
 //set the action as an add or an update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -91,7 +117,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: time_conditions.php');
+				header('Location: time_conditions.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -304,29 +330,44 @@
 								$cond_start = $_REQUEST['value'][$group_id][$cond_num]['start'];
 								$cond_stop = $_REQUEST['value'][$group_id][$cond_num]['stop'];
 
-								//convert to 24 hour time
-								if (!empty($cond_start) && $cond_var == 'date-time' && $settings->get('domain', 'time_format') != '24h') {
-									$cond_start = DateTime::createFromFormat('Y-m-d h:i a', $cond_start)->format('Y-m-d H:i');
+								//convert to 24-hour time and UTC for date-time conditions (FreeSWITCH evaluates date-time in UTC)
+								if (!empty($cond_start) && $cond_var == 'date-time') {
+									$format = $settings->get('domain', 'time_format') == '24h' ? 'Y-m-d H:i' : 'Y-m-d h:i a';
+									$user_timezone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+									$dt = DateTime::createFromFormat($format, $cond_start, new DateTimeZone($user_timezone));
+									if ($dt !== false) {
+										$dt->setTimezone(new DateTimeZone('UTC'));
+										$cond_start = $dt->format('Y-m-d H:i');
+									}
 								}
-								if (!empty($cond_stop) && $cond_var == 'date-time' && $settings->get('domain', 'time_format') != '24h') {
-									$cond_stop = DateTime::createFromFormat('Y-m-d h:i a', $cond_stop)->format('Y-m-d H:i');
+								if (!empty($cond_stop) && $cond_var == 'date-time') {
+									$format = $settings->get('domain', 'time_format') == '24h' ? 'Y-m-d H:i' : 'Y-m-d h:i a';
+									$user_timezone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+									$dt = DateTime::createFromFormat($format, $cond_stop, new DateTimeZone($user_timezone));
+									if ($dt !== false) {
+										$dt->setTimezone(new DateTimeZone('UTC'));
+										$cond_stop = $dt->format('Y-m-d H:i');
+									}
 								}
 
-								//Use date-time to set the year, month, day and time
+								//Use date-time to set the year, month, day, and time
+								/*
 								if (!empty($cond_start) && !empty($cond_stop) && $cond_var == 'date-time') {
 									// Extract components
-									$cond_start_datetime = DateTime::createFromFormat('Y-m-d h:i a', $_REQUEST['value'][$group_id][$cond_num]['start']);
+									$cond_start_datetime = DateTime::createFromFormat('Y-m-d H:i', $cond_start);
 									$cond_start_year   = $cond_start_datetime->format('Y');
 									$cond_start_month  = $cond_start_datetime->format('n');
-									$cond_start_day    = $cond_start_datetime->format('j');
+									$cond_start_day	= $cond_start_datetime->format('j');
 									$cond_start_hour   = $cond_start_datetime->format('G');
 									$cond_start_minute = $cond_start_datetime->format('i');
 									$cond_start_minutes = ($cond_start_hour * 60) + $cond_start_minute + 1;
 
-									$cond_stop_datetime = DateTime::createFromFormat('Y-m-d h:i a', $_REQUEST['value'][$group_id][$cond_num]['stop']);
+									$cond_stop_datetime = DateTime::createFromFormat('Y-m-d H:i', $cond_stop);
 									$cond_stop_year   = $cond_stop_datetime->format('Y');
 									$cond_stop_month  = $cond_stop_datetime->format('n');
-									$cond_stop_day    = $cond_stop_datetime->format('j');
+									$cond_stop_day	= $cond_stop_datetime->format('j');
 									$cond_stop_hour   = $cond_stop_datetime->format('G');
 									$cond_stop_minute = $cond_stop_datetime->format('i');
 									$cond_stop_minutes = ($cond_stop_hour * 60) + $cond_stop_minute;
@@ -378,19 +419,19 @@
 										$x++;
 									}
 								}
+								*/
 
 								//convert time-of-day to minute-of-day (due to inconsistencies with time-of-day on some systems)
 								if ($cond_var == 'time-of-day') {
 									$cond_var = 'minute-of-day';
 									$array_cond_start = explode(':', $cond_start);
-									//adjust time one minute later to account for freeswitch one minute early on start condition behavior.
+									//adjust the time by one minute to account for FreeSwitch starting one minute early under the start condition behavior.
 									$cond_start = ($array_cond_start[0] * 60) + $array_cond_start[1] + 1;
 									if ($cond_stop != '') {
 										$array_cond_stop = explode(':', $cond_stop);
 										$cond_stop = ($array_cond_stop[0] * 60) + $array_cond_stop[1];
 									}
 								}
-
 								$cond_value = $cond_start;
 								if ($cond_stop != '') {
 									$range_indicator = ($cond_var == 'date-time') ? '~' : '-';
@@ -414,7 +455,7 @@
 								}
 
 								//add condition to query string
-								if (!empty($cond_var) && $cond_var != 'date-time') {
+								if (!empty($cond_var)) {
 									$dialplan_detail_order += 10;
 									$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
 									$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
@@ -586,7 +627,7 @@
 			}
 
 		//redirect the browser
-			header("Location: time_condition_edit.php?id=".$dialplan_uuid.(!empty($app_uuid) && is_uuid($app_uuid) ? "&app_uuid=".$app_uuid : null));
+			header("Location: time_condition_edit.php?id=".$dialplan_uuid.(!empty($app_uuid) && is_uuid($app_uuid) ? "&app_uuid=".$app_uuid : null).($query_string ? '&'.$query_string : ''));
 			exit;
 
 	}
@@ -1032,7 +1073,7 @@ echo "<form method='post' name='frm' id='frm' onsubmit=\"return check_submit();\
 echo "<div class='action_bar' id='action_bar'>\n";
 echo "	<div class='heading'><b>".$text['title-time_condition']."</b></div>\n";
 echo "	<div class='actions'>\n";
-echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/app/time_conditions/time_conditions.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1']);
+echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/app/time_conditions/time_conditions.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1'.($query_string ? '&'.$query_string : '')]);
 if ($action == 'update' && permission_exists('dialplan_edit')) {
 	echo button::create(['type'=>'button','label'=>$text['button-dialplan'],'icon'=>'list','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/app/dialplans/dialplan_edit.php?id='.urlencode($dialplan_uuid).'&app_uuid=4b821450-926b-175a-af93-a03c441818b1']);
 }
@@ -1049,10 +1090,10 @@ echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 echo "<tr>\n";
 echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
-echo "    ".$text['label-name']."\n";
+echo "	".$text['label-name']."\n";
 echo "</td>\n";
 echo "<td width='70%' class='vtable' align='left'>\n";
-echo "    <input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"".escape($dialplan_name ?? null)."\">\n";
+echo "	<input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"".escape($dialplan_name ?? null)."\">\n";
 echo "	<br />\n";
 echo "	".$text['description-name']."\n";
 echo "<br />\n";
@@ -1149,11 +1190,32 @@ if ($action == 'update') {
 						if ($cond_var == 'date-time') {
 							echo "	change_to_input(document.getElementById('value_".$group_id."_' + condition_id + '_start'));\n";
 							echo "	change_to_input(document.getElementById('value_".$group_id."_' + condition_id + '_stop'));\n";
-							//convert to 12 hour time if needed
-							if ($settings->get('domain', 'time_format') != '24h') {
-								$cond_val_start = DateTime::createFromFormat('Y-m-d H:i', $cond_val_start)->format('Y-m-d h:i a');
-								$cond_val_stop = DateTime::createFromFormat('Y-m-d H:i', $cond_val_stop)->format('Y-m-d h:i a');
+
+							//convert from UTC to user timezone and format appropriately
+							$user_timezone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+
+							$dt_start = DateTime::createFromFormat('Y-m-d H:i', $cond_val_start, new DateTimeZone('UTC'));
+							if ($dt_start !== false) {
+								$dt_start->setTimezone(new DateTimeZone($user_timezone));
+								if ($settings->get('domain', 'time_format') != '24h') {
+									$cond_val_start = $dt_start->format('Y-m-d h:i a');
+								} else {
+									$cond_val_start = $dt_start->format('Y-m-d H:i');
+								}
 							}
+
+							if (!empty($cond_val_stop)) {
+								$dt_stop = DateTime::createFromFormat('Y-m-d H:i', $cond_val_stop, new DateTimeZone('UTC'));
+								if ($dt_stop !== false) {
+									$dt_stop->setTimezone(new DateTimeZone($user_timezone));
+									if ($settings->get('domain', 'time_format') != '24h') {
+										$cond_val_stop = $dt_stop->format('Y-m-d h:i a');
+									} else {
+										$cond_val_stop = $dt_stop->format('Y-m-d H:i');
+									}
+								}
+							}
+
 							echo "	$('#value_".$group_id."_' + condition_id + '_start').val('".$cond_val_start."');\n";
 							echo "	$('#value_".$group_id."_' + condition_id + '_stop').val('".$cond_val_stop."');\n";
 						}
@@ -1325,7 +1387,7 @@ if ($action == 'update') {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-order']."\n";
+	echo "	".$text['label-order']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='dialplan_order' class='formfld'>\n";
@@ -1345,22 +1407,22 @@ if ($action == 'update') {
 		echo "	".$text['label-domain']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='domain_uuid'>\n";
+		echo "	<select class='formfld' name='domain_uuid'>\n";
 		if (empty($domain_uuid)) {
-			echo "    <option value='' selected='selected'>".$text['label-global']."</option>\n";
+			echo "	<option value='' selected='selected'>".$text['label-global']."</option>\n";
 		}
 		else {
-			echo "    <option value=''>".$text['label-global']."</option>\n";
+			echo "	<option value=''>".$text['label-global']."</option>\n";
 		}
 		foreach ($_SESSION['domains'] as $row) {
 			if ($row['domain_uuid'] == $domain_uuid) {
-				echo "    <option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
+				echo "	<option value='".escape($row['domain_uuid'])."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 			}
 			else {
-				echo "    <option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
+				echo "	<option value='".escape($row['domain_uuid'])."'>".escape($row['domain_name'])."</option>\n";
 			}
 		}
-		echo "    </select>\n";
+		echo "	</select>\n";
 		echo "<br />\n";
 		echo $text['description-domain_name']."\n";
 		echo "</td>\n";
@@ -1382,7 +1444,7 @@ if ($action == 'update') {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-enabled']."\n";
+	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if ($input_toggle_style_switch) {

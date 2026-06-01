@@ -600,7 +600,7 @@
 		echo "			</td>\n";
 		echo "			<td class='formfld'>\n";
 		//echo "				<input class='formfld' type='text' name='device_profile_keys[$x][profile_key_type]' maxlength='255' value=\"".escape($row["profile_key_type"])."\">\n";
-		echo "				<select class='formfld' name='device_profile_keys[".$x."][profile_key_type]' id='key_type_".$x."'>\n";
+		echo "				<select class='formfld' name='device_profile_keys[".$x."][profile_key_type]' id='key_type_".$x."' onchange=\"document.getElementById('key_vendor_".$x."').value = this.options[this.selectedIndex].getAttribute('vendor');\">\n";
 		echo "					<option value=''></option>\n";
 		$previous_vendor = '';
 		$i = 0;
@@ -707,6 +707,87 @@
 	echo ($text['description-profile_key_icon'] ?? '')."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	// Filter device key types when a vendor is selected
+	echo "<select id='hidden_device_key_types' style='display: none;'>\n";
+	$prev_vendor = '';
+	foreach ($vendor_functions as $function) {
+		if ($function['vendor_name'] != $prev_vendor) {
+			if ($prev_vendor !== '') {
+				echo "	</optgroup>\n";
+			}
+			echo "	<optgroup label='".escape(ucwords($function['vendor_name']))."'>\n";
+			$prev_vendor = $function['vendor_name'];
+		}
+		echo "	<option value='".escape($function['value'])."' vendor='".escape($function['vendor_name'])."'>".($text['label-'.$function['type'] ?? ''] ?? $function['value'])."</option>\n";
+	}
+	if ($prev_vendor !== '') {
+		echo "	</optgroup>\n";
+	}
+	echo "</select>\n";
+	?>
+	<script>
+	const hidden_select = document.getElementById('hidden_device_key_types');
+
+	if (hidden_select) {
+		function populate_type_select(type_select, vendor_value) {
+			// Clear current options
+			type_select.innerHTML = '<option value=""></option>';
+
+			const options = hidden_select.querySelectorAll('option');
+			const selected_vendor = (vendor_value || '').trim().toLowerCase();
+
+			let last_label = null;
+			let current_group = null;
+
+			for (const option of options) {
+				const option_vendor = (option.getAttribute('vendor') || '').trim().toLowerCase();
+
+				// Filter by vendor if one is selected
+				if (selected_vendor !== '' && option_vendor !== selected_vendor) {
+					continue;
+				}
+
+				if (selected_vendor === '') {
+					// When no vendor selected, append all options with optgroups
+					const option_group = option.closest('optgroup');
+					const option_label = option_group ? option_group.getAttribute('label') : null;
+
+					if (option_label && option_label !== last_label) {
+						if (current_group) type_select.appendChild(current_group);
+						current_group = document.createElement('optgroup');
+						current_group.setAttribute('label', option_label);
+						last_label = option_label;
+					}
+
+					if (current_group) {
+						current_group.appendChild(option.cloneNode(true));
+					} else {
+						type_select.appendChild(option.cloneNode(true));
+					}
+				} else {
+					// When a vendor is selected, append options without optgroups
+					type_select.appendChild(option.cloneNode(true));
+				}
+			}
+
+			// Append the final group if it exists
+			if (current_group) type_select.appendChild(current_group);
+		}
+
+		// Attach listener to every vendor select in the table
+		document.querySelectorAll('select[name*="[profile_key_vendor]"]').forEach(vendor_select => {
+			vendor_select.addEventListener('change', function() {
+				const type_select = this.closest('tr').querySelector('select[name*="[profile_key_type]"]');
+				if (!type_select) return;
+
+				populate_type_select(type_select, this.value);
+				type_select.value = ''; // Reset selection when vendor changes
+			});
+		});
+	}
+	</script>
+	<?php
 
 	if (permission_exists('device_profile_setting_edit')) {
 		echo "<tr>\n";

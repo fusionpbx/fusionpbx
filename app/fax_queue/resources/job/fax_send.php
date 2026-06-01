@@ -225,6 +225,7 @@
 		$fax_accountcode = $row["fax_accountcode"];
 		$fax_command = $row["fax_command"];
 		$fax_toll_allow = $row["fax_toll_allow"];
+		$fax_retry_date = $row["fax_retry_date"];
 	} else {
 		// Notify user using the system logs
 		syslog(E_WARNING, "Fax Send: UUID {$fax_queue_uuid} not found in fax queue");
@@ -655,6 +656,7 @@
 				$email_body = str_replace('${fax_date}', date('Y-m-d H:i:s', $fax_epoch), $email_body);
 				$email_body = str_replace('${fax_duration}', $fax_duration, $email_body);
 				$email_body = str_replace('${fax_duration_formatted}', $fax_duration_formatted, $email_body);
+				$email_body = str_replace('${fax_retry_date}', $fax_retry_date, $email_body);
 
 				//send the email
 				if (isset($fax_email_address) && !empty($fax_email_address)) {

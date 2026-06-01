@@ -1,0 +1,18 @@
+[Unit]
+Description=Operator Panel Websocket Service
+
+[Service]
+WorkingDirectory=/var/www/fusionpbx
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/operator_panel/resources/service/operator_panel.php
+ExecReload=/bin/kill -SIGUSR1 $MAINPID
+RuntimeDirectory=fusionpbx
+RuntimeDirectoryMode=0755
+RuntimeDirectoryPreserve=yes
+User=www-data
+Group=www-data
+Restart=always
+RestartSec=5
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target

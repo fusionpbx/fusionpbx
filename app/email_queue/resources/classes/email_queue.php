@@ -10,6 +10,7 @@ class email_queue {
 	 */
 	const app_name = 'email_queue';
 	const app_uuid = '5befdf60-a242-445f-91b3-2e9ee3e0ddf7';
+	const app_category = 'queue';
 
 	/**
 	 * Set in the constructor. Must be a database object and cannot be null.
@@ -46,6 +47,7 @@ class email_queue {
 	 */
 	private $name;
 	private $table;
+	private $category;
 	private $toggle_field;
 	private $toggle_values;
 	private $location;
@@ -70,9 +72,19 @@ class email_queue {
 		//assign the variables
 		$this->name          = 'email_queue';
 		$this->table         = 'email_queue';
+		$this->category      = 'queue';
 		$this->toggle_field  = '';
 		$this->toggle_values = ['true', 'false'];
 		$this->location      = 'email_queue.php';
+	}
+
+	/**
+	 * Get the category of this class.
+	 *
+	 * @return string The constant category value.
+	 */
+	public static function get_category(): string {
+		return self::app_category;
 	}
 
 	/**

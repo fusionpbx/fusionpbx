@@ -72,9 +72,14 @@ class modal {
 					$array['title'] = $text['modal_title-confirmation'];
 					$array['message'] = $text['confirm-delete'];
 					break;
+				case 'reload':
+					$array['title'] = $text['modal_title-confirmation'];
+					$array['message'] = $text['confirm-reload'];
+					break;
 				case 'unassign':
 					$array['title'] = $text['modal_title-confirmation'];
 					$array['message'] = $text['confirm-unassign'];
+					break;
 				default: //general
 					$array['title'] = !empty($array['title']) ? $array['title'] : $text['modal_title-confirmation'];
 			}

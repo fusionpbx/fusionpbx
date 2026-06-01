@@ -1,0 +1,6 @@
+<extension name="identity-unset" number="" context="global" continue="true" app_uuid="e952c2ba-1518-4084-9f17-59cab1564065" global="true" order="160">
+	<condition field="${user_exists}" expression="true"/>
+	<condition field="${sip_via_protocol}" expression="^udp$">
+		<action application="unset" data="sip_h_Identity" enabled="true"/>
+	</condition>
+</extension>

@@ -34,6 +34,7 @@ class fax_queue {
 	 */
 	const app_name = 'fax_queue';
 	const app_uuid = '3656287f-4b22-4cf1-91f6-00386bf488f4';
+	const app_category = 'queue';
 
 	/**
 	 * Set in the constructor. Must be a database object and cannot be null.
@@ -80,6 +81,15 @@ class fax_queue {
 		$this->toggle_field  = '';
 		$this->toggle_values = ['true', 'false'];
 		$this->location      = 'fax_queue.php';
+	}
+
+	/**
+	 * Get the category of this class.
+	 *
+	 * @return string The constant category value.
+	 */
+	public static function get_category(): string {
+		return self::app_category;
 	}
 
 	/**
@@ -224,11 +234,11 @@ class fax_queue {
 					}
 				}
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql                       .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
-					$sql                       .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$states[$row['uuid']] = $row['toggle'];
@@ -289,7 +299,6 @@ class fax_queue {
 
 			//copy the checked records
 			if (is_array($records) && @sizeof($records) != 0) {
-
 				//get checked records
 				foreach ($records as $record) {
 					if ($record['checked'] == 'true' && is_uuid($record['fax_queue_uuid'])) {
@@ -299,11 +308,11 @@ class fax_queue {
 
 				//create the array from existing data
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select * from v_" . $this->table . " ";
-					$sql                       .= "where fax_queue_uuid in (" . implode(', ', $uuids) . ") ";
-					$sql                       .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where fax_queue_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$x = 0;
 						foreach ($rows as $row) {

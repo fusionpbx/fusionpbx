@@ -1031,6 +1031,12 @@ class database {
 	 * @depends connect()
 	 */
 	public function table_exists(string $table_name) {
+		// Only add prefix if it's not already prefixed AND prefix is not empty
+		if (!empty(self::TABLE_PREFIX) && !str_starts_with($table_name, self::TABLE_PREFIX)) {
+			$table_name = self::TABLE_PREFIX . $table_name;
+		}
+
+		// Check to see if the table was sanitized
 		if (self::sanitize($table_name) != $table_name) {
 			trigger_error('Table Name must be sanitized', E_USER_WARNING);
 			return false;
@@ -2299,7 +2305,7 @@ class database {
 	 *                     Second dimension in the row value as int. Third dimension is the column name.
 	 * @param bool  $transaction_save
 	 *
-	 * @return returns an array with result details
+	 * @return array|false an array with result details
 	 */
 	public function save(array &$array, bool $transaction_save = true) {
 		// prepare the values
@@ -3628,7 +3634,7 @@ class database {
 			$pg_indexes = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			$database_indexes = array();
 			foreach($pg_indexes as $row) {
-				$database_indexes[$row['table']][$row['index_name']] = $row['definition'];
+				$database_indexes[$row['index_name']] = $row['definition'];
 			}
 		}
 		return $database_indexes;
@@ -3692,10 +3698,17 @@ class database {
 						}
 
 						// create the database index - postgresql index name limited to 63 bytes
-						if ($this->type == 'pgsql' && !isset($database_indexes[$table_name][substr($table_name . "_" . $column_name . "_fkey", 0, 63)])) {
-							$sql = "CREATE INDEX IF NOT EXISTS " . $table_name . "_" . $column_name . "_fkey ON " . $table_name . " (" . $column_name . ");\n";
+						$index_name = substr($table_name . "_" . $column_name . "_fkey", 0, 63);
+						if ($this->type == 'pgsql' && !isset($database_indexes[$index_name])) {
+							// add the database index
+							$sql = "CREATE INDEX " . $index_name . " ON " . $table_name . " (" . $column_name . ");\n";
 							$prep_statement = $this->db->prepare($sql);
 							$prep_statement->execute();
+
+							// add the new index to the database indexes array
+							$database_indexes[$index_name] = $sql;
+
+							// build the results array
 							$row['table_name'] = $table_name;
 							$row['column_name'] = $column_name;
 							$row['sql'] = $sql;

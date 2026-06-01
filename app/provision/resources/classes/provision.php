@@ -54,6 +54,7 @@ class provision {
 	/**
 	 * declare public variables
 	 */
+	public $device_uuid;
 	public $template_dir;
 	public $device_address;
 	public $device_template;
@@ -853,10 +854,6 @@ class provision {
 						if ($row['device_key_vendor'] == 'polycom' && $row['device_key_type'] == 'line') {
 							$device_lines[$device_key_line]['line_keys'] = $row['device_key_value'];
 						}
-
-						// kept temporarily for backwards compatibility to allow custom templates to be updated
-						$device_keys[$id] = $row;
-						$device_keys[$id]['device_key_owner'] = 'profile';
 					}
 				}
 				unset($sql, $parameters, $keys);
@@ -903,42 +900,46 @@ class provision {
 					// build the device keys array
 					$device_keys[$category][$id] = $row;
 					$device_keys[$category][$id]['device_key_owner'] = 'device';
-
-					// kept temporarily for backwards comptability to allow custom templates to be updated
-					$device_keys[$id] = $row;
-					$device_keys[$id]['device_key_owner'] = 'device';
 				}
 			}
 			unset($sql, $parameters, $keys);
 
-			// replace the ${caller_id_name} with the extensions caller id name
+			// replace the ${caller_id_name}, ${extension}, and ${user} with the extensions caller id name
 			if (is_array($device_keys)) {
-				foreach ($device_keys as $row) {
-					// set the variables
-					$id = $row['device_key_id'];
-					$category = $row['device_key_category'];
+				foreach ($device_keys as $key_category) {
+					foreach ($key_category as $row) {
+						// set the variables
+						$id = $row['device_key_id'];
+						$category = $row['device_key_category'];
 
-					// build the device keys array
-					if (in_array($device_key_vendor, ['cisco', 'spa']) && $row['device_key_type'] == 'disabled') {
-						$device_key_array = explode(';', $row['device_key_value']);
-						foreach ($device_key_array as $sub_row) {
-							[$key, $value] = explode('=', $sub_row);
-							if ($key == 'sub') {
-								$extension = explode('@', $value)[0];  // remove the @PROXY
-								$caller_id_name = $extension_labels[$extension]['caller_id_name'];
-								$device_key_label = str_replace('${caller_id_name}', $caller_id_name, $row['device_key_label']);
-								$device_key_label = str_replace('${extension}', $extension, $device_key_label);
-								$device_key_label = str_replace('${user}', $extension, $device_key_label);
-								$device_keys[$category][$id]['device_key_label'] = $device_key_label;
+						// build the device keys array
+						if (in_array($device_key_vendor, ['cisco', 'spa']) && $row['device_key_type'] == 'disabled') {
+							$device_key_array = explode(';', $row['device_key_value']);
+							foreach ($device_key_array as $sub_row) {
+								[$key, $value] = explode('=', $sub_row);
+								if ($key == 'sub') {
+									$extension = explode('@', $value)[0];  // remove the @PROXY
+									$caller_id_name = $extension_labels[$extension]['caller_id_name'];
+									$device_key_label = str_replace('${caller_id_name}', $caller_id_name, $row['device_key_label']);
+									$device_key_label = str_replace('${extension}', $extension, $device_key_label);
+									$device_key_label = str_replace('${user}', $extension, $device_key_label);
+									$device_keys[$category][$id]['device_key_label'] = $device_key_label;
+								}
 							}
+						} elseif (is_numeric($row['device_key_value'])) {
+							$extension = $row['device_key_value'];
+							$caller_id_name = $extension_labels[$row['device_key_value']]['caller_id_name'];
+							$device_key_label = str_replace('${caller_id_name}', $caller_id_name, $row['device_key_label']);
+							$device_key_label = str_replace('${extension}', $extension, $device_key_label);
+							$device_key_label = str_replace('${user}', $extension, $device_key_label);
+							$device_keys[$category][$id]['device_key_label'] = $device_key_label;
 						}
-					} elseif (is_numeric($row['device_key_value'])) {
-						$extension = $row['device_key_value'];
-						$caller_id_name = $extension_labels[$row['device_key_value']]['caller_id_name'];
-						$device_key_label = str_replace('${caller_id_name}', $caller_id_name, $row['device_key_label']);
-						$device_key_label = str_replace('${extension}', $extension, $device_key_label);
-						$device_key_label = str_replace('${user}', $extension, $device_key_label);
-						$device_keys[$category][$id]['device_key_label'] = $device_key_label;
+						else {
+							$device_key_label = str_replace('${caller_id_name}', '', $row['device_key_label']);
+							$device_key_label = str_replace('${extension}', '', $device_key_label);
+							$device_key_label = str_replace('${user}', '', $device_key_label);
+							$device_keys[$category][$id]['device_key_label'] = $device_key_label;
+						}
 					}
 				}
 			}
@@ -1521,9 +1522,11 @@ class provision {
 
 		// get the devices from database
 		$sql = 'select * from v_devices ';
-		// $sql .= "where domain_uuid = :domain_uuid ";
-		// $parameters['domain_uuid'] = $this->domain_uuid;
-		$result = $this->database->select($sql, null, 'all');
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and device_uuid = :device_uuid ";
+		$parameters['domain_uuid'] = $this->domain_uuid;
+		$parameters['device_uuid'] = $this->device_uuid;
+		$result = $this->database->select($sql, $parameters, 'all');
 
 		// process each device
 		if (is_array($result)) {

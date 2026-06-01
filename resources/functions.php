@@ -18,7 +18,7 @@
 
   The Initial Developer of the Original Code is
   Mark J Crane <markjcrane@fusionpbx.com>
-  Portions created by the Initial Developer are Copyright (C) 2008-2025
+  Portions created by the Initial Developer are Copyright (C) 2008-2026
   the Initial Developer. All Rights Reserved.
 
   Contributor(s):
@@ -273,81 +273,43 @@ if (!function_exists('is_xml')) {
 }
 
 if (!function_exists('recursive_copy')) {
-	if (file_exists('/bin/cp')) {
-
-		/**
-		 * Recursively copies the source directory or file to the destination location.
-		 *
-		 * @param string $source      The path of the source directory or file to copy.
-		 * @param string $destination The path where the source will be copied.
-		 * @param string $options     Optional command-line options for the 'cp' command. Defaults to an empty string.
-		 *
-		 * @return void
-		 */
-		function recursive_copy($source, $destination, $options = '') {
-			if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') {
-				//copy -R recursive, preserve attributes for SUN
-				$cmd = 'cp -Rp ' . $source . '/* ' . $destination;
+	/**
+	 * Recursively copies a source directory to a destination directory.
+	 *
+	 * @param string $source      The path of the source directory.
+	 * @param string $destination The path where the copy will be created.
+	 * @param array  $options     An associative array of options. Currently not used.
+	 *
+	 * @return void
+	 * @throws Exception If the source directory does not exist or if it fails to create the destination directory.
+	 */
+	function recursive_copy($source, $destination, $options = '') {
+		$dir = opendir($source);
+		// Source must exist
+		if (!$dir) {
+			throw new Exception("recursive_copy() source directory '" . $source . "' does not exist.");
+		}
+		if (!is_dir($destination)) {
+			// Make directory with permissions set to 02770 so that the group can write to the directory and new files will inherit the group
+			if (!mkdir($destination, 02770, true)) {
+				throw new Exception("recursive_copy() failed to create destination directory '" . $destination . "'");
+			}
+		}
+		while (false !== ( $file = readdir($dir))) {
+			// Skip directory pointers
+			if ($file == '.' || $file == '..' ) {
+				continue;
+			}
+			// Check for directory or file and copy accordingly
+			if (is_dir($source . DIRECTORY_SEPARATOR . $file)) {
+				// Call this function to copy files in a subdirectory
+				recursive_copy($source . DIRECTORY_SEPARATOR . $file, $destination . DIRECTORY_SEPARATOR . $file, $options);
 			} else {
-				//copy -R recursive, -L follow symbolic links, -p preserve attributes for other Posix systemss
-				$cmd = 'cp -RLp ' . $options . ' ' . $source . '/* ' . $destination;
+				// Copy the file
+				copy($source . DIRECTORY_SEPARATOR . $file, $destination . DIRECTORY_SEPARATOR . $file);
 			}
-			exec($cmd);
 		}
-
-	} elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-
-		/**
-		 * Recursively copies a source directory to a destination directory.
-		 *
-		 * @param string $source      The path of the source directory to copy.
-		 * @param string $destination The path of the destination directory where the source will be copied.
-		 * @param array  $options     An associative array of options:
-		 *                            - overwrite (bool) Whether to overwrite existing files. Default is false.
-		 *                            - preserve_permissions (bool) Whether to preserve file permissions. Default is true.
-		 *
-		 * @return bool True if the copy was successful, false otherwise.
-		 */
-		function recursive_copy($source, $destination, $options = '') {
-			$source = normalize_path_to_os($source);
-			$destination = normalize_path_to_os($destination);
-			exec("xcopy /E /Y \"$source\" \"$destination\"");
-		}
-
-	} else {
-
-		/**
-		 * Recursively copies a source directory to a destination directory.
-		 *
-		 * @param string $source      The path of the source directory.
-		 * @param string $destination The path where the copy will be created.
-		 * @param array  $options     An associative array of options. Currently not used.
-		 *
-		 * @return void
-		 * @throws Exception If the source directory does not exist or if it fails to create the destination directory.
-		 */
-		function recursive_copy($source, $destination, $options = '') {
-			$dir = opendir($source);
-			if (!$dir) {
-				throw new Exception("recursive_copy() source directory '" . $source . "' does not exist.");
-			}
-			if (!is_dir($destination)) {
-				if (!mkdir($destination, 02770, true)) {
-					throw new Exception("recursive_copy() failed to create destination directory '" . $destination . "'");
-				}
-			}
-			while (false !== ( $file = readdir($dir))) {
-				if (( $file != '.' ) && ( $file != '..' )) {
-					if (is_dir($source . '/' . $file)) {
-						recursive_copy($source . '/' . $file, $destination . '/' . $file);
-					} else {
-						copy($source . '/' . $file, $destination . '/' . $file);
-					}
-				}
-			}
-			closedir($dir);
-		}
-
+		closedir($dir);
 	}
 }
 
@@ -626,76 +588,86 @@ if (!function_exists('th_order_by')) {
 	/**
 	 * Generates the HTML for a table header cell with ordering functionality.
 	 *
-	 * @param string $field_name      The name of the field used for ordering.
-	 * @param string $column_title    The title to display in the column header.
-	 * @param string|null $order_by        The current order by field.
-	 * @param string|null $order           The current sorting direction ('asc' or 'desc'). Default is 'asc'.
-	 * @param string|null $app_uuid        Optional application UUID parameter. Default is an empty string.
-	 * @param string|null $css             Optional CSS classes for the table header cell. Default is an empty string.
-	 * @param string|null $http_get_params Optional additional HTTP GET parameters to include in the ordering URL. Default is an empty string.
-	 * @param string|null $description     Optional description text to be included in the title attribute of the column header link. Default is an empty string.
+	 * @param string       $field_name      The name of the field used for ordering.
+	 * @param string       $column_title    The title to display in the column header.
+	 * @param string|null  $order_by        The current order by field.
+	 * @param string|null  $order           The current sorting direction ('asc' or 'desc'). Default is 'asc'.
+	 * @param string|null  $app_uuid        Optional application UUID parameter. Default is an empty string.
+	 * @param string|null  $css             Optional CSS classes for the table header cell. Default is an empty string.
+	 * @param string|array $http_get_params Optional additional HTTP GET parameters to include in the ordering URL. Default is an empty array.
+	 * @param string|null  $description     Optional description text to be included in the title attribute of the column header link. Default is an empty string.
 	 *
 	 * @return string The generated HTML for the table header cell with ordering functionality.
 	 */
-	function th_order_by(string $field_name, string $column_title, ?string $order_by, ?string $order, ?string $app_uuid = '', ?string $css = '', ?string $http_get_params = '', ?string $description = ''): string {
+	function th_order_by(string $field_name, string $column_title, ?string $order_by, ?string $order = '', ?string $app_uuid = '', ?string $css = '', $http_get_params = [], ?string $description = ''): string {
 		global $text;
 		if (is_uuid($app_uuid) > 0) {
 			$app_uuid = "&app_uuid=" . urlencode($app_uuid);
-		} // accommodate the need to pass app_uuid where necessary (inbound/outbound routes lists)
+		} // Accommodate the need to pass app_uuid where necessary (inbound/outbound routes lists)
 
+		// Sanitize field_name
 		$field_name = preg_replace("#[^a-zA-Z0-9_]#", "", $field_name);
-		$field_value = preg_replace("#[^a-zA-Z0-9_]#", "", $field_value ?? '');
 
+		// Sanitize the parameters
 		$sanitized_parameters = '';
+		$has_order_by = false;
 		if (!empty($http_get_params)) {
-			$parameters = explode('&', $http_get_params);
-			if (is_array($parameters)) {
-				foreach ($parameters as $parameter) {
-					if (substr_count($parameter, '=') != 0) {
-						$array = explode('=', $parameter);
-						$key = preg_replace('#[^a-zA-Z0-9_\-]#', '', $array['0']);
-						$value = urldecode($array['1']);
-						if ($key == 'order_by' && !empty($value)) {
-							//validate order by
-							$sanitized_parameters .= "&order_by=" . preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
-						} else if ($key == 'order' && !empty($value)) {
-							//validate order
-							switch ($value) {
-								case 'asc':
-									$sanitized_parameters .= "&order=asc";
-									break;
-								case 'desc':
-									$sanitized_parameters .= "&order=desc";
-									break;
-							}
-						} else if (!empty($value) && is_numeric($value)) {
-							$sanitized_parameters .= "&" . $key . "=" . $value;
-						} else {
-							$sanitized_parameters .= "&" . $key . "=" . urlencode($value);
-						}
+			$params = $http_get_params;
+
+			if (is_string($params)) {
+				parse_str($http_get_params, $params);
+			}
+
+			foreach ($params as $key => $value) {
+				if ($key == 'order_by' && !empty($value)) {
+					$has_order_by = true;
+					// Validate order by
+					$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
+				} else if ($key == 'order' && !empty($value)) {
+					$has_order_by = true;
+					// Validate order
+					if (in_array(strtolower($value), ['asc', 'desc'])) {
+						$order = strtolower($value);
 					}
+				} else {
+					$sanitized_parameters .= "&" . preg_replace('#[^a-zA-Z0-9_\-]#', '', $key) . "=" . urlencode($value);
 				}
 			}
 		}
 
-		$html = "<th " . $css . " nowrap='nowrap'>";
-		$description = empty($description) ? '' : $description . ', ';
-		if (empty($order_by)) {
-			$order = 'asc';
+		// Default order to asc on first call and when order_by changes
+		if (empty($order_by) || $order_by !== $field_name) {
+			$next_order = 'asc';
 		}
-		if ($order_by == $field_name) {
-			if ($order == "asc") {
-				$description .= $text['label-order'] . ' ' . $text['label-descending'];
-				$html .= "<a href='?order_by=" . urlencode($field_name) . "&order=desc" . $app_uuid . $sanitized_parameters . "' title=\"" . escape($description) . "\">" . escape($column_title) . "</a>";
+		else {
+			// Toggle order direction
+			$next_order = ($order == 'asc') ? 'desc' : 'asc';
+		}
+
+		// Build the URL
+		$url_params = "?order_by=" . urlencode($field_name) . "&order=" . $next_order . $app_uuid . $sanitized_parameters;
+		if ($order_by === $field_name) {
+			if ($next_order == "asc") {
+				$description .= ', ' . $text['label-order'] . ' ' . $text['label-descending'];
 			} else {
-				$description .= $text['label-order'] . ' ' . $text['label-ascending'];
-				$html .= "<a href='?order_by=" . urlencode($field_name) . "&order=asc" . $app_uuid . $sanitized_parameters . "' title=\"" . escape($description) . "\">" . escape($column_title) . "</a>";
+				$description .= ', ' . $text['label-order'] . ' ' . $text['label-ascending'];
 			}
-		} else {
-			$description .= $text['label-order'] . ' ' . $text['label-ascending'];
-			$html .= "<a href='?order_by=" . urlencode($field_name) . "&order=asc" . $app_uuid . $sanitized_parameters . "' title=\"" . escape($description) . "\">" . escape($column_title) . "</a>";
 		}
-		$html .= "</th>";
+
+		// Build the HTML
+		$html = "<th $css nowrap='nowrap'>\n";
+		if (!empty($description)) {
+			$html .= "	<a href='$url_params' title=\"" . escape(trim($description, ', ')) . "\">" . escape($column_title) . "\n";
+		} else {
+			$html .= "	<a href='$url_params'>" . escape($column_title) . "\n";
+		}
+		if ($has_order_by && $order_by === $field_name && $order == "desc") {
+			$html .= "		<i class='fa-solid fa-sort-down' style='position: absolute; padding: 0 0 6px 6px;'></i>\n";
+		} else if ($has_order_by && $order_by === $field_name) {
+			$html .= "		<i class='fa-solid fa-sort-up' style='position: absolute; padding: 6px 0 0 6px;'></i>\n";
+		}
+		$html .= "	</a>\n";
+		$html .= "</th>\n";
 		return $html;
 	}
 }
@@ -1298,14 +1270,13 @@ function tail(string $file, int $num_to_get = 10): string {
 	return $ret;
 }
 
-//generate a random password with upper, lowercase and symbols
 /**
  * Generates a random password of specified length and strength.
  *
- * @param int $length   The desired length of the password. Defaults to 0 if not provided.
+ * @param int $length   The desired length of the password. Defaults to 20 if not provided.
  * @param int $strength The desired strength level of the password.
  *                      This defaults to 3 if not provided. The higher level includes the previous levels.
- *                      If the password_strength was set to 3, this would include numeric, lowercase, and uppercase letters.
+ *                      If the password_strength were set to 3, this would include numeric, lowercase, and uppercase letters.
  *                      - Level 1: Numeric
  *                      - Level 2: Lowercase letters
  *                      - Level 3: Uppercase letters
@@ -1314,7 +1285,7 @@ function tail(string $file, int $num_to_get = 10): string {
  * @return string The generated password.
  * @throws \Random\RandomException
  */
-function generate_password(int $length = 0, int $strength = 3): string {
+function generate_password(int $length = 20, int $strength = 3): string {
 	//define the global variables
 	global $settings;
 

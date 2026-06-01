@@ -23,6 +23,9 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+--load the functions
+	require("resources.functions.shell_esc")
+
 --define function to listen to the recording
 	function listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number, message_status, message_play)
 
@@ -115,7 +118,7 @@
 								end
 
 							--get the file type
-								command = "file -b --mime-type "..message_location;
+								command = "file -b --mime-type "..shell_esc(message_location);
 								local handle = io.popen(command);
 								local mime_type = trim(handle:read("*a"));
 								handle:close();
@@ -127,7 +130,7 @@
 								end
 
 							--rename the file
-								os.execute('mv '..message_location..' '..message_location..'.'..vm_message_ext);
+								os.execute('mv '..shell_esc(message_location)..' '..shell_esc(message_location..'.'..vm_message_ext));
 						end);
 						dbh:release()
 					elseif (storage_type == "http_cache") then

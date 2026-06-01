@@ -25,6 +25,12 @@ class event_guard_pf implements event_guard_interface {
 	private $firewall_path;
 
 	/**
+	 * filters array
+	 * @var array
+	 */
+	private $filters;
+
+	/**
 	 * called when the object is created
 	 */
 	public function __construct(settings $settings) {
@@ -36,6 +42,10 @@ class event_guard_pf implements event_guard_interface {
 
 		// Set firewall path
 		$this->firewall_path = trim(shell_exec('command -v pfctl'));
+
+		// Create a filter array
+		$this->filters[] = 'sip-auth-ip';
+		$this->filters[] = 'sip-auth-fail';
 	}
 
 	/**
@@ -80,12 +90,24 @@ class event_guard_pf implements event_guard_interface {
 			return false;
 		}
 
+		// Remove from all chains or a specific one
+		if ($filter == 'all') {
+			$filters[] = $this->filters;
+		}
+		else {
+			$filters[] = $filter;
+		}
+
 		// Unblock the address
 		// Example: pfctl -t sip-auth-ip -T delete 127.0.0.5
-		$command = $this->firewall_path.' -t '.$filter.' -T delete '.$ip_address;
-		$result = shell_exec($command);
-		if (!empty($result)) {
-			return false;
+		foreach($filters as $filter) {
+			for ($i = 1; $i <= 999; $i++) {
+				$command = $this->firewall_path.' -t '.$filter.' -T delete '.$ip_address;
+				$result = shell_exec($command);
+				if (!empty($result)) {
+					return false;
+				}
+			}
 		}
 
 		// Return success

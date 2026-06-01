@@ -40,7 +40,7 @@
 
 //add the search string
 	if (isset($_GET["search"])) {
-		$search =  strtolower($_GET["search"]);
+		$search = lower_case($_GET["search"]);
 	}
 
 //check to see if contact details are in the view

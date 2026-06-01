@@ -3004,7 +3004,8 @@ else { //default: white
 		border: 1px solid <?=$dashboard_border_color_hover?>;
 		}
 
-	div.widget div.hud_box:first-of-type {
+	div.widget div.hud_box:first-of-type,
+	div.parent_widget div.hud_box:first-of-type {
 		<?php
 		echo "background: ".($dashboard_background_color[0] ?? '#ffffff').";\n";
 		if (!empty($dashboard_background_color) && is_array($dashboard_background_color) && sizeof($dashboard_background_color) > 1) {
@@ -3987,6 +3988,225 @@ else { //default: white
 	i.ace_control:hover {
 		opacity: 1.0;
 		}
+
+/* MULTI SELECT DROPDOWN ********************************************************/
+
+	.multiselect_container {
+		position: relative;
+		width: 200px;
+		user-select: none;
+	}
+
+	.selected_values {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		cursor: pointer;
+		font-family: <?=$input_text_font?>;
+		font-size: <?=$input_text_size?>;
+		color: <?=$input_text_color?>;
+		text-align: left;
+		min-height: <?=$input_height?>;
+		min-width: <?=$input_width?>;
+		padding: 4px 6px;
+		margin: 1px;
+		border-width: <?=$input_border_size?>;
+		border-style: <?=$input_border_style?>;
+		border-color: <?=$input_border_color?>;
+		outline-width: <?=$input_outline_size?>;
+		<?php if (!empty($input_outline_style)) { ?>
+			outline-style: <?=$input_outline_style?>;
+		<?php } ?>
+		<?php if (!empty($input_outline_color)) { ?>
+			outline-color: <?=$input_outline_color?>;
+		<?php } ?>
+		background: <?=$input_background_color?>;
+		<?php
+		if (!empty($input_shadow_inner_color)) { $shadows[] = $input_shadow_inner_color; }
+		if (!empty($input_shadow_outer_color)) { $shadows[] = $input_shadow_outer_color; }
+		if (!empty($shadows)) {
+			?>
+			-webkit-box-shadow: <?php echo implode(',', $shadows); ?>;
+			-moz-box-shadow:  <?php echo implode(',', $shadows); ?>;
+			box-shadow:  <?php echo implode(',', $shadows); ?>;
+			<?php
+		}
+		unset($shadows);
+		?>
+		<?php $br = format_border_radius($input_border_radius, '3px'); ?>
+		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-webkit-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
+		<?php unset($br); ?>
+		<?php if (!empty($input_outline_radius)) { ?>
+			outline-radius: <?=$input_outline_radius?>
+		<?php } ?>
+		vertical-align: middle;
+	}
+
+	.selected_values:hover {
+		border-color: <?=$input_border_color_hover?>;
+	}
+
+	.tag {
+		background: #007bff25;
+		color: #007bff;
+		padding: 2px 8px;
+		margin: 2px;
+		border-radius: 15px;
+		font-size: 13px;
+		display: flex;
+		align-items: center;
+	}
+
+	.tag span {
+		margin-left: 5px;
+		cursor: pointer;
+		font-weight: bold;
+		color: #007bff;
+	}
+
+	.tag span:hover {
+		color: #d32f2f;
+	}
+
+	.placeholder_text {
+		color: <?=$input_text_placeholder_color?>;
+	}
+
+	.dropdown_list {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		background: <?=$input_background_color?>;
+		border-width: <?=$input_border_size?>;
+		border-style: <?=$input_border_style?>;
+		border-color: <?=$input_border_color?>;
+		border-top: none;
+		border-radius: 0 0 5px 5px;
+		box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+		z-index: 1000;
+		max-height: 300px;
+		overflow-y: auto;
+		box-sizing: border-box;
+		margin: 0 1px;
+	}
+
+	.dropdown_list.open {
+		display: block;
+	}
+
+	.search_box {
+		background-color: <?=$input_background_color?>;
+		color: <?=$input_text_color?>;
+		width: 100%;
+		padding: 10px;
+		border: none;
+		border-bottom: 1px solid #00000010;
+		box-sizing: border-box;
+		font-size: 14px;
+		outline: none;
+	}
+
+	.option_item {
+		display: flex;
+		align-items: center;
+		padding: 10px;
+		cursor: pointer;
+		border-bottom: 1px solid #00000010;
+		margin: 0;
+	}
+
+	.option_item:hover {
+		background-color: <?=$table_row_background_color_hover?>;
+	}
+
+	.option_item input[type="checkbox"] {
+		margin-right: 10px;
+		transform: scale(1.2);
+		cursor: pointer;
+	}
+
+	.no_results {
+		display: none;
+		padding: 15px;
+		text-align: center;
+		color: <?=$input_text_placeholder_color?>;
+	}
+
+/* DOMAIN SEARCH DROPDOWN ********************************************************/
+
+	.domain-search-picker {
+		position: relative;
+		display: inline-block;
+		max-width: 100%;
+	}
+
+	.domain-search-picker .domain-search-input { max-width: 100%; }
+
+	.domain-search-results {
+		display: none;
+		position: fixed;
+		left: 0;
+		top: 0;
+		background: <?=$input_background_color?>;
+		border-width: <?=$input_border_size?>;
+		border-style: <?=$input_border_style?>;
+		border-color: <?=$input_border_color?>;
+		border-radius: 4px;
+		box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+		z-index: 10050;
+		max-height: 300px;
+		overflow-y: auto;
+		box-sizing: border-box;
+		text-align: left;
+	}
+
+	.domain-search-result-item {
+		padding: 6px 10px;
+		cursor: pointer;
+		line-height: 1.3;
+	}
+
+	.domain-search-result-item:hover {
+		background-color: <?=$table_row_background_color_hover?>;
+	}
+
+	.domain-search-result-name {
+		display: block;
+	}
+
+	.domain-search-result-description {
+		display: block;
+		opacity: 0.75;
+		font-size: 0.92em;
+		margin-top: 1px;
+	}
+
+	.domain-search-empty {
+		padding: 8px 10px;
+		color: <?=$input_text_placeholder_color?>;
+	}
+
+	.domain-search-clear {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: 14px;
+		color: #333;
+		opacity: 0.6;
+		padding: 0;
+		line-height: 1;
+		pointer-events: auto;
+		z-index: 2;
+	}
 
 <?php
 

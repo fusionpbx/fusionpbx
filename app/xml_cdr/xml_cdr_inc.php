@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -65,6 +65,7 @@
 	$permission['xml_cdr_search_tta'] = permission_exists('xml_cdr_search_tta');
 	$permission['xml_cdr_search_hangup_cause'] = permission_exists('xml_cdr_search_hangup_cause');
 	$permission['xml_cdr_search_recording'] = permission_exists('xml_cdr_search_recording');
+	$permission['xml_cdr_search_cdr_uuid'] = permission_exists('xml_cdr_search_cdr_uuid');
 	$permission['xml_cdr_search_order'] = permission_exists('xml_cdr_search_order');
 	$permission['xml_cdr_extension'] = permission_exists('xml_cdr_extension');
 	$permission['xml_cdr_caller_id_name'] = permission_exists('xml_cdr_caller_id_name');
@@ -108,7 +109,7 @@
 		$caller_id_name = $_REQUEST["caller_id_name"] ?? '';
 		$caller_id_number = $_REQUEST["caller_id_number"] ?? '';
 		$caller_destination = $_REQUEST["caller_destination"] ?? '';
-		$extension_uuid = $_REQUEST["extension_uuid"] ?? '';
+		$extension_uuids = array_filter($_REQUEST["extension_uuids"] ?? []);
 		$destination_number = $_REQUEST["destination_number"] ?? '';
 		$context = $_REQUEST["context"] ?? '';
 		$start_stamp_begin = $_REQUEST["start_stamp_begin"] ?? '';
@@ -167,7 +168,7 @@
 		}
 		//$mos_comparison = $_REQUEST["mos_comparison"];
 		$mos_score = $_REQUEST["mos_score"] ?? '';
-		$leg = $_REQUEST["leg"] ?? 'a';
+		$leg = $_REQUEST["leg"] ?? '';
 	}
 
 //check to see if permission does not exist
@@ -197,67 +198,79 @@
 	if (!$permission['xml_cdr_domain'] && isset($_SESSION['user']['extension']) && is_array($_SESSION['user']['extension'])) {
 		foreach ($_SESSION['user']['extension'] as $row) {
 			if (is_uuid($row['extension_uuid'])) {
-				$extension_uuids[] = $row['extension_uuid'];
+				$assigned_extension_uuids[] = $row['extension_uuid'];
 			}
 		}
 	}
 
 //set the param variable which is used with paging
-	$param = "&cdr_id=".urlencode($cdr_id ?? '');
-	$param .= "&missed=".urlencode($missed ?? '');
-	$param .= "&direction=".urlencode($direction ?? '');
-	$param .= "&caller_id_name=".urlencode($caller_id_name ?? '');
-	$param .= "&caller_id_number=".urlencode($caller_id_number ?? '');
-	$param .= "&caller_destination=".urlencode($caller_destination ?? '');
-	$param .= "&extension_uuid=".urlencode($extension_uuid ?? '');
-	$param .= "&destination_number=".urlencode($destination_number ?? '');
-	$param .= "&context=".urlencode($context ?? '');
-	$param .= "&start_stamp_begin=".urlencode($start_stamp_begin ?? '');
-	$param .= "&start_stamp_end=".urlencode($start_stamp_end ?? '');
-	$param .= "&answer_stamp_begin=".urlencode($answer_stamp_begin ?? '');
-	$param .= "&answer_stamp_end=".urlencode($answer_stamp_end ?? '');
-	$param .= "&end_stamp_begin=".urlencode($end_stamp_begin ?? '');
-	$param .= "&end_stamp_end=".urlencode($end_stamp_end ?? '');
-	$param .= "&start_epoch=".urlencode($start_epoch ?? '');
-	$param .= "&stop_epoch=".urlencode($stop_epoch ?? '');
-	$param .= "&duration_min=".urlencode($duration_min ?? '');
-	$param .= "&duration_max=".urlencode($duration_max ?? '');
-	$param .= "&billsec=".urlencode($billsec ?? '');
-	$param .= "&hangup_cause=".urlencode($hangup_cause ?? '');
-	$param .= "&status=".urlencode($status ?? '');
-	$param .= "&xml_cdr_uuid=".urlencode($xml_cdr_uuid ?? '');
-	$param .= "&bleg_uuid=".urlencode($bleg_uuid ?? '');
-	$param .= "&accountcode=".urlencode($accountcode ?? '');
-	$param .= "&read_codec=".urlencode($read_codec ?? '');
-	$param .= "&write_codec=".urlencode($write_codec ?? '');
-	$param .= "&remote_media_ip=".urlencode($remote_media_ip ?? '');
-	$param .= "&network_addr=".urlencode($network_addr ?? '');
-	$param .= "&bridge_uuid=".urlencode($bridge_uuid ?? '');
-	$param .= "&mos_comparison=".urlencode($mos_comparison ?? '');
-	$param .= "&mos_score=".urlencode($mos_score ?? '');
-	$param .= "&wait_min=".urlencode($wait_min ?? '');
-	$param .= "&wait_max=".urlencode($wait_max ?? '');
-	$param .= "&tta_min=".urlencode($tta_min ?? '');
-	$param .= "&tta_max=".urlencode($tta_max ?? '');
-	$param .= "&recording=".urlencode($recording ?? '');
-	$param .= "&cc_side=".urlencode($cc_side ?? '');
-	$param .= "&call_center_queue_uuid=".urlencode($call_center_queue_uuid ?? '');
+	$param['cdr_id'] = $cdr_id ?? '';
+	$param['missed'] = $missed ?? '';
+	$param['direction'] = $direction ?? '';
+	$param['caller_id_name'] = $caller_id_name ?? '';
+	$param['caller_id_number'] = $caller_id_number ?? '';
+	$param['caller_destination'] = $caller_destination ?? '';
+	foreach ($extension_uuids as $key => $value) {
+		if (is_uuid($value)) {
+			$param['extension_uuids[]'] = $value;
+		}
+	}
+	$param['destination_number'] = $destination_number ?? '';
+	$param['context'] = $context ?? '';
+	$param['start_stamp_begin'] = $start_stamp_begin ?? '';
+	$param['start_stamp_end'] = $start_stamp_end ?? '';
+	$param['answer_stamp_begin'] = $answer_stamp_begin ?? '';
+	$param['answer_stamp_end'] = $answer_stamp_end ?? '';
+	$param['end_stamp_begin'] = $end_stamp_begin ?? '';
+	$param['end_stamp_end'] = $end_stamp_end ?? '';
+	$param['start_epoch'] = $start_epoch ?? '';
+	$param['stop_epoch'] = $stop_epoch ?? '';
+	$param['duration_min'] = $duration_min ?? '';
+	$param['duration_max'] = $duration_max ?? '';
+	$param['billsec'] = $billsec ?? '';
+	$param['hangup_cause'] = $hangup_cause ?? '';
+	$param['status'] = $status ?? '';
+	$param['xml_cdr_uuid'] = $xml_cdr_uuid ?? '';
+	$param['bleg_uuid'] = $bleg_uuid ?? '';
+	$param['accountcode'] = $accountcode ?? '';
+	$param['read_codec'] = $read_codec ?? '';
+	$param['write_codec'] = $write_codec ?? '';
+	$param['remote_media_ip'] = $remote_media_ip ?? '';
+	$param['network_addr'] = $network_addr ?? '';
+	$param['bridge_uuid'] = $bridge_uuid ?? '';
+	$param['mos_comparison'] = $mos_comparison ?? '';
+	$param['mos_score'] = $mos_score ?? '';
+	$param['wait_min'] = $wait_min ?? '';
+	$param['wait_max'] = $wait_max ?? '';
+	$param['tta_min'] = $tta_min ?? '';
+	$param['tta_max'] = $tta_max ?? '';
+	$param['recording'] = $recording ?? '';
+	$param['cc_side'] = $cc_side ?? '';
+	$param['call_center_queue_uuid'] = $call_center_queue_uuid ?? '';
 
 	if (isset($_SESSION['cdr']['field']) && is_array($_SESSION['cdr']['field'])) {
 		foreach ($_SESSION['cdr']['field'] as $field) {
 			$array = explode(",", $field);
 			$field_name = end($array);
 			if (isset($$field_name)) {
-				$param .= "&".$field_name."=".urlencode($$field_name);
+				$param[$field_name] = $$field_name;
 			}
 		}
 	}
 	if ($_GET['show'] == 'all' && $permission['xml_cdr_all']) {
-		$param .= "&show=all";
+		$param['show'] = 'all';
 	}
 	if (!empty($order_by)) {
-		$param .= "&order_by=".urlencode($order_by)."&order=".urlencode($order);
+		$param['order_by'] = $order_by;
+		$param['order'] = $order;
 	}
+	// Remove empty parameters
+	foreach ($param as $key => $value) {
+		if (empty($value)) {
+			unset($param[$key]);
+		}
+	}
+	$query_string = http_build_query($param);
 
 //create the sql query to get the xml cdr records
 	if (empty($order_by)) { $order_by  = "start_stamp"; }
@@ -379,8 +392,8 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!$permission['xml_cdr_domain']) { //only show the user their calls
-		if (isset($extension_uuids) && is_array($extension_uuids) && @sizeof($extension_uuids)) {
-			$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $extension_uuids)."') \n";
+		if (isset($assigned_extension_uuids) && is_array($assigned_extension_uuids) && @sizeof($assigned_extension_uuids)) {
+			$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $assigned_extension_uuids)."') \n";
 		}
 		else {
 			$sql .= "and false \n";
@@ -422,10 +435,8 @@
 			$parameters['caller_id_number'] = $mod_caller_id_number;
 		}
 	}
-
-	if (!empty($extension_uuid) && is_uuid($extension_uuid)) {
-		$sql .= "and e.extension_uuid = :extension_uuid \n";
-		$parameters['extension_uuid'] = $extension_uuid;
+	if (!empty($extension_uuids)) {
+		$sql .= "and e.extension_uuid in ('".implode("','",$extension_uuids)."') \n";
 	}
 	if (!empty($caller_destination)) {
 		$mod_caller_destination = str_replace("*", "%", $caller_destination);
@@ -679,8 +690,8 @@
 
 //return the paging
 	if (empty($_REQUEST['export_format'])) {
-		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true, $result_count); //top
-		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page, false, $result_count); //bottom
+		list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true, $result_count); //top
+		list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, false, $result_count); //bottom
 	}
 
 ?>

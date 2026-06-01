@@ -105,7 +105,7 @@ class command_option {
 	 */
 	public function callback(?string $function = null) {
 		if ($function !== null) {
-			$this->functions += [$function];
+			$this->functions[] = $function;
 			return $this;
 		}
 		return $this->functions;
@@ -123,7 +123,7 @@ class command_option {
 	 */
 	public function function_append(?string $function = null) {
 		if ($function !== null) {
-			$this->functions += [$function];
+			$this->functions[] = $function;
 			return $this;
 		}
 		return $this->functions;

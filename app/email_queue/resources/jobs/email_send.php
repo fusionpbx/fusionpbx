@@ -170,8 +170,10 @@
 		//$voicemail_mail_to = $row["voicemail_mail_to"];
 		//$voicemail_sms_to  = $row["voicemail_sms_to "];
 		$voicemail_transcription_enabled = $row["voicemail_transcription_enabled"];
+		$voicemail_transcription_prompt_enabled = $row["voicemail_transcription_prompt_enabled"] ?? false;
+		$voicemail_transcription_prompt = $row["voicemail_transcription_prompt"] ?? '';
 		//$voicemail_attach_file = $row["voicemail_attach_file"];
-		//$voicemail_file = $row["voicemail_file"];
+		$voicemail_file = $row["voicemail_file"];
 		//$voicemail_local_after_email = $row["voicemail_local_after_email"];
 		//$voicemail_enabled = $row["voicemail_enabled"];
 		//$voicemail_description = $row["voicemail_description"];
@@ -245,6 +247,25 @@
 				}
 
 				echo "transcribe message: ".$transcribe_message."\n";
+
+				$prompt_is_enabled = in_array($voicemail_transcription_prompt_enabled ?? false, [true, 'true', 't'], true);
+				echo "prompt_enabled raw: ".var_export($voicemail_transcription_prompt_enabled ?? 'NOT SET', true)."\n";
+				echo "prompt_is_enabled: ".($prompt_is_enabled ? 'true' : 'false')."\n";
+				echo "prompt template length: ".strlen($voicemail_transcription_prompt ?? '')."\n";
+				echo "transcribe_prompt class exists: ".(class_exists('transcribe_prompt') ? 'true' : 'false')."\n";
+				if (!empty($transcribe_message)
+					&& $prompt_is_enabled
+					&& !empty($voicemail_transcription_prompt)
+					&& class_exists('transcribe_prompt')
+				) {
+					$prompt_processor = new transcribe_prompt($settings);
+					$prompt_result = $prompt_processor->process($transcribe_message, $voicemail_transcription_prompt);
+					echo "prompt result length: ".strlen($prompt_result)."\n";
+					if (!empty($prompt_result)) {
+						$transcribe_message = $prompt_result;
+					}
+					echo "prompt processed message: ".$transcribe_message."\n";
+				}
 
 				//prepare the email body
 				$email_body = str_replace('${message_text}', $transcribe_message, $email_body);
@@ -328,6 +349,11 @@
 		}
 	}
 
+//clear the array if this is a voicemail and file attachment is not enabled
+	if (!empty($email_uuid) && !empty($voicemail_file) && $voicemail_file !== 'attach') {
+	    $email_attachments = '';
+	}
+
 //send the email
 	$email = new email;
 	$email->domain_uuid = $domain_uuid;
@@ -338,7 +364,9 @@
 	$email->recipients = $email_to;
 	$email->subject = $email_subject;
 	$email->body = $email_body;
-	$email->attachments = $email_attachments;
+	if (!empty($email_attachments)) {
+		$email->attachments = $email_attachments;
+	}
 	$email->debug_level = 3;
 	$email->method = 'direct';
 	$email_status = $email->send();
@@ -430,7 +458,6 @@
 				}
 			}
 		}
-
 
 		/*
 		//build insert array

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Intercept">
+  <defs>
+    <linearGradient id="ig1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#68d391"/>
+      <stop offset="100%" stop-color="#38a169"/>
+    </linearGradient>
+  </defs>
+  <!-- Phone handset -->
+  <path d="M18 46 C10 42, 8 34, 12 26 L16 28 C14 34, 16 38, 20 42 Z" fill="url(#ig1)"/>
+  <path d="M46 18 C42 10, 34 8, 26 12 L28 16 C34 14, 38 16, 42 20 Z" fill="url(#ig1)"/>
+  <line x1="18" y1="46" x2="46" y2="18" stroke="url(#ig1)" stroke-width="5" stroke-linecap="round"/>
+  <!-- Arrow pointing down-left indicating "grab" -->
+  <polyline points="28,50 18,50 18,40" fill="none" stroke="#2d3748" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="18" y1="50" x2="34" y2="34" stroke="#2d3748" stroke-width="3" stroke-linecap="round"/>
+</svg>

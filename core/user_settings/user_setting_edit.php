@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2023
+ Portions created by the Initial Developer are Copyright (C) 2008-2026
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -524,12 +524,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "    	<option value='12h' ".(($user_setting_value == "12h") ? "selected='selected'" : null).">".$text['label-12-hour']."</option>\n";
 		echo "	</select>\n";
 	}
-	else if ($user_setting_category == "domain" && $user_setting_subcategory == "setting_value_input_type" && $user_setting_name == "text" ) {
-		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
-		echo "    	<option value='input'>Input</option>\n";
-		echo "    	<option value='textarea' ".($user_setting_value == "textarea" ? "selected='selected'" : null).">TextArea</option>\n";
-		echo "	</select>\n";
-	}
 	else if ($user_setting_subcategory == 'password' || (substr_count($user_setting_subcategory, '_password') > 0 && $user_setting_subcategory != 'input_text_font_password') || $user_setting_category == "login" && $user_setting_subcategory == "password_reset_key" && $user_setting_name == "text") {
 		echo "	<input class='formfld password' type='password' id='user_setting_value' name='user_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($user_setting_value)."\">\n";
 	}
@@ -680,8 +674,16 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "	</select>\n";
 	}
 	else {
-		if (!empty($_SESSION['domain']['setting_value_input_type']) && $settings->get('domain', 'setting_value_input_type') == 'textarea') {
-			echo "	<textarea class='formfld' style='width: 185px; height: 80px;' id='user_setting_value' name='user_setting_value'>".($user_setting_value ?? '')."</textarea>\n";
+		if (strlen($user_setting_value) > 25) {
+			echo "	<textarea class='formfld' style='width: 185px; height: auto; max-height: 300px;' id='user_setting_value' name='user_setting_value'>".($user_setting_value ?? '')."</textarea>\n";
+
+			echo "	<script>\n";
+			echo "	document.addEventListener('DOMContentLoaded', () => {\n";
+			echo "		let textarea = document.getElementById('user_setting_value');\n";
+			echo "		textarea.style.height = 'auto';\n";
+			echo "		textarea.style.height = textarea.scrollHeight + 'px';\n";
+			echo "	});\n";
+			echo "	</script>\n";
 		}
 		else {
 			echo "	<input class='formfld' type='text' id='user_setting_value' name='user_setting_value' value=\"".escape($user_setting_value ?? '')."\">\n";

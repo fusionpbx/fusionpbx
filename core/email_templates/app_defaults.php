@@ -619,6 +619,12 @@
 		$sql = "update v_email_templates set template_enabled = 'true' where template_enabled is null";
 		$database->execute($sql);
 		unset($sql);
+
+		//email templates moved to core this removes the email_templates from the app directory
+		$app_email_templates = dirname(__DIR__, 2).'/app/email_templates';
+		if (file_exists($app_email_templates)) {
+			recursive_delete($app_email_templates);
+		}
 	}
 
 ?>

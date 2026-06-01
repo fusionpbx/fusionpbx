@@ -47,7 +47,7 @@ class xml_cdr_service extends service {
 	 *
 	 * @return void
 	 */
-	protected function reload_settings(): void {
+	public function reload_settings(): void {
 		// Read the config file to get any possible changes
 		parent::$config->read();
 
@@ -130,6 +130,9 @@ class xml_cdr_service extends service {
 
 		// Set the initial time
 		$last_poll_time = time();
+
+		// Read the directory to find files to process
+		$this->process_files();
 
 		// Service work is handled here
 		while ($this->running) {

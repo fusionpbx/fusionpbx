@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2019
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -513,6 +513,13 @@
 			$sql .= "and default_setting_subcategory in ('invisibles', 'indent_guides', 'line_numbers') ";
 			$sql .= "and default_setting_name = 'boolean' ";
 			$database->execute($sql);
+			unset($sql);
+
+		// Delete setting_value_input_type
+			$sql = "delete from v_default_settings ";
+			$sql .= "where default_setting_category = 'domain' ";
+			$sql .= "and default_setting_subcategory = 'setting_value_input_type' ";
+			$database->execute($sql, null);
 			unset($sql);
 
 	}

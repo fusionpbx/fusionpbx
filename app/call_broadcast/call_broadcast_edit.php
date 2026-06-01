@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -39,6 +39,32 @@
 	$language = new text;
 	$text = $language->get();
 
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'broadcast_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('call_broadcast_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //set the action with add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
@@ -59,52 +85,6 @@
 	$broadcast_destination_data = '';
 	$broadcast_description = '';
 	$broadcast_toll_allow = '';
-
-//function to Upload CSV/TXT file
-/**
- * Uploads a file and prepares the SQL query for broadcasting phone numbers.
- *
- * @param string $sql                     The initial SQL query.
- * @param mixed  $broadcast_phone_numbers The phone numbers to broadcast, or an empty value if not applicable.
- *
- * @return array An array containing the result code ('code') and the prepared SQL query ('sql').
- */
-function upload_file($sql, $broadcast_phone_numbers) {
-		$upload_csv = $sql = '';
-		if (isset($_FILES['broadcast_phone_numbers_file']) && !empty($_FILES['broadcast_phone_numbers_file']) && $_FILES['broadcast_phone_numbers_file']['size'] > 0) {
-			$filename=$_FILES["broadcast_phone_numbers_file"]["tmp_name"];
-			$file_extension = array('application/octet-stream','application/vnd.ms-excel','text/plain','text/csv','text/tsv');
-			if (in_array($_FILES['broadcast_phone_numbers_file']['type'],$file_extension)) {
-				$file = fopen($filename, "r");
-				$count = 0;
-				while (($getData = fgetcsv($file, 0, "\n")) !== FALSE)
-				{
-					$count++;
-					if ($count == 1) { continue; }
-					$getData = preg_split('/[ ,|]/', $getData[0], '', PREG_SPLIT_NO_EMPTY);
-					$separator = $getData[0];
-					$separator .= (isset($getData[1]) && $getData[1] != '')? '|'.$getData[1] : '';
-					$separator .= (isset($getData[2]) && $getData[2] != '')? ','.$getData[2] : '';
-					$separator .= PHP_EOL;
-					$upload_csv .= $separator;
-				}
-				 fclose($file);
-			}
-			else {
-				return array('code'=>false,'sql'=>'');
-			}
-		}
-		if (!empty($broadcast_phone_numbers) && !empty($upload_csv)) {
-			$sql .= $broadcast_phone_numbers.'\n'.$upload_csv;
-		}
-		elseif (empty($broadcast_phone_numbers) && !empty($upload_csv)) {
-			$sql .= $upload_csv;
-		}
-		else {
-			$sql .= $broadcast_phone_numbers;
-		}
-		return array('code'=>true,'sql'=> $sql);
-	}
 
 //get the http post variables and set them to php variables
 	if (!empty($_POST)) {
@@ -152,7 +132,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					$obj = new call_broadcast;
 					$obj->delete($call_broadcasts);
 				//redirect
-					header('Location: call_broadcast.php');
+					header('Location: call_broadcast.php'.($query_string ? '?'.$query_string : ''));
 					exit;
 			}
 		}
@@ -166,7 +146,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$token = new token;
 		if (!$token->validate($_SERVER['PHP_SELF'])) {
 			message::add($text['message-invalid_token'],'negative');
-			header('Location: call_broadcast.php');
+			header('Location: call_broadcast.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 
@@ -208,7 +188,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					message::add($text['confirm-add']);
 
 				//set return url on error
-					$error_return_url = "call_broadcast_edit.php";
+					$error_return_url = "call_broadcast_edit.php".($query_string ? '?'.$query_string : '');
 			}
 
 		//prep update
@@ -220,21 +200,29 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					message::add($text['confirm-update']);
 
 				//set return url on error
-					$error_return_url = "call_broadcast_edit.php?id=".urlencode($_GET['id']);
+					$error_return_url = "call_broadcast_edit.php?id=".urlencode($_GET['id']).($query_string ? '&'.$query_string : '');
 			}
 
 		//execute
 			if (!empty($array)) {
 
+				//save the phone numbers upload the file
+					$upload_csv = $sql = '';
+					if (isset($_FILES['ulfile']) && !empty($_FILES['ulfile']) && $_FILES['ulfile']['size'] > 0) {
+						$file_name = $_FILES["ulfile"]["tmp_name"];
+						$allowed_file_extensions = array('application/octet-stream','application/vnd.ms-excel','text/plain','text/csv','text/tsv');
+						if (in_array($_FILES['ulfile']['type'], $allowed_file_extensions)) {
+							$broadcast_phone_numbers = file_get_contents($_FILES["ulfile"]["tmp_name"]);
+ 						}
+ 					}
+
 				//add file selection and download sample
-					$file_res = upload_file($sql ?? '', $broadcast_phone_numbers);
-					if ($file_res['code'] != true) {
+					if (empty($broadcast_phone_numbers)) {
 						$_SESSION["message_mood"] = "negative";
 						$_SESSION["message"] = $text['file-error'];
 						header("Location: ".$error_return_url);
 						exit;
 					}
-					$broadcast_phone_numbers = $file_res['sql'];
 
 				//build the database array
 					$array['call_broadcasts'][0]['domain_uuid'] = $domain_uuid;
@@ -275,7 +263,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 					unset($array);
 
 				//redirect
-					header("Location: call_broadcast.php");
+					header("Location: call_broadcast.php".($query_string ? '?'.$query_string : ''));
 					exit;
 
 			}
@@ -336,10 +324,10 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-call_broadcast']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'call_broadcast.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'call_broadcast.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == "update") {
-		echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$settings->get('theme', 'button_icon_start'),'style'=>'margin-left: 15px;','link'=>'call_broadcast_send.php?id='.urlencode($call_broadcast_uuid)]);
-		echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$settings->get('theme', 'button_icon_stop'),'link'=>'call_broadcast_stop.php?id='.urlencode($call_broadcast_uuid)]);
+		echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$settings->get('theme', 'button_icon_start'),'style'=>'margin-left: 15px;','link'=>'call_broadcast_send.php?id='.urlencode($call_broadcast_uuid).($query_string ? '&'.$query_string : '')]);
+		echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$settings->get('theme', 'button_icon_stop'),'link'=>'call_broadcast_stop.php?id='.urlencode($call_broadcast_uuid).($query_string ? '&'.$query_string : '')]);
 		if (permission_exists('call_broadcast_delete')) {
 			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
@@ -523,7 +511,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		echo "	<textarea class='formfld' style='width: 300px; height: 200px;' type='text' name='broadcast_phone_numbers' placeholder=\"".$text['label-list_example']."\">".str_replace('\n', "\n", $broadcast_phone_numbers ?? '')."</textarea>";
 		echo "<br><br>";
-		echo " <input type='file' name='broadcast_phone_numbers_file' accept='.csv,.txt' style=\"display:inline-block;\"><a href='sample.csv' download><i class='fas fa-cloud-download-alt' style='margin-right: 5px;'></i>".$text['label-sample_file']."</a>";
+		echo " <input type='file' name='ulfile' accept='.csv,.txt' style=\"display:inline-block;\"><a href='sample.csv' download><i class='fas fa-cloud-download-alt' style='margin-right: 5px;'></i>".$text['label-sample_file']."</a>";
 		echo "<br /><br />";
 
 		echo "".$text['description-phone']." <br /><br />\n";

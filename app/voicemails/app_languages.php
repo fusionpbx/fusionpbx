@@ -1701,6 +1701,15 @@ $text['description-voicemail_transcription_enabled']['zh-cn'] = "选择是否为
 $text['description-voicemail_transcription_enabled']['ja-jp'] = "この内線番号に対してボイスメールの文字起こしを有効にするかどうかを選択します。";
 $text['description-voicemail_transcription_enabled']['ko-kr'] = "이 확장 프로그램에 음성 메일 전사가 활성화되어 있는지 선택하십시오.";
 
+$text['label-voicemail_transcription_prompt_enabled']['en-us'] = "Custom Prompt Processing";
+$text['label-voicemail_transcription_prompt_enabled']['en-gb'] = "Custom Prompt Processing";
+$text['description-voicemail_transcription_prompt_enabled']['en-us'] = "When enabled, the transcription is sent to the configured AI provider with a custom prompt before being included in the voicemail email.";
+$text['description-voicemail_transcription_prompt_enabled']['en-gb'] = "When enabled, the transcription is sent to the configured AI provider with a custom prompt before being included in the voicemail email.";
+$text['label-voicemail_transcription_prompt']['en-us'] = "Transcription Prompt";
+$text['label-voicemail_transcription_prompt']['en-gb'] = "Transcription Prompt";
+$text['description-voicemail_transcription_prompt']['en-us'] = "Enter the prompt template. Use \${transcription} as a placeholder for the raw transcription text. If omitted, the transcription is appended after the prompt.";
+$text['description-voicemail_transcription_prompt']['en-gb'] = "Enter the prompt template. Use \${transcription} as a placeholder for the raw transcription text. If omitted, the transcription is appended after the prompt.";
+
 $text['description-voicemail_message']['en-us'] = "A list of recorded voice messages which shows when the message was created, caller ID information, length, file size and download or delete the message.";
 $text['description-voicemail_message']['en-gb'] = "A list of recorded voice messages which shows when the message was created, caller ID information, length, file size and download or delete the message.";
 $text['description-voicemail_message']['ar-eg'] = "قائمة بالرسائل الصوتية المسجلة التي تظهر وقت إنشاء الرسالة ومعلومات هوية المتصل وطولها وحجم الملف وتنزيل الرسالة أو حذفها.";
@@ -2671,5 +2680,11 @@ $text['message-emails_resent']['tr-tr'] = "E-postalar Yeniden Gönderildi";
 $text['message-emails_resent']['zh-cn'] = "电子邮件已重新发送";
 $text['message-emails_resent']['ja-jp'] = "再送信メール";
 $text['message-emails_resent']['ko-kr'] = "이메일 재전송";
+
+$text['label-alternate_voicemail']['en-us'] = "Alternate Voicemail Location";
+$text['label-alternate_voicemail']['en-gb'] = "Alternate Voicemail Location";
+
+$text['description-alternate_voicemail']['en-us'] = "When enabled, callers reaching this voicemail box are routed to this destination instead of leaving a message. The original Caller ID is preserved.";
+$text['description-alternate_voicemail']['en-gb'] = "When enabled, callers reaching this voicemail box are routed to this destination instead of leaving a message. The original Caller ID is preserved.";
 
 ?>

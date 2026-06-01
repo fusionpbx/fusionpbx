@@ -55,6 +55,32 @@
 		$action = "add";
 	}
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'destination_number'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$url_params = [];
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('destination_all')) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
+
 //set the type
 	$destination_type = !empty($_GET['type']) ? $_GET['type'] : 'inbound';
 	switch ($destination_type) {
@@ -76,7 +102,7 @@
 
 		if ($total_destinations >= $settings->get('limit', 'destinations', '')) {
 			message::add($text['message-maximum_destinations'].' '.$settings->get('limit', 'destinations', ''), 'negative');
-			header('Location: destinations.php');
+			header('Location: destinations.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 	}
@@ -139,6 +165,7 @@
 							$conditions[$i]['condition_expression'] = $row['condition_expression'];
 							$conditions[$i]['condition_app'] = $action_array[0];
 							$conditions[$i]['condition_data'] = $action_array[1];
+							$conditions[$i]['condition_description'] = $row['condition_description'];
 							$i++;
 						}
 					}
@@ -396,7 +423,7 @@
 								if (isset($destination_prefix) && !empty($destination_prefix)) {
 									$destination_numbers['destination_prefix'] = $destination_prefix;
 								}
-								if (isset($destination_trunk_prefix) && !empty($destination_trunk_prefix)) {
+								if (isset($destination_trunk_prefix)) {
 									$destination_numbers['destination_trunk_prefix'] = $destination_trunk_prefix;
 								}
 								if (isset($destination_area_code) && !empty($destination_area_code)) {
@@ -560,7 +587,7 @@
 								if (!empty($destination_cid_name_prefix)) {
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"effective_caller_id_name=".xml::sanitize($destination_cid_name_prefix)."#\${caller_id_name}\" inline=\"true\"/>\n";
 								}
-								if (!empty($destination_record) && $destination_record === true) {
+								if (!empty($destination_record) && $destination_record == 'true') {
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_path=\${recordings_dir}/\${domain_name}/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}\" inline=\"true\"/>\n";
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_name=\${uuid}.".$record_extension."\" inline=\"true\"/>\n";
 									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"record_append=true\" inline=\"true\"/>\n";
@@ -986,7 +1013,7 @@
 										}
 
 									//add option record to the dialplan
-										if ($destination_record === true) {
+										if (!empty($destination_record) && $destination_record == 'true') {
 
 											//add a variable
 												$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
@@ -1344,7 +1371,7 @@
 			if ($action == "update") {
 				message::add($text['message-update']);
 			}
-			header("Location: destination_edit.php?id=".urlencode($destination_uuid)."&type=".urlencode($destination_type));
+			header("Location: destination_edit.php?id=".urlencode($destination_uuid)."&type=".urlencode($destination_type).($query_string ? '&'.$query_string : ''));
 			return;
 	}
 
@@ -1479,12 +1506,14 @@
 		$destination_conditions[$i]['condition_field'] = '';
 		$destination_conditions[$i]['condition_app'] = '';
 		$destination_conditions[$i]['condition_data'] = '';
+		$destination_conditions[$i]['condition_description'] = '';
 	}
 	else {
 		$destination_conditions[0]['condition_field']  = '';
 		$destination_conditions[0]['condition_expression'] = '';
 		$destination_conditions[0]['condition_app'] = '';
 		$destination_conditions[0]['condition_data'] = '';
+		$destination_conditions[0]['condition_description'] = '';
 	}
 
 //get the dialplan details in an array
@@ -1692,7 +1721,7 @@
 	}
 	echo 	"</div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'destinations.php?type='.urlencode($destination_type)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'destinations.php?type='.urlencode($destination_type).($query_string ? '&'.$query_string : '')]);
 	if (permission_exists('destination_add') || permission_exists('destination_edit')) {
 		echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save']);
 	}
@@ -1817,7 +1846,7 @@
 		echo "</tr>\n";
 	}
 
-	//caler id number
+	//caller id number
 	if (permission_exists('destination_caller_id_number')) {
 		echo "<tr id='tr_caller_id_number'>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -1873,6 +1902,7 @@
 				echo "	<input class='formfld' type='text' name=\"destination_conditions[$x][condition_expression]\" id='destination_conditions' maxlength='255' value=\"".escape($row['condition_expression'] ?? '')."\">\n";
 				echo "	<br />\n";
 				echo $destination->select('dialplan', "destination_conditions[$x][condition_action]", $row['condition_app'].':'.$row['condition_data'])."<br />\n";
+				echo "	<textarea class='formfld' style='width: 200px;' name=\"destination_conditions[$x][condition_description]\" id='destination_conditions' maxlength='255' placeholder='".$text['label-description']."'>".escape($row['condition_description'] ?? '')."</textarea><br />\n";
 				if (!empty($row['condition_app'])) {
 					echo "	<br />\n";
 				}

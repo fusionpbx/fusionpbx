@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -292,6 +292,19 @@
 //create the destinations object
 	$destinations = new destinations();
 
+//build the application icons array
+	$application_icons = array();
+	$application_icons["call_centers"] = "fa-headset";
+	$application_icons["call_flows"] = "fa-share-nodes";
+	$application_icons["conferences"] = "fa-comments";
+	$application_icons["destinations"] = "fa-right-to-bracket";
+	$application_icons["dialplans"] = "fa-right-left";
+	$application_icons["extensions"] = "fa-suitcase";
+	$application_icons["ivr_menus"] = "fa-diagram-project";
+	$application_icons["ring_groups"] = "fa-users";
+	$application_icons["time_conditions"] = "fa-clock";
+	$application_icons["voicemails"] = "fa-envelope";
+
 //build the call flow summary array
 	$xml_cdr = new xml_cdr(["database" => $database, "settings" => $settings, "destinations" => $destinations]);
 	$xml_cdr->domain_uuid = $domain_uuid;
@@ -308,6 +321,10 @@
 	}
 	//prepares the raw call flow data to be displayed
 	$call_flow_summary = $xml_cdr->call_flow_summary($call_flow_array);
+	//add the application_icon to the array
+	foreach($call_flow_summary as $id => $row) {
+		$call_flow_summary[$id]["application_icon"] = $application_icons[$row["application_name"] ?? ''] ?? '';
+	}
 
 //debug information
 	if (isset($_REQUEST['debug']) && $_REQUEST['debug'] == 'true') {
@@ -333,6 +350,10 @@
 	else {
 		$start_time = date("Y-m-d g:i:s a", (int) $start_epoch);
 		$end_time = date("Y-m-d g:i:s a", (int) $end_epoch);
+		foreach($call_flow_summary as $x => $row) {
+			$call_flow_summary[$x]["start_stamp"] = date("Y-m-d g:i:s a", (int) $call_flow_summary[$x]["start_epoch"]);
+			$call_flow_summary[$x]["end_stamp"] = date("Y-m-d g:i:s a", (int) $call_flow_summary[$x]["end_epoch"]);
+		}
 	}
 
 //set the year, month and date
@@ -441,6 +462,7 @@
 	}
 
 //get the header
+	$document['title'] = $text['title2'];
 	require_once "resources/header.php";
 
 //page title and description
@@ -448,7 +470,7 @@
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.urlencode($_SESSION['xml_cdr']['last_query']) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.$_SESSION['xml_cdr']['last_query'] : null)]);
 	if (permission_exists('xml_cdr_call_log') && $call_log_enabled && isset($log_content) && !empty($log_content)) {
 		echo button::create(['type'=>'button','label'=>$text['button-call_log'],'icon'=>$settings->get('theme', 'button_icon_search'),'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$uuid]);
 	}
@@ -589,9 +611,8 @@
 	echo "	</tr>\n";
 	$i = 1;
 	foreach ($call_flow_summary as $row) {
-		$application_icon = $row["application_icon"][$row["application_name"] ?? ''] ?? '';
 		echo "	<tr>\n";
-		echo "		<td style='width: 0; padding-right: 0;' valign='top' class='".$row_style[$c]."'><span class='fa-solid ".$application_icon."' style='opacity: 0.8;'></span></td>";
+		echo "		<td style='width: 0; padding-right: 0;' valign='top' class='".$row_style[$c]."'><span class='fa-solid ".$row["application_icon"]."' style='opacity: 0.8;'></span></td>";
 		echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["application_url"]."\">".escape($row["application_label"])."</a></td>\n";
 		if ($call_direction == 'local' || $call_direction == 'outbound') {
 			echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["source_url"]."\">".escape($row["source_number"])."</a></td>\n";

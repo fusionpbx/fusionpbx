@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022-2025
+	Portions created by the Initial Developer are Copyright (C) 2022-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -39,10 +39,35 @@
 	$language = new text;
 	$text = $language->get();
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'email_date'));
+	$order = ($_GET['order'] ?? '') === 'asc' ? 'asc' : 'desc';
+	$search = $_GET['search'] ?? '';
+	$email_status = $_GET['email_status'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($email_status)) {
+		$param['email_status'] = $email_status;
+	}
+	$query_string = http_build_query($param);
+
 //get the http post data
 	if (!empty($_POST['email_queue']) && is_array($_POST['email_queue'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'] ?? '';
 		$email_queue = $_POST['email_queue'];
 	}
 
@@ -53,7 +78,7 @@
 		$token = new token;
 		if (!$token->validate($_SERVER['PHP_SELF'])) {
 			message::add($text['message-invalid_token'],'negative');
-			header('Location: email_queue.php');
+			header('Location: email_queue.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 
@@ -87,24 +112,15 @@
 		}
 
 		//redirect the user
-		header('Location: email_queue.php'.($search != '' ? '?search='.urlencode($search) : ''));
+		header('Location: email_queue.php'.($query_string ? '?'.$query_string : ''));
 		exit;
-	}
-
-//get order and order by
-	$order_by = $_GET["order_by"] ?? null;
-	$order = $_GET["order"] ?? null;
-
-//add the search
-	if (isset($_GET["search"])) {
-		$search = strtolower($_GET["search"]);
 	}
 
 //get the count
 	$sql = "select count(email_queue_uuid) ";
 	$sql .= "from v_email_queue ";
 	$sql .= "where true ";
-	if (isset($search)) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	lower(email_from) like :search ";
 		$sql .= "	or lower(email_to) like :search ";
@@ -112,11 +128,11 @@
 		$sql .= "	or lower(email_body) like :search ";
 		$sql .= "	or lower(email_status) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
-	if (isset($_GET["email_status"]) && $_GET["email_status"] != '') {
+	if (!empty($email_status)) {
 		$sql .= "and email_status = :email_status ";
-		$parameters['email_status'] = $_GET["email_status"];
+		$parameters['email_status'] = $email_status;
 	}
 	//else {
 	//	$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
@@ -127,12 +143,8 @@
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = !empty($_GET["email_status"]) ? "&email_status=".urlencode($_GET["email_status"]) : null;
-	$param .= !empty($search) ? "&search=".urlencode($search) : null;
-	$param .= !empty($_REQUEST['show']) && $_REQUEST['show'] == 'all' && permission_exists('email_queue_all') ? "&show=all" : null;
-	$page = !empty($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : 0;
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //set the time zone
@@ -162,18 +174,18 @@
 	$sql .= "email_retry_count ";
 	$sql .= "from v_email_queue ";
 	$sql .= "where true ";
-	if (isset($search)) {
+	if (!empty($search)) {
 		$sql .= "and (";
 		$sql .= "	lower(email_from) like :search ";
 		$sql .= "	or lower(email_to) like :search ";
 		$sql .= "	or lower(email_subject) like :search ";
 		$sql .= "	or lower(email_status) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
-	if (isset($_GET["email_status"]) && $_GET["email_status"] != '') {
+	if (!empty($email_status)) {
 		$sql .= "and email_status = :email_status ";
-		$parameters['email_status'] = $_GET["email_status"];
+		$parameters['email_status'] = $email_status;
 	}
 	$sql .= order_by($order_by, $order, 'email_date', 'desc');
 	$sql .= limit_offset($rows_per_page, $offset);
@@ -250,18 +262,18 @@
 	echo "		<select class='formfld' style='margin-left: 15px;' name='email_status'>\n";
     echo "			<option value='' selected='selected' disabled hidden>".$text['label-email_status']."...</option>";
 	echo "			<option value=''></option>\n";
-	echo "			<option value='waiting' ".(!empty($_GET["email_status"]) && $_GET["email_status"] == "waiting" ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
-	echo "			<option value='trying' ".(!empty($_GET["email_status"]) && $_GET["email_status"] == "trying" ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
-	echo "			<option value='sent' ".(!empty($_GET["email_status"]) && $_GET["email_status"] == "sent" ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
-	echo "			<option value='failed' ".(!empty($_GET["email_status"]) && $_GET["email_status"] == "failed" ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
+	echo "			<option value='waiting' ".($email_status == "waiting" ? "selected='selected'" : null).">".ucwords($text['label-waiting'])."</option>\n";
+	echo "			<option value='trying' ".($email_status == "trying" ? "selected='selected'" : null).">".ucwords($text['label-trying'])."</option>\n";
+	echo "			<option value='sent' ".($email_status == "sent" ? "selected='selected'" : null).">".ucwords($text['label-sent'])."</option>\n";
+	echo "			<option value='failed' ".($email_status == "failed" ? "selected='selected'" : null).">".ucwords($text['label-failed'])."</option>\n";
 	echo "		</select>\n";
-	//if (permission_exists('email_queue_all')) {
-	//	if ($_GET['show'] == 'all') {
-	//		echo "		<input type='hidden' name='show' value='all'>\n";
-	//	}
-	//	else {
-	//		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
-	//	}
+	foreach ($param as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
+		}
+	}
+	//if ($show !== 'all' && permission_exists('email_queue_all')) {
+	//	echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
 	//}
 	echo 		"<input type='text' class='txt list-search' style='margin-left: 0;' name='search' id='search' value=\"".escape($search ?? '')."\" placeholder=\"".$text['label-search']."\" />";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
@@ -289,7 +301,6 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search ?? '')."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -299,7 +310,7 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".(empty($email_queue) ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	//if ($_GET['show'] == 'all' && permission_exists('email_queue_all')) {
+	//if ($show == 'all' && permission_exists('email_queue_all')) {
 	//	echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	//}
 	//echo th_order_by('email_date', $text['label-email_date'], $order_by, $order);
@@ -307,11 +318,11 @@
 	echo "<th class='center shrink hide-md-dn'>".$text['label-time']."</th>\n";
 	echo "<th class='shrink hide-md-dn'>".$text['label-hostname']."</th>\n";
 	echo "<th class='shrink hide-md-dn'>".$text['label-email_from']."</th>\n";
-	echo th_order_by('email_to', $text['label-email_to'], $order_by, $order);
-	echo th_order_by('email_subject', $text['label-email_subject'], $order_by, $order);
-	echo th_order_by('email_status', $text['label-email_status'], $order_by, $order);
-	echo th_order_by('email_retry_count', $text['label-email_retry_count'], $order_by, $order);
-	//echo th_order_by('email_action_before', $text['label-email_action_before'], $order_by, $order);
+	echo th_order_by('email_to', $text['label-email_to'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('email_subject', $text['label-email_subject'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('email_status', $text['label-email_status'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('email_retry_count', $text['label-email_retry_count'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('email_action_before', $text['label-email_action_before'], $order_by, $order, null, null, $query_string);
 	echo "<th class='hide-md-dn'>".$text['label-email_action_after']."</th>\n";
 	if (permission_exists('email_queue_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -323,7 +334,7 @@
 		foreach ($email_queue as $row) {
 			$list_row_url = '';
 			if (permission_exists('email_queue_edit')) {
-				$list_row_url = "email_queue_edit.php?id=".urlencode($row['email_queue_uuid']);
+				$list_row_url = "email_queue_edit.php?id=".urlencode($row['email_queue_uuid']).($query_string ? '&'.$query_string : '');
 				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
@@ -335,7 +346,7 @@
 				echo "		<input type='hidden' name='email_queue[$x][email_queue_uuid]' value='".escape($row['email_queue_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			//if ($_GET['show'] == 'all' && permission_exists('email_queue_all')) {
+			//if ($show == 'all' && permission_exists('email_queue_all')) {
 			//	echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
 			//}
 			if (permission_exists('email_queue_edit')) {
