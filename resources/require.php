@@ -67,19 +67,14 @@
 		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED);
 	}
 
-//get the database connection settings
-	//$db_type = $settings['database']['type'];
-	//$db_host = $settings['database']['host'];
-	//$db_port = $settings['database']['port'];
-	//$db_name = $settings['database']['name'];
-	//$db_username = $settings['database']['username'];
-	//$db_password = $settings['database']['password'];
+//set runtime ini settings
+	$max_input_vars = $config->get('php.max_input_vars', '15000');
+	ini_set('max_input_vars', $max_input_vars);
 
 //debug info
 	//echo "Include Path: ".get_include_path()."\n";
 	//echo "Document Root: ".dirname(__DIR__, 1)."\n";
 	//echo "Project Root: ".dirname(__DIR__, 1)."\n";
-
 
 //include global functions
 	require_once __DIR__ . "/functions.php";
