@@ -303,6 +303,9 @@
 	$devices = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//snapshot the rendered uuids so device_edit.php can offer Previous/Next arrows
+	edit_nav::snapshot('devices', $devices, 'device_uuid');
+
 //alternate_found
 	$device_alternate = false;
 	if (is_array($devices)) {

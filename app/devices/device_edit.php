@@ -1115,6 +1115,9 @@
 		}
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save', ''),'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
+	if ($action == 'update' && !empty($device_uuid) && is_uuid($device_uuid)) {
+		echo edit_nav::render(['module_key'=>'devices','script'=>'device_edit.php','id'=>$device_uuid]);
+	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
