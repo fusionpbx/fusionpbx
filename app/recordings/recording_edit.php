@@ -486,7 +486,11 @@
 			}
 		}
 		else {
-			echo "		<input class='formfld' type='text' name='recording_voice' maxlength='255' value=\"".escape($recording_voice)."\">\n";
+			$engine_label = ucfirst($speech_engine);
+			echo "<div style='background-color: #fff4d6; border: 1px solid #e0b800; padding: 10px; border-radius: 4px; max-width: 500px;'>\n";
+			echo "<strong>Voice list unavailable.</strong> Unable to load voices from the ".escape($engine_label)." speech API. The service may be temporarily unreachable. Please refresh in a few minutes.\n";
+			echo "</div>\n";
+			echo "<input type='hidden' name='recording_voice' value=\"".escape($recording_voice ?? '')."\">\n";
 		}
 		echo "<br />\n";
 		echo $text['description-voice']."\n";
