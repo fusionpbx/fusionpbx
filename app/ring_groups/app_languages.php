@@ -2616,4 +2616,21 @@ $text['button-view_all']['zh-cn'] = "查看全部";
 $text['button-view_all']['ja-jp'] = "すべて見る";
 $text['button-view_all']['ko-kr'] = "모두보기";
 
+$text['title-ring_group_import']['en-us'] = "Ring Group Import";
+$text['header-ring_group_import']['en-us'] = "Ring Group Import";
+$text['description-ring_group_import']['en-us'] = "Upload delimited data to add multiple ring groups. List multiple destinations in a single column separated by the pipe character (|), e.g. 1001|1002|1003.";
+$text['label-destinations']['en-us'] = "Destinations";
+$text['description-destinations']['en-us'] = "Separate multiple destination numbers with the pipe character (|).";
+$text['label-destination_separator']['en-us'] = "Destination Separator";
+$text['description-destination_separator']['en-us'] = "Character used to separate multiple destination numbers within a single cell.";
+$text['label-destination_delay']['en-us'] = "Destination Delay";
+$text['description-destination_delay']['en-us'] = "Default delay (seconds) applied to each imported destination.";
+$text['label-destination_timeout']['en-us'] = "Destination Timeout";
+$text['description-destination_timeout']['en-us'] = "Default timeout (seconds) applied to each imported destination.";
+$text['description-destination_prompt']['en-us'] = "When enabled, the answering party must press 1 to accept the call.";
+
+$text['title-ring_group_export']['en-us'] = "Ring Group Export";
+$text['header-ring_group_export']['en-us'] = "Ring Group Export";
+$text['description-ring_group_export']['en-us'] = "Select the columns to include in the exported CSV file.";
+
 ?>
