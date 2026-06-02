@@ -2345,6 +2345,10 @@ else { //default: white
 		display: none;
 		}
 
+	td > .switch {
+		vertical-align: middle;
+		}
+
 	.slider {
 		position: absolute;
 		cursor: pointer;
