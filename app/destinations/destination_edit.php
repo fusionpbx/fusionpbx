@@ -602,6 +602,10 @@
 								if (!empty($destination_distinctive_ring)) {
 									$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"sip_h_Alert-Info=".xml::sanitize($destination_distinctive_ring)."\" inline=\"true\"/>\n";
 								}
+								if (!empty($destination_type_fax)) {
+									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"fax_enable_t38=true\"/>\n";
+									$dialplan["dialplan_xml"] .= "		<action application=\"set\" data=\"t38-passthru=once\"/>\n";
+								}
 								if (!empty($destination_ringback) && $ringbacks->valid($destination_ringback)) {
 									$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"ringback=".$destination_ringback."\" inline=\"true\"/>\n";
 									$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"transfer_ringback=".$destination_ringback."\" inline=\"true\"/>\n";
@@ -940,6 +944,37 @@
 											$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "export";
 											$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "sip_h_Alert-Info=".$destination_distinctive_ring;
 											$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
+											$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
+											$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+											$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
+											$y++;
+
+											//increment the dialplan detail order
+											$dialplan_detail_order = $dialplan_detail_order + 10;
+										}
+
+									//set fax t38
+										if (!empty($destination_type_fax)) {
+											$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+											$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
+											$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+											$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+											$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "fax_enable_t38=true";
+											$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "";
+											$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
+											$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+											$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
+											$y++;
+
+											//increment the dialplan detail order
+											$dialplan_detail_order = $dialplan_detail_order + 10;
+
+											$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+											$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
+											$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+											$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+											$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "t38-passthru=once";
+											$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "";
 											$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
 											$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 											$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
