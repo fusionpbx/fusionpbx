@@ -535,6 +535,14 @@ class operator_panel_service extends base_websocket_system_service implements we
 				 . "ORDER BY e.extension::integer NULLS LAST, e.extension ASC";
 
 			$extensions = $database->select($sql, [':domain_name' => $domain_name], 'all') ?? [];
+			if ($extensions === false) {
+				$database_error = $database->message;
+				if (is_array($database_error)) {
+					$database_error = json_encode($database_error);
+				}
+				$this->warning("Database query for extensions failed: " . $database_error . ' LINE: ' . __LINE__);
+				return;
+			}
 			$this->debug('extensions_active trace [step2] extensions query done: rows=' . count($extensions)
 				. ' elapsed_ms=' . round((microtime(true) - $t_db0) * 1000, 1));
 		} catch (\Exception $e) {
@@ -562,7 +570,14 @@ class operator_panel_service extends base_websocket_system_service implements we
 				 . "WHERE d.domain_name = :domain_name AND e.enabled = 'true'";
 
 			$rows = $database->select($sql, [':domain_name' => $domain_name], 'all');
-
+			if ($rows === false) {
+				$database_error = $database->message;
+				if (is_array($database_error)) {
+					$database_error = json_encode($database_error);
+				}
+				$this->warning("Database query for extensions failed: " . $database_error . ' LINE: ' . __LINE__);
+				return;
+			}
 			// Check for unexpected query result formats and coerce to empty array if needed
 			if (!is_array($rows)) {
 				$this->debug('extensions_active trace [step3] user-status query returned non-array; coercing to empty array');
