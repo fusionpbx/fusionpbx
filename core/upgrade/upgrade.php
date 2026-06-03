@@ -594,6 +594,7 @@ function update_php_fpm(settings $settings) {
 		}
 
 		// Build the read write paths array
+		$read_write_paths[] = '/tmp';
 		$read_write_paths[] = '/etc/freeswitch';
 		$read_write_paths[] = '/usr/share/freeswitch';
 		$read_write_paths[] = '/var/lib/freeswitch';
@@ -601,48 +602,111 @@ function update_php_fpm(settings $settings) {
 		$read_write_paths[] = '/usr/share/fusionpbx';
 
 		// Build the line to add to the service file
-		$line_to_insert = "ReadWritePaths=/tmp";
-		foreach($read_write_paths as $read_write_path) {
-			if (file_exists($read_write_path)) {
-				$line_to_insert .= ' '.$read_write_path;
-			}
-		}
 		$service_file = "/usr/lib/systemd/system/php".$php_version."-fpm.service";
 		if (file_exists($service_file)) {
 			// Get the file contents
 			$file_contents = file_get_contents($service_file);
 
-			// Check if "ReadWritePaths" exists in the file contents
-			$file_updated = strpos($file_contents, 'ReadWritePaths') !== false;
+			// Make sure the file contents were read successfully
+			if ($file_contents === false) {
+				// Send an error message only when running from console
+				if (is_cli()) {
+					echo "Failed to read the service file: $service_file\n";
+				}
+			} else {
+				// Set flags
+				$file_update_required = false;
+				$read_write_paths_exists = false;
+				$service_section_exists = false;
 
-			// Check if the service file is writable
-			$file_writable = is_writable($service_file);
-
-			// Find the empty line befor the Install
-			if (!$file_updated && $file_writable) {
+				// Process the file contents to add the ReadWritePaths directive
 				$lines = explode("\n", $file_contents);
-				$insert_index = -1;
-				for ($i = 0; $i < count($lines); $i++) {
-					if (trim($lines[$i]) === '[Install]') {
-						// Find empty line before [Install]
-						for ($j = $i - 1; $j >= 0; $j--) {
-							if (trim($lines[$j]) === '') {
-								$insert_index = $j;
-								break;
-							}
+
+				// $lines is passed by reference so that we can update it in place
+				foreach($lines as &$line) {
+					// Mark the service section
+					if (trim($line) === '[Service]') {
+						$service_section_exists = true;
+						continue;
+					}
+
+					// Don't search for the directive if we haven't reached the service section yet
+					if (!$service_section_exists) {
+						continue;
+					}
+
+					// Check if the ReadWritePaths directive already exists and if so check if it needs to be updated
+					if (str_starts_with(trim($line), 'ReadWritePaths')) {
+						$read_write_paths_exists = true;
+						// Remove whitespace from all elements in the array and split into key and value
+						[, $existing_paths] = array_map('trim', explode('=', $line, 2));
+						$diff = array_diff($read_write_paths, explode(' ', $existing_paths));
+						if (!empty($diff)) {
+							$file_update_required = true;
+							// Rewrite the existing line with the new paths added to the end of the existing paths
+							$line = "ReadWritePaths = " . $existing_paths . ' ' . implode(' ', $diff);
 						}
+						break;
+					}
+					// Stop processing if we reach the end of the service section
+					if (str_starts_with(trim($line), '[')) {
 						break;
 					}
 				}
 
-				// Add the new content
-				array_splice($lines, $insert_index, 0, $line_to_insert);
-				$new_contents = implode("\n", $lines) . "\n";
-				file_put_contents($service_file, $new_contents);
+				// If the service section exists and the ReadWritePaths directive does not exist, add it to the end of the service section
+				if ($service_section_exists && !$read_write_paths_exists) {
+					$file_update_required = true;
+					$line_to_insert = "ReadWritePaths = " . implode(' ', $read_write_paths);
+				}
 
-				// Prepared systemd to use the update
-				system('systemctl daemon-reload');
-				system('systemctl restart php'.$php_version.'-fpm');
+				if ($file_update_required) {
+					// Check if the service file is writable
+					$file_writable = is_writable($service_file);
+
+					// Find the empty line before the Install section
+					if ($file_writable) {
+						$insert_index = -1;
+						for ($i = 0; $i < count($lines); $i++) {
+							if (trim($lines[$i]) === '[Install]') {
+								// Find empty line before [Install]
+								for ($j = $i - 1; $j >= 0; $j--) {
+									if (trim($lines[$j]) === '') {
+										$insert_index = $j;
+										break;
+									}
+								}
+								break;
+							}
+						}
+
+						// Add or Update the new content
+						if (!empty($line_to_insert)) {
+							array_splice($lines, $insert_index, 0, $line_to_insert);
+						}
+						$new_contents = implode("\n", $lines) . "\n";
+						$bytes = file_put_contents($service_file, $new_contents);
+
+						// Check for drive full edge case
+						if ($bytes === false) {
+							// Send an error message only when running from console
+							if (is_cli()) {
+								echo "Failed to write the updated service file: $service_file\n";
+							}
+						}
+
+						// Prepare systemd to use the update
+						system('systemctl daemon-reload');
+
+						// Restart php fpm to apply the changes
+						system('systemctl restart php'.$php_version.'-fpm');
+					} else {
+						// Send an error message only when running from console
+						if (is_cli()) {
+							echo "The service file is not writable: $service_file\n";
+						}
+					}
+				}
 			}
 		}
 	}
