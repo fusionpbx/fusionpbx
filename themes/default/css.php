@@ -2930,7 +2930,6 @@ else { //default: white
 
 	div.card {
 		margin-bottom: 15px;
-		overflow-x: auto;
 		<?php
 		if (isset($card_border_size) || !empty($card_border_color) || !empty($card_background_color) || !empty($card_shadow_color)) {
 			if (isset($card_border_size) && !empty($card_border_color)) {
@@ -4138,43 +4137,103 @@ else { //default: white
 		color: <?=$input_text_placeholder_color?>;
 	}
 
-/* DOMAIN SEARCH DROPDOWN ********************************************************/
+/* SEARCHABLE SELECT BOX ********************************************************/
 
+	.searchable_select_wrapper,
 	.domain-search-picker {
 		position: relative;
 		display: inline-block;
 		max-width: 100%;
 	}
 
-	.domain-search-picker .domain-search-input { max-width: 100%; }
+	.searchable_select_wrapper input { width: 100%; }
 
+	.searchable_select_wrapper .search_results,
 	.domain-search-results {
 		display: none;
-		position: fixed;
+		position: absolute;
 		left: 0;
-		top: 0;
+		top: 100%;
 		background: <?=$input_background_color?>;
 		border-width: <?=$input_border_size?>;
 		border-style: <?=$input_border_style?>;
 		border-color: <?=$input_border_color?>;
 		border-radius: 4px;
+		border-top: none;
 		box-shadow: 0 4px 8px rgba(0,0,0,0.12);
-		z-index: 10050;
+		z-index: 4;
+		width: 100%;
 		max-height: 300px;
 		overflow-y: auto;
 		box-sizing: border-box;
 		text-align: left;
 	}
 
+	.domain-search-results {
+		position: fixed;
+		z-index: 1000;
+	}
+
+	.searchable_select_wrapper .search_result_item,
 	.domain-search-result-item {
 		padding: 6px 10px;
 		cursor: pointer;
 		line-height: 1.3;
 	}
 
+	.searchable_select_wrapper .search_result_item:hover,
 	.domain-search-result-item:hover {
 		background-color: <?=$table_row_background_color_hover?>;
 	}
+
+	.searchable_select_wrapper .optgroup_header_row {
+		padding: 6px 12px;
+		font-weight: 600;
+		color: rgba(0,0,0,0.8);
+	}
+
+	.no_results_message,
+	domain-search-empty {
+		padding: 8px 10px;
+		color: <?=$input_text_placeholder_color?>;
+	}
+
+	.searchable_select_wrapper .actions {
+		position: absolute;
+		top: 0;
+		right: 0;
+		padding: 4px 6px;
+		gap: 6px;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		color: #0000008b;
+	}
+
+	.clear_search_button,
+	.domain-search-clear {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: 16px;
+		color: #0000008b;
+		opacity: 0.6;
+		padding: 0;
+		line-height: 1;
+		pointer-events: auto;
+		z-index: 2;
+	}
+
+	.clear_search_button:hover {
+		color: #000000cc;
+	}
+
+	.domain-search-input, domain-search-picker { max-width: 100%; }
 
 	.domain-search-result-name {
 		display: block;
@@ -4185,28 +4244,6 @@ else { //default: white
 		opacity: 0.75;
 		font-size: 0.92em;
 		margin-top: 1px;
-	}
-
-	.domain-search-empty {
-		padding: 8px 10px;
-		color: <?=$input_text_placeholder_color?>;
-	}
-
-	.domain-search-clear {
-		position: absolute;
-		right: 8px;
-		top: 50%;
-		transform: translateY(-50%);
-		background: none;
-		border: none;
-		cursor: pointer;
-		font-size: 14px;
-		color: #333;
-		opacity: 0.6;
-		padding: 0;
-		line-height: 1;
-		pointer-events: auto;
-		z-index: 2;
 	}
 
 <?php
