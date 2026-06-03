@@ -84,7 +84,7 @@
 		}
 	}
 	else {
-		trigger_error("Unable to connect to FreeSWITCH using $host, $port, $password", E_USER_ERROR);
+		trigger_error("Unable to connect to FreeSWITCH using $host, $port, (password redacted)", E_USER_ERROR);
 	}
 
 	/*
