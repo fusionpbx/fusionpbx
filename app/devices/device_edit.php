@@ -1196,11 +1196,11 @@
 		echo "<div class='template_select_container'>";
 		$device = new device;
 		$template_dir = $device->get_template_dir();
-		echo "	<select id='device_template' name='device_template' class='formfld' style='float: left;'>\n";
+		echo "	<select id='device_template' name='device_template' class='formfld searchable_select' style='float: left;'>\n";
 		echo "		<option value=''></option>\n";
 		if (is_dir($template_dir) && @is_array($device_vendors)) {
 			foreach ($device_vendors as $row) {
-				echo "		<optgroup label='".escape($row["name"])."'>\n";
+				echo "		<optgroup label='".ucwords(escape($row["name"]))."'>\n";
 				if (file_exists($template_dir.'/'.$row["name"])) {
 					$templates = scandir($template_dir.'/'.$row["name"]);
 					if (is_array($templates) && @sizeof($templates) != 0) {
@@ -1224,10 +1224,8 @@
 			}
 		}
 		echo "	</select>\n";
-		echo "	<span style='float: left; clear: left;'";
 		echo "	<br />\n";
 		echo "	".$text['description-device_template']."\n";
-		echo "	</span>";
 		echo "</div>";
 		echo "
 		<style>
