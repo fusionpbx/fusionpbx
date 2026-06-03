@@ -121,11 +121,11 @@ class authentication {
 
 			// Get the user log
 			$sql = "select \n";
-			$sql .= "user_uuid, \n";
-			$sql .= "remember_validator, \n";
-			$sql .= "(timestamp < now() - interval '7 days')::int as expired, \n";
-			$sql .= "(remote_address is distinct from :remote_address)::int as invalid_remote_address, \n";
-			$sql .= "(user_agent is distinct from :user_agent)::int as invalid_user_agent \n";
+			$sql .= " user_uuid, \n";
+			$sql .= " remember_validator, \n";
+			$sql .= " (timestamp < now() - interval '7 days')::int as expired, \n";
+			$sql .= " (remote_address is distinct from :remote_address)::int as invalid_remote_address, \n";
+			$sql .= " (user_agent is distinct from :user_agent)::int as invalid_user_agent \n";
 			$sql .= "from v_user_logs \n";
 			$sql .= "where remember_selector = :remember_selector \n";
 			$parameters['remember_selector'] = $cookie_selector;
@@ -160,8 +160,8 @@ class authentication {
 
 				// Update the user log
 				$sql = "update v_user_logs \n";
-				$sql .= "set remember_selector = :remember_selector, \n";
-				$sql .= "remember_validator = :remember_validator \n";
+				$sql .= " set remember_selector = :remember_selector, \n";
+				$sql .= " remember_validator = :remember_validator \n";
 				$sql .= "where remember_selector = :old_selector \n";
 				$parameters['remember_selector'] = $selector;
 				$parameters['remember_validator'] = $hashed_validator;
@@ -181,10 +181,10 @@ class authentication {
 				// Get the user details
 				$sql = "select \n";
 				$sql .= "u.domain_uuid, \n";
-				$sql .= "d.domain_name, \n";
-				$sql .= "u.user_uuid, \n";
-				$sql .= "u.username, \n";
-				$sql .= "u.contact_uuid \n";
+				$sql .= " d.domain_name, \n";
+				$sql .= " u.user_uuid, \n";
+				$sql .= " u.username, \n";
+				$sql .= " u.contact_uuid \n";
 				$sql .= "from v_users as u \n";
 				$sql .= "inner join v_domains as d on u.domain_uuid = d.domain_uuid \n";
 				$sql .= "where u.user_uuid = :user_uuid \n";
@@ -205,19 +205,19 @@ class authentication {
 				}
 
 				// Build a result array
-				$result['plugin']       = 'remember';
-				$result['domain_name']  = $row["domain_name"];
-				$result['username']     = $row['username'];
-				$result['user_uuid']    = $row['user_uuid'];
+				$result['plugin'] = 'remember';
+				$result['domain_name'] = $row["domain_name"];
+				$result['username'] = $row['username'];
+				$result['user_uuid'] = $row['user_uuid'];
 				$result['contact_uuid'] = $row["contact_uuid"];
 				if ($contacts_exists) {
 					$result["contact_organization"] = $contact["contact_organization"] ?? '';
-					$result["contact_name_given"]   = $contact["contact_name_given"] ?? '';
-					$result["contact_name_family"]  = $contact["contact_name_family"] ?? '';
-					$result["contact_image"]        = $contact["contact_image"] ?? '';
+					$result["contact_name_given"] = $contact["contact_name_given"] ?? '';
+					$result["contact_name_family"] = $contact["contact_name_family"] ?? '';
+					$result["contact_image"] = $contact["contact_image"] ?? '';
 				}
 				$result['domain_uuid'] = $row['domain_uuid'];
-				$result['authorized']  = true;
+				$result['authorized'] = true;
 
 				// Set the domain_uuid
 				$this->domain_uuid = $row["domain_uuid"];
@@ -245,8 +245,8 @@ class authentication {
 
 			//prepare variables
 			$class_name = "plugin_" . $name;
-			$base       = __DIR__ . "/plugins";
-			$plugin     = $base . "/" . $name . ".php";
+			$base = __DIR__ . "/plugins";
+			$plugin = $base . "/" . $name . ".php";
 
 			//process the plugin
 			if (file_exists($plugin)) {
@@ -266,19 +266,19 @@ class authentication {
 
 				//build a result array
 				if (!empty($array) && is_array($array)) {
-					$result['plugin']       = $array["plugin"];
-					$result['domain_name']  = $array["domain_name"];
-					$result['username']     = $array["username"];
-					$result['user_uuid']    = $array["user_uuid"];
+					$result['plugin'] = $array["plugin"];
+					$result['domain_name'] = $array["domain_name"];
+					$result['username'] = $array["username"];
+					$result['user_uuid'] = $array["user_uuid"];
 					$result['contact_uuid'] = $array["contact_uuid"];
 					if ($contacts_exists) {
 						$result["contact_organization"] = $array["contact_organization"] ?? '';
-						$result["contact_name_given"]   = $array["contact_name_given"] ?? '';
-						$result["contact_name_family"]  = $array["contact_name_family"] ?? '';
-						$result["contact_image"]        = $array["contact_image"] ?? '';
+						$result["contact_name_given"] = $array["contact_name_given"] ?? '';
+						$result["contact_name_family"] = $array["contact_name_family"] ?? '';
+						$result["contact_image"] = $array["contact_image"] ?? '';
 					}
 					$result['domain_uuid'] = $array["domain_uuid"];
-					$result['authorized']  = $array["authorized"];
+					$result['authorized'] = $array["authorized"];
 
 					//set the domain_uuid
 					$this->domain_uuid = $array["domain_uuid"];
@@ -301,13 +301,13 @@ class authentication {
 		if (!empty($_SESSION['authentication']['methods'])) {
 			foreach ($_SESSION['authentication']['methods'] as $name) {
 				if (!isset($_SESSION['authentication']['plugin'][$name]['authorized'])) {
-					$_SESSION['authentication']['plugin'][$name]['plugin']      = $name;
+					$_SESSION['authentication']['plugin'][$name]['plugin'] = $name;
 					$_SESSION['authentication']['plugin'][$name]['domain_name'] = $_SESSION['domain_name'];
 					$_SESSION['authentication']['plugin'][$name]['domain_uuid'] = $_SESSION['domain_uuid'];
-					$_SESSION['authentication']['plugin'][$name]['username']    = $_SESSION['username'];
-					$_SESSION['authentication']['plugin'][$name]['user_uuid']   = $_SESSION['user_uuid'];
-					$_SESSION['authentication']['plugin'][$name]['user_email']  = $_SESSION['user_email'];
-					$_SESSION['authentication']['plugin'][$name]['authorized']  = false;
+					$_SESSION['authentication']['plugin'][$name]['username'] = $_SESSION['username'];
+					$_SESSION['authentication']['plugin'][$name]['user_uuid'] = $_SESSION['user_uuid'];
+					$_SESSION['authentication']['plugin'][$name]['user_email'] = $_SESSION['user_email'];
+					$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
 				}
 			}
 		}
@@ -324,7 +324,7 @@ class authentication {
 				if ($row["authorized"]) {
 					$authorized = true;
 				} else {
-					$authorized           = false;
+					$authorized = false;
 					$failed_login_message = "Authentication plugin '$plugin_name' blocked login attempt";
 					break;
 				}
@@ -335,14 +335,14 @@ class authentication {
 		if ($authorized) {
 			//get the cidr restrictions from global, domain, and user default settings
 			$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
-			$cidr_list      = $this->settings->get('domain', 'cidr', []);
+			$cidr_list = $this->settings->get('domain', 'cidr', []);
 			if (check_cidr($cidr_list, $_SERVER['REMOTE_ADDR'])) {
 				//user passed the cidr check
 				self::create_user_session($result, $this->settings);
 			} else {
 				//user failed the cidr check - no longer authorized
-				$authorized                                                = false;
-				$failed_login_message                                      = "CIDR blocked login attempt";
+				$authorized = false;
+				$failed_login_message = "CIDR blocked login attempt";
 				$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
 			}
 		}
@@ -453,8 +453,8 @@ class authentication {
 		// Set the session variables
 		$_SESSION["domain_uuid"] = $result["domain_uuid"];
 		$_SESSION["domain_name"] = $result["domain_name"];
-		$_SESSION["user_uuid"]   = $result["user_uuid"];
-		$_SESSION["context"]     = $result['domain_name'];
+		$_SESSION["user_uuid"] = $result["user_uuid"];
+		$_SESSION["context"] = $result['domain_name'];
 
 		// Build the session server array to validate the session
 		global $conf;
@@ -469,19 +469,19 @@ class authentication {
 		$_SESSION["user_hash"] = hash('sha256', implode($server_array));
 
 		// User session array
-		$_SESSION["user"]["domain_uuid"]  = $result["domain_uuid"];
-		$_SESSION["user"]["domain_name"]  = $result["domain_name"];
-		$_SESSION["user"]["user_uuid"]    = $result["user_uuid"];
-		$_SESSION["user"]["username"]     = $result["username"];
+		$_SESSION["user"]["domain_uuid"] = $result["domain_uuid"];
+		$_SESSION["user"]["domain_name"] = $result["domain_name"];
+		$_SESSION["user"]["user_uuid"] = $result["user_uuid"];
+		$_SESSION["user"]["username"] = $result["username"];
 		$_SESSION["user"]["contact_uuid"] = $result["contact_uuid"] ?? null; //contact_uuid is optional
 
 		// Check for contacts
 		if (file_exists($project_root . '/core/contacts/')) {
 			$_SESSION["user"]["contact_organization"] = $result["contact_organization"] ?? null;
-			$_SESSION["user"]["contact_name"]         = trim(($result["contact_name_given"] ?? '') . ' ' . ($result["contact_name_family"] ?? ''));
-			$_SESSION["user"]["contact_name_given"]   = $result["contact_name_given"] ?? null;
-			$_SESSION["user"]["contact_name_family"]  = $result["contact_name_family"] ?? null;
-			$_SESSION["user"]["contact_image"]        = !empty($result["contact_image"]) && is_uuid($result["contact_image"]) ? $result["contact_image"] : null;
+			$_SESSION["user"]["contact_name"] = trim(($result["contact_name_given"] ?? '') . ' ' . ($result["contact_name_family"] ?? ''));
+			$_SESSION["user"]["contact_name_given"] = $result["contact_name_given"] ?? null;
+			$_SESSION["user"]["contact_name_family"] = $result["contact_name_family"] ?? null;
+			$_SESSION["user"]["contact_image"] = !empty($result["contact_image"]) && is_uuid($result["contact_image"]) ? $result["contact_image"] : null;
 		}
 
 		//empty the permissions
@@ -551,26 +551,26 @@ class authentication {
 
 				//get the user extension list
 				$sql = "select ";
-				$sql .= "e.extension_uuid, ";
-				$sql .= "e.extension, ";
-				$sql .= "e.number_alias, ";
-				$sql .= "e.user_context, ";
-				$sql .= "e.outbound_caller_id_name, ";
-				$sql .= "e.outbound_caller_id_number, ";
-				$sql .= "e.description ";
+				$sql .= " e.extension_uuid, ";
+				$sql .= " e.extension, ";
+				$sql .= " e.number_alias, ";
+				$sql .= " e.user_context, ";
+				$sql .= " e.outbound_caller_id_name, ";
+				$sql .= " e.outbound_caller_id_number, ";
+				$sql .= " e.description ";
 				$sql .= "from ";
-				$sql .= "v_extension_users as u, ";
-				$sql .= "v_extensions as e ";
+				$sql .= " v_extension_users as u, ";
+				$sql .= " v_extensions as e ";
 				$sql .= "where ";
-				$sql .= "e.domain_uuid = :domain_uuid ";
-				$sql .= "and e.extension_uuid = u.extension_uuid ";
-				$sql .= "and u.user_uuid = :user_uuid ";
-				$sql .= "and e.enabled = 'true' ";
+				$sql .= " e.domain_uuid = :domain_uuid ";
+				$sql .= " and e.extension_uuid = u.extension_uuid ";
+				$sql .= " and u.user_uuid = :user_uuid ";
+				$sql .= " and e.enabled = 'true' ";
 				$sql .= "order by ";
 				$sql .= "e.extension asc ";
 				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-				$parameters['user_uuid']   = $_SESSION['user_uuid'];
-				$extensions                = $database->select($sql, $parameters, 'all');
+				$parameters['user_uuid'] = $_SESSION['user_uuid'];
+				$extensions = $database->select($sql, $parameters, 'all');
 				if (!empty($extensions)) {
 					foreach ($extensions as $x => $row) {
 						//set the destination
@@ -657,7 +657,7 @@ class authentication {
 				foreach ($_SESSION['domains'] as $row) {
 					if (lower_case($row['domain_name']) == lower_case($domain_name)) {
 						$this->domain_uuid = $row['domain_uuid'];
-						$domain_exists     = true;
+						$domain_exists = true;
 						break;
 					}
 				}
@@ -665,9 +665,9 @@ class authentication {
 				//if the domain exists then set domain_name and update the username
 				if ($domain_exists) {
 					$this->domain_name = $domain_name;
-					$this->username    = substr($_SESSION['username'], 0, -(strlen($domain_name) + 1));
+					$this->username = substr($_SESSION['username'], 0, -(strlen($domain_name) + 1));
 					//$_SESSION['domain_name'] = $domain_name;
-					$_SESSION['username']    = $this->username;
+					$_SESSION['username'] = $this->username;
 					$_SESSION['domain_uuid'] = $this->domain_uuid;
 				}
 
@@ -680,7 +680,7 @@ class authentication {
 		if (isset($this->domain_name) && !isset($this->domain_uuid)) {
 			foreach ($_SESSION['domains'] as $row) {
 				if (lower_case($row['domain_name']) == lower_case($this->domain_name)) {
-					$this->domain_uuid       = $row['domain_uuid'];
+					$this->domain_uuid = $row['domain_uuid'];
 					$_SESSION['domain_uuid'] = $row['domain_uuid'];
 					break;
 				}
@@ -693,7 +693,7 @@ class authentication {
 
 		//set the domain settings
 		if (!empty($this->domain_name) && !empty($_SESSION["domain_uuid"])) {
-			$_SESSION['domain_name']        = $this->domain_name;
+			$_SESSION['domain_name'] = $this->domain_name;
 			$_SESSION['domain_parent_uuid'] = $_SESSION["domain_uuid"];
 		}
 
