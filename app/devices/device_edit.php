@@ -1196,11 +1196,11 @@
 		echo "<div class='template_select_container'>";
 		$device = new device;
 		$template_dir = $device->get_template_dir();
-		echo "	<select id='device_template' name='device_template' class='formfld' style='float: left;'>\n";
+		echo "	<select id='device_template' name='device_template' class='formfld searchable_select' style='float: left;'>\n";
 		echo "		<option value=''></option>\n";
 		if (is_dir($template_dir) && @is_array($device_vendors)) {
 			foreach ($device_vendors as $row) {
-				echo "		<optgroup label='".escape($row["name"])."'>\n";
+				echo "		<optgroup label='".escape(ucwords($row["name"]))."'>\n";
 				if (file_exists($template_dir.'/'.$row["name"])) {
 					$templates = scandir($template_dir.'/'.$row["name"]);
 					if (is_array($templates) && @sizeof($templates) != 0) {
@@ -1224,10 +1224,8 @@
 			}
 		}
 		echo "	</select>\n";
-		echo "	<span style='float: left; clear: left;'";
 		echo "	<br />\n";
 		echo "	".$text['description-device_template']."\n";
-		echo "	</span>";
 		echo "</div>";
 		echo "
 		<style>
@@ -1755,7 +1753,7 @@
 				foreach ($vendor_functions as $function) {
 					if (empty($row['device_key_vendor']) && $function['vendor_name'] != $previous_vendor) {
 						if ($i > 0) { echo "	</optgroup>\n"; }
-						echo "	<optgroup label='".ucwords($function['vendor_name'])."'>\n";
+						echo "	<optgroup label='".escape(ucwords($function['vendor_name']))."'>\n";
 					}
 					$selected = '';
 					if (!empty($row['device_key_vendor']) && strtolower($row['device_key_vendor']) == $function['vendor_name'] && $row['device_key_type'] == $function['value']) {

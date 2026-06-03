@@ -1548,11 +1548,11 @@ if (permission_exists('device_edit') && (empty($extension_type) || $extension_ty
 			echo "		<td " . ($action == 'edit' ? "class='vtable'" : null) . " style='padding-left: 5px;'>";
 			$device = new device;
 			$template_dir = $device->get_template_dir();
-			echo "			<select id='device_template' name='devices[" . $d . "][device_template]' class='formfld'>\n";
+			echo "			<select id='device_template' name='devices[" . $d . "][device_template]' class='formfld searchable_select'>\n";
 			echo "				<option value=''></option>\n";
 			if (is_dir($template_dir) && is_array($device_vendors)) {
 				foreach ($device_vendors as $row) {
-					echo "			<optgroup label='" . escape($row["name"]) . "'>\n";
+					echo "			<optgroup label='" . escape(ucwords($row["name"])) . "'>\n";
 					if (is_dir($template_dir . '/' . $row["name"])) {
 						$templates = scandir($template_dir . '/' . $row["name"]);
 						foreach ($templates as $dir) {
@@ -1577,7 +1577,6 @@ if (permission_exists('device_edit') && (empty($extension_type) || $extension_ty
 			break; //show one empty row whether adding or editing
 		}
 		echo "		</table>\n";
-		echo "		<br />\n";
 		echo $text['description-provisioning'] . "\n";
 
 		echo "</td>\n";
