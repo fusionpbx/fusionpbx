@@ -898,7 +898,7 @@
 		echo "	</span>\n";
 		echo "&nbsp;";
 	}
-	echo "	<input class='formfld' type='text' name='alternate_voicemail_destination' id='alternate_voicemail_destination' ".($input_toggle_style_switch ? "style='margin-top: -21px;'" : null)." maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".escape($alternate_voicemail_destination ?? '')."\">\n";
+	echo "	<input class='formfld' type='text' name='alternate_voicemail_destination' id='alternate_voicemail_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".escape($alternate_voicemail_destination ?? '')."\">\n";
 	echo "	<br />".$text['description-alternate_voicemail']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
