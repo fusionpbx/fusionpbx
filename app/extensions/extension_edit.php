@@ -1552,7 +1552,7 @@ if (permission_exists('device_edit') && (empty($extension_type) || $extension_ty
 			echo "				<option value=''></option>\n";
 			if (is_dir($template_dir) && is_array($device_vendors)) {
 				foreach ($device_vendors as $row) {
-					echo "			<optgroup label='" . ucwords(escape($row["name"])) . "'>\n";
+					echo "			<optgroup label='" . escape(ucwords($row["name"])) . "'>\n";
 					if (is_dir($template_dir . '/' . $row["name"])) {
 						$templates = scandir($template_dir . '/' . $row["name"]);
 						foreach ($templates as $dir) {
