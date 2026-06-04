@@ -4191,7 +4191,7 @@ else { //default: white
 	}
 
 	.searchable_select_wrapper .optgroup_header_row {
-		padding: 4px 12px;
+		padding: 4px 10px;
 		font-weight: 700;
 		opacity: 0.8;
 	}
