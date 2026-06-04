@@ -294,7 +294,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 				if ($action == "add") {
 					message::add($text['message-add']);
 				}
-				header("Location: /core/users/user_edit.php?id=".$user_uuid);
+				header("Location: /core/user_settings/user_settings.php?id=".$user_uuid);
 				return;
 		}
 }
