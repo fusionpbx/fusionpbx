@@ -1,7 +1,7 @@
 #
 # Install with:
 #
-#   cp debian-websockets.service /etc/systemd/system/websockets.service
+#   cp /var/www/fusionpbx/app/xml_cdr/resources/service/debian/websockets.service /etc/systemd/system/websockets.service
 #   systemctl daemon-reload
 #   systemctl enable --now websockets.service
 #

@@ -1,11 +1,11 @@
 ; Author: Mark J Crane <markjcrane@fusionpbx.com>
-; cp /var/www/fusionpbx/app/xml_cdr/resources/service/debian.service /etc/systemd/system/xml_cdr.service
+; cp /var/www/fusionpbx/app/email_queue/resources/service/debian/email_queue.service /etc/systemd/system/email_queue.service
 ; systemctl daemon-reload
-; systemctl enable xml_cdr
-; systemctl start xml_cdr
+; systemctl enable email_queue
+; systemctl start email_queue
 
 [Unit]
-Description=FusionPBX xml_cdr
+Description=FusionPBX Email Queue
 Wants=network-online.target
 Requires=network.target local-fs.target
 ;Requires=network.target local-fs.target postgresql.service
@@ -15,7 +15,7 @@ StartLimitIntervalSec=0
 
 [Service]
 WorkingDirectory=/var/www/fusionpbx
-ExecStart=/usr/bin/php /var/www/fusionpbx/app/xml_cdr/resources/service/xml_cdr.php
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/email_queue/resources/service/email_queue.php
 RuntimeDirectory=fusionpbx
 RuntimeDirectoryMode=0755
 RuntimeDirectoryPreserve=yes

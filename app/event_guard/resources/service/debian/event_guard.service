@@ -1,5 +1,5 @@
 ; Author: Mark J Crane <markjcrane@fusionpbx.com>
-; cp /var/www/fusionpbx/app/event_guard/resources/service/debian.service /etc/systemd/system/event_guard.service
+; cp /var/www/fusionpbx/app/event_guard/resources/service/debian/event_guard.service /etc/systemd/system/event_guard.service
 ; systemctl daemon-reload
 ; systemctl enable event_guard
 ; systemctl start event_guard

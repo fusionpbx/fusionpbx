@@ -1,5 +1,5 @@
 ; Author: Mark J Crane <markjcrane@fusionpbx.com>
-; cp /var/www/fusionpbx/app/fax_queue/resources/service/debian.service /etc/systemd/system/fax_queue.service
+; cp /var/www/fusionpbx/app/fax_queue/resources/service/debian/fax_queue.service /etc/systemd/system/fax_queue.service
 ; systemctl daemon-reload
 ; systemctl enable fax_queue
 ; systemctl start fax_queue
