@@ -742,9 +742,8 @@
 				searchable_selects.forEach(original_select => {
 					const wrapper = document.createElement('div');
 					wrapper.className = 'searchable_select_wrapper';
-
-					const computedStyles = getComputedStyle(original_select);
-					wrapper.style.width = computedStyles.width;
+					wrapper.id = original_select.id + '_search';
+					wrapper.style.width = (parseInt(getComputedStyle(original_select).width, 10) + 2) + 'px';
 
 					original_select.parentNode.insertBefore(wrapper, original_select);
 					original_select.style.display = 'none';
@@ -773,7 +772,7 @@
 					});
 
 					const arrow_icon = document.createElement('i');
-					arrow_icon.style = 'transform: scale(0.80, 0.85); display: inline-flex; color: #333;';
+					arrow_icon.style = 'transform: scale(0.80, 0.85);';
 					arrow_icon.className = 'fa-solid fa-angle-down';
 					actions.appendChild(arrow_icon);
 
@@ -851,7 +850,7 @@
 
 								item.dataset.value = option.value;
 								item.textContent = option.label;
-								item.style.paddingLeft = option.group ? '24px' : '';
+								item.style.paddingLeft = option.group ? '26px' : '';
 
 								dropdown.appendChild(item);
 							}
