@@ -4179,7 +4179,7 @@ else { //default: white
 
 	.searchable_select_wrapper .search_result_item,
 	.domain-search-result-item {
-		padding: 6px 10px;
+		padding: 6px 0 6px 10px;
 		cursor: pointer;
 		line-height: 1.3;
 		opacity: 0.8;
