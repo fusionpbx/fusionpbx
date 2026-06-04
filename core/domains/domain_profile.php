@@ -381,7 +381,7 @@
 	echo "		".$text['label-time_zone']."\n";
 	echo "	</td>\n";
 	echo "	<td class=\"vtable\" align='left'>\n";
-	echo "		<select id='domain_time_zone' name='domain_time_zone' class='formfld' style=''>\n";
+	echo "		<select id='domain_time_zone' name='domain_time_zone' class='formfld searchable_select' style=''>\n";
 	echo "		<option value=''></option>\n";
 	//$list = DateTimeZone::listAbbreviations();
 	$time_zone_identifiers = DateTimeZone::listIdentifiers();
