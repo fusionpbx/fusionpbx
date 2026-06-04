@@ -743,9 +743,7 @@
 					const wrapper = document.createElement('div');
 					wrapper.className = 'searchable_select_wrapper';
 					wrapper.id = original_select.id + '_search';
-
-					const computedStyles = getComputedStyle(original_select);
-					wrapper.style.width = computedStyles.width;
+					wrapper.style.width = (parseInt(getComputedStyle(original_select).width, 10) + 2) + 'px';
 
 					original_select.parentNode.insertBefore(wrapper, original_select);
 					original_select.style.display = 'none';
