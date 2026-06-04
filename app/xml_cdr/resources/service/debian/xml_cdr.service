@@ -1,10 +1,11 @@
 ; Author: Mark J Crane <markjcrane@fusionpbx.com>
-; cp /var/www/fusionpbx/app/system/resources/service/debian.service /etc/systemd/system/system_status.service
+; cp /var/www/fusionpbx/app/xml_cdr/resources/service/debian/xml_cdr.service /etc/systemd/system/xml_cdr.service
 ; systemctl daemon-reload
-; systemctl enable --now system_status
+; systemctl enable xml_cdr
+; systemctl start xml_cdr
 
 [Unit]
-Description=FusionPBX System Dashboard Information Service
+Description=FusionPBX xml_cdr
 Wants=network-online.target
 Requires=network.target local-fs.target
 ;Requires=network.target local-fs.target postgresql.service
@@ -14,7 +15,7 @@ StartLimitIntervalSec=0
 
 [Service]
 WorkingDirectory=/var/www/fusionpbx
-ExecStart=/usr/bin/php /var/www/fusionpbx/app/system/resources/service/system_status.php
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/xml_cdr/resources/service/xml_cdr.php
 RuntimeDirectory=fusionpbx
 RuntimeDirectoryMode=0755
 RuntimeDirectoryPreserve=yes

@@ -321,15 +321,15 @@ class services {
 		if ($source == 'files') {
 			// Determine the search file name
 			if (stristr(PHP_OS, 'Linux')) {
-				$search_file_name = 'debian';
+				$search_operating_system = 'debian';
 			}
 			if (stristr(PHP_OS, 'FreeBSD')) {
-				$search_file_name = 'freebsd';
+				$search_operating_system = 'freebsd';
 			}
 
 			// Get the list of services
-			$core_files = glob(dirname(__DIR__, 4) . "/core/*/resources/service/".$search_file_name.".service");
-			$app_files = glob(dirname(__DIR__, 4) . "/app/*/resources/service/".$search_file_name.".service");
+			$core_files = glob(dirname(__DIR__, 4) . "/core/*/resources/service/".$search_operating_system."/*.service");
+			$app_files = glob(dirname(__DIR__, 4) . "/app/*/resources/service/".$search_operating_system."/*.service");
 			$service_files = array_merge($core_files, $app_files);
 
 			// Build the services array

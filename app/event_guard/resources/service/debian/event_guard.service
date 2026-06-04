@@ -1,11 +1,11 @@
 ; Author: Mark J Crane <markjcrane@fusionpbx.com>
-; cp /var/www/fusionpbx/app/xml_cdr/resources/service/debian.service /etc/systemd/system/xml_cdr.service
+; cp /var/www/fusionpbx/app/event_guard/resources/service/debian/event_guard.service /etc/systemd/system/event_guard.service
 ; systemctl daemon-reload
-; systemctl enable xml_cdr
-; systemctl start xml_cdr
+; systemctl enable event_guard
+; systemctl start event_guard
 
 [Unit]
-Description=FusionPBX xml_cdr
+Description=FusionPBX Event Guard
 Wants=network-online.target
 Requires=network.target local-fs.target
 ;Requires=network.target local-fs.target postgresql.service
@@ -15,14 +15,15 @@ StartLimitIntervalSec=0
 
 [Service]
 WorkingDirectory=/var/www/fusionpbx
-ExecStart=/usr/bin/php /var/www/fusionpbx/app/xml_cdr/resources/service/xml_cdr.php
+ExecStart=/usr/bin/php /var/www/fusionpbx/app/event_guard/resources/service/event_guard.php
 RuntimeDirectory=fusionpbx
 RuntimeDirectoryMode=0755
 RuntimeDirectoryPreserve=yes
-User=www-data
-Group=www-data
+User=root
+Group=root
 TimeoutSec=55s
 Restart=always
 
 [Install]
 WantedBy=multi-user.target
+
