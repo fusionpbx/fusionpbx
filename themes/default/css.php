@@ -4167,6 +4167,9 @@ else { //default: white
 		overflow-y: auto;
 		box-sizing: border-box;
 		text-align: left;
+		font-family: <?=$input_text_font?>;
+		font-size: <?=$input_text_size?>;
+		color: <?=$input_text_color?>;
 	}
 
 	.domain-search-results {
@@ -4179,6 +4182,7 @@ else { //default: white
 		padding: 6px 10px;
 		cursor: pointer;
 		line-height: 1.3;
+		opacity: 0.8;
 	}
 
 	.searchable_select_wrapper .search_result_item:hover,
@@ -4187,9 +4191,9 @@ else { //default: white
 	}
 
 	.searchable_select_wrapper .optgroup_header_row {
-		padding: 6px 12px;
-		font-weight: 600;
-		color: rgba(0,0,0,0.8);
+		padding: 4px 12px;
+		font-weight: 700;
+		opacity: 0.8;
 	}
 
 	.no_results_message,
@@ -4208,13 +4212,13 @@ else { //default: white
 		display: flex;
 		align-items: center;
 		flex-wrap: wrap;
-		color: #0000008b;
+		color: #000000cc;
 	}
 
 	.clear_search_button,
 	.domain-search-clear {
 		position: absolute;
-		right: 8px;
+		right: 7px;
 		top: 50%;
 		transform: translateY(-50%);
 		background: none;
