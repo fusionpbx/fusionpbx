@@ -362,6 +362,15 @@
 						$response .= "	tb.setAttribute('onchange', \"".$onchange."\");\n";
 						$response .= "	tb.setAttribute('onkeyup', \"".$onchange."\");\n";
 					}
+					$response .= "	const searchable_select = document.getElementById('".$destination_id."_search');\n";
+					$response .= "	if (searchable_select) {\n";
+					$response .= "		tb.setAttribute('style', 'width: ' + searchable_select.offsetWidth + 'px;');\n";
+					$response .= "		searchable_select.style.display = 'none';\n";
+					$response .= "		tb.value=obj.value;\n";
+					$response .= "	} else {\n";
+					$response .= "		tb.setAttribute('style', 'width: ' + obj.offsetWidth + 'px;');\n";
+					$response .= "		tb.value=obj.options[obj.selectedIndex].value;\n";
+					$response .= "	}\n";
 					$response .= "	tb.value=obj.options[obj.selectedIndex].value;\n";
 					$response .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'hidden';\n";
 					$response .= "	tbb=document.createElement('INPUT');\n";
@@ -382,6 +391,8 @@
 					$response .= "	obj[0].parentNode.removeChild(obj[1]);\n";
 					$response .= "	obj[0].parentNode.removeChild(obj[2]);\n";
 					$response .= "	document.getElementById('btn_select_to_input_".$destination_id."').style.visibility = 'visible';\n";
+					$response .= "	const searchable_select = document.getElementById('".$destination_id."_search');\n";
+					$response .= "	if (searchable_select) { searchable_select.style.display = 'inline-block'; }\n";
 					if (!empty($onchange)) {
 						$response .= "	".$onchange.";\n";
 					}
@@ -396,7 +407,7 @@
 				//set default to false
 				$select_found = false;
 
-				$response .= "	<select name='".$destination_name."' id='".$destination_id."' class='formfld' style='".$select_style."' onchange=\"".$onchange."\">\n";
+				$response .= "	<select name='".$destination_name."' id='".$destination_id."' class='formfld searchable_select' style='".$select_style."' onchange=\"".$onchange."\">\n";
 				$response .= "		<option value='' ".(!empty($placeholder) ? "selected='selected' disabled='disabled'" : null).">".(!empty($placeholder) ? $placeholder : null)."</option>\n";
 				foreach ($this->destinations as $row) {
 
