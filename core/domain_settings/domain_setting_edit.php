@@ -513,7 +513,7 @@
 		echo "		</select>\n";
 	}
 	elseif ($category == "domain" && $subcategory == "time_zone" && $name == "name" ) {
-		echo "		<select class='formfld' id='domain_setting_value' name='domain_setting_value' style=''>\n";
+		echo "		<select class='formfld searchable_select' id='domain_setting_value' name='domain_setting_value' style=''>\n";
 		echo "		<option value=''></option>\n";
 		//$list = DateTimeZone::listAbbreviations();
 		$time_zone_identifiers = DateTimeZone::listIdentifiers();
