@@ -1528,7 +1528,7 @@ echo "		<div class='label'>\n";
 echo "			".$text['label-contact_time_zone']."\n";
 echo "		</div>\n";
 echo "		<div class='field no-wrap'>\n";
-echo "			<select class='formfld' id='contact_time_zone' name='contact_time_zone' style=''>\n";
+echo "			<select class='formfld searchable_select' id='contact_time_zone' name='contact_time_zone' style=''>\n";
 echo "				<option value=''></option>\n";
 //$list = DateTimeZone::listAbbreviations();
 $time_zone_identifiers = DateTimeZone::listIdentifiers();
