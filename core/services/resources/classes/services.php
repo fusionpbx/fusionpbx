@@ -321,16 +321,28 @@ class services {
 		if ($source == 'files') {
 			// Determine the search file name
 			if (stristr(PHP_OS, 'Linux')) {
-				$search_operating_system = 'debian';
+				$operating_system = 'debian';
 			}
 			if (stristr(PHP_OS, 'FreeBSD')) {
-				$search_operating_system = 'freebsd';
+				$operating_system = 'freebsd';
 			}
 
 			// Get the list of services
-			$core_files = glob(dirname(__DIR__, 4) . "/core/*/resources/service/".$search_operating_system."/*.service");
-			$app_files = glob(dirname(__DIR__, 4) . "/app/*/resources/service/".$search_operating_system."/*.service");
+			$core_files = glob(dirname(__DIR__, 4) . "/core/*/resources/service/".$operating_system."/*.service");
+			$app_files = glob(dirname(__DIR__, 4) . "/app/*/resources/service/".$operating_system."/*.service");
 			$service_files = array_merge($core_files, $app_files);
+
+			// Additional files for backwards compatibility
+			if (stristr(PHP_OS, 'Linux')) {
+				$additional_services = glob(dirname(__DIR__, 4) . "/app/*/resources/service/".$operating_system."/debian.service");
+				if (!empty($additional_services)) {
+					$service_files = array_merge($service_files, $additional_services);
+				}
+				$additional_services = glob(dirname(__DIR__, 4) . "/app/*/resources/service/*.service");
+				if (!empty($additional_services)) {
+					$service_files = array_merge($service_files, $additional_services);
+				}
+			}
 
 			// Build the services array
 			$services = [];
@@ -576,17 +588,50 @@ class services {
 				echo $service_name."\n";
 			}
 
+			// Set the service file variable from the database if the file exists
+			$service_file = '';
+			if (file_exists($service['file'])) {
+				$service_file = $service['file'];
+			}
+
 			// Upgrade the service
 			if (stristr(PHP_OS, 'Linux')) {
-				system("cp " . escapeshellarg($service['file']) . " /etc/systemd/system/" . escapeshellarg($service_name) . ".service");
+				// Add previous locations for backwards compatibility
+				$temp_service_file = dirname(__DIR__, 4) . "/app/" . $service_name . "/resources/service/debian.service";
+				if (empty($service_file) && file_exists($temp_service_file)) {
+					$service_file = $temp_service_file;
+				}
+				$temp_service_file = dirname(__DIR__, 4) . "/app/" . $service_name . "/resources/service/" . $service_name . ".service";
+				if (empty($service_file) && file_exists($temp_service_file)) {
+					$service_file = $temp_service_file;
+				}
+
+				// If the service_file is empty then skip this service
+				if (empty($service_file)) {
+					continue;
+				}
+
+				// Install the service
+				system("cp " . escapeshellarg($service_file) . " /etc/systemd/system/" . escapeshellarg($service_name) . ".service");
 				system("systemctl daemon-reload");
 				system("systemctl enable " . escapeshellarg($service_name));
 				system("systemctl start " . escapeshellarg($service_name));
 			}
 			if (stristr(PHP_OS, 'BSD')) {
 				if ($service['enabled'] == 'true') {
+					// Add previous locations for backwards compatibility
+					$temp_service_file = dirname(__DIR__, 4) . "/app/" . $service_name . "/resources/service/freebsd.service";
+					if (empty($service_file) && file_exists($temp_service_file)) {
+						$service_file = $temp_service_file;
+					}
+
+					// If the service_file is empty then skip this service
+					if (empty($service_file)) {
+						continue;
+					}
+
 					// Install the service
-					system("cp " . $service['file'] . " /usr/local/etc/rc.d/".$service_name);
+					system("cp " . $service_file . " /usr/local/etc/rc.d/".$service_name);
 					system("sysrc " . $service_name . "_enable=\"YES\"");
 					system("chmod 755 /usr/local/etc/rc.d/" . $service_name);
 
