@@ -73,9 +73,8 @@ local find_dnd do
 
 	local find_dnd_sql = [[select t1.do_not_disturb
 	from v_extensions t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
-	where t2.domain_name = :domain_name and (t1.extension = :extension or t1.number_alias=:extension
-	do_not_disturb = true
-	)]]
+	where t2.domain_name = :domain_name and (t1.extension = :extension or t1.number_alias=:extension)
+	and do_not_disturb = true]]
 	
 	find_dnd = function(user)
 		local ext, domain_name = split_first(user, '@', true)
@@ -119,8 +118,7 @@ local find_agent_status do
 
 	local find_agent_uuid_sql = [[select t1.call_center_agent_uuid
 	from v_call_center_agents t1 inner join v_domains t2 on t1.domain_uuid = t2.domain_uuid
-	where t2.domain_name = :domain_name and t1.agent_name = :agent_name
-	]]
+	where t2.domain_name = :domain_name and t1.agent_name = :agent_name]]
 	
 	function find_agent_status(user)
 		local agent_name, domain_name = split_first(user, '@', true)
