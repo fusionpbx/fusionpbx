@@ -318,11 +318,14 @@
 	}
 
 	input[type=text], select, textarea {
-		width: 70%;
+		max-width: 70%;
 		padding: 12px;
 		border: 1px solid #ccc;
 		border-radius: 4px;
-		resize: vertical;
+	}
+
+	input[type=text] {
+		width: 70%;
 	}
 
 	label {
