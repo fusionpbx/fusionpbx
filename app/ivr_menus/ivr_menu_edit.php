@@ -779,6 +779,12 @@
 	echo "		const rows = document.querySelectorAll('.advanced-row');\n";
 	echo "		rows.forEach(row => {\n";
 	echo "			row.style.display = row.style.display == 'none' ? 'table-row' : 'none';\n";
+	echo "			let searchable_select = row.querySelector('.searchable_select');\n";
+	echo "			if (searchable_select) {\n";
+	echo "				searchable_select.style.display = 'block';\n";
+	echo "				row.querySelector('.searchable_select_wrapper').style.width = (parseInt(getComputedStyle(searchable_select).width, 10) + 2) + 'px';\n";
+	echo "				searchable_select.style.display = 'none';\n";
+	echo "			}\n";
 	echo "		});\n";
 	echo "	}\n";
 	echo "</script>\n";
@@ -1553,7 +1559,7 @@
 	echo "</tr>\n";
 	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "		<select name='".$instance_id."' id='".$instance_id."' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
+	echo "		<select name='".$instance_id."' id='".$instance_id."' class='formfld searchable_select' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
 	echo "		<option value=''></option>\n";
 	$found = $playable = false;
 	if (!empty($audio_files[1]) && is_array($audio_files[1]) && @sizeof($audio_files[1]) != 0) {
@@ -1626,7 +1632,7 @@
 	echo "</tr>\n";
 	echo "<tr class='advanced-row' style='display: none;'>\n";
 	echo "	<td class='vtable' align='left'>\n";
-	echo "	<select name='".$instance_id."' id='".$instance_id."' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
+	echo "	<select name='".$instance_id."' id='".$instance_id."' class='formfld searchable_select' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
 	echo "		<option value=''></option>\n";
 	$found = $playable = false;
 	if (!empty($audio_files[1]) && is_array($audio_files[1]) && @sizeof($audio_files[1]) != 0) {
