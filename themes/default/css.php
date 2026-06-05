@@ -4196,6 +4196,10 @@ else { //default: white
 		opacity: 0.8;
 	}
 
+	.searchable_select_wrapper .optgroup_header_row:first-of-type {
+		padding: 6px 10px 4px 10px;
+	}
+
 	.no_results_message,
 	domain-search-empty {
 		padding: 8px 10px;
