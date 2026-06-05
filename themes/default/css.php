@@ -4201,7 +4201,7 @@ else { //default: white
 	}
 
 	.no_results_message,
-	domain-search-empty {
+	.domain-search-empty {
 		padding: 8px 10px;
 		color: <?=$input_text_placeholder_color?>;
 	}
@@ -4241,7 +4241,7 @@ else { //default: white
 		color: #000000cc;
 	}
 
-	.domain-search-input, domain-search-picker { max-width: 100%; }
+	.domain-search-input, .domain-search-picker { max-width: 100%; }
 
 	.domain-search-result-name {
 		display: block;
