@@ -236,7 +236,7 @@ class ringbacks {
 		$text     = $language->get();
 
 		//start the select
-		$select = "<select class='formfld' name='" . $name . "' id='" . $name . "' style='width: auto;'>\n";
+		$select = "<select class='formfld searchable_select' name='" . $name . "' id='" . $name . "' style='width: auto;'>\n";
 		$select .= "		<option value=''></option>\n";
 
 		//music list
