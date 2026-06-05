@@ -590,7 +590,7 @@
 	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
-	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld' style='width: 300px; min-width: 300px; max-width: 300px;' ".((permission_exists("phrase_execute")) ? "onchange='action_to_input();'" : null)."></select>";
+	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld searchable_select' style='width: 300px; min-width: 300px; max-width: 300px;' ".((permission_exists("phrase_execute")) ? "onchange='action_to_input();'" : null)."></select>";
 	if (permission_exists("phrase_execute")) {
 		echo "	<input id='phrase_detail_data_switch' type='button' class='btn' style='margin-left: 4px; display: none;' value='&#9665;' onclick=\"action_to_select(); load_action_options(document.getElementById('phrase_detail_function').selectedIndex);\">\n";
 	}

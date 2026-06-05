@@ -344,7 +344,7 @@
 	echo "	".$text['label-chime_list']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select name='music_on_hold_chime_list' class='formfld' style='width: 350px;' ".((permission_exists('music_on_hold_path')) ? "onchange='changeToInput(this);'" : null).">\n";
+	echo "	<select name='music_on_hold_chime_list' class='formfld searchable_select' style='width: 350px;' ".((permission_exists('music_on_hold_path')) ? "onchange='changeToInput(this);'" : null).">\n";
 	echo "		<option value=''></option>\n";
 	//misc optgroup
 		/*

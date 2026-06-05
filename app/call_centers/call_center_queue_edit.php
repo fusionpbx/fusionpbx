@@ -818,12 +818,19 @@
 		echo "		tb.name=obj.name;\n";
 		echo "		tb.className='formfld';\n";
 		echo "		tb.setAttribute('id', instance_id);\n";
-		echo "		tb.setAttribute('style', 'width: ' + obj.offsetWidth + 'px;');\n";
 		if (!empty($on_change)) {
 			echo "	tb.setAttribute('onchange', \"".$on_change."\");\n";
 			echo "	tb.setAttribute('onkeyup', \"".$on_change."\");\n";
 		}
-		echo "		tb.value=obj.options[obj.selectedIndex].value;\n";
+		echo "		const searchable_select = document.getElementById(instance_id + '_search');\n";
+		echo "		if (searchable_select) {\n";
+		echo "			tb.setAttribute('style', 'width: ' + searchable_select.offsetWidth + 'px;');\n";
+		echo "			searchable_select.style.display = 'none';\n";
+		echo "			tb.value=obj.value;\n";
+		echo "		} else {\n";
+		echo "			tb.setAttribute('style', 'width: ' + obj.offsetWidth + 'px;');\n";
+		echo "			tb.value=obj.options[obj.selectedIndex].value;\n";
+		echo "		}\n";
 		echo "		document.getElementById('btn_select_to_input_' + instance_id).style.display = 'none';\n";
 		echo "		tbb=document.createElement('INPUT');\n";
 		echo "		tbb.setAttribute('class', 'btn');\n";
@@ -842,6 +849,8 @@
 		echo "		obj[0].parentNode.removeChild(obj[1]);\n";
 		echo "		obj[0].parentNode.removeChild(obj[2]);\n";
 		echo "		document.getElementById('btn_select_to_input_' + instance_id).style.display = 'inline';\n";
+		echo "		const searchable_select = document.getElementById(instance_id + '_search');\n";
+		echo "		if (searchable_select) { searchable_select.style.display = 'inline-block'; }\n";
 		if (!empty($on_change)) {
 			echo "	".$on_change.";\n";
 		}
@@ -912,7 +921,7 @@
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
+	echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld searchable_select' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
 	echo "	<option value=''></option>\n";
 	$found = $playable = false;
 	if (!empty($audio_files[0]) && is_array($audio_files[0]) && @sizeof($audio_files[0]) != 0) {
@@ -1447,7 +1456,7 @@
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
+		echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld searchable_select' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
 		echo "	<option value=''></option>\n";
 		$found = $playable = false;
 		if (!empty($audio_files[1]) && is_array($audio_files[1]) && @sizeof($audio_files[1]) != 0) {

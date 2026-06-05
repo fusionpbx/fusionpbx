@@ -913,7 +913,7 @@
 	echo "		<td class='vtable' align='left'>\n";
 	$countries = get_countries($database);
 	if (is_array($countries) && sizeof($countries) > 0) {
-		echo "		<select class='formfld' name='address_country' id='address_country' required='required'>\n";
+		echo "		<select class='formfld searchable_select' name='address_country' id='address_country' required='required'>\n";
 		echo "			<option value=''></option>\n";
 		foreach ($countries as $country) {
 			$selected = ($address_country == $country['iso_a3']) ? "selected='selected'" : null;

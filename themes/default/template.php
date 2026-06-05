@@ -744,6 +744,7 @@
 					wrapper.className = 'searchable_select_wrapper';
 					wrapper.id = original_select.id + '_search';
 					wrapper.style.width = (parseInt(getComputedStyle(original_select).width, 10) + 2) + 'px';
+					wrapper.style.paddingRight = '2px';
 
 					original_select.parentNode.insertBefore(wrapper, original_select);
 					original_select.style.display = 'none';
@@ -887,6 +888,8 @@
 					});
 
 					input.addEventListener('focus', () => {
+						// Hide other dropdowns before showing the active one
+						document.querySelectorAll('.search_results').forEach(dropdown => { dropdown.style.display = 'none'; });
 						dropdown.style.display = 'block';
 						render_items(input.value);
 					});
