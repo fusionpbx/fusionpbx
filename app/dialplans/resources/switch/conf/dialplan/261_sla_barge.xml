@@ -1,0 +1,10 @@
+<extension name="sla_barge" number="*34[ext]" context="${domain_name}" continue="false" app_uuid="1b09f69d-0395-40f9-88cd-2fd92faa6710" enabled="false" order="261">
+	<condition field="destination_number" expression="^\*34(\d{2,7})$">
+		<action application="answer"/>
+		<!-- optional: require a pin before joining the line (off by default) -->
+		<action application="set" data="barge_pin={v_pin_number}" enabled="false"/>
+		<!-- optional: join mode. full = immediate full-duplex barge (default in the script); set to listen to join muted and press 3 to talk (off by default) -->
+		<action application="set" data="barge_mode=full" enabled="false"/>
+		<action application="lua" data="sla_barge.lua $1"/>
+	</condition>
+</extension>
