@@ -150,7 +150,7 @@
 
 		//create the permission object
 			$p = permissions::new();
-									
+
 		//user selected fields
 			$fields = $_POST['fields'];
 			$domain_uuid = $_POST['domain_uuid'];
@@ -218,7 +218,7 @@
 									//build the array
 										if (!empty($row['destination_actions']) && is_json($row['destination_actions'])) {
 											// use destination_actions json
-											$destination_actions_json = $row['destination_actions']; 
+											$destination_actions_json = $row['destination_actions'];
 											$destination_actions = json_decode($row['destination_actions'], true);
 											$row['destination_app'] = $destination_actions[array_key_last($destination_actions)]['destination_app'];
 											$row['destination_data'] = $destination_actions[array_key_last($destination_actions)]['destination_data'];
@@ -546,6 +546,15 @@
 						$p->delete("dialplan_edit", "temp");
 					}
 
+			}
+
+		//clear the cache
+			$cache = new cache;
+			if ($settings->get('destinations', 'dialplan_mode', '') == 'multiple') {
+				$cache->delete("dialplan:".$_SESSION["domain_name"]);
+			}
+			if ($settings->get('destinations', 'dialplan_mode', '') == 'single') {
+				$response = $cache->flush();
 			}
 
 		//send the redirect header
