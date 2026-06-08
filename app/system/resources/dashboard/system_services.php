@@ -107,11 +107,11 @@
 		$grouped_service_files[dirname($file)][] = $file;
 	}
 
-	// load FusionPBX installed services using OS-specific class handling
-	$system = system_information::new();
-	if ($system !== null) {
-		$services = $system->get_installed_services($grouped_service_files, $service_labels);
-	}
+	// Create the service object
+	$service_object = new services;
+
+	// Get the status of the services
+	$services = $service_object->get_services('true');
 
 	// Get extra system services from default settings
 	$extra_services_string = $settings->get('theme', 'dashboard_extra_system_services');
@@ -136,7 +136,7 @@
 //track total installed services for charts
 	$total_services = count($services);
 	$total_running = count(array_filter($services, function($service) {
-		return !empty($service['running']);
+		return !empty($service['service_status']);
 	}));
 
 //convert to a key
@@ -219,13 +219,12 @@ if ($widget_details_state != 'disabled') {
 	echo "				<th class='hud_heading' width='20%' style='text-align: center;'>".($text['label-running'] ?? 'Running')."</th>\n";
 	echo "				<th class='hud_heading' width='35%' style='text-align: center;'>".($text['label-runtime'] ?? 'Runtime')."</th>\n";
 	echo "			</tr>\n";
-
 	$row_style[false] = "row_style0";
 	$row_style[true] = "row_style1";
 	$c = true;
 	foreach ($services as $info) {
-		$label = $info['label'];
-		$status = $info['running']
+		$label = $info['name'];
+		$status = $info['status']
 			? "<span style='background-color: #28a745; color: white; padding: 2px 8px; border-radius: 10px;'>Yes</span>"
 			: "<span style='background-color: #dc3545; color: white; padding: 2px 8px; border-radius: 10px;'>No</span>";
 		$etime = isset($info['etime']) ? format_etime($info['etime']) : '-';
