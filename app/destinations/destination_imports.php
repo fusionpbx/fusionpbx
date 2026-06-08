@@ -148,6 +148,9 @@
 				exit;
 			}
 
+		//create the permission object
+			$p = permissions::new();
+									
 		//user selected fields
 			$fields = $_POST['fields'];
 			$domain_uuid = $_POST['domain_uuid'];
@@ -505,16 +508,22 @@
 
 							//process a chunk of the array
 								if ($row_id === 1000) {
+									//add the dialplan permission
+									$p->add("dialplan_add", "temp");
+									$p->add("dialplan_edit", "temp");
 
 									//save to the data
-										$database->save($array);
-										//$message = $database->message;
+									$database->save($array);
+
+									//remove the temporary permission
+									$p->delete("dialplan_add", "temp");
+									$p->delete("dialplan_edit", "temp");
 
 									//clear the array
-										unset($array);
+									unset($array);
 
 									//set the row id back to 0
-										$row_id = 0;
+									$row_id = 0;
 								}
 
 						}
@@ -525,8 +534,16 @@
 
 				//save to the data
 					if (!empty($array) && is_array($array)) {
+						//add the dialplan permission
+						$p->add("dialplan_add", "temp");
+						$p->add("dialplan_edit", "temp");
+
+						//save to the data
 						$database->save($array);
-						//$message = $database->message;
+
+						//remove the temporary permission
+						$p->delete("dialplan_add", "temp");
+						$p->delete("dialplan_edit", "temp");
 					}
 
 			}
