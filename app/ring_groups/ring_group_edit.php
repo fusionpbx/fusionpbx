@@ -793,6 +793,30 @@
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//get the extensions and the users assigned to them
+	$sql = "select ";
+	$sql .= "e.extension, ";
+	$sql .= "u.username ";
+	$sql .= "from v_extensions e ";
+	$sql .= "left join v_extension_users eu on e.extension_uuid = eu.extension_uuid ";
+	$sql .= "left join v_users u on eu.user_uuid = u.user_uuid and u.user_enabled = true ";
+	$sql .= "where e.domain_uuid = :domain_uuid ";
+	$sql .= "order by e.extension asc ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$extensions = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
+	$extension_users = [];
+	foreach ($extensions as $row) {
+		$ext = $row['extension'];
+		if (!isset($extension_users[$ext])) {
+			$extension_users[$ext] = ['extension' => $ext, 'users' => []];
+		}
+		if (!empty($row['username'])) {
+			$extension_users[$ext]['users'][] = $row['username'];
+		}
+	}
+
 //get the ring backs
 	$ringbacks = new ringbacks;
 	$ringbacks = $ringbacks->select('ring_group_ringback', $ring_group_ringback);
@@ -1366,8 +1390,80 @@
 
 		echo "			<tr>\n";
 		echo "				<td class='formfld'>\n";
-		$onkeyup = !isset($row['ring_group_destination_uuid']) ? "onkeyup=\"document.getElementById('ring_group_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\"" : null; // new record
-		echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_number]\" class=\"formfld\" value=\"".escape($row['destination_number'])."\" ".$onkeyup.">\n";
+		$oninput = !isset($row['ring_group_destination_uuid']) ? "oninput=\"document.getElementById('ring_group_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\"" : null; // new record
+		echo "					<div class='searchable_select_wrapper'>\n";
+		echo "						<input type='text' name='ring_group_destinations[".$x."][destination_number]' class='formfld extension_search_input' placeholder='' value='".escape($row['destination_number'])."' ".$oninput.">\n";
+		echo "						<div class='search_results'></div>\n";
+		echo "						<select class='extension_hidden_select' style='display:none;'>\n";
+		foreach ($extension_users as $ext_data) {
+			$users_string = implode(', ', array_map('htmlspecialchars', $ext_data['users']));
+			echo "						<option value='".escape($ext_data['extension'])."' data-users='".$users_string."'>".escape($ext_data['extension'])."</option>";
+		}
+		echo "						</select>\n";
+		echo "					</div>\n";
+
+		?>
+		<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const wrappers = document.querySelectorAll('.searchable_select_wrapper:has(.extension_hidden_select)');
+
+			wrappers.forEach(wrapper => {
+				const input = wrapper.querySelector('.extension_search_input');
+				const hidden_select = wrapper.querySelector('.extension_hidden_select');
+				const results = wrapper.querySelector('.search_results');
+
+				// Cache options once for performance
+				const options = Array.from(hidden_select.querySelectorAll('option'));
+
+				if (!input || !results) return;
+
+				function render_results() {
+					// Hide other dropdowns before showing the active one
+					document.querySelectorAll('.search_results').forEach(dropdown => { dropdown.style.display = 'none'; });
+					results.style.display = 'block';
+
+					const term = this.value.trim().toLowerCase();
+
+					// Clear previous results
+					results.innerHTML = '';
+
+					options.forEach(option => {
+						const extension = option.value.trim().toLowerCase();
+						const users = (option.getAttribute('data-users') || '').split(',').map(u => u.trim()).filter(Boolean);
+						const users_lower = users.map(user => user.toLowerCase());
+
+						// Match if extension or username contains the search term
+						const matches_extension = extension.includes(term);
+						const matches_user = users_lower.some(user => user.includes(term));
+
+						if (matches_extension || matches_user) {
+							const items = document.createElement('div');
+							items.className = 'search_result_item';
+							items.innerHTML = `<div class="search_result_name">${option.value}</div>`;
+							items.innerHTML += `<div class="search_result_description">${option.getAttribute('data-users')}</div>`;
+
+							// Click to populate input & hidden select
+							items.addEventListener('click', () => {
+								input.value = option.value;
+								hidden_select.value = option.value;
+								results.style.display = 'none';
+
+								input.dispatchEvent(new Event('focus', { bubbles: true }));
+								input.dispatchEvent(new Event('input',  { bubbles: true }));
+							});
+
+							results.appendChild(items);
+						}
+					});
+				}
+
+				input.addEventListener('focus',  render_results);
+				input.addEventListener('input',  render_results);
+			});
+		});
+		</script>
+		<?php
+
 		echo "				</td>\n";
 		echo "				<td class='formfld'>\n";
 		echo "					<select name='ring_group_destinations[".$x."][destination_delay]' class='formfld' style='width:55px'>\n";
