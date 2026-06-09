@@ -1437,13 +1437,22 @@
 						const matches_user = users_lower.some(user => user.includes(term));
 
 						if (matches_extension || matches_user) {
-							const items = document.createElement('div');
-							items.className = 'search_result_item';
-							items.innerHTML = `<div class="search_result_name">${option.value}</div>`;
-							items.innerHTML += `<div class="search_result_description">${option.getAttribute('data-users')}</div>`;
+							const item = document.createElement('div');
+							item.className = 'search_result_item';
+
+							const extension = document.createElement('div');
+							extension.className = 'search_result_name';
+							extension.textContent = option.value;
+
+							const username = document.createElement('div');
+							username.className = 'search_result_description';
+							username.textContent = option.getAttribute('data-users') || '';
+
+							item.appendChild(extension);
+							item.appendChild(username);
 
 							// Click to populate input & hidden select
-							items.addEventListener('click', () => {
+							item.addEventListener('click', () => {
 								input.value = option.value;
 								hidden_select.value = option.value;
 								results.style.display = 'none';
@@ -1452,7 +1461,7 @@
 								input.dispatchEvent(new Event('input',  { bubbles: true }));
 							});
 
-							results.appendChild(items);
+							results.appendChild(item);
 						}
 					});
 				}
