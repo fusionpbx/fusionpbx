@@ -1392,7 +1392,7 @@
 		echo "				<td class='formfld'>\n";
 		$oninput = !isset($row['ring_group_destination_uuid']) ? "oninput=\"document.getElementById('ring_group_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\"" : null; // new record
 		echo "					<div class='searchable_select_wrapper'>\n";
-		echo "						<input type='text' name='ring_group_destinations[".$x."][destination_number]' class='formfld extension_search_input' placeholder='' value='".escape($row['destination_number'])."' ".$oninput.">\n";
+		echo "						<input type='text' name='ring_group_destinations[".$x."][destination_number]' class='formfld extension_search_input' value='".escape($row['destination_number'])."' ".$oninput.">\n";
 		echo "						<div class='search_results'></div>\n";
 		echo "						<select class='extension_hidden_select' style='display:none;'>\n";
 		foreach ($extension_users as $ext_data) {
