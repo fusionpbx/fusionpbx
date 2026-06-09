@@ -4243,10 +4243,12 @@ else { //default: white
 
 	.domain-search-input, .domain-search-picker { max-width: 100%; }
 
+	.searchable_select_wrapper .search_result_name,
 	.domain-search-result-name {
 		display: block;
 	}
 
+	.searchable_select_wrapper .search_result_description,
 	.domain-search-result-description {
 		display: block;
 		opacity: 0.75;
