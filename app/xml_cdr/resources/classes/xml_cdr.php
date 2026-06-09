@@ -2133,6 +2133,12 @@ class xml_cdr {
 		//get call recording from database
 		$sql = "select record_name, record_path from v_xml_cdr ";
 		$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
+		//restrict to the current domain unless the user can view all domains, so a
+		//recording from another domain cannot be downloaded by guessing its uuid
+		if (!permission_exists('xml_cdr_all')) {
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $this->domain_uuid;
+		}
 		$parameters['xml_cdr_uuid'] = $this->recording_uuid;
 		$row = $this->database->select($sql, $parameters, 'row');
 		if (!empty($row) && is_array($row)) {
