@@ -175,8 +175,8 @@
 			$file_ext = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
 
 		//remove special characters
-			$recording_filename = str_replace(" ", "_", $_FILES['file']['name']);
-			$recording_filename = str_replace("'", "", $recording_filename);
+			$file_name = str_replace(['_', ' '], "-", $file_name);
+			$file_name = str_replace(['"', "'", "`"], "", $file_name);
 			$recording_filename = $file_name.'.'.$file_ext;
 
 		//make sure the destination directory exists
@@ -247,9 +247,13 @@
 				if (filetype($switch_recordings."/".$domain_name."/".$recording_filename) == "file") {
 
 					if (!is_array($array_recordings) || !in_array($recording_filename, $array_recordings)) {
-						//file not found in db, add it
+						//file was not found in database add the recording
 							$recording_uuid = uuid();
-							$recording_name = ucwords(str_replace('_', ' ', pathinfo($recording_filename, PATHINFO_FILENAME)));
+							$recording_name = pathinfo($recording_filename, PATHINFO_FILENAME);
+							$recording_name = str_replace(['_', '-'], ' ', $recording_name);
+							$recording_name = str_replace(['"', "'", "`"], '', $recording_name);
+							$recording_name = preg_replace('/\s+/', ' ', trim($recording_name));
+							$recording_name = ucwords(strtolower($recording_name));
 							$recording_description = $_GET['rd'];
 						//build array
 							$array['recordings'][0]['domain_uuid'] = $domain_uuid;
