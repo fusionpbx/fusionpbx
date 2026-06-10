@@ -353,6 +353,11 @@ class services {
 				// Get the service name
 				$service_name = $this->find_service_name($file);
 
+				// Service name empty skip iteration
+				if (empty($service_name)) {
+					continue; 
+				}
+
 				// Get the service status
 				if ($details) {
 					$service_status = $this->is_running($service_name);
@@ -393,6 +398,11 @@ class services {
 			$i = 0;
 			$service_status = [];
 			foreach($database_services as $row) {
+				// Service name empty skip iteration
+				if (empty($row['service_name'])) {
+					continue; 
+				}
+
 				// Get the service status
 				if ($details) {
 					$service_status = $this->is_running($row['service_name']);
