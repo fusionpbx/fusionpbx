@@ -72,8 +72,8 @@
 
 		--run the query
 			sql = "select * from v_number_translations ";
+			sql = sql .. "where number_translation_enabled = true ";
 			sql = sql .. "order by number_translation_name asc ";
-			sql = sql .. "number_translation_enabled = true ";
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 			end
