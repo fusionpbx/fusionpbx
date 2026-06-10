@@ -444,6 +444,9 @@
 	if (permission_exists('recording_add') && $speech_enabled == 'true') {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$theme_button_icon_add,'id'=>'btn_add','link'=>'recording_edit.php']);
 	}
+	if (permission_exists('recording_delete') && $recordings) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$theme_button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+	}
 	if (permission_exists('recording_upload')) {
 		echo 	"<form id='form_upload' class='inline' method='post' enctype='multipart/form-data'>\n";
 		echo 	"<input name='action' type='hidden' value='upload'>\n";
@@ -459,9 +462,7 @@
 		echo 	"</span>\n";
 		echo 	"</form>";
 	}
-	if (permission_exists('recording_delete') && $recordings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$theme_button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
-	}
+	echo button::create(['type'=>'button','label'=>$text['button-map'],'icon'=>$settings->get('theme', 'button_icon_map'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'recording_map.php']);
 	echo "		<form id='form_search' class='inline' method='get'>\n";
 	foreach ($param as $key => $value) {
 		if ($key !== 'search' && $key !== 'page') {
