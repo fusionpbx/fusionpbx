@@ -21,12 +21,8 @@
 	the Initial Developer. All Rights Reserved.
 */
 
-//set the include path
-	$conf = glob("{/usr/local/etc,/etc}/fusionpbx/config.conf", GLOB_BRACE);
-	set_include_path(parse_ini_file($conf[0])['document.root']);
-
-//includes files
-	require_once "resources/require.php";
+//include files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
@@ -58,14 +54,10 @@
 	$list_row_url = '';
 
 //add the search variable
-	if (!empty($_GET["search"])) {
-		$search = strtolower($_GET["search"]);
-	}
+	$search = strtolower($_GET["search"] ?? '');
 
 //add the show variable
-	if (!empty($_GET["show"])) {
-		$show = $_GET["show"];
-	}
+	$show = $_GET["show"] ?? '';
 
 //prepare the excluded applications array based on permission exists
 	$excluded_app_array = [];
@@ -114,12 +106,12 @@
 	}
 	if (!empty($search)) {
 		$sql .= "AND ( \n";
-		$sql .= "	application like :search \n";
-		$sql .= "	or type like :search \n";
-		$sql .= "	or name like :search \n";
-		$sql .= "	or number like :search \n";
-		$sql .= "	or music like :search \n";
-		$sql .= "	or description like :search \n";
+		$sql .= "	lower(application) like :search \n";
+		$sql .= "	or lower(type) like :search \n";
+		$sql .= "	or lower(name) like :search \n";
+		$sql .= "	or lower(number) like :search \n";
+		$sql .= "	or lower(music) like :search \n";
+		$sql .= "	or lower(description) like :search \n";
 		$sql .= ") \n";
 		$parameters['search'] = '%'.$search.'%';
 	}
@@ -157,11 +149,11 @@
 			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
 		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$_SESSION['theme']['button_icon_all'],'link'=>'?show=all&search='.urlencode($search)]);
+			echo button::create(['type' => 'button', 'label' => $text['button-show_all'], 'icon' => $settings->get('theme', 'button_icon_all'), 'link' => '?show=all&search='.urlencode($search)]);
 		}
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
+	echo button::create(['label' => $text['button-search'], 'icon' => $settings->get('theme', 'button_icon_search'), 'type' => 'submit', 'id' => 'btn_search']);
 	// if ($paging_controls_mini != '') {
 	// 	echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	// }
@@ -222,9 +214,11 @@
 				//add multi-lingual support
 				if (file_exists(dirname(__DIR__, 2)."/app/".$application."/app_languages.php")) {
 					$text2 = $text_language->get($settings->get('domain', 'language', 'en-us'), 'app/'.$application);
+				} else {
+					$text2['title-'.$application] = ucwords(str_replace('_', ' ', $application));
 				}
 
-				echo "<strong>".escape($text2['title-'.$application])."</strong>\n";
+				echo "<strong>".escape($text2['title-'.$application] ?? $application)."</strong>\n";
 				echo "<div class='card'>\n";
 				echo "<table class='list'>\n";
 				echo "<tr class='list-header'>\n";
@@ -244,7 +238,7 @@
 				echo "	<th class='hide-sm-dn' style='width:'>".escape($text['label-description'])."</th>\n";
 				if (permission_exists('extension_view') && $list_row_edit_button == 'true') {
 					echo "	<th class='action-button'>\n";
-					echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+					echo button::create(['type' => 'button', 'title' => $text['button-edit'], 'icon' => $settings->get('theme', 'button_icon_edit'), 'link' => $list_row_url]);
 					echo "	</th>\n";
 				}
 				echo "</tr>\n";
@@ -262,7 +256,7 @@
 			echo "	<td class='hide-sm-dn'>".escape($row['description'])."</td>\n";
 			if (permission_exists('extension_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>\n";
-				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
+				echo button::create(['type' => 'button', 'title' => $text['button-edit'], 'icon' => $settings->get('theme', 'button_icon_edit'), 'link' => $list_row_url]);
 				echo "	</td>\n";
 			}
 			echo "</tr>\n";
