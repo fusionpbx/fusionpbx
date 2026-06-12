@@ -337,10 +337,7 @@ class authentication {
 			$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 			$cidr_list = $this->settings->get('domain', 'cidr', []);
 			if (check_cidr($cidr_list, $_SERVER['REMOTE_ADDR'])) {
-				// The user has passed all authentication for:
-				//   - global
-				//   - domain
-				//   - cidr
+				// The user has passed all authentication for: global, domain, and cidr
 				// But, may still be blocked by other methods. Check the other methods in the user settings
 				// for any additional methods that are active on the user and not on the domain (ie. TOTP).
 				$authenticators = array_diff($this->settings->get('authentication', 'methods', []), $_SESSION['authentication']['methods'] ?? []);
