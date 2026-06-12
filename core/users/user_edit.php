@@ -659,7 +659,7 @@
 				if (permission_exists('api_key')) {
 					$array['users'][$x]['api_key'] = (!empty($api_key)) ? $api_key : null;
 				}
-				if ((!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) { // || $user_has_totp_secret) {
+				if ((!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods']))) { // || $user_has_totp_secret) {
 					$array['users'][$x]['user_totp_secret'] = $user_totp_secret;
 				}
 				$array['users'][$x]['user_type'] = $user_type;
