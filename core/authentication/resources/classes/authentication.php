@@ -337,8 +337,59 @@ class authentication {
 			$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 			$cidr_list = $this->settings->get('domain', 'cidr', []);
 			if (check_cidr($cidr_list, $_SERVER['REMOTE_ADDR'])) {
-				//user passed the cidr check
-				self::create_user_session($result, $this->settings);
+				// The user has passed all authentication for:
+				//   - global
+				//   - domain
+				//   - cidr
+				// But, may still be blocked by other methods. Check the other methods in the user settings
+				// for any additional methods that are active on the user and not on the domain (ie. TOTP).
+				$authenticators = array_diff($this->settings->get('authentication', 'methods', []), $_SESSION['authentication']['methods'] ?? []);
+				if (!empty($authenticators)) {
+					foreach ($authenticators as $name) {
+						// Assume the plugin will not authorize the user until it is processed and returns true
+						$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
+
+						// Set the plugin filename
+						$plugin = __DIR__ . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . $name . ".php";
+
+						// Process the plugin if it exists
+						if (file_exists($plugin)) {
+							// File and class name do not match so adjust the class name
+							$class_name = "plugin_" . $name;
+
+							// Create the plugin object
+							$object = new $class_name();
+
+							// Set database plugin key if it exists
+							if ($object instanceof plugin_database && isset($this->key)) {
+								$object->key = $this->key;
+							}
+
+							// Set common object properties for plugins
+							$object->domain_name = $this->domain_name;
+							$object->domain_uuid = $this->domain_uuid;
+
+							// Plugins are supposed to short-circuit so the script should exit here if user is not authorized
+							$object->{$name}($this, $this->settings);
+						}
+
+						// Check the last called plugin for authorization status and if any plugin returns false then the user is not authorized
+						$authorized = $authorized & ($_SESSION['authentication']['plugin'][$name]['authorized'] ?? false);
+
+						// No need to continue checking if plugin failed, but we will log the plugin responsible for rejection
+						if (!$authorized) {
+							// Set the reason for the failed login attempt to be logged
+							$failed_login_message = "Authentication plugin '$name' blocked login attempt";
+							// Exit the foreach loop
+							break;
+						}
+					}
+				}
+				// Check if they are still authorized after checking all user plugins then create the session
+				if ($authorized) {
+					// user passed all authentication mechanisms and is authorized to login
+					self::create_user_session($result, $this->settings);
+				}
 			} else {
 				//user failed the cidr check - no longer authorized
 				$authorized = false;

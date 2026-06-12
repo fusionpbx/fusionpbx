@@ -49,6 +49,21 @@
 		$action = 'add';
 	}
 
+// Check if the user has totp
+	$user_has_totp_secret = false;
+	$sql = "select user_setting_value from v_user_settings s ";
+	$sql .= "left join v_users u on u.user_uuid = s.user_uuid ";
+	$sql .= "where s.user_uuid = :user_uuid ";
+	$sql .= "and s.user_setting_category = 'authentication' ";
+	$sql .= "and s.user_setting_subcategory = 'methods' ";
+	$sql .= "and s.user_setting_value = 'totp' ";
+	$sql .= "and u.domain_uuid = :domain_uuid ";
+	$sql .= "and u.user_totp_secret is not null ";
+	$parameters['user_uuid'] = $_REQUEST["id"] ?? '';
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$user_has_totp_secret = !empty($database->select($sql, $parameters, 'column'));
+	unset($sql, $parameters);
+
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'username'));
@@ -172,6 +187,12 @@
 			}
 			if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
 				$user_totp_secret = strtoupper($_POST["user_totp_secret"]);
+			}
+			if (!empty($_REQUEST["id"])) {
+				// If they have it on and the reset button was pressed, then clear the TOTP secret so it can be reconfigured on next login
+				if ($user_has_totp_secret && permission_exists('user_totp_reset') && ($_POST['reset_totp'] ?? '') != 'false') {
+					$user_totp_secret = null;
+				}
 			}
 
 		//validate the token
@@ -638,8 +659,8 @@
 				if (permission_exists('api_key')) {
 					$array['users'][$x]['api_key'] = (!empty($api_key)) ? $api_key : null;
 				}
-				if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
-					$array['users'][$x]['user_totp_secret'] = $user_totp_secret;
+				if ((!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) || $user_has_totp_secret) {
+					$array['users'][$x]['user_totp_secret'] = $user_totp_secret ? null : ($user_totp_secret ?? null);
 				}
 				$array['users'][$x]['user_type'] = $user_type;
 				$array['users'][$x]['user_enabled'] = $user_enabled;
@@ -828,6 +849,7 @@
 
 	echo "<form name='frm' id='frm' method='post'>\n";
 	echo "<input type='hidden' name='search' id='search' value=\"".($search ?? '')."\" />\n";
+	echo "<input type='hidden' name='reset_totp' id='reset_totp' value='false' />\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-user_edit']."</b></div>\n";
@@ -1318,6 +1340,22 @@
 			echo "	<br />".$text['description-user_totp_view']."<br />\n";
 		}
 		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if ($action == 'edit' && permission_exists('user_totp_reset') && !empty($user_totp_secret)) {
+		echo "	<tr>\n";
+		echo "		<td class='vncell' valign='top'>".$text['label-user_totp_secret']."</td>\n";
+		echo "		<td class='vtable'>\n";
+		echo button::create(['type'=>'button',
+			'label'=>$text['button-reset'],
+			'icon'=>'trash',
+			'style'=>'margin-top: 1px; margin-bottom: 1px;',
+			'onclick'=>"document.getElementById('reset_totp').value = 'true';\n"
+				."document.getElementById('frm').submit();"]);
+		echo "		<br />\n";
+		echo $text['description-user_totp_reset']."\n";
+		echo "		</td>\n";
 		echo "</tr>\n";
 	}
 
