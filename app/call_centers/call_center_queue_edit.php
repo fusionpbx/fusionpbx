@@ -1119,7 +1119,7 @@
 				$i=0;
 				while($i<=9) {
 					$selected = ($i == $field['tier_level']) ? "selected" : null;
-					echo "				<option value=\"$i\" ".escape($selected).">$i</option>\n";
+					echo "				<option value=\"$i\" $selected>$i</option>\n";
 					$i++;
 				}
 				echo "				</select>\n";
@@ -1130,7 +1130,7 @@
 				$i=0;
 				while($i<=9) {
 					$selected = ($i == $field['tier_position']) ? "selected" : null;
-					echo "				<option value=\"$i\" ".escape($selected).">$i</option>\n";
+					echo "				<option value=\"$i\" $selected>$i</option>\n";
 					$i++;
 				}
 				echo "				</select>\n";

@@ -399,7 +399,7 @@
 			if (is_array($extensions) && @sizeof($extensions) != 0) {
 				foreach ($extensions as $row) {
 					$selected = ($row['extension_uuid'] == $extension_uuids[0]) ? "selected" : null;
-					echo "		<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>\n";
+					echo "		<option value='".escape($row['extension_uuid'])."' $selected>".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>\n";
 				}
 			}
 			echo "			</select>\n";
@@ -537,7 +537,7 @@
 			foreach ($cdr_status_options as $cdr_status) {
 				$selected = ($hangup_cause == $cdr_status) ? "selected='selected'" : null;
 				$cdr_status_label = ucwords(strtolower(str_replace("_", " ", $cdr_status)));
-				echo "			<option value='".escape($cdr_status)."' ".escape($selected).">".escape($cdr_status_label)."</option>\n";
+				echo "			<option value='".escape($cdr_status)."' $selected>".escape($cdr_status_label)."</option>\n";
 			}
 			echo "			</select>\n";
 			echo "		</div>\n";
@@ -647,7 +647,7 @@
 				echo "				<option value=''></option>";
 				foreach ($call_center_queues as $row) {
 					$selected = ($row['call_center_queue_uuid'] == $call_center_queue_uuid) ? "selected" : null;
-					echo "		<option value='".escape($row['call_center_queue_uuid'])."' ".escape($selected).">".((is_numeric($row['queue_extension'])) ? escape($row['queue_extension']." (".$row['queue_name'].")") : escape($row['queue_extension'])." (".escape($row['queue_extension']).")")."</option>";
+					echo "		<option value='".escape($row['call_center_queue_uuid'])."' $selected>".((is_numeric($row['queue_extension'])) ? escape($row['queue_extension']." (".$row['queue_name'].")") : escape($row['queue_extension'])." (".escape($row['queue_extension']).")")."</option>";
 				}
 				echo "			</select>\n";
 				echo "		</div>\n";
@@ -665,7 +665,7 @@
 				echo "				<option value=''></option>";
 				foreach ($ring_groups as $row) {
 					$selected = ($row['ring_group_uuid'] == $ring_group_uuid) ? "selected" : null;
-					echo "		<option value='".escape($row['ring_group_uuid'])."' ".escape($selected).">".((is_numeric($row['ring_group_extension'])) ? escape($row['ring_group_extension']." (".$row['ring_group_name'].")") : escape($row['ring_group_extension'])." (".escape($row['ring_group_extension']).")")."</option>";
+					echo "		<option value='".escape($row['ring_group_uuid'])."' $selected>".((is_numeric($row['ring_group_extension'])) ? escape($row['ring_group_extension']." (".$row['ring_group_name'].")") : escape($row['ring_group_extension'])." (".escape($row['ring_group_extension']).")")."</option>";
 				}
 				echo "			</select>\n";
 				echo "		</div>\n";
@@ -684,7 +684,7 @@
 			echo "				<option value=''></option>";
 			foreach ($ivr_menus as $row) {
 				$selected = ($row['ivr_menu_uuid'] == $ivr_menu_uuid) ? "selected" : null;
-				echo "		<option value='".escape($row['ivr_menu_uuid'])."' ".escape($selected).">".((is_numeric($row['ivr_menu_extension'])) ? escape($row['ivr_menu_extension']." (".$row['ivr_menu_name'].")") : escape($row['ivr_menu_extension'])." (".escape($row['ivr_menu_extension']).")")."</option>";
+				echo "		<option value='".escape($row['ivr_menu_uuid'])."' $selected>".((is_numeric($row['ivr_menu_extension'])) ? escape($row['ivr_menu_extension']." (".$row['ivr_menu_name'].")") : escape($row['ivr_menu_extension'])." (".escape($row['ivr_menu_extension']).")")."</option>";
 			}
 			echo "			</select>\n";
 			echo "		</div>\n";
