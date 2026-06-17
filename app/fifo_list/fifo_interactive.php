@@ -124,7 +124,7 @@ function send_cmd(url) {
 	}
 	xmlhttp.open("GET",url,false);
 	xmlhttp.send(null);
-	document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;
+	// document.getElementById('cmd_response').innerHTML=xmlhttp.responseText;
 }
 
 var record_count = 0;
