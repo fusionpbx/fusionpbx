@@ -96,7 +96,7 @@
 			if (empty($member_count)) {
 				$member_count = 0;
 			}
-	
+
 			//get mute_all
 			$mute_all = "true";
 			foreach ($xml->conference->members->member as $row) {
@@ -108,7 +108,7 @@
 			}
 		}
 
-		echo "<div id='cmd_reponse'></div>\n";
+		echo "<div id='cmd_response'></div>\n";
 
 		echo "<div style='float: right;'>\n";
 
