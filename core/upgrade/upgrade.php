@@ -583,14 +583,45 @@
  */
 function update_php_fpm(settings $settings) {
 
+	//
+	// Special considerations for the php-fpm.service file:
+	//   - It has to exist in the /usr/lib/systemd/system folder.
+	//   - We only change the version of the file that matches the currently running PHP version.
+	//   - If the file exists but is missing the ReadWritePaths directive then we add it with the required paths and in
+	//     the correct section.
+	//   - If the file exists and has the ReadWritePaths directive but is missing any of the required paths then we add
+	//     the missing paths to the end of the existing ReadWritePaths directive.
+	//   - Sections can be in any order and there can be multiple sections. So we make sure to add the directive in the
+	//     [Service] section.
+	//   - An undefined section can exist before the first detected section. These are usually comments but can also be
+	//     something else.
+	//
+
 	// Update the php-fpm.service file
 	if (PHP_OS === 'Linux') {
-		// Get the PHP version
+		// Get the PHP CLI version
 		$php_version =  PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;
+
+		// Check the cli version matches the php-fpm running version
+		$php_fpm_active = false;
+		$output = null;
+		exec('systemctl is-active --quiet php'.$php_version.'-fpm', $output, $php_fpm_active);
+
+		// Zero means active and non-zero means inactive or not found.
+		if ($php_fpm_active !== 0) {
+			// Send an error message only when running from console
+			if (is_cli()) {
+				echo "	php-fpm does not match version $php_version from this command line version. Skipping php-fpm service file update.\n";
+			}
+			return;
+		}
 
 		// Make sure the /usr/share/fusionpbx directory exists
 		if (!file_exists('/usr/share/fusionpbx')) {
-			mkdir('/usr/share/fusionpbx', 0755, true);
+			$success = mkdir('/usr/share/fusionpbx', 0755, true);
+			if (!$success && is_cli()) {
+				echo "	Failed to create directory: /usr/share/fusionpbx\n";
+			}
 		}
 
 		// Build the read write paths array
@@ -616,48 +647,116 @@ function update_php_fpm(settings $settings) {
 			} else {
 				// Set flags
 				$file_update_required = false;
-				$read_write_paths_exists = false;
+				$process_service_section = false;
 				$service_section_exists = false;
+				$read_write_paths_exists = false;
+				$finished = false;
+				$section_name = 'global';
+				$section_indexes = [$section_name => ['start' => 0, 'end' => 0]];
+				$diff = $read_write_paths;
+
+				define('READ_WRITE_PATHS_DIRECTIVE', 'ReadWritePaths');
+				define('SERVICE_SECTION_NAME', 'Service');
 
 				// Process the file contents to add the ReadWritePaths directive
 				$lines = explode("\n", $file_contents);
 
-				// $lines is passed by reference so that we can update it in place
-				foreach($lines as &$line) {
-					// Mark the service section
-					if (trim($line) === '[Service]') {
-						$service_section_exists = true;
+				// Loop through each line to find the correct location to add the ReadWritePaths directive and to check if it already exists and needs to be updated
+				for($i = 0; $i < count($lines); $i++) {
+					// Create a reference to the original for easy updating
+					$line = &$lines[$i];
+
+					// Get the starting character of the line
+					$char = substr(trim($line), 0, 1);
+
+					// Skip comments and empty lines
+					if ($char === '#' || $char === ';' || strlen($char) === 0) {
+						// Goto next line
+						continue;
+					}
+
+					// Mark section indexes
+					if ($char === '[') {
+						// Store the end index of the previous section
+						$section_indexes[$section_name]['end'] = $i - 1;
+
+						if ($finished) {
+							// If we have finished processing the service section then we can stop processing the file
+							break;
+						}
+
+						// Set new section name with no whitespace or brackets
+						$section_name = trim(trim($line), '[]');
+
+						// Store the section name and index in the section indexes array
+						$section_indexes[$section_name]['start'] = $i;
+
+						// Mark when we have found the service section so that we can start looking for the ReadWritePaths directive
+						if (strtolower($section_name) === strtolower(SERVICE_SECTION_NAME)) {
+							$process_service_section = true;
+							$service_section_exists = true;
+						} else {
+							$process_service_section = false;
+						}
+
+						// Goto next line
 						continue;
 					}
 
 					// Don't search for the directive if we haven't reached the service section yet
-					if (!$service_section_exists) {
+					if (!$process_service_section) {
+						// Goto next line
 						continue;
 					}
 
 					// Check if the ReadWritePaths directive already exists and if so check if it needs to be updated
-					if (str_starts_with(trim($line), 'ReadWritePaths')) {
+					if (str_starts_with(trim($line), READ_WRITE_PATHS_DIRECTIVE)) {
 						$read_write_paths_exists = true;
-						// Remove whitespace from all elements in the array and split into key and value
+						// Create an array of existing paths
 						[, $existing_paths] = array_map('trim', explode('=', $line, 2));
+
+						// Compare with required paths
 						$diff = array_diff($read_write_paths, explode(' ', $existing_paths));
+
+						// If there are missing paths then we need to update the line
 						if (!empty($diff)) {
 							$file_update_required = true;
 							// Rewrite the existing line with the new paths added to the end of the existing paths
-							$line = "ReadWritePaths = " . $existing_paths . ' ' . implode(' ', $diff);
+							$line = READ_WRITE_PATHS_DIRECTIVE . " = " . $existing_paths . ' ' . implode(' ', $diff);
 						}
-						break;
-					}
-					// Stop processing if we reach the end of the service section
-					if (str_starts_with(trim($line), '[')) {
-						break;
+						$finished = true;
+						continue;
 					}
 				}
 
-				// If the service section exists and the ReadWritePaths directive does not exist, add it to the end of the service section
+				// Check if the service section was the last section
+				if (!isset($section_indexes[SERVICE_SECTION_NAME]['end'])) {
+					// Get last non-empty lines
+					$temp_lines = explode("\n", rtrim($file_contents));
+					$last_line = array_pop($temp_lines);
+
+					// Find the last line from the file in the original array to get the correct index to add the ReadWritePaths directive after
+					$index_of = array_search($last_line, $lines);
+					if ($index_of === false) {
+						// If for some reason the last line can't be found then just add the directive to the end of the file
+						$index_of = count($lines) - 1;
+					}
+
+					// If the last line isn't empty then we need to add an empty line after it before adding the directive
+					if (strlen(trim($lines[$index_of])) !== 0) {
+						array_splice($lines, $index_of + 1, 0, '');
+						// Move pointer to the empty line we just added
+						$index_of++;
+					}
+
+					// Finally, set the end index of the service section
+					$section_indexes[SERVICE_SECTION_NAME]['end'] = $index_of;
+				}
+
+				// [Service] exists but missing ReadWritePaths
 				if ($service_section_exists && !$read_write_paths_exists) {
 					$file_update_required = true;
-					$line_to_insert = "ReadWritePaths = " . implode(' ', $read_write_paths);
+					$lines[$section_indexes[SERVICE_SECTION_NAME]['end']] = READ_WRITE_PATHS_DIRECTIVE . " = " . implode(' ', $read_write_paths) . "\n";
 				}
 
 				if ($file_update_required) {
@@ -666,33 +765,21 @@ function update_php_fpm(settings $settings) {
 
 					// Find the empty line before the Install section
 					if ($file_writable) {
-						$insert_index = -1;
-						for ($i = 0; $i < count($lines); $i++) {
-							if (trim($lines[$i]) === '[Install]') {
-								// Find empty line before [Install]
-								for ($j = $i - 1; $j >= 0; $j--) {
-									if (trim($lines[$j]) === '') {
-										$insert_index = $j;
-										break;
-									}
-								}
-								break;
-							}
-						}
 
-						// Add or Update the new content
-						if (!empty($line_to_insert)) {
-							array_splice($lines, $insert_index, 0, $line_to_insert);
-						}
-						$new_contents = implode("\n", $lines) . "\n";
+						$new_contents = rtrim(implode("\n", $lines)) . "\n\n";
+
 						$bytes = file_put_contents($service_file, $new_contents);
 
 						// Check for drive full edge case
 						if ($bytes === false) {
 							// Send an error message only when running from console
 							if (is_cli()) {
-								echo "Failed to write the updated service file: $service_file\n";
+								echo "	Failed to write the updated service file: $service_file\n";
 							}
+						}
+
+						if ($bytes !== false && is_cli()) {
+							echo "	Added '" . implode(' ', $diff) . "' to ReadWritePaths in php-fpm file\n";
 						}
 
 						// Prepare systemd to use the update
@@ -703,7 +790,7 @@ function update_php_fpm(settings $settings) {
 					} else {
 						// Send an error message only when running from console
 						if (is_cli()) {
-							echo "The service file is not writable: $service_file\n";
+							echo "	The service file is not writable: $service_file\n";
 						}
 					}
 				}
