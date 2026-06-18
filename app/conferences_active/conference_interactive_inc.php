@@ -108,7 +108,7 @@
 			}
 		}
 
-		echo "<div id='cmd_reponse'></div>\n";
+		echo "<div id='cmd_response'></div>\n";
 
 		echo "<div style='float: right;'>\n";
 

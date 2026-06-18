@@ -205,7 +205,7 @@
 	echo "		}\n";
 	echo "		xmlhttp.open(\"GET\",url,true);\n";
 	echo "		xmlhttp.send(null);\n";
-	echo "		document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;\n";
+	// echo "		document.getElementById('cmd_response').innerHTML=xmlhttp.responseText;\n";
 	echo "	}\n";
 	echo "</script>\n";
 
