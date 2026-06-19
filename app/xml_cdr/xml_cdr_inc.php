@@ -436,13 +436,13 @@
 		}
 	}
 	if (!empty($extension_uuids)) {
-		$placeholders = [];
+		$parameter_names = [];
 		foreach ($extension_uuids as $i => $uuid) {
 			$name = "extension_uuid_$i";
-			$placeholders[] = ":$name";
+			$parameter_names[] = ":$name";
 			$parameters[$name] = $uuid;
 		}
-		$sql .= "and e.extension_uuid in (".implode(",",$placeholders).") \n";
+		$sql .= "and e.extension_uuid in (".implode(",",$parameter_names).") \n";
 	}
 	if (!empty($caller_destination)) {
 		$mod_caller_destination = str_replace("*", "%", $caller_destination);
