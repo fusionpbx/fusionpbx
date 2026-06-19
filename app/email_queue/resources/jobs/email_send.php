@@ -258,8 +258,20 @@
 					&& !empty($voicemail_transcription_prompt)
 					&& class_exists('transcribe_prompt')
 				) {
-					$prompt_processor = new transcribe_prompt($settings);
-					$prompt_result = $prompt_processor->process($transcribe_message, $voicemail_transcription_prompt);
+					// Allow the template to embed the transcription at a specific position;
+					// fall back to appending it after the template.
+					if (strpos($prompt_template, '${transcription}') !== false) {
+						$combined = str_replace('${transcription}', $transcribe_message, $voicemail_transcription_prompt);
+					} else {
+						$combined = $prompt_template . "\n\n" . $transcribe_message;
+					}
+
+					// Send the combined message to the language model to update the message based on the prompt
+					$language_model = new language_model();
+					$model = $this->settings->get('language_model', 'api_model', '');
+					$result = $language_model->request($model, ['prompt' => $combined]);
+					$prompt_result = is_string($result) ? trim($result) : '';
+
 					echo "prompt result length: ".strlen($prompt_result)."\n";
 					if (!empty($prompt_result)) {
 						$transcribe_message = $prompt_result;
