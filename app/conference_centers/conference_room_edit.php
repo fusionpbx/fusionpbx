@@ -233,7 +233,7 @@
 		}
 
 		message::add($text['message-delete']);
-		header("Location: conference_room_edit.php?id=".escape($conference_room_uuid).($query_string ? '&'.$query_string : ''));
+		header("Location: conference_room_edit.php?id=".urlencode($conference_room_uuid).($query_string ? '&'.$query_string : ''));
 		return;
 	}
 
@@ -466,7 +466,7 @@
 				}
 
 				//redirect
-				header("Location: conference_room_edit.php?id=".escape($conference_room_uuid).($query_string ? '&'.$query_string : ''));
+				header("Location: conference_room_edit.php?id=".urlencode($conference_room_uuid).($query_string ? '&'.$query_string : ''));
 				exit;
 			}
 	}
@@ -652,7 +652,7 @@
 				echo "				<td class='vtable'>".escape($row['username'])."</td>\n";
 				echo "				<td style='width: 25px;' align='right'>\n";
 				if (permission_exists('conference_room_delete')) {
-					echo "					<a href='conference_room_edit.php?conference_room_user_uuid=".escape($row['conference_room_user_uuid'])."&conference_room_uuid=".escape($conference_room_uuid)."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+					echo "					<a href='conference_room_edit.php?conference_room_user_uuid=".urlencode($row['conference_room_user_uuid'])."&conference_room_uuid=".urlencode($conference_room_uuid)."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
 				}
 				echo "				</td>\n";
 				echo "			</tr>\n";
