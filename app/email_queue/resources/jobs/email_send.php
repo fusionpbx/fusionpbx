@@ -260,7 +260,7 @@
 
 					// Send the combined message to the language model to update the message based on the prompt
 					$language_model = new language_model();
-					$model = $this->settings->get('language_model', 'api_model', '');
+					$model = $settings->get('language_model', 'api_model', '');
 					$result = $language_model->request($model, ['prompt' => $combined]);
 					$prompt_result = is_string($result) ? trim($result) : '';
 
