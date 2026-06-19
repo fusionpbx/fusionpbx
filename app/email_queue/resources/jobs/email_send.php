@@ -249,15 +249,7 @@
 				echo "transcribe message: ".$transcribe_message."\n";
 
 				$prompt_is_enabled = in_array($voicemail_transcription_prompt_enabled ?? false, [true, 'true', 't'], true);
-				echo "prompt_enabled raw: ".var_export($voicemail_transcription_prompt_enabled ?? 'NOT SET', true)."\n";
-				echo "prompt_is_enabled: ".($prompt_is_enabled ? 'true' : 'false')."\n";
-				echo "prompt template length: ".strlen($voicemail_transcription_prompt ?? '')."\n";
-				echo "transcribe_prompt class exists: ".(class_exists('transcribe_prompt') ? 'true' : 'false')."\n";
-				if (!empty($transcribe_message)
-					&& $prompt_is_enabled
-					&& !empty($voicemail_transcription_prompt)
-					&& class_exists('transcribe_prompt')
-				) {
+				if (!empty($transcribe_message) && $prompt_is_enabled && !empty($voicemail_transcription_prompt)) {
 					// Allow the template to embed the transcription at a specific position;
 					// fall back to appending it after the template.
 					if (strpos($prompt_template, '${transcription}') !== false) {
