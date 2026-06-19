@@ -97,29 +97,29 @@
 				$tmp_name_array = explode('@', $name);
 				$tmp_name = $tmp_name_array[0];
 
-			$td_onclick = "onclick=\"document.location.href='fifo_interactive.php?c=".escape($name)."';\"";
+			$td_onclick = "onclick=\"document.location.href='fifo_interactive.php?c=".urlencode($name)."';\"";
 
 			if (if_group("superadmin")) {
 				//show all fifo queues
 					echo "<tr >\n";
-					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick."><a href='fifo_interactive.php?c=".escape($name)."'>".escape($tmp_name)."</a></td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick."><a href='fifo_interactive.php?c=".urlencode($name)."'>".escape($tmp_name)."</a></td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($consumer_count)."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($caller_count)."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($waiting_count)."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($importance)."</td>\n";
-					echo "<td class='list_control_icon'><a href='fifo_interactive.php?c=".escape($name)."' alt='".$text['button-view']."'>$v_link_label_view</a></td>\n";
+					echo "<td class='list_control_icon'><a href='fifo_interactive.php?c=".urlencode($name)."' alt='".$text['button-view']."'>$v_link_label_view</a></td>\n";
 					echo "</tr>\n";
 			}
 			else {
 				//show only the fifo queues that match the domain_name
 					if (stripos($name, $_SESSION['domain_name']) !== false) {
 						echo "<tr >\n";
-						echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick."><a href='fifo_interactive.php?c=".$name."'>".escape($tmp_name)."</a></td>\n";
+						echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick."><a href='fifo_interactive.php?c=".urlencode($name)."'>".escape($tmp_name)."</a></td>\n";
 						echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($consumer_count)."</td>\n";
 						echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($caller_count)."</td>\n";
 						echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($waiting_count)."</td>\n";
 						echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($importance)."</td>\n";
-						echo "<td class='list_control_icon'><a href='fifo_interactive.php?c=".escape($name)."' alt='".$text['button-view']."'>$v_link_label_view</a></td>\n";
+						echo "<td class='list_control_icon'><a href='fifo_interactive.php?c=".urlencode($name)."' alt='".$text['button-view']."'>$v_link_label_view</a></td>\n";
 						echo "</tr>\n";
 					}
 			}
