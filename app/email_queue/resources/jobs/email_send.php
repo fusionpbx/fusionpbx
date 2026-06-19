@@ -252,10 +252,10 @@
 				if (!empty($transcribe_message) && $prompt_is_enabled && !empty($voicemail_transcription_prompt)) {
 					// Allow the template to embed the transcription at a specific position;
 					// fall back to appending it after the template.
-					if (strpos($prompt_template, '${transcription}') !== false) {
+					if (strpos($voicemail_transcription_prompt, '${transcription}') !== false) {
 						$combined = str_replace('${transcription}', $transcribe_message, $voicemail_transcription_prompt);
-					} else {
-						$combined = $prompt_template . "\n\n" . $transcribe_message;
+					} else { 
+						$combined = $voicemail_transcription_prompt . "\n\n" . $transcribe_message;
 					}
 
 					// Send the combined message to the language model to update the message based on the prompt
