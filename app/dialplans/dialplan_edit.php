@@ -382,7 +382,7 @@
 			else if ($action == "update") {
 				message::add($text['message-update']);
 			}
-			header("Location: ?id=".escape($dialplan_uuid).($query_string ? '&'.$query_string : ''));
+			header("Location: ?id=".urlencode($dialplan_uuid).($query_string ? '&'.$query_string : ''));
 			exit;
 
 	} //(count($_POST)>0 && empty($_POST["persistformvar"]))
