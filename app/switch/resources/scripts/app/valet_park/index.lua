@@ -42,28 +42,90 @@ if ( session:ready() ) then
 		valet_parking_display = session:getVariable("valet_parking_display") or '';
 		valet_announce_slot = session:getVariable("valet_announce_slot") or '';
 end
+local lock_dir = "/tmp/valet_park_"..context..".lock"
+local function acquire_lock(timeout_ms)
+	local attempts = math.ceil(timeout_ms / 100)
+	for i = 1, attempts do
+		local rc = os.execute("mkdir "..lock_dir.." 2>/dev/null")
+		if rc == true then
+			return true
+		end
+		freeswitch.msleep(100)
+	end
+	return false
+end
+local function release_lock()
+	os.execute("rmdir "..lock_dir.." 2>/dev/null")
+end
+local function reserve_slot(slot)
+	local path = "/tmp/valet_slot_"..context.."_"..slot..".reserved"
+	local f = io.open(path, "w")
+	if f then
+		f:write(uuid.."\n")
+		f:close()
+	end
+end
+local function slot_is_reserved(slot)
+	local path = "/tmp/valet_slot_"..context.."_"..slot..".reserved"
+	local f = io.open(path, "r")
+	if f then
+		f:close()
+		return true
+	end
+	return false
+end
+local function cleanup_stale_reservations(valet_info_result)
+	for i = 5901, 5999, 1 do
+		local path = "/tmp/valet_slot_"..context.."_"..i..".reserved"
+		local f = io.open(path, "r")
+		if f then
+			f:close()
+			if not string.find(valet_info_result, "%*"..i) then
+				os.remove(path)
+				freeswitch.consoleLog("NOTICE", "[valet park] cleaned stale reservation for slot *"..i.."\n");
+			end
+		end
+	end
+end
 
 --auto park when direction set to in
 if (valet_parking_direction == 'in') then
+	if not acquire_lock(5000) then
+		freeswitch.consoleLog("ERR", "[valet park] Failed to acquire lock for "..caller_id_number.."@"..context.."\n");
+		session:execute("playback", "ivr/ivr-all_circuits_busy.wav");
+		return;
+	end
+	local destination_number = nil;
 
 	--get the the valet park current details
 	if (session:ready()) then
-		command = "valet_info park@"..context;
-		valet_info_result = api:executeString(command);
-	end
+		local command = "valet_info park@"..context;
+		local valet_info_result = api:executeString(command);
+		valet_info_result = valet_info_result or "";
+		freeswitch.consoleLog("NOTICE", "[valet park] valet_info result: "..valet_info_result.."\n");
+		cleanup_stale_reservations(valet_info_result);
 
-	--find an available parking spot
-	for i = 5901,5999,1 do
-		if (string.find(valet_info_result, "*"..i)) then
-			-- parking spot occupied
-		else
-			destination_number = i;
-			break;
+		--find an available parking spot
+		for i = 5901, 5999, 1 do
+			if slot_is_reserved(i) then
+				-- parking spot occupied
+				freeswitch.consoleLog("NOTICE", "[valet park] slot *"..i.." is reserved, skipping\n");
+			elseif not string.find(valet_info_result, "%*"..i) then
+				destination_number = i;
+				break;
+			end
 		end
+	end
+	if not destination_number then
+		release_lock()
+		freeswitch.consoleLog("ERR", "[valet park] No free slots available for "..caller_id_number.."@"..context.."\n");
+		session:execute("playback", "ivr/ivr-all_circuits_busy.wav");
+		return;
 	end
 
 	--log the destinations
 	freeswitch.consoleLog("NOTICE", "[valet park] "..caller_id_number.."@"..context.." destination_number *"..destination_number.."\n");
+	reserve_slot(destination_number)
 
 	--update the phone display - requires attended transfer
 	if (valet_parking_display == 'enable') then
@@ -71,17 +133,16 @@ if (valet_parking_direction == 'in') then
 		api:executeString("uuid_display "..uuid.." 'parked in *"..destination_number.."'"); --session:get_uuid()
 
 		--wait before transferring the call
-		session:execute("sleep", "3000");
+		session:execute("sleep", "1000");
 	end
-
 	--announce the park extension
 	if (valet_announce_slot == 'enable') then
 		session:execute("say", "en name_spelled iterated *"..destination_number);
 	end
+	release_lock()
 
 	--transfer the call to the available parking lot
 	if (session:ready()) then
 		session:execute("valet_park", "park@"..context.." *"..destination_number);
 	end
-
 end
