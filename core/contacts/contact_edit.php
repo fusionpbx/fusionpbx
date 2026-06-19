@@ -2421,7 +2421,7 @@ if (permission_exists('contact_relation_view')) {
 				echo "			</div>\n";
 			}
 			echo "			<div class='button no-link' style='float: left; margin-top: 1px; margin-left: 8px;'>\n";
-			echo "				<a href='contact_edit.php?id=".escape($row['relation_contact_uuid'])."' target='_blank'>\n";
+			echo "				<a href='contact_edit.php?id=".urlencode($row['relation_contact_uuid'])."' target='_blank'>\n";
 			echo "					<span class='fas fa-user-group' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 3px;'></span>\n";
 			echo "				</a>\n";
 			echo "			</div>\n";
@@ -2622,7 +2622,7 @@ if (permission_exists('contact_attachment_view')) {
 				echo "<img src='data:image/".$attachment_type.";base64,".escape($row['attachment_content'])."' style='border: none; cursor: pointer; width: 100%; height: auto;' onclick=\"display_attachment('".escape($row['contact_attachment_uuid'])."');\">";
 			}
 			else {
-				echo "<a href='contact_attachment.php?id=".escape($row['contact_attachment_uuid'])."&action=download' style='font-size: 120%;'>".escape($row['attachment_filename'])."</a>";
+				echo "<a href='contact_attachment.php?id=".urlencode($row['contact_attachment_uuid'])."&action=download' style='font-size: 120%;'>".escape($row['attachment_filename'])."</a>";
 			}
 		//}
 		//else {
@@ -2636,7 +2636,7 @@ if (permission_exists('contact_attachment_view')) {
 		echo "		".$text['label-attachment_filename']."\n";
 		echo "	</div>\n";
 		echo "	<div class='field no-wrap'>\n";
-		echo "		<a href='contact_attachment.php?id=".escape($row['contact_attachment_uuid'])."&action=download' style='font-size: 120%;'>".escape($row['attachment_filename'])."</a>";
+		echo "		<a href='contact_attachment.php?id=".urlencode($row['contact_attachment_uuid'])."&action=download' style='font-size: 120%;'>".escape($row['attachment_filename'])."</a>";
 		echo "	</div>\n";
 
 		echo "	<div class='label'>\n";
@@ -2740,7 +2740,7 @@ if (permission_exists('contact_note_view')) {
 			$contact_note = htmlspecialchars($contact_note, ENT_QUOTES, 'UTF-8');
 		}
 		if (permission_exists('contact_note_add')) {
-			$list_row_url = "contact_note_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_note_uuid']);
+			$list_row_url = "contact_note_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_note_uuid']);
 		}
 
 		echo "<div class='form_set card'>\n";

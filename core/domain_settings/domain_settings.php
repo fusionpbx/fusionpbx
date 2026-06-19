@@ -262,7 +262,7 @@
 				echo "</tr>\n";
 			}
 			if (permission_exists('domain_setting_edit')) {
-				$list_row_url = PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".escape($domain_uuid)."&id=".escape($row['domain_setting_uuid']);
+				$list_row_url = PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".urlencode($domain_uuid)."&id=".urlencode($row['domain_setting_uuid']);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('domain_setting_add') || permission_exists('domain_setting_edit') || permission_exists('domain_setting_delete')) {

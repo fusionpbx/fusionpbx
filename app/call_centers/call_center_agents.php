@@ -242,7 +242,7 @@
 			}
 			echo "	<td>";
 			if (permission_exists('call_center_agent_edit')) {
-				echo "<a href='call_center_agent_edit.php?id=".escape($row['call_center_agent_uuid'])."'>".escape($row['agent_name'])."</a>";
+				echo "<a href='call_center_agent_edit.php?id=".urlencode($row['call_center_agent_uuid'])."'>".escape($row['agent_name'])."</a>";
 			}
 			else {
 				echo escape($row['agent_name']);
