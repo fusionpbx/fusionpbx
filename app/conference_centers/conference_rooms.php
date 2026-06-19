@@ -383,10 +383,10 @@
 			echo "	</td>\n";
 // 			echo "	<td>";
 // 			if ($row['wait_mod'] == "true") {
-// 				echo "<a href='?conference_room_uuid=".escape($row['conference_room_uuid'])."&wait_mod=false'>".$text['label-true']."</a>";
+// 				echo "<a href='?conference_room_uuid=".urlencode($row['conference_room_uuid'])."&wait_mod=false'>".$text['label-true']."</a>";
 // 			}
 // 			else {
-// 				echo "<a href='?conference_room_uuid=".escape($row['conference_room_uuid'])."&wait_mod=true'>".$text['label-false']."</a>";
+// 				echo "<a href='?conference_room_uuid=".urlencode($row['conference_room_uuid'])."&wait_mod=true'>".$text['label-false']."</a>";
 // 			}
 // 			echo "	</td>\n";
 
@@ -419,10 +419,10 @@
 			echo "	</td>\n";
 // 			echo "	<td>";
 // 			if ($row['announce'] == "true") {
-// 				echo "<a href='?conference_room_uuid=".escape($row['conference_room_uuid'])."&announce=false'>".$text['label-true']."</a>";
+// 				echo "<a href='?conference_room_uuid=".urlencode($row['conference_room_uuid'])."&announce=false'>".$text['label-true']."</a>";
 // 			}
 // 			else {
-// 				echo "<a href='?conference_room_uuid=".escape($row['conference_room_uuid'])."&announce=true'>".$text['label-false']."</a>";
+// 				echo "<a href='?conference_room_uuid=".urlencode($row['conference_room_uuid'])."&announce=true'>".$text['label-false']."</a>";
 // 			}
 // 			echo "	</td>\n";
 
@@ -437,10 +437,10 @@
 			echo "	</td>\n";
 // 			echo "	<td>";
 // 			if ($row['mute'] == "true") {
-// 				echo "<a href='?conference_room_uuid=".escape($row['conference_room_uuid'])."&mute=false'>".$text['label-true']."</a>&nbsp;";
+// 				echo "<a href='?conference_room_uuid=".urlencode($row['conference_room_uuid'])."&mute=false'>".$text['label-true']."</a>&nbsp;";
 // 			}
 // 			else {
-// 				echo "<a href='?conference_room_uuid=".escape($row['conference_room_uuid'])."&mute=true'>".$text['label-false']."</a>&nbsp;";
+// 				echo "<a href='?conference_room_uuid=".urlencode($row['conference_room_uuid'])."&mute=true'>".$text['label-false']."</a>&nbsp;";
 // 			}
 // 			echo "	</td>\n";
 
@@ -455,10 +455,10 @@
 			echo "	</td>\n";
 // 			echo "	<td>";
 // 			if ($row['sounds'] == "true") {
-// 				echo "<a href='?conference_room_uuid=".escape($row['conference_room_uuid'])."&sounds=false'>".$text['label-true']."</a>";
+// 				echo "<a href='?conference_room_uuid=".urlencode($row['conference_room_uuid'])."&sounds=false'>".$text['label-true']."</a>";
 // 			}
 // 			else {
-// 				echo "<a href='?conference_room_uuid=".escape($row['conference_room_uuid'])."&sounds=true'>".$text['label-false']."</a>";
+// 				echo "<a href='?conference_room_uuid=".urlencode($row['conference_room_uuid'])."&sounds=true'>".$text['label-false']."</a>";
 // 			}
 // 			echo "	</td>\n";
 
