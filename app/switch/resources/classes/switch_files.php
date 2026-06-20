@@ -131,7 +131,7 @@ class switch_files {
 			}
 
 			// If the message variable is set then throw an exception or send a message to the browser
-			if (php_sapi_name() === 'cli') {
+			if (is_cli()) {
 				// Throw an exception with the message if run from the command line
 				throw new Exception($message);
 			}
