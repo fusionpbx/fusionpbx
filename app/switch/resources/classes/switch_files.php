@@ -110,7 +110,31 @@ class switch_files {
 			}
 			unset($app_scripts);
 		} else {
-			throw new Exception("Cannot read from '$source_directory' to get the scripts");
+			
+			// Determine the specific reason for the failure and set the message
+			if (empty($source_directory)) {
+				$message = "Source scripts directory is not defined";
+			} elseif (empty($destination_directory)) {
+				$message = "Destination scripts directory is not defined";
+			} elseif (!is_readable($source_directory)) {
+				$message = "Cannot read from '$source_directory' to get the scripts";
+			} elseif (!is_writable($destination_directory)) {
+				$message = "Cannot write to '$destination_directory' to copy the scripts";
+			} else {
+				$message = "Unknown error occurred while copying scripts from '$source_directory' to '$destination_directory'";
+			}
+
+			// If the message variable is set then throw an exception or send a message to the browser
+			if (isset($message) && !empty($message)) {
+				if (php_sapi_name() === 'cli') {
+					// Throw an exception with the message if run from the command line
+					throw new Exception($message);
+				}
+				else {
+					// Send a message to browser if not run from the command line
+					message::add('Error: ' . $message, 'negative');
+				}
+			}
 		}
 		chmod($destination_directory, 0775);
 		unset($destination_directory);
