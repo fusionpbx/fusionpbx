@@ -57,4 +57,8 @@
 	$cdr->post();
 	$cdr->read_files();
 
+//destroy session
+        session_unset();
+        session_destroy();
+
 ?>
