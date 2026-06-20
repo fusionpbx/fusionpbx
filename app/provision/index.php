@@ -501,4 +501,8 @@
 		require_once "app/device_logs/resources/device_logs.php";
 	}
 
+//destroy session
+       session_unset();
+       session_destroy();
+
 ?>
