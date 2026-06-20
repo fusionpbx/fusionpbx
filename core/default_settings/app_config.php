@@ -60,7 +60,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f1a7c2d4-ba3c-49c8-9146-e40eb8873030";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "domain";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "template";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "name";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "default";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
@@ -84,7 +84,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c55b28df-0eba-4e8f-a13b-022d5dfd8d22";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "domain";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "time_zone";
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "name";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "UTC";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";

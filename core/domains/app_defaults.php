@@ -33,6 +33,13 @@
 		$database->execute($sql, null);
 		unset($sql);
 
+		//domain settings - change the type from var or name to text
+		$sql = "update v_domain_settings ";
+		$sql .= "set domain_setting_name = 'text' ";
+		$sql .= "where (domain_setting_name = 'var' or domain_setting_name = 'name') ";
+		$database->execute($sql, null);
+		unset($sql);
+
 	}
  
 ?>

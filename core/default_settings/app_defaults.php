@@ -27,10 +27,10 @@
 //process this only one time
 	if ($domains_processed == 1) {
 
-		//default settings - change the type from var to text
+		//default settings - change the type from var or name to text
 			$sql = "update v_default_settings ";
 			$sql .= "set default_setting_name = 'text' ";
-			$sql .= "where default_setting_name = 'var' ";
+			$sql .= "where (default_setting_name = 'var' or default_setting_name = 'name') ";
 			$database->execute($sql, null);
 			unset($sql);
 
