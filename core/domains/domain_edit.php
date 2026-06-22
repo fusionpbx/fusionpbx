@@ -533,7 +533,6 @@
 
 			//clear the domains session array to update it
 				unset($_SESSION["domains"]);
-				unset($_SESSION['domain']);
 				unset($_SESSION['switch']);
 
 			//redirect the browser

@@ -142,7 +142,7 @@
 				$default_setting_order = ($default_setting_order != '') ? $default_setting_order : 'null';
 
 				//update switch timezone variables
-				if ($default_setting_category == "domain" && $default_setting_subcategory == "time_zone" && $default_setting_name == "name" ) {
+				if ($default_setting_category == "domain" && $default_setting_subcategory == "time_zone") {
 					//get the dialplan_uuid
 						$sql = "select dialplan_uuid from v_dialplans ";
 						$sql .= "where app_uuid = 'd49ee3bd-5085-4619-a2f9-2b62c8c461c5' ";
@@ -331,7 +331,7 @@
 	echo "	".$text['label-type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$setting_types = ['Array','Boolean','Code','Dir','Name','Numeric','Text','UUID'];
+	$setting_types = ['Array','Boolean','Code','Dir','Numeric','Text','UUID'];
 	echo "	<select class='formfld' id='default_setting_name' name='default_setting_name' required='required'>\n";
 	echo "		<option value=''></option>\n";
 	foreach ($setting_types as $setting_type) {
@@ -398,7 +398,7 @@
 		unset($sql, $sub_result, $sub_row, $selected);
 		echo "		</select>\n";
 	}
-	elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
+	elseif ($category == "domain" && $subcategory == "template") {
 		echo "		<select class='formfld' id='default_setting_value' name='default_setting_value' style=''>\n";
 		//add all the themes to the list
 		$theme_dir = dirname(__DIR__, 2).'/themes';
@@ -470,7 +470,7 @@
 		}
 		echo "    </select>\n";
 	}
-	elseif ($category == "domain" && $subcategory == "time_zone" && $name == "name" ) {
+	elseif ($category == "domain" && $subcategory == "time_zone") {
 		echo "		<select class='formfld searchable_select' id='default_setting_value' name='default_setting_value' style=''>\n";
 		//$list = DateTimeZone::listAbbreviations();
 		$time_zone_identifiers = DateTimeZone::listIdentifiers();

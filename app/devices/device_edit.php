@@ -794,7 +794,7 @@
 			if ($_SERVER['HTTPS'] == 'on') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
 			if ($_SERVER['SERVER_PORT'] == '443') { $_SERVER['HTTP_PROTOCOL'] = 'https'; }
 		}
-		echo "		window.location = '".$_SERVER['HTTP_PROTOCOL']."://".$provision_domain_name.PROJECT_PATH."/app/provision/index.php?address=".escape($device_address ?? '')."&file=' + d + '&content_type=application/octet-stream';\n";
+		echo "		window.location = '".$_SERVER['HTTP_PROTOCOL']."://".$provision_domain_name.PROJECT_PATH."/app/provision/index.php?address=".urlencode($device_address ?? '')."&file=' + d + '&content_type=application/octet-stream';\n";
 		echo "	}\n";
 
 		echo "\n";
@@ -976,7 +976,7 @@
 			if ($settings->get('provision', 'http_auth_enabled', true) && !empty($http_auth_username) && !empty($http_auth_password)) {
 				$auth_string = $http_auth_username.':'.$http_auth_password.'@';
 			}
-			$content = "https://".$auth_string.$provision_domain_name.'/app/provision/index.php?address='.$device_address;
+			$content = "https://".$auth_string.$provision_domain_name.'/app/provision/index.php?address='.urlencode($device_address);
 		}
 
 		//stream the file
@@ -2056,7 +2056,7 @@
 		if (empty($label)) { $label = $device_alternate[0]['device_address']; }
 		echo "	<table>\n";
 		echo "	<tr>\n";
-		echo "		<td><a href='?id=".escape($device_uuid_alternate)."' id='device_uuid_alternate_link'>".escape($label)."</a><input class='formfld' type='hidden' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"".escape($device_uuid_alternate)."\" />&nbsp;</td>";
+		echo "		<td><a href='?id=".urlencode($device_uuid_alternate)."' id='device_uuid_alternate_link'>".escape($label)."</a><input class='formfld' type='hidden' name='device_uuid_alternate' id='device_uuid_alternate' maxlength='255' value=\"".escape($device_uuid_alternate)."\" />&nbsp;</td>";
 		echo "		<td><a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('device_uuid_alternate').value = ''; document.getElementById('device_uuid_alternate_link').hidden = 'true'; submit_form(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a></td>\n";
 		echo "	</tr>\n";
 		echo "	</table>\n";

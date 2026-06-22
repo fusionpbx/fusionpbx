@@ -96,7 +96,7 @@
 			if (empty($member_count)) {
 				$member_count = 0;
 			}
-	
+
 			//get mute_all
 			$mute_all = "true";
 			foreach ($xml->conference->members->member as $row) {
@@ -108,7 +108,7 @@
 			}
 		}
 
-		echo "<div id='cmd_reponse'></div>\n";
+		echo "<div id='cmd_response'></div>\n";
 
 		echo "<div style='float: right;'>\n";
 
@@ -249,7 +249,7 @@
 								echo button::create(['type'=>'button','label'=>$text['label-mute'],'icon'=>'microphone-slash','onclick'=>"send_cmd('conference_exec.php?cmd=conference&name=".urlencode($conference_name)."&data=mute&id=".urlencode($id)."');"]);
 							}
 							else { //unmute
-								echo button::create(['type'=>'button','label'=>$text['label-unmute'],'icon'=>'microphone','onclick'=>"send_cmd('conference_exec.php?cmd=conference&name=".urlencode($conference_name)."&data=unmute&id=".urlencode($id)."&uuid=".escape($uuid)."');"]);
+								echo button::create(['type'=>'button','label'=>$text['label-unmute'],'icon'=>'microphone','onclick'=>"send_cmd('conference_exec.php?cmd=conference&name=".urlencode($conference_name)."&data=unmute&id=".urlencode($id)."&uuid=".urlencode($uuid)."');"]);
 							}
 						}
 					//deaf and undeaf
@@ -263,7 +263,7 @@
 						}
 					//kick someone from the conference
 						if (permission_exists('conference_interactive_kick')) {
-							echo button::create(['type'=>'button','label'=>$text['label-kick'],'icon'=>'ban','onclick'=>"send_cmd('conference_exec.php?cmd=conference&name=".urlencode($conference_name)."&data=kick&id=".urlencode($id)."&uuid=".escape($uuid)."');"]);
+							echo button::create(['type'=>'button','label'=>$text['label-kick'],'icon'=>'ban','onclick'=>"send_cmd('conference_exec.php?cmd=conference&name=".urlencode($conference_name)."&data=kick&id=".urlencode($id)."&uuid=".urlencode($uuid)."');"]);
 						}
 					echo "</td>\n";
 					echo "</tr>\n";

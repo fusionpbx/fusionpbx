@@ -184,7 +184,7 @@
 
 			foreach ($result as $index => $row) {
 				$start_date_time = str_replace('/0','/', ltrim($row['start_date_time'], '0'));
-				if (!empty($_SESSION['domain']['time_format']) && $settings->get('domain', 'time_format') == '12h') {
+				if ($settings->get('domain', 'time_format', '12h') == '12h') {
 					$start_date_time = str_replace(' 0',' ', $start_date_time);
 				}
 				//set click-to-call variables

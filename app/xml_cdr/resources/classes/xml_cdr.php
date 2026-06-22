@@ -124,7 +124,7 @@ class xml_cdr {
 	private $json;
 
 	/**
-	 * Initializes the object with setting array.
+	 * Initializes the object with the setting array.
 	 *
 	 * @param array $setting_array An array containing settings for domain, user, and database connections. Defaults to
 	 *                             an empty array.
@@ -2124,7 +2124,7 @@ class xml_cdr {
 			return;
 		}
 
-		//check for a valid uuid
+		//check for a valid UUID
 		if (!is_uuid($this->recording_uuid)) {
 			//echo "invalid uuid";
 			return;
@@ -2133,6 +2133,10 @@ class xml_cdr {
 		//get call recording from database
 		$sql = "select record_name, record_path from v_xml_cdr ";
 		$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
+		if (!permission_exists('xml_cdr_all')) {
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $this->domain_uuid;
+		}
 		$parameters['xml_cdr_uuid'] = $this->recording_uuid;
 		$row = $this->database->select($sql, $parameters, 'row');
 		if (!empty($row) && is_array($row)) {

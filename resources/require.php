@@ -148,11 +148,6 @@
 		require_once __DIR__ . '/switch.php';
 	}
 
-//change language on the fly - for translate tool (if available)
-	//if (!defined('STDIN') && isset($_REQUEST['view_lang_code']) && ($_REQUEST['view_lang_code']) != '') {
-	//	$_SESSION['domain']['language']['en-us'] = $_REQUEST['view_lang_code'];
-	//}
-
 //change the domain
 	if (!empty($_GET["domain_uuid"]) && is_uuid($_GET["domain_uuid"]) && !empty($_GET["domain_change"]) && $_GET["domain_change"] == "true" && permission_exists('domain_select')) {
 

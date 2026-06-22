@@ -1,0 +1,809 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gs_provision version="1">
+<mac>{$mac|replace:'-':''}</mac>
+	<config version="2">
+    <!-- ################################################################################################################################################ -->
+    <!-- ####                          Alias Template for GSC3518HS Firmware Version 1.0.5.22 - FusionPBX                                             #### -->
+    <!-- ################################################################################################################################################ -->
+
+    <!-- ############################################################################## -->
+    <!-- ##  Account 1 Settings                                                      ## -->
+    <!-- ############################################################################## -->
+    <!-- ####################################################################### -->
+    <!-- ##  Account 1 General Settings                                       ## -->
+    <!-- ####################################################################### -->
+
+		<!-- Account Active -->
+		<!-- Yes, No -->
+		<item name="account.1.enable">Yes</item>
+
+		<!-- Account Name -->
+		<item name="account.1.name">{$account.1.display_name}</item>
+
+		<!-- SIP Server -->
+{if $account.1.sip_transport != 'dns srv'}
+		<item name="account.1.sip.server.1.address">{$account.1.server_address}:{$account.1.sip_port}</item>
+{else}
+		<item name="account.1.sip.server.1.address">{$account.1.server_address}</item>
+{/if}
+
+		<!-- Secondary SIP Server -->
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.server_address_secondary)}
+		<item name="account.1.sip.server.2.address">{$account.1.server_address_secondary}:{$account.1.sip_port}</item>
+{else}
+		<item name="account.1.sip.server.2.address">{$account.1.server_address_secondary}</item>
+{/if}
+
+		<!-- Outbound Proxy -->
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_primary)}
+		<item name="account.1.sip.outboundProxy.1.address">{$account.1.outbound_proxy_primary}:{$account.1.sip_port}</item>
+{else}
+		<item name="account.1.sip.outboundProxy.1.address">{$account.1.outbound_proxy_primary}</item>
+{/if}
+
+		<!-- Secondary Outbound Proxy -->
+{if $account.1.sip_transport != 'dns srv' && isset($account.1.outbound_proxy_secondary)}
+		<item name="account.1.sip.outboundProxy.2.address">{$account.1.outbound_proxy_secondary}:{$account.1.sip_port}</item>
+{else}
+		<item name="account.1.sip.outboundProxy.2.address">{$account.1.outbound_proxy_secondary}</item>
+{/if}
+
+		<!-- SIP User ID -->
+		<item name="account.1.sip.userid">{$account.1.user_id}</item>
+
+		<!-- SIP Authentication ID -->
+		<item name="account.1.sip.subscriber.userId">{$account.1.auth_id}</item>
+
+		<!-- SIP Authentication Password -->
+		<item name="account.1.sip.subscriber.password">{$account.1.password}</item>
+
+		<!-- Display Name -->
+		<item name="account.1.sip.subscriber.name">{$account.1.display_name}</item>
+
+		<!-- Tel URI -->
+		<!-- Disabled, UserIsPhone, Enabled -->
+		<item name="account.1.sip.telUri">Disabled</item>
+
+    <!-- ####################################################################### -->
+    <!-- ##  Account 1 Network Settings                                       ## -->
+    <!-- ####################################################################### -->
+
+		<!-- DNS Mode -->
+		<!-- ARecord, SRV, NaptrOrSrv -->
+{if $account.1.sip_transport == 'dns srv'}
+		<item name="account.1.network.dnsMode">SRV</item>
+{else}
+		<item name="account.1.network.dnsMode">ARecord</item>
+{/if}
+
+		<!-- DNS SRV Fail-over Mode -->
+		<!-- Default, SavedOneUntilDNSTTL, SavedOneUntilNoResponse, RegisterBeforeDNSSRVFailover -->
+		<item name="account.1.network.dnsSRVFailoverMode">Default</item>
+
+		<!-- Register Before DNS SRV Fail-over -->
+		<!-- No, Yes -->
+		<item name="account.1.network.dnsSRVRegisterBeforeFailover">No</item>
+
+		<!-- NAT Traversal -->
+		<!-- No, STUN, KeepAlive, UPnP, Auto, VPN -->
+		<item name="account.1.network.natTraversal">KeepAlive</item>
+
+		<!-- Proxy-Require -->
+		<item name="account.1.network.proxyRequire"></item>
+
+    <!-- ####################################################################### -->
+    <!-- ##  Account 1 SIP Settings                                           ## -->
+    <!-- ####################################################################### -->
+
+		<!-- SIP Registration -->
+		<!-- No, Yes -->
+		<item name="account.1.sip.registration">Yes</item>
+
+		<!-- Unregister on Reboot -->
+		<!-- No, Yes, Instance -->
+		<item name="account.1.sip.unregisterOnReboot">Instance</item>
+
+		<!-- Register Expiration (m) -->
+		<!-- Number: 1-64800 -->
+		<item name="account.1.sip.registerExpiration">{$account.1.register_expires}</item>
+
+		<!-- Subscribe Expiration (m) -->
+		<!-- Number: 0-64800 -->
+		<item name="account.1.sip.subscribe.expiration"></item>
+
+		<!-- Re-register before Expiration (s) -->
+		<!-- Number: 0-64800 -->
+		<item name="account.1.sip.registerBeforeExpiration">0</item>
+
+		<!-- Registration Retry Wait Time (s) -->
+		<!-- Number: 1-3600 -->
+		<item name="account.1.sip.registrationFailureRetryWaitTime">20</item>
+
+		<!-- Add Auth Header On RE-REGISTER -->
+		<!-- No, Yes -->
+		<item name="account.1.sip.header.authOnInitialRegister">Yes</item>
+
+		<!-- Enable SIP OPTIONS Keep Alive -->
+		<!-- No, Yes -->
+		<item name="account.1.sip.keepAlive.enable">No</item>
+
+		<!-- SIP OPTIONS Keep Alive Interval (s) -->
+		<!-- Number: 1-64800 -->
+		<item name="account.1.sip.keepAlive.interval">30</item>
+
+		<!-- SIP OPTIONS Keep Alive Maximum Tries -->
+		<!-- Number: 3-10 -->
+		<item name="account.1.sip.keepAlive.maxLost">3</item>
+
+		<!-- SUBSCRIBE for Registration -->
+		<!-- No, Yes -->
+		<item name="account.1.sip.subscribe.forRegistration">No</item>
+
+		<!-- Use Privacy Header -->
+		<!-- Default, No, Yes -->
+		<item name="account.1.sip.header.privacy">Default</item>
+
+		<!-- Use P-Preferred-Identity Header -->
+		<!-- Default, No, Yes -->
+		<item name="account.1.sip.header.ppi">Default</item>
+
+		<!-- Add MAC in User-Agent -->
+		<!-- 0 - No, 1 - Yes for all except REGISTER, 2 - Yes to all Sip -->
+		<item name="account.1.sip.header.mac">0</item>
+
+		<!-- SIP Transport -->
+		<!-- UDP, TCP, TlsOrTcp -->
+{if $account.1.sip_transport == 'tcp'}
+		<item name="account.1.sip.transport">TCP</item>
+{elseif $account.1.sip_transport == 'tls'}
+		<item name="account.1.sip.transport">TlsOrTcp</item>
+{else}
+		<item name="account.1.sip.transport">UDP</item>
+{/if}
+
+		<!-- Enable TCP Keep-alive -->
+		<!-- No, Yes -->
+		<item name="account.1.sip.enableTCPKeepalive">Yes</item>
+
+		<!-- Local SIP Port -->
+		<!-- Number: 0-65535 -->
+		<item name="account.1.sip.localPort">5060</item>
+
+		<!-- SIP URI Scheme When Using TLS -->
+		<!-- sip, sips -->
+		<item name="account.1.sip.uriSchemeWhenUsingTls">sip</item>
+
+		<!-- Use Actual Ephemeral Port in Contact with TCP/TLS -->
+		<!-- No, Yes -->
+		<item name="account.1.sip.useActualEphemeralPortInContactWithTcpTls">No</item>
+
+		<!-- Support SIP Instance ID -->
+		<!-- No, Yes -->
+		<item name="account.1.sip.supportInstanceId">Yes</item>
+
+		<!-- SIP T1 Timeout -->
+		<!-- 0_5sec, 1sec, 2sec -->
+		<item name="account.1.sip.timer.t1">0_5sec</item>
+
+		<!-- SIP T2 Interval -->
+		<!-- 2sec, 4sec, 8sec -->
+		<item name="account.1.sip.timer.t2">4sec</item>
+
+		<!-- SIP Timer D Interval (Seconds) -->
+		<!-- Number: 0-64 -->
+		<item name="account.1.sip.timerd.interval">0</item>
+
+		<!-- Outbound Proxy Mode -->
+		<!-- InRoute, NotInRoute, AlwaysSentTo -->
+		<item name="account.1.sip.outboundProxy.mode">InRoute</item>
+
+		<!-- Enable 100rel -->
+		<!-- No, Yes -->
+		<item name="account.1.sip.header.100rel">No</item>
+
+    <!-- ####################################################################### -->
+    <!-- ##  Account 1 Session Timer                                          ## -->
+    <!-- ####################################################################### -->
+
+		<!-- Enable Session Timer -->
+		<!-- Yes, No -->
+		<item name="account.1.sip.sessionTimer.enable">No</item>
+
+		<!-- Session Expiration (s) -->
+		<!-- Number: 90-64800 -->
+		<item name="account.1.sip.sessionTimer.expiration">180</item>
+
+		<!-- Min-SE(s) -->
+		<!-- Number: 90-64800 -->
+		<item name="account.1.sip.minimumSE">90</item>
+
+		<!-- UAC Specify Refresher -->
+		<!-- Omit, UAC, UAS -->
+		<item name="account.1.sip.sessionTimer.refresher.uacSpecify">Omit</item>
+
+		<!-- UAS Specify Refresher -->
+		<!-- UAC, UAS -->
+		<item name="account.1.sip.sessionTimer.refresher.uasSpecify">UAC</item>
+
+		<!-- Caller Request Timer -->
+		<!-- Yes, No -->
+		<item name="account.1.sip.sessionTimer.requestTimer.caller">No</item>
+
+		<!-- Callee Request Timer -->
+		<!-- Yes, No -->
+		<item name="account.1.sip.sessionTimer.requestTimer.callee">No</item>
+
+		<!-- Force Timer -->
+		<!-- Yes, No -->
+		<item name="account.1.sip.sessionTimer.force">No</item>
+
+		<!-- Force INVITE -->
+		<!-- Yes, No -->
+		<item name="account.1.sip.sessionTimer.forceInvite">No</item>
+
+    <!-- ####################################################################### -->
+    <!-- ##  Account 1 Codec Settings                                         ## -->
+    <!-- ####################################################################### -->
+
+		<!-- Preferred Vocoder -->
+		<!-- PCMU, PCMA, G_726_32, G_722, G_729AOrB, iLBC, OPUS -->
+		<item name="account.1.codec.choice.1">PCMU</item>
+		<item name="account.1.codec.choice.2">PCMA</item>
+		<item name="account.1.codec.choice.3">G_722</item>
+		<item name="account.1.codec.choice.4">OPUS</item>
+		<item name="account.1.codec.choice.5">G_729AOrB</item>
+		<item name="account.1.codec.choice.6">G_722_1</item>
+		<item name="account.1.codec.choice.7">G_722_1</item>
+		<item name="account.1.codec.choice.8">G_722_1</item>
+
+		<!-- Codec Negotiation Priority -->
+		<!-- Caller, Callee -->
+		<item name="account.1.codec.negotiatePriority">Callee</item>
+
+		<!-- Use First Matching Vocoder in 200OK SDP -->
+		<!-- No, Yes -->
+		<item name="account.1.codec.useFirstMatch">No</item>
+
+		<!-- iLBC Frame Size -->
+		<!-- 20ms, 30ms -->
+		<item name="account.1.codec.iLBC.frameSize">30ms</item>
+
+		<!-- G726-32 Packing Mode -->
+		<!-- ITU, IETF -->
+		<item name="account.1.codec.g723.32.packingMode">ITU</item>
+
+		<!-- G726-32 Dynamic PT -->
+		<!-- Number: 96-127 -->
+		<item name="account.1.codec.payloadType.g72632">127</item>
+
+		<!-- Opus Payload Type -->
+		<!-- Number: 96-126 -->
+		<item name="account.1.codec.payloadType.opus">123</item>
+
+		<!-- DTMF -->
+		<!-- No, Yes -->
+		<item name="account.1.dtmf.sendInAudio">No</item>
+		<item name="account.1.dtmf.sendInRtp">Yes</item>
+		<item name="account.1.dtmf.sendInSip">No</item>
+
+		<!-- DTMF Payload Type -->
+		<!-- Number: 96-126 -->
+		<item name="account.1.codec.payloadType.dtmf">101</item>
+
+		<!-- Enable Audio RED with FEC -->
+		<!-- No, Yes -->
+		<item name="account.1.audio.fec.enable">No</item>
+
+		<!-- Audio FEC Payload Type -->
+		<!-- Number: 96-126 -->
+		<item name="account.1.codec.payloadType.fec.audio">121</item>
+
+		<!-- Audio RED Payload Type -->
+		<!-- Number: 96-126 -->
+		<item name="account.1.codec.payloadType.red">124</item>
+
+		<!-- Silence Suppression -->
+		<!-- No, Yes -->
+		<item name="account.1.audio.silenceSuppression">No</item>
+
+		<!-- Voice Frames Per TX -->
+		<!-- Number: 1-64 -->
+		<item name="account.1.audio.voiceFramePerTX">2</item>
+
+    <!-- ####################################################################### -->
+    <!-- ##  Account 1 RTP Settings                                           ## -->
+    <!-- ####################################################################### -->
+
+		<!-- SRTP Mode -->
+		<!-- Disabled, EnabledButNotForced, EnabledAndForced -->
+		<item name="account.1.audio.srtpMode">Disabled</item>
+
+		<!-- SRTP Key Length -->
+		<!-- AES128And256Bit, AES128Bit, AES256Bit -->
+		<item name="account.1.audio.srtpKeyLength">AES128And256Bit</item>
+
+		<!-- Crypto Life Time -->
+		<!-- No, Yes -->
+		<item name="account.1.audio.cryptoLifeTime">Yes</item>
+
+		<!-- Symmetric RTP -->
+		<!-- No, Yes -->
+		<item name="account.1.audio.symmetricRTP">No</item>
+
+		<!-- RTP IP Filter -->
+		<!-- Disable, IPOnly, IPandPort -->
+		<item name="account.1.rtp.filter">Disable</item>
+
+		<!-- RTP Timeout(s) -->
+		<!-- Number: 0, 6-600 -->
+		<item name="account.1.rtp.timeout">0</item>
+
+    <!-- ####################################################################### -->
+    <!-- ##  Account 1 Call Settings                                          ## -->
+    <!-- ####################################################################### -->
+
+		<!-- Play Warning Tone for Auto Answer Intercom -->
+		<!-- No, Yes -->
+		<item name="account.1.intercom.playWarningToneForAutoAnswer">No</item>
+
+		<!-- Send Anonymous -->
+		<!-- No, Yes -->
+		<item name="account.1.call.sendAnonymous">No</item>
+
+		<!-- Anonymous Call Rejection -->
+		<!-- No, Yes -->
+		<item name="account.1.call.rejectAnonymousCall">No</item>
+
+		<!-- Call Log -->
+		<!-- All, IncomingAndOutgoing, Disable, DonotPromptMissedCall -->
+		<item name="account.1.call.callLog">All</item>
+
+		<!-- Ring Timeout -->
+		<!-- Number: 10 - 300 -->
+		<item name="account.1.ring.timeout">60</item>
+
+		<!-- Incoming Call Rules -->
+		<!-- 0 - Block, 1 - SetPassword, 2 - Answer, 3 - Ringing, 4 - Disable -->
+		<!-- 2 = AutoAnswer - recommended for paging speakers -->
+		<item name="account.1.call.incoming.rule">2</item>
+
+		<!-- DialPlan -->
+		<item name="account.1.call.dialplan">{ x+ | \+x+ | *x+ | *xx*x+ }</item>
+
+		<!-- Ignore Alert-Info Header -->
+		<!-- No, Yes -->
+		<item name="account.1.ring.ignoreSipAlertInfo">No</item>
+
+    <!-- ####################################################################### -->
+    <!-- ##  Account 1 Advanced Settings                                      ## -->
+    <!-- ####################################################################### -->
+
+		<!-- Check Domain Certificates -->
+		<!-- No, Yes -->
+		<item name="account.1.sip.validate.domainCertificates">No</item>
+
+		<!-- Validate Certification Chain -->
+		<!-- No, Yes -->
+		<item name="account.1.sip.validate.certificationChain">No</item>
+
+		<!-- Validate Incoming SIP Messages -->
+		<!-- No, Yes -->
+		<item name="account.1.sip.validate.incomingMessage">No</item>
+
+		<!-- Allow Unsolicited REFER -->
+		<!-- Disabled, Enabled, EnabledOrForceAuth -->
+		<item name="account.1.sip.allowUnsolicitedRefer">Disabled</item>
+
+		<!-- Accept Incoming SIP from Proxy Only -->
+		<!-- No, Yes -->
+		<item name="account.1.sip.validate.incomingServer">No</item>
+
+		<!-- Check SIP User ID for Incoming INVITE -->
+		<!-- No, Yes -->
+		<item name="account.1.sip.validate.userIdforInvite">No</item>
+
+		<!-- Allow SIP Reset -->
+		<!-- No, Yes -->
+		<item name="account.1.sip.allowSipReset">No</item>
+
+		<!-- Authenticate Incoming INVITE -->
+		<!-- No, Yes -->
+		<item name="account.1.sip.authenticateIncomingInvite">No</item>
+
+		<!-- Special Feature -->
+		<!-- Standard, Broadsoft, ChinaMobile, ZTEIMS, Mobotix -->
+		<item name="account.1.sip.specialFeature">Standard</item>
+
+		<!-- Feature Key Synchronization -->
+		<!-- No, Yes -->
+		<item name="account.1.broadsoft.syncFeatureKey">No</item>
+
+    <!-- ############################################################################## -->
+    <!-- ##  Contacts/Phonebook Management                                           ## -->
+    <!-- ############################################################################## -->
+
+		<!-- Enable Phonebook XML Download -->
+		<!-- Disabled, EnabledUseHTTP, EnabledUseTFTP, EnabledUseHTTPS -->
+		<item name="phonebook.download.mode">Disabled</item>
+
+		<!-- Non-whitelist calls -->
+		<!-- Block, SetPassword, AutoAnswer, Ringing -->
+		<!-- Block by default; use Allowlist to permit specific extensions -->
+		<item name="phonebook.blocking.rule">AutoAnswer</item>
+
+    <!-- ############################################################################## -->
+    <!-- ##  Phone Settings                                                          ## -->
+    <!-- ############################################################################## -->
+
+		<!-- Local RTP Port -->
+		<!-- Number: 50040 - 65535 -->
+		<item name="network.rtp.local.port">50040</item>
+
+		<!-- Local RTP Port Range -->
+		<!-- Number: 24 - 10000 -->
+		<item name="network.rtp.local.portRange">200</item>
+
+		<!-- Use Random Port -->
+		<!-- No, Yes -->
+		<item name="network.rtp.useRandomPort">No</item>
+
+		<!-- Keep-alive Interval (s) -->
+		<!-- Number: 10 - 160 -->
+		<item name="sip.keepAliveInterval">20</item>
+
+		<!-- Enable Call-Waiting -->
+		<!-- No, Yes -->
+		<item name="call.callWaiting.enable">No</item>
+
+		<!-- Enable Call-Waiting Tone -->
+		<!-- No, Yes -->
+		<item name="call.callWaiting.enableTone">No</item>
+
+		<!-- Multicast Tone -->
+		<!-- No, Yes -->
+		<item name="call.multicast.enableTone">No</item>
+
+		<!-- Automatic Answer Ringing Time(s) -->
+		<!-- Number: 0 - 60 -->
+		<item name="call.autoAnswer.ringing.time">0</item>
+
+		<!-- Environment -->
+		<!-- SmallandMediumRoomOnDesk, LargeRoomOnEmptyArea -->
+		<item name="call.environment.mode">LargeRoomOnEmptyArea</item>
+
+		<!-- Record Mode -->
+		<!-- Local, PortaOne, UCM, BroadSoft -->
+		<item name="call.recording.local.enable">Local</item>
+
+    <!-- ############################################################################## -->
+    <!-- ##  Phone Settings - Multicast Paging                                       ## -->
+    <!-- ############################################################################## -->
+
+		<!-- ============================================================== -->
+		<!-- Multicast variables are driven by FusionPBX provisioning:       -->
+		<!--   Default Settings (category=provision)                         -->
+		<!--   -> Device Profile Settings (per zone)                         -->
+		<!--   -> Device Settings (per device)                               -->
+		<!-- Any unset variable resolves to "" and the line is empty in the  -->
+		<!-- rendered config (= not subscribed / device factory default).    -->
+		<!-- All variables are prefixed grandstream_multicast_* to avoid     -->
+		<!-- collisions with other manufacturer templates.                   -->
+		<!-- ============================================================== -->
+
+		<!-- Paging Barge -->
+		<!-- Values: Disable | priority1 ... priority10                      -->
+		<!-- Recommended: priority1  (priority-1 multicast hangs up an       -->
+		<!-- active SIP call; all lower priorities defer to SIP)             -->
+		<item name="multicast.paginBarge">{$grandstream_multicast_paging_barge|default:"Disable"}</item>
+
+		<!-- Paging Priority Active -->
+		<!-- Values: No | Yes                                                -->
+		<!-- Recommended: Yes  (higher-priority multicast can interrupt a    -->
+		<!-- lower-priority page already playing)                            -->
+		<item name="multicast.pagingPriorityActive">{$grandstream_multicast_paging_priority_active|default:"No"}</item>
+
+		<!-- Multicast Paging Codec -->
+		<!-- Values: PCMU | PCMA | G_726_32 | G_722 | iLBC | OPUS |          -->
+		<!--         G_723_1 | G_729AOrB                                     -->
+		<!-- Must match the sender (Yealink multicast keys / alarm panel).   -->
+		<!-- Recommended: PCMU                                               -->
+		<item name="multicast.multicastPagingCodec">{$grandstream_multicast_paging_codec|default:"PCMU"}</item>
+
+		<!-- ============================================================== -->
+		<!-- Multicast Listening - Zone Address Plan (admin-scoped 239/8)    -->
+		<!-- ============================================================== -->
+		<!-- Slot  Address      Port  Label           Purpose                -->
+		<!--  1    239.0.1.1    5001  EMERGENCY-ALL   Overrides SIP          -->
+		<!--  2    239.0.1.2    5001  ALL-CALL        Site-wide page         -->
+		<!--  3    239.0.1.10   5001  FLOOR-1         Floor zone             -->
+		<!--  4    239.0.1.11   5001  FLOOR-2         Floor zone             -->
+		<!--  5    239.0.1.12   5001  FLOOR-3         Floor zone             -->
+		<!--  6    239.0.1.20   5001  CLASSROOMS-F1   Sub-zone               -->
+		<!--  7    239.0.1.21   5001  CLASSROOMS-F2   Sub-zone               -->
+		<!--  8    239.0.1.22   5001  CLASSROOMS-F3   Sub-zone               -->
+		<!--  9    239.0.1.30   5001  RESERVED        Future zone            -->
+		<!-- 10    239.0.1.99   5004  BG-MUSIC        Music (later)          -->
+		<!-- Senders must hit the exact IP:port and use codec PCMU.          -->
+		<!-- ============================================================== -->
+
+		<item name="multicast.listening.1.address">{$grandstream_multicast_listening_address_1|default:""}</item>
+		<item name="multicast.listening.1.label">{$grandstream_multicast_listening_label_1|default:""}</item>
+		<item name="multicast.listening.2.address">{$grandstream_multicast_listening_address_2|default:""}</item>
+		<item name="multicast.listening.2.label">{$grandstream_multicast_listening_label_2|default:""}</item>
+		<item name="multicast.listening.3.address">{$grandstream_multicast_listening_address_3|default:""}</item>
+		<item name="multicast.listening.3.label">{$grandstream_multicast_listening_label_3|default:""}</item>
+		<item name="multicast.listening.4.address">{$grandstream_multicast_listening_address_4|default:""}</item>
+		<item name="multicast.listening.4.label">{$grandstream_multicast_listening_label_4|default:""}</item>
+		<item name="multicast.listening.5.address">{$grandstream_multicast_listening_address_5|default:""}</item>
+		<item name="multicast.listening.5.label">{$grandstream_multicast_listening_label_5|default:""}</item>
+		<item name="multicast.listening.6.address">{$grandstream_multicast_listening_address_6|default:""}</item>
+		<item name="multicast.listening.6.label">{$grandstream_multicast_listening_label_6|default:""}</item>
+		<item name="multicast.listening.7.address">{$grandstream_multicast_listening_address_7|default:""}</item>
+		<item name="multicast.listening.7.label">{$grandstream_multicast_listening_label_7|default:""}</item>
+		<item name="multicast.listening.8.address">{$grandstream_multicast_listening_address_8|default:""}</item>
+		<item name="multicast.listening.8.label">{$grandstream_multicast_listening_label_8|default:""}</item>
+		<item name="multicast.listening.9.address">{$grandstream_multicast_listening_address_9|default:""}</item>
+		<item name="multicast.listening.9.label">{$grandstream_multicast_listening_label_9|default:""}</item>
+		<item name="multicast.listening.10.address">{$grandstream_multicast_listening_address_10|default:""}</item>
+		<item name="multicast.listening.10.label">{$grandstream_multicast_listening_label_10|default:""}</item>
+
+<!-- ####################################################################### -->
+<!-- ##  Network Settings - DHCP                                          ## -->
+<!-- ####################################################################### -->
+
+		<!-- DHCP Vendor Class ID (Option 60) - factory default; do not override (used for DHCP vendor-class fingerprinting / provisioning matches) -->
+		<item name="network.dhcp.vendorID">Grandstream GSC3518HS</item>
+
+		<!-- DHCP Hostname (Option 12) - shown in router DHCP client lists / network scans. Spaces in display name replaced with '-' (hostnames can't contain spaces). -->
+		<item name="network.dhcp.hostName">{$account.1.display_name|replace:' ':'-'}</item>
+
+<!-- ####################################################################### -->
+<!-- ##  Network Settings - LAN Port VLAN                                 ## -->
+<!-- ####################################################################### -->
+
+		<!-- Enable 802.1Q VLAN tagging on LAN port -->
+		<!-- Yes, No -->
+		<item name="network.port.eth.1.vlan.enable">{if isset($grandstream_lan_port_vlan)}Yes{else}No{/if}</item>
+
+		<!-- VLAN Tag (Number: 0 - 4095) -->
+		<item name="network.port.eth.1.vlan.tag">{$grandstream_lan_port_vlan|default:"0"}</item>
+
+<!-- ####################################################################### -->
+<!-- ##  Network Settings - Bluetooth                                     ## -->
+<!-- ####################################################################### -->
+
+		<!-- Enable Bluetooth -->
+		<item name="bluetooth.enable">Yes</item>
+
+		<!-- Bluetooth Device Name (matches SIP account display name) -->
+		<item name="bluetooth.name">{$account.1.display_name}</item>
+
+		<!-- Bluetooth Discoverable -->
+		<item name="bluetooth.discoverable">Yes</item>
+
+		<!-- Visibility Timeout - 2 minutes (default) -->
+		<item name="bluetooth.visibilityTimeout">2</item>
+
+
+    <!-- ############################################################################## -->
+    <!-- ##  System Settings - Time Settings                                         ## -->
+    <!-- ############################################################################## -->
+
+		<!-- NTP Server -->
+{if isset($ntp_server_primary)}
+		<item name="dateTime.ntp.server.1">{$ntp_server_primary}</item>
+{else}
+		<item name="dateTime.ntp.server.1">pool.ntp.org</item>
+{/if}
+
+		<!-- Enable Authenticated NTP -->
+		<item name="dateTime.ntp.enableAuth">No</item>
+
+		<!-- DHCP Option 42 Override NTP Server -->
+		<item name="dateTime.override.dhcp.allowOption42">Yes</item>
+
+		<!-- DHCP Option 2 to Override Time Zone Settings -->
+		<item name="dateTime.override.dhcp.allowOption2">Yes</item>
+
+		<!-- Time Zone - EST5EDT for US Eastern -->
+		<item name="dateTime.timezone">EST5EDT</item>
+
+		<!-- Time Display Format -->
+		<!-- 12Hour, 24Hour -->
+		<item name="dateTime.format.time">12Hour</item>
+
+		<!-- Date Display Format -->
+		<!-- yyyy-mm-dd, mm-dd-yyy, dd-mm-yyyy, Normal -->
+		<item name="dateTime.format.date">mm-dd-yyy</item>
+
+    <!-- ####################################################################### -->
+    <!-- ##  System Settings - Security Settings                              ## -->
+    <!-- ####################################################################### -->
+
+		<!-- Enable SSH -->
+		<!-- No, Yes -->
+		<item name="security.ssh">No</item>
+
+		<!-- SSH Port -->
+		<item name="security.ssh.port">22</item>
+
+		<!-- HTTP Web Port -->
+		<item name="network.web.port.http">80</item>
+
+		<!-- HTTPS Web Port -->
+		<item name="network.web.port.https">443</item>
+
+		<!-- Web Access Mode -->
+		<!-- HTTP, HTTPS, Disabled, Both HTTP and HTTPS -->
+		<item name="security.webAccessMode">Both HTTP and HTTPS</item>
+
+		<!-- Validate Server Certificates -->
+		<!-- No, Yes -->
+		<item name="security.validate.serverCertificate">No</item>
+
+		<!-- Enable User Web Access -->
+		<!-- No, Yes -->
+		<item name="security.webAccess.user.enable">No</item>
+
+		<!-- Admin Password -->
+		{if isset($admin_password)}
+				<item name="users.admin.password">{$admin_password}</item>
+		{else}
+				<item name="users.admin.password">admin</item>
+		{/if}
+
+		<!-- End User Password -->
+		<item name="users.user.password">user</item>
+
+		<!-- Minimum TLS Version -->
+		<item name="security.tls.minversion">TLS1.2</item>
+
+		<!-- Maximum TLS Version -->
+		<item name="security.tls.maxversion">NoLimit</item>
+
+    <!-- ####################################################################### -->
+    <!-- ##  System Settings - Preferences - Volume Settings                  ## -->
+    <!-- ####################################################################### -->
+
+		<!-- Call Volume -->
+		<!-- Number: 0 - 8 -->
+		<item name="audio.volume.call">8</item>
+
+		<!-- Ringtone Volume -->
+		<!-- Number: 0 - 15 -->
+		<item name="audio.volume.ring">8</item>
+
+		<!-- Media Volume -->
+		<!-- Number: 0 - 15 -->
+		<item name="audio.volume.media">12</item>
+
+		<!-- Enable Bootup Tone -->
+		<!-- No, Yes -->
+		<item name="sounds.booting.enable">Yes</item>
+
+    <!-- ####################################################################### -->
+    <!-- ##  System Settings - Sensor Setting                                 ## -->
+    <!-- ####################################################################### -->
+
+		<!-- Sensor type -->
+		<!-- NormallyOpen, NormallyClose -->
+		<item name="sensor.type">NormallyOpen</item>
+
+		<!-- Trigger type -->
+		<!-- LevelTriggered, EdgeTriggered -->
+		<item name="sensor.trigger.type">LevelTriggered</item>
+
+    <!-- ####################################################################### -->
+    <!-- ##  Maintenance - Upgrade - Firmware                                 ## -->
+    <!-- ####################################################################### -->
+
+		<!-- Firmware Upgrade Mode -->
+		<!-- TFTP, HTTP, HTTPS, FTP, FTPS -->
+		<item name="provisioning.firmware.protocol">HTTP</item>
+
+		<!-- Firmware Server Path -->
+{if isset($grandstream_firmware_path) && isset($firmware_version)}
+		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}/{$firmware_version}</item>
+{elseif isset($grandstream_firmware_path)}
+		<item name="provisioning.firmware.serverPath">{$grandstream_firmware_path}</item>
+{else}
+		<item name="provisioning.firmware.serverPath"></item>
+{/if}
+
+    <!-- ####################################################################### -->
+    <!-- ##  Maintenance - Upgrade - Config File                              ## -->
+    <!-- ####################################################################### -->
+
+		<!-- Config Upgrade Via -->
+		<!-- TFTP, HTTP, HTTPS, FTP, FTPS -->
+		<item name="provisioning.config.protocol">HTTP</item>
+
+		<!-- Config Server Path -->
+{if isset($domain_name)}
+		<item name="provisioning.config.serverPath">{$domain_name}{$project_path}/app/provision</item>
+{else}
+		<item name="provisioning.config.serverPath"></item>
+{/if}
+
+		<!-- Authenticate Conf File -->
+		<!-- No, Yes -->
+		<item name="provisioning.config.authenticateFile">No</item>
+
+		<!-- XML Config File Password -->
+		<item name="provisioning.config.filePassword"></item>
+
+    <!-- ####################################################################### -->
+    <!-- ##  Maintenance - Upgrade - Provision                                ## -->
+    <!-- ####################################################################### -->
+
+		<!-- Automatic Upgrade -->
+		<!-- No, CheckEveryDay, CheckEveryWeek, CheckbyPeriod -->
+		<item name="provisioning.auto.mode">CheckEveryDay</item>
+
+		<!-- Start Upgrade at Random Time -->
+		<!-- No, Yes -->
+		<item name="provisioning.randomized.enable">Yes</item>
+
+		<!-- Automatic Upgrade Check Interval (m) -->
+		<item name="provisioning.auto.minute">10080</item>
+
+		<!-- Starting Hour of the Day (0-23) -->
+		<item name="provisioning.auto.hour">1</item>
+
+		<!-- Firmware Upgrade and Provisioning -->
+		<!-- AlwaysCheck, CheckWhenChange, SkipCheck -->
+		<item name="provisioning.firmware.checkCondition">CheckWhenChange</item>
+
+		<!-- Allow DHCP Option 43 and Option 66 to Override server -->
+		<!-- No, Yes -->
+		<item name="provisioning.override.dhcp.allowCommonOptions">Yes</item>
+
+		<!-- Allow DHCP Option 120 to Override SIP Server -->
+		<!-- Yes, No -->
+		<item name="sip.override.dhcp.allowOption120">No</item>
+
+		<!-- Additional Override DHCP Option -->
+		<!-- None, Option150, Option160 -->
+		<item name="provisioning.override.dhcp.allowCustomOption">Option150</item>
+
+		<!-- PnP (3CX) Auto Provision -->
+		<!-- No, Yes -->
+		<item name="provisioning.3cxAutoProvision">No</item>
+
+		<!-- Enable SIP NOTIFY Authentication -->
+		<!-- Yes, No -->
+		<item name="sip.notify.challenge">No</item>
+
+    <!-- ####################################################################### -->
+    <!-- ##  Maintenance - System Diagnosis - Syslog                          ## -->
+    <!-- ####################################################################### -->
+
+		<!-- Syslog Protocol -->
+		<!-- UDP, SSL_TLS -->
+		<item name="maintain.syslog.protocol">UDP</item>
+
+		<!-- Syslog Server -->
+{if isset($grandstream_syslog_server)}
+		<item name="maintain.syslog.server">{$grandstream_syslog_server}</item>
+{else}
+		<item name="maintain.syslog.server"></item>
+{/if}
+
+		<!-- Syslog Level -->
+		<!-- None, Debug, Info, Warning, Error -->
+{if isset($grandstream_syslog_level)}
+		<item name="maintain.syslog.level">{$grandstream_syslog_level}</item>
+{else}
+		<item name="maintain.syslog.level">None</item>
+{/if}
+
+		<!-- Send SIP Log -->
+		<!-- No - Disable, Yes - Enable -->
+		<item name="maintain.syslog.sendSipLog">No</item>
+
+<!-- ################################################################################################################################################ -->
+<!-- ####                                                   End of FusionPBX Alias Template                                                      #### -->
+<!-- ################################################################################################################################################ -->
+
+  </config>
+</gs_provision>

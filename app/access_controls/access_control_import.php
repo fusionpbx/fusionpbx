@@ -81,7 +81,7 @@
 	//$_POST['submit'] == "Upload" &&
 	if (!empty($_FILES['ulfile']['tmp_name']) &&  is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('access_control_node_add')) {
 		if (!empty($_POST['type']) &&$_POST['type'] == 'csv') {
-			$file = $settings->get('server', 'temp').'/'.$_FILES['ulfile']['name'];
+			$file = $settings->get('server', 'temp').'/'.basename($_FILES['ulfile']['name']);
 			if (move_uploaded_file($_FILES['ulfile']['tmp_name'], $file)) {
 				$_SESSION['file'] = $file;
 			}

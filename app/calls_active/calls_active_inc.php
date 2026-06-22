@@ -135,7 +135,7 @@
 	echo "</style>\n";
 
 //show the results
-	echo "<div id='cmd_reponse'></div>\n";
+	echo "<div id='cmd_response'></div>\n";
 
 	echo "<form id='form_list' method='post' action='calls_exec.php'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
