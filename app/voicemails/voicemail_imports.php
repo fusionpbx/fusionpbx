@@ -70,11 +70,12 @@
 	//$_POST['submit'] == "Upload" &&
 	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('voicemail_import')) {
 		if ($_POST['type'] == 'csv') {
-			move_uploaded_file($_FILES['ulfile']['tmp_name'], $temp_dir.'/'.$_FILES['ulfile']['name']);
-			$save_msg = "Uploaded file to ".$temp_dir."/". htmlentities($_FILES['ulfile']['name']);
+			$upload_name = basename($_FILES['ulfile']['name']);
+			move_uploaded_file($_FILES['ulfile']['tmp_name'], $temp_dir.'/'.$upload_name);
+			$save_msg = "Uploaded file to ".$temp_dir."/". htmlentities($upload_name);
 			//system('chmod -R 744 '.$temp_dir.'*');
 			unset($_POST['txtCommand']);
-			$file = $temp_dir.'/'.$_FILES['ulfile']['name'];
+			$file = $temp_dir.'/'.$upload_name;
 			$_SESSION['file'] = $file;
 		}
 	}

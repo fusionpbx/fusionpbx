@@ -55,11 +55,12 @@
 	//$_POST['submit'] == "Upload" &&
 	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('extension_import')) {
 		if ($_POST['type'] == 'csv') {
-			move_uploaded_file($_FILES['ulfile']['tmp_name'], $settings->get('server', 'temp').'/'.$_FILES['ulfile']['name']);
-			$save_msg = "Uploaded file to ".$settings->get('server', 'temp')."/". htmlentities($_FILES['ulfile']['name']);
+			$upload_name = basename($_FILES['ulfile']['name']);
+			move_uploaded_file($_FILES['ulfile']['tmp_name'], $settings->get('server', 'temp').'/'.$upload_name);
+			$save_msg = "Uploaded file to ".$settings->get('server', 'temp')."/". htmlentities($upload_name);
 			//system('chmod -R 744 '.$settings->get('server', 'temp').'*');
 			unset($_POST['txtCommand']);
-			$file = $settings->get('server', 'temp').'/'.$_FILES['ulfile']['name'];
+			$file = $settings->get('server', 'temp').'/'.$upload_name;
 			$_SESSION['file'] = $file;
 		}
 	}
