@@ -783,14 +783,14 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>";
-	echo "		<td class='vncell'>".$text['label-ivr_menu_parent_uuid']."</td>";
-	echo "		<td class='vtable'>";
-	echo "<select name=\"ivr_menu_parent_uuid\" class='formfld'>\n";
-	echo "<option value=\"\"></option>\n";
+	echo "<tr>";
+	echo "	<td class='vncell'>".$text['label-ivr_menu_parent_uuid']."</td>";
+	echo "	<td class='vtable'>";
+	echo "		<select name=\"ivr_menu_parent_uuid\" class='formfld'>\n";
+	echo "			<option value=\"\"></option>\n";
 	if (!empty($ivr_menus)) {
 		foreach($ivr_menus as $field) {
-			if ($field['ivr_menu_uuid'] != $ivr_menu_uuid) {
+			if ($ivr_menu_uuid != $field['ivr_menu_uuid'] && $ivr_menu_uuid != $field['ivr_menu_parent_uuid']) {
 				if (!empty($ivr_menu_parent_uuid) && $ivr_menu_parent_uuid == $field['ivr_menu_uuid']) {
 					echo "<option value='".escape($field['ivr_menu_uuid'])."' selected='selected'>".escape($field['ivr_menu_name'])."</option>\n";
 				}
@@ -800,9 +800,9 @@
 			}
 		}
 	}
-	echo "</select>";
-	echo "		</td>";
-	echo "	</tr>";
+	echo "		</select>";
+	echo "	</td>";
+	echo "</tr>";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
