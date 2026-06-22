@@ -184,7 +184,7 @@ class plugin_totp {
 			$sql .= "	username = :username\n";
 			$sql .= "	or user_email = :username\n";
 			$sql .= ")\n";
-			if (empty($_SESSION["users"]["unique"]["text"]) || $_SESSION["users"]["unique"]["text"] != "global") {
+			if (empty($users_unique) || $users_unique != "global") {
 				//unique username per domain (not globally unique across system - example: email address)
 				$sql .= "and domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $this->domain_uuid;

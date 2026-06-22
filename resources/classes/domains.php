@@ -559,32 +559,46 @@ class domains {
 								$v_needle = 'v_';
 							}
 
-							//delete the dialplan
-							@unlink($_SESSION['switch']['dialplan']['dir'] . '/' . $domain_name . '.xml');
-							if (!empty($_SESSION['switch']['dialplan']['dir'])) {
-								recursive_delete($_SESSION['switch']['dialplan']['dir'] . '/' . $domain_name);
+							//define the setting switch directories
+							$switch_dialplan = $this->settings->get('switch', 'dialplan');
+							$switch_extensions = $this->settings->get('switch', 'extensions');
+							$switch_storage = $this->settings->get('switch', 'storage');
+							$switch_sip_profiles = $this->settings->get('switch', 'sip_profiles');
+							$switch_conf = $this->settings->get('switch', 'conf');
+							$switch_recordings = $this->settings->get('switch', 'recordings');
+							$switch_voicemail = $this->settings->get('switch', 'voicemail');
+
+							//delete the dialplan directories
+							if (!empty($switch_dialplan)) {
+								//delete the main dialplan directories
+								@unlink($switch_dialplan . '/' . $domain_name . '.xml');
+								if (file_exists($switch_dialplan . '/' . $domain_name)) {
+									recursive_delete($switch_dialplan . '/' . $domain_name);
+								}
+
+								//delete the dialplan public
+								@unlink($switch_dialplan . '/public/' . $domain_name . '.xml');
+								if (file_exists($switch_dialplan . '/public/' . $domain_name)) {
+									recursive_delete($switch_dialplan . '/public/' . $domain_name);
+								}
 							}
 
-							//delete the dialplan public
-							@unlink($_SESSION['switch']['dialplan']['dir'] . '/public/' . $domain_name . '.xml');
-							if (!empty($_SESSION['switch']['dialplan']['dir'])) {
-								recursive_delete($_SESSION['switch']['dialplan']['dir'] . '/public/' . $domain_name);
-							}
-
-							//delete the extension
-							@unlink($_SESSION['switch']['extensions']['dir'] . '/' . $domain_name . '.xml');
-							if (!empty($_SESSION['switch']['extensions']['dir'])) {
-								recursive_delete($_SESSION['switch']['extensions']['dir'] . '/' . $domain_name);
+							//delete the extensions
+							if (!empty($switch_extensions)) {
+								@unlink($switch_extensions . '/' . $domain_name . '.xml');
+								if (file_exists($switch_extensions . '/' . $domain_name)) {
+									recursive_delete($switch_extensions . '/' . $domain_name);
+								}
 							}
 
 							//delete fax
-							if (!empty($_SESSION['switch']['storage']['dir'])) {
-								recursive_delete($_SESSION['switch']['storage']['dir'] . '/fax/' . $domain_name);
+							if (!empty($switch_storage) && file_exists($switch_storage . '/fax/' . $domain_name)) {
+								recursive_delete($switch_storage . '/fax/' . $domain_name);
 							}
 
 							//delete the gateways
-							if (!empty($_SESSION['switch']['sip_profiles']['dir'])) {
-								if ($dh = opendir($_SESSION['switch']['sip_profiles']['dir'])) {
+							if (!empty($switch_sip_profiles)) {
+								if ($dh = opendir($switch_sip_profiles)) {
 									$files = [];
 									while ($file = readdir($dh)) {
 										if ($file != "." && $file != ".." && $file[0] != '.') {
@@ -593,7 +607,7 @@ class domains {
 											} else {
 												//check if file extension is xml
 												if (strpos($file, $v_needle) !== false && substr($file, -4) == '.xml') {
-													@unlink($_SESSION['switch']['sip_profiles']['dir'] . "/" . $file);
+													@unlink($switch_sip_profiles . "/" . $file);
 												}
 											}
 										}
@@ -603,8 +617,8 @@ class domains {
 							}
 
 							//delete the ivr menu
-							if (!empty($_SESSION['switch']['conf']['dir'])) {
-								if ($dh = opendir($_SESSION['switch']['conf']['dir'] . "/ivr_menus")) {
+							if (!empty($switch_conf)) {
+								if ($dh = opendir($switch_conf . "/ivr_menus")) {
 									$files = [];
 									while ($file = readdir($dh)) {
 										if ($file != "." && $file != ".." && $file[0] != '.') {
@@ -612,7 +626,7 @@ class domains {
 												//this is a directory
 											} else {
 												if (strpos($file, $v_needle) !== false && substr($file, -4) == '.xml') {
-													@unlink($_SESSION['switch']['conf']['dir'] . "/ivr_menus/" . $file);
+													@unlink($switch_conf . "/ivr_menus/" . $file);
 												}
 											}
 										}
@@ -622,13 +636,13 @@ class domains {
 							}
 
 							//delete the recordings
-							if (!empty($_SESSION['switch']['recordings']['dir'])) {
-								recursive_delete($_SESSION['switch']['recordings']['dir'] . '/' . $_SESSION['domain_name'] . '/' . $domain_name);
+							if (!empty($switch_recordings) && file_exists($switch_recordings . '/' . $domain_name)) {
+								recursive_delete($switch_recordings . '/' . $domain_name);
 							}
 
 							//delete voicemail
-							if (!empty($_SESSION['switch']['voicemail']['dir'])) {
-								recursive_delete($_SESSION['switch']['voicemail']['dir'] . '/' . $domain_name);
+							if (!empty($switch_voicemail) && file_exists($switch_voicemail . '/' . $domain_name)) {
+								recursive_delete($switch_voicemail . '/' . $domain_name);
 							}
 						}
 
