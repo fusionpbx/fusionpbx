@@ -301,9 +301,9 @@
 			*/
 
 			//write the switch.conf.xml file
-			if (!$domain_exists && file_exists($switch_conf_dir)) {
-				switch_conf_xml();
-			}
+			// if (!$domain_exists && file_exists($switch_conf_dir)) {
+			// 	switch_conf_xml();
+			// }
 
 			#app defaults
 			$output = shell_exec('cd '.dirname(__DIR__, 2).' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');

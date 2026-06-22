@@ -885,49 +885,21 @@ if (!function_exists('switch_conf_xml')) {
 			}
 			$file_contents = file_get_contents($path."/autoload_configs/switch.conf.xml");
 
-		//prepare the php variables
-			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-				$php_bin = win_find_php('php.exe');
-				if (!$php_bin) { // relay on system path
-					$php_bin = 'php.exe';
-				}
-
-				$secure_path = path_join(dirname(__DIR__, 1), PROJECT_PATH, 'secure');
-
-				$v_mail_bat = path_join($secure_path, 'mailto.bat');
-				$v_mail_cmd = '@' .
-					'"' . str_replace('/', '\\', $php_bin) . '" ' .
-					'"' . str_replace('/', '\\', path_join($secure_path, 'v_mailto.php')) . '" ';
-
-				$fout = fopen($v_mail_bat, "w+");
-				fwrite($fout, $v_mail_cmd);
-				fclose($fout);
-
-				$v_mailer_app = '"' .  str_replace('/', '\\', $v_mail_bat) . '"';
-				$v_mailer_app_args = "";
-				unset($v_mail_bat, $v_mail_cmd, $secure_path, $php_bin, $fout);
-			}
-			else {
-				if (file_exists(PHP_BINDIR.'/php')) { define("PHP_BIN", "php"); }
-				$v_mailer_app = PHP_BINDIR."/".PHP_BIN." ".dirname(__DIR__, 1)."/secure/v_mailto.php";
-				$v_mailer_app_args = "-t";
-			}
+		//replace the values in the template
+			// $file_contents = str_replace("{mailer_app}", $mailer_app, $file_contents);
+			// unset ($v_mailer_app);
 
 		//replace the values in the template
-			$file_contents = str_replace("{v_mailer_app}", $v_mailer_app, $file_contents);
-			unset ($v_mailer_app);
-
-		//replace the values in the template
-			$file_contents = str_replace("{v_mailer_app_args}", $v_mailer_app_args, $file_contents);
-			unset ($v_mailer_app_args);
+			// $file_contents = str_replace("{mailer_app_args}", $v_mailer_app_args, $file_contents);
+			// unset ($v_mailer_app_args);
 
 		//write the XML config file
-			$fout = fopen($settings->get('switch', 'conf')."/autoload_configs/switch.conf.xml","w");
-			fwrite($fout, $file_contents);
-			fclose($fout);
+			// $fout = fopen($settings->get('switch', 'conf')."/autoload_configs/switch.conf.xml","w");
+			// fwrite($fout, $file_contents);
+			// fclose($fout);
 
 		//apply settings
-			$_SESSION["reload_xml"] = true;
+			// $_SESSION["reload_xml"] = true;
 	}
 }
 
