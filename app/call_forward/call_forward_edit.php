@@ -365,6 +365,7 @@
 
 		//send feature event notify to the phone
 			if ($settings->get('device', 'feature_sync', false)) {
+				$call_timeout = '30';
 				$ring_count = ceil($call_timeout / 6);
 				$feature_event_notify = new feature_event_notify;
 				$feature_event_notify->domain_name = $_SESSION['domain_name'];
