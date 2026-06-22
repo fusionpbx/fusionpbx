@@ -27,6 +27,29 @@ class sounds {
 	private $database;
 
 	/**
+	 * Settings object set in the constructor. Must be a settings object and cannot be null.
+	 *
+	 * @var settings Settings Object
+	 */
+	private $settings;
+
+	/**
+	 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set
+	 * in the session global array
+	 *
+	 * @var string
+	 */
+	private $domain_name;
+
+	/**
+	 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in
+	 * the session global array
+	 *
+	 * @var string
+	 */
+	private $user_uuid;
+
+	/**
 	 * Constructor for the class.
 	 *
 	 * This method initializes the object with setting_array and session data.
@@ -34,11 +57,21 @@ class sounds {
 	 * @param array $setting_array An optional array of settings to override default values. Defaults to [].
 	 */
 	public function __construct(array $setting_array = []) {
-		//set domain and user UUIDs
+
+		//set the domain details and the user UUID
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
+		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
+
+		//load the settings
+		if (empty($setting_array['settings'])) {
+			$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
+		} else {
+			$this->settings = $setting_array['settings'];
+		}
 	}
 
 	/**
@@ -60,6 +93,7 @@ class sounds {
 				$array['miscellaneous'][$x]['value'] = "tone_stream:";
 			}
 		}
+
 		//recordings
 		if ((empty($this->sound_types) || (is_array($this->sound_types) && in_array('recordings', $this->sound_types))) && file_exists(dirname(__DIR__, 2) . "/app/recordings/app_config.php")) {
 			$sql = "select recording_name, recording_filename from v_recordings ";
@@ -71,13 +105,14 @@ class sounds {
 				foreach ($recordings as $x => $row) {
 					$recording_name = $row["recording_name"];
 					$recording_filename = $row["recording_filename"];
-					$recording_path = !empty($this->full_path) && is_array($this->full_path) && in_array('recordings', $this->full_path) ? $_SESSION['switch']['recordings']['dir'] . '/' . $_SESSION['domain_name'] . '/' : null;
+					$recording_path = !empty($this->full_path) && is_array($this->full_path) && in_array('recordings', $this->full_path) ? $this->settings->get('switch', 'recordings') . '/' . $this->domain_name . '/' : null;
 					$array['recordings'][$x]['name'] = $recording_name;
 					$array['recordings'][$x]['value'] = $recording_path . $recording_filename;
 				}
 			}
 			unset($sql, $parameters, $recordings, $row);
 		}
+
 		//phrases
 		if ((empty($this->sound_types) || (is_array($this->sound_types) && in_array('phrases', $this->sound_types))) && file_exists(dirname(__DIR__, 2) . "/app/phrases/app_config.php")) {
 			$sql = "select * from v_phrases ";
@@ -93,6 +128,7 @@ class sounds {
 			}
 			unset($sql, $parameters, $phrases, $row);
 		}
+
 		//sounds
 		if ((empty($this->sound_types) || (is_array($this->sound_types) && in_array('sounds', $this->sound_types))) && file_exists(dirname(__DIR__, 2) . "/app/phrases/app_config.php")) {
 			$file = new file;
@@ -108,6 +144,7 @@ class sounds {
 				}
 			}
 		}
+
 		//send the results
 		return $array;
 

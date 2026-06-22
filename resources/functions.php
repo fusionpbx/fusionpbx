@@ -96,7 +96,9 @@ if (!function_exists('check_str')) {
 	 * @internal Use parameterized queries
 	 */
 	function check_str($string, $trim = true) {
+		//set global variables
 		global $db_type, $db;
+
 		//when code in db is urlencoded the ' does not need to be modified
 		if ($db_type == "sqlite") {
 			if (function_exists('sqlite_escape_string')) {
@@ -1065,10 +1067,11 @@ function format_string(string $format, string $data): string {
  * @return string|null The formatted phone number if the input matches any defined format, otherwise the original input.
  */
 function format_phone(?string $phone_number): ?string {
+	global $settings;
 	if (is_numeric(trim($phone_number ?? '', ' +'))) {
-		if (isset($_SESSION["format"]["phone"])) {
+		if (!empty($settings->get('format', 'phone'))) {
 			$phone_number = trim($phone_number, ' +');
-			foreach ($_SESSION["format"]["phone"] as $format) {
+			foreach ($settings->get('format', 'phone') as $format) {
 				$format_count = substr_count($format, 'x');
 				$format_count = $format_count + substr_count($format, 'R');
 				$format_count = $format_count + substr_count($format, 'r');

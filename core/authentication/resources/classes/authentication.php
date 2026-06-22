@@ -690,9 +690,6 @@ class authentication {
 			$_SESSION['username'] = trim($_REQUEST["username"]);
 		}
 
-		//set a default value for unqiue
-		$_SESSION["users"]["unique"]["text"] = $this->settings->get('users', 'unique', '');
-
 		//get the domain name from the username
 		if (!empty($_SESSION['username']) && $this->settings->get('users', 'unique', '') != "global") {
 			$username_array = explode("@", $_SESSION['username']);
