@@ -34,6 +34,15 @@
 			$database->execute($sql, null);
 			unset($sql);
 
+		//default settings - change the type from enhanced to default
+			$sql = "update v_default_settings ";
+			$sql .= "set default_setting_value = 'default' ";
+			$sql .= "where default_setting_category = 'domain' ";
+			$sql .= "and default_setting_subcategory = 'template' ";
+			$sql .= "and default_setting_value = 'enhanced' ";
+			$database->execute($sql, null);
+			unset($sql);
+
 		//set domains with enabled status of empty or null to true
 			$sql = "delete from v_default_settings ";
 			$sql .= "where (default_setting_category is null and default_setting_subcategory is null) ";
