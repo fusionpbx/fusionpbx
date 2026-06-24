@@ -89,15 +89,6 @@
 		exit;
 	}
 
-//add the search term
-	if (!empty($search)) {
-		$sql_search = " (";
-		$sql_search .= "	lower(agent_name) like :search ";
-		$sql_search .= "	or lower(agent_id) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.lower_case($search).'%';
-	}
-
 //get total call center agent count from the database
 	$sql = "select count(*) from v_call_center_agents ";
 	$sql .= "where true ";
@@ -105,8 +96,12 @@
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (!empty($sql_search)) {
-		$sql .= "and ".$sql_search;
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(agent_name) like :search ";
+		$sql .= "	or lower(agent_id) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
@@ -124,8 +119,12 @@
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
-	if (!empty($sql_search)) {
-		$sql .= "and ".$sql_search;
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "	lower(agent_name) like :search ";
+		$sql .= "	or lower(agent_id) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$sql .= order_by($order_by, $order, 'agent_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);

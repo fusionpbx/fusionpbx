@@ -114,24 +114,20 @@
 		exit;
 	}
 
-//add the search term
-	if (!empty($search)) {
-		$sql_search = " (";
-		$sql_search .= "lower(queue_name) like :search ";
-		$sql_search .= "or lower(queue_description) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.lower_case($search).'%';
-	}
-
 //get total call center queues count from the database
-	$sql = "select count(*) from v_call_center_queues ";
+	$sql = "select count(*) ";
+	$sql .= "from v_call_center_queues ";
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('call_center_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (!empty($sql_search)) {
-		$sql .= "and ".$sql_search;
+	if (!empty($search)) {
+		$sql .= " (";
+		$sql .= "lower(queue_name) like :search ";
+		$sql .= "or lower(queue_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
@@ -142,7 +138,20 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql ?? '');
+	$sql = "select * ";
+	$sql = "from v_call_center_queues ";
+	$sql .= "where true ";
+	if ($show != "all" || !permission_exists('call_center_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "lower(queue_name) like :search ";
+		$sql .= "or lower(queue_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
+	}
 	$sql .= order_by($order_by, $order, 'queue_name', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$result = $database->select($sql, $parameters ?? null, 'all');
