@@ -36,6 +36,56 @@
 		exit;
 	}
 
+// Set the domain name from the session, defaulting to an empty string if not set
+	$domain_name = $domain_name ?? $_SESSION['domain_name'] ?? '';
+
+// Load the dialplan files
+	$dialplan_templates = [];
+
+	// Get the files
+	$dialplan_files = glob(__DIR__ . '/resources/switch/conf/dialplan/*.xml');
+	if (!empty($dialplan_files)) {
+		// Parse each dialplan file and store its enabled status
+		foreach ($dialplan_files as $file) {
+			// Parse the XML file and extract the dialplan name
+			$xml = simplexml_load_file($file);
+
+			// Get the dialplan name to use as the array key
+			$dialplan_name = (string)$xml->attributes()->name ?? '';
+
+			// Skip this file if the dialplan name is empty
+			if (empty($dialplan_name)) {
+				continue;
+			}
+
+			// If the dialplan name already exists, skip this file to avoid overwriting
+			if(isset($dialplan_templates[$dialplan_name])) {
+				continue;
+			}
+
+			// If the enabled attribute is not set, default to 'true'
+			$enabled = (string)$xml->attributes()->enabled ?? '';
+			if ($enabled === '') {
+				$enabled = 'true';
+			}
+
+			// Create the array of the dialplan attributes
+			$dialplan_templates[$dialplan_name] = [];
+			$dialplan_templates[$dialplan_name]['enabled'] = $enabled;
+			$dialplan_templates[$dialplan_name]['uuid'] = (string)$xml->attributes()->app_uuid ?? '';
+			$dialplan_templates[$dialplan_name]['context'] = (string)$xml->attributes()->context ?? 'public';
+			$dialplan_templates[$dialplan_name]['continue'] = (string)$xml->attributes()->continue ?? 'false';
+			$dialplan_templates[$dialplan_name]['global'] = (string)$xml->attributes()->global ?? 'false';
+			$dialplan_templates[$dialplan_name]['order'] = (int)$xml->attributes()->order ?? 0;
+
+			// Replace dynamic content
+			if ($dialplan_templates[$dialplan_name]['context'] === '${domain_name}' && !empty($domain_name)) {
+				$dialplan_templates[$dialplan_name]['context'] = $domain_name;
+			}
+		}
+		unset($dialplan_files, $file, $xml, $dialplan_name);
+	}
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -586,6 +636,8 @@
 				echo "	<td>".escape($row['dialplan_context'])."</td>\n";
 			}
 			echo "	<td class='center'>".escape($row['dialplan_order'])."</td>\n";
+			$original_enabled = $dialplan_templates[$row['dialplan_name']]['enabled'] ?? $row['dialplan_enabled'];
+			$bold_enabled = $row['dialplan_enabled'] != $original_enabled;
 			if (
 				(!is_uuid($app_uuid) && permission_exists('dialplan_edit')) ||
 				($row['app_uuid'] == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" && permission_exists('inbound_route_edit')) ||
@@ -594,11 +646,11 @@
 				($row['app_uuid'] == "4b821450-926b-175a-af93-a03c441818b1" && permission_exists('time_condition_edit'))
 				) {
 				echo "	<td class='no-link center'>";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['dialplan_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['dialplan_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')", 'style'=>($bold_enabled ? 'font-weight: bold;' : '')]);
 			}
 			else {
 				echo "	<td class='center'>";
-				echo $text['label-'.$row['dialplan_enabled']];
+				echo $bold_enabled ? "	<strong>" . $text['label-'.$row['dialplan_enabled']] . "</strong>" : $text['label-'.$row['dialplan_enabled']];
 			}
 			echo "	</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($dialplan_description)."&nbsp;</td>\n";
