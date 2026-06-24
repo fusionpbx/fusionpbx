@@ -40,7 +40,7 @@
 	$domain_name = $domain_name ?? $_SESSION['domain_name'] ?? '';
 
 // Load the dialplan files
-	$original_dialplans = [];
+	$dialplan_templates = [];
 
 	// Get the files
 	$dialplan_files = glob(__DIR__ . '/resources/switch/conf/dialplan/*.xml');
@@ -59,7 +59,7 @@
 			}
 
 			// If the dialplan name already exists, skip this file to avoid overwriting
-			if(isset($original_dialplans[$dialplan_name])) {
+			if(isset($dialplan_templates[$dialplan_name])) {
 				continue;
 			}
 
@@ -70,17 +70,17 @@
 			}
 
 			// Create the array of the dialplan attributes
-			$original_dialplans[$dialplan_name] = [];
-			$original_dialplans[$dialplan_name]['enabled'] = $enabled;
-			$original_dialplans[$dialplan_name]['uuid'] = (string)$xml->attributes()->app_uuid ?? '';
-			$original_dialplans[$dialplan_name]['context'] = (string)$xml->attributes()->context ?? 'public';
-			$original_dialplans[$dialplan_name]['continue'] = (string)$xml->attributes()->continue ?? 'false';
-			$original_dialplans[$dialplan_name]['global'] = (string)$xml->attributes()->global ?? 'false';
-			$original_dialplans[$dialplan_name]['order'] = (int)$xml->attributes()->order ?? 0;
+			$dialplan_templates[$dialplan_name] = [];
+			$dialplan_templates[$dialplan_name]['enabled'] = $enabled;
+			$dialplan_templates[$dialplan_name]['uuid'] = (string)$xml->attributes()->app_uuid ?? '';
+			$dialplan_templates[$dialplan_name]['context'] = (string)$xml->attributes()->context ?? 'public';
+			$dialplan_templates[$dialplan_name]['continue'] = (string)$xml->attributes()->continue ?? 'false';
+			$dialplan_templates[$dialplan_name]['global'] = (string)$xml->attributes()->global ?? 'false';
+			$dialplan_templates[$dialplan_name]['order'] = (int)$xml->attributes()->order ?? 0;
 
 			// Replace dynamic content
-			if ($original_dialplans[$dialplan_name]['context'] === '${domain_name}' && !empty($domain_name)) {
-				$original_dialplans[$dialplan_name]['context'] = $domain_name;
+			if ($dialplan_templates[$dialplan_name]['context'] === '${domain_name}' && !empty($domain_name)) {
+				$dialplan_templates[$dialplan_name]['context'] = $domain_name;
 			}
 		}
 		unset($dialplan_files, $file, $xml, $dialplan_name);
@@ -636,7 +636,7 @@
 				echo "	<td>".escape($row['dialplan_context'])."</td>\n";
 			}
 			echo "	<td class='center'>".escape($row['dialplan_order'])."</td>\n";
-			$original_enabled = $original_dialplans[$row['dialplan_name']]['enabled'] ?? $row['dialplan_enabled'];
+			$original_enabled = $dialplan_templates[$row['dialplan_name']]['enabled'] ?? $row['dialplan_enabled'];
 			$bold_enabled = $row['dialplan_enabled'] != $original_enabled;
 			if (
 				(!is_uuid($app_uuid) && permission_exists('dialplan_edit')) ||
