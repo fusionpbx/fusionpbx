@@ -204,8 +204,8 @@
 //get http_domain_filter from global settings only (can't be used per domain)
 	$domain_filter = (new settings(['database' => $database]))->get('provision', 'http_domain_filter', true);
 
-//get the domain_uuid, domain_name, user_uuid, device_name and device_vendor
-	$sql = "select d.device_uuid, d.domain_uuid, d.user_uuid, d.device_vendor, n.domain_name ";
+//get the domain_uuid, domain_name, device_user_uuid, device_name and device_vendor
+	$sql = "select d.device_uuid, d.domain_uuid, d.device_user_uuid, d.device_vendor, n.domain_name ";
 	$sql .= "from v_devices as d, v_domains as n ";
 	$sql .= "where device_address = :device_address ";
 	$sql .= "and d.domain_uuid = n.domain_uuid ";
@@ -218,7 +218,7 @@
 	if (is_array($row)) {
 		$device_uuid = $row['device_uuid'];
 		$domain_uuid = $row['domain_uuid'];
-		$user_uuid = $row['user_uuid'];
+		$user_uuid = $row['device_user_uuid'];
 		$domain_name = $row['domain_name'];
 		$device_vendor = $row['device_vendor'];
 	} else {
