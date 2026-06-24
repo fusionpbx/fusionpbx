@@ -105,7 +105,8 @@
 	$xml_cdrs = [];
 	$paging_controls_mini = '';
 	$paging_controls = null;
-	$order_by = "";
+	$order = '';
+	$order_by = '';
 	$read_codec = '';
 	$write_codec = '';
 	if (!isset($_REQUEST['show'])) {
@@ -124,8 +125,8 @@
 		switch ($action) {
 			case 'delete':
 				if ($permission['xml_cdr_delete']) {
-					$obj = new xml_cdr;
-					$obj->delete($xml_cdrs);
+					$xml_cdr = new xml_cdr(["database" => $database, "settings" => $settings, "domain_uuid" => $domain_uuid]);
+					$xml_cdr->delete($xml_cdrs);
 				}
 				break;
 		}
@@ -137,6 +138,18 @@
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
+
+//xml cdr include
+	$rows_per_page = $settings->get('domain', 'paging', 50);
+	require_once "xml_cdr_inc.php";
+
+//define global variables set in xml_cdr_inc.php
+	global $assigned_extension_uuids, $extension_uuids;
+	global $direction, $status, $leg, $order_by, $order, $query_string;
+	global $caller_id_name, $caller_id_number, $caller_destination;
+	global $duration_min, $duration_max, $hangup_cause, $recording;
+	global $start_stamp_begin, $start_stamp_end, $wait_min, $wait_max, $tta_min, $tta_max;
+	global $call_center_queue_uuid, $ring_group_uuid, $ivr_menu_uuid;
 
 //get the extensions
 	if ($permission['xml_cdr_search_extension']) {
@@ -191,10 +204,6 @@
 		$document['title'] = $text['title-call_detail_records'];
 	}
 	require_once "resources/header.php";
-
-//xml cdr include
-	$rows_per_page = $settings->get('domain', 'paging', 50);
-	require_once "xml_cdr_inc.php";
 
 //javascript function: send_cmd
 	echo "<script type=\"text/javascript\">\n";

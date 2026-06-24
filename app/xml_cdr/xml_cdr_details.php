@@ -306,8 +306,7 @@
 	$application_icons["voicemails"] = "fa-envelope";
 
 //build the call flow summary array
-	$xml_cdr = new xml_cdr(["database" => $database, "settings" => $settings, "destinations" => $destinations]);
-	$xml_cdr->domain_uuid = $domain_uuid;
+	$xml_cdr = new xml_cdr(["database" => $database, "settings" => $settings, "destinations" => $destinations, "domain_uuid" => $domain_uuid]);
 	$xml_cdr->call_direction = $call_direction; //used to determine when the call is outbound
 	$xml_cdr->status = $status; //used to determine when the call is outbound
 	if (empty($call_flow)) {

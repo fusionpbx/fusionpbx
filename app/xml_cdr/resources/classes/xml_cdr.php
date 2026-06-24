@@ -37,14 +37,6 @@ class xml_cdr {
 	const app_category = 'switch';
 
 	/**
-	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set
-	 * in the session global array
-	 *
-	 * @var string
-	 */
-	public $domain_uuid;
-
-	/**
 	 * declare public variables
 	 */
 	public $array;
@@ -84,6 +76,14 @@ class xml_cdr {
 	 * @var settings A settings object loaded from Default Settings
 	 */
 	private $settings;
+
+	/**
+	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set
+	 * in the session global array
+	 *
+	 * @var string
+	 */
+	private $domain_uuid;
 
 	/**
 	 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in
@@ -133,8 +133,8 @@ class xml_cdr {
 	 */
 	public function __construct(array $setting_array = []) {
 		//set domain and user UUIDs
-		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->domain_uuid = $setting_array['domain_uuid'] ?? '';
+		$this->user_uuid   = $setting_array['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
@@ -316,7 +316,6 @@ class xml_cdr {
 			//save the call details record to the database
 			$this->database->app_name = 'xml_cdr';
 			$this->database->app_uuid = '4a085c51-7635-ff03-f67b-86e834422848';
-			//$this->database->domain_uuid = $domain_uuid;
 			$response = $this->database->save($this->array, false);
 			if ($response['code'] == '200') {
 				//delete the file after it is saved to the database
@@ -700,6 +699,7 @@ class xml_cdr {
 
 			//update the settings object when the domain changes
 			if ($this->domain_uuid != $domain_uuid) {
+				$this->domain_uuid = $domain_uuid;
 				$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $domain_uuid]);
 			}
 
@@ -1867,6 +1867,9 @@ class xml_cdr {
 
 		//set the time zone for php
 		date_default_timezone_set($time_zone);
+
+		//define the variable
+		$sql_date_range = '';
 
 		//build the date range
 		if ((!empty($this->start_stamp_begin) && strlen($this->start_stamp_begin) > 0) || !empty($this->start_stamp_end)) {

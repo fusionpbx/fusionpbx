@@ -139,26 +139,26 @@ if (!function_exists('check_cidr')) {
 	 */
 	function check_cidr($cidr, string $ip_address): bool {
 
-		//no cidr restriction
+		// No CIDR restriction
 		if (empty($cidr)) {
 			return true;
 		}
 
-		//check to see if the user's remote address is in the cidr array
+		// Check to see if the user's remote address is in the CIDR array
 		if (is_array($cidr)) {
-		    	//cidr is an array
+		    // CIDR is an array
 			foreach ($cidr as $value) {
 				if (check_cidr($value, $ip_address)) {
 					return true;
 				}
 			}
 		} else {
-			//cidr is a string
+			// CIDR is a string
 			[$subnet, $mask] = explode('/', $cidr);
 			return (ip2long($ip_address) & ~((1 << (32 - $mask)) - 1)) == ip2long($subnet);
 		}
 
-		//value not found in cidr
+		// Value not found in CIDR
 		return false;
 	}
 }
