@@ -35,6 +35,9 @@ if (!(permission_exists('extension_add') || permission_exists('extension_edit'))
 	exit;
 }
 
+//define global variable(s)
+global $database;
+
 //get the domain and user UUIDs
 $domain_uuid = $_SESSION['domain_uuid'] ?? '';
 $domain_name = $_SESSION['domain_name'] ?? '';
@@ -724,7 +727,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 							}
 
 							//build the devices array
-							if (($device_unique && $device_mac_address != '000000000000') || $device_mac_address == '000000000000') {
+							if (($device_unique && $device_address != '000000000000') || $device_address == '000000000000') {
 								$array["devices"][$j]["device_uuid"] = $device_uuids[$d];
 								$array["devices"][$j]["domain_uuid"] = $domain_uuid;
 								$array["devices"][$j]["device_address"] = $device_address;
@@ -895,8 +898,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 			//write the provision files
 			if (!empty($provision_path) && is_dir(dirname(__DIR__, 2) . '/app/provision')) {
-				$prov = new provision;
-				$prov->domain_uuid = $domain_uuid;
+				$prov = new provision(['settings'=>$settings, 'domain_uuid'=>$domain_uuid, 'domain_name'=>$domain_name, 'user_uuid'=>$user_uuid]);
 				$response = $prov->write();
 			}
 

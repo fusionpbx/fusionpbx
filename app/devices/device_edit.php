@@ -32,6 +32,9 @@
 		exit;
 	}
 
+//define global variable(s)
+	global $database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -523,10 +526,9 @@
 
 				//write the provision files
 					if (!empty($settings->get('provision', 'path'))) {
-						$prov = new provision(['settings' => $settings]);
-						$prov->domain_uuid = $domain_uuid;
+						$prov = new provision(['settings'=>$settings, 'domain_uuid'=>$domain_uuid, 'domain_name'=>$domain_name, 'user_uuid'=>$_SESSION['user_uuid']]);
 						$prov->device_uuid = $device_uuid;
-						$response = $prov->write();
+						$prov->write();
 					}
 
 				//set the message

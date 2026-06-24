@@ -559,9 +559,9 @@ class device {
 
 		//assign private variables
 		$this->permission_prefix = 'device_';
-		$this->list_page         = 'devices.php';
-		$this->table             = 'devices';
-		$this->uuid_prefix       = 'device_';
+		$this->list_page = 'devices.php';
+		$this->table = 'devices';
+		$this->uuid_prefix = 'device_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
@@ -583,15 +583,15 @@ class device {
 				//build the delete array
 				foreach ($records as $x => $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-						$sql                                 = "update v_devices set device_uuid_alternate = null where device_uuid_alternate = :device_uuid_alternate; ";
+						$sql = "update v_devices set device_uuid_alternate = null where device_uuid_alternate = :device_uuid_alternate; ";
 						$parameters['device_uuid_alternate'] = $record['uuid'];
 						$this->database->execute($sql, $parameters);
 						unset($sql, $parameters);
 
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array['device_settings'][$x]['device_uuid']          = $record['uuid'];
-						$array['device_lines'][$x]['device_uuid']             = $record['uuid'];
-						$array['device_keys'][$x]['device_uuid']              = $record['uuid'];
+						$array['device_settings'][$x]['device_uuid'] = $record['uuid'];
+						$array['device_lines'][$x]['device_uuid'] = $record['uuid'];
+						$array['device_keys'][$x]['device_uuid'] = $record['uuid'];
 					}
 				}
 
@@ -615,9 +615,8 @@ class device {
 
 					//write the provision files
 					if (!empty($this->settings->get('provision', 'path'))) {
-						$prov              = new provision;
-						$prov->domain_uuid = $this->domain_uuid;
-						$response          = $prov->write();
+						$prov = new provision(['settings'=>$this->settings, 'domain_uuid'=>$this->domain_uuid, 'domain_name'=>$this->domain_name, 'user_uuid'=>$this->user_uuid]);
+						$prov->write();
 					}
 
 					//set message
@@ -640,14 +639,14 @@ class device {
 	public function delete_lines($records) {
 		//assign private variables
 		$this->permission_prefix = 'device_line_';
-		$this->table             = 'device_lines';
-		$this->uuid_prefix       = 'device_line_';
+		$this->table = 'device_lines';
+		$this->uuid_prefix = 'device_line_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -692,14 +691,14 @@ class device {
 	public function delete_keys($records) {
 		//assign private variables
 		$this->permission_prefix = 'device_key_';
-		$this->table             = 'device_keys';
-		$this->uuid_prefix       = 'device_key_';
+		$this->table = 'device_keys';
+		$this->uuid_prefix = 'device_key_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -717,7 +716,7 @@ class device {
 				foreach ($records as $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array[$this->table][$x]['device_uuid']               = $this->device_uuid;
+						$array[$this->table][$x]['device_uuid'] = $this->device_uuid;
 						$x++;
 					}
 				}
@@ -747,14 +746,14 @@ class device {
 	public function delete_settings($records) {
 		//assign private variables
 		$this->permission_prefix = 'device_setting_';
-		$this->table             = 'device_settings';
-		$this->uuid_prefix       = 'device_setting_';
+		$this->table = 'device_settings';
+		$this->uuid_prefix = 'device_setting_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -800,17 +799,17 @@ class device {
 
 		//assign private variables
 		$this->permission_prefix = 'device_vendor_';
-		$this->list_page         = 'device_vendors.php';
-		$this->tables[]          = 'device_vendors';
-		$this->tables[]          = 'device_vendor_functions';
-		$this->tables[]          = 'device_vendor_function_groups';
-		$this->uuid_prefix       = 'device_vendor_';
+		$this->list_page = 'device_vendors.php';
+		$this->tables[] = 'device_vendors';
+		$this->tables[] = 'device_vendor_functions';
+		$this->tables[] = 'device_vendor_function_groups';
+		$this->uuid_prefix = 'device_vendor_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -869,16 +868,16 @@ class device {
 
 		//assign private variables
 		$this->permission_prefix = 'device_vendor_function_';
-		$this->list_page         = 'device_vendor_edit.php';
-		$this->tables[]          = 'device_vendor_functions';
-		$this->tables[]          = 'device_vendor_function_groups';
-		$this->uuid_prefix       = 'device_vendor_function_';
+		$this->list_page = 'device_vendor_edit.php';
+		$this->tables[] = 'device_vendor_functions';
+		$this->tables[] = 'device_vendor_function_groups';
+		$this->uuid_prefix = 'device_vendor_function_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -935,17 +934,17 @@ class device {
 
 		//assign private variables
 		$this->permission_prefix = 'device_profile_';
-		$this->list_page         = 'device_profiles.php';
-		$this->tables[]          = 'device_profiles';
-		$this->tables[]          = 'device_profile_keys';
-		$this->tables[]          = 'device_profile_settings';
-		$this->uuid_prefix       = 'device_profile_';
+		$this->list_page = 'device_profiles.php';
+		$this->tables[] = 'device_profiles';
+		$this->tables[] = 'device_profile_keys';
+		$this->tables[] = 'device_profile_settings';
+		$this->uuid_prefix = 'device_profile_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -1004,15 +1003,15 @@ class device {
 
 		//assign private variables
 		$this->permission_prefix = 'device_profile_key_';
-		$this->list_page         = 'device_profile_edit.php?id=' . $this->device_profile_uuid;
-		$this->table             = 'device_profile_keys';
-		$this->uuid_prefix       = 'device_profile_key_';
+		$this->list_page = 'device_profile_edit.php?id=' . $this->device_profile_uuid;
+		$this->table = 'device_profile_keys';
+		$this->uuid_prefix = 'device_profile_key_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -1052,15 +1051,15 @@ class device {
 
 		//assign private variables
 		$this->permission_prefix = 'device_profile_setting_';
-		$this->list_page         = 'device_profile_edit.php?id=' . $this->device_profile_uuid;
-		$this->table             = 'device_profile_settings';
-		$this->uuid_prefix       = 'device_profile_setting_';
+		$this->list_page = 'device_profile_edit.php?id=' . $this->device_profile_uuid;
+		$this->table = 'device_profile_settings';
+		$this->uuid_prefix = 'device_profile_setting_';
 
 		if (permission_exists($this->permission_prefix . 'delete')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -1104,17 +1103,17 @@ class device {
 
 		//assign private variables
 		$this->permission_prefix = 'device_';
-		$this->list_page         = 'devices.php';
-		$this->table             = 'devices';
-		$this->uuid_prefix       = 'device_';
-		$this->toggle_field      = 'device_enabled';
-		$this->toggle_values     = ['true', 'false'];
+		$this->list_page = 'devices.php';
+		$this->table = 'devices';
+		$this->uuid_prefix = 'device_';
+		$this->toggle_field = 'device_enabled';
+		$this->toggle_values = ['true', 'false'];
 
 		if (permission_exists($this->permission_prefix . 'edit')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -1134,11 +1133,11 @@ class device {
 					}
 				}
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$states[$row['uuid']] = $row['toggle'];
@@ -1151,7 +1150,7 @@ class device {
 				$x = 0;
 				foreach ($states as $uuid => $state) {
 					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]         = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 					$x++;
 				}
 
@@ -1159,15 +1158,14 @@ class device {
 				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 					//save the array
-
 					$this->database->save($array);
 					unset($array);
 
 					//write the provision files
 					if (!empty($this->settings->get('provision', 'path'))) {
-						$prov              = new provision;
+						$prov = new provision;
 						$prov->domain_uuid = $this->domain_uuid;
-						$response          = $prov->write();
+						$response = $prov->write();
 					}
 
 					//set message
@@ -1191,17 +1189,17 @@ class device {
 
 		//assign private variables
 		$this->permission_prefix = 'device_vendor_';
-		$this->list_page         = 'device_vendors.php';
-		$this->table             = 'device_vendors';
-		$this->uuid_prefix       = 'device_vendor_';
-		$this->toggle_field      = 'enabled';
-		$this->toggle_values     = ['true', 'false'];
+		$this->list_page = 'device_vendors.php';
+		$this->table = 'device_vendors';
+		$this->uuid_prefix = 'device_vendor_';
+		$this->toggle_field = 'enabled';
+		$this->toggle_values = ['true', 'false'];
 
 		if (permission_exists($this->permission_prefix . 'edit')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -1236,7 +1234,7 @@ class device {
 				$x = 0;
 				foreach ($states as $uuid => $state) {
 					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]         = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 					$x++;
 				}
 
@@ -1244,7 +1242,6 @@ class device {
 				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
 
 					//save the array
-
 					$this->database->save($array);
 					unset($array);
 
@@ -1268,17 +1265,17 @@ class device {
 
 		//assign private variables
 		$this->permission_prefix = 'device_vendor_function_';
-		$this->list_page         = 'device_vendor_edit.php';
-		$this->table             = 'device_vendor_functions';
-		$this->uuid_prefix       = 'device_vendor_function_';
-		$this->toggle_field      = 'enabled';
-		$this->toggle_values     = ['true', 'false'];
+		$this->list_page = 'device_vendor_edit.php';
+		$this->table = 'device_vendor_functions';
+		$this->uuid_prefix = 'device_vendor_function_';
+		$this->toggle_field = 'enabled';
+		$this->toggle_values = ['true', 'false'];
 
 		if (permission_exists($this->permission_prefix . 'edit')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -1313,15 +1310,13 @@ class device {
 				$x = 0;
 				foreach ($states as $uuid => $state) {
 					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]         = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 					$x++;
 				}
 
 				//save the changes
 				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-
 					//save the array
-
 					$this->database->save($array);
 					unset($array);
 
@@ -1347,17 +1342,17 @@ class device {
 
 		//assign private variables
 		$this->permission_prefix = 'device_profile_';
-		$this->list_page         = 'device_profiles.php';
-		$this->table             = 'device_profiles';
-		$this->uuid_prefix       = 'device_profile_';
-		$this->toggle_field      = 'device_profile_enabled';
-		$this->toggle_values     = ['true', 'false'];
+		$this->list_page = 'device_profiles.php';
+		$this->table = 'device_profiles';
+		$this->uuid_prefix = 'device_profile_';
+		$this->toggle_field = 'device_profile_enabled';
+		$this->toggle_values = ['true', 'false'];
 
 		if (permission_exists($this->permission_prefix . 'edit')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -1393,16 +1388,14 @@ class device {
 				if (!empty($states) && is_array($states) && @sizeof($states) != 0) {
 					foreach ($states as $uuid => $state) {
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
-						$array[$this->table][$x][$this->toggle_field]         = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+						$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 						$x++;
 					}
 				}
 
 				//save the changes
 				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-
 					//save the array
-
 					$this->database->save($array);
 					unset($array);
 
@@ -1428,15 +1421,15 @@ class device {
 
 		//assign private variables
 		$this->permission_prefix = 'device_profile_';
-		$this->list_page         = 'device_profiles.php';
-		$this->table             = 'device_profiles';
-		$this->uuid_prefix       = 'device_profile_';
+		$this->list_page = 'device_profiles.php';
+		$this->table = 'device_profiles';
+		$this->uuid_prefix = 'device_profile_';
 
 		if (permission_exists($this->permission_prefix . 'add')) {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -1448,7 +1441,6 @@ class device {
 
 			//copy the checked records
 			if (is_array($records) && @sizeof($records) != 0) {
-
 				//get checked records
 				foreach ($records as $x => $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
@@ -1458,11 +1450,11 @@ class device {
 
 				//create insert array from existing data
 				if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select * from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$y = $z = 0;
 						foreach ($rows as $x => $row) {
@@ -1471,7 +1463,7 @@ class device {
 							//convert boolean values to a string
 							foreach ($row as $key => $value) {
 								if (gettype($value) == 'boolean') {
-									$value     = $value ? 'true' : 'false';
+									$value = $value ? 'true' : 'false';
 									$row[$key] = $value;
 								}
 							}
@@ -1484,25 +1476,24 @@ class device {
 							$array[$this->table][$x]['device_profile_description'] = trim($row['device_profile_description'] . ' (' . $text['label-copy'] . ')');
 
 							//keys sub table
-							$sql_2                               = "select * from v_device_profile_keys ";
-							$sql_2                               .= "where device_profile_uuid = :device_profile_uuid ";
-							$sql_2                               .= "order by ";
-							$sql_2                               .= "case profile_key_category ";
-							$sql_2                               .= "when 'line' then 1 ";
-							$sql_2                               .= "when 'memort' then 2 ";
-							$sql_2                               .= "when 'programmable' then 3 ";
-							$sql_2                               .= "when 'expansion' then 4 ";
-							$sql_2                               .= "else 100 end, ";
-							$sql_2                               .= "profile_key_id asc ";
+							$sql_2 = "select * from v_device_profile_keys ";
+							$sql_2 .= "where device_profile_uuid = :device_profile_uuid ";
+							$sql_2 .= "order by ";
+							$sql_2 .= "case profile_key_category ";
+							$sql_2 .= "when 'line' then 1 ";
+							$sql_2 .= "when 'memort' then 2 ";
+							$sql_2 .= "when 'programmable' then 3 ";
+							$sql_2 .= "when 'expansion' then 4 ";
+							$sql_2 .= "else 100 end, ";
+							$sql_2 .= "profile_key_id asc ";
 							$parameters_2['device_profile_uuid'] = $row['device_profile_uuid'];
-							$rows_2                              = $this->database->select($sql_2, $parameters_2, 'all');
+							$rows_2 = $this->database->select($sql_2, $parameters_2, 'all');
 							if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 								foreach ($rows_2 as $row_2) {
-
 									//convert boolean values to a string
 									foreach ($row_2 as $key => $value) {
 										if (gettype($value) == 'boolean') {
-											$value       = $value ? 'true' : 'false';
+											$value = $value ? 'true' : 'false';
 											$row_2[$key] = $value;
 										}
 									}
@@ -1516,22 +1507,20 @@ class device {
 
 									//increment
 									$y++;
-
 								}
 							}
 							unset($sql_2, $parameters_2, $rows_2, $row_2);
 
 							//settings sub table
-							$sql_3                               = "select * from v_device_profile_settings where device_profile_uuid = :device_profile_uuid";
+							$sql_3 = "select * from v_device_profile_settings where device_profile_uuid = :device_profile_uuid";
 							$parameters_3['device_profile_uuid'] = $row['device_profile_uuid'];
-							$rows_3                              = $this->database->select($sql_3, $parameters_3, 'all');
+							$rows_3 = $this->database->select($sql_3, $parameters_3, 'all');
 							if (is_array($rows_3) && @sizeof($rows_3) != 0) {
 								foreach ($rows_3 as $row_3) {
-
 									//convert boolean values to a string
 									foreach ($row_3 as $key => $value) {
 										if (gettype($value) == 'boolean') {
-											$value       = $value ? 'true' : 'false';
+											$value = $value ? 'true' : 'false';
 											$row_3[$key] = $value;
 										}
 									}
@@ -1541,11 +1530,10 @@ class device {
 
 									//overwrite
 									$array['device_profile_settings'][$z]['device_profile_setting_uuid'] = uuid();
-									$array['device_profile_settings'][$z]['device_profile_uuid']         = $primary_uuid;
+									$array['device_profile_settings'][$z]['device_profile_uuid'] = $primary_uuid;
 
 									//increment
 									$z++;
-
 								}
 							}
 							unset($sql_3, $parameters_3, $rows_3, $row_3);
@@ -1557,14 +1545,12 @@ class device {
 
 				//save the changes and set the message
 				if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
-
 					//grant temporary permissions
 					$p = permissions::new();
 					$p->add('device_profile_key_add', 'temp');
 					$p->add('device_profile_setting_add', 'temp');
 
 					//save the array
-
 					$this->database->save($array);
 					unset($array);
 
@@ -1574,7 +1560,6 @@ class device {
 
 					//set message
 					message::add($text['message-copy']);
-
 				}
 				unset($records);
 			}

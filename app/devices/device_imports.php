@@ -34,6 +34,9 @@
 		exit;
 	}
 
+//define global variable(s)
+	global $database;
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -440,8 +443,7 @@
 					}
 
 					if (!empty($settings->get('provision', 'path'))) {
-						$prov = new provision;
-						$prov->domain_uuid = $domain_uuid;
+						$prov = new provision(['settings'=>$settings, 'domain_uuid'=>$domain_uuid, 'domain_name'=>$domain_name, 'user_uuid'=>$_SESSION['user_uuid']]);
 						$response = $prov->write();
 					}
 

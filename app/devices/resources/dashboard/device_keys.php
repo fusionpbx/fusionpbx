@@ -26,6 +26,9 @@
 	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
+//define global variable(s)
+	global $database;
+
 //convert to a key
 	$widget_key = str_replace(' ', '_', strtolower($widget_name));
 
@@ -277,9 +280,8 @@
 
 				//write the provision files
 					if (!empty($settings->get('provision', 'path'))) {
-						$prov = new provision;
-						$prov->domain_uuid = $domain_uuid;
-						$response = $prov->write();
+						$prov = new provision(['settings'=>$settings, 'domain_uuid'=>$domain_uuid, 'domain_name'=>$domain_name, 'user_uuid'=>$_SESSION['user_uuid']]);
+						$prov->write();
 					}
 
 				//set the message

@@ -35,13 +35,7 @@ class provision {
 
 	const app_uuid = 'abf28ead-92ef-3de6-ebbb-023fbc2b6dd3';
 
-	/**
-	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set
-	 * in the session global array
-	 *
-	 * @var string
-	 */
-	public $domain_uuid;
+
 
 	/**
 	 * Domain name set in the constructor. This can be passed in through the $settings_array associative array or set
@@ -75,6 +69,14 @@ class provision {
 	private $settings;
 
 	/**
+	 * Domain UUID set in the constructor. This can be passed in through the $settings_array associative array or set
+	 * in the session global array
+	 *
+	 * @var string
+	 */
+	private $domain_uuid;
+
+	/**
 	 * User UUID set in the constructor. This can be passed in through the $settings_array associative array or set in
 	 * the session global array
 	 *
@@ -99,9 +101,9 @@ class provision {
 	 */
 	public function __construct(array $setting_array = []) {
 		// set domain and user UUIDs
-		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
-		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
-		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->domain_uuid = $setting_array['domain_uuid'] ?? '';
+		$this->domain_name = $setting_array['domain_name'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? '';
 
 		// set objects
 		$this->database = $setting_array['database'] ?? database::new();
