@@ -38,8 +38,8 @@
 	}
 
 //get the variables
-	$filename = $_GET['filename'];
-	$type = $_GET['type']; //moh //rec
+	$filename = basename($_GET['filename'] ?? '');
+	$type = $_GET['type'] ?? ''; //moh //rec
 
 //show the content
 ?>
