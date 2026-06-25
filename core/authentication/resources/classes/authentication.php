@@ -175,7 +175,7 @@ class authentication {
 					'path' => '/',
 					'secure' => true,
 					'httponly' => true,
-					'samesite' => 'Strict'
+					'samesite' => 'Lax'
 				]);
 
 				// Get the user details
@@ -425,7 +425,7 @@ class authentication {
 					'path' => '/',
 					'secure' => true,
 					'httponly' => true,
-					'samesite' => 'Strict'
+					'samesite' => 'Lax'
 				]);
 
 				// Unset the session variable after use
