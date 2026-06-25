@@ -588,9 +588,32 @@ function update_php_fpm(settings $settings) {
 		// Get the PHP version
 		$php_version =  PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;
 
+		// Set the path for PHP FPM service file
+		$service_file = "/usr/lib/systemd/system/php".$php_version."-fpm.service";
+
+		// Check if the service file exists
+		if (!file_exists($service_file)) {
+			if (is_cli()) {
+				echo "The service file does not exist\n";
+			}
+			return;
+		}
+
+		// Check if the service file is writable
+		$file_writable = is_writable($service_file);
+		if (!$file_writable) {
+			if (is_cli()) {
+				echo "The service file is not writable\n";
+			}
+			return;
+		}
+
 		// Make sure the /usr/share/fusionpbx directory exists
 		if (!file_exists('/usr/share/fusionpbx')) {
-			mkdir('/usr/share/fusionpbx', 0755, true);
+			$result = mkdir('/usr/share/fusionpbx', 0755, true);
+			if (!$result && is_cli()) {
+				echo "Failed to create directory: /usr/share/fusionpbx\n";
+			}
 		}
 
 		// Build the read write paths array
@@ -602,113 +625,62 @@ function update_php_fpm(settings $settings) {
 		$read_write_paths[] = '/usr/share/fusionpbx';
 
 		// Build the line to add to the service file
-		$service_file = "/usr/lib/systemd/system/php".$php_version."-fpm.service";
-		if (file_exists($service_file)) {
-			// Get the file contents
-			$file_contents = file_get_contents($service_file);
-
-			// Make sure the file contents were read successfully
-			if ($file_contents === false) {
-				// Send an error message only when running from console
-				if (is_cli()) {
-					echo "Failed to read the service file: $service_file\n";
-				}
-			} else {
-				// Set flags
-				$file_update_required = false;
-				$read_write_paths_exists = false;
-				$service_section_exists = false;
-
-				// Process the file contents to add the ReadWritePaths directive
-				$lines = explode("\n", $file_contents);
-
-				// $lines is passed by reference so that we can update it in place
-				foreach($lines as &$line) {
-					// Mark the service section
-					if (trim($line) === '[Service]') {
-						$service_section_exists = true;
-						continue;
-					}
-
-					// Don't search for the directive if we haven't reached the service section yet
-					if (!$service_section_exists) {
-						continue;
-					}
-
-					// Check if the ReadWritePaths directive already exists and if so check if it needs to be updated
-					if (str_starts_with(trim($line), 'ReadWritePaths')) {
-						$read_write_paths_exists = true;
-						// Remove whitespace from all elements in the array and split into key and value
-						[, $existing_paths] = array_map('trim', explode('=', $line, 2));
-						$diff = array_diff($read_write_paths, explode(' ', $existing_paths));
-						if (!empty($diff)) {
-							$file_update_required = true;
-							// Rewrite the existing line with the new paths added to the end of the existing paths
-							$line = "ReadWritePaths = " . $existing_paths . ' ' . implode(' ', $diff);
-						}
-						break;
-					}
-					// Stop processing if we reach the end of the service section
-					if (str_starts_with(trim($line), '[')) {
-						break;
-					}
-				}
-
-				// If the service section exists and the ReadWritePaths directive does not exist, add it to the end of the service section
-				if ($service_section_exists && !$read_write_paths_exists) {
-					$file_update_required = true;
-					$line_to_insert = "ReadWritePaths = " . implode(' ', $read_write_paths);
-				}
-
-				if ($file_update_required) {
-					// Check if the service file is writable
-					$file_writable = is_writable($service_file);
-
-					// Find the empty line before the Install section
-					if ($file_writable) {
-						$insert_index = -1;
-						for ($i = 0; $i < count($lines); $i++) {
-							if (trim($lines[$i]) === '[Install]') {
-								// Find empty line before [Install]
-								for ($j = $i - 1; $j >= 0; $j--) {
-									if (trim($lines[$j]) === '') {
-										$insert_index = $j;
-										break;
-									}
-								}
-								break;
-							}
-						}
-
-						// Add or Update the new content
-						if (!empty($line_to_insert)) {
-							array_splice($lines, $insert_index, 0, $line_to_insert);
-						}
-						$new_contents = implode("\n", $lines) . "\n";
-						$bytes = file_put_contents($service_file, $new_contents);
-
-						// Check for drive full edge case
-						if ($bytes === false) {
-							// Send an error message only when running from console
-							if (is_cli()) {
-								echo "Failed to write the updated service file: $service_file\n";
-							}
-						}
-
-						// Prepare systemd to use the update
-						system('systemctl daemon-reload');
-
-						// Restart php fpm to apply the changes
-						system('systemctl restart php'.$php_version.'-fpm');
-					} else {
-						// Send an error message only when running from console
-						if (is_cli()) {
-							echo "The service file is not writable: $service_file\n";
-						}
-					}
-				}
+		$line_to_insert = "ReadWritePaths=";
+		foreach($read_write_paths as $read_write_path) {
+			if (file_exists($read_write_path)) {
+				$line_to_insert .= $read_write_path.' ';
 			}
 		}
+
+		// Get the file contents
+		$file_contents = file_get_contents($service_file);
+
+		// Check if "ReadWritePaths" exists in the file contents
+		$read_write_exists = strpos($file_contents, 'ReadWritePaths') !== false;
+
+		// ReadWritePaths make sure all paths are included in the file if any are missing, then replace the line with the new one 
+		if ($read_write_exists && $file_writable) {
+			// Use preg_replace to find the line starting with ReadWritePaths and replace the entire line
+			$new_contents = preg_replace('/^ReadWritePaths.*$/m', trim($line_to_insert), $file_contents);
+
+			// If the file content matches then skip the service file update
+			if ($file_contents === $new_contents) {
+				unset($new_contents);
+			}
+		}
+
+		// Find the empty line before the Install
+		if (!$read_write_exists && $file_writable) {
+			$lines = explode("\n", $file_contents);
+			$insert_index = -1;
+			for ($i = 0; $i < count($lines); $i++) {
+				if (trim($lines[$i]) === '[Install]') {
+					// Find empty line before [Install]
+					for ($j = $i - 1; $j >= 0; $j--) {
+						if (trim($lines[$j]) === '') {
+							$insert_index = $j;
+							break;
+						}
+					}
+					break;
+				}
+			}
+
+			// Add the new ReadWritePaths into the $new_contents string
+			array_splice($lines, $insert_index, 0, trim($line_to_insert));
+			$new_contents = implode("\n", $lines) . "\n";
+		}
+
+		// Update the service file, daemon-reload, and restart service
+		if (!empty($new_contents)) {
+			// Write the changes to the service file
+			file_put_contents($service_file, $new_contents);
+
+			// Prepared systemd to use the update
+			system('systemctl daemon-reload');
+			system('systemctl restart php'.$php_version.'-fpm');
+		}
+
 	}
 }
 
@@ -723,7 +695,6 @@ function update_php_fpm(settings $settings) {
  * @param settings $settings The current application settings instance.
  */
 function update_file_permissions($text, settings $settings) {
-
 	if (is_root()) {
 		// Initialize the array
 		$directories = [];
@@ -787,8 +758,6 @@ function update_file_permissions($text, settings $settings) {
  * @param settings $settings Application settings
  */
 function upgrade_services($text, settings $settings) {
-	// echo ($text['description-upgrade_services'] ?? "")."\n";
-
 	// Determine the search file name
 	if (stristr(PHP_OS, 'Linux')) {
 		$search_file_name = 'debian';
@@ -839,8 +808,6 @@ function upgrade_services($text, settings $settings) {
  * @param settings $settings
  */
 function stop_services($text, settings $settings) {
-	// echo ($text['description-stop_services'] ?? "")."\n";
-
 	// Determine the search file name
 	if (stristr(PHP_OS, 'Linux')) {
 		$search_file_name = 'debian';
@@ -858,16 +825,16 @@ function stop_services($text, settings $settings) {
 	if (!empty($service_files)) {
 		foreach($service_files as $file) {
 			// Set a variable for the service name
-		 	$service_name = find_service_name($file);
-		 	// Sanitize the service name
-		 	$service_name = preg_replace('/[^a-zA-Z0-9_]/', '', $service_name);
-		 	// Send the service name to the console
+			$service_name = find_service_name($file);
+			// Sanitize the service name
+			$service_name = preg_replace('/[^a-zA-Z0-9_]/', '', $service_name);
+			// Send the service name to the console
 			if (stristr(PHP_OS, 'Linux')) {
-		 		echo "Name: " . $service_name . "\n";
+				echo "Name: " . $service_name . "\n";
 			}
-		 	// Stop the service
+			// Stop the service
 			if (stristr(PHP_OS, 'Linux')) {
-		 		system("systemctl stop " . $service_name);
+				system("systemctl stop " . $service_name);
 			}
 			if (stristr(PHP_OS, 'FreeBSD')) {
 				system("service " . $service_name . " stop");
@@ -885,8 +852,6 @@ function stop_services($text, settings $settings) {
  * @param settings $settings Settings object
  */
 function restart_services($text, settings $settings) {
-	// echo ($text['description-restart_services'] ?? "")."\n";
-
 	// Determine the search file name
 	if (stristr(PHP_OS, 'Linux')) {
 		$search_file_name = 'debian';
