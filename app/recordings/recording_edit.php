@@ -274,18 +274,32 @@
 					$speech->audio_message = $recording_message;
 					$speech->speech();
 
-					//fix invalid riff & data header lengths in generated wave file
-					if ($speech_engine == 'openai') {
-						$recording_filename_temp = str_replace('.'.$recording_extension, '.tmp.'.$recording_extension, $recording_filename);
-						if (file_exists($recording_path.'/'.$recording_filename)) {
-							exec('sox --ignore-length '.escapeshellarg($recording_path.'/'.$recording_filename).' '.escapeshellarg($recording_path.'/'.$recording_filename_temp));
+					//each speech engine outputs its own native format (wav for openai/local/inworld,
+					//mp3 for elevenlabs). if the target file name uses a different extension (e.g. an
+					//uploaded .mp3 being regenerated) the content is transcoded to match the extension,
+					//otherwise it plays back incorrectly. the file name is never changed so existing
+					//references (ivr, ring group, voicemail, etc.) remain valid.
+					$recording_file = $recording_path.'/'.$recording_filename;
+					$source_format = $speech->get_format();
+					if (file_exists($recording_file) && in_array($recording_extension, ['mp3', 'wav'], true)) {
+						$recording_file_temp = $recording_file.'.tmp';
+						if ($source_format != $recording_extension) {
+							//transcode the generated audio so its content matches the file extension
+							//(the source type is forced since the file name may not reflect the content)
+							exec('sox --ignore-length -t '.escapeshellarg($source_format).' '.escapeshellarg($recording_file).' -t '.escapeshellarg($recording_extension).' '.escapeshellarg($recording_file_temp));
 						}
-						if (file_exists($recording_path.'/'.$recording_filename_temp)) {
-							recursive_delete($recording_path.'/'.$recording_filename);
-							exec('mv '.escapeshellarg($recording_path.'/'.$recording_filename_temp).' '.escapeshellarg($recording_path.'/'.$recording_filename));
+						else if ($speech_engine == 'openai' && $recording_extension == 'wav') {
+							//fix invalid riff & data header lengths in the generated wave file
+							exec('sox --ignore-length '.escapeshellarg($recording_file).' -t wav '.escapeshellarg($recording_file_temp));
 						}
-						unset($recording_filename_temp);
+						//replace the original with the processed file (file name is unchanged)
+						if (file_exists($recording_file_temp)) {
+							recursive_delete($recording_file);
+							exec('mv '.escapeshellarg($recording_file_temp).' '.escapeshellarg($recording_file));
+						}
+						unset($recording_file_temp);
 					}
+					unset($recording_file, $source_format);
 
 				}
 
