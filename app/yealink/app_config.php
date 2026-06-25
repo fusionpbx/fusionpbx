@@ -1914,5 +1914,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Forced ringer volume: 0 - 15, default: empty";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d87d9df4-e32a-4f17-a18c-200645529bbd";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "yealink_video_enable";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable or Disable video. Options: 0: Disabled, 1: Video first, 2: Optional";
 
 ?>

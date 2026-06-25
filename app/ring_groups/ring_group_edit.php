@@ -58,6 +58,8 @@
 	$ring_group_forward_destination = '';
 	$ring_group_forward_toll_allow = '';
 	$ring_group_description = '';
+	$ring_group_wait_announcement = '';
+	$ring_group_wait_interval = '';
 	$onkeyup = '';
 	$total_ring_groups = '0';
 	$ring_group_ringback = $settings->get('ring_group', 'default_ringback', '');
@@ -66,6 +68,63 @@
 	$ring_group_follow_me_enabled = $settings->get('ring_group', 'follow_me_enabled', false);
 	$destination_delay_max = $settings->get('ring_group', 'destination_delay_max', '');
 	$destination_timeout_max = $settings->get('ring_group', 'destination_timeout_max', '');
+	$recording_name = '';
+	$recording_message = '';
+	$recording_description = '';
+	$recording_speed = '1.0';
+	$recording_uuid = '';
+	$speed_enabled = false;
+	$speed_options = [];
+	$translate_enabled = false;
+	$language_enabled = false;
+
+//set speech enabled and engine variables
+	$speech_enabled = class_exists('speech') && $settings->get('speech', 'enabled', false);
+	$speech_engine = $settings->get('speech', 'engine', '');
+
+//add the speech object and get the voices and languages arrays
+	if ($speech_enabled && !empty($speech_engine)) {
+		$speech = new speech($settings);
+		$voices = $speech->get_voices();
+		$recording_extension = $speech->get_format();
+		$speed_enabled = $speech->is_speed_enabled();
+		$speed_options = $speed_enabled ? $speech->get_speed_options() : [];
+
+		// Determine the aray type single, or multi
+		$voices_array_type = array_type($voices);
+
+		// Sort the array by language code keys alphabetically
+		if ($voices_array_type == 'multi') {
+			ksort($voices);
+		}
+	}
+
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'ring_group_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$sort = $order_by == 'ring_group_extension' ? 'natural' : null;
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('ring_group_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
 
 //get the domain_uuid
 	$domain_uuid = $_SESSION['domain_uuid'];
@@ -132,7 +191,7 @@
 			message::add($text['message-delete']);
 
 			//redirect the browser
-			header("Location: ring_group_edit.php?id=$ring_group_uuid");
+			header("Location: ring_group_edit.php?id=".$ring_group_uuid.($query_string ? '&'.$query_string : ''));
 			exit;
 	}
 
@@ -146,7 +205,7 @@
 
 		if (is_numeric($settings->get('limit', 'ring_groups', '')) && $total_ring_groups >= $settings->get('limit', 'ring_groups', '')) {
 			message::add($text['message-maximum_ring_groups'].' '.$settings->get('limit', 'ring_groups', ''), 'negative');
-			header('Location: ring_groups.php');
+			header('Location: ring_groups.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 	}
@@ -174,7 +233,7 @@
 						break;
 				}
 
-				header('Location: ring_groups.php');
+				header('Location: ring_groups.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -182,12 +241,14 @@
 			$ring_group_name = $_POST["ring_group_name"];
 			$ring_group_extension = $_POST["ring_group_extension"];
 			$ring_group_greeting = $_POST["ring_group_greeting"];
+			$ring_group_wait_announcement = $_POST["ring_group_wait_announcement"];
+			$ring_group_wait_interval = $_POST["ring_group_wait_interval"];
 			$ring_group_strategy = $_POST["ring_group_strategy"];
 			$ring_group_destinations = $_POST["ring_group_destinations"];
 			$ring_group_timeout_action = $_POST["ring_group_timeout_action"];
 			$ring_group_exit_key = $_POST["ring_group_exit_key"] ?? null;
 			$ring_group_call_timeout = $_POST["ring_group_call_timeout"];
-			$ring_group_caller_id_name = $_POST["ring_group_caller_id_name"];
+			$ring_group_caller_id_name = str_replace(':', '', $_POST["ring_group_caller_id_name"]);
 			$ring_group_caller_id_number = $_POST["ring_group_caller_id_number"];
 			$ring_group_cid_name_prefix = $_POST["ring_group_cid_name_prefix"] ?? null;
 			$ring_group_cid_number_prefix = $_POST["ring_group_cid_number_prefix"] ?? null;
@@ -269,7 +330,7 @@
 		message::add($text['message-add']);
 
 		//redirect the browser
-		header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
+		header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid).($query_string ? '&'.$query_string : ''));
 		exit;
 	}
 
@@ -280,7 +341,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: ring_groups.php');
+				header('Location: ring_groups.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -365,6 +426,8 @@
 			$array['ring_groups'][0]["ring_group_name"] = $ring_group_name;
 			$array['ring_groups'][0]["ring_group_extension"] = $ring_group_extension;
 			$array['ring_groups'][0]["ring_group_greeting"] = $ring_group_greeting;
+			$array['ring_groups'][0]["ring_group_wait_announcement"] = $ring_group_wait_announcement;
+			$array['ring_groups'][0]["ring_group_wait_interval"] = $ring_group_wait_interval;
 			$array['ring_groups'][0]["ring_group_strategy"] = $ring_group_strategy;
 			$array["ring_groups"][0]["ring_group_exit_key"] = $ring_group_exit_key;
 			$array["ring_groups"][0]["ring_group_call_timeout"] = $ring_group_call_timeout;
@@ -496,6 +559,75 @@
 			$array["dialplans"][0]["dialplan_description"] = $ring_group_description;
 			$array["dialplans"][0]["app_uuid"] = "1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2";
 
+		//build the recording array
+			$recording_types = ['greeting', 'wait_announcement'];
+
+			foreach ($recording_types as $x => $type) {
+				$recording_name = $_POST[$type]['recording_name'] ?? '';
+				$recording_voice = $_POST[$type]['recording_voice'] ?? '';
+				$recording_speed = $_POST[$type]['recording_speed'] ?? '1.0';
+				$recording_message = $_POST[$type]['recording_message'] ?? '';
+				$recording_desc = $_POST[$type]['recording_description'] ?? '';
+
+				if (permission_exists('recording_edit') && !empty($recording_message)) {
+					$recording_uuid = uuid();
+
+					if (empty($recording_name)) {
+						$recording_name = 'recording'.$ring_group_extension.($type == $recording_types[1] ? '-'.$type : null).'-'.str_pad(random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+					}
+
+					//set the recording format for approved types
+					if (!in_array($recording_extension, ['mp3', 'wav'], true)) {
+						//default to wav
+						$recording_extension = 'wav';
+					}
+
+					//build the setting object and get the recording path
+					$recording_path = $settings->get('switch', 'recordings').'/'.$domain_name;
+
+					//create the file name
+					$recording_filename = empty($_POST[$type]['recording_filename'] ?? '') ? preg_replace('#[^a-zA-Z0-9_\-]#', '_', $recording_name) : $_POST[$type]['recording_filename'];
+					if (!str_ends_with($recording_filename, ".$recording_extension")) {
+						$recording_filename .= ".$recording_extension";
+					}
+
+					//text to audio - make a new audio file from the message
+					$speech->audio_path = $recording_path;
+					$speech->audio_filename = $recording_filename;
+					$speech->audio_voice = $recording_voice;
+					if ($speed_enabled) {
+						$speech->audio_speed = (float)$recording_speed;
+					}
+					$speech->audio_message = $recording_message;
+					$speech->speech();
+
+					//fix invalid riff & data header lengths in generated wave file
+					if ($speech_engine == 'openai') {
+						$recording_filename_temp = str_replace('.'.$recording_extension, '.tmp.'.$recording_extension, $recording_filename);
+						if (file_exists($recording_path.'/'.$recording_filename)) {
+							exec('sox --ignore-length '.escapeshellarg($recording_path.'/'.$recording_filename).' '.escapeshellarg($recording_path.'/'.$recording_filename_temp));
+						}
+						if (file_exists($recording_path.'/'.$recording_filename_temp)) {
+							recursive_delete($recording_path.'/'.$recording_filename);
+							exec('mv '.escapeshellarg($recording_path.'/'.$recording_filename_temp).' '.escapeshellarg($recording_path.'/'.$recording_filename));
+						}
+						unset($recording_filename_temp);
+					}
+
+					$array['recordings'][$x]['domain_uuid'] = $domain_uuid;
+					$array['recordings'][$x]['recording_uuid'] = $recording_uuid;
+					$array['recordings'][$x]['recording_filename'] = $recording_filename;
+					$array['recordings'][$x]['recording_name'] = $recording_name;
+					$array['recordings'][$x]['recording_voice'] = $speech_enabled ? $recording_voice : null;
+					$array['recordings'][$x]['recording_speed'] = ($speech_enabled && $speed_enabled) ? $recording_speed : null;
+					$array['recordings'][$x]['recording_message'] = $speech_enabled ? $recording_message : null;
+					$array['recordings'][$x]['recording_description'] = $recording_desc;
+
+					// Update ring group fields directly
+					$array['ring_groups'][0]["ring_group_{$type}"] = $recording_filename;
+				}
+			}
+
 		//add the dialplan permission
 			$p = permissions::new();
 			$p->add("dialplan_add", "temp");
@@ -544,7 +676,7 @@
 			}
 
 		//redirect the browser
-			header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid));
+			header("Location: ring_group_edit.php?id=".urlencode($ring_group_uuid).($query_string ? '&'.$query_string : ''));
 			exit;
 	}
 
@@ -559,6 +691,8 @@
 			$ring_group_name = $row["ring_group_name"];
 			$ring_group_extension = $row["ring_group_extension"];
 			$ring_group_greeting = $row["ring_group_greeting"];
+			$ring_group_wait_announcement = $row["ring_group_wait_announcement"];
+			$ring_group_wait_interval = $row["ring_group_wait_interval"];
 			$ring_group_strategy = $row["ring_group_strategy"];
 			$ring_group_timeout_app = $row["ring_group_timeout_app"];
 			$ring_group_timeout_data = $row["ring_group_timeout_data"];
@@ -593,6 +727,8 @@
 	$ring_group_exit_key = $ring_group_exit_key ?? '';
 	$ring_group_call_timeout = $ring_group_call_timeout ?? '30';
 	$ring_group_greeting = $ring_group_greeting ?? '';
+	$ring_group_wait_announcement = $ring_group_wait_announcement ?? '';
+	$ring_group_wait_interval = $ring_group_wait_interval ?? '';
 	$ring_group_forward_enabled = $ring_group_forward_enabled ?? false;
 	$ring_group_context = $ring_group_context ?? $domain_name;
 	$ring_group_enabled = $ring_group_enabled ?? true;
@@ -657,6 +793,30 @@
 	$users = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//get the extensions and the users assigned to them
+	$sql = "select ";
+	$sql .= "e.extension, ";
+	$sql .= "u.username ";
+	$sql .= "from v_extensions e ";
+	$sql .= "left join v_extension_users eu on e.extension_uuid = eu.extension_uuid ";
+	$sql .= "left join v_users u on eu.user_uuid = u.user_uuid and u.user_enabled = true ";
+	$sql .= "where e.domain_uuid = :domain_uuid ";
+	$sql .= "order by e.extension asc ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$extensions = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
+	$extension_users = [];
+	foreach ($extensions as $row) {
+		$ext = $row['extension'];
+		if (!isset($extension_users[$ext])) {
+			$extension_users[$ext] = ['extension' => $ext, 'users' => []];
+		}
+		if (!empty($row['username'])) {
+			$extension_users[$ext]['users'][] = $row['username'];
+		}
+	}
+
 //get the ring backs
 	$ringbacks = new ringbacks;
 	$ringbacks = $ringbacks->select('ring_group_ringback', $ring_group_ringback);
@@ -710,12 +870,19 @@
 		echo "		tb.name=obj.name;\n";
 		echo "		tb.className='formfld';\n";
 		echo "		tb.setAttribute('id', instance_id);\n";
-		echo "		tb.setAttribute('style', 'width: ' + obj.offsetWidth + 'px;');\n";
 		if (!empty($on_change)) {
 			echo "	tb.setAttribute('onchange', \"".$on_change."\");\n";
 			echo "	tb.setAttribute('onkeyup', \"".$on_change."\");\n";
 		}
-		echo "		tb.value=obj.options[obj.selectedIndex].value;\n";
+		echo "		const searchable_select = document.getElementById(instance_id + '_search');\n";
+		echo "		if (searchable_select) {\n";
+		echo "			tb.setAttribute('style', 'width: ' + searchable_select.offsetWidth + 'px;');\n";
+		echo "			searchable_select.style.display = 'none';\n";
+		echo "			tb.value=obj.value;\n";
+		echo "		} else {\n";
+		echo "			tb.setAttribute('style', 'width: ' + obj.offsetWidth + 'px;');\n";
+		echo "			tb.value=obj.options[obj.selectedIndex].value;\n";
+		echo "		}\n";
 		echo "		document.getElementById('btn_select_to_input_' + instance_id).style.display = 'none';\n";
 		echo "		tbb=document.createElement('INPUT');\n";
 		echo "		tbb.setAttribute('class', 'btn');\n";
@@ -734,6 +901,8 @@
 		echo "		obj[0].parentNode.removeChild(obj[1]);\n";
 		echo "		obj[0].parentNode.removeChild(obj[2]);\n";
 		echo "		document.getElementById('btn_select_to_input_' + instance_id).style.display = 'inline';\n";
+		echo "		const searchable_select = document.getElementById(instance_id + '_search');\n";
+		echo "		if (searchable_select) { searchable_select.style.display = 'inline-block'; }\n";
 		if (!empty($on_change)) {
 			echo "	".$on_change.";\n";
 		}
@@ -746,7 +915,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-ring_group']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'ring_groups.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'ring_groups.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == 'update') {
 		$button_margin = 'margin-left: 15px;';
 		if (permission_exists('ring_group_add') && (empty($settings->get('limit', 'ring_groups', '')) || ($total_ring_groups < $settings->get('limit', 'ring_groups', '')))) {
@@ -800,6 +969,23 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	// Text-to-speech form styles
+	echo "<style>\n";
+	echo ".greeting_tts,\n";
+	echo ".wait_announcement_tts {\n";
+	echo "	overflow: hidden;\n";
+	echo "	max-height: 0;\n";
+	echo "	opacity: 0;\n";
+	echo "	transition: max-height 0.3s ease, opacity 0.3s ease;\n";
+	echo "}\n";
+	echo ".greeting_tts.animate-in,\n";
+	echo ".wait_announcement_tts.animate-in {\n";
+	echo "	padding: 5px 0;\n";
+	echo "	max-height: 500px;\n";
+	echo "	opacity: 1;\n";
+	echo "}\n";
+	echo "</style>\n";
+
 	$instance_id = 'ring_group_greeting';
 	$instance_label = 'greeting';
 	$instance_value = $ring_group_greeting;
@@ -811,8 +997,13 @@
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));\"" : null).">\n";
+	echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld searchable_select' onchange=\"".(permission_exists('recording_play') || permission_exists('recording_download') ? "recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));" : null)." if (this.options[this.selectedIndex].getAttribute('data-tts') == 'new') {document.querySelectorAll('.".$instance_label."_tts').forEach(el => { el.classList.add('animate-in'); });} else {document.querySelectorAll('.".$instance_label."_tts').forEach(el => { el.classList.remove('animate-in'); });}\">\n";
 	echo "	<option value=''></option>\n";
+	if ($speech_enabled && !empty($speech_engine)) {
+		echo "<optgroup label='".$text['label-text_to_speech']."'>\n";
+		echo "	<option value='new' data-tts='new'>".$text['label-new']."</option>\n";
+		echo "</optgroup>\n";
+	}
 	$found = $playable = false;
 	if (!empty($audio_files) && is_array($audio_files) && @sizeof($audio_files) != 0) {
 		foreach ($audio_files as $key => $value) {
@@ -879,7 +1070,270 @@
 		unset($playable, $mime_type);
 	}
 	echo "<br />\n";
+	if ($speech_enabled && !empty($speech_engine)) {
+		echo "<div class='".$instance_label."_tts'>\n";
+
+		echo "	<strong>".$text['label-recording_name']."</strong><br />\n";
+		echo "	<input class='formfld' type='text' name='".$instance_label."[recording_name]' maxlength='255' value=\"".escape($recording_name)."\">\n";
+		echo "	<br /><br />\n";
+
+		echo "	<div style='display: flex; flex-wrap: wrap; column-gap: 10px; width: 400px;'>\n";
+
+		echo "		<div style='flex: 1; min-width: 200px;'>\n";
+		echo "			<strong>".$text['label-voice']."</strong>\n";
+		echo "		</div>\n";
+
+		if ($speed_enabled) {
+			echo "		<div style='flex: 1; min-width: 120px;'>\n";
+			echo "			<strong>".$text['label-speed']."</strong>\n";
+			echo "		</div>\n";
+		}
+
+		// Voice
+		echo "		<div style='flex: 1; min-width: 200px;'>\n";
+		if (!empty($voices)) {
+			if ($voices_array_type == 'single') {
+				echo "	<select class='formfld' name='".$instance_label."[recording_voice]' style='width: 100%;'>\n";
+				echo "		<option value=''></option>\n";
+				foreach ($voices as $key => $voice) {
+					$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
+					echo "		<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+				}
+				echo "	</select>\n";
+			}
+			if ($voices_array_type == 'multi') {
+				echo "	<select class='formfld' id='recording_voice_source' name='".$instance_label."[recording_voice_source]' style='display: none;'>\n";
+				echo "		<option value=''></option>\n";
+				foreach ($voices as $category => $sub_array) {
+					$category = $text['label-'.$category] ?? $category;
+					echo "<optgroup label='".$category."' data-type='".$category."'>\n";
+					foreach ($sub_array as $key => $voice) {
+						$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
+						echo "	<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+					}
+					echo "</optgroup>\n";
+				}
+				echo "	</select>\n";
+
+				echo "	<select class='formfld' id='recording_voice_group_select' style='width: 100%; margin-bottom: 5px;'>\n";
+				echo "		<option value='' disabled='disabled' selected='selected'></option>\n";
+				echo "	</select>\n";
+
+				echo "	<select class='formfld' id='recording_voice_option_select' name='".$instance_label."[recording_voice]' style='width: 100%;' disabled='disabled'>\n";
+				echo "		<option value='' disabled='disabled' selected='selected'></option>\n";
+				echo "	</select>\n";
+
+				echo "<script>\n";
+				echo "	select_group_option('recording_voice_source', 'recording_voice_group_select', 'recording_voice_option_select');\n";
+				echo "</script>\n";
+			}
+		} else {
+			echo "	<input class='formfld' type='text' name='".$instance_label."[recording_voice]' maxlength='255' value=\"".escape($recording_voice)."\">\n";
+		}
+		echo "	</div>\n";
+
+		// Speed
+		if ($speed_enabled) {
+			echo "	<div style='flex: 1; min-width: 120px;'>\n";
+			echo "	<select class='formfld' name='".$instance_label."[recording_speed]' style='width: 100%;'>\n";
+			foreach ($speed_options as $speed_value => $speed_label) {
+				$selected = (string)$recording_speed === $speed_value ? "selected='selected'" : '';
+				echo "		<option value='".escape($speed_value)."' $selected>".escape($speed_label)."</option>\n";
+			}
+			echo "	</select>\n";
+			echo "	<br />\n";
+			echo "	</div>\n";
+		}
+		echo "	</div>\n";
+
+		echo "	<br />\n";
+		echo "	<strong>".$text['label-message']."</strong><br />\n";
+		echo "	<textarea class='formfld' name='".$instance_label."[recording_message]' style='width: 300px; height: 150px;'></textarea>\n";
+
+		echo "</div>\n";
+	}
 	echo $text['description-'.$instance_label]."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	$instance_id = 'ring_group_wait_announcement';
+	$instance_label = 'wait_announcement';
+	$instance_value = $ring_group_wait_announcement;
+	echo "<tr>\n";
+	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-wait_announcement']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld searchable_select' onchange=\"".(permission_exists('recording_play') || permission_exists('recording_download') ? "recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));" : null)." if (this.options[this.selectedIndex].getAttribute('data-tts') == 'new') {document.querySelectorAll('.".$instance_label."_tts').forEach(el => { el.classList.add('animate-in'); });} else {document.querySelectorAll('.".$instance_label."_tts').forEach(el => { el.classList.remove('animate-in'); });}\">\n";
+	echo "	<option value=''></option>\n";
+	if ($speech_enabled && !empty($speech_engine)) {
+		echo "<optgroup label='".$text['label-text_to_speech']."'>\n";
+		echo "	<option value='new' data-tts='new'>".$text['label-new']."</option>\n";
+		echo "</optgroup>\n";
+	}
+	$found = $playable = false;
+	if (!empty($audio_files) && is_array($audio_files) && @sizeof($audio_files) != 0) {
+		foreach ($audio_files as $key => $value) {
+			echo "<optgroup label=".$text['label-'.$key]." data-type='".$key."'>\n";
+			foreach ($value as $row) {
+				if ($key == 'recordings') {
+					if (
+						!empty($instance_value) &&
+						($instance_value == $row["value"] || $instance_value == $settings->get('switch', 'recordings', '')."/".$domain_name.'/'.$row["value"]) &&
+						file_exists($settings->get('switch', 'recordings', '')."/".$domain_name.'/'.pathinfo($row["value"], PATHINFO_BASENAME))
+						) {
+						$selected = "selected='selected'";
+						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.pathinfo($row["value"], PATHINFO_BASENAME);
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
+				else if ($key == 'sounds') {
+					if (!empty($instance_value) && $instance_value == $row["value"]) {
+						$selected = "selected='selected'";
+						$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
+				else if ($key == 'phrases') {
+					if (!empty($instance_value) && $instance_value == $row["value"]) {
+						$selected = "selected='selected'";
+						$playable = '';
+						$found = true;
+					}
+					else {
+						unset($selected);
+					}
+				}
+				else {
+					unset($selected);
+				}
+				echo "	<option value='".escape($row["value"])."' ".($selected ?? '').">".escape($row["name"])."</option>\n";
+			}
+			echo "</optgroup>\n";
+		}
+	}
+	if (if_group("superadmin") && !empty($instance_value) && !$found) {
+		echo "	<option value='".escape($instance_value)."' selected='selected'>".escape($instance_value)."</option>\n";
+	}
+	unset($selected);
+	echo "	</select>\n";
+	if (if_group("superadmin")) {
+		echo "<input type='button' id='btn_select_to_input_".$instance_id."' class='btn' name='' alt='back' onclick='toggle_select_input(document.getElementById(\"".$instance_id."\"), \"".$instance_id."\"); this.style.visibility=\"hidden\";' value='&#9665;'>";
+	}
+	if ((permission_exists('recording_play') || permission_exists('recording_download')) && (!empty($playable) || empty($instance_value))) {
+		switch (pathinfo($playable, PATHINFO_EXTENSION)) {
+			case 'wav' : $mime_type = 'audio/wav'; break;
+			case 'mp3' : $mime_type = 'audio/mpeg'; break;
+			case 'ogg' : $mime_type = 'audio/ogg'; break;
+		}
+		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'))"]);
+		unset($playable, $mime_type);
+	}
+	echo "<br />\n";
+	if ($speech_enabled && !empty($speech_engine)) {
+		echo "<div class='".$instance_label."_tts'>\n";
+
+		echo "	<strong>".$text['label-recording_name']."</strong><br />\n";
+		echo "	<input class='formfld' type='text' name='".$instance_label."[recording_name]' maxlength='255' value=\"".escape($recording_name)."\">\n";
+		echo "	<br /><br />\n";
+
+		echo "	<div style='display: flex; flex-wrap: wrap; column-gap: 10px; width: 400px;'>\n";
+
+		echo "		<div style='flex: 1; min-width: 200px;'>\n";
+		echo "			<strong>".$text['label-voice']."</strong>\n";
+		echo "		</div>\n";
+
+		if ($speed_enabled) {
+			echo "		<div style='flex: 1; min-width: 120px;'>\n";
+			echo "			<strong>".$text['label-speed']."</strong>\n";
+			echo "		</div>\n";
+		}
+
+		// Voice
+		echo "		<div style='flex: 1; min-width: 200px;'>\n";
+		if (!empty($voices)) {
+			if ($voices_array_type == 'single') {
+				echo "	<select class='formfld' name='".$instance_label."[recording_voice]' style='width: 100%;'>\n";
+				echo "		<option value=''></option>\n";
+				foreach ($voices as $key => $voice) {
+					$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
+					echo "		<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+				}
+				echo "	</select>\n";
+			}
+			if ($voices_array_type == 'multi') {
+				echo "	<select class='formfld' id='recording_voice_source' name='".$instance_label."[recording_voice_source]' style='display: none;'>\n";
+				echo "		<option value=''></option>\n";
+				foreach ($voices as $category => $sub_array) {
+					$category = $text['label-'.$category] ?? $category;
+					echo "<optgroup label='".$category."' data-type='".$category."'>\n";
+					foreach ($sub_array as $key => $voice) {
+						$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
+						echo "	<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+					}
+					echo "</optgroup>\n";
+				}
+				echo "	</select>\n";
+
+				echo "	<select class='formfld' id='recording_voice_group_select' style='width: 100%; margin-bottom: 5px;'>\n";
+				echo "		<option value='' disabled='disabled' selected='selected'></option>\n";
+				echo "	</select>\n";
+
+				echo "	<select class='formfld' id='recording_voice_option_select' name='".$instance_label."[recording_voice]' style='width: 100%;' disabled='disabled'>\n";
+				echo "		<option value='' disabled='disabled' selected='selected'></option>\n";
+				echo "	</select>\n";
+
+				echo "<script>\n";
+				echo "	select_group_option('recording_voice_source', 'recording_voice_group_select', 'recording_voice_option_select');\n";
+				echo "</script>\n";
+			}
+		} else {
+			echo "	<input class='formfld' type='text' name='".$instance_label."[recording_voice]' maxlength='255' value=\"".escape($recording_voice)."\">\n";
+		}
+		echo "	</div>\n";
+
+		// Speed
+		if ($speed_enabled) {
+			echo "	<div style='flex: 1; min-width: 120px;'>\n";
+			echo "	<select class='formfld' name='".$instance_label."[recording_speed]' style='width: 100%;'>\n";
+			foreach ($speed_options as $speed_value => $speed_label) {
+				$selected = (string)$recording_speed === $speed_value ? "selected='selected'" : '';
+				echo "		<option value='".escape($speed_value)."' $selected>".escape($speed_label)."</option>\n";
+			}
+			echo "	</select>\n";
+			echo "	<br />\n";
+			echo "	</div>\n";
+		}
+		echo "	</div>\n";
+
+		echo "	<br />\n";
+		echo "	<strong>".$text['label-message']."</strong><br />\n";
+		echo "	<textarea class='formfld' name='".$instance_label."[recording_message]' style='width: 300px; height: 150px;'></textarea>\n";
+
+		echo "</div>\n";
+	}
+	echo $text['description-wait_announcement']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-wait_interval']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='number' name='ring_group_wait_interval' maxlength='255' value=\"".escape($ring_group_wait_interval)."\" min='1' max='300'>\n";
+	echo "<br />\n";
+	echo $text['description-wait_interval']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -936,8 +1390,89 @@
 
 		echo "			<tr>\n";
 		echo "				<td class='formfld'>\n";
-		$onkeyup = !isset($row['ring_group_destination_uuid']) ? "onkeyup=\"document.getElementById('ring_group_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\"" : null; // new record
-		echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_number]\" class=\"formfld\" value=\"".escape($row['destination_number'])."\" ".$onkeyup.">\n";
+		$oninput = !isset($row['ring_group_destination_uuid']) ? "oninput=\"document.getElementById('ring_group_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\"" : null; // new record
+		echo "					<div class='searchable_select_wrapper'>\n";
+		echo "						<input type='text' name='ring_group_destinations[".$x."][destination_number]' class='formfld extension_search_input' value='".escape($row['destination_number'])."' ".$oninput.">\n";
+		echo "						<div class='search_results'></div>\n";
+		echo "						<select class='extension_hidden_select' style='display:none;'>\n";
+		foreach ($extension_users as $ext_data) {
+			$users_string = implode(', ', array_map('htmlspecialchars', $ext_data['users']));
+			echo "						<option value='".escape($ext_data['extension'])."' data-users='".$users_string."'>".escape($ext_data['extension'])."</option>";
+		}
+		echo "						</select>\n";
+		echo "					</div>\n";
+
+		?>
+		<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const wrappers = document.querySelectorAll('.searchable_select_wrapper:has(.extension_hidden_select)');
+
+			wrappers.forEach(wrapper => {
+				const input = wrapper.querySelector('.extension_search_input');
+				const hidden_select = wrapper.querySelector('.extension_hidden_select');
+				const results = wrapper.querySelector('.search_results');
+
+				// Cache options once for performance
+				const options = Array.from(hidden_select.querySelectorAll('option'));
+
+				if (!input || !results) return;
+
+				function render_results() {
+					// Hide other dropdowns before showing the active one
+					document.querySelectorAll('.search_results').forEach(dropdown => { dropdown.style.display = 'none'; });
+					results.style.display = 'block';
+
+					const term = this.value.trim().toLowerCase();
+
+					// Clear previous results
+					results.innerHTML = '';
+
+					options.forEach(option => {
+						const extension = option.value.trim().toLowerCase();
+						const users = (option.getAttribute('data-users') || '').split(',').map(u => u.trim()).filter(Boolean);
+						const users_lower = users.map(user => user.toLowerCase());
+
+						// Match if extension or username contains the search term
+						const matches_extension = extension.includes(term);
+						const matches_user = users_lower.some(user => user.includes(term));
+
+						if (matches_extension || matches_user) {
+							const item = document.createElement('div');
+							item.className = 'search_result_item';
+
+							const extension = document.createElement('div');
+							extension.className = 'search_result_name';
+							extension.textContent = option.value;
+
+							const username = document.createElement('div');
+							username.className = 'search_result_description';
+							username.textContent = option.getAttribute('data-users') || '';
+
+							item.appendChild(extension);
+							item.appendChild(username);
+
+							// Click to populate input & hidden select
+							item.addEventListener('click', () => {
+								input.value = option.value;
+								hidden_select.value = option.value;
+								results.style.display = 'none';
+
+								input.dispatchEvent(new Event('focus', { bubbles: true }));
+								input.dispatchEvent(new Event('input',  { bubbles: true }));
+							});
+
+							results.appendChild(item);
+						}
+					});
+				}
+
+				input.addEventListener('focus',  render_results);
+				input.addEventListener('input',  render_results);
+			});
+		});
+		</script>
+		<?php
+
 		echo "				</td>\n";
 		echo "				<td class='formfld'>\n";
 		echo "					<select name='ring_group_destinations[".$x."][destination_delay]' class='formfld' style='width:55px'>\n";
@@ -1262,7 +1797,7 @@
 			echo "	</span>";
 		}
 		echo "&nbsp;";
-		echo 	"<input class='formfld' ".($input_toggle_style_switch ? "style='margin-top: -21px;'" : null)." type='text' name='ring_group_forward_destination' id='ring_group_forward_destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($ring_group_forward_destination)."\">";
+		echo 	"<input class='formfld' type='text' name='ring_group_forward_destination' id='ring_group_forward_destination' placeholder=\"".$text['label-forward_destination']."\" maxlength='255' value=\"".escape($ring_group_forward_destination)."\">";
 		echo "<br />\n";
 		echo $text['description-ring-group-forward']."\n";
 		echo "</td>\n";

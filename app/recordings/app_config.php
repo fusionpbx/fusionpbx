@@ -45,6 +45,34 @@
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "lua:streamfile.lua \${destination}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:lua streamfile.lua \${destination}";
 		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
+		$y++;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "playback";
+		$apps[$x]['destinations'][$y]['name'] = "playback";
+		$apps[$x]['destinations'][$y]['sql'] = "SELECT ";
+		$apps[$x]['destinations'][$y]['sql'] .= "  r.recording_uuid, r.recording_name AS name, ";
+		$apps[$x]['destinations'][$y]['sql'] .= "  s.recording_path || '/' || d.domain_name || '/' || r.recording_filename AS destination ";
+		$apps[$x]['destinations'][$y]['sql'] .= "FROM ";
+		$apps[$x]['destinations'][$y]['sql'] .= "  v_recordings AS r ";
+		$apps[$x]['destinations'][$y]['sql'] .= "INNER JOIN ";
+		$apps[$x]['destinations'][$y]['sql'] .= "  v_domains AS d ON r.domain_uuid = d.domain_uuid ";
+		$apps[$x]['destinations'][$y]['sql'] .= "CROSS JOIN ( ";
+		$apps[$x]['destinations'][$y]['sql'] .= "  SELECT default_setting_value AS recording_path ";
+		$apps[$x]['destinations'][$y]['sql'] .= "  FROM v_default_settings ";
+		$apps[$x]['destinations'][$y]['sql'] .= "  WHERE default_setting_category = 'switch' ";
+		$apps[$x]['destinations'][$y]['sql'] .= "  AND default_setting_subcategory = 'recordings' ";
+		$apps[$x]['destinations'][$y]['sql'] .= ") AS s ";
+		$apps[$x]['destinations'][$y]['sql'] .= "WHERE ";
+		$apps[$x]['destinations'][$y]['sql'] .= "  r.domain_uuid = '\${domain_uuid}' ";
+		$apps[$x]['destinations'][$y]['sql'] .= "  AND d.domain_uuid = '\${domain_uuid}' ";
+		$apps[$x]['destinations'][$y]['order_by'] = "recording_name asc";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "recording_uuid";
+		$apps[$x]['destinations'][$y]['field']['name'] = "recording_name";
+		$apps[$x]['destinations'][$y]['field']['destination'] = "recording_filename";
+		$apps[$x]['destinations'][$y]['field']['description'] = "recording_description";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "playback:\${destination}";
+		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:playback \${destination}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${name}";
 
 	//permission details
 		$y=0;
@@ -87,7 +115,16 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "recording_map";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "recording_password";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "playback_destinations";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
@@ -183,6 +220,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = 'true';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "recording_speed";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "numeric";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "decimal(4,2)";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Speech speed (0.25 to 4.0, default 1.0).";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "recording_message";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

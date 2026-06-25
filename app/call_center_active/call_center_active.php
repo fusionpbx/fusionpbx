@@ -130,7 +130,7 @@
 	}
 
 	var requestTime = function() {
-		var url = 'call_center_active_inc.php?queue_name=<?php echo escape($queue_name); ?>&name=<?php echo urlencode(escape($name)); ?>&agent_status=<?php echo escape($_GET['agent_status']); ?>';
+		var url = 'call_center_active_inc.php?queue_name=<?php echo escape($queue_name); ?>&name=<?php echo urlencode($name); ?>&agent_status=<?php echo escape($_GET['agent_status']); ?>';
 		new loadXmlHttp(url, 'ajax_response');
 		<?php
 
@@ -183,7 +183,7 @@
 	echo "	<div class='actions'>\n";
 	echo "		<form id='frm' name='frm' method='GET'>\n";
 	echo "			<input type='hidden' name='queue_name' value='".escape($queue_name)."'>\n";
-	echo "			<input type='hidden' name='name' value='".urlencode(escape($_GET['name']))."'>\n";
+	echo "			<input type='hidden' name='name' value='".escape($_GET['name'])."'>\n";
 	echo "			<select class='formfld' name='agent_status' id='agent_status' onchange=\"document.getElementById('frm').submit();\">\n";
 	echo "				<option value='' selected disabled hidden>".$text['label-status']."...</option>";
 	echo "				<option value=''></option>\n";

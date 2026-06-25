@@ -32,5 +32,34 @@
 	$apps[$x]['menu'][$y]['order'] = "";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$y++;
-
-?>
+	$apps[$x]['menu'][$y]['title']['en-us'] = "Domain Profile";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Domain  Profile";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "ملف تعريف النطاق";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "Bereichsprofil";
+	$apps[$x]['menu'][$y]['title']['de-de'] = "Bereichsprofil";
+	$apps[$x]['menu'][$y]['title']['es-cl'] = "Perfil de Dominio";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "Perfil de Dominio";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Profil de domaine";
+	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Profil de domaine";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "פרופיל דומיין";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Profilo Dominio";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "დომენის პროფილი";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Domeinprofiel";
+	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Profil Domeny";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Perfil de Domínio";
+	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Perfil de Domínio";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Profil Domeniu";
+	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Профиль домена";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "Domänprofil";
+	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Профіль домену";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "域名配置文件";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "ドメインプロフィール";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "도메인 프로필";
+	$apps[$x]['menu'][$y]['uuid'] = "84d72d69-0fc8-4414-a36a-a03b1255ff91";
+	$apps[$x]['menu'][$y]['parent_uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
+	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['icon'] = "";
+	$apps[$x]['menu'][$y]['path'] = "/core/domains/domain_profile.php";
+	$apps[$x]['menu'][$y]['order'] = "";
+	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$apps[$x]['menu'][$y]['groups'][] = "admin";

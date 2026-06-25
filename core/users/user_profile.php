@@ -456,11 +456,14 @@
 					}
 					unset($sql, $parameters, $row);
 
-					//replace variables in email body
-					$email_body = str_replace('${domain}', $domain_name, $email_body);
+					//send email if the subject and body are not empty
+					if (!empty($email_subject) && !empty($email_body)) {
+						//replace variables in email body
+						$email_body = str_replace('${domain}', $domain_name, $email_body);
 
-					//send the email
-					send_email($user_email, $email_subject, $email_body, $eml_error);
+						//send the email
+						send_email($user_email, $email_subject, $email_body, $eml_error);
+					}
 
 					//get the username
 					$sql = "select username from v_users ";
@@ -910,7 +913,7 @@
 	echo "		<td class='vtable' align='left'>\n";
 	$countries = get_countries($database);
 	if (is_array($countries) && sizeof($countries) > 0) {
-		echo "		<select class='formfld' name='address_country' id='address_country' required='required'>\n";
+		echo "		<select class='formfld searchable_select' name='address_country' id='address_country' required='required'>\n";
 		echo "			<option value=''></option>\n";
 		foreach ($countries as $country) {
 			$selected = ($address_country == $country['iso_a3']) ? "selected='selected'" : null;
@@ -954,7 +957,7 @@
 	echo "		".$text['label-time_zone']."\n";
 	echo "	</td>\n";
 	echo "	<td class=\"vtable\" align='left'>\n";
-	echo "		<select id='user_time_zone' name='user_time_zone' class='formfld' style=''>\n";
+	echo "		<select id='user_time_zone' name='user_time_zone' class='formfld searchable_select' style=''>\n";
 	echo "		<option value=''></option>\n";
 	//$list = DateTimeZone::listAbbreviations();
 	$time_zone_identifiers = DateTimeZone::listIdentifiers();

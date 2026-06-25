@@ -192,7 +192,7 @@
 			foreach ($extensions as $row) {
 				echo "					<label class='option_item' data-value='".escape($row['extension'])."'>\n";
 				$selected = (!empty($caller_extension_uuid) && $row['extension_uuid'] == $caller_extension_uuid) ? "checked" : null;
-				echo "						<input type='checkbox' value='".escape($row['extension_uuid'])."' ".escape($selected).">\n";
+				echo "						<input type='checkbox' value='".escape($row['extension_uuid'])."' $selected>\n";
 				echo "						".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."\n";
 				echo "					</label>\n";
 			}
@@ -352,7 +352,7 @@
 			if (is_array($call_center_queues) && @sizeof($call_center_queues) != 0) {
 				foreach ($call_center_queues as $row) {
 					$selected = ($row['call_center_queue_uuid'] == $call_center_queue_uuid) ? "selected" : null;
-					echo "		<option value='".escape($row['call_center_queue_uuid'])."' ".escape($selected).">".((is_numeric($row['queue_extension'])) ? escape($row['queue_extension']." (".$row['queue_name'].")") : escape($row['queue_extension'])." (".escape($row['queue_extension']).")")."</option>";
+					echo "		<option value='".escape($row['call_center_queue_uuid'])."' $selected>".((is_numeric($row['queue_extension'])) ? escape($row['queue_extension']." (".$row['queue_name'].")") : escape($row['queue_extension'])." (".escape($row['queue_extension']).")")."</option>";
 				}
 			}
 			echo "			</select>\n";
@@ -370,7 +370,7 @@
 			if (is_array($ring_groups) && @sizeof($ring_groups) != 0) {
 				foreach ($ring_groups as $row) {
 					$selected = ($row['ring_group_uuid'] == $ring_group_uuid) ? "selected" : null;
-					echo "		<option value='".escape($row['ring_group_uuid'])."' ".escape($selected).">".((is_numeric($row['ring_group_extension'])) ? escape($row['ring_group_extension']." (".$row['ring_group_name'].")") : escape($row['ring_group_extension'])." (".escape($row['ring_group_extension']).")")."</option>";
+					echo "		<option value='".escape($row['ring_group_uuid'])."' $selected>".((is_numeric($row['ring_group_extension'])) ? escape($row['ring_group_extension']." (".$row['ring_group_name'].")") : escape($row['ring_group_extension'])." (".escape($row['ring_group_extension']).")")."</option>";
 				}
 			}
 			echo "			</select>\n";

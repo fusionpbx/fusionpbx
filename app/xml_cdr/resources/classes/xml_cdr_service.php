@@ -25,10 +25,10 @@ class xml_cdr_service extends service {
 	private $settings;
 
 	/**
-	 * cdr object
-	 * @var settings
+	 * xml_cdr object
+	 * @var xml_cdr
 	 */
-	private $cdr;
+	private $xml_cdr;
 
 	/**
 	 * hostname variable
@@ -47,7 +47,7 @@ class xml_cdr_service extends service {
 	 *
 	 * @return void
 	 */
-	protected function reload_settings(): void {
+	public function reload_settings(): void {
 		// Read the config file to get any possible changes
 		parent::$config->read();
 
@@ -61,7 +61,7 @@ class xml_cdr_service extends service {
 		$this->hostname = gethostname();
 
 		// Initialize the xml cdr object
-		$this->cdr = new xml_cdr;
+		$this->xml_cdr = new xml_cdr(["database" => $this->database, "settings" => $this->settings]);
 
 		// Get the xml_cdr directory
 		$this->xml_cdr_dir = $this->settings->get('switch', 'log', '/var/log/freeswitch').'/xml_cdr';
@@ -297,7 +297,7 @@ class xml_cdr_service extends service {
 		// Process the call detail record
 		if (isset($xml_cdr_file) && isset($call_details)) {
 			// Set the file
-			$this->cdr->file = basename($xml_cdr_file);
+			$this->xml_cdr->file = basename($xml_cdr_file);
 
 			// Get the leg of the call and the file prefix
 			if (substr(basename($xml_cdr_file), 0, 2) == "a_") {
@@ -313,7 +313,7 @@ class xml_cdr_service extends service {
 			}
 
 			// Parse the XML and insert the data into the database
-			$this->cdr->xml_array(0, $leg, $call_details);
+			$this->xml_cdr->xml_array(0, $leg, $call_details);
 		}
 	}
 

@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+# PROVIDE: xml_cdr
+# REQUIRE: DAEMON
+# KEYWORD: shutdown
+#
+# Add the following lines to /etc/rc.conf to enable xml_cdr:
+# xml_cdr_enable:      Set it to "YES" to enable xml_cdr.
+#                          Default is "NO".
+#
+
+. /etc/rc.subr
+name="xml_cdr"
+
+rcvar=${name}_enable
+load_rc_config $name
+
+# Set defaults
+: ${xml_cdr_enable="NO"}
+: ${xml_cdr_pidfile="/var/run/xml_cdr.pid"}
+
+# Prepare the variables
+start_cmd=${name}_start
+stop_cmd=${name}_stop
+status_cmd=${name}_status
+pidfile=${xml_cdr_pidfile}
+
+# Path to the PHP script
+script="/usr/local/www/fusionpbx/app/xml_cdr/resources/service/xml_cdr.php"
+
+# Command to run the script
+command="/usr/local/bin/php"
+
+xml_cdr_start() {
+    echo "Starting $name..."
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        echo "$name is already running."
+    else
+        # Fully detach from parent shell to prevent 'service' from blocking
+        nohup $command $script </dev/null >/dev/null 2>&1 &
+        echo $! > "$pidfile"
+        echo "$name started."
+    fi
+}
+
+xml_cdr_stop() {
+    echo "Stopping $name..."
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        kill "$(cat $pidfile)"
+        rm -f "$pidfile"
+        echo "$name stopped."
+    else
+        echo "$name is not running."
+    fi
+}
+
+xml_cdr_status() {
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        echo "$name is running with PID $(cat $pidfile)."
+    else
+        echo "$name is not running."
+    fi
+}
+
+run_rc_command "$1"

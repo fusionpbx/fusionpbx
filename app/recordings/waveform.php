@@ -64,7 +64,7 @@
 			unset($sql, $parameters, $row, $recording_decoded);
 		}
 		else if ($_GET['data']) {
-			$recording_filename = str_replace($path, '', $_GET['data']);
+			$recording_filename = basename($_GET['data']);
 		}
 
 		//build full path

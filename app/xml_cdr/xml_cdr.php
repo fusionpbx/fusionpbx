@@ -105,7 +105,8 @@
 	$xml_cdrs = [];
 	$paging_controls_mini = '';
 	$paging_controls = null;
-	$order_by = "";
+	$order = '';
+	$order_by = '';
 	$read_codec = '';
 	$write_codec = '';
 	if (!isset($_REQUEST['show'])) {
@@ -124,8 +125,8 @@
 		switch ($action) {
 			case 'delete':
 				if ($permission['xml_cdr_delete']) {
-					$obj = new xml_cdr;
-					$obj->delete($xml_cdrs);
+					$xml_cdr = new xml_cdr(["database" => $database, "settings" => $settings, "domain_uuid" => $domain_uuid]);
+					$xml_cdr->delete($xml_cdrs);
 				}
 				break;
 		}
@@ -137,6 +138,18 @@
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
+
+//xml cdr include
+	$rows_per_page = $settings->get('domain', 'paging', 50);
+	require_once "xml_cdr_inc.php";
+
+//define global variables set in xml_cdr_inc.php
+	global $assigned_extension_uuids, $extension_uuids;
+	global $direction, $status, $leg, $order_by, $order, $query_string;
+	global $caller_id_name, $caller_id_number, $caller_destination;
+	global $duration_min, $duration_max, $hangup_cause, $recording;
+	global $start_stamp_begin, $start_stamp_end, $wait_min, $wait_max, $tta_min, $tta_max;
+	global $call_center_queue_uuid, $ring_group_uuid, $ivr_menu_uuid;
 
 //get the extensions
 	if ($permission['xml_cdr_search_extension']) {
@@ -192,10 +205,6 @@
 	}
 	require_once "resources/header.php";
 
-//xml cdr include
-	$rows_per_page = $settings->get('domain', 'paging', 50);
-	require_once "xml_cdr_inc.php";
-
 //javascript function: send_cmd
 	echo "<script type=\"text/javascript\">\n";
 	echo "	function send_cmd(url) {\n";
@@ -207,7 +216,7 @@
 	echo "		}\n";
 	echo "		xmlhttp.open(\"GET\",url,true);\n";
 	echo "		xmlhttp.send(null);\n";
-	echo "		document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;\n";
+	// echo "		document.getElementById('cmd_response').innerHTML=xmlhttp.responseText;\n";
 	echo "	}\n";
 	echo "</script>\n";
 
@@ -254,7 +263,7 @@
 	echo "		<input type='hidden' name='status' value='".escape($status ?? '')."'>\n";
 	echo "		<input type='hidden' name='caller_id_number' value='".escape($caller_id_number ?? '')."'>\n";
 	echo "		<input type='hidden' name='caller_destination' value='".escape($caller_destination ?? '')."'>\n";
-	echo "		<input type='hidden' name='extension_uuid' value='".escape($extension_uuid ?? '')."'>\n";
+	echo "		<input type='hidden' name='extension_uuids[]' value='".escape($extension_uuids ?? '')."'>\n";
 	echo "		<input type='hidden' name='destination_number' value='".escape($destination_number ?? '')."'>\n";
 	echo "		<input type='hidden' name='context' value='".escape($context ?? '')."'>\n";
 	echo "		<input type='hidden' name='answer_stamp_begin' value='".escape($answer_stamp_begin ?? '')."'>\n";
@@ -399,7 +408,7 @@
 			if (is_array($extensions) && @sizeof($extensions) != 0) {
 				foreach ($extensions as $row) {
 					$selected = ($row['extension_uuid'] == $extension_uuids[0]) ? "selected" : null;
-					echo "		<option value='".escape($row['extension_uuid'])."' ".escape($selected).">".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>\n";
+					echo "		<option value='".escape($row['extension_uuid'])."' $selected>".((is_numeric($row['extension'])) ? escape($row['extension']) : escape($row['number_alias'])." (".escape($row['extension']).")")."</option>\n";
 				}
 			}
 			echo "			</select>\n";
@@ -537,7 +546,7 @@
 			foreach ($cdr_status_options as $cdr_status) {
 				$selected = ($hangup_cause == $cdr_status) ? "selected='selected'" : null;
 				$cdr_status_label = ucwords(strtolower(str_replace("_", " ", $cdr_status)));
-				echo "			<option value='".escape($cdr_status)."' ".escape($selected).">".escape($cdr_status_label)."</option>\n";
+				echo "			<option value='".escape($cdr_status)."' $selected>".escape($cdr_status_label)."</option>\n";
 			}
 			echo "			</select>\n";
 			echo "		</div>\n";
@@ -647,7 +656,7 @@
 				echo "				<option value=''></option>";
 				foreach ($call_center_queues as $row) {
 					$selected = ($row['call_center_queue_uuid'] == $call_center_queue_uuid) ? "selected" : null;
-					echo "		<option value='".escape($row['call_center_queue_uuid'])."' ".escape($selected).">".((is_numeric($row['queue_extension'])) ? escape($row['queue_extension']." (".$row['queue_name'].")") : escape($row['queue_extension'])." (".escape($row['queue_extension']).")")."</option>";
+					echo "		<option value='".escape($row['call_center_queue_uuid'])."' $selected>".((is_numeric($row['queue_extension'])) ? escape($row['queue_extension']." (".$row['queue_name'].")") : escape($row['queue_extension'])." (".escape($row['queue_extension']).")")."</option>";
 				}
 				echo "			</select>\n";
 				echo "		</div>\n";
@@ -665,7 +674,7 @@
 				echo "				<option value=''></option>";
 				foreach ($ring_groups as $row) {
 					$selected = ($row['ring_group_uuid'] == $ring_group_uuid) ? "selected" : null;
-					echo "		<option value='".escape($row['ring_group_uuid'])."' ".escape($selected).">".((is_numeric($row['ring_group_extension'])) ? escape($row['ring_group_extension']." (".$row['ring_group_name'].")") : escape($row['ring_group_extension'])." (".escape($row['ring_group_extension']).")")."</option>";
+					echo "		<option value='".escape($row['ring_group_uuid'])."' $selected>".((is_numeric($row['ring_group_extension'])) ? escape($row['ring_group_extension']." (".$row['ring_group_name'].")") : escape($row['ring_group_extension'])." (".escape($row['ring_group_extension']).")")."</option>";
 				}
 				echo "			</select>\n";
 				echo "		</div>\n";
@@ -684,7 +693,7 @@
 			echo "				<option value=''></option>";
 			foreach ($ivr_menus as $row) {
 				$selected = ($row['ivr_menu_uuid'] == $ivr_menu_uuid) ? "selected" : null;
-				echo "		<option value='".escape($row['ivr_menu_uuid'])."' ".escape($selected).">".((is_numeric($row['ivr_menu_extension'])) ? escape($row['ivr_menu_extension']." (".$row['ivr_menu_name'].")") : escape($row['ivr_menu_extension'])." (".escape($row['ivr_menu_extension']).")")."</option>";
+				echo "		<option value='".escape($row['ivr_menu_uuid'])."' $selected>".((is_numeric($row['ivr_menu_extension'])) ? escape($row['ivr_menu_extension']." (".$row['ivr_menu_name'].")") : escape($row['ivr_menu_extension'])." (".escape($row['ivr_menu_extension']).")")."</option>";
 			}
 			echo "			</select>\n";
 			echo "		</div>\n";
@@ -709,10 +718,6 @@
 		echo "<br />\n";
 		echo "</form>";
 	}
-
-//mod paging parameters for inclusion in column sort heading links
-	$param = substr($param, 1); //remove leading '&'
-	$param = substr($param, 0, strrpos($param, '&order_by=')); //remove trailing order by
 
 //column overflow setting
 	echo "<style>\n";
@@ -954,7 +959,7 @@
 
 				//recording playback
 					if ($permission['xml_cdr_recording_play']) {
-						$content .= "<tr class='list-row' id='recording_progress_bar_".$row['xml_cdr_uuid']."' style='display: none;' onclick=\"recording_seek(event,'".escape($row['xml_cdr_uuid'])."')\"><td id='playback_progress_bar_background_".escape($row['xml_cdr_uuid'])."' class='playback_progress_bar_background' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".$row['xml_cdr_uuid']."'></span></td></tr>\n";
+						$content .= "<tr class='list-row' id='recording_progress_bar_".$row['xml_cdr_uuid']."' style='display: none;' onclick=\"recording_seek(event,'".escape($row['xml_cdr_uuid'])."')\"><td id='playback_progress_bar_background_".escape($row['xml_cdr_uuid'])."' class='playback_progress_bar_background' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['xml_cdr_uuid'])."'></span></td></tr>\n";
 						$content .= "<tr class='list-row' style='display: none;'><td></td></tr>\n"; // dummy row to maintain alternating background color
 					}
 					$list_row_url = '';
@@ -1006,7 +1011,7 @@
 				//source
 					if ($permission['xml_cdr_caller_id_number']) {
 						$content .= "	<td class='middle no-link no-wrap'>";
-						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($outbound_caller_id_name)."&dest_cid_number=".urlencode($outbound_caller_id_number)."&src=".urlencode($user_extension)."&dest=".urlencode(escape($row['caller_id_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($outbound_caller_id_name)."&dest_cid_number=".urlencode($outbound_caller_id_number)."&src=".urlencode($user_extension)."&dest=".urlencode($row['caller_id_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['caller_id_number'])) {
 							$content .= "		".escape(format_phone(substr($row['caller_id_number'], 0, 20))).' ';
 						}
@@ -1019,7 +1024,7 @@
 				//caller destination
 					if ($permission['xml_cdr_caller_destination']) {
 						$content .= "	<td class='middle no-link no-wrap'>";
-						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['caller_id_name']))."&src_cid_number=".urlencode(escape($row['caller_id_number']))."&dest_cid_name=".urlencode($outbound_caller_id_name)."&dest_cid_number=".urlencode($outbound_caller_id_number)."&src=".urlencode($user_extension)."&dest=".urlencode(escape($row['caller_destination']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($outbound_caller_id_name)."&dest_cid_number=".urlencode($outbound_caller_id_number)."&src=".urlencode($user_extension)."&dest=".urlencode($row['caller_destination'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['caller_destination'])) {
 							$content .= "		".escape(format_phone(substr($row['caller_destination'], 0, 20))).' ';
 						}
@@ -1032,7 +1037,7 @@
 				//destination
 					if ($permission['xml_cdr_destination']) {
 						$content .= "	<td class='hide-md-dn middle no-link no-wrap'>";
-						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode(escape($row['destination_number']))."&src_cid_number=".urlencode(escape($row['destination_number']))."&dest_cid_name=".urlencode($outbound_caller_id_name)."&dest_cid_number=".urlencode($outbound_caller_id_number)."&src=".urlencode($user_extension)."&dest=".urlencode(escape($row['destination_number']))."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+						$content .= "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['destination_number'])."&src_cid_number=".urlencode($row['destination_number'])."&dest_cid_name=".urlencode($outbound_caller_id_name)."&dest_cid_number=".urlencode($outbound_caller_id_number)."&src=".urlencode($user_extension)."&dest=".urlencode($row['destination_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 						if (is_numeric($row['destination_number'])) {
 							$content .= escape(format_phone(substr($row['destination_number'], 0, 20)))."\n";
 						}
@@ -1047,7 +1052,7 @@
 						if (!empty($record_path) || !empty($record_name)) {
 							$content .= "	<td class='middle button center no-link no-wrap'>";
 							if ($permission['xml_cdr_recording_play']) {
-								$content .= 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=\"download.php?id=".escape($row['xml_cdr_uuid'])."\" type='".escape($record_type)."'></audio>";
+								$content .= 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=\"download.php?id=".urlencode($row['xml_cdr_uuid'])."\" type='".escape($record_type)."'></audio>";
 								$content .= button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.escape($row['xml_cdr_uuid']),'onclick'=>"recording_play('".escape($row['xml_cdr_uuid'])."')"]);
 							}
 							if ($permission['xml_cdr_recording_download']) {
@@ -1123,7 +1128,7 @@
 						$content .= "	<td class='middle no-wrap hide-sm-dn'><a href='".$list_row_url."'>".escape($hangup_cause)."</a></td>\n";
 					}
 					$content .= "</tr>\n";
-				//show the leg b only to those with the permission
+				//show the leg b only to those with permission
 					if ($row['leg'] == 'a') {
 						echo $content;
 					}
@@ -1145,7 +1150,7 @@
 	echo "</form>\n";
 
 //store last search/sort query parameters in session
-	$_SESSION['xml_cdr']['last_query'] = $_SERVER["QUERY_STRING"];
+	$_SESSION['xml_cdr']['last_query'] = $query_string;
 
 //show the footer
 	require_once "resources/footer.php";

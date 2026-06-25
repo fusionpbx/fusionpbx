@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2023
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -76,7 +76,10 @@ class switch_files {
 	 */
 	public function copy_scripts() {
 
-		//get the source directory
+		// Initialize the message variable to hold any error messages
+		$message = '';
+	
+		// Get the source directory
 		if (file_exists('/usr/share/examples/fusionpbx/scripts')) {
 			$source_directory = '/usr/share/examples/fusionpbx/scripts';
 		} elseif (file_exists('/usr/local/www/fusionpbx/app/switch/resources/scripts')) {
@@ -87,32 +90,59 @@ class switch_files {
 			$source_directory = dirname(__DIR__, 4) . '/app/switch/resources/scripts';
 		}
 
-		//get the destination directory
+		// Get the destination directory
 		if (file_exists($this->config->get('switch.scripts.dir'))) {
 			$destination_directory = $this->config->get('switch.scripts.dir');
-		} elseif (file_exists('/etc/freeswitch/scripts')) {
-			$destination_directory = '/etc/freeswitch/scripts';
+		} elseif (file_exists('/usr/share/freeswitch/scripts/')) {
+			$destination_directory = '/usr/share/freeswitch/scripts';
 		} elseif (file_exists('/usr/local/freeswitch/scripts')) {
 			$destination_directory = '/usr/local/freeswitch/scripts';
 		}
 
-		//copy the scripts directory
-		if (!empty($source_directory) && is_readable($source_directory)) {
-			//copy the main scripts
+		// Check if the source and destination directories were found
+		if (empty($source_directory)) {
+			throw new Exception("Source directory for switch scripts not found.");	
+		}
+		if (empty($destination_directory)) {
+			throw new Exception("Destination directory for switch scripts not found.");
+		}
+
+		// Copy the scripts directory
+		if (!empty($source_directory) && !empty($destination_directory) 
+			&& is_readable($source_directory) && is_writable($destination_directory)) {
+			// Copy the main scripts
 			recursive_copy($source_directory, $destination_directory);
 			unset($source_directory);
 
-			//copy the app/*/resource/install/scripts
-			$app_scripts = glob(dirname(__DIR__, 4) . 'app/*/resource/scripts');
+			// Copy the app/*/resources/install/scripts
+			$app_scripts = glob(dirname(__DIR__, 4) . 'app/*/resources/scripts');
 			foreach ($app_scripts as $app_script) {
 				recursive_copy($app_script, $destination_directory);
 			}
 			unset($app_scripts);
 		} else {
-			throw new Exception("Cannot read from '$source_directory' to get the scripts");
+			// Determine the specific reason for the failure and set the message
+			if (!is_readable($source_directory)) {
+				$message = "Cannot read from '$source_directory' to get the scripts";
+			} elseif (!is_writable($destination_directory)) {
+				$message = "Cannot write to '$destination_directory' to copy the scripts";
+			} else {
+				$message = "Unknown error occurred while copying scripts from '$source_directory' to '$destination_directory'";
+			}
+
+			// If the message variable is set then throw an exception or send a message to the browser
+			if (is_cli()) {
+				// Throw an exception with the message if run from the command line
+				throw new Exception($message);
+			}
+			else {
+				// Send a message to browser if not run from the command line
+				message::add('Error: ' . $message, 'negative');
+			}
 		}
+
+		// Set the permissions of the destination directory to 0775
 		chmod($destination_directory, 0775);
-		unset($destination_directory);
 
 	}
 
@@ -123,7 +153,7 @@ class switch_files {
 	 */
 	public function copy_languages() {
 
-		//get the source directory
+		// Get the source directory
 		if (file_exists('/usr/share/examples/freeswitch/conf/languages')) {
 			$source_directory = '/usr/share/examples/fusionpbx/conf/languages';
 		} elseif (file_exists('/usr/local/www/fusionpbx/app/switch/resources/conf/languages')) {
@@ -134,7 +164,7 @@ class switch_files {
 			$source_directory = dirname(__DIR__, 4) . '/app/switch/resources/conf/languages';
 		}
 
-		//get the destination directory
+		// Get the destination directory
 		if (file_exists($this->config->get('switch.conf.dir') . '/languages')) {
 			$destination_directory = $this->config->get('switch.conf.dir') . '/languages';
 		} elseif (file_exists('/etc/freeswitch/languages')) {
@@ -143,16 +173,17 @@ class switch_files {
 			$destination_directory = '/usr/local/freeswitch/conf/languages';
 		}
 
-		//copy the languages directory
+		// Copy the languages directory
 		if (!empty($source_directory) && is_readable($source_directory)) {
-			//copy the main languages
+			// Copy the main languages
 			recursive_copy($source_directory, $destination_directory);
 			unset($source_directory);
 		} else {
 			throw new Exception("Cannot read from '$source_directory' to get the scripts");
 		}
+
+		// Set the permissions of the destination directory to 0775
 		chmod($destination_directory, 0775);
-		unset($destination_directory);
 
 	}
 

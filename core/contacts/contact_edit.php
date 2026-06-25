@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2018-2025
+	Portions created by the Initial Developer are Copyright (C) 2018-2026
 	the Initial Developer. All Rights Reserved.
 */
 
@@ -50,6 +50,32 @@
 	$url_label = '';
 	$relation_label = '';
 	$contact_attachments = [];
+
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'last_mod_date'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('contact_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
 
 //set from session variables
 	$body_text_color = !empty($settings->get('theme', 'body_text_color')) ? $settings->get('theme', 'body_text_color') : 'false';
@@ -110,7 +136,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: contacts.php');
+				header('Location: contacts.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -262,7 +288,7 @@
 
 				//redirect the user
 				if (in_array($_POST['action'], array('copy', 'delete', 'toggle'))) {
-					header('Location: contact_edit.php?id='.$id);
+					header('Location: contact_edit.php?id='.$id.($query_string ? '&'.$query_string : ''));
 					exit;
 				}
 			}
@@ -402,10 +428,33 @@
 						$array['contacts'][0]['contact_phones'][$y]['phone_primary'] = $row["phone_primary"];
 						$array['contacts'][0]['contact_phones'][$y]['phone_description'] = $row["phone_description"];
 
-						//clear the cache
+						// clear the speed dial cache only if speed dial is set
 						if (!empty($row["phone_speed_dial"])) {
 							$cache = new cache;
+
+							// clear the cache for the submitted speed dial number
 							$cache->delete("app.dialplan.speed_dial.".$row["phone_speed_dial"]."@".$_SESSION['domain_name']);
+
+							// clear the cache for the old speed dial number if it exists and is different from the submitted speed dial number
+							if ($action == "update" && is_uuid($row["contact_phone_uuid"])) {
+								// original speed dial number is not available so we have to get it from the database
+								$sql = "select phone_speed_dial from v_contact_phones ";
+								$sql .= "where contact_phone_uuid = :contact_phone_uuid ";
+								$parameters['contact_phone_uuid'] = $row["contact_phone_uuid"];
+								$old_phone_speed_dial = $database->execute($sql, $parameters, 'column');
+								unset($sql, $parameters);
+
+								// compare the original speed dial number to the newly submitted one
+								if (!empty($old_phone_speed_dial) && $old_phone_speed_dial != $row["phone_speed_dial"]) {
+									// they are different so we clear the old stale value from the cache
+									$cache->delete("app.dialplan.speed_dial.".$old_phone_speed_dial."@".$_SESSION['domain_name']);
+								}
+							}
+						}
+
+						// always clear caller ID lookup cache when a phone number is saved
+						if (!empty($row["phone_number"])) {
+							$cache = $cache ?? new cache;
 							$cache->delete("app:caller_id:lookup:domain_name:" . $_SESSION['domain_name'] . ":" . $row["phone_number"]);
 							if (!empty($row["phone_country_code"])) {
 								$cache->delete("app:caller_id:lookup:domain_name:" . $_SESSION['domain_name'] . ":" . $row["phone_country_code"] . $row["phone_number"]);
@@ -594,7 +643,7 @@
 					$_SESSION["message"] = $text['message-update'];
 				}
 				//header('Location: contacts.php');
-				header('Location: contact_edit.php?id='.urlencode($contact_uuid ?? null));
+				header('Location: contact_edit.php?id='.urlencode($contact_uuid ?? null).($query_string ? '&'.$query_string : ''));
 				return;
 			}
 	}
@@ -1109,7 +1158,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-contact-edit']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'contact_view.php?id='.$contact_uuid]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'contact_view.php?id='.$contact_uuid.($query_string ? '&'.$query_string : '')]);
 	if ($action == 'update') {
 		if (permission_exists('contact_phone_add')) {
 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
@@ -1219,11 +1268,14 @@
 	}
 
 input[type=text], select, textarea {
-	width: 100%;
+	max-width: 100%;
 	padding: 12px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
-	resize: vertical;
+	}
+
+input[type=text] {
+	width: 100%;
 	}
 
 label {
@@ -1479,7 +1531,7 @@ echo "		<div class='label'>\n";
 echo "			".$text['label-contact_time_zone']."\n";
 echo "		</div>\n";
 echo "		<div class='field no-wrap'>\n";
-echo "			<select class='formfld' id='contact_time_zone' name='contact_time_zone' style=''>\n";
+echo "			<select class='formfld searchable_select' id='contact_time_zone' name='contact_time_zone' style=''>\n";
 echo "				<option value=''></option>\n";
 //$list = DateTimeZone::listAbbreviations();
 $time_zone_identifiers = DateTimeZone::listIdentifiers();
@@ -1675,7 +1727,7 @@ if (permission_exists('contact_phone_view')) {
 	echo "	}\n";
 	echo "	xmlhttp.open(\"GET\",url,true);\n";
 	echo "	xmlhttp.send(null);\n";
-	echo "	document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;\n";
+	// echo "	document.getElementById('cmd_response').innerHTML=xmlhttp.responseText;\n";
 	echo "}\n";
 	echo "</script>\n";
 
@@ -2369,7 +2421,7 @@ if (permission_exists('contact_relation_view')) {
 				echo "			</div>\n";
 			}
 			echo "			<div class='button no-link' style='float: left; margin-top: 1px; margin-left: 8px;'>\n";
-			echo "				<a href='contact_edit.php?id=".escape($row['relation_contact_uuid'])."' target='_blank'>\n";
+			echo "				<a href='contact_edit.php?id=".urlencode($row['relation_contact_uuid'])."' target='_blank'>\n";
 			echo "					<span class='fas fa-user-group' style='color: ".$body_text_color."; float: left; margin-top: 7px; margin-left: 3px;'></span>\n";
 			echo "				</a>\n";
 			echo "			</div>\n";
@@ -2570,7 +2622,7 @@ if (permission_exists('contact_attachment_view')) {
 				echo "<img src='data:image/".$attachment_type.";base64,".escape($row['attachment_content'])."' style='border: none; cursor: pointer; width: 100%; height: auto;' onclick=\"display_attachment('".escape($row['contact_attachment_uuid'])."');\">";
 			}
 			else {
-				echo "<a href='contact_attachment.php?id=".escape($row['contact_attachment_uuid'])."&action=download' style='font-size: 120%;'>".escape($row['attachment_filename'])."</a>";
+				echo "<a href='contact_attachment.php?id=".urlencode($row['contact_attachment_uuid'])."&action=download' style='font-size: 120%;'>".escape($row['attachment_filename'])."</a>";
 			}
 		//}
 		//else {
@@ -2584,7 +2636,7 @@ if (permission_exists('contact_attachment_view')) {
 		echo "		".$text['label-attachment_filename']."\n";
 		echo "	</div>\n";
 		echo "	<div class='field no-wrap'>\n";
-		echo "		<a href='contact_attachment.php?id=".escape($row['contact_attachment_uuid'])."&action=download' style='font-size: 120%;'>".escape($row['attachment_filename'])."</a>";
+		echo "		<a href='contact_attachment.php?id=".urlencode($row['contact_attachment_uuid'])."&action=download' style='font-size: 120%;'>".escape($row['attachment_filename'])."</a>";
 		echo "	</div>\n";
 
 		echo "	<div class='label'>\n";
@@ -2688,7 +2740,7 @@ if (permission_exists('contact_note_view')) {
 			$contact_note = htmlspecialchars($contact_note, ENT_QUOTES, 'UTF-8');
 		}
 		if (permission_exists('contact_note_add')) {
-			$list_row_url = "contact_note_edit.php?contact_uuid=".escape($row['contact_uuid'])."&id=".escape($row['contact_note_uuid']);
+			$list_row_url = "contact_note_edit.php?contact_uuid=".urlencode($row['contact_uuid'])."&id=".urlencode($row['contact_note_uuid']);
 		}
 
 		echo "<div class='form_set card'>\n";

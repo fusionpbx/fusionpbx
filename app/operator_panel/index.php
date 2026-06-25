@@ -35,6 +35,9 @@
 		exit;
 	}
 
+// Globals from require.php
+	global $config, $database, $settings;
+
 // Multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -54,6 +57,8 @@
 		'operator_panel_manage'      => permission_exists('operator_panel_manage'),
 		'operator_panel_hangup'      => permission_exists('operator_panel_hangup'),
 		'operator_panel_eavesdrop'   => permission_exists('operator_panel_eavesdrop'),
+		'active_call_whisper'        => permission_exists('active_call_whisper'),
+		'active_call_barge'          => permission_exists('active_call_barge'),
 		'operator_panel_record'      => permission_exists('operator_panel_record'),
 		'operator_panel_originate'   => permission_exists('operator_panel_originate'),
 		'operator_panel_coach'       => permission_exists('operator_panel_coach'),
@@ -113,6 +118,10 @@
 	if (!in_array($card_label_position, ['top', 'left', 'right', 'bottom', 'hidden'], true)) {
 		$card_label_position = 'left';
 	}
+
+// Show/hide the "My Extensions" filter button.
+// Default is hidden when unset so the user's own extensions remain shown.
+	$my_extensions_button_visible = $settings->get('operator_panel', 'my_extensions_button_visible', 'false') === 'true';
 
 // Optional polling reconciliation of registration state (can be disabled).
 	$registrations_reconcile_enabled = $settings->get('operator_panel', 'registrations_reconcile_enabled', 'false') === 'true';
@@ -194,6 +203,9 @@
 
 	// Group card label position (top, left, right, bottom, hidden)
 	const card_label_position = <?= json_encode($card_label_position) ?>;
+
+	// Show/hide the "My Extensions" filter button
+	const my_extensions_button_visible = <?= json_encode($my_extensions_button_visible) ?>;
 
 	// Optional registrations-state reconciliation polling
 	const registrations_reconcile_enabled = <?= json_encode($registrations_reconcile_enabled) ?>;

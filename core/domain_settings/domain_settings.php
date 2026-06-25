@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -137,6 +137,7 @@
 		echo "		$('#btn_copy').fadeOut(fade_speed, function() {\n";
 		echo "			$('#btn_copy_cancel').fadeIn(fade_speed);\n";
 		echo "			$('#target_domain').fadeIn(fade_speed);\n";
+		echo "			if (typeof window.sync_domain_search_select_visibility === 'function') { window.sync_domain_search_select_visibility('target_domain'); }\n";
 		echo "			$('#btn_paste').fadeIn(fade_speed);\n";
 		echo "			document.getElementById('domain_uuid_target').value = '';\n";
 		echo "		});";
@@ -145,6 +146,7 @@
 		echo "		$('#btn_copy_cancel').fadeOut(fade_speed);\n";
 		echo "		$('#target_domain').fadeOut(fade_speed);\n";
 		echo "		$('#btn_paste').fadeOut(fade_speed, function() {\n";
+		echo "			if (typeof window.sync_domain_search_select_visibility === 'function') { window.sync_domain_search_select_visibility('target_domain'); }\n";
 		echo "			$('#btn_copy').fadeIn(fade_speed);\n";
 		echo "			document.getElementById('target_domain').selectedIndex = 0;\n";
 		echo "			document.getElementById('domain_uuid_target').value = '';\n";
@@ -168,7 +170,7 @@
 	if (permission_exists("domain_select") && permission_exists("domain_setting_add") && $num_rows) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'id'=>'btn_copy','icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','onclick'=>'show_domains();']);
 		echo button::create(['type'=>'button','label'=>$text['button-cancel'],'id'=>'btn_copy_cancel','icon'=>$settings->get('theme', 'button_icon_cancel'),'style'=>'display: none;','onclick'=>'hide_domains();']);
-		echo 	"<select class='formfld' style='display: none; width: auto;' id='target_domain' onchange=\"document.getElementById('domain_uuid_target').value = this.options[this.selectedIndex].value;\">\n";
+		echo "	<select class='formfld' style='display: none; width: auto;' id='target_domain' onchange=\"document.getElementById('domain_uuid_target').value = this.options[this.selectedIndex].value;\" data-domain-search='true'>\n";
 		echo "		<option value='".$domain_uuid."'>(".$text['label-duplicate'].")</option>\n";
 		echo "		<option value='' selected='selected' disabled='disabled'>".$text['label-domain']."...</option>\n";
 		foreach ($_SESSION['domains'] as $domain) {
@@ -180,7 +182,8 @@
 			echo "	<option value='default'>".$text['label-default_settings']."</option>\n";
 		}
 		echo "	</select>";
-		echo button::create(['type'=>'button','label'=>$text['button-paste'],'icon'=>$settings->get('theme', 'button_icon_paste'),'id'=>'btn_paste','style'=>'display: none;','onclick'=>"if (confirm('".$text['confirm-copy']."')) { list_action_set('copy'); list_form_submit('form_list'); } else { this.blur(); return false; }"]);
+		echo button::create(['type'=>'button','label'=>$text['button-paste'],'icon'=>$settings->get('theme', 'button_icon_paste'),'id'=>'btn_paste','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('copy'); list_form_submit('form_list');"])]);
 	}
 	if (permission_exists('domain_setting_edit') && $num_rows) {
 		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'name'=>'btn_toggle','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
@@ -259,7 +262,7 @@
 				echo "</tr>\n";
 			}
 			if (permission_exists('domain_setting_edit')) {
-				$list_row_url = PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".escape($domain_uuid)."&id=".escape($row['domain_setting_uuid']);
+				$list_row_url = PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".urlencode($domain_uuid)."&id=".urlencode($row['domain_setting_uuid']);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('domain_setting_add') || permission_exists('domain_setting_edit') || permission_exists('domain_setting_delete')) {

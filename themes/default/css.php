@@ -2339,6 +2339,7 @@ else { //default: white
 		-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 		<?php unset($br); ?>
+		vertical-align: middle;
 		}
 
 	.switch > select {
@@ -2929,7 +2930,6 @@ else { //default: white
 
 	div.card {
 		margin-bottom: 15px;
-		overflow-x: auto;
 		<?php
 		if (isset($card_border_size) || !empty($card_border_color) || !empty($card_background_color) || !empty($card_shadow_color)) {
 			if (isset($card_border_size) && !empty($card_border_color)) {
@@ -4137,59 +4137,124 @@ else { //default: white
 		color: <?=$input_text_placeholder_color?>;
 	}
 
-/* DOMAIN SEARCH DROPDOWN ********************************************************/
+/* SEARCHABLE SELECT BOX ********************************************************/
 
+	.searchable_select_wrapper,
 	.domain-search-picker {
 		position: relative;
 		display: inline-block;
 		max-width: 100%;
 	}
 
-	.domain-search-picker .domain-search-input { max-width: 100%; }
+	.searchable_select_wrapper input { width: 100%; }
 
+	.searchable_select_wrapper .search_results,
 	.domain-search-results {
 		display: none;
-		position: fixed;
+		position: absolute;
 		left: 0;
-		top: 0;
+		top: 100%;
 		background: <?=$input_background_color?>;
 		border-width: <?=$input_border_size?>;
 		border-style: <?=$input_border_style?>;
 		border-color: <?=$input_border_color?>;
 		border-radius: 4px;
+		border-top: none;
 		box-shadow: 0 4px 8px rgba(0,0,0,0.12);
-		z-index: 10050;
+		z-index: 4;
+		width: 100%;
 		max-height: 300px;
 		overflow-y: auto;
 		box-sizing: border-box;
 		text-align: left;
+		font-family: <?=$input_text_font?>;
+		font-size: <?=$input_text_size?>;
+		color: <?=$input_text_color?>;
 	}
 
+	.domain-search-results {
+		position: fixed;
+		z-index: 1000;
+	}
+
+	.searchable_select_wrapper .search_result_item,
 	.domain-search-result-item {
-		padding: 6px 10px;
+		padding: 6px 0 6px 10px;
 		cursor: pointer;
 		line-height: 1.3;
+		opacity: 0.8;
 	}
 
+	.searchable_select_wrapper .search_result_item:hover,
 	.domain-search-result-item:hover {
 		background-color: <?=$table_row_background_color_hover?>;
 	}
 
+	.searchable_select_wrapper .optgroup_header_row {
+		padding: 4px 10px;
+		font-weight: 700;
+		opacity: 0.8;
+	}
+
+	.searchable_select_wrapper .optgroup_header_row:first-of-type {
+		padding: 6px 10px 4px 10px;
+	}
+
+	.no_results_message,
+	.domain-search-empty {
+		padding: 8px 10px;
+		color: <?=$input_text_placeholder_color?>;
+	}
+
+	.searchable_select_wrapper .actions {
+		position: absolute;
+		top: 0;
+		right: 0;
+		padding: 4px 6px;
+		gap: 6px;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		color: #000000cc;
+	}
+
+	.clear_search_button,
+	.domain-search-clear {
+		position: absolute;
+		right: 7px;
+		top: 50%;
+		transform: translateY(-50%);
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: 16px;
+		color: #0000008b;
+		opacity: 0.6;
+		padding: 0;
+		line-height: 1;
+		pointer-events: auto;
+		z-index: 2;
+	}
+
+	.clear_search_button:hover {
+		color: #000000cc;
+	}
+
+	.domain-search-input, .domain-search-picker { max-width: 100%; }
+
+	.searchable_select_wrapper .search_result_name,
 	.domain-search-result-name {
 		display: block;
 	}
 
+	.searchable_select_wrapper .search_result_description,
 	.domain-search-result-description {
 		display: block;
 		opacity: 0.75;
 		font-size: 0.92em;
 		margin-top: 1px;
 	}
-
-	.domain-search-empty {
-		padding: 8px 10px;
-		color: <?=$input_text_placeholder_color?>;
-	};
 
 <?php
 

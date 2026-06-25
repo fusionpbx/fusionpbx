@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2020
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -114,7 +114,7 @@
 
 //show the msg
 	if ($msg) {
-		message::add($msg, 'negative', 5000);
+		message::add($msg, 'positive', 5000);
 	}
 
 //create token

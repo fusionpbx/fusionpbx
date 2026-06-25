@@ -55,26 +55,30 @@ class plugin_database {
 	 */
 	function database(authentication $auth, settings $settings) {
 
+		//add multi-lingual support
+		$language = new text;
+		$text     = $language->get(null, '/core/authentication');
+
 		//pre-process some settings
-		$theme_favicon             = $settings->get('theme', 'favicon', PROJECT_PATH . '/themes/default/favicon.ico');
-		$theme_logo                = $settings->get('theme', 'logo', PROJECT_PATH . '/themes/default/images/logo_login.png');
-		$theme_login_type          = $settings->get('theme', 'login_brand_type', '');
-		$theme_login_image         = $settings->get('theme', 'login_brand_image', '');
-		$theme_login_text          = $settings->get('theme', 'login_brand_text', '');
-		$theme_login_logo_width    = $settings->get('theme', 'login_logo_width', 'auto; max-width: 300px');
-		$theme_login_logo_height   = $settings->get('theme', 'login_logo_height', 'auto; max-height: 300px');
-		$theme_message_delay       = 1000 * (float)$settings->get('theme', 'message_delay', 3000);
-		$background_videos         = $settings->get('theme', 'background_video', []);
-		$theme_background_video    = (isset($background_videos[0])) ? $background_videos[0] : '';
+		$theme_favicon = $settings->get('theme', 'favicon', PROJECT_PATH . '/themes/default/favicon.ico');
+		$theme_logo = $settings->get('theme', 'logo', PROJECT_PATH . '/themes/default/images/logo_login.png');
+		$theme_login_type = $settings->get('theme', 'login_brand_type', '');
+		$theme_login_image = $settings->get('theme', 'login_brand_image', '');
+		$theme_login_text = $settings->get('theme', 'login_brand_text', '');
+		$theme_login_logo_width = $settings->get('theme', 'login_logo_width', 'auto; max-width: 300px');
+		$theme_login_logo_height = $settings->get('theme', 'login_logo_height', 'auto; max-height: 300px');
+		$theme_message_delay = 1000 * (float)$settings->get('theme', 'message_delay', 3000);
+		$background_videos = $settings->get('theme', 'background_video', []);
+		$theme_background_video = (isset($background_videos[0])) ? $background_videos[0] : '';
 		$login_domain_name_visible = $settings->get('login', 'domain_name_visible', false);
-		$login_domain_name         = $settings->get('login', 'domain_name');
-		$login_remember_me         = $settings->get('login', 'remember_me', true);
-		$login_destination         = $settings->get('login', 'destination');
-		$users_unique              = $settings->get('users', 'unique', '');
+		$login_domain_name = $settings->get('login', 'domain_name');
+		$login_remember_me = $settings->get('login', 'remember_me', true);
+		$login_destination = $settings->get('login', 'destination');
+		$users_unique = $settings->get('users', 'unique', '');
 
 		//set the default login type and image
 		if (empty($theme_login_type)) {
-			$theme_login_type  = 'image';
+			$theme_login_type = 'image';
 			$theme_login_image = $theme_logo;
 		}
 
@@ -94,21 +98,17 @@ class plugin_database {
 
 			//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-			$domain_name  = $domain_array[0];
+			$domain_name = $domain_array[0];
 
 			//create token
-			//$object = new token;
-			//$token = $object->create('login');
-
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get(null, '/core/authentication');
+			$object = new token;
+			$token = $object->create('login');
 
 			//initialize a template object
-			$view               = new template();
-			$view->engine       = 'smarty';
+			$view = new template();
+			$view->engine = 'smarty';
 			$view->template_dir = dirname(__DIR__, 5) . '/core/authentication/resources/views/';
-			$view->cache_dir    = sys_get_temp_dir();
+			$view->cache_dir = sys_get_temp_dir();
 			$view->init();
 
 			//add translations
@@ -157,15 +157,15 @@ class plugin_database {
 
 			//assign user to the template
 			if (!empty($_SESSION['username'])) {
-				$view->assign("username", $_SESSION['username']);
+				$view->assign("username", escape($_SESSION['username']));
 			}
 
 			//messages
 			$view->assign('messages', message::html(true, '		'));
 
 			//add the token name and hash to the view
-			//$view->assign("token_name", $token['name']);
-			//$view->assign("token_hash", $token['hash']);
+			$view->assign("token_name", $token['name']);
+			$view->assign("token_hash", $token['hash']);
 
 			//show the views
 			$content = $view->render('login.htm');
@@ -174,16 +174,16 @@ class plugin_database {
 		}
 
 		//validate the token
-		//$token = new token;
-		//if (!$token->validate($_SERVER['PHP_SELF'])) {
-		//	message::add($text['message-invalid_token'],'negative');
-		//	header('Location: domains.php');
-		//	exit;
-		//}
+		$token = new token;
+		if (!$token->validate('login')) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: login.php');
+			exit;
+		}
 
 		//add the authentication details
 		if (isset($_REQUEST["username"])) {
-			$this->username       = $_REQUEST["username"];
+			$this->username = $_REQUEST["username"];
 			$_SESSION['username'] = $this->username;
 		}
 		if (isset($_REQUEST["password"])) {
@@ -196,7 +196,7 @@ class plugin_database {
 			$this->key = $_REQUEST["key"];
 		}
 		if (isset($_REQUEST["domain_name"])) {
-			$domain_name       = $_REQUEST["domain_name"];
+			$domain_name = $_REQUEST["domain_name"];
 			$this->domain_name = $_REQUEST["domain_name"];
 		}
 
@@ -239,20 +239,20 @@ class plugin_database {
 		$sql .= "		or user_type is null";
 		$sql .= "	) ";
 		if (isset($this->key) && strlen($this->key) > 30) {
-			$sql                   .= "and u.api_key = :api_key ";
+			$sql .= "and u.api_key = :api_key ";
 			$parameters['api_key'] = $this->key;
 		} else {
-			$sql                    .= "and (\n";
-			$sql                    .= "	lower(u.username) = lower(:username)\n";
-			$sql                    .= "	or lower(u.user_email) = lower(:username)\n";
-			$sql                    .= ")\n";
+			$sql .= "and (\n";
+			$sql .= "	lower(u.username) = lower(:username)\n";
+			$sql .= "	or lower(u.user_email) = lower(:username)\n";
+			$sql .= ")\n";
 			$parameters['username'] = $this->username;
 		}
 		if ($users_unique === "global") {
 			//unique username - global (example: email address)
 		} else {
 			//unique username - per domain
-			$sql                       .= "and u.domain_uuid = :domain_uuid ";
+			$sql .= "and u.domain_uuid = :domain_uuid ";
 			$parameters['domain_uuid'] = $this->domain_uuid;
 		}
 		$sql .= "and (user_enabled = true or user_enabled is null) ";
@@ -302,25 +302,25 @@ class plugin_database {
 				//get the user contact details
 				if ($contacts_exists) {
 					unset($parameters);
-					$sql                        = "select ";
-					$sql                        .= " c.contact_organization, ";
-					$sql                        .= " c.contact_name_given, ";
-					$sql                        .= " c.contact_name_family, ";
-					$sql                        .= " a.contact_attachment_uuid ";
-					$sql                        .= "from v_contacts as c ";
-					$sql                        .= "left join v_contact_attachments as a on c.contact_uuid = a.contact_uuid ";
-					$sql                        .= "where c.contact_uuid = :contact_uuid ";
-					$sql                        .= "and c.domain_uuid = :domain_uuid ";
-					$sql                        .= "and a.attachment_primary = true ";
-					$sql                        .= "and a.attachment_filename is not null ";
-					$sql                        .= "and a.attachment_content is not null ";
+					$sql = "select ";
+					$sql .= " c.contact_organization, ";
+					$sql .= " c.contact_name_given, ";
+					$sql .= " c.contact_name_family, ";
+					$sql .= " a.contact_attachment_uuid ";
+					$sql .= "from v_contacts as c ";
+					$sql .= "left join v_contact_attachments as a on c.contact_uuid = a.contact_uuid ";
+					$sql .= "where c.contact_uuid = :contact_uuid ";
+					$sql .= "and c.domain_uuid = :domain_uuid ";
+					$sql .= "and a.attachment_primary = true ";
+					$sql .= "and a.attachment_filename is not null ";
+					$sql .= "and a.attachment_content is not null ";
 					$parameters['domain_uuid']  = $this->domain_uuid;
 					$parameters['contact_uuid'] = $this->contact_uuid;
-					$contact                    = $settings->database()->select($sql, $parameters, 'row');
+					$contact = $settings->database()->select($sql, $parameters, 'row');
 					$this->contact_organization = $contact['contact_organization'] ?? '';
-					$this->contact_name_given   = $contact['contact_name_given'] ?? '';
-					$this->contact_name_family  = $contact['contact_name_family'] ?? '';
-					$this->contact_image        = $contact['contact_attachment_uuid'] ?? '';
+					$this->contact_name_given = $contact['contact_name_given'] ?? '';
+					$this->contact_name_family = $contact['contact_name_family'] ?? '';
+					$this->contact_image = $contact['contact_attachment_uuid'] ?? '';
 				}
 
 				//debug info
@@ -329,9 +329,9 @@ class plugin_database {
 				//echo "contact_uuid ".$this->contact_uuid."<br />\n";
 
 				//set a few session variables
-				$_SESSION["user_uuid"]    = $row['user_uuid'];
-				$_SESSION["username"]     = $row['username'];
-				$_SESSION["user_email"]   = $row['user_email'];
+				$_SESSION["user_uuid"] = $row['user_uuid'];
+				$_SESSION["username"] = $row['username'];
+				$_SESSION["user_email"] = $row['user_email'];
 				$_SESSION["contact_uuid"] = $row["contact_uuid"];
 			}
 
@@ -344,18 +344,18 @@ class plugin_database {
 				if (password_needs_rehash($row["password"], PASSWORD_DEFAULT, $options)) {
 
 					//build user insert array
-					$array                            = [];
-					$array['users'][0]['user_uuid']   = $this->user_uuid;
+					$array = [];
+					$array['users'][0]['user_uuid'] = $this->user_uuid;
 					$array['users'][0]['domain_uuid'] = $this->domain_uuid;
-					$array['users'][0]['user_email']  = $this->user_email;
-					$array['users'][0]['password']    = password_hash($this->password, PASSWORD_DEFAULT, $options);
-					$array['users'][0]['salt']        = null;
+					$array['users'][0]['user_email'] = $this->user_email;
+					$array['users'][0]['password'] = password_hash($this->password, PASSWORD_DEFAULT, $options);
+					$array['users'][0]['salt'] = null;
 
 					//build user group insert array
 					$array['user_groups'][0]['user_group_uuid'] = uuid();
-					$array['user_groups'][0]['domain_uuid']     = $this->domain_uuid;
-					$array['user_groups'][0]['group_name']      = 'user';
-					$array['user_groups'][0]['user_uuid']       = $this->user_uuid;
+					$array['user_groups'][0]['domain_uuid'] = $this->domain_uuid;
+					$array['user_groups'][0]['group_name'] = 'user';
+					$array['user_groups'][0]['user_uuid'] = $this->user_uuid;
 
 					//grant temporary permissions
 					$p = permissions::new();
@@ -376,20 +376,20 @@ class plugin_database {
 
 			//result array
 			if ($valid_password) {
-				$result["plugin"]       = "database";
-				$result["domain_name"]  = $this->domain_name;
-				$result["username"]     = $this->username;
-				$result["user_uuid"]    = $this->user_uuid;
-				$result["domain_uuid"]  = $_SESSION['domain_uuid'];
+				$result["plugin"] = "database";
+				$result["domain_name"] = $this->domain_name;
+				$result["username"] = $this->username;
+				$result["user_uuid"] = $this->user_uuid;
+				$result["domain_uuid"] = $_SESSION['domain_uuid'];
 				$result["contact_uuid"] = $this->contact_uuid;
 				if ($contacts_exists) {
 					$result["contact_organization"] = $this->contact_organization;
-					$result["contact_name_given"]   = $this->contact_name_given;
-					$result["contact_name_family"]  = $this->contact_name_family;
-					$result["contact_image"]        = $this->contact_image;
+					$result["contact_name_given"] = $this->contact_name_given;
+					$result["contact_name_family"] = $this->contact_name_family;
+					$result["contact_image"] = $this->contact_image;
 				}
 				$result["user_email"] = $this->user_email;
-				$result["sql"]        = $sql;
+				$result["sql"] = $sql;
 				$result["authorized"] = $valid_password;
 			}
 
@@ -403,4 +403,4 @@ class plugin_database {
 	}
 }
 
-?>
+

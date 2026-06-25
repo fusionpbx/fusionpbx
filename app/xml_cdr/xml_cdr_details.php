@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -306,8 +306,7 @@
 	$application_icons["voicemails"] = "fa-envelope";
 
 //build the call flow summary array
-	$xml_cdr = new xml_cdr(["database" => $database, "settings" => $settings, "destinations" => $destinations]);
-	$xml_cdr->domain_uuid = $domain_uuid;
+	$xml_cdr = new xml_cdr(["database" => $database, "settings" => $settings, "destinations" => $destinations, "domain_uuid" => $domain_uuid]);
 	$xml_cdr->call_direction = $call_direction; //used to determine when the call is outbound
 	$xml_cdr->status = $status; //used to determine when the call is outbound
 	if (empty($call_flow)) {
@@ -350,6 +349,10 @@
 	else {
 		$start_time = date("Y-m-d g:i:s a", (int) $start_epoch);
 		$end_time = date("Y-m-d g:i:s a", (int) $end_epoch);
+		foreach($call_flow_summary as $x => $row) {
+			$call_flow_summary[$x]["start_stamp"] = date("Y-m-d g:i:s a", (int) $call_flow_summary[$x]["start_epoch"]);
+			$call_flow_summary[$x]["end_stamp"] = date("Y-m-d g:i:s a", (int) $call_flow_summary[$x]["end_epoch"]);
+		}
 	}
 
 //set the year, month and date
@@ -458,6 +461,7 @@
 	}
 
 //get the header
+	$document['title'] = $text['title2'];
 	require_once "resources/header.php";
 
 //page title and description
@@ -465,7 +469,7 @@
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b><br><br></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.urlencode($_SESSION['xml_cdr']['last_query']) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'link'=>'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.$_SESSION['xml_cdr']['last_query'] : null)]);
 	if (permission_exists('xml_cdr_call_log') && $call_log_enabled && isset($log_content) && !empty($log_content)) {
 		echo button::create(['type'=>'button','label'=>$text['button-call_log'],'icon'=>$settings->get('theme', 'button_icon_search'),'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$uuid]);
 	}
@@ -648,7 +652,7 @@
 		echo "	<td align='right'>\n";
 		//controls
 		if (!empty($record_path) || !empty($record_name)) {
-			echo "<audio id='recording_audio_".escape($xml_cdr_uuid)."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($xml_cdr_uuid)."')\" onended=\"recording_reset('".escape($xml_cdr_uuid)."');\" src=\"download.php?id=".escape($xml_cdr_uuid)."\" type='".escape($record_type)."'></audio>";
+			echo "<audio id='recording_audio_".escape($xml_cdr_uuid)."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($xml_cdr_uuid)."')\" onended=\"recording_reset('".escape($xml_cdr_uuid)."');\" src=\"download.php?id=".urlencode($xml_cdr_uuid)."\" type='".escape($record_type)."'></audio>";
 			echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'label'=>$text['label-play'],'id'=>'recording_button_'.escape($xml_cdr_uuid),'onclick'=>"recording_play('".escape($xml_cdr_uuid)."', null, null, '".$text['label-play']."')",'style'=>'margin-bottom: 8px; margin-top: -8px;']);
 			if (permission_exists('xml_cdr_recording_download')) {
 				echo button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'label'=>$text['label-download'],'onclick'=>"window.location.href='download.php?id=".urlencode($xml_cdr_uuid)."&t=bin';",'style'=>'margin-bottom: 8px; margin-top: -8px;']);

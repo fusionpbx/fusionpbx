@@ -89,7 +89,7 @@
 
 		//redirect the user
 			message::add($text['message-delete'] ?? '');
-			header("Location: device_vendor_function_edit.php?id=".escape($device_vendor_function_uuid) ."&device_vendor_uuid=".escape($device_vendor_uuid));
+			header("Location: device_vendor_function_edit.php?id=".urlencode($device_vendor_function_uuid) ."&device_vendor_uuid=".urlencode($device_vendor_uuid));
 			exit;
 	}
 
@@ -185,7 +185,7 @@
 
 				//redirect the user
 					$_SESSION["message"] = $text['message-'.$action];
-					header("Location: device_vendor_function_edit.php?id=".escape($device_vendor_function_uuid) ."&device_vendor_uuid=".escape($device_vendor_uuid));
+					header("Location: device_vendor_function_edit.php?id=".urlencode($device_vendor_function_uuid) ."&device_vendor_uuid=".urlencode($device_vendor_uuid));
 					exit;
 			}
 	}

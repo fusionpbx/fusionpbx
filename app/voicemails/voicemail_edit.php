@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2025
+ Portions created by the Initial Developer are Copyright (C) 2008-2026
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -60,7 +60,35 @@
 	$voicemail_option_digits = '';
 	$voicemail_option_description = '';
 	$voicemail_mail_to = '';
+	$alternate_voicemail_enabled = false;
+	$alternate_voicemail_destination = '';
 	$transcribe_enabled = $settings->get('transcribe', 'enabled', false);
+
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'voicemail_id'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('voicemail_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
 
 //set the domain variables
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
@@ -85,7 +113,7 @@
 						break;
 				}
 
-				header('Location: voicemails.php');
+				header('Location: voicemails.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -99,11 +127,15 @@
 			$voicemail_mail_to = $_POST["voicemail_mail_to"];
 			$voicemail_sms_to = $_POST["voicemail_sms_to"] ?? null;
 			$voicemail_transcription_enabled = $_POST["voicemail_transcription_enabled"];
+			$voicemail_transcription_prompt_enabled = $_POST["voicemail_transcription_prompt_enabled"] ?? 'false';
+			$voicemail_transcription_prompt = $_POST["voicemail_transcription_prompt"] ?? '';
 			$voicemail_file = $_POST["voicemail_file"];
 			$voicemail_local_after_email = $_POST["voicemail_local_after_email"];
 			$voicemail_destination = $_POST["voicemail_destination"];
 			$voicemail_enabled = $_POST["voicemail_enabled"];
 			$voicemail_description = $_POST["voicemail_description"];
+			$alternate_voicemail_enabled = filter_var($_POST["alternate_voicemail_enabled"] ?? false, FILTER_VALIDATE_BOOLEAN);
+			$alternate_voicemail_destination = $_POST["alternate_voicemail_destination"] ?? '';
 			$voicemail_tutorial = $_POST["voicemail_tutorial"];
 			$voicemail_recording_instructions = $_POST["voicemail_recording_instructions"];
 			$voicemail_recording_options = $_POST["voicemail_recording_options"];
@@ -112,6 +144,9 @@
 
 		//remove the space
 			$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
+
+		//sanitise the alternate voicemail destination — digits and * only (matches forward_*_destination)
+			$alternate_voicemail_destination = preg_replace('#[^\*0-9]#', '', $alternate_voicemail_destination);
 	}
 
 //process the data
@@ -126,7 +161,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: voicemails.php');
+				header('Location: voicemails.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -171,6 +206,10 @@
 					$array['voicemails'][0]['voicemail_mail_to'] = $voicemail_mail_to;
 					$array['voicemails'][0]['voicemail_sms_to'] = $voicemail_sms_to;
 					$array['voicemails'][0]['voicemail_transcription_enabled'] = $voicemail_transcription_enabled;
+					if ($transcribe_enabled && permission_exists('voicemail_transcription_enabled')) {
+						$array['voicemails'][0]['voicemail_transcription_prompt_enabled'] = $voicemail_transcription_prompt_enabled;
+						$array['voicemails'][0]['voicemail_transcription_prompt'] = $voicemail_transcription_prompt;
+					}
 					$array['voicemails'][0]['voicemail_tutorial'] = $voicemail_tutorial;
 					if (permission_exists('voicemail_recording_instructions')) {
 						$array['voicemails'][0]['voicemail_recording_instructions'] = $voicemail_recording_instructions;
@@ -186,6 +225,8 @@
 					}
 					$array['voicemails'][0]['voicemail_enabled'] = $voicemail_enabled;
 					$array['voicemails'][0]['voicemail_description'] = $voicemail_description;
+					$array['voicemails'][0]['alternate_voicemail_enabled'] = $alternate_voicemail_enabled ? 'true' : 'false';
+					$array['voicemails'][0]['alternate_voicemail_destination'] = $alternate_voicemail_destination;
 
 				//create permissions object
 					$p = permissions::new();
@@ -318,7 +359,7 @@
 						header("Location: voicemails.php");
 					}
 					else if ($action == "update") {
-						header("Location: voicemail_edit.php?id=".$voicemail_uuid);
+						header("Location: voicemail_edit.php?id=".$voicemail_uuid.($query_string ? '&'.$query_string : ''));
 					}
 					exit;
 			}
@@ -335,13 +376,19 @@
 		$sql .= "voicemail_mail_to, ";
 		$sql .= "voicemail_sms_to, ";
 		$sql .= "voicemail_transcription_enabled, ";
+		if ($transcribe_enabled && permission_exists('voicemail_transcription_enabled')) {
+			$sql .= "voicemail_transcription_prompt_enabled, ";
+			$sql .= "voicemail_transcription_prompt, ";
+		}
 		$sql .= "voicemail_tutorial, ";
 		$sql .= "voicemail_recording_instructions, ";
 		$sql .= "voicemail_recording_options, ";
 		$sql .= "voicemail_file, ";
 		$sql .= "voicemail_local_after_email, ";
 		$sql .= "voicemail_enabled, ";
-		$sql .= "voicemail_description ";
+		$sql .= "voicemail_description, ";
+		$sql .= "alternate_voicemail_enabled, ";
+		$sql .= "alternate_voicemail_destination ";
 		$sql .= "from v_voicemails ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and voicemail_uuid = :voicemail_uuid ";
@@ -356,6 +403,8 @@
 			$voicemail_mail_to = $row["voicemail_mail_to"];
 			$voicemail_sms_to = $row["voicemail_sms_to"];
 			$voicemail_transcription_enabled = $row["voicemail_transcription_enabled"];
+			$voicemail_transcription_prompt_enabled = $row["voicemail_transcription_prompt_enabled"] ?? false;
+			$voicemail_transcription_prompt = $row["voicemail_transcription_prompt"] ?? '';
 			$voicemail_tutorial = $row["voicemail_tutorial"];
 			$voicemail_recording_instructions = $row["voicemail_recording_instructions"];
 			$voicemail_recording_options = $row["voicemail_recording_options"];
@@ -363,6 +412,8 @@
 			$voicemail_local_after_email = $row["voicemail_local_after_email"];
 			$voicemail_enabled = $row["voicemail_enabled"];
 			$voicemail_description = $row["voicemail_description"];
+			$alternate_voicemail_enabled = filter_var($row["alternate_voicemail_enabled"] ?? false, FILTER_VALIDATE_BOOLEAN);
+			$alternate_voicemail_destination = $row["alternate_voicemail_destination"] ?? '';
 		}
 		unset($sql, $parameters, $row);
 	}
@@ -380,6 +431,8 @@
 	$voicemail_local_after_email = $voicemail_local_after_email ?? true;
 	$voicemail_enabled = $voicemail_enabled ?? $settings->get('voicemail', 'enabled_default', true);
 	$voicemail_transcription_enabled = $voicemail_transcription_enabled ?? $settings->get('voicemail', 'transcription_enabled_default', false);
+	$voicemail_transcription_prompt_enabled = $voicemail_transcription_prompt_enabled ?? false;
+	$voicemail_transcription_prompt = $voicemail_transcription_prompt ?? '';
 	$voicemail_tutorial = $voicemail_tutorial ?? false;
 	$voicemail_recording_instructions = $voicemail_recording_instructions ?? true;
 	$voicemail_recording_options = $voicemail_recording_options ?? true;
@@ -515,10 +568,10 @@
 
 //set the location for the back button
 	if (permission_exists('voicemail_view')) {
-		$back_button_location = "voicemails.php";
+		$back_button_location = "voicemails.php".($query_string ? '?'.$query_string : '');
 	}
 	else {
-		$back_button_location = "voicemail_messages.php?voicemail_uuid=".urlencode($voicemail_uuid);
+		$back_button_location = "voicemail_messages.php?voicemail_uuid=".urlencode($voicemail_uuid).($query_string ? '&'.$query_string : '');
 	}
 
 //show the content
@@ -526,7 +579,7 @@
 		echo "<script type='text/javascript' language='JavaScript'>\n";
 		echo "	function set_playable(id, audio_selected, mime_type) {\n";
 		echo "		if (mime_type != undefined && mime_type != '' && audio_selected != undefined) {\n";
-		echo "			$('#recording_audio_' + id).attr('src', '../voicemail_greetings/voicemail_greetings.php?id=".escape($voicemail_id)."&a=download&type=rec&uuid=' + audio_selected);\n";
+		echo "			$('#recording_audio_' + id).attr('src', '../voicemail_greetings/voicemail_greetings.php?id=".urlencode($voicemail_id)."&a=download&type=rec&uuid=' + audio_selected);\n";
 		echo "			$('#recording_audio_' + id).attr('type', mime_type);\n";
 		echo "			$('#recording_button_' + id).show();\n";
 		echo "		}\n";
@@ -618,7 +671,7 @@
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "<audio id='recording_audio_recorded_name' style='display: none;' preload='none' ontimeupdate=\"update_progress('recorded_name')\" onended=\"recording_reset('recorded_name');\" src='voicemail_name.php?id=".escape($voicemail_id)."' type='audio/x-wav'></audio>";
+		echo "<audio id='recording_audio_recorded_name' style='display: none;' preload='none' ontimeupdate=\"update_progress('recorded_name')\" onended=\"recording_reset('recorded_name');\" src='voicemail_name.php?id=".urlencode($voicemail_id)."' type='audio/x-wav'></audio>";
 		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_recorded_name','style'=>'display: inline-block; margin-right: 15px; margin-top: -2px;','onclick'=>"recording_play('recorded_name','".escape($voicemail_id)."','recorded_name')"]);
 		echo "<input type='checkbox' name='recorded_name' id='recorded_name' value='1'><label for='recorded_name' style='display: inline-block; padding-top: 4px; padding-left: 5px;'>".$text['label-delete']."</label>";
 		echo "<br />\n";
@@ -660,7 +713,7 @@
 	}
 	echo "	</select>\n";
 	if ((permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download')) && (!empty($playable) || empty($greeting_id))) {
-		echo "<audio id='recording_audio_greeting' style='display: none;' preload='none' ontimeupdate=\"update_progress('greeting')\" onended=\"recording_reset('greeting');\" src='../voicemail_greetings/voicemail_greetings.php?id=".escape($voicemail_id)."&a=download&type=rec&uuid=".escape($greetings[($greeting_id ?? '')]['voicemail_greeting_uuid'] ?? '')."' type='".($mime_type ?? '')."'></audio>";
+		echo "<audio id='recording_audio_greeting' style='display: none;' preload='none' ontimeupdate=\"update_progress('greeting')\" onended=\"recording_reset('greeting');\" src='../voicemail_greetings/voicemail_greetings.php?id=".urlencode($voicemail_id)."&a=download&type=rec&uuid=".urlencode($greetings[($greeting_id ?? '')]['voicemail_greeting_uuid'] ?? '')."' type='".($mime_type ?? '')."'></audio>";
 		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_greeting','style'=>'display: '.(!empty($greeting_id) ? 'inline' : 'none'),'onclick'=>"recording_play('greeting','".escape($voicemail_id).'|'.escape($greetings[($greeting_id ?? '')]['voicemail_greeting_uuid'] ?? '')."','greeting')"]);
 		unset($playable, $mime_type);
 	}
@@ -828,6 +881,28 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-alternate_voicemail']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	if ($input_toggle_style_switch) {
+		echo "	<span class='switch'>\n";
+	}
+	echo "		<select class='formfld' id='alternate_voicemail_enabled' name='alternate_voicemail_enabled'>\n";
+	echo "			<option value='true' ".($alternate_voicemail_enabled === true ? "selected='selected'" : '').">".$text['option-true']."</option>\n";
+	echo "			<option value='false' ".($alternate_voicemail_enabled === false ? "selected='selected'" : '').">".$text['option-false']."</option>\n";
+	echo "		</select>\n";
+	if ($input_toggle_style_switch) {
+		echo "		<span class='slider'></span>\n";
+		echo "	</span>\n";
+		echo "&nbsp;";
+	}
+	echo "	<input class='formfld' type='text' name='alternate_voicemail_destination' id='alternate_voicemail_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".escape($alternate_voicemail_destination ?? '')."\">\n";
+	echo "	<br />".$text['description-alternate_voicemail']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	if (permission_exists('voicemail_sms_edit') && file_exists(dirname(__DIR__, 2).'/app/sms/')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -860,6 +935,39 @@
 		}
 		echo "<br />\n";
 		echo $text['description-voicemail_transcription_enabled']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-voicemail_transcription_prompt_enabled']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		if ($input_toggle_style_switch) {
+			echo "	<span class='switch'>\n";
+		}
+		echo "	<select class='formfld' id='voicemail_transcription_prompt_enabled' name='voicemail_transcription_prompt_enabled' onchange=\"document.getElementById('voicemail_transcription_prompt_row').style.display = (this.value === 'true') ? '' : 'none';\">\n";
+		echo "		<option value='true' " . ($voicemail_transcription_prompt_enabled == true ? "selected='selected'" : null) . ">" . $text['option-true'] . "</option>\n";
+		echo "		<option value='false' " . ($voicemail_transcription_prompt_enabled == false ? "selected='selected'" : null) . ">" . $text['option-false'] . "</option>\n";
+		echo "	</select>\n";
+		if ($input_toggle_style_switch) {
+			echo "		<span class='slider'></span>\n";
+			echo "	</span>\n";
+		}
+		echo "<br />\n";
+		echo $text['description-voicemail_transcription_prompt_enabled']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		$prompt_row_style = in_array($voicemail_transcription_prompt_enabled, [true, 'true', 't'], true) ? '' : 'display:none;';
+		echo "<tr id='voicemail_transcription_prompt_row' style='".$prompt_row_style."'>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-voicemail_transcription_prompt']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<textarea class='formfld' name='voicemail_transcription_prompt' style='width:280px; height: 80px;'>".escape($voicemail_transcription_prompt)."</textarea>\n";
+		echo "<br />\n";
+		echo $text['description-voicemail_transcription_prompt']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

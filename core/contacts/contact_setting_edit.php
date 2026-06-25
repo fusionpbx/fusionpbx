@@ -165,7 +165,7 @@
 					}
 
 				//redirect the browser
-					header("Location: contact_edit.php?id=".escape($contact_uuid));
+					header("Location: contact_edit.php?id=".urlencode($contact_uuid));
 					exit;
 			}
 	}

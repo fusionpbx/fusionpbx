@@ -355,15 +355,21 @@ abstract class base_websocket_system_service extends service implements websocke
 
 		// Get the web socket message as an object
 		$message = websocket_message::create_from_json_message($json_string);
+		if (!($message instanceof websocket_message)) {
+			$this->warning('Invalid websocket message received; ignoring frame');
+			return;
+		}
+
+		$topic = $message->topic();
 
 		// Nothing to do
-		if (empty($message->topic())) {
-			$this->error("Message received does not have topic");
+		if (empty($topic)) {
+			$this->warning("Message received does not have topic. Message dropped.");
 			return;
 		}
 
 		// Call the registered topic event
-		$this->trigger_topic($message->topic, $message, $this->ws_client);
+		$this->trigger_topic($topic, $message, $this->ws_client);
 	}
 
 	/**

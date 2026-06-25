@@ -52,6 +52,39 @@ class feature_codes {
 		return 'Features Report';
 	}
 
+	/**
+	 * Fetch feature code rows from the dialplan and call flows tables.
+	 *
+	 * Dialplan entries whose number begins with '*' are included. Call flows
+	 * that have a feature code set are joined in and that code is used in
+	 * place of the dialplan number.
+	 *
+	 * @param database $database    Database instance to use for the query.
+	 * @param bool     $include_raw Include the raw dialplan_xml column.
+	 *
+	 * @return array                Array of associative rows, or an empty array.
+	 */
+	public static function fetch_features(database $database, bool $include_raw = false): array {
+		$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+		$order_by = $_GET['order_by'] ?? '';
+		$order = $_GET['order'] ?? '';
+		$sql = "SELECT d.dialplan_uuid, d.dialplan_name, ";
+		$sql .= "COALESCE(NULLIF(cf.call_flow_feature_code, ''), d.dialplan_number) AS feature_code, ";
+		$sql .= "COALESCE(cf.call_flow_description, d.dialplan_description) AS dialplan_description ";
+		if ($include_raw) {
+			$sql .= ", d.dialplan_xml ";
+		}
+		$sql .= "FROM v_dialplans d ";
+		$sql .= "LEFT JOIN v_call_flows cf ON cf.dialplan_uuid = d.dialplan_uuid ";
+		$sql .= "WHERE d.dialplan_enabled = 'true' ";
+		$sql .= "AND (d.dialplan_number LIKE '*%' OR NULLIF(cf.call_flow_feature_code, '') IS NOT NULL) ";
+		$sql .= "AND (d.domain_uuid = :domain_uuid OR d.domain_uuid IS NULL) ";
+		$sql .= order_by($order_by, $order, 'feature_code', 'asc');
+		$parameters['domain_uuid'] = $domain_uuid;
+		$result = $database->select($sql, $parameters, 'all');
+		return is_array($result) ? $result : [];
+	}
+
 	public function display(): void {
 		echo $this->render();
 		return;

@@ -835,7 +835,6 @@ class extension {
 					$p->add('extension_edit', 'temp');
 
 					//save the array
-
 					$this->database->save($array);
 					unset($array);
 
@@ -850,9 +849,8 @@ class extension {
 					//write the provision files
 					if (!empty($this->settings->get('provision', 'path'))) {
 						if (is_dir(dirname(__DIR__, 4) . '/app/provision')) {
-							$prov              = new provision;
-							$prov->domain_uuid = $this->domain_uuid;
-							$response          = $prov->write();
+							$prov = new provision(['settings'=>$this->settings, 'domain_uuid'=>$this->domain_uuid, 'domain_name'=>$this->domain_name, 'user_uuid'=>$this->user_uuid]);
+							$response = $prov->write();
 						}
 					}
 

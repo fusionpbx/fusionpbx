@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2022-2024
+	Portions created by the Initial Developer are Copyright (C) 2022-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -37,6 +37,32 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'email_date'));
+	$order = ($_GET['order'] ?? '') === 'asc' ? 'asc' : 'desc';
+	$search = $_GET['search'] ?? '';
+	$email_status = $_GET['email_status'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($email_status)) {
+		$param['email_status'] = $email_status;
+	}
+	$query_string = http_build_query($param);
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -69,7 +95,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: email_queue.php');
+				header('Location: email_queue.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -98,7 +124,7 @@
 
 				//redirect the user
 				if (in_array($_POST['action'], array('copy', 'delete', 'toggle'))) {
-					header('Location: email_queue_edit.php?id='.$id);
+					header('Location: email_queue_edit.php?id='.$id.($query_string ? '&'.$query_string : ''));
 					exit;
 				}
 			}
@@ -195,7 +221,7 @@
 					$_SESSION["message"] = $text['message-update'];
 				}
 				//header('Location: email_queue.php');
-				header('Location: email_queue_edit.php?id='.urlencode($email_queue_uuid));
+				header('Location: email_queue_edit.php?id='.urlencode($email_queue_uuid).($query_string ? '&'.$query_string : ''));
 				return;
 			}
 	}
@@ -293,7 +319,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-email_queue']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'email_queue.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'email_queue.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == 'update') {
 		if (permission_exists('_add')) {
 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);

@@ -65,6 +65,7 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 				$param_sub_array = explode("=", $row);
 				$key = preg_replace('#[^a-zA-Z0-9_\-[]]#', '', $param_sub_array['0']);
 				$value = urldecode($param_sub_array['1'] ?? '');
+				if ($key === 'page') continue;
 				if ($key === 'order_by' && !empty($value)) {
 					//validate order by
 					$sanitized_parameters .= "&order_by=" . preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
@@ -198,3 +199,4 @@ function paging($num_rows, $param, $rows_per_page, $mini = false, $result_count 
 	return $array;
 
 }
+ 

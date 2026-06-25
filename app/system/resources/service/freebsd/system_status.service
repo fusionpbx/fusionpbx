@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+# PROVIDE: system_status
+# REQUIRE: DAEMON
+# KEYWORD: shutdown
+#
+# Add the following lines to /etc/rc.conf to enable system_status:
+# system_status_enable:      Set it to "YES" to enable system_status.
+#                          Default is "NO".
+#
+
+. /etc/rc.subr
+name="system_status"
+
+rcvar=${name}_enable
+load_rc_config $name
+
+# Set defaults
+: ${system_status_enable="NO"}
+: ${system_status_pidfile="/var/run/system_status.pid"}
+
+# Prepare the variables
+start_cmd=${name}_start
+stop_cmd=${name}_stop
+status_cmd=${name}_status
+pidfile=${system_status_pidfile}
+
+# Path to the PHP script
+script="/usr/local/www/fusionpbx/app/system/resources/service/system_status.php"
+
+# Command to run the script
+command="/usr/local/bin/php"
+
+system_status_start() {
+    echo "Starting $name..."
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        echo "$name is already running."
+    else
+        # Fully detach from parent shell to prevent 'service' from blocking
+        nohup $command $script </dev/null >/dev/null 2>&1 &
+        echo $! > "$pidfile"
+        echo "$name started."
+    fi
+}
+
+system_status_stop() {
+    echo "Stopping $name..."
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        kill "$(cat $pidfile)"
+        rm -f "$pidfile"
+        echo "$name stopped."
+    else
+        echo "$name is not running."
+    fi
+}
+
+system_status_status() {
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        echo "$name is running with PID $(cat $pidfile)."
+    else
+        echo "$name is not running."
+    fi
+}
+
+run_rc_command "$1"

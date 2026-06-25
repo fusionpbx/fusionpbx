@@ -203,7 +203,7 @@ function activate_tab(button) {
 			bootstrap.Tab.getOrCreateInstance(button).show();
 			return;
 		} catch (err) {
-			console.warn('[OP] Bootstrap tab show failed, using fallback:', err);
+            //console.warn('[OP] Bootstrap tab show failed, using fallback:', err);
 		}
 	}
 
@@ -247,10 +247,34 @@ function normalize_group_key(raw_group) {
 	return key || '';
 }
 
-function get_extension_group_key(ext_number) {
+function parse_call_group_entries(raw_groups) {
+	const entries = [];
+	const seen = new Set();
+
+	((raw_groups || '') + '').split(',').forEach(part => {
+		const raw = (part + '').trim();
+		const key = normalize_group_key(raw);
+		if (!key || seen.has(key)) return;
+		seen.add(key);
+		entries.push({ key: key, display: to_title_case(raw) });
+	});
+
+	if (entries.length === 0) {
+		entries.push({ key: '', display: '' });
+	}
+
+	return entries;
+}
+
+function get_extension_group_entries(ext_number) {
 	const ext = extensions_map.get((ext_number || '').toString());
-	if (!ext) return '';
-	return normalize_group_key(ext.call_group || '');
+	if (!ext) return [{ key: '', display: '' }];
+	return parse_call_group_entries(ext.call_group || '');
+}
+
+function get_extension_group_key(ext_number) {
+	const groups = get_extension_group_entries(ext_number);
+	return groups.length ? (groups[0].key || '') : '';
 }
 
 function get_extension_display_name(ext_number) {
@@ -653,6 +677,46 @@ function get_call_uuid(ch) {
 	return ch.unique_id || ch.uuid || ch.channel_uuid || '';
 }
 
+function is_ringing_like_call(ch) {
+	if (!ch || typeof ch !== 'object') return false;
+	const channel_state = ((ch.channel_call_state || '') + '').toUpperCase();
+	const answer_state = ((ch.answer_state || '') + '').toUpperCase();
+	return channel_state.indexOf('RING') !== -1 || answer_state.indexOf('RING') !== -1 || answer_state === 'EARLY';
+}
+
+function remove_stale_linked_ringing_legs(destroyed_uuid, destroyed_event) {
+	if (!destroyed_uuid) return;
+
+	const destroyed_refs = [
+		destroyed_event && destroyed_event.other_leg_unique_id,
+		destroyed_event && destroyed_event.variable_bridge_uuid,
+		destroyed_event && destroyed_event.bridge_uuid,
+	]
+		.map(v => ((v || '') + '').trim())
+		.filter(Boolean);
+
+	for (const linked_uuid of get_linked_call_uuids(destroyed_uuid)) {
+		if (!linked_uuid || linked_uuid === destroyed_uuid) continue;
+
+		const linked_call = calls_map.get(linked_uuid);
+		if (!linked_call || !is_ringing_like_call(linked_call)) continue;
+
+		const linked_refs = [
+			linked_call.other_leg_unique_id,
+			linked_call.variable_bridge_uuid,
+			linked_call.bridge_uuid,
+		]
+			.map(v => ((v || '') + '').trim())
+			.filter(Boolean);
+
+		const directly_linked = linked_refs.includes(destroyed_uuid) || destroyed_refs.includes(linked_uuid);
+		if (directly_linked) {
+			recording_call_uuids.delete(linked_uuid);
+			calls_map.delete(linked_uuid);
+		}
+	}
+}
+
 function is_parked_call(ch) {
 	if (!ch || typeof ch !== 'object') return false;
 	const callstate = ((ch.channel_call_state || ch.answer_state || '') + '').toLowerCase();
@@ -895,6 +959,7 @@ function on_call_event(event) {
 		case 'channel_destroy':
 			recording_call_uuids.delete(uuid);
 			calls_map.delete(uuid);
+			remove_stale_linked_ringing_legs(uuid, event);
 			break;
 
 		default:
@@ -1322,6 +1387,7 @@ function render_calls_tab() {
 		const created_ts = ch.caller_channel_created_time || '0';
 		const elapsed = esc(format_elapsed(created_ts));
 		const is_recording = call_is_recording(ch, uuid_raw);
+		const can_monitor_this_call = can_monitor_call_with_my_extensions(uuid_raw);
 		const record_icon = is_recording
 			? '../operator_panel/resources/images/recording.png'
 			: '../operator_panel/resources/images/record.png';
@@ -1343,9 +1409,11 @@ function render_calls_tab() {
 			row_html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-eavesdrop'] || 'Eavesdrop')}" onclick="action_eavesdrop('${uuid}')">`
 				+ `<img class="op-ext-action-icon" src="../operator_panel/resources/images/eavesdrop.png" alt="${esc(text['button-eavesdrop'] || 'Eavesdrop')}"></a> `;
 		}
-		if (permissions.operator_panel_coach) {
+		if (permissions.active_call_whisper && can_monitor_this_call) {
 			row_html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-whisper'] || 'Whisper')}" onclick="action_whisper('${uuid}')">`
 				+ `<img class="op-ext-action-icon" src="../operator_panel/resources/images/whisper.svg" alt="${esc(text['button-whisper'] || 'Whisper')}"></a> `;
+		}
+		if (permissions.active_call_barge && can_monitor_this_call) {
 			row_html += `    <a class="btn-action" href="javascript:void(0)" title="${esc(text['button-barge'] || 'Barge')}" onclick="action_barge('${uuid}')">`
 				+ `<img class="op-ext-action-icon" src="../operator_panel/resources/images/barge.svg" alt="${esc(text['button-barge'] || 'Barge')}"></a> `;
 		}
@@ -1637,10 +1705,10 @@ function render_conferences_tab() {
 						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(deaf_label)}" onclick='action_conference_member(${jsq(deaf_action)}, ${conf_name_js}, ${member_id_js}, ${uuid_js})'><span class="${esc(get_conference_action_icon(deaf_action, deaf_action === 'deaf' ? 'fas fa-deaf' : 'fas fa-headphones'))}" aria-hidden="true"></span></button> `;
 						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-energy'] || 'Energy')}` + ` +" onclick='action_conference_member("energy", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "up")'><span class="${esc(get_conference_action_icon('energy_up', 'fas fa-plus'))}" aria-hidden="true"></span></button> `;
 						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-energy'] || 'Energy')}` + ` -" onclick='action_conference_member("energy", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "down")'><span class="${esc(get_conference_action_icon('energy_down', 'fas fa-minus'))}" aria-hidden="true"></span></button> `;
-						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-volume'] || 'Volume')}` + ` -" onclick='action_conference_member("volume_in", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "down")'><span class="${esc(get_conference_action_icon('volume_down', 'fas fa-volume-down'))}" aria-hidden="true"></span></button> `;
 						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-volume'] || 'Volume')}` + ` +" onclick='action_conference_member("volume_in", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "up")'><span class="${esc(get_conference_action_icon('volume_up', 'fas fa-volume-up'))}" aria-hidden="true"></span></button> `;
-						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-gain'] || 'Gain')}` + ` -" onclick='action_conference_member("volume_out", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "down")'><span class="${esc(get_conference_action_icon('gain_down', 'fas fa-sort-amount-down'))}" aria-hidden="true"></span></button> `;
+						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-volume'] || 'Volume')}` + ` -" onclick='action_conference_member("volume_in", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "down")'><span class="${esc(get_conference_action_icon('volume_down', 'fas fa-volume-down'))}" aria-hidden="true"></span></button> `;
 						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-gain'] || 'Gain')}` + ` +" onclick='action_conference_member("volume_out", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "up")'><span class="${esc(get_conference_action_icon('gain_up', 'fas fa-sort-amount-up'))}" aria-hidden="true"></span></button> `;
+						html += `      <button type="button" class="btn btn-default btn-xs" title="${esc(text['label-gain'] || 'Gain')}` + ` -" onclick='action_conference_member("volume_out", ${conf_name_js}, ${member_id_js}, ${uuid_js}, "down")'><span class="${esc(get_conference_action_icon('gain_down', 'fas fa-sort-amount-down'))}" aria-hidden="true"></span></button> `;
 					}
 					html += `    </td>\n`;
 				}
@@ -1920,17 +1988,30 @@ document.addEventListener('keydown', function (e) {
 });
 
 /**
+ * True when the originating caller of the given call is one of the logged-in
+ * user's own extensions.  Used to suppress Intercept UI when the operator is
+ * the one placing the call (you cannot intercept your own outgoing call).
+ */
+function is_call_originated_by_me(call_info) {
+	if (!call_info || !Array.isArray(user_own_extensions) || user_own_extensions.length === 0) return false;
+	const cid = ((call_info.caller_caller_id_number || call_info.caller_id_number || '') + '').trim();
+	if (!cid) return false;
+	return user_own_extensions.includes(cid);
+}
+
+/**
  * Right-click handler for extension blocks.
  * @param {MouseEvent} event
  * @param {string}     ext_num
  */
 function on_ext_contextmenu(event, ext_num) {
-	const block = document.getElementById('ext_block_' + ext_num);
+	const block = get_extension_block(ext_num, event);
 	const uuid  = block ? (block.getAttribute('data-call-uuid') || '') : '';
 	const is_mine  = !!(block && block.classList.contains('op-ext-mine'));
 	const { state, call_info } = get_extension_call_state(ext_num);
 	const has_call  = !!uuid;
 	const ext_data = extensions_map.get(ext_num) || {};
+	const is_registered = ext_data.registered === true;
 	const voicemail_enabled = (ext_data.voicemail_enabled || '') === 'true';
 
 	// Derive call direction for the ringing extension to suppress Reject on outbound calls.
@@ -1944,6 +2025,17 @@ function on_ext_contextmenu(event, ext_num) {
 
 	const items = [];
 	items.push({ header: ext_num });
+
+	if (!is_registered) {
+		if (permissions.operator_panel_originate) {
+			items.push({ label: text['button-call_voicemail'] || 'Call Voicemail', icon_class: 'fa-solid fa-voicemail',
+				fn: function () { action_call_voicemail(ext_num); }
+			});
+		}
+		if (items.length <= 1) return;
+		show_context_menu(event, items);
+		return;
+	}
 
 	if (!has_call) {
 		if (is_mine) {
@@ -1982,7 +2074,7 @@ function on_ext_contextmenu(event, ext_num) {
 					fn: function () { action_hangup_caller(uuid); }, danger: true });
 			}
 		} else {
-			if (permissions.operator_panel_manage) {
+			if (permissions.operator_panel_manage && !is_call_originated_by_me(call_info)) {
 				items.push({ label: text['button-intercept'] || 'Intercept', icon_class: 'fa-solid fa-phone-volume',
 					fn: function () { action_intercept_icon(uuid, ext_num); } });
 			}
@@ -1993,6 +2085,7 @@ function on_ext_contextmenu(event, ext_num) {
 		}
 	} else if (has_call) {
 		// active / held
+		const can_monitor_this_call = can_monitor_call_with_my_extensions(uuid);
 		if (is_mine && permissions.operator_panel_originate) {
 			items.push({ label: text['label-dial_number'] || 'Dial a Number', icon_class: 'fa-solid fa-phone',
 				fn: function () { toggle_ext_dialpad(ext_num, null); } });
@@ -2006,9 +2099,11 @@ function on_ext_contextmenu(event, ext_num) {
 			items.push({ label: text['button-eavesdrop'] || 'Eavesdrop', icon_class: 'fa-solid fa-ear-listen',
 				fn: function () { action_eavesdrop(uuid); } });
 		}
-		if (permissions.operator_panel_coach) {
+		if (permissions.active_call_whisper && can_monitor_this_call) {
 			items.push({ label: text['button-whisper'] || 'Whisper', icon_class: 'fa-solid fa-comment-dots',
 				fn: function () { action_whisper(uuid); } });
+		}
+		if (permissions.active_call_barge && can_monitor_this_call) {
 			items.push({ label: text['button-barge'] || 'Barge', icon_class: 'fa-solid fa-volume-high',
 				fn: function () { action_barge(uuid); } });
 		}
@@ -2072,6 +2167,7 @@ function get_call_row_state(ch) {
 function on_call_contextmenu(event, uuid) {
 	if (!uuid) return;
 	const items = [];
+	const can_monitor_this_call = can_monitor_call_with_my_extensions(uuid);
 	const call_info = calls_map.get(uuid) || null;
 	const source_ext = get_call_source_extension(uuid);
 	const is_mine = !!(source_ext && Array.isArray(user_own_extensions) && user_own_extensions.includes(source_ext));
@@ -2096,7 +2192,7 @@ function on_call_contextmenu(event, uuid) {
 					fn: function () { action_hangup_caller(uuid); }, danger: true });
 			}
 		} else {
-			if (permissions.operator_panel_manage) {
+			if (permissions.operator_panel_manage && !is_call_originated_by_me(call_info)) {
 				items.push({ label: text['button-intercept'] || 'Intercept', icon_class: 'fa-solid fa-phone-volume',
 					fn: function () { action_intercept_icon(uuid, source_ext); } });
 			}
@@ -2116,9 +2212,11 @@ function on_call_contextmenu(event, uuid) {
 			items.push({ label: text['button-eavesdrop'] || 'Eavesdrop', icon_class: 'fa-solid fa-ear-listen',
 				fn: function () { action_eavesdrop(uuid); } });
 		}
-		if (permissions.operator_panel_coach) {
+		if (permissions.active_call_whisper && can_monitor_this_call) {
 			items.push({ label: text['button-whisper'] || 'Whisper', icon_class: 'fa-solid fa-comment-dots',
 				fn: function () { action_whisper(uuid); } });
+		}
+		if (permissions.active_call_barge && can_monitor_this_call) {
 			items.push({ label: text['button-barge'] || 'Barge', icon_class: 'fa-solid fa-volume-high',
 				fn: function () { action_barge(uuid); } });
 		}
@@ -2201,7 +2299,207 @@ function open_transfer_modal(uuid, source_ext) {
 	if (!dlg) return;
 
 	dlg.showModal();
+	init_contact_autocomplete(dest_field);
 	setTimeout(() => dest_field.focus(), 100);
+}
+
+/**
+ * Initialize contact autocomplete for an input field.
+ * @param {HTMLInputElement} input_field The input element to attach autocomplete to
+ */
+function init_contact_autocomplete(input_field) {
+	if (!input_field) return;
+
+	// Assign a stable ID so we can scope cleanup to this specific input
+	if (!input_field.dataset.acId) input_field.dataset.acId = 'ac_' + Math.random().toString(36).slice(2);
+	const ac_id = input_field.dataset.acId;
+
+	// Remove any existing autocomplete list tied to this input
+	document.querySelectorAll('.op-autocomplete-list[data-for="' + ac_id + '"]').forEach(el => el.remove());
+
+	let autocomplete_list = null;
+	let autocomplete_items = [];
+	let selected_index = -1;
+
+	/**
+	 * Fetch contact/extension suggestions from the server.
+	 */
+	function fetch_suggestions(term) {
+		if (term.length === 0) {
+			hide_autocomplete();
+			return;
+		}
+
+		fetch('autocomplete.php?term=' + encodeURIComponent(term))
+			.then(response => response.json())
+			.then(data => {
+				autocomplete_items = data || [];
+				display_autocomplete_suggestions(autocomplete_items);
+			})
+			.catch(err => {
+				console.error('[OP] Autocomplete error:', err);
+				hide_autocomplete();
+			});
+	}
+
+	/**
+	 * Display the autocomplete dropdown with suggestions.
+	 */
+	function display_autocomplete_suggestions(items) {
+		if (!autocomplete_list) {
+			autocomplete_list = document.createElement('ul');
+			autocomplete_list.className = 'op-autocomplete-list';
+			autocomplete_list.dataset.for = ac_id;
+			document.body.appendChild(autocomplete_list);
+		}
+
+		if (items.length === 0) {
+			hide_autocomplete();
+			return;
+		}
+
+		autocomplete_list.innerHTML = '';
+		selected_index = -1;
+
+		items.forEach((item, index) => {
+			const li = document.createElement('li');
+			li.className = 'op-autocomplete-item';
+			li.innerHTML = `<div class="op-autocomplete-label">${esc(item.label)}</div>`;
+			li.dataset.value = item.value;
+			li.dataset.index = index;
+
+			li.addEventListener('click', function() {
+				select_autocomplete_item(item);
+			});
+
+			li.addEventListener('mouseenter', function() {
+				set_autocomplete_selected(index);
+			});
+
+			autocomplete_list.appendChild(li);
+		});
+
+		autocomplete_list.style.display = 'block';
+		reposition_dropdown();
+	}
+
+	/**
+	 * Position the dropdown directly below the input using fixed coordinates.
+	 */
+	function reposition_dropdown() {
+		if (!autocomplete_list) return;
+		const rect    = input_field.getBoundingClientRect();
+		const min_w   = 420;
+		const max_w   = window.innerWidth - rect.left - 8;
+		const width   = Math.min(Math.max(rect.width, min_w), max_w);
+		autocomplete_list.style.top   = (rect.bottom + 2) + 'px';
+		autocomplete_list.style.left  = rect.left + 'px';
+		autocomplete_list.style.width = width + 'px';
+	}
+
+	/**
+	 * Select an autocomplete item and fill the input field.
+	 */
+	function select_autocomplete_item(item) {
+		input_field.value = item.value;
+		hide_autocomplete();
+		// Trigger change event in case there are listeners
+		input_field.dispatchEvent(new Event('change'));
+	}
+
+	/**
+	 * Set the selected/highlighted item in the autocomplete list.
+	 */
+	function set_autocomplete_selected(index) {
+		if (!autocomplete_list) return;
+
+		const items = autocomplete_list.querySelectorAll('.op-autocomplete-item');
+		items.forEach((item, i) => {
+			item.classList.toggle('op-autocomplete-selected', i === index);
+		});
+
+		selected_index = index;
+	}
+
+	/**
+	 * Hide the autocomplete dropdown.
+	 */
+	function hide_autocomplete() {
+		if (autocomplete_list) {
+			autocomplete_list.style.display = 'none';
+		}
+	}
+
+	/**
+	 * Handle arrow keys and Enter in the input field.
+	 */
+	function handle_keyboard(event) {
+		if (!autocomplete_list || autocomplete_list.style.display === 'none') {
+			if (event.key === 'Enter') {
+				event.preventDefault();
+				return;
+			}
+			return;
+		}
+
+		const items = autocomplete_list.querySelectorAll('.op-autocomplete-item');
+
+		switch (event.key) {
+			case 'ArrowDown':
+				event.preventDefault();
+				selected_index = Math.min(selected_index + 1, items.length - 1);
+				set_autocomplete_selected(selected_index);
+				break;
+			case 'ArrowUp':
+				event.preventDefault();
+				selected_index = Math.max(selected_index - 1, -1);
+				if (selected_index >= 0) {
+					set_autocomplete_selected(selected_index);
+				} else {
+					items.forEach(item => item.classList.remove('op-autocomplete-selected'));
+				}
+				break;
+			case 'Enter':
+				event.preventDefault();
+				if (selected_index >= 0 && autocomplete_items[selected_index]) {
+					select_autocomplete_item(autocomplete_items[selected_index]);
+				}
+				break;
+			case 'Escape':
+				event.preventDefault();
+				hide_autocomplete();
+				break;
+		}
+	}
+
+	// Debounce timer for input
+	let autocomplete_timer = null;
+
+	// Input event listener with debouncing
+	input_field.addEventListener('input', function(e) {
+		if (autocomplete_timer) clearTimeout(autocomplete_timer);
+
+		const term = (e.target.value || '').trim();
+
+		if (term.length < 1) {
+			hide_autocomplete();
+		} else {
+			// Debounce the API call
+			autocomplete_timer = setTimeout(() => {
+				fetch_suggestions(term);
+			}, 300);
+		}
+	});
+
+	// Keyboard event listener
+	input_field.addEventListener('keydown', handle_keyboard);
+
+	// Hide autocomplete when input loses focus
+	input_field.addEventListener('blur', function() {
+		setTimeout(() => {
+			hide_autocomplete();
+		}, 150);
+	});
 }
 
 /** Called by the Transfer button inside the dialog. */
@@ -2411,11 +2709,73 @@ function action_barge(uuid) {
 	action_monitor_mode('barge', uuid, text['button-barge'] || 'Barge started');
 }
 
+function call_leg_has_extension(ch, ext_number) {
+	if (!ch || !ext_number) return false;
+	const ext = String(ext_number).trim();
+	if (!ext) return false;
+
+	const presence = (((ch.channel_presence_id || '').split('@')[0]) || '').trim();
+	if (presence && presence === ext) return true;
+
+	const dest = ((ch.caller_destination_number || '') + '').trim();
+	if (dest && dest === ext) return true;
+
+	const cid = ((ch.caller_caller_id_number || ch.caller_id_number || '') + '').trim();
+	if (cid && cid === ext) return true;
+
+	return false;
+}
+
+function extension_is_already_on_call(uuid, ext_number) {
+	if (!uuid || !ext_number) return false;
+	const related_uuids = get_conversation_call_uuids(uuid);
+	for (const call_uuid of related_uuids) {
+		const ch = calls_map.get(call_uuid);
+		if (call_leg_has_extension(ch, ext_number)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function get_monitor_eligible_extensions(uuid) {
+	if (!uuid || !Array.isArray(user_own_extensions)) return [];
+
+	const unique = [];
+	for (const raw_ext of user_own_extensions) {
+		const ext = String(raw_ext || '').trim();
+		if (!ext || unique.includes(ext)) continue;
+		if (!extension_is_already_on_call(uuid, ext)) unique.push(ext);
+	}
+
+	return unique;
+}
+
+function can_monitor_call_with_my_extensions(uuid) {
+	return get_monitor_eligible_extensions(uuid).length > 0;
+}
+
 function action_monitor_mode(mode, uuid, success_message) {
 	if (!uuid) return;
+	const eligible_extensions = get_monitor_eligible_extensions(uuid);
+	if (!eligible_extensions.length) {
+		show_toast(text['message-monitor_extension_on_call'] || 'Cannot monitor from an extension that is already on this call.', 'warning');
+		return;
+	}
 
 	if (Array.isArray(user_own_extensions) && user_own_extensions.length === 1) {
-		const ext = user_own_extensions[0];
+		const ext = eligible_extensions[0];
+		send_action(mode, { uuid, destination: ext, destination_extension: ext })
+			.then(() => show_toast(success_message, 'success'))
+			.catch((err) => {
+				console.error(err);
+				show_toast((err && err.message) || (mode + ' failed'), 'danger');
+			});
+		return;
+	}
+
+	if (eligible_extensions.length === 1) {
+		const ext = eligible_extensions[0];
 		send_action(mode, { uuid, destination: ext, destination_extension: ext })
 			.then(() => show_toast(success_message, 'success'))
 			.catch((err) => {
@@ -2427,6 +2787,10 @@ function action_monitor_mode(mode, uuid, success_message) {
 
 	const ext = prompt(text['label-your_extension'] || 'Your extension to receive the call:');
 	if (!ext) return;
+	if (!eligible_extensions.includes(String(ext).trim())) {
+		show_toast(text['message-monitor_extension_on_call'] || 'Cannot monitor from an extension that is already on this call.', 'warning');
+		return;
+	}
 
 	send_action(mode, { uuid, destination: ext, destination_extension: ext })
 		.then(() => show_toast(success_message, 'success'))
@@ -2494,20 +2858,57 @@ function action_agent_status(agent_name, status) {
 	send_action('agent_status', { agent_name, status }).catch(console.error);
 }
 
+function get_conference_action_message(action, direction, success) {
+	const dir = (direction || '').toLowerCase();
+	const energy_label = text['label-energy'] || 'Energy';
+	const volume_label = text['label-volume'] || 'Volume';
+	const gain_label = text['label-gain'] || 'Gain';
+
+	switch (action) {
+		case 'kick':
+			return success ? 'Member removed' : 'Unable to remove member';
+		case 'mute':
+			return success ? 'Member muted' : 'Unable to mute member';
+		case 'unmute':
+			return success ? 'Member unmuted' : 'Unable to unmute member';
+		case 'deaf':
+			return success ? 'Member deafened' : 'Unable to deafen member';
+		case 'undeaf':
+			return success ? 'Member undeafened' : 'Unable to undeafen member';
+		case 'energy':
+			return success
+				? `${energy_label} ${dir === 'down' ? 'decreased' : 'increased'}`
+				: `Unable to ${dir === 'down' ? 'decrease' : 'increase'} ${energy_label.toLowerCase()}`;
+		case 'volume_in':
+			return success
+				? `Input ${volume_label.toLowerCase()} ${dir === 'down' ? 'decreased' : 'increased'}`
+				: `Unable to ${dir === 'down' ? 'decrease' : 'increase'} input ${volume_label.toLowerCase()}`;
+		case 'volume_out':
+			return success
+				? `${gain_label} ${dir === 'down' ? 'decreased' : 'increased'}`
+				: `Unable to ${dir === 'down' ? 'decrease' : 'increase'} ${gain_label.toLowerCase()}`;
+		default:
+			return success ? 'Action completed' : 'Action failed';
+	}
+}
+
 function action_conference_member(action, conference_name, member_id, uuid, direction) {
 	const payload = { conference_name, member_id, uuid };
 	if (direction) {
 		payload.direction = direction;
 	}
 	send_action(action, payload)
-		.then(() => {
-			if (action === 'kick') {
-				show_toast(text['button-hangup'] || 'Member removed', 'success');
-				return;
+		.then(response => {
+			const result = (response && response.payload) ? response.payload : response;
+			if (result && result.success === false) {
+				throw new Error(result.message || get_conference_action_message(action, direction, false));
 			}
-			show_toast(text['label-actions'] || 'Action executed', 'success');
+			show_toast(get_conference_action_message(action, direction, true), 'success');
 		})
-		.catch(console.error);
+		.catch(err => {
+			show_toast((err && err.message) || get_conference_action_message(action, direction, false), 'danger');
+			console.error(err);
+		});
 }
 
 /**
@@ -2520,9 +2921,17 @@ function show_toast(message, variant) {
 	let container = document.getElementById('lop_toast_container');
 	if (!container) {
 		container = document.createElement('div');
-		container.id             = 'lop_toast_container';
-		container.className      = 'toast-container position-fixed bottom-0 end-0 p-3';
-		container.style.zIndex   = '9999';
+		container.id = 'lop_toast_container';
+		container.className = 'toast-container position-fixed p-3';
+		container.style.top = '0';
+		container.style.left = '50%';
+		container.style.right = 'auto';
+		container.style.bottom = 'auto';
+		container.style.transform = 'translateX(-50%)';
+		container.style.zIndex = '9999';
+		container.style.display = 'flex';
+		container.style.flexDirection = 'column';
+		container.style.alignItems = 'center';
 		document.body.appendChild(container);
 	}
 
@@ -2533,7 +2942,6 @@ function show_toast(message, variant) {
 	toast_el.innerHTML = `
 		<div class="d-flex">
 			<div class="toast-body">${esc(message)}</div>
-			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 		</div>`;
 
 	container.appendChild(toast_el);
@@ -2652,6 +3060,9 @@ function render_ext_block(ext, is_mine) {
 		? current_user_status
 		: (ext.user_status || '').trim();
 
+	// Unregistered extensions always render as unregistered (grey).  When they
+	// have an active call it is running on the voicemail leg; that is surfaced
+	// to the user via the state label + voicemail icon below, not a colour change.
 	let css_state;
 	if (!reg) {
 		css_state = 'op-ext-unregistered';
@@ -2690,8 +3101,22 @@ function render_ext_block(ext, is_mine) {
 
 	// Only show a state label when something notable is happening
 	let state_label = '';
+	let state_label_icon = ''; // optional leading Font Awesome icon class
 	if (dnd && reg) {
 		state_label = text['label-do_not_disturb'] || 'Do Not Disturb';
+	} else if (!reg && state !== 'idle' && call_info) {
+		// Unregistered extension with a live call: the call is on the voicemail leg.
+		const call_name = ((call_info.caller_caller_id_name || call_info.caller_id_name || '') + '').trim();
+		const call_cid  = ((call_info.caller_caller_id_number || call_info.caller_id_number || '') + '').trim();
+		const from_parts = [];
+		if (call_name && call_name.toLowerCase() !== 'outbound call' && call_name.toLowerCase() !== 'inbound call' && call_name !== call_cid) {
+			from_parts.push(call_name);
+		}
+		if (call_cid) from_parts.push(call_cid);
+		const from_text = from_parts.join(' ');
+		state_label_icon = 'fa-solid fa-voicemail';
+		state_label = (text['label-voicemail'] || 'Voicemail')
+			+ (from_text ? ' \u2014 ' + (text['label-from'] || 'From') + ': ' + esc(from_text) : '');
 	} else if (reg && state !== 'idle') {
 		switch (state) {
 			case 'ringing': state_label = text['label-ringing'] || 'Ringing\u2026'; break;
@@ -2732,13 +3157,21 @@ function render_ext_block(ext, is_mine) {
 	const call_uuid_js = (call_uuid || '').replace(/'/g, "\\'");
 	const call_dest = ((call_info || {}).caller_destination_number || '').trim();
 	const call_cid  = ((call_info || {}).caller_caller_id_number || '').trim();
+	const call_presence = (((call_info || {}).channel_presence_id || '').split('@')[0] || '').trim();
+	const fs_direction = (((call_info || {}).call_direction || (call_info || {}).variable_call_direction || '') + '').toLowerCase();
 	let direction_raw = '';
-	if (call_dest === num && call_cid !== num) {
+	if (call_dest === num && call_cid !== num && call_cid) {
 		direction_raw = 'inbound';
-	} else if (call_cid === num && call_dest !== num) {
+	} else if (call_cid === num && call_dest !== num && call_dest) {
 		direction_raw = 'outbound';
+	} else if (call_presence === num && fs_direction) {
+		// FS leg that belongs to this extension. FS direction is relative to the
+		// switch, not the extension, so invert it for the panel's viewpoint:
+		//   FS outbound => switch is dialing this phone => panel inbound
+		//   FS inbound  => phone dialed the switch      => panel outbound
+		direction_raw = (fs_direction === 'outbound') ? 'inbound' : 'outbound';
 	} else {
-		direction_raw = (((call_info || {}).call_direction || (call_info || {}).variable_call_direction || '') + '').toLowerCase();
+		direction_raw = fs_direction;
 	}
 	const direction_icon = direction_raw === 'inbound'
 		? '../operator_panel/resources/images/inbound.png'
@@ -2832,9 +3265,11 @@ function render_ext_block(ext, is_mine) {
 				: '') +
 			`</div>`;
 	} else if (has_live_call && is_ringing && !is_mine) {
-		// Ringing on another user's extension: Intercept icon
+		// Ringing on another user's extension: Intercept icon (hidden when the
+		// operator is the one placing the call).
+		const can_intercept = !is_call_originated_by_me(call_info);
 		live_actions_html = `<div class="op-ext-call-actions">` +
-			(permissions.operator_panel_manage
+			(permissions.operator_panel_manage && can_intercept
 				? `<img class="op-ext-action-icon" src="../operator_panel/resources/images/intercept.svg" alt="${esc(text['button-intercept'] || 'Intercept')}" title="${esc(text['button-intercept'] || 'Intercept')}" onclick="action_intercept_icon('${call_uuid_js}', '${esc(num)}')">`
 				: '') +
 			(permissions.operator_panel_hangup
@@ -2842,6 +3277,7 @@ function render_ext_block(ext, is_mine) {
 				: '') +
 			`</div>`;
 	} else if (has_live_call) {
+		const can_monitor_this_call = can_monitor_call_with_my_extensions(call_uuid || '');
 		// Active/held call: normal action icons
 		live_actions_html = `<div class="op-ext-call-actions">` +
 			(permissions.operator_panel_record
@@ -2850,10 +3286,10 @@ function render_ext_block(ext, is_mine) {
 			(permissions.operator_panel_eavesdrop
 				? `<img class="op-ext-action-icon" src="../operator_panel/resources/images/eavesdrop.png" alt="${esc(text['button-eavesdrop'] || 'Eavesdrop')}" title="${esc(text['button-eavesdrop'] || 'Eavesdrop')}" draggable="true" ondragstart="on_eavesdrop_dragstart('${call_uuid_js}', event)" ondragend="on_drag_end()" onclick="action_eavesdrop('${call_uuid_js}')">`
 				: '') +
-			(permissions.operator_panel_coach
+			(permissions.active_call_whisper && can_monitor_this_call
 				? `<img class="op-ext-action-icon" src="../operator_panel/resources/images/whisper.svg" alt="${esc(text['button-whisper'] || 'Whisper')}" title="${esc(text['button-whisper'] || 'Whisper')}" onclick="action_whisper('${call_uuid_js}')">`
 				: '') +
-			(permissions.operator_panel_coach
+			(permissions.active_call_barge && can_monitor_this_call
 				? `<img class="op-ext-action-icon" src="../operator_panel/resources/images/barge.svg" alt="${esc(text['button-barge'] || 'Barge')}" title="${esc(text['button-barge'] || 'Barge')}" onclick="action_barge('${call_uuid_js}')">`
 				: '') +
 			(permissions.operator_panel_hangup
@@ -2862,7 +3298,7 @@ function render_ext_block(ext, is_mine) {
 			`</div>`;
 	}
 
-	return `<div class="op-ext-block ${css_state}${mine_cls}" id="ext_block_${esc(num)}"` +
+	return `<div class="op-ext-block ${css_state}${mine_cls}"` +
 		` data-extension="${esc(num)}"${data_uuid}` +
 		` data-can-receive-originate="${can_receive_originate ? 'true' : 'false'}"` +
 		drag_attrs +
@@ -2877,11 +3313,29 @@ function render_ext_block(ext, is_mine) {
 		`<div class="op-ext-number">${esc(num)}</div>` +
 		dialpad_html +
 		(show_name ? `<div class="op-ext-name" title="${esc(raw_name)}">${esc(raw_name)}</div>` : '') +
-		(state_label ? `<div class="op-ext-state-info">${state_label}</div>` : '') +
+		(state_label ? `<div class="op-ext-state-info">${state_label_icon ? `<i class="${esc(state_label_icon)} op-ext-state-icon" aria-hidden="true"></i> ` : ''}${state_label}</div>` : '') +
 		live_call_meta_html +
 		live_actions_html +
 		`</div>` +
 		`</div>`;
+}
+
+function get_extension_block(ext_number, event) {
+	const target_num = ((ext_number || '') + '').trim();
+	if (!target_num) return null;
+
+	if (event && event.currentTarget && event.currentTarget.classList && event.currentTarget.classList.contains('op-ext-block')) {
+		const current_num = (event.currentTarget.getAttribute('data-extension') || '').trim();
+		if (current_num === target_num) return event.currentTarget;
+	}
+
+	const blocks = document.querySelectorAll('.op-ext-block[data-extension]');
+	for (const block of blocks) {
+		const candidate = (block.getAttribute('data-extension') || '').trim();
+		if (candidate === target_num) return block;
+	}
+
+	return null;
 }
 
 /**
@@ -3134,7 +3588,8 @@ function apply_extension_filters() {
 	document.querySelectorAll('.op-group-card').forEach(card => {
 		const key = card.getAttribute('data-group-key') || '';
 		// Group filter
-		const group_visible = active_group_filters.size === 0 || active_group_filters.has(key);
+		const my_extensions_always_visible = key === '__my__' && !my_extensions_button_visible;
+		const group_visible = my_extensions_always_visible || active_group_filters.size === 0 || active_group_filters.has(key);
 		card.classList.toggle('op-hidden', !group_visible);
 
 		if (group_visible && filter_text) {
@@ -3253,12 +3708,14 @@ function render_extensions_tab() {
 	// Group remaining extensions by call_group (case-insensitive)
 	const groups = new Map();
 	others.forEach(ext => {
-		const raw_group = (ext.call_group || '').trim();
-		const key = raw_group.toLowerCase() || '';
-		if (!groups.has(key)) {
-			groups.set(key, { display: raw_group ? to_title_case(raw_group) : '', exts: [] });
-		}
-		groups.get(key).exts.push(ext);
+		const group_entries = parse_call_group_entries(ext.call_group || '');
+		group_entries.forEach(group_entry => {
+			const key = group_entry.key;
+			if (!groups.has(key)) {
+				groups.set(key, { display: group_entry.display, exts: [] });
+			}
+			groups.get(key).exts.push(ext);
+		});
 	});
 
 	// Sort groups: named groups alphabetically, ungrouped last
@@ -3270,7 +3727,7 @@ function render_extensions_tab() {
 
 	// Build the list of all group keys for filters (including "my_extensions")
 	const filter_keys = [];
-	if (own.length > 0) {
+	if (own.length > 0 && my_extensions_button_visible) {
 		filter_keys.push({ key: '__my__', display: text['label-my_extensions'] || 'My Extensions' });
 	}
 	sorted_keys.forEach(key => {
@@ -3544,17 +4001,37 @@ function on_parked_drop(event) {
 	dragged_parked_uuid = null;
 
 	const payload = { uuid, destination: park_destination, context: domain_name };
-	// Determine whether to use -bleg based on call type.
-	// For internal ext-to-ext calls: transfer the dragged extension's own
-	// channel into the parking lot (no -bleg), so the dragged ext is parked
-	// and the other internal extension is freed.
-	// For inbound external calls: use -bleg to park the external caller
-	// and free the local extension.
+	// Parking leg rules:
+	// - Inbound call: park A-leg
+	// - Outbound call: park B-leg
+	// - Local ext-to-ext: park dragged extension
 	if (source_ext) {
 		const call = calls_map.get(uuid);
-		const caller_num = (call && (call.caller_caller_id_number || call.caller_id_number || '')).toString().trim();
-		const is_internal = caller_num !== '' && extensions_map.has(caller_num);
-		if (!is_internal) {
+		const ext = String(source_ext || '').trim();
+		const caller_num = ((call && (call.caller_caller_id_number || call.caller_id_number || '')) + '').trim();
+		const dest_num = ((call && call.caller_destination_number) + '').trim();
+
+		const caller_is_extension = caller_num !== '' && extensions_map.has(caller_num);
+		const dest_is_extension = dest_num !== '' && extensions_map.has(dest_num);
+
+		const call_presence = (((call || {}).channel_presence_id || '').split('@')[0] || '').trim();
+		const fs_direction = ((((call || {}).call_direction || (call || {}).variable_call_direction || '') + '')).toLowerCase();
+		let direction_raw = '';
+		if (dest_num === ext && caller_num !== ext && caller_num) {
+			direction_raw = 'inbound';
+		} else if (caller_num === ext && dest_num !== ext && dest_num) {
+			direction_raw = 'outbound';
+		} else if (call_presence === ext && fs_direction) {
+			direction_raw = (fs_direction === 'outbound') ? 'inbound' : 'outbound';
+		} else {
+			direction_raw = fs_direction;
+		}
+
+		const peer_number = call ? resolve_peer_number_for_leg(call, ext, direction_raw) : '';
+		const peer_is_extension = peer_number !== '' && peer_number !== ext && extensions_map.has(peer_number);
+		const is_local_extension_call = (caller_is_extension && dest_is_extension) || peer_is_extension;
+
+		if (!is_local_extension_call) {
 			payload.bleg = true;
 		}
 	}
@@ -3580,7 +4057,7 @@ function toggle_ext_dialpad(ext_number, event) {
 		event.stopPropagation();
 	}
 
-	const row = document.getElementById(`ext_block_${ext_number}`);
+	const row = get_extension_block(ext_number, event);
 	if (!row) return;
 
 	const input = row.querySelector('.op-ext-dial-input');
@@ -3594,6 +4071,7 @@ function toggle_ext_dialpad(ext_number, event) {
 	}
 
 	input.classList.remove('d-none');
+		init_contact_autocomplete(input);
 	setTimeout(() => input.focus(), 10);
 }
 
@@ -3604,7 +4082,7 @@ function submit_ext_dial(ext_number, event) {
 		event.stopPropagation();
 	}
 
-	const row = document.getElementById(`ext_block_${ext_number}`);
+	const row = get_extension_block(ext_number, event);
 	if (!row) return;
 
 	const input = row.querySelector('.op-ext-dial-input');

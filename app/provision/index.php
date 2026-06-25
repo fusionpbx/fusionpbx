@@ -24,9 +24,15 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
+// Disable the PHP SESSION
+	$no_session = true;
+
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/functions/device_by.php";
+
+//define global variable(s)
+	global $database;
 
 //logging
 	openlog("FusionPBX", LOG_PID | LOG_PERROR, LOG_LOCAL0);
@@ -198,8 +204,8 @@
 //get http_domain_filter from global settings only (can't be used per domain)
 	$domain_filter = (new settings(['database' => $database]))->get('provision', 'http_domain_filter', true);
 
-//get the domain_uuid, domain_name, device_name and device_vendor
-	$sql = "select d.device_uuid, d.domain_uuid, d.device_vendor, n.domain_name ";
+//get the domain_uuid, domain_name, device_user_uuid, device_name and device_vendor
+	$sql = "select d.device_uuid, d.domain_uuid, d.device_user_uuid, d.device_vendor, n.domain_name ";
 	$sql .= "from v_devices as d, v_domains as n ";
 	$sql .= "where device_address = :device_address ";
 	$sql .= "and d.domain_uuid = n.domain_uuid ";
@@ -212,6 +218,7 @@
 	if (is_array($row)) {
 		$device_uuid = $row['device_uuid'];
 		$domain_uuid = $row['domain_uuid'];
+		$user_uuid = $row['device_user_uuid'];
 		$domain_name = $row['domain_name'];
 		$device_vendor = $row['device_vendor'];
 	} else {
@@ -330,7 +337,7 @@
 				if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) || ($data['username'] != $provision["http_auth_username"])) {
 					header('HTTP/1.1 401 Unauthorized');
 					header("Content-Type: text/html");
-					$content = 'Unauthorized '.$__line__;
+					$content = 'Unauthorized '.__line__;
 					header("Content-Length: ".strval(strlen($content)));
 					echo $content;
 					exit;
@@ -355,7 +362,7 @@
 			if (!$authorized) {
 				header('HTTP/1.0 401 Unauthorized');
 				header("Content-Type: text/html");
-				$content = 'Unauthorized '.$__line__;
+				$content = 'Unauthorized '.__line__;
 				header("Content-Length: ".strval(strlen($content)));
 				echo $content;
 				exit;
@@ -415,7 +422,7 @@
 	ob_start();
 
 //output template to string for header processing
-	$prov = new provision(['settings'=>$settings, 'domain_uuid'=>$domain_uuid, 'domain_name'=>$domain_name, 'user_uuid'=>$_SESSION['user_uuid']]);
+	$prov = new provision(['settings'=>$settings, 'domain_uuid'=>$domain_uuid, 'domain_name'=>$domain_name, 'user_uuid'=>$user_uuid]);
 	$prov->device_address = $device_address;
 	$prov->device_file = $file;
 	$file_contents = $prov->render();

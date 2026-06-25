@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+# PROVIDE: operator_panel
+# REQUIRE: DAEMON
+# KEYWORD: shutdown
+#
+# Add the following lines to /etc/rc.conf to enable operator_panel:
+# operator_panel_enable:      Set it to "YES" to enable operator_panel.
+#                          Default is "NO".
+#
+
+. /etc/rc.subr
+name="operator_panel"
+
+rcvar=${name}_enable
+load_rc_config $name
+
+# Set defaults
+: ${operator_panel_enable="NO"}
+: ${operator_panel_pidfile="/var/run/operator_panel.pid"}
+
+# Prepare the variables
+start_cmd=${name}_start
+stop_cmd=${name}_stop
+status_cmd=${name}_status
+pidfile=${operator_panel_pidfile}
+
+# Path to the PHP script
+script="/usr/local/www/fusionpbx/app/operator_panel/resources/service/operator_panel.php"
+
+# Command to run the script
+command="/usr/local/bin/php"
+
+operator_panel_start() {
+    echo "Starting $name..."
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        echo "$name is already running."
+    else
+        # Fully detach from parent shell to prevent 'service' from blocking
+        nohup $command $script </dev/null >/dev/null 2>&1 &
+        echo $! > "$pidfile"
+        echo "$name started."
+    fi
+}
+
+operator_panel_stop() {
+    echo "Stopping $name..."
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        kill "$(cat $pidfile)"
+        rm -f "$pidfile"
+        echo "$name stopped."
+    else
+        echo "$name is not running."
+    fi
+}
+
+operator_panel_status() {
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        echo "$name is running with PID $(cat $pidfile)."
+    else
+        echo "$name is not running."
+    fi
+}
+
+run_rc_command "$1"

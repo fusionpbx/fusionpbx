@@ -1,0 +1,94 @@
+<?php
+
+	// application details
+		$apps[$x]['name'] = 'Services';
+		$apps[$x]['uuid'] = '540c3ec2-4f0c-467f-a09d-d644439c96f2';
+		$apps[$x]['category'] = '';
+		$apps[$x]['subcategory'] = '';
+		$apps[$x]['version'] = '';
+		$apps[$x]['license'] = 'Mozilla Public License 1.1';
+		$apps[$x]['url'] = 'http://www.fusionpbx.com';
+		$apps[$x]['description']['en-us'] = '';
+
+	// permission details
+		$y = 0;
+		$apps[$x]['permissions'][$y]['name'] = 'service_view';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		// $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'service_add';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		// $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'service_edit';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		// $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'service_delete';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		// $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'service_all';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+
+	// services
+		$y = 0;
+		$apps[$x]['db'][$y]['table']['name'] = 'v_services';
+		$apps[$x]['db'][$y]['table']['parent'] = '';
+		$z = 0;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'service_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'primary';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'service_name';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the service name.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'service_category';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select the category.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'service_file';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'The service file.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'service_enabled';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'boolean';
+		$apps[$x]['db'][$y]['fields'][$z]['toggle'] = ['true','false'];
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the service enabled.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'service_description';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the service description.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'insert_date';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'insert_user';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'update_date';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'timestamptz';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'date';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'update_user';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+

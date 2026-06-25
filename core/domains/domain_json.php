@@ -41,10 +41,10 @@
 
 //add the search term
 	if (!empty($_GET["search"])) {
-		$search = strtolower($_GET["search"]);
+		$search = lower_case($_GET["search"]);
 	}
 
-//validate the token	
+//validate the token
 	//$token = new token;
 	//if (!$token->validate($_SERVER['PHP_SELF'])) {
 	//	message::add($text['message-invalid_token'],'negative');

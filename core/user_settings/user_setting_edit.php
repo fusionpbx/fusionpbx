@@ -294,7 +294,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 				if ($action == "add") {
 					message::add($text['message-add']);
 				}
-				header("Location: /core/users/user_edit.php?id=".$user_uuid);
+				header("Location: /core/user_settings/user_settings.php?id=".$user_uuid);
 				return;
 		}
 }
@@ -478,7 +478,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "		</select>\n";
 	}
 	else if ($user_setting_category == "domain" && $user_setting_subcategory == "time_zone" && $user_setting_name == "name" ) {
-		echo "		<select class='formfld' id='user_setting_value' name='user_setting_value' style=''>\n";
+		echo "		<select class='formfld searchable_select' id='user_setting_value' name='user_setting_value' style=''>\n";
 		echo "		<option value=''></option>\n";
 		//$list = DateTimeZone::listAbbreviations();
 		$time_zone_identifiers = DateTimeZone::listIdentifiers();

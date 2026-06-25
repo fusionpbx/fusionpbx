@@ -39,12 +39,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//get order and order by, page
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_REQUEST["order_by"] ?? ''));
-	$order = $_REQUEST["order"] ?? 'asc';
-	$page = isset($_REQUEST['page']) && is_numeric($_REQUEST['page']) ? $_REQUEST['page'] : null;
-	$search = $_REQUEST['search'] ?? null;
-
 //get user uuid
 	if (permission_exists('user_edit') && !empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$user_uuid = $_REQUEST["id"];
@@ -54,6 +48,47 @@
 		$user_uuid = uuid();
 		$action = 'add';
 	}
+
+// Check if the user has totp
+	// $user_has_totp_secret = false;
+	// $sql = "select user_setting_value from v_user_settings s ";
+	// $sql .= "left join v_users u on u.user_uuid = s.user_uuid ";
+	// $sql .= "where s.user_uuid = :user_uuid ";
+	// $sql .= "and s.user_setting_category = 'authentication' ";
+	// $sql .= "and s.user_setting_subcategory = 'methods' ";
+	// $sql .= "and s.user_setting_value = 'totp' ";
+	// $sql .= "and u.domain_uuid = :domain_uuid ";
+	// $sql .= "and u.user_totp_secret is not null ";
+	// $parameters['user_uuid'] = $_REQUEST["id"] ?? '';
+	// $parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	// $user_has_totp_secret = !empty($database->select($sql, $parameters, 'column'));
+	// unset($sql, $parameters);
+
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'username'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$url_params = [];
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('user_all')) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
 
 //get total user count from the database, check limit, if defined
 	if (permission_exists('user_add') && $action == 'add' && $settings->get('limit', 'users') != '') {
@@ -66,7 +101,7 @@
 
 		if ($num_rows >= $settings->get('limit', 'users')) {
 			message::add($text['message-maximum_users'].' '.$settings->get('limit', 'users'), 'negative');
-			header('Location: users.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+			header('Location: users.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 	}
@@ -91,7 +126,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header("Location: users.php?".(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+				header("Location: users.php".($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -103,7 +138,7 @@
 
 		//redirect the user
 			message::add($text['message-delete']);
-			header("Location: user_edit.php?id=".urlencode($user_uuid).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+			header("Location: user_edit.php?id=".urlencode($user_uuid).($query_string ? '&'.$query_string : ''));
 			exit;
 	}
 
@@ -153,12 +188,18 @@
 			if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
 				$user_totp_secret = strtoupper($_POST["user_totp_secret"]);
 			}
+			// if (!empty($_REQUEST["id"])) {
+			// 	// If they have it on and the reset button was pressed, then clear the TOTP secret so it can be reconfigured on next login
+			// 	if ($user_has_totp_secret && permission_exists('user_totp_reset') && ($_POST['reset_totp'] ?? '') != 'false') {
+			// 		$user_totp_secret = null;
+			// 	}
+			// }
 
 		//validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: users.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+				header('Location: users.php'.($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 
@@ -267,7 +308,7 @@
 			if (message::count() != 0 || !empty($invalid)) {
 				if ($invalid) { message::add($text['message-required'].implode(', ', $invalid), 'negative', 7500); }
 				persistent_form_values('store', $_POST);
-				header("Location: user_edit.php".(permission_exists('user_edit') && $action != 'add' ? "?id=".urlencode($user_uuid) : null).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+				header("Location: user_edit.php".(permission_exists('user_edit') && $action != 'add' ? "?id=".urlencode($user_uuid) : null).($query_string ? '&'.$query_string : ''));
 				exit;
 			}
 			else {
@@ -592,11 +633,14 @@
 					}
 					unset($sql, $parameters, $row);
 
-					//replace variables in email body
-					$email_body = str_replace('${domain}', $domain_name, $email_body);
+					//send email if the subject and body are not empty
+					if (!empty($email_subject) && !empty($email_body)) {
+						//replace variables in email body
+						$email_body = str_replace('${domain}', $domain_name, $email_body);
 
-					//send the email
-					send_email($user_email, $email_subject, $email_body, $eml_error);
+						//send the email
+						send_email($user_email, $email_subject, $email_body, $eml_error);
+					}
 
 					//build the user log array
 					$log_array['type'] = 'Password Changed';
@@ -615,7 +659,7 @@
 				if (permission_exists('api_key')) {
 					$array['users'][$x]['api_key'] = (!empty($api_key)) ? $api_key : null;
 				}
-				if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
+				if ((!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods']))) { // || $user_has_totp_secret) {
 					$array['users'][$x]['user_totp_secret'] = $user_totp_secret;
 				}
 				$array['users'][$x]['user_type'] = $user_type;
@@ -687,7 +731,7 @@
 			else {
 				message::add($text['message-add'],'positive');
 			}
-			header("Location: user_edit.php?id=".urlencode($user_uuid).(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+			header("Location: user_edit.php?id=".urlencode($user_uuid).($query_string ? '&'.$query_string : ''));
 			exit;
 	}
 
@@ -727,7 +771,7 @@
 				}
 				else {
 					message::add($text['message-invalid_user'], 'negative', 7500);
-					header("Location: user_edit.php?id=".$_SESSION['user_uuid'].(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+					header("Location: user_edit.php?id=".$_SESSION['user_uuid'].($query_string ? '&'.$query_string : ''));
 					exit;
 				}
 				unset($sql, $parameters, $row);
@@ -805,6 +849,7 @@
 
 	echo "<form name='frm' id='frm' method='post'>\n";
 	echo "<input type='hidden' name='search' id='search' value=\"".($search ?? '')."\" />\n";
+	//echo "<input type='hidden' name='reset_totp' id='reset_totp' value='false' />\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-user_edit']."</b></div>\n";
@@ -813,7 +858,7 @@
 		echo "<div class='unsaved'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle'></i></div>";
 	}
 	if (permission_exists('user_add') || permission_exists('user_edit')) {
-		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'users.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null)]);
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'users.php'.($query_string ? '?'.$query_string : '')]);
 	}
 	$button_margin = 'margin-left: 15px;';
 	if (permission_exists('ticket_add') || permission_exists('ticket_edit')) {
@@ -938,7 +983,7 @@
 	echo "		".$text['label-time_zone']."\n";
 	echo "	</td>\n";
 	echo "	<td class=\"vtable\" align='left'>\n";
-	echo "		<select id='user_time_zone' name='user_time_zone' class='formfld' style=''>\n";
+	echo "		<select id='user_time_zone' name='user_time_zone' class='formfld searchable_select' style=''>\n";
 	echo "		<option value=''></option>\n";
 	//$list = DateTimeZone::listAbbreviations();
 	$time_zone_identifiers = DateTimeZone::listIdentifiers();
@@ -1219,7 +1264,7 @@
 	}
 
 	//user time based one time password secret
-	if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
+	if (!empty($user_totp_secret) || (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods']))) {
 		if (!empty($user_totp_secret) && !empty($username)) {
 			$otpauth = "otpauth://totp/".$username."?secret=".$user_totp_secret."&issuer=".$_SESSION['domain_name'];
 
@@ -1297,6 +1342,22 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
+
+	// if ($action == 'edit' && permission_exists('user_totp_reset') && !empty($user_totp_secret)) {
+	// 	echo "	<tr>\n";
+	// 	echo "		<td class='vncell' valign='top'>".$text['label-user_totp_secret']."</td>\n";
+	// 	echo "		<td class='vtable'>\n";
+	// 	echo button::create(['type'=>'button',
+	// 		'label'=>$text['button-reset'],
+	// 		'icon'=>'trash',
+	// 		'style'=>'margin-top: 1px; margin-bottom: 1px;',
+	// 		'onclick'=>"document.getElementById('reset_totp').value = 'true';\n"
+	// 			."document.getElementById('frm').submit();"]);
+	// 	echo "		<br />\n";
+	// 	echo $text['description-user_totp_reset']."\n";
+	// 	echo "		</td>\n";
+	// 	echo "</tr>\n";
+	// }
 
 	echo "<tr ".($user_uuid == $_SESSION['user_uuid'] ? "style='display: none;'" : null).">\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";

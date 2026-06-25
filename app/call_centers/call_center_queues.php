@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -42,8 +42,32 @@
 	$language = new text;
 	$text = $language->get();
 
-//set additional variables
-	$show = $_GET["show"] ?? '';
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'queue_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$sort = $order_by == 'queue_extension' ? 'natural' : null;
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('call_center_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
@@ -51,7 +75,6 @@
 //get posted data
 	if (!empty($_POST['call_center_queues']) && is_array($_POST['call_center_queues'])) {
 		$action = $_POST['action'];
-		$search = $_POST['search'] ?? '';
 		$call_center_queues = $_POST['call_center_queues'];
 	}
 
@@ -65,7 +88,7 @@
 
 		if ($total_call_center_queues >= $settings->get('limit','call_center_queues', 0)) {
 			message::add($text['message-maximum_queues'].' '.$settings->get('limit','call_center_queues', ''), 'negative');
-			header('Location: call_center_queues.php');
+			header('Location: call_center_queues.php'.($query_string ? '?'.$query_string : ''));
 			return;
 		}
 	}
@@ -87,51 +110,48 @@
 				break;
 		}
 
-		header('Location: call_center_queues.php'.($search != '' ? '?search='.urlencode($search) : ''));
+		header('Location: call_center_queues.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
 
-//get http variables and set as php variables
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
-	$sort = $order_by == 'queue_extension' ? 'natural' : null;
-
-//add the search term
-	$search = strtolower($_GET["search"] ?? '');
-	if (!empty($search)) {
-		$sql_search = " (";
-		$sql_search .= "lower(queue_name) like :search ";
-		$sql_search .= "or lower(queue_description) like :search ";
-		$sql_search .= ") ";
-		$parameters['search'] = '%'.$search.'%';
-	}
-
 //get total call center queues count from the database
-	$sql = "select count(*) from v_call_center_queues ";
+	$sql = "select count(*) ";
+	$sql .= "from v_call_center_queues ";
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('call_center_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
-	if (!empty($sql_search)) {
-		$sql .= "and ".$sql_search;
+	if (!empty($search)) {
+		$sql .= " (";
+		$sql .= "lower(queue_name) like :search ";
+		$sql .= "or lower(queue_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	$param = "&search=".urlencode($search);
-	if ($show == "all" && permission_exists('call_center_all')) {
-		$param .= "&show=all";
-	}
-	$page = $_GET['page'] ?? '';
-	if (empty($page)) { $page = 0; $_GET['page'] = 0; }
-	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
+	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = str_replace('count(*)', '*', $sql ?? '');
+	$sql = "select * ";
+	$sql = "from v_call_center_queues ";
+	$sql .= "where true ";
+	if ($show != "all" || !permission_exists('call_center_all')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "lower(queue_name) like :search ";
+		$sql .= "or lower(queue_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
+	}
 	$sql .= order_by($order_by, $order, 'queue_name', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$result = $database->select($sql, $parameters ?? null, 'all');
@@ -171,20 +191,20 @@
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; '.!empty($margin_left),'onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		unset($margin_left);
 	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	if (permission_exists('call_center_all')) {
-		if ($show == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>";
-		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?type=&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($param as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	if (permission_exists('call_center_all') && (!isset($show) || $show != 'all')) {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
+	}
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'call_center_queues.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
@@ -203,7 +223,6 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -214,24 +233,24 @@
 		echo "	</th>\n";
 	}
 	if ($show == "all" && permission_exists('call_center_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, "class='shrink'", $query_string);
 	}
-	echo th_order_by('queue_name', $text['label-queue_name'], $order_by, $order);
-	echo th_order_by('queue_extension', $text['label-extension'], $order_by, $order);
-	echo th_order_by('queue_strategy', $text['label-strategy'], $order_by, $order);
-	//echo th_order_by('queue_moh_sound', $text['label-music_on_hold'], $order_by, $order);
-	//echo th_order_by('queue_record_template', $text['label-record_template'], $order_by, $order);
-	//echo th_order_by('queue_time_base_score', $text['label-time_base_score'], $order_by, $order);
-	//echo th_order_by('queue_time_base_score_sec', $text['label-time_base_score_sec'], $order_by, $order);
-	//echo th_order_by('queue_max_wait_time', $text['label-max_wait_time'], $order_by, $order);
-	//echo th_order_by('queue_max_wait_time_with_no_agent', $text['label-max_wait_time_with_no_agent'], $order_by, $order);
-	echo th_order_by('queue_tier_rules_apply', $text['label-tier_rules_apply'], $order_by, $order);
-	//echo th_order_by('queue_tier_rule_wait_second', $text['label-tier_rule_wait_second'], $order_by, $order);
-	//echo th_order_by('queue_tier_rule_no_agent_no_wait', $text['label-tier_rule_no_agent_no_wait'], $order_by, $order);
-	//echo th_order_by('queue_discard_abandoned_after', $text['label-discard_abandoned_after'], $order_by, $order);
-	//echo th_order_by('queue_abandoned_resume_allowed', $text['label-abandoned_resume_allowed'], $order_by, $order);
-	//echo th_order_by('queue_tier_rule_wait_multiply_level', $text['label-tier_rule_wait_multiply_level'], $order_by, $order);
-	echo th_order_by('queue_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'");
+	echo th_order_by('queue_name', $text['label-queue_name'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('queue_extension', $text['label-extension'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('queue_strategy', $text['label-strategy'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('queue_moh_sound', $text['label-music_on_hold'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('queue_record_template', $text['label-record_template'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('queue_time_base_score', $text['label-time_base_score'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('queue_time_base_score_sec', $text['label-time_base_score_sec'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('queue_max_wait_time', $text['label-max_wait_time'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('queue_max_wait_time_with_no_agent', $text['label-max_wait_time_with_no_agent'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('queue_tier_rules_apply', $text['label-tier_rules_apply'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('queue_tier_rule_wait_second', $text['label-tier_rule_wait_second'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('queue_tier_rule_no_agent_no_wait', $text['label-tier_rule_no_agent_no_wait'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('queue_discard_abandoned_after', $text['label-discard_abandoned_after'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('queue_abandoned_resume_allowed', $text['label-abandoned_resume_allowed'], $order_by, $order, null, null, $query_string);
+	//echo th_order_by('queue_tier_rule_wait_multiply_level', $text['label-tier_rule_wait_multiply_level'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('queue_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'", $query_string);
 	if (permission_exists('call_center_queue_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
@@ -242,7 +261,7 @@
 		foreach($result as $row) {
 			$list_row_url = '';
 			if (permission_exists('call_center_queue_edit')) {
-				$list_row_url = "call_center_queue_edit.php?id=".urlencode($row['call_center_queue_uuid']);
+				$list_row_url = "call_center_queue_edit.php?id=".urlencode($row['call_center_queue_uuid']).($query_string ? '&'.$query_string : '');
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
@@ -310,4 +329,3 @@
 	require_once "resources/footer.php";
 
 ?>
-

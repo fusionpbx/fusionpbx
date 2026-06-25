@@ -43,7 +43,7 @@ class system_dashboard_service extends base_websocket_system_service {
 	 *
 	 * @return void
 	 */
-	protected function reload_settings(): void {
+	public function reload_settings(): void {
 		static::set_system_information();
 
 		// re-read the config file to get any possible changes
@@ -64,8 +64,14 @@ class system_dashboard_service extends base_websocket_system_service {
 		// get the network interval
 		$this->network_status_refresh_interval = intval($this->settings->get('system', 'network_status_refresh_interval', 3));
 
-		// get the network card to watch
-		$this->network_interface = $this->settings->get('system', 'network_interface', 'eth0');
+		// get the network card to watch - auto-detect if not configured
+		$configured_interface = $this->settings->get('system', 'network_interface', '');
+		if (!empty($configured_interface)) {
+			$this->network_interface = $configured_interface;
+		} else {
+			// Auto-detect network interface from system information
+			$this->network_interface = self::$system_information->get_network_card('em0');
+		}
 	}
 
 	/**
@@ -122,8 +128,8 @@ class system_dashboard_service extends base_websocket_system_service {
 			->topic(self::NETWORK_STATUS_TOPIC)
 		;
 		if ($message !== null && $message instanceof websocket_message) {
-			$this->debug("Responding to message request id: ".$message->id());
-			$response->id($message->id());
+			$this->debug("Responding to message request id: ".$message->request_id());
+			$response->request_id($message->request_id());
 		}
 
 		// Log for debugging
@@ -167,7 +173,7 @@ class system_dashboard_service extends base_websocket_system_service {
 		if ($message !== null && $message instanceof websocket_message) {
 			$payload = $message->payload();
 			if (!empty($payload['network_interface'])) {
-				$this->network_interface = ['network_interface'];
+				$this->network_interface = $payload['network_interface'];
 			}
 		}
 	}
@@ -202,7 +208,7 @@ class system_dashboard_service extends base_websocket_system_service {
 
 		// Include message ID if responding to a request
 		if ($message !== null && $message instanceof websocket_message) {
-			$response->id($message->id());
+			$response->request_id($message->request_id());
 		}
 
 		// Log for debugging

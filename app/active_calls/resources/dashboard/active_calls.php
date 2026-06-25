@@ -68,6 +68,9 @@ $c = 0;
 $row_style["0"] = "row_style0";
 $row_style["1"] = "row_style1";
 
+// From the include statement
+global $widget_chart_type;
+
 //icon and count
 echo "<div class='hud_content' ".($widget_details_state == "disabled" ?: "onclick=\"$('#hud_active_calls_details').slideToggle('fast');\"").">\n";
 	echo "<span class='hud_title'><a onclick=\"document.location.href='".PROJECT_PATH."/app/active_calls/active_calls.php'\">".escape($widget_label)."</a></span>\n";
@@ -362,7 +365,8 @@ if (!empty($_SESSION['user']['extension'])) {
 
 	// Ringing, Answer, Hangup
 	function channel_callstate_event(call) {
-		const state = call.answer_state;
+		const state = normalize_answer_state(call);
+		call.answer_state = state;
 		//update color
 		const uuid = call.unique_id;
 		//console.log(call.event_name, call.unique_id, state, call);
@@ -410,6 +414,21 @@ if (!empty($_SESSION['user']['extension'])) {
 				hangup_call(call);
 				break;
 		}
+	}
+
+	function normalize_answer_state(call) {
+		const answer_state = String(call.answer_state ?? '').toLowerCase();
+		if (answer_state !== 'ringing') {
+			return answer_state;
+		}
+
+		// The in.progress bootstrap payload is currently synthesized as "ringing"
+		// even when a call is already established. Mark those request-seeded rows as answered.
+		if (call.__from_request === true) {
+			return 'answered';
+		}
+
+		return answer_state;
 	}
 
 	//////////////////////

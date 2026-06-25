@@ -91,7 +91,7 @@
 			$row_style["1"] = "row_style1";
 
 		//response div tag
-			echo "<div id='cmd_reponse'>\n";
+			echo "<div id='cmd_response'>\n";
 			echo "</div>\n";
 
 		//show the content
@@ -203,7 +203,7 @@
 			$row_style["1"] = "row_style1";
 
 		//response div tag
-			echo "<div id='cmd_reponse'>\n";
+			echo "<div id='cmd_response'>\n";
 			echo "</div>\n";
 			echo "<br><br>Logged in agents<br><br>\n";
 

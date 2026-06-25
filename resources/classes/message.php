@@ -77,9 +77,12 @@ class message {
 	 * @return void
 	 */
 	static function add($message, $mood = null, $delay = null) {
+		//set the global variables
+		global $settings;
+
 		//set mood and delay
 		$mood = $mood ?: 'positive';
-		$delay = $delay ?: (1000 * (float)$_SESSION['theme']['message_delay']['text']);
+		$delay = $delay ?: (1000 * (float)$settings->get('theme', 'message_delay', '3'));
 		//ignore duplicate messages
 		if (isset($_SESSION["messages"]) && !empty($_SESSION["messages"][$mood]['message'])) {
 			if (!in_array($message, $_SESSION["messages"][$mood]['message'])) {

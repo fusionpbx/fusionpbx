@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+# PROVIDE: active_conferences
+# REQUIRE: DAEMON
+# KEYWORD: shutdown
+#
+# Add the following lines to /etc/rc.conf to enable active_conferences:
+# active_conferences_enable:      Set it to "YES" to enable active_conferences.
+#                          Default is "NO".
+#
+
+. /etc/rc.subr
+name="active_conferences"
+
+rcvar=${name}_enable
+load_rc_config $name
+
+# Set defaults
+: ${active_conferences_enable="NO"}
+: ${active_conferences_pidfile="/var/run/active_conferences.pid"}
+
+# Prepare the variables
+start_cmd=${name}_start
+stop_cmd=${name}_stop
+status_cmd=${name}_status
+pidfile=${active_conferences_pidfile}
+
+# Path to the PHP script
+script="/usr/local/www/fusionpbx/app/active_conferences/resources/service/active_conferences.php"
+
+# Command to run the script
+command="/usr/local/bin/php"
+
+active_conferences_start() {
+    echo "Starting $name..."
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        echo "$name is already running."
+    else
+        # Fully detach from parent shell to prevent 'service' from blocking
+        nohup $command $script </dev/null >/dev/null 2>&1 &
+        echo $! > "$pidfile"
+        echo "$name started."
+    fi
+}
+
+active_conferences_stop() {
+    echo "Stopping $name..."
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        kill "$(cat $pidfile)"
+        rm -f "$pidfile"
+        echo "$name stopped."
+    else
+        echo "$name is not running."
+    fi
+}
+
+active_conferences_status() {
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        echo "$name is running with PID $(cat $pidfile)."
+    else
+        echo "$name is not running."
+    fi
+}
+
+run_rc_command "$1"

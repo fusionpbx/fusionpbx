@@ -65,10 +65,34 @@
 	$theme_button_icon_play = $settings->get('theme','button_icon_play');
 	$theme_button_icon_reset = $settings->get('theme','button_icon_reset');
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'recording_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('recording_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
+
 //set additional variables
 	$action = $_REQUEST["action"] ?? '';
-	$search = $_REQUEST["search"] ?? '';
-	$show = $_GET['show'] ?? '';
 
 //download the recording
 	if ($action == "download" && (permission_exists('recording_play') || permission_exists('recording_download'))) {
@@ -95,7 +119,7 @@
 					}
 					unset($sql, $parameters, $row, $recording_decoded);
 				} elseif ($_GET['filename']) {
-					$recording_filename = $_GET['filename'];
+					$recording_filename = basename($_GET['filename']);
 				}
 
 			// build full path
@@ -151,8 +175,8 @@
 			$file_ext = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
 
 		//remove special characters
-			$recording_filename = str_replace(" ", "_", $_FILES['file']['name']);
-			$recording_filename = str_replace("'", "", $recording_filename);
+			$file_name = str_replace(['_', ' '], "-", $file_name);
+			$file_name = str_replace(['"', "'", "`"], "", $file_name);
 			$recording_filename = $file_name.'.'.$file_ext;
 
 		//make sure the destination directory exists
@@ -173,7 +197,7 @@
 
 		//set the file name to be inserted as the recording description
 			$recording_description = $_FILES['file']['name'];
-			header("Location: recordings.php?rd=".urlencode($recording_description));
+			header("Location: recordings.php?rd=".urlencode($recording_description).($query_string ? '&'.$query_string : ''));
 			exit;
 	}
 
@@ -223,9 +247,13 @@
 				if (filetype($switch_recordings."/".$domain_name."/".$recording_filename) == "file") {
 
 					if (!is_array($array_recordings) || !in_array($recording_filename, $array_recordings)) {
-						//file not found in db, add it
+						//file was not found in database add the recording
 							$recording_uuid = uuid();
-							$recording_name = ucwords(str_replace('_', ' ', pathinfo($recording_filename, PATHINFO_FILENAME)));
+							$recording_name = pathinfo($recording_filename, PATHINFO_FILENAME);
+							$recording_name = str_replace(['_', '-'], ' ', $recording_name);
+							$recording_name = str_replace(['"', "'", "`"], '', $recording_name);
+							$recording_name = preg_replace('/\s+/', ' ', trim($recording_name));
+							$recording_name = ucwords(strtolower($recording_name));
 							$recording_description = $_GET['rd'];
 						//build array
 							$array['recordings'][0]['domain_uuid'] = $domain_uuid;
@@ -275,7 +303,7 @@
 
 		//redirect
 			if ($_GET['rd'] ?? '') {
-				header("Location: recordings.php");
+				header("Location: recordings.php".($query_string ? '?'.$query_string : ''));
 				exit;
 			}
 	}
@@ -297,16 +325,9 @@
 				break;
 		}
 
-		header('Location: recordings.php'.($search != '' ? '?search='.urlencode($search) : ''));
+		header('Location: recordings.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
-
-//get order and order by
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
-
-//add the search term
-	$search = $_REQUEST["search"] ?? '';
 
 //get the total recordings from the database
 	$sql = "select count(*) from v_recordings ";
@@ -321,20 +342,14 @@
 		$sql .= "	or lower(recording_filename) like :search ";
 		$sql .= "	or lower(recording_description) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.strtolower($search).'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
 	$rows_per_page = ($domain_paging != '') ? $domain_paging : 50;
-	$param = "&search=".urlencode($search);
-	if ($show == "all" && permission_exists('recording_all')) {
-		$param .= "&show=all";
-	}
-	$param .= "&order_by=".$order_by."&order=".$order;
-	$page = isset($_GET['page']) ? $_GET['page'] : 0;
-	[$paging_controls, $rows_per_page] = paging($num_rows, $param, $rows_per_page);
-	[$paging_controls_mini, $rows_per_page] = paging($num_rows, $param, $rows_per_page, true);
+	[$paging_controls, $rows_per_page] = paging($num_rows, $query_string, $rows_per_page);
+	[$paging_controls_mini, $rows_per_page] = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
 //get the file size
@@ -371,7 +386,7 @@
 		$sql .= "	or lower(recording_filename) like :search ";
 		$sql .= "	or lower(recording_description) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.strtolower($search).'%';
+		$parameters['search'] = '%'.lower_case($search).'%';
 	}
 	$sql .= order_by($order_by, $order, 'recording_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
@@ -433,6 +448,9 @@
 	if (permission_exists('recording_add') && $speech_enabled == 'true') {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$theme_button_icon_add,'id'=>'btn_add','link'=>'recording_edit.php']);
 	}
+	if (permission_exists('recording_delete') && $recordings) {
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$theme_button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+	}
 	if (permission_exists('recording_upload')) {
 		echo 	"<form id='form_upload' class='inline' method='post' enctype='multipart/form-data'>\n";
 		echo 	"<input name='action' type='hidden' value='upload'>\n";
@@ -448,23 +466,21 @@
 		echo 	"</span>\n";
 		echo 	"</form>";
 	}
-	if (permission_exists('recording_delete') && $recordings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$theme_button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
-	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	if (permission_exists('recording_all')) {
-		if ($show == 'all') {
-			echo "		<input type='hidden' name='show' value='all'>";
-		}
-		else {
-			echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$theme_button_icon_all,'link'=>'?type=&show=all'.($search != '' ? "&search=".urlencode($search) : null)]);
+	echo button::create(['type'=>'button','label'=>$text['button-map'],'icon'=>$settings->get('theme', 'button_icon_map'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'recording_map.php']);
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($param as $key => $value) {
+		if ($key !== 'search' && $key !== 'page') {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	if ($show !== 'all' && permission_exists('recording_all')) {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$theme_button_icon_all,'link'=>'?show=all']);
+	}
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$theme_button_icon_search,'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$theme_button_icon_reset,'type'=>'button','id'=>'btn_reset','link'=>'recordings.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if ($paging_controls_mini != '') {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
@@ -485,7 +501,6 @@
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='search' value=\"".escape($search)."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -498,12 +513,12 @@
 		$col_count++;
 	}
 	if ($show == "all" && permission_exists('recording_all')) {
-		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, $param, "class='shrink'");
+		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, "class='shrink'", $query_string);
 	}
-	echo th_order_by('recording_name', $text['label-recording_name'], $order_by, $order);
+	echo th_order_by('recording_name', $text['label-recording_name'], $order_by, $order, null, null, $query_string);
 	$col_count++;
 	if ($recording_storage_type != 'base64') {
-		echo th_order_by('recording_filename', $text['label-file_name'], $order_by, $order, null, "class='hide-md-dn'");
+		echo th_order_by('recording_filename', $text['label-file_name'], $order_by, $order, null, "class='hide-md-dn'", $query_string);
 		$col_count++;
 	}
 	if (permission_exists('recording_play') || permission_exists('recording_download')) {
@@ -516,7 +531,7 @@
 	echo "<th class='center hide-md-dn'>".$text['label-date']."</th>\n";
 	$col_count++;
 
-	echo th_order_by('recording_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn pct-25'");
+	echo th_order_by('recording_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn pct-25'", $query_string);
 	$col_count++;
 	if (permission_exists('recording_edit') && $theme_list_row_edit_button == true) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -533,7 +548,7 @@
 			}
 			$list_row_url = '';
 			if (permission_exists('recording_edit')) {
-				$list_row_url = "recording_edit.php?id=".urlencode($row['recording_uuid']);
+				$list_row_url = "recording_edit.php?id=".urlencode($row['recording_uuid']).($query_string ? '&'.$query_string : '');
 				if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}

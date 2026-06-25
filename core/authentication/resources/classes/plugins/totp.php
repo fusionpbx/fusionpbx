@@ -70,29 +70,43 @@ class plugin_totp {
 	 */
 	function totp(authentication $auth, settings $settings) {
 
+		//add multi-lingual support
+		$language = new text;
+		$text = $language->get(null, '/core/authentication');
+
+		//validate the token
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			$token = new token;
+			if (!$token->validate('login')) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: login.php');
+				exit;
+			}
+		}
+
 		//pre-process some settings
-		$theme_favicon           = $settings->get('theme', 'favicon', PROJECT_PATH . '/themes/default/favicon.ico');
-		$theme_logo              = $settings->get('theme', 'logo', PROJECT_PATH . '/themes/default/images/logo_login.png');
-		$theme_login_type        = $settings->get('theme', 'login_brand_type', '');
-		$theme_login_image       = $settings->get('theme', 'login_brand_image', '');
-		$theme_login_text        = $settings->get('theme', 'login_brand_text', '');
-		$theme_login_logo_width  = $settings->get('theme', 'login_logo_width', 'auto; max-width: 300px');
+		$theme_favicon = $settings->get('theme', 'favicon', PROJECT_PATH . '/themes/default/favicon.ico');
+		$theme_logo = $settings->get('theme', 'logo', PROJECT_PATH . '/themes/default/images/logo_login.png');
+		$theme_login_type = $settings->get('theme', 'login_brand_type', '');
+		$theme_login_image = $settings->get('theme', 'login_brand_image', '');
+		$theme_login_text = $settings->get('theme', 'login_brand_text', '');
+		$theme_login_logo_width = $settings->get('theme', 'login_logo_width', 'auto; max-width: 300px');
 		$theme_login_logo_height = $settings->get('theme', 'login_logo_height', 'auto; max-height: 300px');
-		$theme_message_delay     = 1000 * (float)$settings->get('theme', 'message_delay', 3000);
-		$background_videos       = $settings->get('theme', 'background_video', null);
-		$theme_background_video  = (isset($background_videos) && is_array($background_videos)) ? $background_videos[0] : null;
+		$theme_message_delay = 1000 * (float)$settings->get('theme', 'message_delay', 3000);
+		$background_videos = $settings->get('theme', 'background_video', null);
+		$theme_background_video = (isset($background_videos) && is_array($background_videos)) ? $background_videos[0] : null;
 		//$login_domain_name_visible = $settings->get('login', 'domain_name_visible');
 		//$login_domain_name = $settings->get('login', 'domain_name');
 		$login_remember_me = $settings->get('login', 'remember_me', true);
 		$login_destination = $settings->get('login', 'destination');
-		$users_unique      = $settings->get('users', 'unique', '');
+		$users_unique = $settings->get('users', 'unique', '');
 
 		//get the username
 		if (isset($_SESSION["username"])) {
 			$this->username = $_SESSION["username"];
 		}
 		if (isset($_POST['username'])) {
-			$this->username       = $_POST['username'];
+			$this->username = $_POST['username'];
 			$_SESSION["username"] = $this->username;
 		}
 		if (isset($_POST["remember"])) {
@@ -107,18 +121,14 @@ class plugin_totp {
 			$domain_name  = $domain_array[0];
 
 			//create token
-			//$object = new token;
-			//$token = $object->create('login');
-
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get(null, '/core/authentication');
+			$object = new token;
+			$token = $object->create('login');
 
 			//initialize a template object
-			$view               = new template();
-			$view->engine       = 'smarty';
+			$view = new template();
+			$view->engine = 'smarty';
 			$view->template_dir = dirname(__DIR__, 5) . '/core/authentication/resources/views/';
-			$view->cache_dir    = sys_get_temp_dir();
+			$view->cache_dir = sys_get_temp_dir();
 			$view->init();
 
 			//assign default values to the template
@@ -139,6 +149,10 @@ class plugin_totp {
 			//messages
 			$view->assign('messages', message::html(true, '		'));
 
+			//add the token name and hash to the view
+			$view->assign("token_name", $token['name']);
+			$view->assign("token_hash", $token['hash']);
+
 			//show the views
 			$content = $view->render('username.htm');
 			echo $content;
@@ -150,7 +164,7 @@ class plugin_totp {
 
 			//get the username
 			if (!isset($this->username) && isset($_REQUEST['username'])) {
-				$this->username       = $_REQUEST['username'];
+				$this->username = $_REQUEST['username'];
 				$_SESSION['username'] = $this->username;
 			}
 
@@ -160,7 +174,7 @@ class plugin_totp {
 				$auth->get_domain();
 				$this->domain_uuid = $_SESSION['domain_uuid'];
 				$this->domain_name = $_SESSION['domain_name'];
-				$this->username    = $_SESSION['username'];
+				$this->username = $_SESSION['username'];
 			}
 
 			//get the user details
@@ -170,23 +184,23 @@ class plugin_totp {
 			$sql .= "	username = :username\n";
 			$sql .= "	or user_email = :username\n";
 			$sql .= ")\n";
-			if (empty($_SESSION["users"]["unique"]["text"]) || $_SESSION["users"]["unique"]["text"] != "global") {
+			if (empty($users_unique) || $users_unique != "global") {
 				//unique username per domain (not globally unique across system - example: email address)
-				$sql                       .= "and domain_uuid = :domain_uuid ";
+				$sql .= "and domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $this->domain_uuid;
 			}
-			$sql                    .= "and (user_type = 'default' or user_type is null) ";
+			$sql .= "and (user_type = 'default' or user_type is null) ";
 			$parameters['username'] = $this->username;
-			$row                    = $this->database->select($sql, $parameters, 'row');
+			$row = $this->database->select($sql, $parameters, 'row');
 			if (empty($row) || !is_array($row) || @sizeof($row) == 0) {
 				//clear submitted usernames
 				unset($this->username, $_SESSION['username'], $_REQUEST['username'], $_POST['username']);
 
 				//build the result array
-				$result["plugin"]      = "totp";
+				$result["plugin"] = "totp";
 				$result["domain_uuid"] = $_SESSION["domain_uuid"];
 				$result["domain_name"] = $_SESSION["domain_name"];
-				$result["authorized"]  = false;
+				$result["authorized"] = false;
 
 				//retun the array
 				return $result;
@@ -194,34 +208,30 @@ class plugin_totp {
 			unset($parameters);
 
 			//set class variables
-			$this->user_uuid        = $row['user_uuid'];
-			$this->user_email       = $row['user_email'];
-			$this->contact_uuid     = $row['contact_uuid'];
+			$this->user_uuid = $row['user_uuid'];
+			$this->user_email = $row['user_email'];
+			$this->contact_uuid = $row['contact_uuid'];
 			$this->user_totp_secret = $row['user_totp_secret'];
 
 			//set a few session variables
-			$_SESSION["user_uuid"]    = $row['user_uuid'];
-			$_SESSION["username"]     = $row['username'];
-			$_SESSION["user_email"]   = $row['user_email'];
+			$_SESSION["user_uuid"] = $row['user_uuid'];
+			$_SESSION["username"] = $row['username'];
+			$_SESSION["user_email"] = $row['user_email'];
 			$_SESSION["contact_uuid"] = $row["contact_uuid"];
 
 			//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-			$domain_name  = $domain_array[0];
+			$domain_name = $domain_array[0];
 
 			//create token
-			//$object = new token;
-			//$token = $object->create('login');
-
-			//add multi-lingual support
-			$language = new text;
-			$text     = $language->get(null, '/core/authentication');
+			$object = new token;
+			$token = $object->create('login');
 
 			//initialize a template object
-			$view               = new template();
-			$view->engine       = 'smarty';
+			$view = new template();
+			$view->engine = 'smarty';
 			$view->template_dir = dirname(__DIR__, 5) . '/core/authentication/resources/views/';
-			$view->cache_dir    = sys_get_temp_dir();
+			$view->cache_dir = sys_get_temp_dir();
 			$view->init();
 
 			//assign values to the template
@@ -237,22 +247,26 @@ class plugin_totp {
 			$view->assign("favicon", $theme_favicon);
 			$view->assign("background_video", $theme_background_video);
 			if (!empty($_SESSION['username'])) {
-				$view->assign("username", $_SESSION['username']);
+				$view->assign("username", escape($_SESSION['username']));
 				$view->assign("button_cancel", $text['button-cancel']);
 			}
+
+			//add the token name and hash to the view
+			$view->assign("token_name", $token['name']);
+			$view->assign("token_hash", $token['hash']);
 
 			//show the views
 			if (!empty($_SESSION['authentication']['plugin']['database']['authorized']) && empty($this->user_totp_secret)) {
 
 				//create the totp secret
-				$base32                 = new base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', false, true, true);
-				$user_totp_secret       = $base32->encode(generate_password(20, 3));
+				$base32 = new base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', false, true, true);
+				$user_totp_secret = $base32->encode(generate_password(20, 3));
 				$this->user_totp_secret = $user_totp_secret;
 
 				//add user setting to array for update
-				$x                                      = 0;
-				$array['users'][$x]['user_uuid']        = $this->user_uuid;
-				$array['users'][$x]['domain_uuid']      = $this->domain_uuid;
+				$x = 0;
+				$array['users'][$x]['user_uuid'] = $this->user_uuid;
+				$array['users'][$x]['domain_uuid'] = $this->domain_uuid;
 				$array['users'][$x]['user_totp_secret'] = $this->user_totp_secret;
 
 				//add the user_edit permission
@@ -320,22 +334,22 @@ class plugin_totp {
 		if (isset($_POST['authentication_code'])) {
 
 			//get the user details
-			$sql = "select user_uuid, user_email, contact_uuid, user_totp_secret\n";
-			$sql .= "from v_users\n";
-			$sql .= "where (\n";
-			$sql .= "	username = :username\n";
-			$sql .= "	or user_email = :username\n";
-			$sql .= ")\n";
+			$sql = "select user_uuid, user_email, contact_uuid, user_totp_secret \n";
+			$sql .= "from v_users \n";
+			$sql .= "where ( \n";
+			$sql .= "	username = :username \n";
+			$sql .= "	or user_email = :username \n";
+			$sql .= ") \n";
 			if ($users_unique != "global") {
 				//unique username per domain (not globally unique across system - example: email address)
-				$sql                       .= "and domain_uuid = :domain_uuid ";
+				$sql .= "and domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 			}
 			$parameters['username'] = $_SESSION["username"];
-			$row                    = $this->database->select($sql, $parameters, 'row');
-			$this->user_uuid        = $row['user_uuid'];
-			$this->user_email       = $row['user_email'];
-			$this->contact_uuid     = $row['contact_uuid'];
+			$row = $this->database->select($sql, $parameters, 'row');
+			$this->user_uuid = $row['user_uuid'];
+			$this->user_email = $row['user_email'];
+			$this->contact_uuid = $row['contact_uuid'];
 			$this->user_totp_secret = $row['user_totp_secret'];
 			unset($parameters);
 
@@ -380,25 +394,25 @@ class plugin_totp {
 				$sql .= "	u.user_uuid = :user_uuid ";
 				if ($users_unique != "global") {
 					//unique username per domain (not globally unique across system - example: email address)
-					$sql                       .= "and u.domain_uuid = :domain_uuid ";
+					$sql .= "and u.domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 				}
 				$parameters['user_uuid'] = $_SESSION["user_uuid"];
-				$row                     = $this->database->select($sql, $parameters, 'row');
+				$row = $this->database->select($sql, $parameters, 'row');
 				unset($parameters);
 			} else {
-// 					//destroy session
-// 					session_unset();
-// 					session_destroy();
-//
-// 					//send http 403
-// 					header('HTTP/1.0 403 Forbidden', true, 403);
-//
-// 					//redirect to the root of the website
-// 					header("Location: ".PROJECT_PATH."/");
-//
-// 					//exit the code
-// 					exit();
+				// //destroy session
+				// session_unset();
+				// session_destroy();
+
+				// //send http 403
+				// header('HTTP/1.0 403 Forbidden', true, 403);
+
+				// //redirect to the root of the website
+				// header("Location: ".PROJECT_PATH."/");
+
+				// //exit the code
+				// exit();
 
 				//clear authentication session
 				unset($_SESSION['authentication']);
@@ -428,11 +442,11 @@ class plugin_totp {
 			*/
 
 			//build the result array
-			$result["plugin"]       = "totp";
-			$result["domain_name"]  = $_SESSION["domain_name"];
-			$result["username"]     = $_SESSION["username"] ?? null;
-			$result["user_uuid"]    = $_SESSION["user_uuid"];
-			$result["domain_uuid"]  = $_SESSION["domain_uuid"];
+			$result["plugin"] = "totp";
+			$result["domain_name"] = $_SESSION["domain_name"];
+			$result["username"] = $_SESSION["username"] ?? null;
+			$result["user_uuid"] = $_SESSION["user_uuid"];
+			$result["domain_uuid"] = $_SESSION["domain_uuid"];
 			$result["contact_uuid"] = $_SESSION["contact_uuid"];
 			if ($contacts_exists) {
 				$result["contact_organization"] = $row["contact_organization"];

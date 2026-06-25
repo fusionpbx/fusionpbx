@@ -39,10 +39,10 @@
 
 //download
 	if (is_uuid($_GET['id'])) {
-		$obj = new xml_cdr;
-		$obj->recording_uuid = $_GET['id'];
-		$obj->binary = isset($_GET['t']) && $_GET['t'] == 'bin' ? true : false;
-		$obj->download();
+		$xml_cdr = new xml_cdr(["database" => $database, "settings" => $settings, "domain_uuid" => $domain_uuid]);
+		$xml_cdr->recording_uuid = $_GET['id'];
+		$xml_cdr->binary = isset($_GET['t']) && $_GET['t'] == 'bin' ? true : false;
+		$xml_cdr->download();
 	}
 
 ?>

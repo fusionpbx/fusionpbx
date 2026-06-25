@@ -74,6 +74,7 @@ class active_calls_service extends service implements websocket_service_interfac
 		'secure',
 		// Application
 		'application',
+		'application_name',
 		'application_data',
 		'variable_current_application',
 		'playback_file_path',
@@ -104,6 +105,7 @@ class active_calls_service extends service implements websocket_service_interfac
 		'caller_channel_name'          => 'call_active_profile',
 		'secure'                       => 'call_active_secure',
 		'application'                  => 'call_active_application',
+		'application_name'             => 'call_active_application',
 		'application_data'             => 'call_active_application',
 		'playback_file_path'           => 'call_active_application',
 		'variable_current_application' => 'call_active_application',
@@ -237,7 +239,7 @@ class active_calls_service extends service implements websocket_service_interfac
 	 * Reloads the settings for the service so the service does not have to be restarted
 	 * @return void
 	 */
-	protected function reload_settings(): void {
+	public function reload_settings(): void {
 		// re-read the config file to get any possible changes
 		parent::$config->read();
 
@@ -392,10 +394,18 @@ class active_calls_service extends service implements websocket_service_interfac
 			if (!empty($read)) {
 				$write = $except = [];
 				// Wait for an event and timeout at 1/3 of a second so we can re-check all connections
-				if (false === stream_select($read, $write, $except, 0, 333333)) {
-					// severe error encountered so exit
+				$select_result = @stream_select($read, $write, $except, 0, 333333);
+				if ($select_result === false) {
+					// SIGUSR1/SIGHUP can interrupt stream_select during reload
+					$last_error = error_get_last();
+					$last_error_message = $last_error['message'] ?? '';
+					$error_message = strtolower((string)$last_error_message);
+					if (str_contains($error_message, 'interrupted system call')) {
+						continue;
+					}
+
+					// real fatal select error
 					$this->running = false;
-					// Exit with non-zero exit code
 					return 1;
 				}
 
@@ -438,8 +448,9 @@ class active_calls_service extends service implements websocket_service_interfac
 	private function on_in_progress(websocket_message $websocket_message) {
 		// Check permission
 		if (!$websocket_message->has_permission('call_active_view')) {
-			$this->warning("Permission 'call_active_show' not found in subscriber request");
+			$this->warning("Permission 'call_active_view' not found in subscriber request");
 			websocket_client::send($this->ws_client->socket(), websocket_message::request_forbidden($websocket_message->request_id, SERVICE_NAME, $websocket_message->topic));
+			return;
 		}
 
 		// Set up the response array
@@ -475,6 +486,7 @@ class active_calls_service extends service implements websocket_service_interfac
 		if (!$websocket_message->has_permission('call_active_hangup')) {
 			$this->warning("Permission 'call_active_hangup' not found in subscriber request");
 			websocket_client::send($this->ws_client->socket(), websocket_message::request_forbidden($websocket_message->request_id, SERVICE_NAME, $websocket_message->topic));
+			return;
 		}
 
 		// Get the payload
@@ -489,6 +501,7 @@ class active_calls_service extends service implements websocket_service_interfac
 		// Respond with bad command
 		if (empty($uuid)) {
 			websocket_client::send($this->ws_client->socket(), websocket_message::request_is_bad($request_id, SERVICE_NAME, 'hangup'));
+			return;
 		}
 
 		$host = self::$switch_host ?? parent::$config->get('switch.event_socket.host', '127.0.0.1');
@@ -536,6 +549,7 @@ class active_calls_service extends service implements websocket_service_interfac
 		if (!$websocket_message->has_permission('call_active_eavesdrop')) {
 			$this->warning("Permission 'call_active_eavesdrop' not found in subscriber request");
 			websocket_client::send($this->ws_client->socket(), websocket_message::request_forbidden($websocket_message->request_id, SERVICE_NAME, $websocket_message->topic));
+			return;
 		}
 
 		// Make sure we are connected
@@ -559,6 +573,29 @@ class active_calls_service extends service implements websocket_service_interfac
 		$origination_caller_id_name = $payload['origination_caller_id_name'] ?? '';
 		$caller_caller_id_number = $payload['caller_caller_id_number'] ?? '';
 		$origination_caller_contact = $payload['origination_caller_contact'] ?? '';
+
+		//
+		// All four values below are interpolated into a single FreeSWITCH command:
+		//     bgapi originate {caller_id_name=NAME,caller_id_number=NUMBER}user/CONTACT@DOMAIN &eavesdrop(UUID)
+		// A client could otherwise inject extra originate variables or commands using
+		// the structural characters of that string ( { } , & / @ ' ( ) and whitespace ).
+		// Each value is checked against an allowlist of only the characters it legitimately
+		// needs, so those structural characters are rejected. Bail out if any value is invalid.
+		//
+		$valid =
+			// unique_id: must be exactly a UUID (8-4-4-4-12 hex, case insensitive)
+			preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $uuid)
+			// caller contact: an extension / number alias - digits, letters and * # + . _ - (required)
+			&& preg_match('/^[0-9A-Za-z*#+._-]+$/', $origination_caller_contact)
+			// caller id number: a dial string - digits and * # + (may be empty)
+			&& preg_match('/^[0-9*#+]*$/', $caller_caller_id_number)
+			// caller id name: a display name - any unicode letter/number plus space . _ - (may be empty)
+			&& preg_match('/^[\p{L}\p{N} ._-]*$/u', $origination_caller_id_name);
+		if (!$valid) {
+			$this->warning("Eavesdrop request rejected because of an invalid payload");
+			websocket_client::send($this->ws_client->socket(), websocket_message::request_is_bad($websocket_message->request_id, SERVICE_NAME, $websocket_message->topic));
+			return;
+		}
 
 		$response['status_message'] = 'success';
 		$response['status_code'] = 200;
@@ -750,7 +787,19 @@ class active_calls_service extends service implements websocket_service_interfac
 			$message->caller_caller_id_name = $call['initial_cid_name'];
 			$message->caller_caller_id_number = $call['initial_cid_num'];
 			$message->caller_destination_number = $call['initial_dest'];
-			$message->application = $call['application'] ?? '';
+			$application = $call['application'] ?? '';
+			$application_data = $call['application_data'] ?? '';
+			$message->application = $application;
+			$message->application_data = $application_data;
+			$application_name = '';
+			if (!empty($application_data)) {
+				$application_name = (!empty($application) && strpos($application_data, $application . ':') !== 0)
+					? $application . ':' . $application_data
+					: $application_data;
+			} elseif (!empty($application)) {
+				$application_name = $application;
+			}
+			$message->application_name = $application_name;
 			$message->secure = $call['secure'] ?? '';
 
 			if (true) {
@@ -784,8 +833,11 @@ class active_calls_service extends service implements websocket_service_interfac
 
 	/**
 	 * Allows the service to register a callback so when the topic arrives the callable is called
-	 * @param type $topic
-	 * @param type $callable
+	 *
+	 * @param string   $topic
+	 * @param callable $callable
+	 *
+	 * @return void
 	 */
 	public function on_topic($topic, $callable) {
 		if (!isset($this->topics[$topic])) {
@@ -804,7 +856,7 @@ class active_calls_service extends service implements websocket_service_interfac
 		$json_string = $this->ws_client->read();
 
 		// Nothing to do
-		if ($json_string === null) {
+		if (empty($json_string)) {
 			$this->warning('Message received from Websocket is empty');
 			return;
 		}

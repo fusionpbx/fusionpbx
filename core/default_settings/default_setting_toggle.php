@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2021
+ Portions created by the Initial Developer are Copyright (C) 2008-2026
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -39,8 +39,33 @@
 	$text = $language->get();
 
 //get submitted variables
-	$search = $_REQUEST['search'] ?? '';
 	$default_setting_uuids = $_REQUEST["id"];
+
+// Set variables from http GET parameters
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'default_setting_category'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+	$default_setting_category = $_GET['default_setting_category'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('stream_all')) {
+		$param['show'] = $show;
+	}
+	if (!empty($default_setting_category)) {
+		$param['default_setting_category'] = $default_setting_category;
+	}
+	$query_string = http_build_query($param);
 
 //toggle the setting
 	$toggled = 0;
@@ -72,7 +97,6 @@
 	}
 
 //redirect the user
-	$search = preg_replace('#[^a-zA-Z0-9_\-\.]# ', '', $search);
-	header("Location: default_settings.php".($search != '' ? '?search='.$search : null));
+	header("Location: default_settings.php".($query_string ? '?'.$query_string : ''));
 
 ?>

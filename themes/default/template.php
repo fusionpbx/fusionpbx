@@ -19,7 +19,7 @@
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-tempusdominus.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-colorpicker.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/fontawesome/css/all.min.css.php'>
-	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202603110200'>
+	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202605220330'>
 {*//link to custom css file *}
 	{if !empty($settings.theme.custom_css)}
 		<link rel='stylesheet' type='text/css' href='{$settings.theme.custom_css}'>
@@ -734,6 +734,190 @@
 			}
 			{/literal}
 
+		// Searchable select box
+			{literal}
+			(function() {
+				const searchable_selects = document.querySelectorAll('.searchable_select');
+
+				searchable_selects.forEach(original_select => {
+					const wrapper = document.createElement('div');
+					wrapper.className = 'searchable_select_wrapper';
+					wrapper.id = original_select.id + '_search';
+					wrapper.style.width = (parseInt(getComputedStyle(original_select).width, 10) + 2) + 'px';
+					wrapper.style.paddingRight = '2px';
+
+					original_select.parentNode.insertBefore(wrapper, original_select);
+					original_select.style.display = 'none';
+
+					const input = document.createElement('input');
+					input.type = 'text';
+					input.className = 'formfld';
+					input.placeholder = '{/literal}{$text.label_search}{literal}';
+					wrapper.appendChild(input);
+
+					const actions = document.createElement('div');
+					actions.className = 'actions';
+					wrapper.appendChild(actions);
+
+					actions.addEventListener('click', function(event) {
+						event.preventDefault();
+						event.stopPropagation();
+						const is_open = dropdown.style.display === 'block';
+
+						dropdown.style.display = is_open ? 'none' : 'block';
+
+						if (!is_open) {
+							input.focus();
+							render_items(input.value);
+						}
+					});
+
+					const arrow_icon = document.createElement('i');
+					arrow_icon.style = 'transform: scale(0.80, 0.85);';
+					arrow_icon.className = 'fa-solid fa-angle-down';
+					actions.appendChild(arrow_icon);
+
+					const clear_button = document.createElement('button');
+					clear_button.type = 'button';
+					clear_button.className = 'clear_search_button';
+					clear_button.innerHTML = '&times;';
+					clear_button.setAttribute('aria-label', 'Clear search');
+					actions.appendChild(clear_button);
+
+					const update_visibility = () => {
+						clear_button.style.display = input.value.trim() !== '' ? 'inline-flex' : 'none';
+						arrow_icon.style.display = input.value.trim() !== '' ? 'none' : 'inline-flex';
+					};
+
+					clear_button.addEventListener('click', function(event) {
+						event.preventDefault();
+						event.stopPropagation();
+
+						input.value = '';
+						original_select.value = '';
+						original_select.dispatchEvent(new Event('change'));
+
+						update_visibility();
+						render_items();
+						input.focus();
+					});
+
+					const dropdown = document.createElement('div');
+					dropdown.className = 'search_results';
+					wrapper.appendChild(dropdown);
+
+					// Extract options safely & isolate per instance
+					let all_options = [];
+					original_select.querySelectorAll('option').forEach(option => {
+						if (option.value) {
+							all_options.push({
+								value: option.value,
+								label: option.textContent.trim(),
+								group: option.parentNode?.tagName === 'OPTGROUP' ? option.parentNode.label : ''
+							});
+						}
+					});
+
+					// Handle initial selection
+					if (original_select.value) {
+						const initial_option = all_options.find(option => option.value === original_select.value);
+						if (initial_option) input.value = initial_option.label;
+					}
+					update_visibility();
+
+					function render_items(filter = '') {
+						dropdown.innerHTML = '';
+						const lower_filter = filter.toLowerCase();
+						let current_group = null;
+						let has_results = false;
+
+						all_options.forEach(option => {
+							const matches_label = option.label.toLowerCase().includes(lower_filter);
+							const matches_group = option.group.toLowerCase().includes(lower_filter);
+
+							if (matches_label || matches_group) {
+								has_results = true;
+								if (option.group && option.group !== current_group) {
+									current_group = option.group;
+									const group_title = document.createElement('div');
+									group_title.className = 'optgroup_header_row';
+									group_title.textContent = current_group;
+									dropdown.appendChild(group_title);
+								}
+
+								const item = document.createElement('div');
+								item.className = 'search_result_item';
+								if (original_select.value === option.value) item.classList.add('active');
+
+								item.dataset.value = option.value;
+								item.textContent = option.label;
+								item.style.paddingLeft = option.group ? '26px' : '';
+
+								dropdown.appendChild(item);
+							}
+						});
+
+						if (!has_results) {
+							const no_results = document.createElement('div');
+							no_results.className = 'no_results_message';
+							no_results.textContent = '{/literal}{$text.label_no_results}{literal}';
+							dropdown.appendChild(no_results);
+						}
+					}
+
+					function select_item(option) {
+						input.value = option.label;
+						original_select.value = option.value;
+						dropdown.style.display = 'none';
+						original_select.dispatchEvent(new Event('change'));
+						update_visibility();
+					}
+
+					input.addEventListener('input', (event) => {
+						const val = event.target.value;
+						const trimmed = val.trim();
+
+						if (trimmed === '') {
+							original_select.value = '';
+							original_select.dispatchEvent(new Event('change'));
+						}
+
+						render_items(val);
+						dropdown.style.display = 'block';
+						update_visibility();
+					});
+
+					input.addEventListener('focus', () => {
+						// Hide other dropdowns before showing the active one
+						document.querySelectorAll('.search_results').forEach(dropdown => { dropdown.style.display = 'none'; });
+						dropdown.style.display = 'block';
+						render_items(input.value);
+					});
+
+					// Event delegation for dropdown items
+					dropdown.addEventListener('click', (event) => {
+						const item = event.target.closest('.search_result_item');
+						if (item && !item.classList.contains('no_results_message')) {
+							const option_found = all_options.find(option => option.value === item.dataset.value);
+							if (option_found) select_item(option_found);
+						}
+					});
+
+					// Initial render
+					render_items();
+				});
+
+				// Global outside-click handler
+				document.addEventListener('click', (event) => {
+					if (!event.target.closest('.searchable_select_wrapper')) {
+						document.querySelectorAll('.search_results').forEach(dropdown => {
+							dropdown.style.display = 'none';
+						});
+					}
+				});
+			})();
+			{/literal}
+
 		//domain select: searchable picker
 			{literal}
 			(function() {
@@ -795,7 +979,24 @@
 					var input = document.createElement('input');
 					input.type = 'text';
 					input.className = 'formfld domain-search-input';
-					input.placeholder = '{/literal}{$text.label_search_domains}{literal}...';
+					input.placeholder = '{/literal}{$text.label_search_domains}{literal}..';
+
+					var clear_button = document.createElement('button');
+					clear_button.type = 'button';
+					clear_button.className = 'domain-search-clear';
+					clear_button.innerHTML = '&times;';
+					clear_button.setAttribute('aria-label', 'Clear search');
+					picker.appendChild(clear_button);
+
+					clear_button.addEventListener('click', function(e) {
+						e.preventDefault();
+						e.stopPropagation();
+						input.value = '';
+						active_index = -1;
+						clear_button.style.display = 'none';
+						render_results();
+						input.focus();
+					});
 
 					var results = document.createElement('div');
 					results.className = 'domain-search-results';
@@ -825,12 +1026,16 @@
 							if (selected_option && selected_option.value !== '') {
 								return selected_option.text || selected_option.innerText || '';
 							}
+							if (selected_option && selected_option.value === '' && selected_option.innerText == '{/literal}{$text.label_global}{literal}') {
+								return selected_option.text || selected_option.innerText || '';
+							}
 						}
 						return '';
 					}
 
 					function sync_input_to_select() {
 						input.value = get_selected_label();
+						clear_button.style.display = (input.value.trim() !== '') ? 'inline-flex' : 'none';
 					}
 
 					// Results panel is on document.body; match .formfld / theme input typography
@@ -948,6 +1153,9 @@
 							}
 							results.appendChild(row);
 						}
+						// Toggle clear button visibility based on current input
+						clear_button.style.display = (input.value.trim() !== '') ? 'inline-flex' : 'none';
+
 						open_results();
 						window.requestAnimationFrame(position_results_panel);
 					}
@@ -1088,160 +1296,162 @@
 
 		// Multi select box with search
 			{literal}
-			const container = document.querySelector('.multiselect_container');
+			(function() {
+				const container = document.querySelector('.multiselect_container');
 
-			if (container) {
-				const trigger_btn = container.querySelector('.selected_values');
-				const dropdown_list = container.querySelector('.dropdown_list');
-				const search_input = container.querySelector('.search_box');
-				const options_list = container.querySelector('.options_list');
-				const input_name = options_list.getAttribute('name');
-				const no_results = container.querySelector('#no_results');
-				const placeholder = container.querySelector('.placeholder_text');
-				let is_open = false;
+				if (container) {
+					const trigger_btn = container.querySelector('.selected_values');
+					const dropdown_list = container.querySelector('.dropdown_list');
+					const search_input = container.querySelector('.search_box');
+					const options_list = container.querySelector('.options_list');
+					const input_name = options_list.getAttribute('name');
+					const no_results = container.querySelector('#no_results');
+					const placeholder = container.querySelector('.placeholder_text');
+					let is_open = false;
 
-				// Toggle dropdown open/close
-				trigger_btn.addEventListener('click', (event) => {
-					event.stopPropagation();
-					is_open = !is_open;
-					if (is_open) {
-						dropdown_list.classList.add('open');
-						search_input.focus();
-					}
-					else {
-						dropdown_list.classList.remove('open');
-					}
-				});
-
-				// Close dropdown if clicked outside
-				document.addEventListener('click', (event) => {
-					if (!container.contains(event.target)) {
-						is_open = false;
-						dropdown_list.classList.remove('open');
-					}
-				});
-
-				// Prevent dropdown from closing when clicking inside the dropdown
-				dropdown_list.addEventListener('click', (event) => {
-					event.stopPropagation();
-				});
-
-				// Handle Search Filtering
-				search_input.addEventListener('input', (event) => {
-					const search_term = event.target.value.toLowerCase();
-					const option_items = document.querySelectorAll('.option_item');
-					let visible_count = 0;
-
-					option_items.forEach(item => {
-						const text = item.innerText.toLowerCase();
-
-						if (text.includes(search_term)) {
-							item.style.display = 'block';
-							visible_count++;
+					// Toggle dropdown open/close
+					trigger_btn.addEventListener('click', (event) => {
+						event.stopPropagation();
+						is_open = !is_open;
+						if (is_open) {
+							dropdown_list.classList.add('open');
+							search_input.focus();
 						}
 						else {
-							item.style.display = 'none';
+							dropdown_list.classList.remove('open');
 						}
 					});
 
-					if (visible_count === 0) {
-						no_results.style.display = 'block';
-					}
-					else {
-						no_results.style.display = 'none';
-					}
-				});
+					// Close dropdown if clicked outside
+					document.addEventListener('click', (event) => {
+						if (!container.contains(event.target)) {
+							is_open = false;
+							dropdown_list.classList.remove('open');
+						}
+					});
 
-				// Handle checkbox selection
-				container.addEventListener('change', (event) => {
-					if (event.target.type === 'checkbox') {
-						// If unchecked, remove the corresponding hidden input
-						if (!event.target.checked) {
-							const value = event.target.value;
+					// Prevent dropdown from closing when clicking inside the dropdown
+					dropdown_list.addEventListener('click', (event) => {
+						event.stopPropagation();
+					});
+
+					// Handle Search Filtering
+					search_input.addEventListener('input', (event) => {
+						const search_term = event.target.value.toLowerCase();
+						const option_items = document.querySelectorAll('.option_item');
+						let visible_count = 0;
+
+						option_items.forEach(item => {
+							const text = item.innerText.toLowerCase();
+
+							if (text.includes(search_term)) {
+								item.style.display = 'block';
+								visible_count++;
+							}
+							else {
+								item.style.display = 'none';
+							}
+						});
+
+						if (visible_count === 0) {
+							no_results.style.display = 'block';
+						}
+						else {
+							no_results.style.display = 'none';
+						}
+					});
+
+					// Handle checkbox selection
+					container.addEventListener('change', (event) => {
+						if (event.target.type === 'checkbox') {
+							// If unchecked, remove the corresponding hidden input
+							if (!event.target.checked) {
+								const value = event.target.value;
+								const hidden_input = document.querySelector(`input[name="${input_name}"][value="${value}"]`);
+								if (hidden_input) {
+									hidden_input.remove();
+								}
+							}
+
+							// Update visual tags and handle checked boxes
+							update_selected_values();
+						}
+					});
+
+					// Handle clicking the text part of the option
+					container.addEventListener('click', (event) => {
+						if (event.target.classList.contains('option_item')) {
+							const checkbox = event.target.querySelector('input[type="checkbox"]');
+							if (checkbox) {
+								checkbox.checked = !checkbox.checked;
+								update_selected_values();
+							}
+						}
+					});
+
+					// Update display logic (tags & hidden input)
+					function update_selected_values() {
+						const checked_boxes = document.querySelectorAll('.option_item input:checked');
+						const selected_count = checked_boxes.length;
+
+						// Update visual tags
+						if (selected_count === 0) {
+							placeholder.style.display = 'block';
+							trigger_btn.innerHTML = `<span class="placeholder_text">{/literal}{$text.label_select}{literal}...</span>`;
+							trigger_btn.innerHTML += `<i class='fa-solid fa-angle-down' style='position: absolute; right: 6px; transform: scale(0.70, 0.75);'></i>`;
+						}
+						else {
+							placeholder.style.display = 'none';
+							let html = '';
+
+							checked_boxes.forEach(box => {
+								const label = box.parentElement.innerText;
+
+								// Create a hidden input for each selected tag
+								create_hidden_input_for_tag(label, box.value);
+
+								html += `<span class="tag" data-value="${box.value}">`;
+								html += `	${label}`;
+								html += `	<span onclick="remove_option('${box.value}')">&times;</span>`;
+								html += `</span>`;
+							});
+
+							trigger_btn.innerHTML = html;
+						}
+					}
+
+					// Helper function to remove a tag when clicked (External to scope)
+					window.remove_option = function(value) {
+						const checkbox = document.querySelector(`input[value="${value}"]`);
+						if (checkbox) {
+							checkbox.checked = false;
+
+							// Remove the hidden input corresponding to this tag
 							const hidden_input = document.querySelector(`input[name="${input_name}"][value="${value}"]`);
 							if (hidden_input) {
 								hidden_input.remove();
 							}
-						}
 
-						// Update visual tags and handle checked boxes
-						update_selected_values();
-					}
-				});
-
-				// Handle clicking the text part of the option
-				container.addEventListener('click', (event) => {
-					if (event.target.classList.contains('option_item')) {
-						const checkbox = event.target.querySelector('input[type="checkbox"]');
-						if (checkbox) {
-							checkbox.checked = !checkbox.checked;
 							update_selected_values();
 						}
-					}
-				});
+					};
 
-				// Update display logic (tags & hidden input)
-				function update_selected_values() {
-					const checked_boxes = document.querySelectorAll('.option_item input:checked');
-					const selected_count = checked_boxes.length;
-
-					// Update visual tags
-					if (selected_count === 0) {
-						placeholder.style.display = 'block';
-						trigger_btn.innerHTML = `<span class="placeholder_text">{/literal}{$text.label_select}{literal}...</span>`;
-						trigger_btn.innerHTML += `<i class='fa-solid fa-angle-down' style='position: absolute; right: 6px; transform: scale(0.70, 0.75);'></i>`;
-					}
-					else {
-						placeholder.style.display = 'none';
-						let html = '';
-
-						checked_boxes.forEach(box => {
-							const label = box.parentElement.innerText;
-
-							// Create a hidden input for each selected tag
-							create_hidden_input_for_tag(label, box.value);
-
-							html += `<span class="tag" data-value="${box.value}">`;
-							html += `	${label}`;
-							html += `	<span onclick="remove_option('${box.value}')">&times;</span>`;
-							html += `</span>`;
-						});
-
-						trigger_btn.innerHTML = html;
-					}
-				}
-
-				// Helper function to remove a tag when clicked (External to scope)
-				window.remove_option = function(value) {
-					const checkbox = document.querySelector(`input[value="${value}"]`);
-					if (checkbox) {
-						checkbox.checked = false;
-
-						// Remove the hidden input corresponding to this tag
-						const hidden_input = document.querySelector(`input[name="${input_name}"][value="${value}"]`);
-						if (hidden_input) {
-							hidden_input.remove();
+					// Function to create a hidden input for each selected tag
+					function create_hidden_input_for_tag(label, value) {
+						const existing_hidden_input = document.querySelector(`input[name="${input_name}"][value="${value}"]`);
+						if (!existing_hidden_input) {
+							const hidden_input = document.createElement('input');
+							hidden_input.type = 'hidden';
+							hidden_input.name = input_name;
+							hidden_input.value = value;
+							container.appendChild(hidden_input);
 						}
-
-						update_selected_values();
 					}
-				};
 
-				// Function to create a hidden input for each selected tag
-				function create_hidden_input_for_tag(label, value) {
-					const existing_hidden_input = document.querySelector(`input[name="${input_name}"][value="${value}"]`);
-					if (!existing_hidden_input) {
-						const hidden_input = document.createElement('input');
-						hidden_input.type = 'hidden';
-						hidden_input.name = input_name;
-						hidden_input.value = value;
-						container.appendChild(hidden_input);
-					}
+					// Initialize state
+					update_selected_values();
 				}
-
-				// Initialize state
-				update_selected_values();
-			}
+			})();
 			{/literal}
 
 	{literal}
@@ -1467,6 +1677,7 @@
 			btn_toggle = document.getElementById("btn_toggle");
 			btn_delete = document.getElementById("btn_delete");
 			btn_download = document.getElementById("btn_download");
+			btn_reload = document.getElementById("btn_reload");
 			btn_transcribe = document.getElementById("btn_transcribe");
 			any_revealed = document.getElementsByClassName('revealed');
 			if (checked == true) {
@@ -1474,6 +1685,7 @@
 				if (btn_toggle) { btn_toggle.style.display = "inline"; }
 				if (btn_delete) { btn_delete.style.display = "inline"; }
 				if (btn_download) { btn_download.style.display = "inline"; }
+				if (btn_reload) { btn_reload.style.display = "inline"; }
 				if (btn_transcribe) { btn_transcribe.style.display = "inline"; }
 				if (any_revealed) { [...any_revealed].map(btn => btn.style.display = "inline"); }
 			}
@@ -1677,6 +1889,7 @@
 	{*//domain selector *}
 	function search_domains(element_id) {
 		var xhttp = new XMLHttpRequest();
+		var obj, domain_uuid, domain_name, link_label;
 		xhttp.onreadystatechange = function() {
 			//if (this.readyState == 4 && this.status == 200) {
 			//	document.getElementById(element_id).innerHTML = this.responseText;
@@ -1750,7 +1963,7 @@
 				}
 			}
 		};
-		search = document.getElementById('domains_search');
+		var search = document.getElementById('domains_search');
 		if (search.value) {
 			//xhttp.open("GET", "/core/domains/domain_list.php?search="+search.value, true);
 			xhttp.open("GET", "/core/domains/domain_json.php?search="+search.value+"&{$domain_json_token_name}={$domain_json_token_hash}", true);

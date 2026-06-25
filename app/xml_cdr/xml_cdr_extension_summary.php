@@ -62,13 +62,12 @@
 	}
 
 //get the summary
-	$cdr = new xml_cdr;
-	$cdr->domain_uuid = $_SESSION['domain_uuid'];
-	$cdr->quick_select = $quick_select;
-	$cdr->start_stamp_begin = $start_stamp_begin_formatted ?? null;
-	$cdr->start_stamp_end = $start_stamp_end_formatted ?? null;
-	$cdr->include_internal = $include_internal ?? null;
-	$summary = $cdr->user_summary();
+	$xml_cdr = new xml_cdr(["database" => $database, "settings" => $settings, "destinations" => $destinations, "domain_uuid" => $domain_uuid]);
+	$xml_cdr->quick_select = $quick_select;
+	$xml_cdr->start_stamp_begin = $start_stamp_begin_formatted ?? null;
+	$xml_cdr->start_stamp_end = $start_stamp_end_formatted ?? null;
+	$xml_cdr->include_internal = $include_internal ?? null;
+	$summary = $xml_cdr->user_summary();
 
 //set the http header
 	if (!empty($_REQUEST['type']) && $_REQUEST['type'] == "csv") {

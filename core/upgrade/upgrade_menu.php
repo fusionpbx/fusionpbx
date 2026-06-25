@@ -421,8 +421,16 @@ function do_upgrade_defaults() {
  */
 function do_upgrade_services($text, settings $settings) {
 	echo ($text['description-upgrade_services'] ?? "")."\n";
-	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.service");
-	$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.service");
+
+	// Determine the correct service file name for this OS
+    if (stristr(PHP_OS, 'FreeBSD')) {
+    	$search_file_name = 'freebsd';
+    } else {
+		$search_file_name = 'debian';
+    }
+	
+	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/" . $search_file_name . ".service");
+    $app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/" . $search_file_name . ".service");
 	$service_files = array_merge($core_files, $app_files);
 	foreach($service_files as $file) {
 		$service_name = get_service_name($file);
@@ -471,8 +479,16 @@ function is_root_user(): bool {
  */
 function do_restart_services($text, settings $settings) {
 	echo ($text['description-restart_services'] ?? "")."\n";
-	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/*.service");
-	$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/*.service");
+
+	// Determine the correct service file name for this OS
+    if (stristr(PHP_OS, 'FreeBSD')) {
+    	$search_file_name = 'freebsd';
+    } else {
+		$search_file_name = 'debian';
+    }
+
+	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/" . $search_file_name . ".service");
+	$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/" . $search_file_name . ".service");
 	$service_files = array_merge($core_files, $app_files);
 	foreach($service_files as $file) {
 		$service_name = get_service_name($file);
