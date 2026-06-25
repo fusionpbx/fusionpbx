@@ -951,5 +951,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Siren22 at 64 kbps codec priority order. 0 disables, 1+ sets preference order.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "cb56e58f-f359-4f3f-9b26-c1cd7ca6e988";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "polycom_background_url";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://server.domain.local/app/polycom/resources/background/background.jpg";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "URL of the image to be set as the phone background wallpaper.";
 
 ?>
