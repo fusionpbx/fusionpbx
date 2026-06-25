@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2025
+	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -40,6 +40,9 @@
 
 //initialize the destinations object
 	$destination = new destinations;
+
+//get the server time zone
+	$server_time_zone = trim(shell_exec('date +%Z'));
 
 //load available presets
 	$preset_region = "preset_".$settings->get('time_conditions', 'region');
@@ -304,25 +307,39 @@
 								$cond_start = $_REQUEST['value'][$group_id][$cond_num]['start'];
 								$cond_stop = $_REQUEST['value'][$group_id][$cond_num]['stop'];
 
-								//convert to 24-hour time and UTC for date-time conditions (FreeSWITCH evaluates date-time in UTC)
-								if (!empty($cond_start) && $cond_var == 'date-time') {
-									$format = $settings->get('domain', 'time_format') == '24h' ? 'Y-m-d H:i' : 'Y-m-d h:i a';
-									$user_timezone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+								//convert to 24-hour time and UTC. use the user and the servers time zone, use a time offset
+								if ($server_time_zone === 'UTC') {
+									if (!empty($cond_start) && $cond_var == 'date-time') {
+										$format = $settings->get('domain', 'time_format') == '24h' ? 'Y-m-d H:i' : 'Y-m-d h:i a';
+										$user_timezone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 
-									$dt = DateTime::createFromFormat($format, $cond_start, new DateTimeZone($user_timezone));
-									if ($dt !== false) {
-										$dt->setTimezone(new DateTimeZone('UTC'));
-										$cond_start = $dt->format('Y-m-d H:i');
+										$dt = DateTime::createFromFormat($format, $cond_start, new DateTimeZone($user_timezone));
+										if ($dt !== false) {
+											$dt->setTimezone(new DateTimeZone('UTC'));
+											$cond_start = $dt->format('Y-m-d H:i');
+										}
+									}
+									if (!empty($cond_stop) && $cond_var == 'date-time') {
+										$format = $settings->get('domain', 'time_format') == '24h' ? 'Y-m-d H:i' : 'Y-m-d h:i a';
+										$user_timezone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+	
+										$dt = DateTime::createFromFormat($format, $cond_stop, new DateTimeZone($user_timezone));
+										if ($dt !== false) {
+											$dt->setTimezone(new DateTimeZone('UTC'));
+											$cond_stop = $dt->format('Y-m-d H:i');
+										}
+	
 									}
 								}
-								if (!empty($cond_stop) && $cond_var == 'date-time') {
-									$format = $settings->get('domain', 'time_format') == '24h' ? 'Y-m-d H:i' : 'Y-m-d h:i a';
-									$user_timezone = $settings->get('domain', 'time_zone', date_default_timezone_get());
 
-									$dt = DateTime::createFromFormat($format, $cond_stop, new DateTimeZone($user_timezone));
-									if ($dt !== false) {
-										$dt->setTimezone(new DateTimeZone('UTC'));
-										$cond_stop = $dt->format('Y-m-d H:i');
+								//convert to 24 hour time - use the servers local time zone to set the time, no time offset
+								if ($server_time_zone !== 'UTC') {
+									$format = $settings->get('domain', 'time_format') == '24h' ? 'Y-m-d H:i' : 'Y-m-d h:i a';
+									if (!empty($cond_start) && $cond_var == 'date-time' && $settings->get('domain', 'time_format') != '24h') {
+										$cond_start = DateTime::createFromFormat($format, $cond_start)->format('Y-m-d H:i');
+									}
+									if (!empty($cond_stop) && $cond_var == 'date-time' && $settings->get('domain', 'time_format') != '24h') {
+										$cond_stop = DateTime::createFromFormat($format, $cond_stop)->format('Y-m-d H:i');
 									}
 								}
 
@@ -1167,26 +1184,34 @@ if ($action == 'update') {
 
 							//convert from UTC to user timezone and format appropriately
 							$user_timezone = $settings->get('domain', 'time_zone', date_default_timezone_get());
-
-							$dt_start = DateTime::createFromFormat('Y-m-d H:i', $cond_val_start, new DateTimeZone('UTC'));
-							if ($dt_start !== false) {
-								$dt_start->setTimezone(new DateTimeZone($user_timezone));
-								if ($settings->get('domain', 'time_format') != '24h') {
-									$cond_val_start = $dt_start->format('Y-m-d h:i a');
-								} else {
-									$cond_val_start = $dt_start->format('Y-m-d H:i');
+							if ($server_time_zone === 'UTC') {
+								$dt_start = DateTime::createFromFormat('Y-m-d H:i', $cond_val_start, new DateTimeZone('UTC'));
+								if ($dt_start !== false) {
+									$dt_start->setTimezone(new DateTimeZone($user_timezone));
+									if ($settings->get('domain', 'time_format') != '24h') {
+										$cond_val_start = $dt_start->format('Y-m-d h:i a');
+									} else {
+										$cond_val_start = $dt_start->format('Y-m-d H:i');
+									}
+								}
+								if (!empty($cond_val_stop)) {
+									$dt_stop = DateTime::createFromFormat('Y-m-d H:i', $cond_val_stop, new DateTimeZone('UTC'));
+									if ($dt_stop !== false) {
+										$dt_stop->setTimezone(new DateTimeZone($user_timezone));
+										if ($settings->get('domain', 'time_format') != '24h') {
+											$cond_val_stop = $dt_stop->format('Y-m-d h:i a');
+										} else {
+											$cond_val_stop = $dt_stop->format('Y-m-d H:i');
+										}
+									}
 								}
 							}
 
-							if (!empty($cond_val_stop)) {
-								$dt_stop = DateTime::createFromFormat('Y-m-d H:i', $cond_val_stop, new DateTimeZone('UTC'));
-								if ($dt_stop !== false) {
-									$dt_stop->setTimezone(new DateTimeZone($user_timezone));
-									if ($settings->get('domain', 'time_format') != '24h') {
-										$cond_val_stop = $dt_stop->format('Y-m-d h:i a');
-									} else {
-										$cond_val_stop = $dt_stop->format('Y-m-d H:i');
-									}
+							//convert to 12 hour time if needed - use the servers local time zone
+							if ($server_time_zone !== 'UTC') {
+								if ($settings->get('domain', 'time_format') != '24h') {
+									$cond_val_start = DateTime::createFromFormat('Y-m-d H:i', $cond_val_start)->format('Y-m-d h:i a');
+									$cond_val_stop = DateTime::createFromFormat('Y-m-d H:i', $cond_val_stop)->format('Y-m-d h:i a');
 								}
 							}
 
