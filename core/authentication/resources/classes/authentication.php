@@ -101,8 +101,8 @@ class authentication {
 		//check if contacts app exists
 		$contacts_exists = file_exists(dirname(__DIR__, 4) . '/core/contacts/');
 
-		// Check for remember me cookie
-		if (isset($_COOKIE['remember'])) {
+		// Check for remember me cookie and that the feature is enabled
+		if (isset($_COOKIE['remember']) && $this->settings->get('login', 'remember_me') === true) {
 			// Validate cookie format
 			$parts = explode(':', $_COOKIE['remember'], 2);
 			if (count($parts) !== 2 || !is_uuid($parts[0])) {
@@ -396,7 +396,7 @@ class authentication {
 		}
 
 		// Create remember me token
-		if ($authorized && isset($_SESSION['username']) && isset($_SESSION['remember'])) {
+		if ($authorized && isset($_SESSION['username']) && isset($_SESSION['remember']) && $this->settings->get('login', 'remember_me') === true) {
 			// Set session variables
 			$input_username = $_SESSION['username'];
 			$remember = $_SESSION['remember'];
@@ -427,6 +427,9 @@ class authentication {
 					'httponly' => true,
 					'samesite' => 'Strict'
 				]);
+
+				// Unset the session variable after use
+				unset($_SESSION['remember']);
 			}
 		}
 
