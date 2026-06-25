@@ -60,7 +60,7 @@
 							end
 							if (type == "greeting") then
 								--remove old greeting file, and rename tmp file
-									local real_file = string.gsub(tmp_file, ".tmp", "");
+									local real_file = string.gsub(tmp_file, "%.tmp", "");
 									if (file_exists(real_file)) then
 										os.remove(real_file);
 									end
