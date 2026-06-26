@@ -681,14 +681,14 @@
 		$sql = "with recursive children as ( ";
 		$sql .= "	select ivr_menu_uuid ";
 		$sql .= "	from v_ivr_menus ";
-		$sql .= "	where ivr_menu_parent_uuid = :menu_uuid ";
+		$sql .= "	where ivr_menu_parent_uuid = :ivr_menu_uuid ";
 		$sql .= "	union all ";
 		$sql .= "	select child.ivr_menu_uuid ";
-		$sql .= "	from v_ivr_menus child ";
+		$sql .= "	from v_ivr_menus as child ";
 		$sql .= "	join children c on child.ivr_menu_parent_uuid = c.ivr_menu_uuid ";
 		$sql .= ") ";
 		$sql .= "select ivr_menu_uuid from children ";
-		$parameters['menu_uuid'] = $ivr_menu_uuid;
+		$parameters['ivr_menu_uuid'] = $ivr_menu_uuid;
 		$descendants = $database->select($sql, $parameters, 'all');
 		unset($sql, $parameters);
 
