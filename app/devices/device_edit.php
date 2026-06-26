@@ -19,7 +19,6 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Portions created by the Initial Developer are Copyright (C) 2008-2026
 	the Initial Developer. All Rights Reserved.
-
 */
 
 //includes files
@@ -42,7 +41,7 @@
 //set the defaults
 	$device_model = '';
 	$device_firmware_version = '';
-	$device_template ='';
+	$device_template = '';
 
 //get the domain values
 	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
@@ -1082,8 +1081,7 @@
 		}
 		if (permission_exists("device_files")) {
 			//get the template directory
-				$prov = new provision(['settings' => $settings]);
-				$prov->domain_uuid = $domain_uuid;
+				$prov = new provision(['settings'=>$settings, 'domain_uuid'=>$domain_uuid, 'domain_name'=>$domain_name, 'user_uuid'=>$_SESSION['user_uuid']]);
 				$template_dir = $prov->template_dir;
 				$files = glob($template_dir.'/'.$device_template.'/*');
 			//add file buttons and the file list
@@ -1092,12 +1090,14 @@
 				echo "			<option value=''>".$text['label-download']."</option>\n";
 				foreach ($files as $file) {
 					//format the device address
-						$address = $prov->format_address($device_address, $device_vendor);
+					$address = $prov->format_address($device_address, $device_vendor);
+
 					//render the file name
-						$file_name = str_replace("{\$address}", $address, basename($file));
-						$file_name = str_replace("{\$mac}", $address, basename($file_name));
+					$file_name = str_replace("{\$address}", $address, basename($file));
+					$file_name = str_replace("{\$mac}", $address, basename($file_name));
+
 					//add the select option
-						echo "		<option value='".basename($file)."'>".$file_name."</option>\n";
+					echo "		<option value='".basename($file)."'>".$file_name."</option>\n";
 				}
 				echo "		</select>";
 				unset($button_margin);
