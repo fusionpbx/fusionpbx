@@ -94,7 +94,7 @@
 		$fax_email_connection .= "/".(($fax_email_connection_validate == 'false') ? "no" : null)."validate-cert";
 		$fax_email_connection .= "}".$fax_email_connection_mailbox;
 		if (!$connection = imap_open($fax_email_connection, $fax_email_connection_username, $fax_email_connection_password)) {
-			message::add($text['message-cannot_connect']."(".imap_last_error().")", 'neative');
+			message::add($text['message-cannot_connect']."(".imap_last_error().")", 'negative');
 			header("Location: fax.php");
 			exit;
 		}
