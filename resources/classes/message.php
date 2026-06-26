@@ -70,7 +70,7 @@ class message {
 	 * Adds a message to the session messages array.
 	 *
 	 * @param string      $message The message to add.
-	 * @param string|null $mood    The mood of the message. Defaults to 'positive'.
+	 * @param string|null $mood    The mood of the message. Options: positive, negative, alert. Default: positive
 	 * @param int|null    $delay   The delay before displaying the message. Defaults to the theme's default text
 	 *                             message delay in milliseconds.
 	 *
