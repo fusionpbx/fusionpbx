@@ -670,7 +670,7 @@
 //get the ivr menus
 	$sql = "select * from v_ivr_menus ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "order by v_ivr_menus asc ";
+	$sql .= "order by ivr_menu_name asc ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	$ivr_menus = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
