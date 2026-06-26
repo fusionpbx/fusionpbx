@@ -28,6 +28,14 @@
 class message {
 
 	/**
+	 * Define constants for mood
+	 *
+	 */
+    const mood_positive = 'positive';
+    const mood_negative = 'negative';
+    const mood_alert = 'alert';
+
+	/**
 	 * Returns the total number of messages in the session.
 	 *
 	 * @return int The number of messages, or 0 if no messages are present in the session.
