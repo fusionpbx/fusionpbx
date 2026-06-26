@@ -547,6 +547,30 @@
 	$ivr_menus = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+// Get all descendants of the current menu to prevent circular parent assignment
+	$children_uuids = [];
+	if (!empty($ivr_menu_uuid)) {
+		$sql = "with recursive children as ( ";
+		$sql .= "	select ivr_menu_uuid ";
+		$sql .= "	from v_ivr_menus ";
+		$sql .= "	where ivr_menu_parent_uuid = :ivr_menu_uuid ";
+		$sql .= "	union all ";
+		$sql .= "	select child.ivr_menu_uuid ";
+		$sql .= "	from v_ivr_menus as child ";
+		$sql .= "	join children c on child.ivr_menu_parent_uuid = c.ivr_menu_uuid ";
+		$sql .= ") ";
+		$sql .= "select ivr_menu_uuid from children ";
+		$parameters['ivr_menu_uuid'] = $ivr_menu_uuid;
+		$descendants = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+
+		if (!empty($descendants)) {
+			foreach ($descendants as $desc) {
+				$children_uuids[] = $desc['ivr_menu_uuid'];
+			}
+		}
+	}
+
 //add an empty row to the options array
 	if (count($ivr_menu_options) == 0) {
 		$rows = $settings->get('ivr_menu', 'option_add_rows');
@@ -790,13 +814,16 @@
 	echo "			<option value=\"\"></option>\n";
 	if (!empty($ivr_menus)) {
 		foreach($ivr_menus as $field) {
-			if ($ivr_menu_uuid != $field['ivr_menu_uuid'] && $ivr_menu_uuid != $field['ivr_menu_parent_uuid']) {
-				if (!empty($ivr_menu_parent_uuid) && $ivr_menu_parent_uuid == $field['ivr_menu_uuid']) {
-					echo "<option value='".escape($field['ivr_menu_uuid'])."' selected='selected'>".escape($field['ivr_menu_name'])."</option>\n";
-				}
-				else {
-					echo "<option value='".escape($field['ivr_menu_uuid'])."'>".escape($field['ivr_menu_name'])."</option>\n";
-				}
+			// Exclude current menu and its descendants to prevent loops
+			if ($field['ivr_menu_uuid'] == $ivr_menu_uuid || in_array($field['ivr_menu_uuid'], $children_uuids)) {
+				continue;
+			}
+
+			if (!empty($ivr_menu_parent_uuid) && $ivr_menu_parent_uuid == $field['ivr_menu_uuid']) {
+				echo "<option value='".escape($field['ivr_menu_uuid'])."' selected='selected'>".escape($field['ivr_menu_name'])."</option>\n";
+			}
+			else {
+				echo "<option value='".escape($field['ivr_menu_uuid'])."'>".escape($field['ivr_menu_name'])."</option>\n";
 			}
 		}
 	}
