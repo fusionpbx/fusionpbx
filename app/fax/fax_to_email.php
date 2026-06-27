@@ -25,6 +25,15 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
+//includes files
+	require_once dirname(__DIR__, 2) . "/resources/require.php";
+	include_once "resources/phpmailer/class.phpmailer.php";
+	include_once "resources/phpmailer/class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
+
+//set php ini values
+	ini_set('max_execution_time', 900); //15 minutes
+	ini_set('memory_limit', '96M');
+
 //file or console
 	$output_type = "file";
 
@@ -61,32 +70,6 @@ if (!function_exists('correct_path')) {
 	}
 }
 
-if (!function_exists('path_join')) {
-	function path_join() {
-		$args = func_get_args();
-		$paths = array();
-		foreach ($args as $arg) {
-			$paths = array_merge($paths, (array)$arg);
-		}
-
-		$prefix = null;
-		foreach ($paths as $path) {
-			if ($prefix === null && !empty($path)) {
-				if (substr($path, 0, 1) == '/') $prefix = '/';
-				else $prefix = '';
-			}
-			$path = trim( $path, '/' );
-		}
-
-		if ($prefix === null) {
-			return '';
-		}
-
-		$paths = array_filter($paths);
-		return $prefix . implode('/', $paths);
-	}
-}
-
 if (!function_exists('tiff2pdf')) {
 	function tiff2pdf($tiff_file_name) {
 		//convert the tif to a pdf
@@ -111,7 +94,7 @@ if (!function_exists('tiff2pdf')) {
 
 		$dir_fax_temp = $settings->get('server', 'temp', sys_get_temp_dir());
 		if (!$dir_fax_temp) {
-			$dir_fax_temp = path_join(dirname($dir_fax), 'temp');
+			$dir_fax_temp = path_join(dirname($dir_fax), 'tmp');
 		}
 
 		if (!file_exists($dir_fax_temp)) {
@@ -198,15 +181,6 @@ if (!function_exists('fax_split_dtmf')) {
 		}
 	}
 }
-
-//includes files
-	require_once dirname(__DIR__) . "/resources/require.php";
-	include_once "resources/phpmailer/class.phpmailer.php";
-	include_once "resources/phpmailer/class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
-
-//set php ini values
-	ini_set('max_execution_time', 900); //15 minutes
-	ini_set('memory_limit', '96M');
 
 //add a delimeter to the log
 	echo "\n---------------------------------\n";
@@ -529,7 +503,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 
 			//send the email
-			$email = new email(["domain_uuid" => $domain_uuid]);
+			$email = new email(["database" => $database, "settings" => $settings, "domain_uuid" => $domain_uuid]);
 			$email->recipients = $fax_email;
 			$email->subject = $email_subject;
 			$email->body = $email_body;
@@ -539,24 +513,14 @@ if (!function_exists('fax_split_dtmf')) {
 				$email->attachments = $email_attachments;
 			}
 			//$email->debug_level = 3;
-			$response = $mail->error;
 			$sent = $email->send();
+			//$error = $email->error;
 		}
 
 		//output to the log
 		echo "email_from_address: ".$email_from_address."\n";
 		echo "email_from_name: ".$email_from_address."\n";
 		echo "email_subject: $email_subject\n";
-
-		//send the email
-		if ($sent) {
-			echo "Mailer Error";
-			$email_status='failed';
-		}
-		else {
-			echo "Message sent!";
-			$email_status='ok';
-		}
 	}
 
 //when the exit is called, capture the statements
@@ -566,18 +530,14 @@ function shutdown() {
 
 	//open the file for writing
 	if ($output_type == "file") {
-		//ensure we can access the settings object
-		if (class_exists('settings') && $settings instanceof settings) {
-			//temporary directory in default settings or use the system temp directory
-			$temp_dir = $settings->get('server', 'temp', sys_get_temp_dir());
-		}
-		else {
-			//settings is not available
-			$temp_dir = sys_get_temp_dir();
-		}
+		//temporary directory in default settings or use the system temp directory
+		$temp_dir = $settings->get('server', 'temp', sys_get_temp_dir());
 
-		//open the file
-		$fp = fopen("$temp_dir/fax_to_email.log", "w");
+		// Check if directory is writable before proceeding
+		if (!is_writable($temp_dir)) {
+			echo "Cannot write to temporary directory: $temp_dir\n";
+			return;
+		}
 
 		//get the output from the buffer
 		$content = ob_get_contents();
@@ -585,16 +545,11 @@ function shutdown() {
 		//clean the buffer
 		ob_end_clean();
 
-		//write the contents of the buffer
-		fwrite($fp, $content);
-
-		//close the file pointer
-		fclose($fp);
+		//write the log file
+		file_put_contents($temp_dir . "/fax_to_email.log", $content);
 	}
-	else {
-		if ($debug_level > 2) {
-			var_dump($_REQUEST);
-		}
+	elseif ($debug_level > 2) {
+		var_dump($_REQUEST);
 	}
 }
 
