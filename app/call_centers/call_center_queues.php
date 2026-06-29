@@ -139,7 +139,7 @@
 
 //get the list
 	$sql = "select * ";
-	$sql = "from v_call_center_queues ";
+	$sql .= "from v_call_center_queues ";
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('call_center_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
