@@ -130,41 +130,104 @@ if (!function_exists('transcribe')) {
 				if (!isset($transcribe_alternate_language) && empty($transcribe_alternate_language)) {
 					$transcribe_alternate_language = 'es-US';
 				}
-				if ($file_extension == "mp3") {
-					$content_type = 'audio/mp3';
-				}
-				if ($file_extension == "wav") {
-					$content_type = 'audio/wav';
-				}
+
+				$full_file_path = $file_path.'/'.$file_name;
 
 				//version 1
 				if (substr($api_url, 0, 32) == 'https://speech.googleapis.com/v1') {
 					if (isset($api_key) && $api_key != '') {
-						$command = "sox ".$file_path."/".$file_name." ".$file_path."/".$file_name.".flac trim 0 00:59 ";
-						$command .= "&& echo \"{ 'config': { 'languageCode': '".$transcribe_language."', 'enableWordTimeOffsets': false , 'enableAutomaticPunctuation': true , 'alternativeLanguageCodes': '".$transcribe_alternate_language."' }, 'audio': { 'content': '`base64 -w 0 ".$file_path."/".$file_name.".flac`' } }\" ";
-						$command .= "| curl -X POST -H \"Content-Type: application/json\" -d @- ".$api_url.":recognize?key=".$api_key." ";
-						$command .= "&& rm -f ".$file_path."/".$file_name.".flac";
-						echo $command."\n";
+						$flac_path = $file_path.'/'.$file_name.'.flac';
+
+						$sox_cmd = escapeshellarg('sox').' '.escapeshellarg($full_file_path).' '.escapeshellarg($flac_path).' trim 0 00:59';
+						exec($sox_cmd, $sox_output, $sox_return);
+						if ($sox_return !== 0) {
+							echo "sox conversion failed\n";
+							return false;
+						}
+
+						$audio_content = file_get_contents($flac_path);
+						if ($audio_content === false) {
+							echo "failed to read flac file\n";
+							return false;
+						}
+						$audio_base64 = base64_encode($audio_content);
+						unlink($flac_path);
+
+						$json_request = json_encode([
+							'config' => [
+								'languageCode' => $transcribe_language,
+								'enableWordTimeOffsets' => false,
+								'enableAutomaticPunctuation' => true,
+								'alternativeLanguageCodes' => $transcribe_alternate_language
+							],
+							'audio' => [
+								'content' => $audio_base64
+							]
+						]);
+
+						$ch = curl_init();
+						curl_setopt_array($ch, [
+							CURLOPT_URL => $api_url.':recognize?key='.$api_key,
+							CURLOPT_RETURNTRANSFER => true,
+							CURLOPT_POST => true,
+							CURLOPT_POSTFIELDS => $json_request,
+							CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+							CURLOPT_CONNECTTIMEOUT => 20,
+							CURLOPT_TIMEOUT => 300,
+							CURLOPT_SSL_VERIFYPEER => true
+						]);
+						$http_response = curl_exec($ch);
+						if (curl_errno($ch)) {
+							echo 'Error:' . curl_error($ch);
+						}
+						curl_close($ch);
 					}
 				}
 				//version 2
 				elseif (substr($api_url, 0, 32) == 'https://speech.googleapis.com/v2') {
-					if (!empty(($application_credentials))) {
-						putenv("GOOGLE_APPLICATION_CREDENTIALS=".$application_credentials);
+					$audio_content = file_get_contents($full_file_path);
+					if ($audio_content === false) {
+						echo "failed to read audio file\n";
+						return false;
 					}
-					$command = "echo \"{ 'config': { 'auto_decoding_config': {}, 'language_codes': ['".$transcribe_language."'], 'model': 'long' }, 'content': '`base64 -w 0 ".$file_path."/".$file_name."`' } \" ";
-					$command .= "| curl -X POST -H \"Content-Type: application/json\" -H \"Authorization: Bearer \$(gcloud auth application-default print-access-token)\" -d @- ".$api_url;
-					echo $command."\n";
-				}
+					$audio_base64 = base64_encode($audio_content);
 
-				//ob_start();
-				//$result = passthru($command);
-				//$json_result = ob_get_contents();
-				//ob_end_clean();
+					$json_request = json_encode([
+						'config' => [
+							'auto_decoding_config' => new stdClass(),
+							'language_codes' => [$transcribe_language],
+							'model' => 'long'
+						],
+						'content' => $audio_base64
+					]);
 
-				//run the command
-				if (!empty($command)) {
-					$http_response = shell_exec($command);
+					$ch = curl_init();
+					$headers = ['Content-Type: application/json'];
+
+					if (!empty($application_credentials)) {
+						putenv('GOOGLE_APPLICATION_CREDENTIALS='.$application_credentials);
+						$gcloud_cmd = escapeshellarg('gcloud').' auth application-default print-access-token';
+						$access_token = trim(shell_exec($gcloud_cmd));
+						if (!empty($access_token)) {
+							$headers[] = 'Authorization: Bearer '.$access_token;
+						}
+					}
+
+					curl_setopt_array($ch, [
+						CURLOPT_URL => $api_url,
+						CURLOPT_RETURNTRANSFER => true,
+						CURLOPT_POST => true,
+						CURLOPT_POSTFIELDS => $json_request,
+						CURLOPT_HTTPHEADER => $headers,
+						CURLOPT_CONNECTTIMEOUT => 20,
+						CURLOPT_TIMEOUT => 300,
+						CURLOPT_SSL_VERIFYPEER => true
+					]);
+					$http_response = curl_exec($ch);
+					if (curl_errno($ch)) {
+						echo 'Error:' . curl_error($ch);
+					}
+					curl_close($ch);
 				}
 
 				//validate the json
@@ -176,7 +239,6 @@ if (!function_exists('transcribe')) {
 					}
 
 					$json = json_decode($http_response, true);
-					//echo "json; ".$json."\n";
 					$message = '';
 					foreach($json['results'] as $row) {
 						$message .= $row['alternatives'][0]['transcript'];
@@ -186,9 +248,7 @@ if (!function_exists('transcribe')) {
 				//build the response
 				$array['provider'] = $transcribe_provider;
 				$array['language'] = $transcribe_language;
-				$array['command'] = $command ?? '';
 				$array['message'] = $message ?? '';
-				//print_r($array);
 
 				return $array;
 			}
@@ -202,36 +262,67 @@ if (!function_exists('transcribe')) {
 					$transcribe_language = 'en-US';
 				}
 
-				if ($file_extension == "mp3") {
-					$content_type = 'audio/mp3';
-				}
-				if ($file_extension == "wav") {
-					$content_type = 'audio/wav';
-				}
-
 				if (isset($api_key) && $api_key != '') {
-					$command = "curl -X POST \"https://".$api_url.".api.cognitive.microsoft.com/sts/v1.0/issueToken\" -H \"Content-type: application/x-www-form-urlencoded\" -H \"Content-Length: 0\" -H \"Ocp-Apim-Subscription-Key: ".$api_key."\"";
-					$access_token_result = shell_exec($command);
-					if (empty($access_token_result)) {
+					$full_file_path = $file_path.'/'.$file_name;
+
+					$ch = curl_init();
+					curl_setopt_array($ch, [
+						CURLOPT_URL => 'https://'.$api_url.'.api.cognitive.microsoft.com/sts/v1.0/issueToken',
+						CURLOPT_RETURNTRANSFER => true,
+						CURLOPT_POST => true,
+						CURLOPT_POSTFIELDS => '',
+						CURLOPT_HTTPHEADER => [
+							'Content-type: application/x-www-form-urlencoded',
+							'Content-Length: 0',
+							'Ocp-Apim-Subscription-Key: '.$api_key
+						],
+						CURLOPT_CONNECTTIMEOUT => 20,
+						CURLOPT_TIMEOUT => 30,
+						CURLOPT_SSL_VERIFYPEER => true
+					]);
+					$access_token_result = curl_exec($ch);
+					$token_errno = curl_errno($ch);
+					curl_close($ch);
+
+					if ($token_errno || empty($access_token_result)) {
+						return false;
+					}
+
+					$audio_data = file_get_contents($full_file_path);
+					if ($audio_data === false) {
+						return false;
+					}
+
+					$ch = curl_init();
+					curl_setopt_array($ch, [
+						CURLOPT_URL => 'https://'.$api_url.'.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language='.urlencode($transcribe_language).'&format=detailed',
+						CURLOPT_RETURNTRANSFER => true,
+						CURLOPT_POST => true,
+						CURLOPT_POSTFIELDS => $audio_data,
+						CURLOPT_HTTPHEADER => [
+							'Authorization: Bearer '.$access_token_result,
+							'Content-type: audio/wav; codec="audio/pcm"; samplerate=8000'
+						],
+						CURLOPT_CONNECTTIMEOUT => 20,
+						CURLOPT_TIMEOUT => 300,
+						CURLOPT_SSL_VERIFYPEER => true
+					]);
+					$http_response = curl_exec($ch);
+					if (curl_errno($ch)) {
+						echo 'Error:' . curl_error($ch);
+					}
+					curl_close($ch);
+
+					$array = json_decode($http_response, true);
+					if ($array === null) {
 						return false;
 					}
 					else {
-						$file_path = $file_path.'/'.$file_name;
-						$command = "curl -X POST \"https://".$api_url.".stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=".$transcribe_language."&format=detailed\" -H 'Authorization: Bearer ".$access_token_result."' -H 'Content-type: audio/wav; codec=\"audio/pcm\"; samplerate=8000; trustsourcerate=false' --data-binary @".$file_path;
-						echo $command."\n";
-						$http_response = shell_exec($command);
-						$array = json_decode($http_response, true);
-						if ($array === null) {
-							return false;
-						}
-						else {
-							$message = $array['NBest'][0]['Display'];
-						}
+						$message = $array['NBest'][0]['Display'];
 					}
+
 					$array['provider'] = $transcribe_provider;
 					$array['language'] = $transcribe_language;
-					$array['api_key'] = $api_key;
-					$array['command'] = $command;
 					$array['message'] = $message;
 					return $array;
 				}
@@ -248,25 +339,33 @@ if (!function_exists('transcribe')) {
 					$transcribe_language = 'en-US';
 				}
 
-				if ($file_extension == "mp3") {
-					$content_type = 'audio/mp3';
-				}
-				if ($file_extension == "wav") {
-					$content_type = 'audio/wav';
-				}
+				$full_file_path = $file_path.'/'.$file_name;
 
 				$message = null;
 				for($retries = 5; $retries > 0; $retries--) {
 					echo "sending voicemail recording to ".$api_url." for transcription";
 
 					// submit the file for transcribing
-					$file_path = $file_path.'/'.$file_name;
-					$command = "curl -sX POST ".$api_url."/enqueue -H 'Authorization: Bearer ".$api_key."' -F file=@".$file_path;
-					$stdout = shell_exec($command);
+					$ch = curl_init();
+					curl_setopt_array($ch, [
+						CURLOPT_URL => $api_url.'/enqueue',
+						CURLOPT_RETURNTRANSFER => true,
+						CURLOPT_POST => true,
+						CURLOPT_POSTFIELDS => ['file' => curl_file_create($full_file_path)],
+						CURLOPT_HTTPHEADER => ['Authorization: Bearer '.$api_key],
+						CURLOPT_CONNECTTIMEOUT => 20,
+						CURLOPT_TIMEOUT => 60,
+						CURLOPT_SSL_VERIFYPEER => true
+					]);
+					$stdout = curl_exec($ch);
+					if (curl_errno($ch)) {
+						echo 'Error:' . curl_error($ch);
+					}
+					curl_close($ch);
+
 					$resp = json_decode($stdout, true);
 					if ($resp === null) {
 						echo "unexpected error: ".$stdout;
-						// json not parsable, try again
 						continue;
 					}
 
@@ -277,10 +376,23 @@ if (!function_exists('transcribe')) {
 
 					while(true) {
 						echo "checking ".$api_url." for completion of job ".$transcription_id;
-						$command = "curl -s ".$api_url."/j/".$transcription_id." -H 'Authorization: Bearer ".$api_key."'";
-						$resp = json_decode(shell_exec($command), true);
+						$ch = curl_init();
+						curl_setopt_array($ch, [
+							CURLOPT_URL => $api_url.'/j/'.$transcription_id,
+							CURLOPT_RETURNTRANSFER => true,
+							CURLOPT_HTTPHEADER => ['Authorization: Bearer '.$api_key],
+							CURLOPT_CONNECTTIMEOUT => 10,
+							CURLOPT_TIMEOUT => 30,
+							CURLOPT_SSL_VERIFYPEER => true
+						]);
+						$stdout = curl_exec($ch);
+						if (curl_errno($ch)) {
+							echo 'Error:' . curl_error($ch);
+						}
+						curl_close($ch);
+
+						$resp = json_decode($stdout, true);
 						if ($resp === null) {
-							// json not parsable, try again
 							continue;
 						}
 
@@ -295,7 +407,6 @@ if (!function_exists('transcribe')) {
 							break;
 						}
 
-						// transcription is queued or in progress, check again in 1 second
 						sleep(1);
 					}
 
@@ -310,8 +421,6 @@ if (!function_exists('transcribe')) {
 
 				$array['provider'] = $transcribe_provider;
 				$array['language'] = $transcribe_language;
-				$array['api_key'] = $api_key;
-				// $array['command'] = $command
 				$array['message'] = $message;
 				return $array;
 			}
