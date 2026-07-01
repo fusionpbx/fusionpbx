@@ -93,11 +93,6 @@ class authentication {
 			$_SESSION['authentication']['methods'][] = 'database';
 		}
 
-		//set the database as the default plugin
-		if (!isset($_SESSION['authentication']['methods'])) {
-			$_SESSION['authentication']['methods'][] = 'database';
-		}
-
 		//check if contacts app exists
 		$contacts_exists = file_exists(dirname(__DIR__, 4) . '/core/contacts/');
 
