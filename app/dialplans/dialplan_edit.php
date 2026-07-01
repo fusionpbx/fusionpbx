@@ -613,6 +613,9 @@
 		}
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;']);
+	if ($action == 'update' && !empty($dialplan_uuid) && is_uuid($dialplan_uuid)) {
+		echo edit_nav::render(['module_key'=>'dialplans'.(!empty($app_uuid) ? ':'.$app_uuid : ''),'script'=>'dialplan_edit.php','id'=>$dialplan_uuid,'passthrough'=>['order_by','order','page','search','app_uuid','context','show']]);
+	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
