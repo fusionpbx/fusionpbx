@@ -19,7 +19,7 @@ if ($domains_processed == 1) {
 	$array['email_templates'][$x]['template_category'] = 'call_recordings';
 	$array['email_templates'][$x]['template_subcategory'] = 'transcription';
 	$array['email_templates'][$x]['template_subject'] = "Caller ID \${caller_id_name} <\${caller_id_number}> \${duration}";
-	$array['email_templates'][$x]['template_body'] .= "<html>\n";
+	$array['email_templates'][$x]['template_body'] = "<html>\n";
 	$array['email_templates'][$x]['template_body'] .= "	<head>\n";
 	$array['email_templates'][$x]['template_body'] .= "	 <style>\n";
 	$array['email_templates'][$x]['template_body'] .= "	 	.message-bubble {\n";
