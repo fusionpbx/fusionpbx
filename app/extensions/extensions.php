@@ -472,10 +472,10 @@
 				echo "	<td>".escape($row['call_group'])."&nbsp;</td>\n";
 			}
 			if (permission_exists("extension_device_address")) {
-				echo "	<td class='hide-md-dn'><a href='" . PROJECT_PATH . "/app/devices/device_edit.php?id=".urlencode($row['device_uuid'])."'>".escape($row['device_address'])."</td>\n";
+				echo "	<td class='hide-md-dn'><a href='" . PROJECT_PATH . "/app/devices/device_edit.php?id=".urlencode($row['device_uuid'] ?? '')."'>".escape($row['device_address'] ?? '')."</td>\n";
 			}
 			if (permission_exists("extension_device_template")) {
-				echo "	<td class='hide-md-dn'><a href='" . PROJECT_PATH . "/app/devices/device_edit.php?id=".urlencode($row['device_uuid'])."'>".escape($row['device_template'])."</td>\n";
+				echo "	<td class='hide-md-dn'><a href='" . PROJECT_PATH . "/app/devices/device_edit.php?id=".urlencode($row['device_uuid'] ?? '')."'>".escape($row['device_template'] ?? '')."</td>\n";
 			}
 			if (permission_exists("extension_user_context")) {
 				echo "	<td>".escape($row['user_context'])."</td>\n";
