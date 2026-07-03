@@ -59,7 +59,7 @@ if ($domains_processed == 1) {
 	$array['email_templates'][$x]['template_body'] .= "		\${summary}\n";
 	$array['email_templates'][$x]['template_body'] .= "	<br />\n";
 	$array['email_templates'][$x]['template_body'] .= "	<br />\n";
-	$array['email_templates'][$x]['template_body'] .= "		<strong>Conversation Transcription<strong><br />\n";
+	$array['email_templates'][$x]['template_body'] .= "		<strong>Conversation Transcription</strong><br />\n";
 	$array['email_templates'][$x]['template_body'] .= "		\${transcript}\n";
 	$array['email_templates'][$x]['template_body'] .= "	<br />\n";
 	$array['email_templates'][$x]['template_body'] .= "	<br />\n";
