@@ -104,7 +104,7 @@
 //get the domain_name and the domain_uuid
 	if (empty($_SESSION['domain_uuid'])) {
 		//get the domain from the url
-		$domain_name = $_SERVER["HTTP_HOST"];
+		$domain_name = $_SERVER["HTTP_HOST"] ?? '';
 
 		//get the domain name from the http value
 		if (!empty($_REQUEST["domain_name"])) {
