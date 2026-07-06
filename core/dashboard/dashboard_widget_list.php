@@ -164,7 +164,7 @@
 	echo "		<option value=''>Select Group</option>\n";
 	if (!empty($groups)) {
 		foreach ($groups as $row) {
-			echo "	<option value='".urlencode($row["group_uuid"])."'>".escape($row['group_name'])." ".escape($row['group_description'])."</option>\n";
+			echo "	<option value='".urlencode($row["group_uuid"])."'>".escape($row['group_name'])."</option>\n";
 		}
 	}
 	echo "	</select>\n";
