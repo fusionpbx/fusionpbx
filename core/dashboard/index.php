@@ -713,7 +713,7 @@ window.addEventListener('resize', update_parent_height);
 		$widget_class = ($widget_path == 'dashboard/parent' ? 'parent_widget' : 'widget');
 
 		echo "<div class='".$widget_class." details_".$widget_details_state." draggable' id='".$widget_id."' draggable='false'>\n";
-		if (file_exists($path_array[0])) {
+		if (!empty($path_array[0]) && file_exists($path_array[0])) {
 			include $path_array[0];
 		}
 		echo "</div>\n";

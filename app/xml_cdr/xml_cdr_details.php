@@ -210,7 +210,7 @@
 	}
 
 //format the call recording transcript text
-	$transcription_array = json_decode($transcript_json, true);
+	$transcription_array = json_decode($transcript_json ?? '', true) ?? [];
 	$call_transcript = conversational_html($transcription_array['segments']);
 
 //format the call recording transcript summary
@@ -218,7 +218,7 @@
 	$parsedown = new Parsedown();
 	$parsedown->setSafeMode(true);
 	$parsedown->setMarkupEscaped(true);
-	$call_summary = str_replace('###', '', $transcript_summary);
+	$call_summary = str_replace('###', '', $transcript_summary ?? '');
 	$call_summary = str_replace('&amp;', '&', $parsedown->text($call_summary));
 
 //get the format

@@ -124,7 +124,7 @@
 		// Loop through extra services if array is not empty
 		if (!empty($extra_services)) {
 			foreach ($extra_services as $extra) {
-				if (!isset($services[$extra]) && $system !== null) {
+				if (!isset($services[$extra]) && isset($system) && $system !== null) {
 					$info = $system->is_running($extra);
 					$info['label'] = $service_labels[$extra] ?? ucwords($extra);
 					$services[$extra] = $info;

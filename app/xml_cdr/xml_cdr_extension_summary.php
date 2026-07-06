@@ -62,7 +62,7 @@
 	}
 
 //get the summary
-	$xml_cdr = new xml_cdr(["database" => $database, "settings" => $settings, "destinations" => $destinations, "domain_uuid" => $domain_uuid]);
+	$xml_cdr = new xml_cdr(["database" => $database, "settings" => $settings, "destinations" => $destinations ?? null, "domain_uuid" => $domain_uuid]);
 	$xml_cdr->quick_select = $quick_select;
 	$xml_cdr->start_stamp_begin = $start_stamp_begin_formatted ?? null;
 	$xml_cdr->start_stamp_end = $start_stamp_end_formatted ?? null;
