@@ -78,11 +78,11 @@ require_once "resources/header.php";
 echo "<div class='action_bar' id='action_bar'>\n";
 echo "	<div class='heading'><b>".$text['title-destination_map']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 echo "	<div class='actions'>\n";
-echo 		"<form id='form_search' class='inline' method='get'>\n";
-echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+echo "		<form id='form_search' class='inline' method='get'>\n";
+echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
-if ($paging_controls_mini != '') {
-	echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
+if (!empty($paging_controls_mini)) {
+	echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 }
 echo "		</form>\n";
 echo "	</div>\n";
@@ -109,7 +109,7 @@ if (!empty($destination_array)) {
 		echo "<div class=\"card\">\n";
 
 		echo "	<table class='list'>\n";
-		echo "	<tr class='list-row' href='".$list_row_url."'>\n";
+		echo "	<tr class='list-row' href='".($list_row_url ?? '')."'>\n";
 		echo "		<th>".$text['label-label']."</th>\n";
 		echo "		<th>".$text['label-extension']."</th>\n";
 		echo "		<th>&nbsp;</th>\n";
