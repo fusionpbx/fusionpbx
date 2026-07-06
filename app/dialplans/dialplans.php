@@ -578,8 +578,8 @@
 		$x = 0;
 		foreach ($dialplans as $row) {
 			//set the dialplan description
-			$dialplan_description = $row['dialplan_description'] ?? $text['description-dialplan_'.$row['dialplan_name']];
-			$dialplan_description = str_replace('${number}', $row['dialplan_number'], $dialplan_description);
+			$dialplan_description = $row['dialplan_description'] ?? $text['description-dialplan_'.$row['dialplan_name']] ?? '';
+			$dialplan_description = str_replace('${number}', $row['dialplan_number'] ?? '', $dialplan_description);
 
 			$list_row_url = '';
 			if ($row['app_uuid'] == "4b821450-926b-175a-af93-a03c441818b1") {
