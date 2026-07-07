@@ -391,41 +391,28 @@ class authentication {
 		}
 
 		// Create remember me token
-		if ($authorized && isset($_SESSION['username']) && isset($_SESSION['remember']) && $this->settings->get('login', 'remember_me') === true) {
-			// Set session variables
-			$input_username = $_SESSION['username'];
-			$remember = $_SESSION['remember'];
+		if ($authorized && !empty($_SESSION['remember']) && $this->settings->get('login', 'remember_me') === true) {
+			// Generate the token
+			$selector = uuid();
+			$validator = generate_password(32);
+			$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
+			$token = $selector.':'.$validator;
 
-			// Match the username
-			$sql = "select user_uuid from v_users ";
-			$sql .= "where username = :username";
-			$parameters['username'] = $input_username;
-			$user = $this->database->select($sql, $parameters, 'row');
-			unset($sql, $parameters);
+			// Save token to the user log array
+			$_SESSION['authentication']['plugin'][$name]['remember_selector'] = $selector;
+			$_SESSION['authentication']['plugin'][$name]['remember_validator'] = $hashed_validator;
 
-			if ($remember && $user) {
-				// Generate the token
-				$selector = uuid();
-				$validator = generate_password(32);
-				$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
-				$token = $selector.':'.$validator;
+			// Set the cookie
+			setcookie('remember', $token, [
+				'expires' => strtotime('+7 days'),
+				'path' => '/',
+				'secure' => true,
+				'httponly' => true,
+				'samesite' => 'Lax'
+			]);
 
-				// Save token to the user log array
-				$_SESSION['authentication']['plugin'][$name]['remember_selector'] = $selector;
-				$_SESSION['authentication']['plugin'][$name]['remember_validator'] = $hashed_validator;
-
-				// Set the cookie
-				setcookie('remember', $token, [
-					'expires' => strtotime('+7 days'),
-					'path' => '/',
-					'secure' => true,
-					'httponly' => true,
-					'samesite' => 'Lax'
-				]);
-
-				// Unset the session variable after use
-				unset($_SESSION['remember']);
-			}
+			// Unset the session variable after use
+			unset($_SESSION['remember']);
 		}
 
 		//set a session variable to indicate whether or not we are authorized
