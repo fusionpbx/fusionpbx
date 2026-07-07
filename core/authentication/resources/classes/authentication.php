@@ -396,14 +396,14 @@ class authentication {
 			$selector = uuid();
 			$validator = generate_password(32);
 			$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
-			$token = $selector.':'.$validator;
+			$cookie_value = $selector.':'.$validator;
 
 			// Save token to the user log array
 			$_SESSION['authentication']['plugin'][$name]['remember_selector'] = $selector;
 			$_SESSION['authentication']['plugin'][$name]['remember_validator'] = $hashed_validator;
 
 			// Set the cookie
-			setcookie('remember', $token, [
+			setcookie('remember', $cookie_value, [
 				'expires' => strtotime('+7 days'),
 				'path' => '/',
 				'secure' => true,
