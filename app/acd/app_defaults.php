@@ -113,8 +113,8 @@
 						$array['dialplans'][0]['dialplan_details'][$d]['dialplan_detail_order'] = '20';
 
 					//save
-						$database->app_name = 'acd';
-						$database->app_uuid = 'c8e2f4a6-b0d2-4e6f-8a0c-2e4f6a8c0e2f';
+						$database->app_name = acd::app_name;
+						$database->app_uuid = acd::app_uuid;
 						$database->save($array, false);
 						unset($array);
 				}

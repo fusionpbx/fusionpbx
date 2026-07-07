@@ -28,10 +28,15 @@
 	class acd {
 
 		/**
+		 * application details as constants — the framework auto-detects the app
+		 * for database transactions from these when changing table data
+		 */
+		const app_name = 'acd';
+		const app_uuid = 'c8e2f4a6-b0d2-4e6f-8a0c-2e4f6a8c0e2f';
+
+		/**
 		 * declare private variables
 		 */
-		private $app_name;
-		private $app_uuid;
 		private $permission_prefix;
 		private $list_page;
 		private $table;
@@ -54,8 +59,6 @@
 		public function __construct() {
 
 			//assign private variables
-				$this->app_name         = 'acd';
-				$this->app_uuid         = 'c8e2f4a6-b0d2-4e6f-8a0c-2e4f6a8c0e2f';
 				$this->permission_prefix = 'acd_';
 				$this->list_page        = 'acd.php';
 				$this->table            = 'acd_queues';
@@ -99,7 +102,7 @@
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and queue_uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
+								$database = database::new();
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -119,9 +122,9 @@
 									$p->add('dialplan_delete', 'temp');
 									$p->add('dialplan_detail_delete', 'temp');
 
-								$database = new database;
-								$database->app_name = $this->app_name;
-								$database->app_uuid = $this->app_uuid;
+								$database = database::new();
+								$database->app_name = self::app_name;
+								$database->app_uuid = self::app_uuid;
 
 								foreach ($queues as $queue_uuid => $queue) {
 									//delete sessions (raw SQL — custom table)
@@ -211,7 +214,7 @@
 								$sql .= "where domain_uuid = :domain_uuid ";
 								$sql .= "and queue_uuid in (".implode(', ', $uuids).") ";
 								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database = new database;
+								$database = database::new();
 								$rows = $database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -230,9 +233,9 @@
 									$p = permissions::new();
 									$p->add('dialplan_edit', 'temp');
 
-								$database = new database;
-								$database->app_name = $this->app_name;
-								$database->app_uuid = $this->app_uuid;
+								$database = database::new();
+								$database->app_name = self::app_name;
+								$database->app_uuid = self::app_uuid;
 
 								$x = 0;
 								foreach ($queues as $uuid => $queue) {
@@ -320,7 +323,7 @@
 									$sql .= "where domain_uuid = :domain_uuid ";
 									$sql .= "and queue_uuid in (".implode(', ', $uuids).") ";
 									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-									$database = new database;
+									$database = database::new();
 									$rows = $database->select($sql, $parameters, 'all');
 									if (is_array($rows) && @sizeof($rows) != 0) {
 										$y = 0;
@@ -341,7 +344,7 @@
 											//members sub table
 												$sql_2 = "select * from v_acd_queue_members where queue_uuid = :queue_uuid";
 												$parameters_2['queue_uuid'] = $row['queue_uuid'];
-												$database_2 = new database;
+												$database_2 = database::new();
 												$rows_2 = $database_2->select($sql_2, $parameters_2, 'all');
 												if (is_array($rows_2) && @sizeof($rows_2) != 0) {
 													foreach ($rows_2 as $row_2) {
@@ -363,7 +366,7 @@
 											//dialplan record
 												$sql_3 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
 												$parameters_3['dialplan_uuid'] = $row['dialplan_uuid'];
-												$database_3 = new database;
+												$database_3 = database::new();
 												$dialplan = $database_3->select($sql_3, $parameters_3, 'row');
 												if (is_array($dialplan) && @sizeof($dialplan) != 0) {
 
@@ -397,9 +400,9 @@
 									$p = permissions::new();
 									$p->add('dialplan_add', 'temp');
 
-								$database = new database;
-								$database->app_name = $this->app_name;
-								$database->app_uuid = $this->app_uuid;
+								$database = database::new();
+								$database->app_name = self::app_name;
+								$database->app_uuid = self::app_uuid;
 
 								//save custom tables with raw SQL, standard tables with $database->save()
 								$dp_array = [];
@@ -588,7 +591,7 @@
 				$array['dialplans'][0]['dialplan_enabled']      = $queue['queue_enabled'] ?? 'true';
 				$array['dialplans'][0]['dialplan_description']  = 'Advanced Call Distribution queue: '.$queue_name;
 				$array['dialplans'][0]['dialplan_xml']          = $dialplan_xml;
-				$array['dialplans'][0]['app_uuid']              = $this->app_uuid;
+				$array['dialplans'][0]['app_uuid']              = self::app_uuid;
 
 			//dialplan detail records
 				$detail_condition_uuid = uuid();
@@ -657,8 +660,8 @@
 				);
 
 			//save dialplan and dialplan_details via $database->save() (standard FusionPBX tables)
-				$database->app_name = $this->app_name;
-				$database->app_uuid = $this->app_uuid;
+				$database->app_name = self::app_name;
+				$database->app_uuid = self::app_uuid;
 				$database->save($array);
 				unset($array);
 

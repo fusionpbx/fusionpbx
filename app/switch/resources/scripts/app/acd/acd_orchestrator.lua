@@ -205,9 +205,18 @@ local function any_active_channel_for_numbers(numbers_set)
 
 			-- Match the agent as CALLEE / forward target via the show-channels fields.
 			for num, _ in pairs(numbers_set) do
-				if presence_ext == num or dest_v == num or callee_v == num
-					or callee_ext == num or initial_v == num or cid_v == num
-					or name_v:match("/" .. num .. "@") then
+				local why
+				if     presence_ext == num then why = "presence"
+				elseif dest_v      == num then why = "dest"
+				elseif callee_v    == num then why = "callee"
+				elseif callee_ext  == num then why = "callee_ext"
+				elseif initial_v   == num then why = "initial_dest"
+				elseif cid_v       == num then why = "cid_num"
+				elseif name_v:match("/" .. num .. "@") then why = "name"
+				end
+				if why then
+					freeswitch.consoleLog("notice", "[acd_cc_orch] busy-match num=" .. num .. " via " .. why ..
+						" chan=" .. name_v .. " dest=" .. dest_v .. " cid=" .. cid_v .. "\n")
 					return true
 				end
 			end
@@ -225,6 +234,8 @@ local function any_active_channel_for_numbers(numbers_set)
 						local from_ext = from_user:match("ext=(%d+)")
 						for num, _ in pairs(numbers_set) do
 							if from_user == num or from_ext == num then
+								freeswitch.consoleLog("notice", "[acd_cc_orch] busy-match num=" .. num ..
+									" via sip_from(" .. tostring(from_user) .. ") chan=" .. name_v .. "\n")
 								return true
 							end
 						end
