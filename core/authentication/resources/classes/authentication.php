@@ -115,14 +115,12 @@ class authentication {
 			$user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
 			// Get the user log
-			$sql = "select \n";
-			$sql .= " user_uuid, \n";
-			$sql .= " remember_validator, \n";
-			$sql .= " (timestamp < now() - interval '7 days')::int as expired, \n";
-			$sql .= " (remote_address is distinct from :remote_address)::int as invalid_remote_address, \n";
-			$sql .= " (user_agent is distinct from :user_agent)::int as invalid_user_agent \n";
+			$sql = "select user_uuid, remember_validator \n";
 			$sql .= "from v_user_logs \n";
 			$sql .= "where remember_selector = :remember_selector \n";
+			$sql .= " and remote_address = :remote_address \n";
+			$sql .= " and user_agent = :user_agent \n";
+			$sql .= " and timestamp > now() - interval '7 days' \n";
 			$parameters['remember_selector'] = $cookie_selector;
 			$parameters['remote_address'] = $remote_address;
 			$parameters['user_agent'] = $user_agent;
@@ -137,11 +135,6 @@ class authentication {
 					// Invalid token
 					user_logs::add(['authorized' => false, 'domain_uuid' => $_SESSION['domain_uuid']], "Invalid remember me token");
 
-					unset($_COOKIE['remember']);
-					setcookie('remember', '', time() - 3600, '/');
-					return false;
-				}
-				else if ($user_log['expired'] || $user_log['invalid_remote_address'] || $user_log['invalid_user_agent']) {
 					unset($_COOKIE['remember']);
 					setcookie('remember', '', time() - 3600, '/');
 					return false;
