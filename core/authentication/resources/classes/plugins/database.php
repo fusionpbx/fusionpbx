@@ -296,25 +296,27 @@ class plugin_database {
 				//get the user contact details
 				if ($contacts_exists) {
 					unset($parameters);
-					$sql                        = "select ";
-					$sql                        .= " c.contact_organization, ";
-					$sql                        .= " c.contact_name_given, ";
-					$sql                        .= " c.contact_name_family, ";
-					$sql                        .= " a.contact_attachment_uuid ";
-					$sql                        .= "from v_contacts as c ";
-					$sql                        .= "left join v_contact_attachments as a on c.contact_uuid = a.contact_uuid ";
-					$sql                        .= "where c.contact_uuid = :contact_uuid ";
-					$sql                        .= "and c.domain_uuid = :domain_uuid ";
-					$sql                        .= "and a.attachment_primary = true ";
-					$sql                        .= "and a.attachment_filename is not null ";
-					$sql                        .= "and a.attachment_content is not null ";
+					$sql = "select ";
+					$sql .= " c.contact_organization, ";
+					$sql .= " c.contact_name_given, ";
+					$sql .= " c.contact_name_family, ";
+					$sql .= " a.contact_attachment_uuid ";
+					$sql .= "from v_contacts as c ";
+					$sql .= "left join v_contact_attachments as a on ( \n";
+					$sql .= "	c.contact_uuid = a.contact_uuid  \n";
+					$sql .= "	and a.attachment_primary = true  \n";
+					$sql .= "	and a.attachment_filename is not null  \n";
+					$sql .= "	and a.attachment_content is not null \n";
+					$sql .= ") \n";
+					$sql .= "where c.contact_uuid = :contact_uuid ";
+					$sql .= "and c.domain_uuid = :domain_uuid ";
 					$parameters['domain_uuid']  = $this->domain_uuid;
 					$parameters['contact_uuid'] = $this->contact_uuid;
-					$contact                    = $settings->database()->select($sql, $parameters, 'row');
+					$contact = $settings->database()->select($sql, $parameters, 'row');
 					$this->contact_organization = $contact['contact_organization'] ?? '';
-					$this->contact_name_given   = $contact['contact_name_given'] ?? '';
-					$this->contact_name_family  = $contact['contact_name_family'] ?? '';
-					$this->contact_image        = $contact['contact_attachment_uuid'] ?? '';
+					$this->contact_name_given = $contact['contact_name_given'] ?? '';
+					$this->contact_name_family = $contact['contact_name_family'] ?? '';
+					$this->contact_image = $contact['contact_attachment_uuid'] ?? '';
 				}
 
 				//debug info
