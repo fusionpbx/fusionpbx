@@ -183,9 +183,20 @@ class authentication {
 
 				// Get the contact details
 				if ($contacts_exists && !empty($row["contact_uuid"])) {
-					$sql = "select * from v_contacts \n";
-					$sql .= "where contact_uuid = :contact_uuid \n";
-					$sql .= "and domain_uuid = :domain_uuid \n";
+					$sql = "select ";
+					$sql .= " c.contact_organization, ";
+					$sql .= " c.contact_name_given, ";
+					$sql .= " c.contact_name_family, ";
+					$sql .= " a.contact_attachment_uuid ";
+					$sql .= "from v_contacts as c ";
+					$sql .= "left join v_contact_attachments as a on ( \n";
+					$sql .= "	c.contact_uuid = a.contact_uuid  \n";
+					$sql .= "	and a.attachment_primary = true  \n";
+					$sql .= "	and a.attachment_filename is not null  \n";
+					$sql .= "	and a.attachment_content is not null \n";
+					$sql .= ") \n";
+					$sql .= "where c.contact_uuid = :contact_uuid ";
+					$sql .= "and c.domain_uuid = :domain_uuid ";
 					$parameters['contact_uuid'] = $row["contact_uuid"];
 					$parameters['domain_uuid'] = $row["domain_uuid"];
 					$contact = $this->database->select($sql, $parameters, 'row');
@@ -202,7 +213,7 @@ class authentication {
 					$result["contact_organization"] = $contact["contact_organization"] ?? '';
 					$result["contact_name_given"] = $contact["contact_name_given"] ?? '';
 					$result["contact_name_family"] = $contact["contact_name_family"] ?? '';
-					$result["contact_image"] = $contact["contact_image"] ?? '';
+					$result["contact_image"] = $contact["contact_attachment_uuid"] ?? '';
 				}
 				$result['domain_uuid'] = $row['domain_uuid'];
 				$result['authorized'] = true;
