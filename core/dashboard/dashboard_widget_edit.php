@@ -431,7 +431,7 @@
 	$widget_chart_type_options = [];
 	if (!empty($array['dashboard_widgets'])) {
 		foreach ($array['dashboard_widgets'] as $index => $row) {
-			if ($row['widget_path'] === "$application_name/$widget_path_name") {
+			if (!empty($row['widget_chart_type_options']) && $row['widget_path'] === "$application_name/$widget_path_name") {
 				$widget_chart_type_options = $row['widget_chart_type_options'];
 				break;
 			}
