@@ -781,7 +781,7 @@ class menu {
 			$sql .= ") ";
 		}
 		$sql .= ") ";
-		$sql .= "order by l.menu_item_title, i.menu_item_order asc ";
+		$sql .= "order by i.menu_item_order, l.menu_item_title asc ";
 		$parameters['menu_language'] = $this->settings->get('domain', 'language', 'en-us');
 		$parameters['menu_uuid'] = $this->menu_uuid;
 		$parameters['menu_item_parent_uuid'] = $menu_item_uuid;
