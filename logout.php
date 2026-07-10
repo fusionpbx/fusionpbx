@@ -30,22 +30,8 @@
 //use custom logout destination if set otherwise redirect to the index page
 	$logout_destination = $settings->get('login', 'logout_destination', PROJECT_PATH.'/');
 
-//remove remember me token
-	if ($_COOKIE['remember']) {
-		$cookie_selector = explode(":", $_COOKIE['remember'])[0];
-
-		$sql = "update v_user_logs ";
-		$sql .= "set remember_selector = null, ";
-		$sql .= "remember_validator = null ";
-		$sql .= "where remember_selector = :remember_selector ";
-		$parameters['remember_selector'] = $cookie_selector;
-		$database->execute($sql, $parameters);
-		unset($sql, $parameters);
-
-		//unset cookie
-		unset($_COOKIE['remember']);
-		setcookie('remember', '', time() - 3600, '/');
-	}
+//delete remember me token
+	remember_me::logout_action();
 
 //destroy session
 	session_unset();
