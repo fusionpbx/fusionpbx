@@ -77,6 +77,9 @@ class authentication {
 		//set default return array as null
 		$result = null;
 
+		//set default authorized to false
+		$authorized  = false;
+
 		//use a login message when a login attempt fails
 		$failed_login_message = null;
 
@@ -96,236 +99,107 @@ class authentication {
 		//check if contacts app exists
 		$contacts_exists = file_exists(dirname(__DIR__, 4) . '/core/contacts/');
 
-		// Check for remember me cookie and that the feature is enabled
-		if (isset($_COOKIE['remember']) && $this->settings->get('login', 'remember_me') === true) {
-			// Validate cookie format
-			$parts = explode(':', $_COOKIE['remember'], 2);
-			if (count($parts) !== 2 || !is_uuid($parts[0])) {
-				// Invalid format
-				user_logs::add(['authorized' => false, 'domain_uuid' => $_SESSION['domain_uuid']], "Invalid remember me token format");
-
-				unset($_COOKIE['remember']);
-				setcookie('remember', '', time() - 3600, '/');
-				return false;
-			}
-
-			// Set variables
-			[$cookie_selector, $cookie_validator] = $parts;
-			$remote_address = $_SERVER['REMOTE_ADDR'] ?? '';
-			$user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-
-			// Get the user log
-			$sql = "select user_uuid, remember_validator \n";
-			$sql .= "from v_user_logs \n";
-			$sql .= "where remember_selector = :remember_selector \n";
-			$sql .= " and remote_address = :remote_address \n";
-			$sql .= " and user_agent = :user_agent \n";
-			$sql .= " and timestamp > now() - interval '7 days' \n";
-			$parameters['remember_selector'] = $cookie_selector;
-			$parameters['remote_address'] = $remote_address;
-			$parameters['user_agent'] = $user_agent;
-			$user_log = $this->database->select($sql, $parameters, 'row');
-			unset($sql, $parameters);
-
-			// Check if a token was found
-			if (!empty($user_log['remember_validator'])) {
-
-				// Validate the token
-				if (!password_verify($cookie_validator, $user_log['remember_validator'])) {
-					// Invalid token
-					user_logs::add(['authorized' => false, 'domain_uuid' => $_SESSION['domain_uuid']], "Invalid remember me token");
-
-					unset($_COOKIE['remember']);
-					setcookie('remember', '', time() - 3600, '/');
-					return false;
-				}
-
-				// Generate new token
-				$selector = uuid();
-				$validator = generate_password(32);
-				$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
-				$token = $selector.':'.$validator;
-
-				// Update the user log
-				$sql = "update v_user_logs \n";
-				$sql .= " set remember_selector = :remember_selector, \n";
-				$sql .= " remember_validator = :remember_validator \n";
-				$sql .= "where remember_selector = :old_selector \n";
-				$parameters['remember_selector'] = $selector;
-				$parameters['remember_validator'] = $hashed_validator;
-				$parameters['old_selector'] = $cookie_selector;
-				$this->database->execute($sql, $parameters);
-				unset($sql, $parameters);
-
-				// Set the cookie
-				setcookie('remember', $token, [
-					'expires' => strtotime('+7 days'),
-					'path' => '/',
-					'secure' => true,
-					'httponly' => true,
-					'samesite' => 'Lax'
-				]);
-
-				// Get the user details
-				$sql = "select \n";
-				$sql .= "u.domain_uuid, \n";
-				$sql .= " d.domain_name, \n";
-				$sql .= " u.user_uuid, \n";
-				$sql .= " u.username, \n";
-				$sql .= " u.contact_uuid \n";
-				$sql .= "from v_users as u \n";
-				$sql .= "inner join v_domains as d on u.domain_uuid = d.domain_uuid \n";
-				$sql .= "where u.user_uuid = :user_uuid \n";
-				$sql .= "and u.user_enabled = 'true' \n";
-				$parameters['user_uuid'] = $user_log['user_uuid'];
-				$row = $this->database->select($sql, $parameters, 'row');
-				unset($sql, $parameters);
-
-				// Get the contact details
-				if ($contacts_exists && !empty($row["contact_uuid"])) {
-					$sql = "select ";
-					$sql .= " c.contact_organization, ";
-					$sql .= " c.contact_name_given, ";
-					$sql .= " c.contact_name_family, ";
-					$sql .= " a.contact_attachment_uuid ";
-					$sql .= "from v_contacts as c ";
-					$sql .= "left join v_contact_attachments as a on ( \n";
-					$sql .= "	c.contact_uuid = a.contact_uuid  \n";
-					$sql .= "	and a.attachment_primary = true  \n";
-					$sql .= "	and a.attachment_filename is not null  \n";
-					$sql .= "	and a.attachment_content is not null \n";
-					$sql .= ") \n";
-					$sql .= "where c.contact_uuid = :contact_uuid ";
-					$sql .= "and c.domain_uuid = :domain_uuid ";
-					$parameters['contact_uuid'] = $row["contact_uuid"];
-					$parameters['domain_uuid'] = $row["domain_uuid"];
-					$contact = $this->database->select($sql, $parameters, 'row');
-					unset($sql, $parameters);
-				}
-
-				// Build a result array
-				$result['plugin'] = 'remember';
-				$result['domain_name'] = $row["domain_name"];
-				$result['username'] = $row['username'];
-				$result['user_uuid'] = $row['user_uuid'];
-				$result['contact_uuid'] = $row["contact_uuid"];
-				if ($contacts_exists) {
-					$result["contact_organization"] = $contact["contact_organization"] ?? '';
-					$result["contact_name_given"] = $contact["contact_name_given"] ?? '';
-					$result["contact_name_family"] = $contact["contact_name_family"] ?? '';
-					$result["contact_image"] = $contact["contact_attachment_uuid"] ?? '';
-				}
-				$result['domain_uuid'] = $row['domain_uuid'];
-				$result['authorized'] = true;
-
-				// Set the domain_uuid
-				$this->domain_uuid = $row["domain_uuid"];
-
-				// Set the user_uuid
-				$this->user_uuid = $row["user_uuid"];
-
-				// Create the session
-				self::create_user_session($result, $this->settings);
-
-				// Set the session authorized to true
-				$_SESSION['authorized'] = true;
-
-				// Return the result
-				return $result;
-			}
+		// Check for remember me cookie
+		$remember_me = new remember_me($this->database, $this->settings);
+		$result = $remember_me->authenticate($contacts_exists);
+		if (is_array($result)) {
+			$authorized = true;
 		}
 
-		//use the authentication plugins
-		foreach ($_SESSION['authentication']['methods'] as $name) {
-			//already processed the plugin move to the next plugin
-			if (!empty($_SESSION['authentication']['plugin'][$name]['authorized']) && $_SESSION['authentication']['plugin'][$name]['authorized']) {
-				continue;
-			}
-
-			//prepare variables
-			$class_name = "plugin_" . $name;
-			$base = __DIR__ . "/plugins";
-			$plugin = $base . "/" . $name . ".php";
-
-			//process the plugin
-			if (file_exists($plugin)) {
-				//run the plugin
-				$object = new $class_name();
-				$object->domain_name = $this->domain_name;
-				$object->domain_uuid = $this->domain_uuid;
-				if ($name == 'database' && isset($this->key)) {
-					$object->key = $this->key;
-				}
-				if ($name == 'database' && isset($this->username)) {
-					$object->username = $this->username;
-					$object->password = $this->password;
-				}
-				//initialize the plugin send the authentication object and settings
-				$array = $object->$name($this, $this->settings);
-
-				//build a result array
-				if (!empty($array) && is_array($array)) {
-					$result['plugin'] = $array["plugin"];
-					$result['domain_name'] = $array["domain_name"];
-					$result['username'] = $array["username"];
-					$result['user_uuid'] = $array["user_uuid"];
-					$result['contact_uuid'] = $array["contact_uuid"];
-					if ($contacts_exists) {
-						$result["contact_organization"] = $array["contact_organization"] ?? '';
-						$result["contact_name_given"] = $array["contact_name_given"] ?? '';
-						$result["contact_name_family"] = $array["contact_name_family"] ?? '';
-						$result["contact_image"] = $array["contact_image"] ?? '';
-					}
-					$result['domain_uuid'] = $array["domain_uuid"];
-					$result['authorized'] = $array["authorized"];
-
-					//set the domain_uuid
-					$this->domain_uuid = $array["domain_uuid"];
-
-					//set the user_uuid
-					$this->user_uuid = $array["user_uuid"];
-
-					//save the result to the authentication plugin
-					$_SESSION['authentication']['plugin'][$name] = $result;
-				}
-
-				//plugin authorized false
-				if (!$result['authorized']) {
-					break;
-				}
-			}
-		}
-
-		//make sure all plugins are in the array
-		if (!empty($_SESSION['authentication']['methods'])) {
+		// Skip authentication plugins if already authorized by remember me
+		if (!$authorized) {
+			//use the authentication plugins
 			foreach ($_SESSION['authentication']['methods'] as $name) {
-				if (!isset($_SESSION['authentication']['plugin'][$name]['authorized'])) {
-					$_SESSION['authentication']['plugin'][$name]['plugin'] = $name;
-					$_SESSION['authentication']['plugin'][$name]['domain_name'] = $_SESSION['domain_name'];
-					$_SESSION['authentication']['plugin'][$name]['domain_uuid'] = $_SESSION['domain_uuid'];
-					$_SESSION['authentication']['plugin'][$name]['username'] = $_SESSION['username'];
-					$_SESSION['authentication']['plugin'][$name]['user_uuid'] = $_SESSION['user_uuid'];
-					$_SESSION['authentication']['plugin'][$name]['user_email'] = $_SESSION['user_email'];
-					$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
+				//already processed the plugin move to the next plugin
+				if (!empty($_SESSION['authentication']['plugin'][$name]['authorized']) && $_SESSION['authentication']['plugin'][$name]['authorized']) {
+					continue;
+				}
+
+				//prepare variables
+				$class_name = "plugin_" . $name;
+				$base = __DIR__ . "/plugins";
+				$plugin = $base . "/" . $name . ".php";
+
+				//process the plugin
+				if (file_exists($plugin)) {
+					//run the plugin
+					$object = new $class_name();
+					$object->domain_name = $this->domain_name;
+					$object->domain_uuid = $this->domain_uuid;
+					if ($name == 'database' && isset($this->key)) {
+						$object->key = $this->key;
+					}
+					if ($name == 'database' && isset($this->username)) {
+						$object->username = $this->username;
+						$object->password = $this->password;
+					}
+					//initialize the plugin send the authentication object and settings
+					$array = $object->$name($this, $this->settings);
+
+					//build a result array
+					if (!empty($array) && is_array($array)) {
+						$result['plugin'] = $array["plugin"];
+						$result['domain_name'] = $array["domain_name"];
+						$result['username'] = $array["username"];
+						$result['user_uuid'] = $array["user_uuid"];
+						$result['contact_uuid'] = $array["contact_uuid"];
+						if ($contacts_exists) {
+							$result["contact_organization"] = $array["contact_organization"] ?? '';
+							$result["contact_name_given"] = $array["contact_name_given"] ?? '';
+							$result["contact_name_family"] = $array["contact_name_family"] ?? '';
+							$result["contact_image"] = $array["contact_image"] ?? '';
+						}
+						$result['domain_uuid'] = $array["domain_uuid"];
+						$result['authorized'] = $array["authorized"];
+
+						//set the domain_uuid
+						$this->domain_uuid = $array["domain_uuid"];
+
+						//set the user_uuid
+						$this->user_uuid = $array["user_uuid"];
+
+						//save the result to the authentication plugin
+						$_SESSION['authentication']['plugin'][$name] = $result;
+					}
+
+					//plugin authorized false
+					if (!$result['authorized']) {
+						break;
+					}
 				}
 			}
-		}
 
-		//debug information
-		// view_array($_SESSION['authentication'], false);
+			//make sure all plugins are in the array
+			if (!empty($_SESSION['authentication']['methods'])) {
+				foreach ($_SESSION['authentication']['methods'] as $name) {
+					if (!isset($_SESSION['authentication']['plugin'][$name]['authorized'])) {
+						$_SESSION['authentication']['plugin'][$name]['plugin'] = $name;
+						$_SESSION['authentication']['plugin'][$name]['domain_name'] = $_SESSION['domain_name'];
+						$_SESSION['authentication']['plugin'][$name]['domain_uuid'] = $_SESSION['domain_uuid'];
+						$_SESSION['authentication']['plugin'][$name]['username'] = $_SESSION['username'];
+						$_SESSION['authentication']['plugin'][$name]['user_uuid'] = $_SESSION['user_uuid'];
+						$_SESSION['authentication']['plugin'][$name]['user_email'] = $_SESSION['user_email'];
+						$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
+					}
+				}
+			}
 
-		//set authorized to false if any authentication method failed
-		$authorized  = false;
-		$plugin_name = '';
-		if (is_array($_SESSION['authentication']['plugin'])) {
-			foreach ($_SESSION['authentication']['plugin'] as $row) {
-				$plugin_name = $row['plugin'];
-				if ($row["authorized"]) {
-					$authorized = true;
-				} else {
-					$authorized = false;
-					$failed_login_message = "Authentication plugin '$plugin_name' blocked login attempt";
-					break;
+			//debug information
+			// view_array($_SESSION['authentication'], false);
+
+			//set authorized to false if any authentication method failed
+			$authorized = false;
+			$plugin_name = '';
+			if (is_array($_SESSION['authentication']['plugin'])) {
+				foreach ($_SESSION['authentication']['plugin'] as $row) {
+					$plugin_name = $row['plugin'];
+					if ($row["authorized"]) {
+						$authorized = true;
+					} else {
+						$authorized = false;
+						$failed_login_message = "Authentication plugin '$plugin_name' blocked login attempt";
+						break;
+					}
 				}
 			}
 		}
@@ -340,7 +214,7 @@ class authentication {
 				// But, may still be blocked by other methods. Check the other methods in the user settings
 				// for any additional methods that are active on the user and not on the domain (ie. TOTP).
 				$authenticators = array_diff($this->settings->get('authentication', 'methods', []), $_SESSION['authentication']['methods'] ?? []);
-				if (!empty($authenticators)) {
+				if (!empty($authenticators) && $result['plugin'] !== 'remember_me') {
 					foreach ($authenticators as $name) {
 						// Assume the plugin will not authorize the user until it is processed and returns true
 						$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
@@ -385,6 +259,15 @@ class authentication {
 				if ($authorized) {
 					// user passed all authentication mechanisms and is authorized to login
 					self::create_user_session($result, $this->settings);
+
+					// Create remember me token
+					if (!empty($name) && !empty($_SESSION['remember']) && $this->settings->get('login', 'remember_me', false)) {
+						$token_data = $remember_me->issue_token();
+
+						// Save token to the user log array
+						$_SESSION['authentication']['plugin'][$name]['remember_selector'] = $token_data['selector'];
+						$_SESSION['authentication']['plugin'][$name]['remember_validator'] = $token_data['hashed_validator'];
+					}
 				}
 			} else {
 				//user failed the cidr check - no longer authorized
@@ -394,36 +277,13 @@ class authentication {
 			}
 		}
 
-		// Create remember me token
-		if ($authorized && !empty($_SESSION['remember']) && $this->settings->get('login', 'remember_me') === true) {
-			// Generate the token
-			$selector = uuid();
-			$validator = generate_password(32);
-			$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
-			$cookie_value = $selector.':'.$validator;
-
-			// Save token to the user log array
-			$_SESSION['authentication']['plugin'][$name]['remember_selector'] = $selector;
-			$_SESSION['authentication']['plugin'][$name]['remember_validator'] = $hashed_validator;
-
-			// Set the cookie
-			setcookie('remember', $cookie_value, [
-				'expires' => strtotime('+7 days'),
-				'path' => '/',
-				'secure' => true,
-				'httponly' => true,
-				'samesite' => 'Lax'
-			]);
-
-			// Unset the session variable after use
-			unset($_SESSION['remember']);
-		}
-
 		//set a session variable to indicate whether or not we are authorized
 		$_SESSION['authorized'] = $authorized;
 
 		//log the attempt
-		user_logs::add($_SESSION['authentication']['plugin'][$name], $failed_login_message);
+		if (!empty($name)) {
+			user_logs::add($_SESSION['authentication']['plugin'][$name], $failed_login_message);
+		}
 
 		//return the result
 		return $result ?? false;
