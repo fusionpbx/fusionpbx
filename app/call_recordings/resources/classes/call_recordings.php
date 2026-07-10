@@ -752,7 +752,7 @@ class call_recordings {
 									$call_recording_name_download = str_replace('${time}', $call_recording_time, $call_recording_name_download);
 
 									//create a symbolic link with custom name
-									$command = 'ln -s ' . $call_recording_path . '/' . $call_recording_name . ' ' . $call_recording_path . '/' . $call_recording_name_download;
+									$command = 'ln -s ' . escapeshellarg($call_recording_path . '/' . $call_recording_name) . ' ' . escapeshellarg($call_recording_path . '/' . $call_recording_name_download);
 									system($command);
 
 									//build the array for all the call recording with the new file name
