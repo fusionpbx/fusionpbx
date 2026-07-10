@@ -78,7 +78,7 @@ class authentication {
 		$result = null;
 
 		//set default authorized to false
-		$authorized  = false;
+		$authorized = false;
 
 		//use a login message when a login attempt fails
 		$failed_login_message = null;
