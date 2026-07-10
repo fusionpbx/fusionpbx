@@ -87,8 +87,6 @@ class remember_me {
 		setcookie(self::$cookie_name, '', time() - 3600, '/');
 	}
 
-	// --- HELPER FUNCTIONS ---
-
 	private function parse_cookie(string $cookie_value): array|null {
 		$parts = explode(':', $cookie_value, 2);
 		if (count($parts) !== 2 || !is_uuid($parts[0])) {
