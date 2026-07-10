@@ -583,19 +583,12 @@
 				$array['users'][$x]['password'] = password_hash($password, PASSWORD_DEFAULT, $options);
 				$array['users'][$x]['salt'] = null;
 
-				//remove remember me tokens
-				$sql = "update v_user_logs ";
-				$sql .= "set remember_selector = null, ";
-				$sql .= "remember_validator = null ";
-				$sql .= "where user_uuid = :user_uuid ";
-				$parameters['user_uuid'] = $user_uuid;
-				$database->execute($sql, $parameters);
-				unset($sql, $parameters);
+				//delete remember me tokens
+				remember_me::delete_user_tokens($user_uuid);
 
 				// Unset remember me cookie
 				if ($user_uuid == $_SESSION['user_uuid']) {
-					unset($_COOKIE['remember']);
-					setcookie('remember', '', time() - 3600, '/');
+					remember_me::clear_cookie();
 				}
 
 				//send the password changed email
