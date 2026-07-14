@@ -334,7 +334,7 @@
 						sql = sql .. "e.forward_user_not_registered_destination, ";
 						sql = sql .. "cast(e.forward_user_not_registered_enabled as text), ";
 						sql = sql .. "e.follow_me_uuid, ";
-						sql = sql .. "cast(e.follow_me_enabled as text), ";
+						sql = sql .. "COALESCE(CAST(v.follow_me_enabled AS TEXT), 'false') as follow_me_enabled, "
 						sql = sql .. "e.follow_me_destinations, ";
 						sql = sql .. "cast(e.enabled as text), ";
 						sql = sql .. "e.description, ";
@@ -345,7 +345,10 @@
 						sql = sql .. "e.extension_language, ";
 						sql = sql .. "e.extension_dialect, ";
 						sql = sql .. "e.extension_voice, ";
-						sql = sql .. "random() FROM v_extensions as e, v_domains as d "
+						sql = sql .. "random() "
+						sql = sql .. "FROM v_extensions as e "
+						sql = sql .. "JOIN v_domains as d ON e.domain_uuid = d.domain_uuid "
+						sql = sql .. "LEFT JOIN v_follow_me as v ON e.follow_me_uuid = v.follow_me_uuid "
 						sql = sql .. "WHERE e.domain_uuid = :domain_uuid "
 						sql = sql .. "AND d.domain_uuid = :domain_uuid "
 						sql = sql .. "AND d.domain_enabled = true "
