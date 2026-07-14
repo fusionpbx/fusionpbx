@@ -11,7 +11,6 @@
 
 //includes files
 	require_once "resources/pdo.php";
-	require dirname(__DIR__, 4)."/app/email_queue/resources/functions/transcribe.php";
 
 //increase limits
 	set_time_limit(0);
@@ -63,7 +62,7 @@
 //check to see if the process exists
 	$pid_exists = process_exists($pid_file);
 
-//prevent the process running more than once
+//prevent the process from running more than once
 	if ($pid_exists) {
 		echo "Cannot lock pid file {$pid_file}\n";
 		exit;
@@ -83,7 +82,7 @@
         }
     }
 
-//create the process id file if the process doesn't exist
+//create the process ID file if the process doesn't exist
 	if (!$pid_exists) {
 		//remove the old pid file
 		if (file_exists($file)) {
@@ -143,7 +142,7 @@
                 echo $result."\n";
             }
             else {
-                //starts process rapidly doesn't wait for previous process to finish (used for production)
+                //starts process rapidly, doesn't wait for previous process to finish (used for production)
                 $handle = popen($command." > /dev/null &", 'r'); 
                 echo "'$handle'; " . gettype($handle) . "\n";
                 $read = fread($handle, 2096);
@@ -179,7 +178,7 @@
 
 //notes
 	//echo __line__."\n";
-	// if not keeping the email then need to delete it after the voicemail is emailed
+	// if not keeping the email, then need to delete it after the voicemail is emailed
 
 //how to use this feature
 	// cd /var/www/fusionpbx; /usr/bin/php /var/www/fusionpbx/app/email_queue/resources/send.php
