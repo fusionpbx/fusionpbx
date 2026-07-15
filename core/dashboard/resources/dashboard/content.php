@@ -19,8 +19,8 @@
 	$widget_content_details = escape($widget_content_details);
 
 //allow line breaks
-	$widget_content = str_replace('&lt;br &sol;&gt;', '<br />', $widget_content);
-	$widget_content_details = str_replace('&lt;br &sol;&gt;', '<br />', $widget_content_details);
+	$widget_content = str_replace('&lt;br /&gt;', '<br />', $widget_content);
+	$widget_content_details = str_replace('&lt;br /&gt;', '<br />', $widget_content_details);
 
 //dashboard icon
 	echo "<div class='hud_box'>\n";
