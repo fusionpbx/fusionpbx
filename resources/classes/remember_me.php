@@ -3,34 +3,56 @@
 class remember_me {
 
 	/**
-	 * Declare Private variables
+	 * Set in the constructor. Must be a database object and cannot be null.
 	 *
-	 * @var mixed
+	 * @var database Database Object
 	 */
 	private $database;
-	private $settings;
-	private static $cookie_name = 'remember';
-	private static $expiry_days = 7;
 
 	/**
-	 * Called when the object is created
+	 * Internal array structure that is populated from the database
+	 *
+	 * @var settings A settings object loaded from Default Settings
 	 */
-	public function __construct($database, $settings) {
-		$this->database = $database;
-		$this->settings = $settings;
+	private $settings;
+
+	/**
+	 * additional private variables
+	 */
+	private static $cookie_name = 'remember';
+	private $expiry_days;
+
+	/**
+	 * Initializes the object with the setting array.
+	 *
+	 * @param array $setting_array An array containing settings for domain, user, and database connections. Defaults to
+	 *                             an empty array.
+	 *
+	 * @return void
+	 */
+	public function __construct(array $setting_array = []) {
+		//set objects
+		$this->database = $setting_array['database'] ?? database::new();
+		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database]);
+
+		//assign private variables
+		$this->cookie_name = self::$cookie_name;
+		$this->expiry_days = 7;
 	}
 
 	/**
-	 * Main entry point: Checks if a valid remember me cookie exists and returns user data.
+	 * Checks if a valid remember me cookie exists and returns user data.
+	 *
+	 * @param bool $contacts_exists Whether the contacts app exists
 	 *
 	 * @return array|null
 	 */
 	public function authenticate($contacts_exists = false): array|null {
-		if (!$this->settings->get('login', 'remember_me', false) || !isset($_COOKIE[self::$cookie_name])) {
+		if (!$this->settings->get('login', 'remember_me', false) || !isset($_COOKIE[$this->cookie_name])) {
 			return null;
 		}
 
-		$cookie_data = $this->parse_cookie($_COOKIE[self::$cookie_name]);
+		$cookie_data = $this->parse_cookie($_COOKIE[$this->cookie_name]);
 		if (!$cookie_data) {
 			return null;
 		}
@@ -68,8 +90,8 @@ class remember_me {
 		$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
 
 		// Set Cookie
-		setcookie(self::$cookie_name, $selector . ':' . $validator, [
-			'expires' => strtotime("+".self::$expiry_days." days"),
+		setcookie($this->cookie_name, $selector . ':' . $validator, [
+			'expires' => strtotime("+".$this->expiry_days." days"),
 			'path' => '/',
 			'secure' => true,
 			'httponly' => true,
@@ -106,7 +128,7 @@ class remember_me {
 		$sql .= "where remember_selector = :remember_selector \n";
 		$sql .= " and remote_address = :remote_address \n";
 		$sql .= " and user_agent = :user_agent \n";
-		$sql .= " and timestamp > now() - interval '".self::$expiry_days." days' \n";
+		$sql .= " and timestamp > now() - interval '".$this->expiry_days." days' \n";
 		$parameters['remember_selector'] = $remember_selector;
 		$parameters['remote_address'] = $remote_address;
 		$parameters['user_agent'] = $user_agent;
@@ -125,8 +147,8 @@ class remember_me {
 		$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
 
 		// Update Cookie
-		setcookie(self::$cookie_name, $selector . ':' . $validator, [
-			'expires' => strtotime("+".self::$expiry_days." days"),
+		setcookie($this->cookie_name, $selector . ':' . $validator, [
+			'expires' => strtotime("+".$this->expiry_days." days"),
 			'path' => '/',
 			'secure' => true,
 			'httponly' => true,
@@ -227,6 +249,9 @@ class remember_me {
 
 	/**
 	 * Deletes all tokens associated with a user.
+	 *
+	 * @param mixed $user User UUID or username
+	 *
 	 */
 	public static function delete_user_tokens(mixed $user) {
 

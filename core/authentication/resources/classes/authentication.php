@@ -100,7 +100,7 @@ class authentication {
 		$contacts_exists = file_exists(dirname(__DIR__, 4) . '/core/contacts/');
 
 		// Check for remember me cookie
-		$remember_me = new remember_me($this->database, $this->settings);
+		$remember_me = new remember_me(['database' => $this->database, 'settings' => $this->settings]);
 		$result = $remember_me->authenticate($contacts_exists);
 		if (is_array($result)) {
 			$authorized = true;
