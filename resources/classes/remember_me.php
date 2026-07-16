@@ -253,7 +253,7 @@ class remember_me {
 	 * @param mixed $user User UUID or username
 	 *
 	 */
-	public static function delete_user_tokens($user) {
+	public static function delete_user_tokens(mixed $user) {
 
 		// Use the database global
 		global $database;
