@@ -310,8 +310,14 @@
 					$cache = new cache;
 					$cache->delete("configuration:local_stream.conf");
 
+				//add the domain name to the stream name
+					if (!empty($domain_uuid)) {
+						$stream_name = $_SESSION['domain_name'].'/'.$stream_name;
+					}
+
+				//reload local stream
 					$music = new switch_music_on_hold;
-					$music->reload();
+					$music->reload($stream_name);
 
 			}
 		//set message for unsupported file type
