@@ -17,7 +17,7 @@ class remember_me {
 	private $settings;
 
 	/**
-	 * additional private variables
+	 * Additional private variables
 	 */
 	private static $cookie_name = 'remember';
 	private $expiry_days;
@@ -31,11 +31,11 @@ class remember_me {
 	 * @return void
 	 */
 	public function __construct(array $setting_array = []) {
-		//set objects
+		// Set objects
 		$this->database = $setting_array['database'] ?? database::new();
 		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database]);
 
-		//assign private variables
+		// Assign private variables
 		$this->cookie_name = self::$cookie_name;
 		$this->expiry_days = 7;
 	}
@@ -250,10 +250,10 @@ class remember_me {
 	/**
 	 * Deletes all tokens associated with a user.
 	 *
-	 * @param mixed $user User UUID or username
+	 * @param string $user User UUID or username
 	 *
 	 */
-	public static function delete_user_tokens(mixed $user) {
+	public static function delete_user_tokens(string $user) {
 
 		// Use the database global
 		global $database;
@@ -264,7 +264,7 @@ class remember_me {
 		if (is_uuid($user)) {
 			$sql .= "where user_uuid = :user_uuid ";
 			$parameters['user_uuid'] = $user;
-		} else if ($_COOKIE[self::$cookie_name]) {
+		} else {
 			$sql .= "where username = :username ";
 			$parameters['username'] = $user;
 		}
