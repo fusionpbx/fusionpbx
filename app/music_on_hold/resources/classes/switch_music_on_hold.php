@@ -200,13 +200,13 @@ class switch_music_on_hold {
 	 */
 	public function get() {
 		//get moh records, build array
-		$sql                       = "select ";
-		$sql                       .= "d.domain_name, ";
-		$sql                       .= "m.* ";
-		$sql                       .= "from v_music_on_hold as m ";
-		$sql                       .= "left join v_domains as d on d.domain_uuid = m.domain_uuid ";
-		$sql                       .= "where (m.domain_uuid = :domain_uuid or m.domain_uuid is null) ";
-		$sql                       .= "order by m.domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc ";
+		$sql = "select ";
+		$sql .= "d.domain_name, ";
+		$sql .= "m.* ";
+		$sql .= "from v_music_on_hold as m ";
+		$sql .= "left join v_domains as d on d.domain_uuid = m.domain_uuid ";
+		$sql .= "where (m.domain_uuid = :domain_uuid or m.domain_uuid is null) ";
+		$sql .= "order by m.domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc ";
 		$parameters['domain_uuid'] = $this->domain_uuid;
 		return $this->database->select($sql, $parameters, 'all');
 	}
@@ -217,7 +217,7 @@ class switch_music_on_hold {
 	public function reload() {
 		//add multi-lingual support
 		$language = new text;
-		$text     = $language->get();
+		$text = $language->get();
 
 		//if the handle does not exist create it
 		$esl = event_socket::create();
@@ -229,7 +229,7 @@ class switch_music_on_hold {
 
 		//send the api command to check if the module exists
 		if ($esl->is_connected()) {
-			$cmd           = "reload mod_local_stream";
+			$cmd = "local_stream reload";
 			$switch_result = event_socket::api($cmd);
 			unset($cmd);
 		}
