@@ -51,15 +51,15 @@
 	else {
 		$conditions = [];
 		$sql .= "where (";
-	    if (permission_exists('music_on_hold_domain')) {
-	        $conditions[] = "domain_uuid = :domain_uuid";
-	        $parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	    }
-	    if (permission_exists('music_on_hold_global')) {
-	        $conditions[] = "domain_uuid is null ";
-	    }
-	    $sql .= implode(" or ", $conditions);
-	    $sql .= ")";
+		if (permission_exists('music_on_hold_domain')) {
+		$conditions[] = "domain_uuid = :domain_uuid";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		}
+		if (permission_exists('music_on_hold_global')) {
+			$conditions[] = "domain_uuid is null ";
+		}
+		$sql .= implode(" or ", $conditions);
+		$sql .= ")";
 	}
 	$sql .= "order by domain_uuid desc, music_on_hold_name asc, music_on_hold_rate asc";
 	$streams = $database->select($sql, $parameters ?? null, 'all');
@@ -301,11 +301,11 @@
 						}
 
 						// 14.03.22 freeswitch bug - shouldn't be needed with freeswitch 1.10.8
-			                       if (preg_match('|^(/usr/share/freeswitch/sounds/music/(.*?\._loc.*?))/|', $stream_path, $m)) {
-			                           $fs_bug_target = $m[2];
-			                           $fs_bug_link = str_replace('._loc', '.loc', $m[1]);
-			                           symlink($fs_bug_target, $fs_bug_link);
-			                       }
+						if (preg_match('|^(/usr/share/freeswitch/sounds/music/(.*?\._loc.*?))/|', $stream_path, $m)) {
+							$fs_bug_target = $m[2];
+							$fs_bug_link = str_replace('._loc', '.loc', $m[1]);
+							symlink($fs_bug_target, $fs_bug_link);
+						}
 					}
 					if (is_dir($stream_path)) {
 						if (copy($stream_file_name_temp, $stream_path.'/'.$stream_file_name)) {
@@ -320,8 +320,14 @@
 					$cache = new cache;
 					$cache->delete("configuration:local_stream.conf");
 
+				//add the domain name to the stream name
+					if (!empty($domain_uuid)) {
+						$stream_name = $_SESSION['domain_name'].'/'.$stream_name;
+					}
+
+				//reload local stream
 					$music = new switch_music_on_hold;
-					$music->reload();
+					$music->reload($stream_name);
 
 			}
 		//set message for unsupported file type

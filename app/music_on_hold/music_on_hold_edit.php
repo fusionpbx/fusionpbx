@@ -123,7 +123,6 @@
 				}
 
 				if (is_array($array) && @sizeof($array) != 0) {
-
 					//add common array elements
 						if (permission_exists('music_on_hold_domain')) {
 							$array['music_on_hold'][0]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
@@ -150,14 +149,18 @@
 						$cache = new cache;
 						$cache->delete("configuration:local_stream.conf");
 
-					//reload mod local stream
+					//add the domain name to the stream name
+						if (!empty($domain_uuid)) {
+							$music_on_hold_name = $_SESSION['domain_name'].'/'.$music_on_hold_name;
+						}
+
+					//reload local stream
 						$music = new switch_music_on_hold;
-						$music->reload();
+						$music->reload($music_on_hold_name);
 
 					//redirect the user
 						header("Location: music_on_hold.php");
 						exit;
-
 				}
 			}
 
