@@ -465,6 +465,10 @@
 				session:setVariable("missed_call", 'true');
 			end
 
+			if (debug["info"]) then
+				freeswitch.consoleLog("notice", "[missed call] missed() called, app=" .. tostring(missed_call_app) .. " data=" .. tostring(missed_call_data) .. "\n");
+			end
+
 		--send missed call email
 		if (missed_call_app ~= nil and missed_call_data ~= nil) then
 			if (missed_call_app == "email") then
@@ -551,6 +555,65 @@
 					if (debug["info"]) then
 						freeswitch.consoleLog("notice", "[missed call]: "..mail_to.." '"..subject.."' '"..body.."'\n");
 					end
+
+			elseif (missed_call_app == "sms") then
+				--open a fresh db connection (the shared dbh may be closed by now)
+					local sms_dbh = Database.new('system');
+					local sms_settings = Settings.new(sms_dbh, domain_name, domain_uuid);
+				--get the FROM number for outbound SMS
+					local sms_from = sms_settings:get('voicemail', 'voicemail_to_sms_did', 'text') or '';
+					--TO numbers stored in E.164 format, comma-separated (enforced by ring_group_edit.php)
+					local sms_to_list = missed_call_data or '';
+
+				if (sms_from ~= '' and sms_to_list ~= '') then
+					--look up provider_uuid via the FROM DID in v_destinations
+						local provider_uuid_sms = nil;
+						local sql_dest = "select provider_uuid from v_destinations where "
+						sql_dest = sql_dest .. "( coalesce(destination_prefix,'') || coalesce(destination_area_code,'') || destination_number = :dn "
+						sql_dest = sql_dest .. " or '+' || coalesce(destination_prefix,'') || coalesce(destination_area_code,'') || destination_number = :dn "
+						sql_dest = sql_dest .. " or coalesce(destination_prefix,'') || destination_number = :dn "
+						sql_dest = sql_dest .. " or '+' || coalesce(destination_prefix,'') || destination_number = :dn "
+						sql_dest = sql_dest .. " or destination_number = :dn) "
+						sql_dest = sql_dest .. "and provider_uuid is not null and destination_enabled = 'true' limit 1";
+						sms_dbh:query(sql_dest, {dn = sms_from}, function(row)
+							provider_uuid_sms = row["provider_uuid"];
+						end);
+
+					if (provider_uuid_sms ~= nil) then
+						--build the SMS body
+							local sms_body = "Missed call from " .. (caller_id_name or '') .. " <" .. (caller_id_number or '') .. ">\nRing group: " .. (ring_group_name or '');
+							local hostname  = trim(api:execute("hostname", ""));
+
+						--send to each number in the comma-separated list
+							for sms_to in string.gmatch(sms_to_list, "[^,]+") do
+								sms_to = trim(sms_to);
+								if (sms_to ~= '') then
+									local message_queue_uuid = api:executeString("create_uuid");
+									local sql_sms = "insert into v_message_queue ";
+									sql_sms = sql_sms .. "(message_queue_uuid, domain_uuid, provider_uuid, hostname, ";
+									sql_sms = sql_sms .. " message_status, message_type, message_direction, message_date, ";
+									sql_sms = sql_sms .. " message_from, message_to, message_text) ";
+									sql_sms = sql_sms .. "values (:message_queue_uuid, :domain_uuid, :provider_uuid, :hostname, ";
+									sql_sms = sql_sms .. " 'waiting', 'sms', 'outbound', now(), ";
+									sql_sms = sql_sms .. " :message_from, :message_to, :message_text)";
+									sms_dbh:query(sql_sms, {
+										message_queue_uuid = message_queue_uuid,
+										domain_uuid        = domain_uuid,
+										provider_uuid      = provider_uuid_sms,
+										hostname           = hostname,
+										message_from       = sms_from,
+										message_to         = sms_to,
+										message_text       = sms_body
+									});
+									if (debug["info"]) then
+											freeswitch.consoleLog("notice", "[missed call] SMS queued to: " .. sms_to .. "\n");
+										end
+								end
+							end
+					else
+						freeswitch.consoleLog("warning", "[missed call] SMS skipped: no provider found for FROM number " .. sms_from .. "\n");
+					end
+				end
 			end
 		end
 	end
