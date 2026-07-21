@@ -47,7 +47,7 @@ class remember_me {
 	 *
 	 * @return array|null
 	 */
-	public function authenticate($contacts_exists = false): array|null {
+	public function authenticate($contacts_exists = false) {
 		if (!$this->settings->get('login', 'remember_me', false) || !isset($_COOKIE[$this->cookie_name])) {
 			return null;
 		}
@@ -84,7 +84,7 @@ class remember_me {
 	 *
 	 * @return array
 	 */
-	public function issue_token(): array {
+	public function issue_token() {
 		$selector = uuid();
 		$validator = generate_password(32);
 		$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
@@ -109,7 +109,7 @@ class remember_me {
 		setcookie(self::$cookie_name, '', time() - 3600, '/');
 	}
 
-	private function parse_cookie(string $cookie_value): array|null {
+	private function parse_cookie(string $cookie_value) {
 		$parts = explode(':', $cookie_value, 2);
 		if (count($parts) !== 2 || !is_uuid($parts[0])) {
 			return null;
@@ -117,7 +117,7 @@ class remember_me {
 		return $parts;
 	}
 
-	private function find_user_token(string $remember_selector): array|null {
+	private function find_user_token(string $remember_selector) {
 		// Set variables
 		$remote_address = $_SERVER['REMOTE_ADDR'] ?? '';
 		$user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
@@ -167,7 +167,7 @@ class remember_me {
 		unset($sql, $parameters);
 	}
 
-	private function get_user_details(string $user_uuid, bool $contacts_exists): array|null {
+	private function get_user_details(string $user_uuid, bool $contacts_exists) {
 		// Get the user details
 		$sql = "select \n";
 		$sql .= " u.domain_uuid, \n";
