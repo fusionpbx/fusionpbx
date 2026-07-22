@@ -469,7 +469,7 @@
 	echo button::create(['type'=>'button','label'=>$text['button-map'],'icon'=>$settings->get('theme', 'button_icon_map'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'recording_map.php']);
 	echo "		<form id='form_search' class='inline' method='get'>\n";
 	foreach ($param as $key => $value) {
-		if ($key !== 'search' && $key !== 'page') {
+		if (in_array($key, ['order_by', 'order', 'show'])) {
 			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}

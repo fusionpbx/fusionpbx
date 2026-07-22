@@ -300,7 +300,7 @@
 	echo "		<form id='form_search' class='inline' method='get'>\n";
 	echo "		<input type='hidden' name='type' value=\"".escape($destination_type)."\">\n";
 	foreach ($url_params as $key => $value) {
-		if ($key !== 'search' && $key !== 'page') {
+		if (in_array($key, ['order_by', 'order', 'show'])) {
 			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
 		}
 	}
