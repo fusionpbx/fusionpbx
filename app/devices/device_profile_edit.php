@@ -506,7 +506,7 @@
 		//set the column names
 		if ($previous_profile_key_vendor != $row['profile_key_vendor']) {
 			echo "		</tbody>\n";
-			echo "		<tbody class='".(!empty($row['device_profile_key_uuid']) ? 'sortable' : null)."' >\n";
+			echo "		<tbody class='".(!empty($row['device_profile_key_uuid']) ? 'sortable' : null)."'>\n";
 			echo "			<tr>\n";
 			echo "				<th class='vtablereq'>".$text['label-device_key_category']."</td>\n";
 			echo "				<th class='vtablereq'>".$text['label-device_key_id']."</td>\n";
@@ -948,13 +948,41 @@
 		sortable_lists.forEach(function(list) {
 			let device_keys = list.querySelectorAll('tr.draggable');
 			let key_id = 1;
+			let expansion_map = {};
 
-			//add the device_keys to the list
+			// Add the non-expansion device keys to the list
 			device_keys.forEach(function(device_key) {
 				let key_uuid = device_key.getAttribute('data-key-uuid');
+				let category_select = device_key.querySelector('select[name*="[profile_key_category]"]');
+				let category = category_select ? category_select.value : "";
+
+				// Skip expansion keys after adding them to the expansion_map
+				if (category.includes('expansion')) {
+					// Initialize array if it doesn't exist
+					if (!expansion_map[category]) {
+						expansion_map[category] = [];
+					}
+					expansion_map[category].push(key_uuid);
+					return;
+				}
+
 				device_key_list.push(`${key_uuid}|${key_id}`);
 				key_id += 1;
 			});
+
+			// Add the expansion device keys to the list
+			for (let key in expansion_map) {
+				key_id = 1;
+
+				if (expansion_map[key]) {
+					let expansion_keys = expansion_map[key];
+
+					expansion_keys.forEach(function(key_uuid) {
+						device_key_list.push(`${key_uuid}|${key_id}`);
+						key_id += 1;
+					});
+				}
+			}
 		});
 
 		document.getElementById('device_key_ids').value = device_key_list;
