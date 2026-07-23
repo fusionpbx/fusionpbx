@@ -161,6 +161,7 @@
 		echo "				<option value='5' ".($quick_select == 5 ? "selected='selected'" : null).">".$text['option-this_week']."</option>\n";
 		echo "				<option value='6' ".($quick_select == 6 ? "selected='selected'" : null).">".$text['option-this_month']."</option>\n";
 		echo "				<option value='7' ".($quick_select == 7 ? "selected='selected'" : null).">".$text['option-this_year']."</option>\n";
+		echo "				<option value='8' ".($quick_select == 8 ? "selected='selected'" : null).">".$text['option-prev_month']."</option>\n";
 		echo "			</select>\n";
 		echo "		</div>\n";
 		echo "	</div>\n";
