@@ -181,7 +181,8 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$greeting_files = glob($greeting_path.'/greeting_*');
 
 		if (empty($greeting_format) && !empty($greeting_files)) {
-			$greeting_format = pathinfo($greeting_files[0], PATHINFO_EXTENSION);
+			$index = $greeting_id - 1;
+			$greeting_format = pathinfo($greeting_files[$index], PATHINFO_EXTENSION);
 		} else {
 			$greeting_format = $greeting_format ?? 'wav';
 		}
