@@ -309,11 +309,9 @@
 		echo "		<div class='mt-1'>".$text['label-upgrade_source']."</div>\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
-		echo "		<div style='float: left; clear: both;'>\n";
-		echo "			<input type='checkbox' id='view_source_code_options' onclick=\"event.stopPropagation(); if (!$(this).prop('checked')) { $('#do_source').prop('checked', false); $('.do_optional_app').prop('checked', false); } else { $('#tr_applications').slideDown('fast'); $('#do_source').prop('checked', true); $('.do_optional_app').prop('checked', true); }\">\n";
-		echo "		</div>\n";
-		echo "		<div style='overflow: hidden;'>\n";
-		echo "			<span onclick=\"event.stopPropagation(); $('#tr_applications').slideToggle('fast');\">&nbsp;&nbsp;".$text['description-update_all_source_files']." (".$repos_count.")</span>\n";
+		echo "		<div style='display: flex; align-items: center; margin-bottom: 3px;'>\n";
+		echo "			<input type='checkbox'id='view_source_code_options' onclick=\"event.stopPropagation(); if (!$(this).prop('checked')) { $('#do_source').prop('checked', false); $('.do_optional_app').prop('checked', false); } else { $('#tr_applications').slideDown('fast'); $('#do_source').prop('checked', true); $('.do_optional_app').prop('checked', true); }\">\n";
+		echo "			<span style='margin-left: 6px;' onclick=\"event.stopPropagation(); $('#tr_applications').slideToggle('fast');\">".$text['description-update_all_source_files']." (".$repos_count.")</span>\n";
 		echo "		</div>\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
@@ -327,8 +325,10 @@
 		echo "		".$settings->get('theme', 'title', 'FusionPBX')."\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
-		echo "		<input type='checkbox' name='action[upgrade_source]' id='do_source' value='1' onclick=\"event.stopPropagation(); if (this.checked == false) { document.getElementById('view_source_code_options').checked = false; }\">\n";
-		echo "		&nbsp;".$text['description-upgrade_source']."<br />\n";
+		echo "		<div style='display: flex; align-items: center; margin-bottom: 3px;'>\n";
+		echo "			<input type='checkbox' name='action[upgrade_source]' id='do_source' value='1' onclick=\"event.stopPropagation(); if (this.checked == false) { document.getElementById('view_source_code_options').checked = false; }\">\n";
+		echo "			<span style='margin-left: 6px;'>".$text['description-upgrade_source']."</span>\n";
+		echo "		</div>\n";
 		//show current git version info
 		chdir(dirname(__DIR__, 2));
 		exec("git rev-parse --abbrev-ref HEAD 2>&1", $git_current_branch, $branch_return_value);
@@ -358,14 +358,17 @@
 				echo "		".$app['name']."\n";
 				echo "	</td>\n";
 				echo "	<td width='70%' class='vtable' style='height: 50px; cursor: ".($pull_method == 'http' ? "pointer;'" : "help;' title=\"".$text['message-upgrade_manually'].": ".$repo_info['url']."\"").">\n";
+				echo "		<div style='display: flex; align-items: center; margin-bottom: 3px;'>\n";
 				if ($pull_method == 'http') {
-					echo "	<input type='checkbox' name='action[optional_apps][]' class='do_optional_app' id='do_".$app['app']."' value='".$app['app']."' onclick=\"event.stopPropagation(); if (this.checked == false) { document.getElementById('view_source_code_options').checked = false; }\"> &nbsp;".$app['description']."<br />\n";
+					echo "		<input type='checkbox' name='action[optional_apps][]' class='do_optional_app' id='do_".$app['app']."' value='".$app['app']."' onclick=\"event.stopPropagation(); if (this.checked == false) { document.getElementById('view_source_code_options').checked = false; }\">\n";
 				}
 				else {
-					echo "	<i class='fas fa-ban mr-3' style='opacity: 0.3; margin: 0 1px;'></i> ".$app['description']."<br>\n";
+					echo "		<i class='fas fa-ban mr-3' style='opacity: 0.3; margin: 0 1px;'></i>\n";
 				}
-				echo "		<span style='font-weight: 600;'>".$app['version']."</span>&nbsp;&nbsp;<i><a href='".str_replace(['git@','.com:'],['https://','.com/'], $repo_info['url'])."/compare/".$repo_info['commit']."...".$repo_info['branch']." 'target='_blank' title='".$repo_info['commit']."'>".$repo_info['branch']."</i></a>\n";
-				echo "		&nbsp;&nbsp;<button type='button' class='btn btn-link btn-xs' onclick=\"event.stopPropagation(); source_preview('".$app['app']."','".$app['name']."');\">".$text['button-preview']."</button>\n";
+				echo "			<span style='margin-left: 6px;'>".$app['description']."</span><br />\n";
+				echo "		</div>\n";
+				echo "		<span style='font-weight: 600;'>".$app['version']."</span><i><a href='".str_replace(['git@','.com:'],['https://','.com/'], $repo_info['url'])."/compare/".$repo_info['commit']."...".$repo_info['branch']." 'target='_blank' title='".$repo_info['commit']."'><span style='margin-left: 6px;'>".$repo_info['branch']."</span></i></a>\n";
+				echo "		<span style='margin-left: 6px;'><button type='button' class='btn btn-link btn-xs' onclick=\"event.stopPropagation(); source_preview('".$app['app']."','".$app['name']."');\">".$text['button-preview']."</button></span>\n";
 				echo "	</td>\n";
 				echo "</tr>\n";
 				echo "</table>\n";
@@ -384,7 +387,10 @@
 		echo "		<div class='mt-1'>".$text['label-upgrade_schema']."</div>\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
-		echo "		<input type='checkbox' name='action[upgrade_schema]' id='do_schema' value='1' onclick=\"event.stopPropagation();\"> &nbsp;".$text['description-upgrade_schema']."\n";
+		echo "		<div style='display: flex; align-items: center; margin-bottom: 3px;'>\n";
+		echo "			<input type='checkbox' name='action[upgrade_schema]' id='do_schema' value='1' onclick=\"event.stopPropagation();\" style='margin: 0;'>\n";
+		echo "			<span style='margin-left: 6px;'>".$text['description-upgrade_schema']."</span>\n";
+		echo "		</div>\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
@@ -399,7 +405,10 @@
 		echo "		<div class='mt-1'>".$text['label-upgrade_apps']."</div>\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
-		echo "		<input type='checkbox' name='action[app_defaults]' id='do_apps' value='1' onclick=\"event.stopPropagation();\"> &nbsp;".$text['description-upgrade_apps']."\n";
+		echo "		<div style='display: flex; align-items: center; margin-bottom: 3px;'>\n";
+		echo "			<input type='checkbox' name='action[app_defaults]' id='do_apps' value='1' onclick=\"event.stopPropagation();\">\n";
+		echo "			<span style='margin-left: 6px;'>".$text['description-upgrade_apps']."</span>\n";
+		echo "		</div>\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
@@ -414,23 +423,25 @@
 		echo "		<div class='mt-1'>".$text['label-upgrade_menu']."</div>\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
-		echo 		"<input type='checkbox' name='action[menu_defaults]' id='do_menu' value='1' onclick=\"event.stopPropagation(); $('#sel_menu').fadeToggle('fast');\">";
-		echo 		"<select name='sel_menu' id='sel_menu' class='formfld' style='display: none; vertical-align: middle; margin-left: 5px;' onclick=\"event.stopPropagation();\">";
+		echo "		<div style='display: flex; align-items: center; margin-bottom: 3px;'>\n";
+		echo "			<input type='checkbox' name='action[menu_defaults]' id='do_menu' value='1' onclick=\"event.stopPropagation(); $('#sel_menu').fadeToggle('fast');\">";
+		echo "			<select name='sel_menu' id='sel_menu' class='formfld' style='display: none; vertical-align: middle; margin-left: 5px;' onclick=\"event.stopPropagation();\">";
 		$sql = "select * from v_menus order by menu_name asc;";
 		$result = $database->select($sql, null, 'all');
 		if (is_array($result) && sizeof($result) != 0) {
 			foreach ($result as $row) {
 				if ($row["menu_name"] == 'default') {
-					echo "<option selected value='".$row["menu_uuid"]."|".$row["menu_language"]."'>".$row["menu_name"]."</option>";
+					echo "	<option selected value='".$row["menu_uuid"]."|".$row["menu_language"]."'>".$row["menu_name"]."</option>";
 				}
 				else {
-					echo "<option value='".$row["menu_uuid"]."|".$row["menu_language"]."'>".$row["menu_name"]."</option>";
+					echo "	<option value='".$row["menu_uuid"]."|".$row["menu_language"]."'>".$row["menu_name"]."</option>";
 				}
 			}
 		}
 		unset ($sql, $result);
-		echo 		"</select>";
-		echo 		" &nbsp;".$text['description-upgrade_menu'];
+		echo "			</select>";
+		echo "			<span style='margin-left: 6px;'>".$text['description-upgrade_menu']."</span>\n";
+		echo "		</div>\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
@@ -445,7 +456,10 @@
 		echo "		<div class='mt-1'>".$text['label-upgrade_permissions']."</div>\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;'>\n";
-		echo "		<input type='checkbox' name='action[permission_defaults]' id='do_permissions' value='1' onclick=\"event.stopPropagation();\"> &nbsp;".$text['description-upgrade_permissions']."\n";
+		echo "		<div style='display: flex; align-items: center; margin-bottom: 3px;'>\n";
+		echo "			<input type='checkbox' name='action[permission_defaults]' id='do_permissions' value='1' onclick=\"event.stopPropagation();\">\n";
+		echo "			<span style='margin-left: 6px;'>".$text['description-upgrade_permissions']."</span>\n";
+		echo "		</div>\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
