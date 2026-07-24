@@ -386,7 +386,7 @@
 		echo "		<div style='".$step_container_style."'><span style='".$step_number_style."'>".$step."</span></div>";
 		echo "		<div class='mt-1'>".$text['label-upgrade_schema']."</div>\n";
 		echo "	</td>\n";
-		echo "	<td width='70%' class='vtable' style='height: 50px; vertical-align: middle;'>\n";
+		echo "	<td width='70%' class='vtable' style='height: 50px; cursor: pointer;''>\n";
 		echo "		<div style='display: flex; align-items: center; margin-bottom: 3px;'>\n";
 		echo "			<input type='checkbox' name='action[upgrade_schema]' id='do_schema' value='1' onclick=\"event.stopPropagation();\" style='margin: 0;'>\n";
 		echo "			<span style='margin-left: 6px;'>".$text['description-upgrade_schema']."</span>\n";
