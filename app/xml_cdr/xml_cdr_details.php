@@ -88,7 +88,7 @@
 	}
 	unset($sql, $parameters, $row);
 
-//transcribe, if enabled
+//transcribe the call recording
 	if (!empty($_GET['action']) && $_GET['action'] == 'transcribe' &&
 		$transcribe_enabled && !empty($transcribe_engine) &&
 		!empty($record_path) && !empty($record_name) &&
@@ -126,6 +126,91 @@
 				//set message
 				message::add($text['message-added_to_queue']);
 			}
+
+			//redirect
+			header('Location: '.$_SERVER['PHP_SELF'].'?id='.$uuid);
+			exit;
+	}
+
+//summarize the call recording
+	if (!empty($_GET['action']) && $_GET['action'] == 'summarize' &&
+		$transcribe_enabled && !empty($transcribe_engine) &&
+		!empty($record_path) && !empty($record_name) &&
+		file_exists($record_path.'/'.$record_name)) {
+
+			//prepare the params
+			$params['domain_uuid'] = $domain_uuid;
+			$params['xml_cdr_uuid'] = $uuid;
+			$params['call_direction'] = $call_direction;
+
+			//get the call transcript
+			$sql = "select * from v_xml_cdr_transcripts ";
+			if (permission_exists('xml_cdr_all')) {
+				$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+			}
+			else {
+				$sql .= "where xml_cdr_uuid  = :xml_cdr_uuid ";
+				$sql .= "and domain_uuid = :domain_uuid ";
+				$parameters['domain_uuid'] = $params['domain_uuid'];
+			}
+			$parameters['xml_cdr_uuid'] = $params['xml_cdr_uuid'];
+			$row = $database->select($sql, $parameters, 'row');
+			if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
+				$transcript_message = trim($row["transcript_json"] ?? '');
+				//$transcript_summary = trim($row["transcript_summary"] ?? '');
+			}
+			unset($sql, $parameters, $row);
+
+			//summarize the transcript
+			if ($settings->get('language_model', 'enabled') && $settings->get('call_recordings', 'summary_enabled')) {
+				//get the transcribed text
+				$transcribe_text = transcribe::conversation_format($transcript_message, 'text');
+
+				//get the summary language model prompt
+				$default_prompt = "Summarize this conversation with Key Points, Action Items if any, and Sentiment. Use names when they are provided. Keep the summary professional. Return text without markdown.";
+				$prompt = $settings->get('call_recordings', 'summary_model_prompt', $default_prompt);
+
+				//combine the prompt with the call transcript
+				$request_data['prompt'] = $prompt . "```\n".$transcribe_text."\n```";
+
+				//get the summary language model name
+				$request_model = $settings->get('call_recordings', 'summary_model_name', 'ministral-3:8b');
+
+				//load the language model and get the call summary
+				$language_model = new language_model();
+				$params['transcript_summary'] = $language_model->request($request_model, $request_data);
+
+				//get the summary from the params
+				$transcript_summary = $params['transcript_summary'] ?? '';
+
+				//format the call recording transcript summary
+				require_once "resources/classes/parsedown.php";
+				$parsedown = new Parsedown();
+				$parsedown->setSafeMode(true);
+				$parsedown->setMarkupEscaped(true);
+				$call_summary = str_replace('###', '', $transcript_summary);
+				$call_summary = str_replace('&amp;', '&', $parsedown->text($call_summary));
+			}
+
+			//prepare the array with the transcript details
+			$array['xml_cdr_transcripts'][0]['xml_cdr_transcript_uuid'] = $params['xml_cdr_uuid'];
+			$array['xml_cdr_transcripts'][0]['domain_uuid'] = $params['domain_uuid'];
+			$array['xml_cdr_transcripts'][0]['xml_cdr_uuid'] = $params['xml_cdr_uuid'];
+			//$array['xml_cdr_transcripts'][0]['transcript_json'] = $params['transcribe_message'];
+			$array['xml_cdr_transcripts'][0]['transcript_summary'] = $params['transcript_summary'] ?? '';
+
+			//add temporary permissions
+			$p = permissions::new();
+			$p->add('xml_cdr_transcript_add', 'temp');
+			$p->add('xml_cdr_transcript_edit', 'temp');
+
+			//save the call recording transcript
+			$result = $database->save($array, false);
+			unset($array);
+
+			//remove the temporary permissions
+			$p->delete('xml_cdr_transcript_add', 'temp');
+			$p->delete('xml_cdr_transcript_edit', 'temp');
 
 			//redirect
 			header('Location: '.$_SERVER['PHP_SELF'].'?id='.$uuid);
@@ -714,14 +799,29 @@
 
 //transcription, if enabled
 	if ($transcribe_enabled && !empty($transcribe_engine) && !empty($call_transcript) && $duration > 1) {
-		echo "<b>".$text['label-transcription']."</b><br>\n";
+		echo "<div style='display: flex; justify-content: space-between; align-items: center;'>\n";
+		echo "	<div><b>".$text['label-transcription']."</b>&nbsp;</div>\n";
+		echo "	<div>\n";
+		if ($transcribe_enabled && !empty($transcribe_engine) && !empty($record_path) && !empty($record_name) && file_exists($record_path.'/'.$record_name)) {
+			echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','collapse'=>'hide-xs','style'=>'margin-left: 15px; margin-bottom: 8px; margin-top: -8px;','onclick'=>"window.location.href='?id=".$uuid."&action=transcribe';"]);
+		}
+		echo "	</div>\n";
+		echo "</div>";
 		echo "<div class='card'>\n";
-		echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-		echo "	<tr >\n";
-		echo "		<td valign='top' style='width: 50%;'><div style='min-width: 200px; max-width: 800px;' margin: 0px;>".$call_transcript."</div></td>\n";
-		echo "		<td valign='top' style='width: 50%;'><div style='min-width: 200px; max-width: 800px; margin: 15px;'>".$call_summary."</div></td>\n";
-		echo "	</tr>\n";
-		echo "	</table>";
+		echo "	<div style='min-width: 200px; max-width: 800px;'>".$call_transcript."</div>\n";
+		echo "</div>\n";
+		echo "<br /><br />\n";
+
+		echo "<div style='display: flex; justify-content: space-between; align-items: center;'>\n";
+		echo "	<div><b>".$text['label-summary']."</b>&nbsp;</div>\n";
+		echo "	<div>\n";
+		if ($transcribe_enabled && !empty($transcribe_engine) && !empty($record_path) && !empty($record_name) && file_exists($record_path.'/'.$record_name)) {
+			echo button::create(['type'=>'button','label'=>$text['button-summarize'],'icon'=>'list-ul','id'=>'btn_transcribe','name'=>'btn_transcribe','collapse'=>'hide-xs','style'=>'margin-left: 15px; margin-bottom: 8px; margin-top: -8px;','onclick'=>"window.location.href='?id=".$uuid."&action=summarize';"]);
+		}
+		echo "	</div>\n";
+		echo "</div>";
+		echo "<div class='card'>\n";
+		echo "	<div style='min-width: 200px; max-width: 800px; margin: 15px;'>".$call_summary."</div>\n";
 		echo "</div>\n";
 		echo "<br /><br />\n";
 	}
