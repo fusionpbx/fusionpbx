@@ -1028,7 +1028,7 @@
 					}
 				//recording
 					if ($permission['xml_cdr_recording'] && ($permission['xml_cdr_recording_play'] || $permission['xml_cdr_recording_download'])) {
-						if (!empty($record_path) || !empty($record_name)) {
+						if ((!empty($record_path) || !empty($record_name)) && $duration > 1) {
 							$content .= "	<td class='middle button center no-link no-wrap'>";
 							if ($permission['xml_cdr_recording_play']) {
 								$content .= 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=\"download.php?id=".escape($row['xml_cdr_uuid'])."\" type='".escape($record_type)."'></audio>";
