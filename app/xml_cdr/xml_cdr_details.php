@@ -473,7 +473,7 @@
 	if (permission_exists('xml_cdr_call_log') && $call_log_enabled && isset($log_content) && !empty($log_content)) {
 		echo button::create(['type'=>'button','label'=>$text['button-call_log'],'icon'=>$settings->get('theme', 'button_icon_search'),'style'=>'margin-left: 15px;','link'=>'xml_cdr_log.php?id='.$uuid]);
 	}
-	if ($transcribe_enabled && !empty($transcribe_engine) && !empty($record_path) && !empty($record_name) && file_exists($record_path.'/'.$record_name)) {
+	if ($transcribe_enabled && !empty($transcribe_engine) && !empty($record_path) && !empty($record_name) && file_exists($record_path.'/'.$record_name) && $duration > 1) {
 		echo button::create(['type'=>'button','label'=>$text['button-transcribe'],'icon'=>'quote-right','id'=>'btn_transcribe','name'=>'btn_transcribe','collapse'=>'hide-xs','style'=>'margin-left: 15px;','onclick'=>"window.location.href='?id=".$uuid."&action=transcribe';"]);
 	}
 	echo "</td>\n";
@@ -635,7 +635,7 @@
 	echo "<br /><br />\n";
 
 //call recording
-	if (permission_exists('xml_cdr_recording') && !empty($record_path)) {
+	if (permission_exists('xml_cdr_recording') && !empty($record_path) && $duration > 1) {
 		//recording properties
 		if (!empty($record_name) && permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
 			$record_extension = pathinfo($record_name, PATHINFO_EXTENSION);
@@ -713,7 +713,7 @@
 	echo "</style>\n";
 
 //transcription, if enabled
-	if ($transcribe_enabled && !empty($transcribe_engine) && !empty($call_transcript)) {
+	if ($transcribe_enabled && !empty($transcribe_engine) && !empty($call_transcript) && $duration > 1) {
 		echo "<b>".$text['label-transcription']."</b><br>\n";
 		echo "<div class='card'>\n";
 		echo "	<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
