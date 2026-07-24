@@ -42,7 +42,7 @@
 					$xml_string = file_get_contents($xml_file);
 				}
 				elseif (file_exists($xml_file_alt)) {
-					$xml_string = file_get_contents(xml_file_alt);
+					$xml_string = file_get_contents($xml_file_alt);
 				}
 				else {
 					$xml_string = "<configuration name=\"acl.conf\" description=\"Network Lists\">\n";
