@@ -1030,6 +1030,7 @@
 						case 5: $sql_date_range = "and start_stamp >= '".date('Y-m-d',strtotime("this week"))." "."00:00:00.000 ".$time_zone."' \n"; break; //this week
 						case 6: $sql_date_range = "and start_stamp >= '".date('Y-m-')."01 "."00:00:00.000 ".$time_zone."'::timestamptz \n"; break; //this month
 						case 7: $sql_date_range = "and start_stamp >= '".date('Y-')."01-01 "."00:00:00.000 ".$time_zone."'::timestamptz \n"; break; //this year
+						case 8: $sql_date_range = "and start_stamp between '".date('Y-m-d',strtotime("first day of last month"))." "."00:00:00.000 ".$time_zone."'::timestamptz and '".date('Y-m-d',strtotime("last day of last month"))." "."23:59:59.999 ".$time_zone."'::timestamptz \n"; break; //prev month
 					}
 				}
 
