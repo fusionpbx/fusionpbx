@@ -7,7 +7,7 @@ if ($domains_processed == 1) {
 		$ffmpeg_path = shell_exec('which zip');
 		if (empty($ffmpeg_path)) {
 			echo "Please install zip\n";
-			echo "On Debian / Ubuntu Linux install zip with this command.\n";
+			echo "On Debian / Ubuntu Linux, install zip with this command.\n";
 			echo "apt install zip\n";
 		}
 	}
@@ -52,7 +52,8 @@ if ($domains_processed == 1) {
 	$array['email_templates'][$x]['template_body'] .= "	<body>\n";
 	$array['email_templates'][$x]['template_body'] .= "	Caller ID \${caller_id_name} <a href=\"tel:\${caller_id_number}\">\${caller_id_number}</a><br />\n";
 	$array['email_templates'][$x]['template_body'] .= "	<br />\n";
-	$array['email_templates'][$x]['template_body'] .= "		Date \${start_date}<br />\n";
+    $array['email_templates'][$x]['template_body'] .= "        Dialed Number <a href=\"tel:\${caller_destination}\">\${caller_destination}</a><br />\n";	
+    $array['email_templates'][$x]['template_body'] .= "		Date \${start_date}<br />\n";
 	$array['email_templates'][$x]['template_body'] .= "		Time \${start_time} \${end_time}<br />\n";
 	$array['email_templates'][$x]['template_body'] .= "		Length \${duration}<br />\n";
 	$array['email_templates'][$x]['template_body'] .= "	<br />\n";
