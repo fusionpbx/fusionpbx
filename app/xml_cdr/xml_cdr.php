@@ -780,7 +780,7 @@
 		$col_count++;
 	}
 	if ($permission['xml_cdr_recording'] && ($permission['xml_cdr_recording_play'] || $permission['xml_cdr_recording_download'])) {
-		echo "<th class='center'>".$text['label-recording']."</th>\n";
+		echo "<th class='center hide-md-dn'>".$text['label-recording']."</th>\n";
 		$col_count++;
 	}
 	if ($permission['xml_cdr_account_code']) {
@@ -1049,8 +1049,8 @@
 					}
 				//recording
 					if ($permission['xml_cdr_recording'] && ($permission['xml_cdr_recording_play'] || $permission['xml_cdr_recording_download'])) {
-						if ((!empty($record_path) || !empty($record_name)) && $duration > 1) {
-							$content .= "	<td class='middle button center no-link no-wrap'>";
+						if (!empty($record_path) || !empty($record_name)) {
+							$content .= "	<td class='middle button center no-link no-wrap hide-sm-dn'>";
 							if ($permission['xml_cdr_recording_play']) {
 								$content .= 	"<audio id='recording_audio_".escape($row['xml_cdr_uuid'])."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".escape($row['xml_cdr_uuid'])."')\" onended=\"recording_reset('".escape($row['xml_cdr_uuid'])."');\" src=\"download.php?id=".urlencode($row['xml_cdr_uuid'])."\" type='".escape($record_type)."'></audio>";
 								$content .= button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.escape($row['xml_cdr_uuid']),'onclick'=>"recording_play('".escape($row['xml_cdr_uuid'])."')"]);
@@ -1061,7 +1061,7 @@
 							$content .= 	"</td>\n";
 						}
 						else {
-							$content .= "	<td>&nbsp;</td>\n";
+							$content .= "	<td class='hide-sm-dn'>&nbsp;</td>\n";
 						}
 					}
 				//account code
