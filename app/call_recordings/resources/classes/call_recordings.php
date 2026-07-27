@@ -299,11 +299,13 @@ class call_recordings {
 			//format the transcription variables for text and html
 			$transcribe_html = transcribe::conversation_format($params['transcribe_message'], 'html');
 
-			//get the email template
+			//get the call details
 			$sql = "SELECT ";
 			$sql .= " domain_name, ";
 			$sql .= " caller_id_name, ";
 			$sql .= " caller_id_number, ";
+			$sql .= " caller_destination, ";
+			$sql .= " destination_number, ";
 			$sql .= " to_char(timezone(:time_zone, start_stamp), 'DD Mon YYYY') as start_date, \n";
 			$sql .= " to_char(timezone(:time_zone, start_stamp), 'HH12:MI:SS am') as start_time, \n";
 			$sql .= " to_char(timezone(:time_zone, end_stamp), 'DD Mon YYYY') as end_date, \n";
@@ -319,6 +321,8 @@ class call_recordings {
 			$domain_name = $row["domain_name"];
 			$caller_id_name = $row["caller_id_name"];
 			$caller_id_number = $row["caller_id_number"];
+			$caller_destination = $row["caller_destination"];
+			$destination_number = $row["destination_number"];
 			$start_date = $row["start_date"];
 			$start_time = $row["start_time"];
 			$end_date = $row["end_date"];
@@ -347,6 +351,8 @@ class call_recordings {
 			$email_subject = str_replace('${email_address}', $email_address, $email_subject);
 			$email_subject = str_replace('${caller_id_name}', $caller_id_name, $email_subject);
 			$email_subject = str_replace('${caller_id_number}', $caller_id_number, $email_subject);
+			$email_subject = str_replace('${caller_destination}', $caller_destination, $email_subject);
+			$email_subject = str_replace('${destination_number}', $destination_number, $email_subject);
 			$email_subject = str_replace('${start_date}', $start_date, $email_subject);
 			$email_subject = str_replace('${start_time}', $start_time, $email_subject);
 			$email_subject = str_replace('${end_date}', $end_date, $email_subject);
@@ -360,6 +366,8 @@ class call_recordings {
 			$email_body = str_replace('${email_address}', $email_address, $email_body);
 			$email_body = str_replace('${caller_id_name}', $caller_id_name, $email_body);
 			$email_body = str_replace('${caller_id_number}', $caller_id_number, $email_body);
+			$email_body = str_replace('${caller_destination}', $caller_destination, $email_body);
+			$email_body = str_replace('${destination_number}', $destination_number, $email_body);
 			$email_body = str_replace('${start_date}', $start_date, $email_body);
 			$email_body = str_replace('${start_time}', $start_time, $email_body);
 			$email_body = str_replace('${end_date}', $end_date, $email_body);
@@ -418,7 +426,7 @@ class call_recordings {
 	}
 
 	/**
-	 * Add one or more calls recordings to the transcribe queue.
+	 * Add one or more call recordings to the transcribe queue.
 	 *
 	 * @param array $records An array of records to transcribe.
 	 *
@@ -463,7 +471,7 @@ class call_recordings {
 							@sizeof($field) != 0 &&
 							file_exists($field['call_recording_path'] . '/' . $field['call_recording_name'])
 						) {
-							//prepare the paramaters
+							//prepare the parameters
 							$params['domain_uuid'] = $this->domain_uuid;
 							$params['xml_cdr_uuid'] = $record['uuid'];
 							$params['call_direction'] = $field['call_direction'];
@@ -752,7 +760,7 @@ class call_recordings {
 									$call_recording_name_download = str_replace('${time}', $call_recording_time, $call_recording_name_download);
 
 									//create a symbolic link with custom name
-									$command = 'ln -s ' . escapeshellarg($call_recording_path . '/' . $call_recording_name) . ' ' . escapeshellarg($call_recording_path . '/' . $call_recording_name_download);
+									$command = 'ln -s ' . $call_recording_path . '/' . $call_recording_name . ' ' . $call_recording_path . '/' . $call_recording_name_download;
 									system($command);
 
 									//build the array for all the call recording with the new file name
