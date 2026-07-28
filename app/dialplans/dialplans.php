@@ -452,6 +452,21 @@ if (!empty($dialplans)) {
 	}
 }
 
+// Detect shipped per-domain baseline dialplans that have been deleted
+// entirely (no matching row left in v_dialplans at all). These are appended
+// as "ghost" rows - rendered semi-transparent/italic with no link - so the
+// gap is visible with a hint to run the upgrade to restore it.
+// Limited to the normal per-domain view (not the superadmin "all domains"
+// view) and only appended on the first page so they are not duplicated
+// across pages.
+$missing_dialplans = ($show !== 'all' && $page == 0)
+	? dialplan_find_missing_dialplans($database, $domain_uuid, $dialplan_templates, $app_uuid, $context, $search, $original_compare_excluded_app_uuids)
+	: [];
+if (!empty($missing_dialplans)) {
+	$dialplans = dialplan_merge_missing_sorted($dialplans ?? [], $missing_dialplans, $order_by, $order);
+}
+unset($missing_dialplans);
+
 //get the list of all dialplan contexts
 	$sql = "select dc.* from ( ";
 	$sql .= "select distinct dialplan_context from v_dialplans ";
@@ -699,6 +714,42 @@ if (!empty($dialplans)) {
 	if (!empty($dialplans)) {
 		$x = 0;
 		foreach ($dialplans as $row) {
+			//render deleted-baseline dialplans as a ghosted, non-clickable row
+			if (!empty($row['is_missing_dialplan'])) {
+				$missing_tooltip = $text['message-missing_dialplan'] ?? 'Missing Dialplan Entry - Run Upgrade To Restore';
+				echo "<tr class='list-row' title='".escape($missing_tooltip)."' style='opacity: 0.5; font-style: italic;'>\n";
+				if (
+					(!is_uuid($app_uuid) && (permission_exists('dialplan_add') || permission_exists('dialplan_edit') || permission_exists('dialplan_delete'))) ||
+					($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" && (permission_exists('inbound_route_copy') || permission_exists('inbound_route_edit') || permission_exists('inbound_route_delete'))) ||
+					($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3" && (permission_exists('outbound_route_copy') || permission_exists('outbound_route_edit') || permission_exists('outbound_route_delete'))) ||
+					($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7" && (permission_exists('fifo_add') || permission_exists('fifo_edit') || permission_exists('fifo_delete'))) ||
+					($app_uuid == "4b821450-926b-175a-af93-a03c441818b1" && (permission_exists('time_condition_add') || permission_exists('time_condition_edit') || permission_exists('time_condition_delete')))
+					) {
+					echo "	<td class='checkbox'>&nbsp;</td>\n";
+				}
+				if ($show == "all" && permission_exists('dialplan_all')) {
+					echo "	<td>&nbsp;</td>\n";
+				}
+				echo "	<td title='".escape($missing_tooltip)."'>".escape($row['dialplan_name'])."</td>\n";
+				echo "	<td>&nbsp;</td>\n";
+				if (permission_exists('dialplan_context')) {
+					echo "	<td>".escape($row['dialplan_context'])."</td>\n";
+				}
+				echo "	<td class='center'>".escape($row['dialplan_order'])."</td>\n";
+				echo "	<td class='center'>".escape($text['label-'.$row['dialplan_enabled']] ?? $row['dialplan_enabled'])."</td>\n";
+				echo "	<td class='description overflow hide-sm-dn'>&nbsp;</td>\n";
+				if ($list_row_edit_button && (
+					(!is_uuid($app_uuid) && permission_exists('dialplan_edit')) ||
+					($row['app_uuid'] == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" && permission_exists('inbound_route_edit')) ||
+					($row['app_uuid'] == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3" && permission_exists('outbound_route_edit')) ||
+					($row['app_uuid'] == "16589224-c876-aeb3-f59f-523a1c0801f7" && permission_exists('fifo_edit')) ||
+					($row['app_uuid'] == "4b821450-926b-175a-af93-a03c441818b1" && permission_exists('time_condition_edit'))
+					)) {
+					echo "	<td class='action-button'>&nbsp;</td>\n";
+				}
+				echo "</tr>\n";
+				continue;
+			}
 			//set the dialplan description
 			$dialplan_description = $row['dialplan_description'] ?? $text['description-dialplan_'.$row['dialplan_name']] ?? '';
 			$dialplan_description = str_replace('${number}', $row['dialplan_number'] ?? '', $dialplan_description);

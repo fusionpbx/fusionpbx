@@ -660,4 +660,150 @@ if (!function_exists('dialplan_normalize_name')) {
 		}
 
 	}
+
+	/**
+	 * Find shipped baseline dialplans (parsed from the static XML templates in
+	 * app/dialplans/resources/switch/conf/dialplan/) that have no matching
+	 * live row left in v_dialplans for the given domain (i.e. the user
+	 * deleted the row entirely). Used by dialplans.php to render "ghost" rows
+	 * hinting that running the upgrade will restore the missing entry.
+	 *
+	 * Applies the same app_uuid/context/search visibility rules used by the
+	 * live-row list query so the ghost rows only appear on the same
+	 * tab/filtered view where the real row would have appeared.
+	 *
+	 * @param database $database Database object
+	 * @param string $domain_uuid Current domain UUID
+	 * @param array $dialplan_templates Baseline templates keyed by dialplan_name (see dialplans.php)
+	 * @param string $app_uuid Selected app_uuid tab filter (empty = default Dialplan Manager tab)
+	 * @param string $context Selected dialplan_context filter, if any
+	 * @param string $search Selected search term, if any
+	 * @param array $excluded_app_uuids app_uuids that are UI-managed and have no static 1:1 baseline file
+	 *
+	 * @return array<int,array> List of synthetic dialplan rows flagged with 'is_missing_dialplan' => true
+	 */
+	function dialplan_find_missing_dialplans(database $database, string $domain_uuid, array $dialplan_templates, string $app_uuid, string $context, string $search, array $excluded_app_uuids): array {
+		if (empty($dialplan_templates)) {
+			return [];
+		}
+
+		$sql = "select distinct dialplan_name from v_dialplans ";
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$existing_rows = $database->select($sql, ['domain_uuid' => $domain_uuid], 'all');
+		$existing_dialplan_names = [];
+		if (is_array($existing_rows)) {
+			foreach ($existing_rows as $existing_row) {
+				$existing_dialplan_names[$existing_row['dialplan_name']] = true;
+			}
+		}
+
+		$missing_dialplans = [];
+		foreach ($dialplan_templates as $template_name => $template) {
+			//skip templates that already have a live row for this domain (or a shared/global row)
+			if (isset($existing_dialplan_names[$template_name])) {
+				continue;
+			}
+
+
+			//skip apps that are managed entirely through their own UI (no static 1:1 baseline file)
+			if (in_array($template['uuid'], $excluded_app_uuids, true)) {
+				continue;
+			}
+
+			//apply the same app_uuid visibility rules used for the live rows in dialplans.php
+			if (empty($app_uuid)) {
+				if ($template['uuid'] === 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' || $template['context'] === 'public') {
+					continue;
+				}
+			}
+			else if ($app_uuid === 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
+				if ($template['uuid'] !== $app_uuid && $template['context'] !== 'public') {
+					continue;
+				}
+			}
+			else if ($template['uuid'] !== $app_uuid) {
+				continue;
+			}
+
+			//apply the context filter, if any
+			if ($context !== '' && $template['context'] !== $context) {
+				continue;
+			}
+
+			//apply the search filter, if any
+			if ($search !== '' && stripos($template_name, $search) === false) {
+				continue;
+			}
+
+			$missing_dialplans[] = [
+				'is_missing_dialplan' => true,
+				'app_uuid' => $template['uuid'],
+				'dialplan_name' => $template_name,
+				'dialplan_context' => $template['context'],
+				'dialplan_order' => $template['order'],
+				'dialplan_enabled' => (in_array(strtolower((string) $template['enabled']), ['1', 't', 'true', 'yes', 'on'], true) ? 'true' : 'false'),
+			];
+		}
+
+		return $missing_dialplans;
+	}
+
+	/**
+	 * Merge synthetic "missing" dialplan ghost rows into the current page of
+	 * live dialplan rows, inserting them into their correct sorted position
+	 * (rather than appending at the end) so a deleted baseline entry appears
+	 * where the user expects it - e.g. domain-variables (order 20) shows up
+	 * near the top instead of being lost at the bottom of the list.
+	 *
+	 * The combined list is ordered using the same criteria the list SQL uses:
+	 * when no explicit column is selected it sorts by dialplan_order asc then
+	 * dialplan_name asc; otherwise it honours the selected column/direction.
+	 *
+	 * @param array $dialplans Current page of live dialplan rows (already sorted by SQL)
+	 * @param array $missing_dialplans Synthetic ghost rows from dialplan_find_missing_dialplans()
+	 * @param string $order_by Selected sort column, if any
+	 * @param string $order Selected sort direction ('asc' or 'desc')
+	 *
+	 * @return array Combined, correctly ordered list of dialplan rows
+	 */
+	function dialplan_merge_missing_sorted(array $dialplans, array $missing_dialplans, string $order_by, string $order): array {
+		if (empty($missing_dialplans)) {
+			return $dialplans;
+		}
+		if (empty($dialplans)) {
+			return $missing_dialplans;
+		}
+
+		$combined = array_merge($dialplans, $missing_dialplans);
+		$direction = (strtolower($order) === 'desc') ? -1 : 1;
+
+		//numeric columns are compared as numbers, everything else case-insensitively
+		$numeric_columns = ['dialplan_order', 'dialplan_number'];
+
+		usort($combined, function ($a, $b) use ($order_by, $direction, $numeric_columns) {
+			//default ordering: dialplan_order asc, then dialplan_name asc
+			if ($order_by === '') {
+				$order_a = (int) ($a['dialplan_order'] ?? 0);
+				$order_b = (int) ($b['dialplan_order'] ?? 0);
+				if ($order_a !== $order_b) {
+					return $order_a <=> $order_b;
+				}
+				return strcasecmp((string) ($a['dialplan_name'] ?? ''), (string) ($b['dialplan_name'] ?? ''));
+			}
+
+			$value_a = $a[$order_by] ?? '';
+			$value_b = $b[$order_by] ?? '';
+
+			if (in_array($order_by, $numeric_columns, true)) {
+				$result = ((int) $value_a) <=> ((int) $value_b);
+			}
+			else {
+				$result = strcasecmp((string) $value_a, (string) $value_b);
+			}
+
+			return $result * $direction;
+		});
+
+		return $combined;
+	}
 }
