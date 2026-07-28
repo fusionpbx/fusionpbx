@@ -382,6 +382,10 @@ $original_compare_excluded_app_uuids = [
 	'b523c2d2-64cd-46f1-9520-ca4b4098e044', // voicemails
 ];
 
+// Omitted dialplans that are not to be compared against the baseline
+// XML files because they are expected to be customized
+$omitted_dialplans = ['domain-variables', 'global-variables'];
+
 if (!empty($dialplans)) {
 	foreach ($dialplans as $x => $row) {
 		// Disabled dialplans are now compared as well - the XML canonicalizer
@@ -408,7 +412,7 @@ if (!empty($dialplans)) {
 			continue;
 		}
 		else if (!empty($baseline_hash) && $current_hash !== null) {
-			if ($baseline_hash === $current_hash) {
+			if ($baseline_hash === $current_hash || in_array($row['dialplan_name'], $omitted_dialplans, true)) {
 				$dialplans[$x]['original_xml_status'] = 'match';
 			} else {
 				// Possible template-token substitution ({v_pin_number} etc.) -
