@@ -269,7 +269,11 @@
 	$sql .= "dialplan_xml, ";
 	$sql .= "dialplan_order, ";
 	$sql .= "cast(dialplan_enabled as text), ";
-	$sql .= "dialplan_hash, ";
+	$sql .= "dialplan_hash_file, ";
+	$sql .= "dialplan_hash_canonical, ";
+	$sql .= "cast(dialplan_enabled_original as text) as dialplan_enabled_original, ";
+	$sql .= "dialplan_context_original, ";
+	$sql .= "dialplan_order_original, ";
 	$sql .= "dialplan_description ";
 	$sql .= "from v_dialplans ";
 	if ($show == "all" && permission_exists('dialplan_all')) {
@@ -334,14 +338,14 @@
 
 // compare current dialplans with original app XML files
 //
-// Fast path: v_dialplans.dialplan_hash is populated during upgrade by
-// app/enhanced_dialplans/app_defaults.php with the canonical MD5 of the
+// Fast path: v_dialplans.dialplan_hash_canonical is populated during
+// app/dialplans/app_defaults.php execution with the canonical MD5 of the
 // shipped baseline that this row was installed from. When present, we only
 // have to canonicalize+hash the row's current dialplan_xml (in-memory cached)
 // and compare two strings. No filesystem parse of the shipped XML file is
 // needed.
 //
-// Slow path (fallback): when dialplan_hash is NULL (pre-upgrade install or
+// Slow path (fallback): when dialplan_hash_canonical is NULL (pre-upgrade install or
 // freshly added row that has not been through upgrade yet) OR when the fast
 // path reports a mismatch but the baseline file contains `{v_token}`
 // substitutions, fall back to dialplan_compare_status() which reads and
@@ -349,6 +353,7 @@
 // regex matching.
 $original_dialplan_directory = dialplan_baseline_directory();
 $original_file_map = dialplan_build_original_file_map($original_dialplan_directory);
+$original_name_index = dialplan_build_original_name_index($original_file_map);
 $original_xml_cache = [];
 $all_original_status_match = !empty($dialplans);
 
@@ -379,7 +384,7 @@ $original_compare_excluded_app_uuids = [
 
 if (!empty($dialplans)) {
 	foreach ($dialplans as $x => $row) {
-		// Disabled dialplans are now compared as well — the XML canonicalizer
+		// Disabled dialplans are now compared as well - the XML canonicalizer
 		// preserves `enabled="false"` on <extension>, so a shipped-disabled
 		// entry matches cleanly when the user has left it disabled. Rows the
 		// user re-enabled (or disabled) relative to the baseline will show as
@@ -391,11 +396,11 @@ if (!empty($dialplans)) {
 			continue;
 		}
 
-		$original_file = dialplan_find_original_file($row['dialplan_order'], $row['dialplan_name'], $original_file_map);
+		$original_file = dialplan_find_original_file($row['dialplan_order'], $row['dialplan_name'], $original_file_map, $original_name_index);
 		$dialplans[$x]['original_xml_status'] = 'missing';
 
 		// Fast path: DB-cached baseline hash compared to current row's canonical hash.
-		$baseline_hash = $row['dialplan_hash'] ?? null;
+		$baseline_hash = $row['dialplan_hash_canonical'] ?? null;
 		$current_hash  = dialplan_canonical_hash($row['dialplan_xml'] ?? '');
 		$baseline_hash_is_copy_marker = (is_string($baseline_hash) && strpos($baseline_hash, 'copied:') === 0);
 		if ($baseline_hash_is_copy_marker) {
@@ -406,7 +411,7 @@ if (!empty($dialplans)) {
 			if ($baseline_hash === $current_hash) {
 				$dialplans[$x]['original_xml_status'] = 'match';
 			} else {
-				// Possible template-token substitution ({v_pin_number} etc.) —
+				// Possible template-token substitution ({v_pin_number} etc.) -
 				// defer to the slow path which regex-matches those.
 				$dialplans[$x]['original_xml_status'] = 'diff';
 			}
@@ -736,21 +741,64 @@ if (!empty($dialplans)) {
 				}
 				echo "	<td>".escape($domain)."</td>\n";
 			}
-			echo "	<td>";
+			$bold_changed = (($row['original_xml_status'] ?? 'missing') === 'diff');
+			echo "  <td>";
 			if ($list_row_url) {
-				echo "<a href='".$list_row_url."'>".escape($row['dialplan_name'])."</a>";
+				echo "<a href='".$list_row_url."'".($bold_changed ? " style='font-weight: bold;'" : "").">".escape($row['dialplan_name'])."</a>";
 			}
 			else {
-				echo escape($row['dialplan_name']);
+				echo $bold_changed ? "<strong>".escape($row['dialplan_name'])."</strong>" : escape($row['dialplan_name']);
 			}
 			echo "	</td>\n";
 			echo "	<td>".((!empty($row['dialplan_number'])) ? escape(format_phone($row['dialplan_number'])) : "&nbsp;")."</td>\n";
 			if (permission_exists('dialplan_context')) {
-				echo "	<td>".escape($row['dialplan_context'])."</td>\n";
+				// Determine whether the current context differs from the shipped
+				// baseline (e.g. a dialplan moved to the domain or global context
+				// after being installed from a per-domain template).
+				$baseline_context = $row['dialplan_context_original'] ?? null;
+				if ($baseline_context !== null && $baseline_context !== '') {
+					if (strpos($baseline_context, '${domain_name}') !== false) {
+						$row_domain_name = $domain_name;
+						if (!empty($row['domain_uuid']) && $row['domain_uuid'] !== $domain_uuid && !empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
+							$row_domain_name = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+						}
+						if (!empty($row_domain_name)) {
+							$baseline_context = str_replace('${domain_name}', $row_domain_name, $baseline_context);
+						}
+					}
+				}
+				else {
+					// Fallback for rows not yet backfilled by upgrade.
+					$baseline_context = $dialplan_templates[$row['dialplan_name']]['context'] ?? null;
+				}
+				$bold_context = ($baseline_context !== null && $baseline_context !== '' && (string) $row['dialplan_context'] !== (string) $baseline_context);
+				echo "	<td>".($bold_context ? "<strong>".escape($row['dialplan_context'])."</strong>" : escape($row['dialplan_context']))."</td>\n";
 			}
-			echo "	<td class='center'>".escape($row['dialplan_order'])."</td>\n";
-			$original_enabled = $dialplan_templates[$row['dialplan_name']]['enabled'] ?? $row['dialplan_enabled'];
-			$bold_enabled = $row['dialplan_enabled'] != $original_enabled;
+			// Determine whether the current order differs from the shipped
+			// baseline (e.g. the row was renumbered relative to the baseline
+			// file it was installed from).
+			$baseline_order = $row['dialplan_order_original'] ?? null;
+			if ($baseline_order === null || $baseline_order === '') {
+				// Fallback for rows not yet backfilled by upgrade.
+				$baseline_order = $dialplan_templates[$row['dialplan_name']]['order'] ?? null;
+			}
+			$bold_order = ($baseline_order !== null && $baseline_order !== '' && (int) $row['dialplan_order'] !== (int) $baseline_order);
+			echo "	<td class='center'>".($bold_order ? "<strong>".escape($row['dialplan_order'])."</strong>" : escape($row['dialplan_order']))."</td>\n";
+			$row_enabled = in_array(strtolower((string) ($row['dialplan_enabled'] ?? 'false')), ['1', 't', 'true', 'yes', 'on'], true);
+			$baseline_enabled_raw = $row['dialplan_enabled_original'] ?? null;
+			$baseline_enabled = null;
+			if ($baseline_enabled_raw !== null && $baseline_enabled_raw !== '') {
+				$baseline_enabled = in_array(strtolower((string) $baseline_enabled_raw), ['1', 't', 'true', 'yes', 'on'], true);
+			}
+
+			// Fallback for rows not yet backfilled by upgrade.
+			if ($baseline_enabled === null) {
+				$original_enabled = $dialplan_templates[$row['dialplan_name']]['enabled'] ?? $row['dialplan_enabled'];
+				$bold_enabled = ((string) $row['dialplan_enabled'] !== (string) $original_enabled);
+			}
+			else {
+				$bold_enabled = ($row_enabled !== $baseline_enabled);
+			}
 			if (
 				(!is_uuid($app_uuid) && permission_exists('dialplan_edit')) ||
 				($row['app_uuid'] == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" && permission_exists('inbound_route_edit')) ||
