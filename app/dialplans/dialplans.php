@@ -742,12 +742,15 @@ if (!empty($dialplans)) {
 				echo "	<td>".escape($domain)."</td>\n";
 			}
 			$bold_changed = (($row['original_xml_status'] ?? 'missing') === 'diff');
+			$name_mismatch_text = $text['message-mismatch_detected'] ?? 'Mismatch detected';
+			$expected_text = $text['message-expected'] ?? 'Expected';
+			$name_tooltip = $bold_changed ? " title='".escape($name_mismatch_text)."'" : '';
 			echo "  <td>";
 			if ($list_row_url) {
-				echo "<a href='".$list_row_url."'".($bold_changed ? " style='font-weight: bold;'" : "").">".escape($row['dialplan_name'])."</a>";
+				echo "<a href='".$list_row_url."'".($bold_changed ? " style='font-weight: bold;'" : "").$name_tooltip.">".escape($row['dialplan_name'])."</a>";
 			}
 			else {
-				echo $bold_changed ? "<strong>".escape($row['dialplan_name'])."</strong>" : escape($row['dialplan_name']);
+				echo $bold_changed ? "<strong".$name_tooltip.">".escape($row['dialplan_name'])."</strong>" : escape($row['dialplan_name']);
 			}
 			echo "	</td>\n";
 			echo "	<td>".((!empty($row['dialplan_number'])) ? escape(format_phone($row['dialplan_number'])) : "&nbsp;")."</td>\n";
@@ -772,7 +775,8 @@ if (!empty($dialplans)) {
 					$baseline_context = $dialplan_templates[$row['dialplan_name']]['context'] ?? null;
 				}
 				$bold_context = ($baseline_context !== null && $baseline_context !== '' && (string) $row['dialplan_context'] !== (string) $baseline_context);
-				echo "	<td>".($bold_context ? "<strong>".escape($row['dialplan_context'])."</strong>" : escape($row['dialplan_context']))."</td>\n";
+				$context_tooltip = $bold_context ? " title='".escape($expected_text . ': ' . $baseline_context)."'" : '';
+				echo "	<td".$context_tooltip.">".($bold_context ? "<strong>".escape($row['dialplan_context'])."</strong>" : escape($row['dialplan_context']))."</td>\n";
 			}
 			// Determine whether the current order differs from the shipped
 			// baseline (e.g. the row was renumbered relative to the baseline
@@ -783,7 +787,8 @@ if (!empty($dialplans)) {
 				$baseline_order = $dialplan_templates[$row['dialplan_name']]['order'] ?? null;
 			}
 			$bold_order = ($baseline_order !== null && $baseline_order !== '' && (int) $row['dialplan_order'] !== (int) $baseline_order);
-			echo "	<td class='center'>".($bold_order ? "<strong>".escape($row['dialplan_order'])."</strong>" : escape($row['dialplan_order']))."</td>\n";
+			$order_tooltip = $bold_order ? " title='".escape($expected_text . ': ' . $baseline_order)."'" : '';
+			echo "	<td class='center'".$order_tooltip.">".($bold_order ? "<strong>".escape($row['dialplan_order'])."</strong>" : escape($row['dialplan_order']))."</td>\n";
 			$row_enabled = in_array(strtolower((string) ($row['dialplan_enabled'] ?? 'false')), ['1', 't', 'true', 'yes', 'on'], true);
 			$baseline_enabled_raw = $row['dialplan_enabled_original'] ?? null;
 			$baseline_enabled = null;
@@ -795,10 +800,14 @@ if (!empty($dialplans)) {
 			if ($baseline_enabled === null) {
 				$original_enabled = $dialplan_templates[$row['dialplan_name']]['enabled'] ?? $row['dialplan_enabled'];
 				$bold_enabled = ((string) $row['dialplan_enabled'] !== (string) $original_enabled);
+				$expected_enabled = in_array(strtolower((string) $original_enabled), ['1', 't', 'true', 'yes', 'on'], true);
 			}
 			else {
 				$bold_enabled = ($row_enabled !== $baseline_enabled);
+				$expected_enabled = $baseline_enabled;
 			}
+			$expected_enabled_label = $text['label-'.($expected_enabled ? 'true' : 'false')] ?? ($expected_enabled ? 'true' : 'false');
+			$enabled_tooltip = $bold_enabled ? $expected_text . ': ' . $expected_enabled_label : null;
 			if (
 				(!is_uuid($app_uuid) && permission_exists('dialplan_edit')) ||
 				($row['app_uuid'] == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4" && permission_exists('inbound_route_edit')) ||
@@ -807,10 +816,14 @@ if (!empty($dialplans)) {
 				($row['app_uuid'] == "4b821450-926b-175a-af93-a03c441818b1" && permission_exists('time_condition_edit'))
 				) {
 				echo "	<td class='no-link center'>";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['dialplan_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')", 'style'=>($bold_enabled ? 'font-weight: bold;' : '')]);
+				$enabled_button_title = $text['button-toggle'];
+				if ($enabled_tooltip !== null) {
+					$enabled_button_title .= ' - ' . $enabled_tooltip;
+				}
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['dialplan_enabled']],'title'=>$enabled_button_title,'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')", 'style'=>($bold_enabled ? 'font-weight: bold;' : '')]);
 			}
 			else {
-				echo "	<td class='center'>";
+				echo "	<td class='center'".($enabled_tooltip !== null ? " title='".escape($enabled_tooltip)."'" : '').">";
 				echo $bold_enabled ? "	<strong>" . $text['label-'.$row['dialplan_enabled']] . "</strong>" : $text['label-'.$row['dialplan_enabled']];
 			}
 			echo "	</td>\n";
