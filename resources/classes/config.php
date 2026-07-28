@@ -331,7 +331,7 @@ final class config {
 	 * @return config The loaded or default configuration object
 	 */
 	public static function load(string $file = ''): config {
-		if (self::$config === null) {
+		if (self::$config === null || self::$config->is_empty()) {
 			self::$config = new config($file);
 		}
 		return self::$config;
