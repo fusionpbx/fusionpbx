@@ -29,6 +29,7 @@
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
+	require_once "resources/functions/dialplan_helpers.php";
 
 //check permissions
 	if (!(permission_exists('dialplan_view') || permission_exists('inbound_route_view') || permission_exists('outbound_route_view'))) {
@@ -152,7 +153,7 @@
 					if (permission_exists('dialplan_add')) {
 						$obj = new dialplan;
 						$obj->app_uuid = $app_uuid;
-						$obj->list_page = $list_page;
+						$obj->list_page = basename(__FILE__);
 						$obj->copy($dialplans);
 					}
 					break;
@@ -160,7 +161,7 @@
 					if (permission_exists('dialplan_edit')) {
 						$obj = new dialplan;
 						$obj->app_uuid = $app_uuid;
-						$obj->list_page = $list_page;
+						$obj->list_page = basename(__FILE__);
 						$obj->toggle($dialplans);
 					}
 					break;
@@ -168,7 +169,7 @@
 					if (permission_exists('dialplan_delete')) {
 						$obj = new dialplan;
 						$obj->app_uuid = $app_uuid;
-						$obj->list_page = $list_page;
+						$obj->list_page = basename(__FILE__);
 						$obj->delete($dialplans);
 					}
 					break;
@@ -268,6 +269,7 @@
 	$sql .= "dialplan_xml, ";
 	$sql .= "dialplan_order, ";
 	$sql .= "cast(dialplan_enabled as text), ";
+	$sql .= "dialplan_hash, ";
 	$sql .= "dialplan_description ";
 	$sql .= "from v_dialplans ";
 	if ($show == "all" && permission_exists('dialplan_all')) {
@@ -329,6 +331,117 @@
 	$sql .= limit_offset($rows_per_page, $offset);
 	$dialplans = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
+
+// compare current dialplans with original app XML files
+//
+// Fast path: v_dialplans.dialplan_hash is populated during upgrade by
+// app/enhanced_dialplans/app_defaults.php with the canonical MD5 of the
+// shipped baseline that this row was installed from. When present, we only
+// have to canonicalize+hash the row's current dialplan_xml (in-memory cached)
+// and compare two strings. No filesystem parse of the shipped XML file is
+// needed.
+//
+// Slow path (fallback): when dialplan_hash is NULL (pre-upgrade install or
+// freshly added row that has not been through upgrade yet) OR when the fast
+// path reports a mismatch but the baseline file contains `{v_token}`
+// substitutions, fall back to dialplan_compare_status() which reads and
+// canonicalizes the shipped XML file and performs template-token-aware
+// regex matching.
+$original_dialplan_directory = dialplan_baseline_directory();
+$original_file_map = dialplan_build_original_file_map($original_dialplan_directory);
+$original_xml_cache = [];
+$all_original_status_match = !empty($dialplans);
+
+// UI-managed dialplan apps do not use static baseline XML files.
+$original_compare_excluded_app_uuids = [
+	'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d', // bridges
+	'9ed63276-e085-4897-839c-4f2e36d92d6c', // call block
+	'efc11f6b-ed73-9955-4d4d-3a1bed75a056', // call broadcast
+	'95788e50-9500-079e-2807-fd530b0ea370', // call centers
+	'4a085c51-7635-ff03-f67b-86e834422848', // call detail records (xml cdr)
+	'b1b70f85-6b42-429b-8c5a-60c8b02b7d14', // call flows
+	'19806921-e8ed-dcff-b325-dd3e5da4959d', // call forward
+	'56165644-598d-4ed8-be01-d960bcb8ffed', // call recordings
+	'8d083f5a-f726-42a8-9ffa-8d28f848f10e', // conference centers
+	'e1ad84a2-79e1-450c-a5b1-7507a043e048', // conference controls
+	'c33e2c2a-847f-44c1-8c0d-310df5d65ba9', // conference profiles
+	'b81412e8-7253-91f4-e48e-42fc2c9a38d9', // conferences
+	'24108154-4ac3-1db6-1551-4731703a4440', // fax
+	'a5788e9b-58bc-bd1b-df59-fff5d51253ab', // ivr menus
+	'f5210fba-337d-4e05-86b6-7a2fd9dc7c42', // follow me
+	'5c6f597c-9b78-11e4-89d3-123b93f75cba', // phrases
+	'16589224-c876-aeb3-f59f-523a1c0801f7', // queues (fifo)
+	'83913217-c7a2-9e90-925d-a866eb40b60e', // recordings
+	'1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2', // ring groups
+	'4b821450-926b-175a-af93-a03c441818b1', // time conditions
+	'b523c2d2-64cd-46f1-9520-ca4b4098e044', // voicemails
+];
+
+if (!empty($dialplans)) {
+	foreach ($dialplans as $x => $row) {
+		// Disabled dialplans are now compared as well — the XML canonicalizer
+		// preserves `enabled="false"` on <extension>, so a shipped-disabled
+		// entry matches cleanly when the user has left it disabled. Rows the
+		// user re-enabled (or disabled) relative to the baseline will show as
+		// 'diff' via the XML compare AND via the enabled-column bolding in
+		// the UI.
+
+		if (in_array(($row['app_uuid'] ?? ''), $original_compare_excluded_app_uuids, true)) {
+			$dialplans[$x]['original_xml_status'] = 'missing';
+			continue;
+		}
+
+		$original_file = dialplan_find_original_file($row['dialplan_order'], $row['dialplan_name'], $original_file_map);
+		$dialplans[$x]['original_xml_status'] = 'missing';
+
+		// Fast path: DB-cached baseline hash compared to current row's canonical hash.
+		$baseline_hash = $row['dialplan_hash'] ?? null;
+		$current_hash  = dialplan_canonical_hash($row['dialplan_xml'] ?? '');
+		$baseline_hash_is_copy_marker = (is_string($baseline_hash) && strpos($baseline_hash, 'copied:') === 0);
+		if ($baseline_hash_is_copy_marker) {
+			$dialplans[$x]['original_xml_status'] = 'missing';
+			continue;
+		}
+		else if (!empty($baseline_hash) && $current_hash !== null) {
+			if ($baseline_hash === $current_hash) {
+				$dialplans[$x]['original_xml_status'] = 'match';
+			} else {
+				// Possible template-token substitution ({v_pin_number} etc.) —
+				// defer to the slow path which regex-matches those.
+				$dialplans[$x]['original_xml_status'] = 'diff';
+			}
+		}
+
+		// Slow path: no cached baseline hash OR fast path reported diff and the
+		// baseline may contain template tokens. Read and compare the file.
+		$needs_slow_path = !$baseline_hash_is_copy_marker && (
+			empty($baseline_hash)
+			|| ($dialplans[$x]['original_xml_status'] === 'diff')
+		);
+		if ($needs_slow_path && !empty($original_file) && is_file($original_file) && is_readable($original_file)) {
+			if (!isset($original_xml_cache[$original_file])) {
+				$original_xml_cache[$original_file] = file_get_contents($original_file);
+			}
+			if ($original_xml_cache[$original_file] !== false) {
+				// Only run the expensive template-aware compare if the fast
+				// path was missing OR the baseline actually contains tokens.
+				$run_compare = empty($baseline_hash)
+					|| strpos($original_xml_cache[$original_file], '{v_') !== false;
+				if ($run_compare) {
+					$status = dialplan_compare_status($original_xml_cache[$original_file], $row['dialplan_xml'] ?? '');
+					if ($status !== null) {
+						$dialplans[$x]['original_xml_status'] = $status;
+					}
+				}
+			}
+		}
+
+		// N/A ('missing') counts as match for the header-state indicator.
+		if ($dialplans[$x]['original_xml_status'] === 'diff') {
+			$all_original_status_match = false;
+		}
+	}
+}
 
 //get the list of all dialplan contexts
 	$sql = "select dc.* from ( ";
