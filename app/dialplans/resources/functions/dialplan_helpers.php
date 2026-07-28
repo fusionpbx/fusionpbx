@@ -32,12 +32,15 @@ if (!function_exists('dialplan_normalize_name')) {
 	 * The FusionPBX save path normalizes the XML it writes back to v_dialplans
 	 * in ways that differ cosmetically from the shipped baseline files:
 	 *   - boolean attributes rendered as "1"/"" instead of "true"/"false"
+	 *   - extension-level enabled attr may be omitted in DB XML while also
+	 *     tracked separately by v_dialplans.dialplan_enabled
 	 *   - wrapper metadata attrs (uuid/app_uuid/order/number/context/global)
 	 *     emitted inconsistently on the <extension> element
 	 *   - empty-string attributes (data="", field="", expression="")
 	 *   - XML comments stripped
 	 *   - <action enabled="false"/> entries stripped (they are inert)
-	 *   - `enabled="true"` attribute omitted (default)
+	 *   - extension `enabled` omitted in canonical output (enabled state is
+	 *     compared separately via dialplan_enabled vs dialplan_enabled_original)
 	 *
 	 * @param string $xml XML to be canonicalized
 	 *
@@ -90,6 +93,9 @@ if (!function_exists('dialplan_normalize_name')) {
 					continue;
 				}
 				if ($is_extension && in_array($name, $extension_metadata_attrs, true)) {
+					continue;
+				}
+				if ($is_extension && $name === 'enabled') {
 					continue;
 				}
 				if (in_array($name, $boolean_attrs, true)) {
