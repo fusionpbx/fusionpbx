@@ -348,17 +348,16 @@
 									if (!empty($cond_stop) && $cond_var == 'date-time') {
 										$format = $settings->get('domain', 'time_format') == '24h' ? 'Y-m-d H:i' : 'Y-m-d h:i a';
 										$user_timezone = $settings->get('domain', 'time_zone', date_default_timezone_get());
-	
+
 										$dt = DateTime::createFromFormat($format, $cond_stop, new DateTimeZone($user_timezone));
 										if ($dt !== false) {
 											$dt->setTimezone(new DateTimeZone('UTC'));
 											$cond_stop = $dt->format('Y-m-d H:i');
 										}
-	
 									}
 								}
 
-								// Convert to 24 hour time - use the servers local time zone to set the time, no time offset
+								// Convert to 24 hour time - use the server's local time zone to set the time, no time offset
 								if ($server_time_zone !== 'UTC') {
 									$format = $settings->get('domain', 'time_format') == '24h' ? 'Y-m-d H:i' : 'Y-m-d h:i a';
 									if (!empty($cond_start) && $cond_var == 'date-time' && $settings->get('domain', 'time_format') != '24h') {
@@ -442,7 +441,7 @@
 								if ($cond_var == 'time-of-day') {
 									$cond_var = 'minute-of-day';
 									$array_cond_start = explode(':', $cond_start);
-									// Adjust the time by one minute to account for FreeSwitch starting one minute early under the start condition behavior.
+									// Adjust the time by one minute to account for freeswitch starting one minute early under the start condition behavior.
 									$cond_start = ($array_cond_start[0] * 60) + $array_cond_start[1] + 1;
 									if ($cond_stop != '') {
 										$array_cond_stop = explode(':', $cond_stop);
@@ -900,7 +899,7 @@
 
 					case 'year': // Years
 						for (var y = <?php echo (date('Y') - 5) ?>; y <= <?php echo (date('Y') + 10)?>; y++) {
-							select_start_element.options[select_start.options.length] = new Option(y, y);
+							select_start.options[select_start.options.length] = new Option(y, y);
 							select_stop.options[select_stop.options.length] = new Option(y, y);
 						}
 						break;
@@ -1043,7 +1042,7 @@
 		input_element.setAttribute('onblur', "document.getElementById('" + input_id + "').dataset.hide = 'true';");
 		obj.parentNode.insertBefore(input_element, obj);
 		obj.parentNode.removeChild(obj);
-		
+
 		wrap_element(input_element, "<div style='position: relative; display: inline;'></div>"); //add parent div
 		// Keep the Jquery datetimepicker as requested exception
 		$('#'+input_id).datetimepicker({ format: 'YYYY-MM-DD <?php echo $time_format; ?>', });
@@ -1220,7 +1219,7 @@ if ($action == 'update') {
 						if ($cond_var == 'minute-of-day') {
 							$cond_var = 'time-of-day';
 
-							// Adjust time one minute earlier to account for freeswitch one minute early on start condition behavior.
+							// Adjust time one minute earlier to account for FreeSWITCH one minute early on start condition behavior.
 							$cond_val_start = $cond_val_start - 1;
 
 							$cond_val_start = number_pad(floor($cond_val_start / 60),2).":".number_pad(fmod($cond_val_start, 60),2);
@@ -1230,9 +1229,9 @@ if ($action == 'update') {
 						}
 
 						echo "<script>\n";
-						echo "	condition_id = add_condition(".$group_id.",'custom');\n";
+						echo "	var condition_id = add_condition(".$group_id.",'custom');\n";
 						echo "	var sel_cond = document.getElementById('variable_".$group_id."_'+condition_id);\n";
-						echo "	if (sel_cond){ sel_cond.value = \"".$cond_var."\"; }\n";
+						echo "	if (sel_cond) { sel_cond.value = \"".$cond_var."\"; }\n";
 						if ($cond_var == 'date-time') {
 							echo "	change_to_input(document.getElementById('value_".$group_id."_'+condition_id+'_start'));\n";
 							echo "	change_to_input(document.getElementById('value_".$group_id."_'+condition_id+'_stop'));\n";
@@ -1262,7 +1261,7 @@ if ($action == 'update') {
 								}
 							}
 
-							// Convert to 12 hour time if needed - use the servers local time zone
+							// Convert to 12-hour time if needed - use the server's local time zone
 							if ($server_time_zone !== 'UTC') {
 								if ($settings->get('domain', 'time_format') != '24h') {
 									$cond_val_start = DateTime::createFromFormat('Y-m-d H:i', $cond_val_start)->format('Y-m-d h:i a');
@@ -1270,11 +1269,18 @@ if ($action == 'update') {
 								}
 							}
 
-							echo "	document.getElementById('value_".$group_id."_'+condition_id+'_start').value = \"".$cond_val_start."\";\n";
-							echo "	document.getElementById('value_".$group_id."_'+condition_id+'_stop').value = \"".$cond_val_stop."\";\n";
+							echo "	var start_input = document.getElementById('value_".$group_id."_'+condition_id+'_start');\n";
+							echo "	if(start_input) start_input.value = \"".$cond_val_start."\";\n";
+							echo "	var start_output = document.getElementById('value_".$group_id."_'+condition_id+'_stop');\n";
+							echo "	if(start_output) start_output.value = \"".$cond_val_stop."\";\n";
 						}
 						else {
 							echo "	load_value_fields(".$group_id.", condition_id, '".$cond_var."');\n";
+							// select the correct dropdown options
+							echo "	var start_sel = document.getElementById('value_".$group_id."_'+condition_id+'_start');\n";
+							echo "	for(var i=0; i<start_sel.options.length; i++){ if(start_sel.options[i].value == \"".$cond_val_start."\"){ start_sel.selectedIndex = i; break; } }\n";
+							echo "	var stop_sel = document.getElementById('value_".$group_id."_'+condition_id+'_stop');\n";
+							echo "	for(var i=0; i<stop_sel.options.length; i++){ if(stop_sel.options[i].value == \"".$cond_val_stop."\"){ stop_sel.selectedIndex = i; break; } }\n";
 						}
 						echo "</script>\n";
 					}
@@ -1361,17 +1367,24 @@ if ($action == 'update') {
 									}
 
 									echo "<script>\n";
-									echo "condition_id = add_condition(".$preset_group_id.",'preset');\n";
-									echo "var sel_preset = document.getElementById('variable_".$preset_group_id."_'+condition_id);\n";
-									echo "if (sel_preset){ sel_preset.value = \"".$cond_var."\"; }\n";
+									echo "	var condition_id = add_condition(".$preset_group_id.",'preset');\n";
+									echo "	var sel_preset = document.getElementById('variable_".$preset_group_id."_'+condition_id);\n";
+									echo "	if (sel_preset) { sel_preset.value = \"".$cond_var."\"; }\n";
+
 									if ($cond_var == 'date-time') {
-										echo "change_to_input(document.getElementById('value_".$preset_group_id."_'+condition_id+'_start'));\n";
-										echo "change_to_input(document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop'));\n";
-										echo "document.getElementById('value_".$preset_group_id."_'+condition_id+'_start').value = \"".$cond_val_start."\";\n";
-										echo "document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop').value = \"".$cond_val_stop."\";\n";
+										echo "	change_to_input(document.getElementById('value_".$preset_group_id."_'+condition_id+'_start'));\n";
+										echo "	change_to_input(document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop'));\n";
+										echo "	var start_input = document.getElementById('value_".$preset_group_id."_'+condition_id+'_start');\n";
+										echo "	if(start_input) start_input.value = \"".$cond_val_start."\";\n";
+										echo "	var start_output = document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop');\n";
+										echo "	if (start_output) start_output.value = \"".$cond_val_stop."\";\n";
 									}
 									else {
-										echo "load_value_fields(".$preset_group_id.", condition_id, '".$cond_var."');\n";
+										echo "	load_value_fields(".$preset_group_id.", condition_id, '".$cond_var."');\n";
+										echo "	var start_sel = document.getElementById('value_".$preset_group_id."_'+condition_id+'_start');\n";
+										echo "	for(var i=0; i<start_sel.options.length; i++){ if(start_sel.options[i].value == \"".$cond_val_start."\"){ start_sel.selectedIndex = i; break; } }\n";
+										echo "	var stop_sel = document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop');\n";
+										echo "	for(var i=0; i<stop_sel.options.length; i++){ if(stop_sel.options[i].value == \"".$cond_val_stop."\"){ stop_sel.selectedIndex = i; break; } }\n";
 									}
 									echo "</script>\n";
 								}
@@ -1387,17 +1400,24 @@ if ($action == 'update') {
 									$preset_value_stop = $tmp[1] ?? null;
 									unset($tmp);
 									echo "<script>\n";
-									echo "condition_id = add_condition(".$preset_group_id.",'preset');\n";
-									echo "var sel_def = document.getElementById('variable_".$preset_group_id."_'+condition_id);\n";
-									echo "if (sel_def) { sel_def.value = \"".$preset_variable."\"; }\n";
+									echo "	var condition_id = add_condition(".$preset_group_id.",'preset');\n";
+									echo "	var sel_def = document.getElementById('variable_".$preset_group_id."_'+condition_id);\n";
+									echo "	if (sel_def) { sel_def.value = \"".$preset_variable."\"; }\n";
+									
 									if ($preset_variable == 'date-time') {
-										echo "change_to_input(document.getElementById('value_".$preset_group_id."_'+condition_id+'_start'));\n";
-										echo "change_to_input(document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop'));\n";
-										echo "document.getElementById('value_".$preset_group_id."_'+condition_id+'_start').value = \"".$preset_value_start."\";\n";
-										echo "document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop').value = \"".$preset_value_stop."\";\n";
+										echo "	change_to_input(document.getElementById('value_".$preset_group_id."_'+condition_id+'_start'));\n";
+										echo "	change_to_input(document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop'));\n";
+										echo "	var start_input = document.getElementById('value_".$preset_group_id."_'+condition_id+'_start');\n";
+										echo "	if(start_input) start_input.value = \"".$preset_value_start."\";\n";
+										echo "	var start_output = document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop');\n";
+										echo "	if(start_output) start_output.value = \"".$preset_value_stop."\";\n";
 									}
 									else {
-										echo "load_value_fields(".$preset_group_id.", condition_id, '".$preset_variable."');\n";
+										echo "	load_value_fields(".$preset_group_id.", condition_id, '".$preset_variable."');\n";
+										echo "	var start_sel = document.getElementById('value_".$preset_group_id."_'+condition_id+'_start');\n";
+										echo "	for(var i=0; i<start_sel.options.length; i++){ if(start_sel.options[i].value == \"".$preset_value_start."\"){ start_sel.selectedIndex = i; break; } }\n";
+										echo "	var stop_sel = document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop');\n";
+										echo "	for(var i=0; i<stop_sel.options.length; i++){ if(stop_sel.options[i].value == \"".$preset_value_stop."\"){ stop_sel.selectedIndex = i; break; } }\n";
 									}
 									echo "</script>\n\n";
 								}
