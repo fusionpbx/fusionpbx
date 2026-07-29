@@ -359,27 +359,28 @@ $all_original_status_match = !empty($dialplans);
 
 // UI-managed dialplan apps do not use static baseline XML files.
 $original_compare_excluded_app_uuids = [
-	'a6a7c4c5-340a-43ce-bcbc-2ed9bab8659d', // bridges
-	'9ed63276-e085-4897-839c-4f2e36d92d6c', // call block
-	'efc11f6b-ed73-9955-4d4d-3a1bed75a056', // call broadcast
-	'95788e50-9500-079e-2807-fd530b0ea370', // call centers
-	'4a085c51-7635-ff03-f67b-86e834422848', // call detail records (xml cdr)
-	'b1b70f85-6b42-429b-8c5a-60c8b02b7d14', // call flows
-	'19806921-e8ed-dcff-b325-dd3e5da4959d', // call forward
-	'56165644-598d-4ed8-be01-d960bcb8ffed', // call recordings
-	'8d083f5a-f726-42a8-9ffa-8d28f848f10e', // conference centers
-	'e1ad84a2-79e1-450c-a5b1-7507a043e048', // conference controls
-	'c33e2c2a-847f-44c1-8c0d-310df5d65ba9', // conference profiles
-	'b81412e8-7253-91f4-e48e-42fc2c9a38d9', // conferences
-	'24108154-4ac3-1db6-1551-4731703a4440', // fax
-	'a5788e9b-58bc-bd1b-df59-fff5d51253ab', // ivr menus
-	'f5210fba-337d-4e05-86b6-7a2fd9dc7c42', // follow me
-	'5c6f597c-9b78-11e4-89d3-123b93f75cba', // phrases
-	'16589224-c876-aeb3-f59f-523a1c0801f7', // queues (fifo)
-	'83913217-c7a2-9e90-925d-a866eb40b60e', // recordings
-	'1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2', // ring groups
-	'4b821450-926b-175a-af93-a03c441818b1', // time conditions
-	'b523c2d2-64cd-46f1-9520-ca4b4098e044', // voicemails
+	bridges::app_uuid,
+	call_block::app_uuid,
+	call_broadcast::app_uuid,
+	call_center::app_uuid,
+	call_flows::app_uuid,          // Same as call_recordings
+	call_forward::app_uuid,        // Same as do_not_disturb and follow_me
+	//call_recordings::app_uuid,   // Same as call_flows
+	//do_not_disturb::app_uuid,    // Same as call_forward
+	conference_centers::app_uuid,
+	conference_controls::app_uuid,
+	conference_profiles::app_uuid,
+	conferences::app_uuid,
+	fax::app_uuid,
+	fifo::app_uuid,
+	//follow_me::app_uuid,         // Same as call_forward
+	ivr_menu::app_uuid,
+	phrases::app_uuid,
+	ring_groups::app_uuid,
+	switch_recordings::app_uuid,
+	time_conditions::app_uuid,
+	voicemail::app_uuid,
+	xml_cdr::app_uuid,
 ];
 
 // Omitted dialplans that are not to be compared against the baseline
@@ -388,7 +389,8 @@ $omitted_dialplans = ['domain-variables', 'global-variables'];
 
 if (!empty($dialplans)) {
 	foreach ($dialplans as $x => $row) {
-		// Disabled dialplans are now compared as well - the XML canonicalizer
+		//
+		// Disabled dialplans are compared as well - the XML canonicalizer
 		// preserves `enabled="false"` on <extension>, so a shipped-disabled
 		// entry matches cleanly when the user has left it disabled. Rows the
 		// user re-enabled (or disabled) relative to the baseline will show as
@@ -415,14 +417,13 @@ if (!empty($dialplans)) {
 			if ($baseline_hash === $current_hash || in_array($row['dialplan_name'], $omitted_dialplans, true)) {
 				$dialplans[$x]['original_xml_status'] = 'match';
 			} else {
-				// Possible template-token substitution ({v_pin_number} etc.) -
-				// defer to the slow path which regex-matches those.
+				// Possible template-token substitution ({v_pin_number} etc.) - defer to the slow path which regex-matches those
 				$dialplans[$x]['original_xml_status'] = 'diff';
 			}
 		}
 
 		// Slow path: no cached baseline hash OR fast path reported diff and the
-		// baseline may contain template tokens. Read and compare the file.
+		// baseline may contain template tokens. Read and compare the file
 		$needs_slow_path = !$baseline_hash_is_copy_marker && (
 			empty($baseline_hash)
 			|| ($dialplans[$x]['original_xml_status'] === 'diff')
@@ -433,7 +434,7 @@ if (!empty($dialplans)) {
 			}
 			if ($original_xml_cache[$original_file] !== false) {
 				// Only run the expensive template-aware compare if the fast
-				// path was missing OR the baseline actually contains tokens.
+				// path was missing OR the baseline actually contains tokens
 				$run_compare = empty($baseline_hash)
 					|| strpos($original_xml_cache[$original_file], '{v_') !== false;
 				if ($run_compare) {
@@ -445,7 +446,7 @@ if (!empty($dialplans)) {
 			}
 		}
 
-		// N/A ('missing') counts as match for the header-state indicator.
+		// 'missing' counts as match for the header-state indicator
 		if ($dialplans[$x]['original_xml_status'] === 'diff') {
 			$all_original_status_match = false;
 		}
@@ -467,7 +468,7 @@ if (!empty($missing_dialplans)) {
 }
 unset($missing_dialplans);
 
-//get the list of all dialplan contexts
+// Get the list of all dialplan contexts
 	$sql = "select dc.* from ( ";
 	$sql .= "select distinct dialplan_context from v_dialplans ";
 	if ($show == "all" && permission_exists('dialplan_all')) {
@@ -478,7 +479,7 @@ unset($missing_dialplans);
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!is_uuid($app_uuid)) {
-		//hide inbound routes
+		// Hide inbound routes
 		$sql .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
 		$sql .= "and dialplan_context <> 'public' ";
 	}
@@ -489,27 +490,36 @@ unset($missing_dialplans);
 	$sql .= ") as dc ";
 	$rows = $database->select($sql, $parameters ?? null, 'all');
 	if (is_array($rows) && @sizeof($rows) != 0) {
+		// Define temporary variables used when grouping the contexts by domain
+		$array = [];
+		$dialplan_contexts = $dialplan_contexts ?? [];
+
+		// Add the context values to a new array, reversed (string) values in preparation to sort
 		foreach ($rows as $row) {
-			//reverse the array's (string) values in preparation to sort
 			$dialplan_contexts[] = strrev($row['dialplan_context']);
 		}
-		//sort the reversed context values, now grouping them by the domain
+
+		// Sort the reversed context values, now grouping them by the domain
 		sort($dialplan_contexts, SORT_NATURAL);
-		//create new array
+
+		// Iterate through the sorted array of reversed context values, and create a new array with the domain as the key, and the subcontext as the value
 		foreach ($dialplan_contexts as $dialplan_context) {
-			//if no subcontext (doesn't contain '@'), create new key in array with a null value
+			// If no subcontext (doesn't contain '@'), create new key in array with a null value
 			if (!substr_count($dialplan_context, '@') || strrev($dialplan_context) == 'global' || strrev($dialplan_context) == 'public') {
 				$array[strrev($dialplan_context)] = null;
 			}
-			//subcontext (contains '@'), create new key in array, and place subcontext in subarray
+
+			// Subcontext (contains '@'), create new key in array, and place subcontext in subarray
 			else {
 				$dialplan_context_parts = explode('@', $dialplan_context);
 				$array[strrev($dialplan_context_parts[0])][] = strrev($dialplan_context_parts[1]);
 			}
 		}
-		// sort array by key (domain)
+
+		// Sort array by key (domain)
 		ksort($array, SORT_NATURAL);
-		// move global and public to beginning of array
+
+		// Move global and public to beginning of array
 		if (array_key_exists('global', $array)) {
 			unset($array['global']);
 			$array = array_merge(['global'=>null], $array);
@@ -518,16 +528,22 @@ unset($missing_dialplans);
 			unset($array['public']);
 			$array = array_merge(['public'=>null], $array);
 		}
+
+		// Save the new sorted array to the dialplan_contexts variable
 		$dialplan_contexts = $array;
+
+		// Remove the temporary sorting variables from global namespace
 		unset($dialplan_context, $array, $dialplan_context_parts);
 	}
+
+	// Remove the temporary database variables from global namespace
 	unset($sql, $parameters, $rows, $row);
 
-//create token
+// Create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
-//include the header
+// Include the header
 	switch ($app_uuid) {
 		case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4": $document['title'] = $text['title-inbound_routes']; break;
 		case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3": $document['title'] = $text['title-outbound_routes']; break;
@@ -537,7 +553,7 @@ unset($missing_dialplans);
 	}
 	require_once "resources/header.php";
 
-//show the content
+// Show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>";
 	switch ($app_uuid) {
@@ -714,7 +730,7 @@ unset($missing_dialplans);
 	if (!empty($dialplans)) {
 		$x = 0;
 		foreach ($dialplans as $row) {
-			//render deleted-baseline dialplans as a ghosted, non-clickable row
+			// Render deleted-baseline dialplans as a ghosted, non-clickable row
 			if (!empty($row['is_missing_dialplan'])) {
 				$missing_tooltip = $text['message-missing_dialplan'] ?? 'Missing Dialplan Entry - Run Upgrade To Restore';
 				echo "<tr class='list-row' title='".escape($missing_tooltip)."' style='opacity: 0.5; font-style: italic;'>\n";
@@ -750,7 +766,7 @@ unset($missing_dialplans);
 				echo "</tr>\n";
 				continue;
 			}
-			//set the dialplan description
+			// Set the dialplan description
 			$dialplan_description = $row['dialplan_description'] ?? $text['description-dialplan_'.$row['dialplan_name']] ?? '';
 			$dialplan_description = str_replace('${number}', $row['dialplan_number'] ?? '', $dialplan_description);
 
@@ -909,7 +925,5 @@ unset($missing_dialplans);
 
 	echo "</form>\n";
 
-//include the footer
+// Include the footer
 	require_once "resources/footer.php";
-
-?>
