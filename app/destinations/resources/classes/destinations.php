@@ -201,6 +201,7 @@
 				return $destination_regex;
 
 		}
+
 		/**
 		* Build the destinations array
 		*/
@@ -477,6 +478,7 @@
 							$select_label = str_replace("&#9993", 'email-icon', $select_label);
 							$select_label = escape(trim($select_label));
 							$select_label = str_replace('email-icon', '&#9993', $select_label);
+
 							if ($select_value == $destination_value) { $selected = "selected='selected' "; $select_found = true; } else { $selected = ''; }
 							if ($label2 == 'destinations') { $select_label = format_phone($select_label); }
 							$response .= "			<option value='".escape($select_value)."' ".$selected.">".$select_label."</option>\n";
@@ -557,10 +559,10 @@
 						$selected = (isset($destination_key) && $key == $destination_key) ? "selected='selected'" : '';
 
 						//add multi-lingual support
-						if (file_exists(dirname(__DIR__, 4)."/app/".$key."/app_languages.php")) {
+							if (file_exists(dirname(__DIR__, 4)."/app/".$key."/app_languages.php")) {
 							$text2 = $language2->get($this->language, 'app/'.$key);
 							$found = 'true';
-						}
+							}
 						if ($key == 'other') {
 							$text2 = $language2->get($this->language, 'app/dialplans');
 						}
@@ -588,7 +590,7 @@
 					'type'=>'button',
 					'icon'=>'external-link-alt',
 					'id'=>'btn_dest_go',
-					'title'=>$text2['button-edit'],
+					'title'=>$text2['button-edit'] ?? '',
 					'onclick'=>"
 						let types = document.getElementById('{$destination_id}_type').options;
 						let opts = document.getElementById('{$destination_id}').options;
@@ -632,7 +634,6 @@
 			//set default values
 			$destination_name = '';
 			$destination_id = '';
-
 
 			//get the destinations
 			$this->get_destinations();
@@ -744,9 +745,10 @@
 			//predefine the destination value
 			$destination_value = '';
 
-
 			//get the destinations
-			$this->get_destinations();
+			if (empty($this->destinations)) {
+				$this->get_destinations();
+			}
 
 			//remove special characters from the name
 			$destination_id = str_replace("]", "", $destination_name ?? '');
@@ -754,6 +756,9 @@
 
 			//set default to false
 			$select_found = false;
+
+			//create the text object
+			$language2 = new text;
 
 			$i = 0;
 			foreach ($this->destinations as $row) {
@@ -764,7 +769,6 @@
 
 				//add multi-lingual support
 				if (file_exists(dirname(__DIR__, 4)."/app/".$name."/app_languages.php")) {
-					$language2 = new text;
 					$text2 = $language2->get($this->language, 'app/'.$name);
 				}
 
@@ -840,7 +844,6 @@
 
 						$i++;
 					}
-					unset($text);
 				}
 				//else {
 				//	//add all main destination categories to the array
