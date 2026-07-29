@@ -460,7 +460,7 @@ if (!empty($dialplans)) {
 // view) and only appended on the first page so they are not duplicated
 // across pages.
 $missing_dialplans = ($show !== 'all' && $page == 0)
-	? dialplan_find_missing_dialplans($database, $domain_uuid, $dialplan_templates, $app_uuid, $context, $search, $original_compare_excluded_app_uuids)
+	? dialplan_find_missing_dialplans($database, $domain_uuid, $domain_name, $app_uuid, $context, $search, $original_compare_excluded_app_uuids)
 	: [];
 if (!empty($missing_dialplans)) {
 	$dialplans = dialplan_merge_missing_sorted($dialplans ?? [], $missing_dialplans, $order_by, $order);

@@ -503,6 +503,20 @@ if (!function_exists('dialplan_normalize_name')) {
 		$value = $extension->getAttribute('order');
 		return $value === '' ? null : (int) $value;
 	}
+
+	/**
+	 * Populate the dialplan_hash_file and dialplan_hash_canonical columns in
+	 * v_dialplans for shipped baseline XML files. This is run during the
+	 * `php core/upgrade/upgrade.php` path to avoid having to canonicalize
+	 * baseline XML on every request.
+	 *
+	 * Also populates dialplan_enabled_original, dialplan_context_original,
+	 * and dialplan_order_original if they are null, so that the UI can compare
+	 * the live row against the shipped baseline even if the user has changed
+	 * those attributes in the live row.
+	 *
+	 * @return void
+	 */
 	function dialplan_populate_original_hashes() {
 		global $database; /** @var database $database Database Object */
 
@@ -662,11 +676,85 @@ if (!function_exists('dialplan_normalize_name')) {
 	}
 
 	/**
-	 * Find shipped baseline dialplans (parsed from the static XML templates in
-	 * app/dialplans/resources/switch/conf/dialplan/) that have no matching
-	 * live row left in v_dialplans for the given domain (i.e. the user
-	 * deleted the row entirely). Used by dialplans.php to render "ghost" rows
-	 * hinting that running the upgrade will restore the missing entry.
+	 * Build the full list of shipped baseline dialplan variants from the XML
+	 * files in the baseline directory.
+	 *
+	 * Unlike the name-keyed $dialplan_templates array built in dialplans.php
+	 * (which keeps only the FIRST file per dialplan name), this returns EVERY
+	 * shipped variant. This matters because some dialplans ship more than once
+	 * under the same name but in different contexts/orders - e.g.
+	 * caller-details ships as both context="public" (order 10) and
+	 * context="global" (order 15).
+	 *
+	 * The literal `${domain_name}` context token is substituted with the given
+	 * domain name so the returned context matches how per-domain rows are
+	 * stored in v_dialplans.
+	 *
+	 * @param string $directory Baseline dialplan XML directory
+	 * @param string $domain_name Domain name used to substitute ${domain_name}
+	 *
+	 * @return array<int,array{name:string,context:string,order:int,app_uuid:string,enabled:string}>
+	 */
+	function dialplan_build_baseline_variants(string $directory, string $domain_name): array {
+		$variants = [];
+		$paths = glob($directory . '/*.xml') ?: [];
+		foreach ($paths as $path) {
+			$xml = @file_get_contents($path);
+			if ($xml === false || $xml === '') {
+				continue;
+			}
+			$wrapped = '<?xml version="1.0" encoding="UTF-8"?><_root>' . $xml . '</_root>';
+			$prev_errors = libxml_use_internal_errors(true);
+			$doc = new DOMDocument();
+			$loaded = $doc->loadXML($wrapped, LIBXML_NOBLANKS | LIBXML_NONET);
+			libxml_clear_errors();
+			libxml_use_internal_errors($prev_errors);
+			if (!$loaded) {
+				continue;
+			}
+			$extension = $doc->getElementsByTagName('extension')->item(0);
+			if (!$extension instanceof DOMElement) {
+				continue;
+			}
+			$name = (string) $extension->getAttribute('name');
+			if ($name === '') {
+				continue;
+			}
+			$context = (string) $extension->getAttribute('context');
+			if ($context === '') {
+				$context = 'public';
+			}
+			if ($domain_name !== '') {
+				//substitute the ${domain_name} token wherever it appears, not
+				//just when it is the entire value - some contexts embed it,
+				//e.g. "conf-xfer@${domain_name}"
+				$context = str_replace('${domain_name}', $domain_name, $context);
+			}
+			$enabled_attr = strtolower((string) $extension->getAttribute('enabled'));
+			$enabled = in_array($enabled_attr, ['0', 'false', 'no', 'off'], true) ? 'false' : 'true';
+			$variants[] = [
+				'name' => $name,
+				'context' => $context,
+				'order' => (int) $extension->getAttribute('order'),
+				'app_uuid' => (string) $extension->getAttribute('app_uuid'),
+				'enabled' => $enabled,
+			];
+		}
+		return $variants;
+	}
+
+	/**
+	 * Find shipped baseline dialplans that have no matching live row left in
+	 * v_dialplans for the given domain (i.e. the user deleted the row
+	 * entirely). Used by dialplans.php to render "ghost" rows hinting that
+	 * running the upgrade will restore the missing entry.
+	 *
+	 * Detection is done at name+context granularity against ALL shipped
+	 * baseline variants (see dialplan_build_baseline_variants). This is
+	 * required so a dialplan that ships under one name in multiple contexts
+	 * (e.g. caller-details public + global) is still flagged when only one of
+	 * those context variants has been deleted - a name-only check would
+	 * consider the name "present" as long as any context survived.
 	 *
 	 * Applies the same app_uuid/context/search visibility rules used by the
 	 * live-row list query so the ghost rows only appear on the same
@@ -674,7 +762,7 @@ if (!function_exists('dialplan_normalize_name')) {
 	 *
 	 * @param database $database Database object
 	 * @param string $domain_uuid Current domain UUID
-	 * @param array $dialplan_templates Baseline templates keyed by dialplan_name (see dialplans.php)
+	 * @param string $domain_name Current domain name (for ${domain_name} substitution)
 	 * @param string $app_uuid Selected app_uuid tab filter (empty = default Dialplan Manager tab)
 	 * @param string $context Selected dialplan_context filter, if any
 	 * @param string $search Selected search term, if any
@@ -682,66 +770,80 @@ if (!function_exists('dialplan_normalize_name')) {
 	 *
 	 * @return array<int,array> List of synthetic dialplan rows flagged with 'is_missing_dialplan' => true
 	 */
-	function dialplan_find_missing_dialplans(database $database, string $domain_uuid, array $dialplan_templates, string $app_uuid, string $context, string $search, array $excluded_app_uuids): array {
-		if (empty($dialplan_templates)) {
+	function dialplan_find_missing_dialplans(database $database, string $domain_uuid, string $domain_name, string $app_uuid, string $context, string $search, array $excluded_app_uuids): array {
+		$variants = dialplan_build_baseline_variants(dialplan_baseline_directory(), $domain_name);
+		if (empty($variants)) {
 			return [];
 		}
 
-		$sql = "select distinct dialplan_name from v_dialplans ";
+		//build a set of existing live rows keyed by "name|context" for this
+		//domain, including shared/global rows (domain_uuid is null)
+		$sql = "select distinct dialplan_name, dialplan_context from v_dialplans ";
 		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$existing_rows = $database->select($sql, ['domain_uuid' => $domain_uuid], 'all');
-		$existing_dialplan_names = [];
+		$existing_dialplans = [];
 		if (is_array($existing_rows)) {
 			foreach ($existing_rows as $existing_row) {
-				$existing_dialplan_names[$existing_row['dialplan_name']] = true;
+				$existing_dialplans[$existing_row['dialplan_name'] . '|' . $existing_row['dialplan_context']] = true;
 			}
 		}
 
 		$missing_dialplans = [];
-		foreach ($dialplan_templates as $template_name => $template) {
-			//skip templates that already have a live row for this domain (or a shared/global row)
-			if (isset($existing_dialplan_names[$template_name])) {
+		$seen = [];
+		foreach ($variants as $variant) {
+			$name = $variant['name'];
+			$variant_context = $variant['context'];
+			$variant_app_uuid = $variant['app_uuid'];
+
+			//skip variants that already have a live row for this name+context
+			if (isset($existing_dialplans[$name . '|' . $variant_context])) {
 				continue;
 			}
 
-
 			//skip apps that are managed entirely through their own UI (no static 1:1 baseline file)
-			if (in_array($template['uuid'], $excluded_app_uuids, true)) {
+			if (in_array($variant_app_uuid, $excluded_app_uuids, true)) {
 				continue;
 			}
 
 			//apply the same app_uuid visibility rules used for the live rows in dialplans.php
 			if (empty($app_uuid)) {
-				if ($template['uuid'] === 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' || $template['context'] === 'public') {
+				if ($variant_app_uuid === 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' || $variant_context === 'public') {
 					continue;
 				}
 			}
 			else if ($app_uuid === 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
-				if ($template['uuid'] !== $app_uuid && $template['context'] !== 'public') {
+				if ($variant_app_uuid !== $app_uuid && $variant_context !== 'public') {
 					continue;
 				}
 			}
-			else if ($template['uuid'] !== $app_uuid) {
+			else if ($variant_app_uuid !== $app_uuid) {
 				continue;
 			}
 
 			//apply the context filter, if any
-			if ($context !== '' && $template['context'] !== $context) {
+			if ($context !== '' && $variant_context !== $context) {
 				continue;
 			}
 
 			//apply the search filter, if any
-			if ($search !== '' && stripos($template_name, $search) === false) {
+			if ($search !== '' && stripos($name, $search) === false) {
 				continue;
 			}
 
+			//avoid emitting duplicate ghost rows for identical name+context variants
+			$dedup_key = $name . '|' . $variant_context;
+			if (isset($seen[$dedup_key])) {
+				continue;
+			}
+			$seen[$dedup_key] = true;
+
 			$missing_dialplans[] = [
 				'is_missing_dialplan' => true,
-				'app_uuid' => $template['uuid'],
-				'dialplan_name' => $template_name,
-				'dialplan_context' => $template['context'],
-				'dialplan_order' => $template['order'],
-				'dialplan_enabled' => (in_array(strtolower((string) $template['enabled']), ['1', 't', 'true', 'yes', 'on'], true) ? 'true' : 'false'),
+				'app_uuid' => $variant_app_uuid,
+				'dialplan_name' => $name,
+				'dialplan_context' => $variant_context,
+				'dialplan_order' => $variant['order'],
+				'dialplan_enabled' => $variant['enabled'],
 			];
 		}
 
