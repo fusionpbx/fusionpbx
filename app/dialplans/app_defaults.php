@@ -24,6 +24,8 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+global $database; /** @var database $database Database object */
+
 //update dialplan details when group is null set to 0
 	if ($domains_processed == 1) {
 		//change dialplan context ${domain_name} to global
@@ -115,7 +117,7 @@
 		$sql = "update v_dialplan_details set dialplan_detail_data = 'recording_id='  where dialplan_detail_data = 'recording_id=true'\n";
 		$database->execute($sql);
 		unset($sql);
-	
+
 		//dialplan cleanup
 		$sql = "delete from v_dialplans where dialplan_name is null and dialplan_enabled is null and dialplan_context is null;\n";
 		$database->execute($sql);
@@ -147,6 +149,13 @@
 			$database->execute($sql);
 		}
 		unset($sql, $num_rows);
+	}
+
+	// Compute and store the hash value of baseline XML files for all dialplans. This is used to detect changes to the original git repository value in future upgrades.
+	if ($domains_processed == 1) {
+		require_once __DIR__ . '/resources/functions/dialplan_helpers.php';
+
+		dialplan_populate_original_hashes();
 	}
 
 //add not found dialplan to inbound routes

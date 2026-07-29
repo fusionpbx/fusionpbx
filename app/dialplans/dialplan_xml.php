@@ -25,6 +25,8 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
+global $database;
+
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
@@ -139,8 +141,8 @@
 		//disable XML entities and load the XML object to test if the XML is valid
 			if ($dialplan_valid) {
 				preg_match_all('/^\s*<extension.+>(?:[\S\s])+<\/extension>\s*$/mU', $dialplan_xml, $matches);
-				foreach($matches as $match) {
-					if (!xml::valid($xml)) {
+				foreach($matches[0] as $match) {
+					if (!xml::valid($match)) {
 						//$errors = libxml_get_errors();
 						$dialplan_valid = false;
 						break;
@@ -264,7 +266,11 @@
 
 //set the button back link
 	if (is_array($dialplan_uuid)) {
-		$button_back_link = 'dialplan_edit.php?id='.urlencode($dialplan_uuid).($query_string ? '&'.$query_string : '');
+		//array_key_last() is only available in PHP 7.3 and higher, so using array_pop() instead for compatibility with older versions
+		$last_uuid = array_pop($dialplan_uuid);
+		//array_pop() removes the last element from the array, so we need to add it back to the array to preserve the original list of UUIDs
+		array_push($dialplan_uuid, $last_uuid);
+		$button_back_link = 'dialplan_edit.php?id='.urlencode($last_uuid).($query_string ? '&'.$query_string : '');
 	}
 	else {
 		$button_back_link = 'dialplans.php'.($query_string ? '?'.$query_string : '');
