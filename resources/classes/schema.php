@@ -601,12 +601,8 @@ class schema {
 
 		//loop line by line through all the lines of sql code
 		$x = 0;
-		if (empty($sql_update) && $format == "text") {
-			$response .= "	" . $text['label-schema'] ?? '' . ":			" . $text['label-no_change'] . "\n";
-		} else {
-			if ($format == "text") {
-				$response .= "	" . $text['label-schema'] . "\n";
-			}
+		if (!empty($sql_update) && $format == "text") {
+
 			//$this->db->beginTransaction();
 			$update_array = explode(";", $sql_update);
 			if (is_array($update_array) && count($update_array)) {
