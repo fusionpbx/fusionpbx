@@ -201,6 +201,7 @@
 				return $destination_regex;
 
 		}
+
 		/**
 		* Build the destinations array
 		*/
@@ -710,9 +711,10 @@
 			//predefine the destination value
 			$destination_value = '';
 
-
 			//get the destinations
-			$this->get_destinations();
+			if (empty($this->destinations)) {
+				$this->get_destinations();
+			}
 
 			//remove special characters from the name
 			$destination_id = str_replace("]", "", $destination_name ?? '');
@@ -720,6 +722,9 @@
 
 			//set default to false
 			$select_found = false;
+
+			//create the text object
+			$language2 = new text;
 
 			$i = 0;
 			foreach ($this->destinations as $row) {
@@ -730,7 +735,6 @@
 
 				//add multi-lingual support
 				if (file_exists(dirname(__DIR__, 4)."/app/".$name."/app_languages.php")) {
-					$language2 = new text;
 					$text2 = $language2->get($this->language, 'app/'.$name);
 				}
 
@@ -806,7 +810,6 @@
 
 						$i++;
 					}
-					unset($text);
 				}
 				//else {
 				//	//add all main destination categories to the array
