@@ -601,7 +601,7 @@
 							if (selected_type === 'call_centers') {
 								window.open('/app/'+selected_type+'/call_center_queue_edit.php?id='+selected_id, '_blank');
 							} else {
-								window.open('/app/'+selected_type+'/'+selected_id+'_edit.php?id='+selected_id, '_blank');
+								window.open('/app/'+selected_type+'/'+types[types.selectedIndex].id+'_edit.php?id='+selected_id, '_blank');
 							}
 						}
 					"
