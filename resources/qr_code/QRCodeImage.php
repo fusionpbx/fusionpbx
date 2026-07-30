@@ -180,7 +180,9 @@ class QRCodeImage
   {
     if($this->img)
     {
-      imagedestroy($this->img);
+			if (PHP_VERSION_ID < 80000) {
+        imagedestroy($this->img);
+      }
       $this->img = null;
     }
   }
