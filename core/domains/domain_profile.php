@@ -85,6 +85,7 @@
 
 		//check to see if domain language is set
 			$row = $domain_settings['domain']['language'] ?? [];
+			$i = 0;
 			if (!empty($domain_language) && (empty($row) || (!empty($row['domain_setting_uuid']) && !is_uuid($row['domain_setting_uuid'])))) {
 				//add user setting to array for insert
 				$array['domain_settings'][$i]['domain_setting_uuid'] = uuid();
@@ -189,7 +190,7 @@
 			}
 
 		//check to see if domain time zone is set
-			$row = $domain_settings['domain']['time_zone'];
+			$row = $domain_settings['domain']['time_zone'] ?? [];
 			if (!empty($domain_time_zone) && (empty($row) || (!empty($row['domain_setting_uuid']) && !is_uuid($row['domain_setting_uuid'])))) {
 				//add user setting to array for insert
 				$array['domain_settings'][$i]['domain_setting_uuid'] = uuid();
@@ -231,7 +232,7 @@
 
 		//check to see if domain time_format is set
 			$row = $domain_settings['domain']['time_format'] ?? [];
-			if (!empty($domain_language) && (empty($row) || (!empty($row['domain_setting_uuid']) && !is_uuid($row['domain_setting_uuid'])))) {
+			if (!empty($domain_time_format) && (empty($row) || (!empty($row['domain_setting_uuid']) && !is_uuid($row['domain_setting_uuid'])))) {
 				//add user setting to array for insert
 				$array['domain_settings'][$i]['domain_setting_uuid'] = uuid();
 				$array['domain_settings'][$i]['domain_uuid'] = $domain_uuid;
