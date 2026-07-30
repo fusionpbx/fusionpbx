@@ -48,7 +48,6 @@
 
 //get default settings
 	$sql = "select * from v_default_settings ";
-	$sql .= "where default_setting_enabled = true ";
 	$result = $database->select($sql, null, 'all');
 	$default_settings = [];
 	if (is_array($result)) {
@@ -91,6 +90,7 @@
 				$array['default_settings'][$i]['default_setting_name'] = 'code';
 				$array['default_settings'][$i]['default_setting_value'] = $global_language;
 				$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+				$array['default_settings'][$i]['default_setting_description'] = '';
 				$i++;
 			}
 			else {
@@ -115,6 +115,7 @@
 					$array['default_settings'][$i]['default_setting_name'] = 'code';
 					$array['default_settings'][$i]['default_setting_value'] = $global_language;
 					$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'];
 					$i++;
 				}
 			}
@@ -189,6 +190,7 @@
 				$array['default_settings'][$i]['default_setting_name'] = 'name';
 				$array['default_settings'][$i]['default_setting_value'] = $global_time_zone;
 				$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+				$array['default_settings'][$i]['default_setting_description'] = '';
 				$i++;
 			}
 			else {
@@ -213,6 +215,7 @@
 					$array['default_settings'][$i]['default_setting_name'] = 'name';
 					$array['default_settings'][$i]['default_setting_value'] = $global_time_zone;
 					$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'];
 					$i++;
 				}
 			}
@@ -228,6 +231,7 @@
 				$array['default_settings'][$i]['default_setting_name'] = 'text';
 				$array['default_settings'][$i]['default_setting_value'] = $global_time_format;
 				$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+				$array['default_settings'][$i]['default_setting_description'] = 'Toggle between 24 hour and 12 hour time formats. Default is 12 hour when disabled.';
 				$i++;
 			}
 			else {
@@ -252,6 +256,7 @@
 					$array['default_settings'][$i]['default_setting_name'] = 'text';
 					$array['default_settings'][$i]['default_setting_value'] = $global_time_format;
 					$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'];
 					$i++;
 				}
 			}
@@ -351,7 +356,7 @@
 	unset($sql, $languages, $row);
 	if (is_array($_SESSION['app']['languages']) && sizeof($_SESSION['app']['languages']) != 0) {
 		foreach ($_SESSION['app']['languages'] as $code) {
-			$selected = (isset($global_language) && $code == $global_language) || (isset($default_settings['domain']['language']['default_setting_value']) && $code == $default_settings['domain']['language']['default_setting_value']) ? "selected='selected'" : null;
+			$selected = (isset($global_language) && $code == $global_language) || (!empty($default_settings['domain']['language']['default_setting_enabled']) && $code == $default_settings['domain']['language']['default_setting_value']) ? "selected" : null;
 			echo "	<option value='".$code."' ".$selected.">".escape($language_codes[$code] ?? $language_codes[explode('-', $code)[0]] ?? null)." [".escape($code ?? null)."]</option>\n";
 		}
 	}
@@ -381,7 +386,7 @@
 			}
 			echo "		<optgroup label='".$category."'>\n";
 		}
-		$selected = (isset($global_time_zone) && $row == $global_time_zone) || (!empty($default_settings['domain']['time_zone']['default_setting_value']) && $row == $default_settings['domain']['time_zone']['default_setting_value']) ? "selected='selected'" : null;
+		$selected = (isset($global_time_zone) && $row == $global_time_zone) || (!empty($default_settings['domain']['time_zone']['default_setting_enabled']) && $row == $default_settings['domain']['time_zone']['default_setting_value']) ? "selected" : null;
 		echo "			<option value='".escape($row)."' ".$selected.">".escape($row)."</option>\n";
 		$previous_category = $category;
 		$x++;
@@ -399,8 +404,8 @@
 	echo "	<td class=\"vtable\" align='left'>\n";
 	echo "	<select class='formfld' id='global_time_format' name='global_time_format'>\n";
 	echo "	 	<option value=''></option>\n";
-	echo "	 	<option value='12h' ".(($default_settings['domain']['time_format']['default_setting_value'] == "12h") ? "selected='selected'" : null).">".$text['label-12-hour']."</option>\n";
-	echo "		<option value='24h' ".(($default_settings['domain']['time_format']['default_setting_value'] == "24h") ? "selected='selected'" : null).">".$text['label-24-hour']."</option>\n";
+	echo "	 	<option value='12h' ".((!empty($default_settings['domain']['time_format']['default_setting_enabled']) && $default_settings['domain']['time_format']['default_setting_value'] == "12h") ? "selected" : null).">".$text['label-12-hour']."</option>\n";
+	echo "		<option value='24h' ".((!empty($default_settings['domain']['time_format']['default_setting_enabled']) && $default_settings['domain']['time_format']['default_setting_value'] == "24h") ? "selected" : null).">".$text['label-24-hour']."</option>\n";
 	echo "	</select>\n";
 	echo "		<br />\n";
 	echo "		".$text['description-time_format']."<br />\n";
