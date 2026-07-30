@@ -49,7 +49,6 @@
 //get domain settings
 	$sql = "select * from v_domain_settings ";
 	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "and domain_setting_enabled = true ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$result = $database->select($sql, $parameters, 'all');
 	$domain_settings = [];
@@ -95,6 +94,7 @@
 				$array['domain_settings'][$i]['domain_setting_name'] = 'code';
 				$array['domain_settings'][$i]['domain_setting_value'] = $domain_language;
 				$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
+				$array['domain_settings'][$i]['domain_setting_description'] = '';
 				$i++;
 			}
 			else {
@@ -120,6 +120,7 @@
 					$array['domain_settings'][$i]['domain_setting_name'] = 'code';
 					$array['domain_settings'][$i]['domain_setting_value'] = $domain_language;
 					$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
+					$array['domain_settings'][$i]['domain_setting_description'] = $row['domain_setting_description'] ?? '';
 					$i++;
 				}
 			}
@@ -200,6 +201,7 @@
 				$array['domain_settings'][$i]['domain_setting_name'] = 'name';
 				$array['domain_settings'][$i]['domain_setting_value'] = $domain_time_zone;
 				$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
+				$array['domain_settings'][$i]['domain_setting_description'] = '';
 				$i++;
 			}
 			else {
@@ -225,6 +227,7 @@
 					$array['domain_settings'][$i]['domain_setting_name'] = 'name';
 					$array['domain_settings'][$i]['domain_setting_value'] = $domain_time_zone;
 					$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
+					$array['domain_settings'][$i]['domain_setting_description'] = $row['domain_setting_description'] ?? '';
 					$i++;
 				}
 			}
@@ -241,6 +244,7 @@
 				$array['domain_settings'][$i]['domain_setting_name'] = 'text';
 				$array['domain_settings'][$i]['domain_setting_value'] = $domain_time_format;
 				$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
+				$array['domain_settings'][$i]['domain_setting_description'] = 'Toggle between 24 hour and 12 hour time formats. Default is 12 hour when disabled.';
 				$i++;
 			}
 			else {
@@ -266,6 +270,7 @@
 					$array['domain_settings'][$i]['domain_setting_name'] = 'text';
 					$array['domain_settings'][$i]['domain_setting_value'] = $domain_time_format;
 					$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
+					$array['domain_settings'][$i]['domain_setting_description'] = $row['domain_setting_description'] ?? '';
 					$i++;
 				}
 			}
@@ -365,7 +370,7 @@
 	unset($sql, $languages, $row);
 	if (is_array($_SESSION['app']['languages']) && sizeof($_SESSION['app']['languages']) != 0) {
 		foreach ($_SESSION['app']['languages'] as $code) {
-			$selected = (isset($domain_language) && $code == $domain_language) || (isset($domain_settings['domain']['language']['domain_setting_value']) && $code == $domain_settings['domain']['language']['domain_setting_value']) ? "selected='selected'" : null;
+			$selected = (isset($domain_language) && $code == $domain_language) || (!empty($domain_settings['domain']['language']['domain_setting_enabled']) && $code == $domain_settings['domain']['language']['domain_setting_value']) ? "selected" : null;
 			echo "	<option value='".$code."' ".$selected.">".escape($language_codes[$code] ?? $language_codes[explode('-', $code)[0]] ?? null)." [".escape($code ?? null)."]</option>\n";
 		}
 	}
@@ -395,7 +400,7 @@
 			}
 			echo "		<optgroup label='".$category."'>\n";
 		}
-		$selected = (isset($domain_time_zone) && $row == $domain_time_zone) || (!empty($domain_settings['domain']['time_zone']['domain_setting_value']) && $row == $domain_settings['domain']['time_zone']['domain_setting_value']) ? "selected='selected'" : null;
+		$selected = (isset($domain_time_zone) && $row == $domain_time_zone) || (!empty($domain_settings['domain']['time_zone']['domain_setting_enabled']) && $row == $domain_settings['domain']['time_zone']['domain_setting_value']) ? "selected" : null;
 		echo "			<option value='".escape($row)."' ".$selected.">".escape($row)."</option>\n";
 		$previous_category = $category;
 		$x++;
@@ -413,8 +418,8 @@
 	echo "	<td class=\"vtable\" align='left'>\n";
 	echo "	<select class='formfld' id='domain_time_format' name='domain_time_format'>\n";
 	echo "	 	<option value=''></option>\n";
-	echo "	 	<option value='12h' ".(($domain_settings['domain']['time_format']['domain_setting_value'] == "12h") ? "selected='selected'" : null).">".$text['label-12-hour']."</option>\n";
-	echo "		<option value='24h' ".(($domain_settings['domain']['time_format']['domain_setting_value'] == "24h") ? "selected='selected'" : null).">".$text['label-24-hour']."</option>\n";
+	echo "	 	<option value='12h' ".((!empty($domain_settings['domain']['time_format']['domain_setting_enabled']) && $domain_settings['domain']['time_format']['domain_setting_value'] == "12h") ? "selected" : null).">".$text['label-12-hour']."</option>\n";
+	echo "		<option value='24h' ".((!empty($domain_settings['domain']['time_format']['domain_setting_enabled']) && $domain_settings['domain']['time_format']['domain_setting_value'] == "24h") ? "selected" : null).">".$text['label-24-hour']."</option>\n";
 	echo "	</select>\n";
 	echo "		<br />\n";
 	echo "		".$text['description-time_format']."<br />\n";
