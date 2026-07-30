@@ -2214,4 +2214,3 @@ $text['description-auth_username']['zh-cn'] = "在此处输入授权用户名。
 $text['description-auth_username']['ja-jp'] = "ここに認証ユーザー名を入力します。";
 $text['description-auth_username']['ko-kr'] = "여기에 인증 사용자 이름을 입력합니다.";
 
-?>

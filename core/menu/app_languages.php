@@ -1292,4 +1292,3 @@ $text['button-unassign']['zh-cn'] = "取消分配";
 $text['button-unassign']['ja-jp'] = "割り当て解除";
 $text['button-unassign']['ko-kr'] = "할당 해제";
 
-?>

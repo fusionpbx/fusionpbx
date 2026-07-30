@@ -216,4 +216,3 @@ $text['label-recording']['zh-cn'] = "记录";
 $text['label-recording']['ja-jp'] = "録音";
 $text['label-recording']['ko-kr'] = "녹음";
 
-?>

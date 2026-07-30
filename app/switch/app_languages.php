@@ -135,4 +135,3 @@ $text['label-switch']['zh-cn'] = "转变";
 $text['label-switch']['ja-jp'] = "スイッチ";
 $text['label-switch']['ko-kr'] = "스위치";
 
-?>

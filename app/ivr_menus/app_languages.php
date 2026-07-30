@@ -2051,4 +2051,3 @@ $text['description-caller_id_name_prefix']['zh-cn'] = "在来电显示名称上�
 $text['description-caller_id_name_prefix']['ja-jp'] = "発信者ID名にプレフィックスを設定します。";
 $text['description-caller_id_name_prefix']['ko-kr'] = "발신자 ID 이름에 접두사를 설정합니다.";
 
-?>

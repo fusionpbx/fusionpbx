@@ -5805,4 +5805,3 @@ $text['label-testing']['zh-cn'] = "测试";
 $text['label-testing']['ja-jp'] = "テスト";
 $text['label-testing']['ko-kr'] = "테스트";
 
-?>

@@ -1178,4 +1178,3 @@ $text['label-system_status']['zh-cn'] = "系统状况";
 $text['label-system_status']['ja-jp'] = "システムステータス";
 $text['label-system_status']['ko-kr'] = "시스템 상태";
 
-?>

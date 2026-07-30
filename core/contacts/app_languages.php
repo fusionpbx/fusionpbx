@@ -7735,4 +7735,3 @@ $text['label-permissions']['zh-cn'] = "权限";
 $text['label-permissions']['ja-jp'] = "権限";
 $text['label-permissions']['ko-kr'] = "권한";
 
-?>

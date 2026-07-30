@@ -1249,4 +1249,3 @@ $text['button-view_all']['zh-cn'] = "查看全部";
 $text['button-view_all']['ja-jp'] = "すべて見る";
 $text['button-view_all']['ko-kr'] = "모두보기";
 
-?>

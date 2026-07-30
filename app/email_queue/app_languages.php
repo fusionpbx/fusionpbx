@@ -1052,5 +1052,3 @@ $text['message-resending_messages']['tr-tr'] = "Mesajları Yeniden Gönderme";
 $text['message-resending_messages']['zh-cn'] = "Mesajları Yeniden Gönderme";
 $text['message-resending_messages']['ja-jp'] = "メッセージの再送信";
 $text['message-resending_messages']['ko-kr'] = "메시지 재전송";
-
-?>

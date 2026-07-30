@@ -2184,4 +2184,3 @@ $text['button-view_active']['zh-cn'] = "积极";
 $text['button-view_active']['ja-jp'] = "アクティブを見る";
 $text['button-view_active']['ko-kr'] = "연락처";
 
-?>

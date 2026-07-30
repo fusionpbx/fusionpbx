@@ -1618,3 +1618,4 @@ $text['label-scroll']['uk-ua'] = "Прокрутити";
 $text['label-scroll']['zh-cn'] = "滚动";
 $text['label-scroll']['ja-jp'] = "スクロール";
 $text['label-scroll']['ko-kr'] = "스크롤";
+

@@ -1207,4 +1207,3 @@ $text['button-block']['zh-cn'] = "堵塞";
 $text['button-block']['ja-jp'] = "ブロック";
 $text['button-block']['ko-kr'] = "차단하다";
 
-?>

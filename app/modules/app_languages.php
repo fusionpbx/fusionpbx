@@ -729,4 +729,3 @@ $text['confirm-stop_modules']['zh-cn'] = "您确定要停止这些模块吗？";
 $text['confirm-stop_modules']['ja-jp'] = "これらのモジュールを停止してもよろしいですか?";
 $text['confirm-stop_modules']['ko-kr'] = "이 모듈을 중지하시겠습니까?";
 
-?>

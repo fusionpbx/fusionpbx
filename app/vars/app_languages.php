@@ -567,4 +567,3 @@ $text['description-description']['zh-cn'] = "输入说明。";
 $text['description-description']['ja-jp'] = "説明を入力します。";
 $text['description-description']['ko-kr'] = "설명을 입력합니다.";
 
-?>

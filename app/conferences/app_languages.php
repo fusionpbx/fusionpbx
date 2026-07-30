@@ -1014,4 +1014,3 @@ $text['label-view']['zh-cn'] = "看法";
 $text['label-view']['ja-jp'] = "意見";
 $text['label-view']['ko-kr'] = "보다";
 
-?>

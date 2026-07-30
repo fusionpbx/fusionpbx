@@ -4213,4 +4213,3 @@ $text['description-dialplan_intercept_ext']['zh-cn'] = "拨打 ** 加分机号�
 $text['description-dialplan_intercept_ext']['ja-jp'] = "** に続けて内線番号をダイヤルして鳴っている通話をピックアップします。";
 $text['description-dialplan_intercept_ext']['ko-kr'] = "**을 누르고 내선 번호를 눌러 울리는 전화를 가로채기하세요.";
 
-?>

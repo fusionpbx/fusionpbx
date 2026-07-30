@@ -567,4 +567,3 @@ $text['button-all']['zh-cn'] = "全部";
 $text['button-all']['ja-jp'] = "全て";
 $text['button-all']['ko-kr'] = "모두";
 
-?>

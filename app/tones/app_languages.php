@@ -81,4 +81,3 @@ $text['label-tones']['zh-cn'] = "音调";
 $text['label-tones']['ja-jp'] = "トーン";
 $text['label-tones']['ko-kr'] = "톤";
 
-?>

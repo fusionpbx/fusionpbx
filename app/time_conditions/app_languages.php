@@ -1960,4 +1960,3 @@ $text['sunday']['zh-cn'] = "星期日";
 $text['sunday']['ja-jp'] = "日曜日";
 $text['sunday']['ko-kr'] = "일요일";
 
-?>
