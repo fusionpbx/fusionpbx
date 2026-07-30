@@ -114,7 +114,6 @@
 					//add user setting to array for update
 					$array['domain_settings'][$i]['domain_setting_uuid'] = $row['domain_setting_uuid'];
 					$array['domain_settings'][$i]['domain_uuid'] = $domain_uuid;
-					$array['domain_settings'][$i]['domain_uuid'] = $domain_uuid;
 					$array['domain_settings'][$i]['domain_setting_category'] = 'domain';
 					$array['domain_settings'][$i]['domain_setting_subcategory'] = 'language';
 					$array['domain_settings'][$i]['domain_setting_name'] = 'code';
@@ -127,7 +126,7 @@
 
 		//update switch timezone variables
 			if (permission_exists('dialplan_view')) {
-				//get the dialplan_uuid
+				//get the dialplan_uuid using the domain-variables app_uuid
 					$sql = "select dialplan_uuid from v_dialplans ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "and app_uuid = '9f356fe7-8cf8-4c14-8fe2-6daf89304458' ";
@@ -260,7 +259,6 @@
 				if (!empty($domain_time_format)) {
 					//add user setting to array for update
 					$array['domain_settings'][$i]['domain_setting_uuid'] = $row['domain_setting_uuid'];
-					$array['domain_settings'][$i]['domain_uuid'] = $domain_uuid;
 					$array['domain_settings'][$i]['domain_uuid'] = $domain_uuid;
 					$array['domain_settings'][$i]['domain_setting_category'] = 'domain';
 					$array['domain_settings'][$i]['domain_setting_subcategory'] = 'time_format';
