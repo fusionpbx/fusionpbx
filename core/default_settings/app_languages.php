@@ -81,6 +81,33 @@ $text['title-default_setting-add']['zh-cn'] = "默认设置 添加";
 $text['title-default_setting-add']['ja-jp'] = "デフォルト設定の追加";
 $text['title-default_setting-add']['ko-kr'] = "기본 설정 추가";
 
+$text['title-global_profile']['en-us'] = "Global Profile";
+$text['title-global_profile']['en-gb'] = "Global Profile";
+$text['title-global_profile']['ar-eg'] = "الملف الشخصي العالمي";
+$text['title-global_profile']['de-at'] = "Globales Profil";
+$text['title-global_profile']['de-ch'] = "Globales Profil";
+$text['title-global_profile']['de-de'] = "Globales Profil";
+$text['title-global_profile']['el-gr'] = "Παγκόσμιο Προφίλ";
+$text['title-global_profile']['es-cl'] = "Perfil Global";
+$text['title-global_profile']['es-mx'] = "Perfil Global";
+$text['title-global_profile']['fr-ca'] = "Profil mondial";
+$text['title-global_profile']['fr-fr'] = "Profil mondial";
+$text['title-global_profile']['he-il'] = "פרופיל גלובלי";
+$text['title-global_profile']['it-it'] = "Profilo globale";
+$text['title-global_profile']['ka-ge'] = "გლობალური პროფილი";
+$text['title-global_profile']['nl-nl'] = "Globaal profiel";
+$text['title-global_profile']['pl-pl'] = "Globalny profil";
+$text['title-global_profile']['pt-br'] = "Perfil Global";
+$text['title-global_profile']['pt-pt'] = "Perfil Global";
+$text['title-global_profile']['ro-ro'] = "Profil global";
+$text['title-global_profile']['ru-ru'] = "Глобальный профиль";
+$text['title-global_profile']['sv-se'] = "Global profil";
+$text['title-global_profile']['uk-ua'] = "Глобальний профіль";
+$text['title-global_profile']['tr-tr'] = "Küresel Profil";
+$text['title-global_profile']['zh-cn'] = "全球资料";
+$text['title-global_profile']['ja-jp'] = "グローバルプロフィール";
+$text['title-global_profile']['ko-kr'] = "글로벌 프로필";
+
 $text['option-voicemail_file_listen']['en-us'] = "Listen Link (Login Required)";
 $text['option-voicemail_file_listen']['en-gb'] = "Listen Link (Login Required)";
 $text['option-voicemail_file_listen']['ar-eg'] = "رابط الاستماع (تسجيل الدخول مطلوب)";
@@ -1460,6 +1487,33 @@ $text['description-default_setting-add']['zh-cn'] = "用于所有域的设置。
 $text['description-default_setting-add']['ja-jp'] = "すべてのドメインに使用される設定。";
 $text['description-default_setting-add']['ko-kr'] = "모든 도메인에 사용되는 설정입니다.";
 
+$text['description-default_setting_profile']['en-us'] = "Manage the Time Zone, Language, and other global settings.";
+$text['description-default_setting_profile']['en-gb'] = "Manage the Time Zone, Language, and other global settings.";
+$text['description-default_setting_profile']['ar-eg'] = "إدارة المنطقة الزمنية واللغة والإعدادات العالمية الأخرى.";
+$text['description-default_setting_profile']['de-at'] = "Verwalten Sie die Zeitzone, Sprache und andere globale Einstellungen.";
+$text['description-default_setting_profile']['de-ch'] = "Verwalten Sie die Zeitzone, Sprache und andere globale Einstellungen.";
+$text['description-default_setting_profile']['de-de'] = "Verwalten Sie die Zeitzone, Sprache und andere globale Einstellungen.";
+$text['description-default_setting_profile']['el-gr'] = "Διαχειριστείτε τη Ζώνη Ώρας, τη Γλώσσα και άλλες γενικές ρυθμίσεις.";
+$text['description-default_setting_profile']['es-cl'] = "Administre la zona horaria, el idioma y otros ajustes globales.";
+$text['description-default_setting_profile']['es-mx'] = "Administre la zona horaria, el idioma y otros ajustes globales.";
+$text['description-default_setting_profile']['fr-ca'] = "Gérez le fuseau horaire, la langue et autres paramètres globaux.";
+$text['description-default_setting_profile']['fr-fr'] = "Gérez le fuseau horaire, la langue et autres paramètres globaux.";
+$text['description-default_setting_profile']['he-il'] = "נהל את אזור הזמן, השפה והגדרות גלובליות אחרות.";
+$text['description-default_setting_profile']['it-it'] = "Gestisci il fuso orario, la lingua e altre impostazioni globali.";
+$text['description-default_setting_profile']['ka-ge'] = "მართეთ დროის სარტყელი, ენა და სხვა გლობალური პარამეტრები.";
+$text['description-default_setting_profile']['nl-nl'] = "Beheer de tijdzone, taal and andere globale instellingen.";
+$text['description-default_setting_profile']['pl-pl'] = "Zarządzaj strefą czasową, językiem i innymi ustawieniami globalnymi.";
+$text['description-default_setting_profile']['pt-br'] = "Gerencie o fuso horário, o idioma e outras configurações globais.";
+$text['description-default_setting_profile']['pt-pt'] = "Gerencie o fuso horário, o idioma e outras configurações globais.";
+$text['description-default_setting_profile']['ro-ro'] = "Gestionați fusul orar, limba și alte setări globale.";
+$text['description-default_setting_profile']['ru-ru'] = "Управление часовым поясом, языком и другими глобальными настройками.";
+$text['description-default_setting_profile']['sv-se'] = "Hantera tidszon, språk och andra globala inställningar.";
+$text['description-default_setting_profile']['uk-ua'] = "Керуйте часовим поясом, мовою та іншими глобальними налаштуваннями.";
+$text['description-default_setting_profile']['tr-tr'] = "Saat Dilimini, Dili ve diğer genel ayarları yönetin.";
+$text['description-default_setting_profile']['zh-cn'] = "管理时区、语言和其他全局设置。";
+$text['description-default_setting_profile']['ja-jp'] = "タイムゾーン、言語、およびその他のグローバル設定を管理します。";
+$text['description-default_setting_profile']['ko-kr'] = "시간대, 언어 및 기타 글로벌 설정을 관리합니다.";
+
 $text['button-toggle']['en-us'] = "Toggle";
 $text['button-toggle']['en-gb'] = "Toggle";
 $text['button-toggle']['ar-eg'] = "تبديل";
@@ -1564,6 +1618,3 @@ $text['label-scroll']['uk-ua'] = "Прокрутити";
 $text['label-scroll']['zh-cn'] = "滚动";
 $text['label-scroll']['ja-jp'] = "スクロール";
 $text['label-scroll']['ko-kr'] = "스크롤";
-
-
-?>
