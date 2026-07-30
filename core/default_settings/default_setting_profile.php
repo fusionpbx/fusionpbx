@@ -82,6 +82,7 @@
 
 		//check to see if domain language is set
 			$row = $default_settings['domain']['language'] ?? [];
+			$i = 0;
 			if (!empty($global_language) && (empty($row) || (!empty($row['default_setting_uuid']) && !is_uuid($row['default_setting_uuid'])))) {
 				//add user setting to array for insert
 				$array['default_settings'][$i]['default_setting_uuid'] = uuid();
@@ -94,10 +95,10 @@
 				$i++;
 			}
 			else {
-				if (empty($row['default_setting_value']) || empty($global_language)) {
+				if (!empty($row['default_setting_uuid']) && (empty($row['default_setting_value']) || empty($global_language))) {
 					$array_delete['default_settings'][0]['default_setting_category'] = 'domain';
 					$array_delete['default_settings'][0]['default_setting_subcategory'] = 'language';
-					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'];
+					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'] ?? '';
 
 					$p = permissions::new();
 					$p->add('default_setting_delete', 'temp');
@@ -115,7 +116,7 @@
 					$array['default_settings'][$i]['default_setting_name'] = 'code';
 					$array['default_settings'][$i]['default_setting_value'] = $global_language;
 					$array['default_settings'][$i]['default_setting_enabled'] = 'true';
-					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'];
+					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'] ?? '';
 					$i++;
 				}
 			}
@@ -181,7 +182,7 @@
 			}
 
 		//check to see if domain time zone is set
-			$row = $default_settings['domain']['time_zone'];
+			$row = $default_settings['domain']['time_zone'] ?? [];
 			if (!empty($global_time_zone) && (empty($row) || (!empty($row['default_setting_uuid']) && !is_uuid($row['default_setting_uuid'])))) {
 				//add user setting to array for insert
 				$array['default_settings'][$i]['default_setting_uuid'] = uuid();
@@ -194,10 +195,10 @@
 				$i++;
 			}
 			else {
-				if (empty($row['default_setting_value']) || empty($global_time_zone)) {
+				if (!empty($row['default_setting_uuid']) && (empty($row['default_setting_value']) || empty($global_time_zone))) {
 					$array_delete['default_settings'][0]['default_setting_category'] = 'domain';
 					$array_delete['default_settings'][0]['default_setting_subcategory'] = 'time_zone';
-					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'];
+					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'] ?? '';
 
 					$p = permissions::new();
 					$p->add('default_setting_delete', 'temp');
@@ -215,7 +216,7 @@
 					$array['default_settings'][$i]['default_setting_name'] = 'name';
 					$array['default_settings'][$i]['default_setting_value'] = $global_time_zone;
 					$array['default_settings'][$i]['default_setting_enabled'] = 'true';
-					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'];
+					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'] ?? '';
 					$i++;
 				}
 			}
@@ -223,7 +224,7 @@
 
 		//check to see if global time_format is set
 			$row = $default_settings['domain']['time_format'] ?? [];
-			if (!empty($global_language) && (empty($row) || (!empty($row['default_setting_uuid']) && !is_uuid($row['default_setting_uuid'])))) {
+			if (!empty($global_time_format) && (empty($row) || (!empty($row['default_setting_uuid']) && !is_uuid($row['default_setting_uuid'])))) {
 				//add user setting to array for insert
 				$array['default_settings'][$i]['default_setting_uuid'] = uuid();
 				$array['default_settings'][$i]['default_setting_category'] = 'domain';
@@ -235,10 +236,10 @@
 				$i++;
 			}
 			else {
-				if (empty($row['default_setting_value']) || empty($global_time_format)) {
+				if (!empty($row['default_setting_uuid']) && (empty($row['default_setting_value']) || empty($global_time_format))) {
 					$array_delete['default_settings'][0]['default_setting_category'] = 'domain';
 					$array_delete['default_settings'][0]['default_setting_subcategory'] = 'time_format';
-					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'];
+					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'] ?? '';
 
 					$p = permissions::new();
 					$p->add('default_setting_delete', 'temp');
@@ -256,7 +257,7 @@
 					$array['default_settings'][$i]['default_setting_name'] = 'text';
 					$array['default_settings'][$i]['default_setting_value'] = $global_time_format;
 					$array['default_settings'][$i]['default_setting_enabled'] = 'true';
-					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'];
+					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'] ?? '';
 					$i++;
 				}
 			}
