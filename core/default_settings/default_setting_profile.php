@@ -98,7 +98,7 @@
 				if (!empty($row['default_setting_uuid']) && (empty($row['default_setting_value']) || empty($global_language))) {
 					$array_delete['default_settings'][0]['default_setting_category'] = 'domain';
 					$array_delete['default_settings'][0]['default_setting_subcategory'] = 'language';
-					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'] ?? '';
+					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'];
 
 					$p = permissions::new();
 					$p->add('default_setting_delete', 'temp');
@@ -198,7 +198,7 @@
 				if (!empty($row['default_setting_uuid']) && (empty($row['default_setting_value']) || empty($global_time_zone))) {
 					$array_delete['default_settings'][0]['default_setting_category'] = 'domain';
 					$array_delete['default_settings'][0]['default_setting_subcategory'] = 'time_zone';
-					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'] ?? '';
+					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'];
 
 					$p = permissions::new();
 					$p->add('default_setting_delete', 'temp');
@@ -239,7 +239,7 @@
 				if (!empty($row['default_setting_uuid']) && (empty($row['default_setting_value']) || empty($global_time_format))) {
 					$array_delete['default_settings'][0]['default_setting_category'] = 'domain';
 					$array_delete['default_settings'][0]['default_setting_subcategory'] = 'time_format';
-					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'] ?? '';
+					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'];
 
 					$p = permissions::new();
 					$p->add('default_setting_delete', 'temp');
