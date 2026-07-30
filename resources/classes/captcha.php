@@ -116,7 +116,9 @@ class captcha {
 		imagepng($image);
 		$image_buffer = ob_get_clean();
 		//echo "<img src=\"data:image/png;base64, ".base64_encode($image_buffer)."\" />\n";
-		imagedestroy($image);
+		if (PHP_VERSION_ID < 80000) {
+			imagedestroy($image);
+		}
 		return $image_buffer;
 	}
 
@@ -134,7 +136,9 @@ class captcha {
 		$dummy = imagecreate(1, 1);
 		$black = imagecolorallocate($dummy, 0, 0, 0);
 		$bbox = imagettftext($dummy, $size, $angle, 0, 0, $black, $font, $text);
-		imagedestroy($dummy);
+		if (PHP_VERSION_ID < 80000) {
+			imagedestroy($dummy);
+		}
 		return $bbox;
 	}
 
