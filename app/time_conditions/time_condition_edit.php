@@ -336,7 +336,6 @@
 
 		// Add conditions to insert array for custom and preset conditions
 			if (is_array($_REQUEST['variable'])) {
-				// $x = 0;
 				foreach ($_REQUEST['variable'] as $group_id => $conditions) {
 
 					$group_conditions_exist[$group_id] = false;
