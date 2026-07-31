@@ -54,7 +54,7 @@ $x++;
 $array['dashboard_widgets'][$x]['dashboard_uuid'] = '3e2cbaa4-2bec-41b2-a626-999a59b8b19c';
 $array['dashboard_widgets'][$x]['dashboard_widget_uuid'] = '97e69ceb-89f6-43a0-9a92-c89c5b02e6ee';
 $array['dashboard_widgets'][$x]['widget_name'] = 'Ring Groups';
-$array['dashboard_widgets'][$x]['widget_path'] = 'core/dashboard/resources/dashboard/icon.php';
+$array['dashboard_widgets'][$x]['widget_path'] = 'dashboard/icon';
 $array['dashboard_widgets'][$x]['widget_icon'] = 'fa-users';
 $array['dashboard_widgets'][$x]['widget_url'] = '/app/ring_groups/ring_groups.php';
 $array['dashboard_widgets'][$x]['widget_target'] = 'self';
