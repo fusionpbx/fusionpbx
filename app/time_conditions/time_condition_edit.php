@@ -97,6 +97,7 @@
 		$domain_uuid = $_POST["domain_uuid"];
 		$dialplan_name = $_POST["dialplan_name"];
 		$dialplan_number = $_POST["dialplan_number"];
+		$dialplan_time_zone = $_POST["dialplan_time_zone"];
 		$dialplan_order = $_POST["dialplan_order"];
 
 		$dialplan_anti_action = $_POST["dialplan_anti_action"] ?? '';
@@ -229,6 +230,33 @@
 		// Initialize dialplan detail group and order numbers
 			$dialplan_detail_group = 0;
 			$dialplan_detail_order = 0;
+			$x = 0;
+
+		// Add the timezone
+			if (!empty($dialplan_time_zone)) {
+				$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+				$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+				$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
+				$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'condition';
+				$array['dialplan_details'][$x]['dialplan_detail_type'] = 'destination_number';
+				$array['dialplan_details'][$x]['dialplan_detail_data'] = '^'.$dialplan_number.'$';
+				$array['dialplan_details'][$x]['dialplan_detail_break'] = null;
+				$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
+				$array['dialplan_details'][$x]['dialplan_detail_group'] = 0;
+				$array['dialplan_details'][$x]['dialplan_detail_order'] = 10;
+				$x++;
+				$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
+				$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
+				$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
+				$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'action';
+				$array['dialplan_details'][$x]['dialplan_detail_type'] = 'set';
+				$array['dialplan_details'][$x]['dialplan_detail_data'] = 'timezone='.$dialplan_time_zone;
+				$array['dialplan_details'][$x]['dialplan_detail_break'] = null;
+				$array['dialplan_details'][$x]['dialplan_detail_inline'] = 'true';
+				$array['dialplan_details'][$x]['dialplan_detail_group'] = 0;
+				$array['dialplan_details'][$x]['dialplan_detail_order'] = 20;
+				$x++;
+			}
 
 		// Clean up array
 			// Remove presets not checked, restructure variable array
@@ -308,7 +336,7 @@
 
 		// Add conditions to insert array for custom and preset conditions
 			if (is_array($_REQUEST['variable'])) {
-				$x = 0;
+				// $x = 0;
 				foreach ($_REQUEST['variable'] as $group_id => $conditions) {
 
 					$group_conditions_exist[$group_id] = false;
@@ -696,6 +724,12 @@
 		// Load current conditions into array (combined by group), and retrieve action and anti-action
 			$c = 0;
 			if (is_array($dialplan_details) && @sizeof($dialplan_details) != 0) {
+				// Get time zone
+				foreach ($dialplan_details as $i => $row) {
+					if ($row['dialplan_detail_tag'] == 'action' && $row['dialplan_detail_type'] == 'set' && strpos($row['dialplan_detail_data'], 'timezone=') === 0) {
+						$dialplan_time_zone = explode('=',$row['dialplan_detail_data'])[1];
+					}
+				}
 				// Detect dialplan detail group has valid preset
 				$dialplan_detail_group_max = 0;
 				foreach ($dialplan_details as $i => $row) {
@@ -1454,6 +1488,37 @@ if ($action == 'update') {
 	echo "	".$destination->select('dialplan', 'dialplan_anti_action', $dialplan_anti_action ?? null);
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	echo "	<tr>\n";
+	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
+	echo "		".$text['label-time_zone']."\n";
+	echo "	</td>\n";
+	echo "	<td class=\"vtable\" align='left'>\n";
+	echo "		<select id='dialplan_time_zone' name='dialplan_time_zone' class='formfld searchable_select' style=''>\n";
+	echo "			<option value=''></option>\n";
+	//$list = DateTimeZone::listAbbreviations();
+	$time_zone_identifiers = DateTimeZone::listIdentifiers();
+	$previous_category = '';
+	$x = 0;
+	foreach ($time_zone_identifiers as $key => $row) {
+		$time_zone = explode("/", $row);
+		$category = $time_zone[0];
+		if ($category != $previous_category) {
+			if ($x > 0) {
+				echo "		</optgroup>\n";
+			}
+			echo "		<optgroup label='$category'>\n";
+		}
+		$selected = (!empty($dialplan_time_zone) && $row == $dialplan_time_zone) ? "selected" : null;
+		echo "			<option value='".escape($row)."' $selected>".escape($row)."</option>\n";
+		$previous_category = $category;
+		$x++;
+	}
+	echo "		</select>\n";
+	echo "		<br />\n";
+	echo "		".$text['description-time_zone']."<br />\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
