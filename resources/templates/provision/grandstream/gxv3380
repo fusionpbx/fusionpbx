@@ -1188,7 +1188,7 @@
 		<!-- System Settings - TR069 -->
 		<!-- Enable TR-069 -->
 		<!-- Yes, No -->
-		<item name="tr069.enable">No</item>
+		<item name="tr069.enable">{$grandstream_tr069_enable}</item>
 		<!-- ACS URL -->
 		<item name="tr069.url"></item>
 		<!-- ACS Username -->

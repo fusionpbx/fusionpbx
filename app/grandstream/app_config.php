@@ -956,9 +956,9 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_tr069_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable tr-069 provisioning for grandstream devices 0-disable, 1-enable";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable tr-069 provisioning for grandstream devices 0-disable, 1-enable. Disable to remove cloud provisioning";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bad2bcef-4117-4aa3-ad29-ffd2b6b832aa";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
