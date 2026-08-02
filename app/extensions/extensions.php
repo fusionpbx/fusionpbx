@@ -268,6 +268,9 @@
 	$extensions = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
+//snapshot the rendered uuids so extension_edit.php can offer Previous/Next arrows
+	edit_nav::snapshot('extensions', $extensions, 'extension_uuid');
+
 //get the registrations
 	if (permission_exists('extension_registered')) {
 		$obj = new registrations;

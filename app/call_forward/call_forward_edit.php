@@ -561,6 +561,9 @@
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'call_forward.php'.($query_string ? '?'.$query_string : '')]);
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;']);
+	if ($action == 'update' && !empty($extension_uuid) && is_uuid($extension_uuid)) {
+		echo edit_nav::render(['module_key'=>'call_forward','script'=>'call_forward_edit.php','id'=>$extension_uuid]);
+	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";

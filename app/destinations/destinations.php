@@ -247,6 +247,9 @@
 	$destinations = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
+//snapshot the rendered uuids so destination_edit.php can offer Previous/Next arrows
+	edit_nav::snapshot('destinations', $destinations, 'destination_uuid');
+
 //update the array to add the actions
 	if ($show != "all") {
 		$x = 0;

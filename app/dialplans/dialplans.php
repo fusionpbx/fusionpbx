@@ -330,6 +330,10 @@
 	$dialplans = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
+//snapshot the rendered uuids so dialplan_edit.php can offer Previous/Next arrows
+//(per-view key so Inbound Routes / Outbound Routes / Dialplan Manager each get their own snapshot)
+	edit_nav::snapshot('dialplans'.(!empty($app_uuid) ? ':'.$app_uuid : ''), $dialplans, 'dialplan_uuid');
+
 //get the list of all dialplan contexts
 	$sql = "select dc.* from ( ";
 	$sql .= "select distinct dialplan_context from v_dialplans ";

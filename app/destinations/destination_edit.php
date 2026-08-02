@@ -1725,6 +1725,9 @@
 	if (permission_exists('destination_add') || permission_exists('destination_edit')) {
 		echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save']);
 	}
+	if ($action == 'update' && !empty($destination_uuid) && is_uuid($destination_uuid)) {
+		echo edit_nav::render(['module_key'=>'destinations','script'=>'destination_edit.php','id'=>$destination_uuid,'passthrough'=>['order_by','order','page','search','type','show']]);
+	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
