@@ -136,8 +136,10 @@
 				//end the buffering
 				ob_end_clean();
 
-				//free up the memory
-				imagedestroy($image);
+				if (PHP_VERSION_ID < 80000) {
+					//free up the memory
+					imagedestroy($image);
+				}
 			}
 		}
 

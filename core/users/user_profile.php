@@ -254,8 +254,10 @@
 					//end the buffering
 					ob_end_clean();
 
-					//free up the memory
-					imagedestroy($image);
+					if (PHP_VERSION_ID < 80000) {
+						//free up the memory
+						imagedestroy($image);
+					}
 
 					//prepare the array
 					$array['contact_attachments'][0]['contact_attachment_uuid'] = is_uuid($contact_attachment_uuid) ? $contact_attachment_uuid : uuid();

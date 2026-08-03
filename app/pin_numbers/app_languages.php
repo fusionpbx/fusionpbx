@@ -621,4 +621,3 @@ $text['message-required']['zh-cn'] = "请提供：";
 $text['message-required']['ja-jp'] = "どうか提供してください：";
 $text['message-required']['ko-kr'] = "제공 부탁드립니다:";
 
-?>

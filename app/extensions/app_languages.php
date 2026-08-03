@@ -4291,4 +4291,3 @@ $text['button-call_forward']['zh-cn'] = "呼叫转移";
 $text['button-call_forward']['ja-jp'] = "電話転送";
 $text['button-call_forward']['ko-kr'] = "착신 전환";
 
-?>

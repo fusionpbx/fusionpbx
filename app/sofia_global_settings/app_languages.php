@@ -297,4 +297,3 @@ $text['description-global_setting_description']['zh-cn'] = "输入全局设置�
 $text['description-global_setting_description']['ja-jp'] = "グローバル設定の説明を入力します。";
 $text['description-global_setting_description']['ko-kr'] = "전역 설정 설명을 입력합니다.";
 
-?>

@@ -540,4 +540,3 @@ $text['description-template_description']['zh-cn'] = "输入说明。";
 $text['description-template_description']['ja-jp'] = "説明を入力します。";
 $text['description-template_description']['ko-kr'] = "설명을 입력합니다.";
 
-?>

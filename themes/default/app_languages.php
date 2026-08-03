@@ -514,4 +514,3 @@ $text['label-no_matching_domains']['zh-cn'] = "未找到匹配的域名";
 $text['label-no_matching_domains']['ja-jp'] = "一致するドメインが見つかりません";
 $text['label-no_matching_domains']['ko-kr'] = "일치하는 도메인이 없습니다";
 
-?>

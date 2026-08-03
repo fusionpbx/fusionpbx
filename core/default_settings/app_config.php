@@ -46,6 +46,9 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "default_setting_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "default_setting_profile";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//default settings
 		$y = 0;

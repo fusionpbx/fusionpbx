@@ -402,5 +402,3 @@ $text['description-extension_setting_description']['tr-tr'] = "Uzantı açıklam
 $text['description-extension_setting_description']['zh-cn'] = "输入扩展描述。";
 $text['description-extension_setting_description']['ja-jp'] = "拡張機能の説明を入力します。";
 $text['description-extension_setting_description']['ko-kr'] = "확장 설명을 입력합니다.";
-
-?>

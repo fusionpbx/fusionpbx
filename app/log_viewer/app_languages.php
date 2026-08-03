@@ -405,4 +405,3 @@ $text['label-display']['zh-cn'] = "展示";
 $text['label-display']['ja-jp'] = "画面";
 $text['label-display']['ko-kr'] = "표시하다";
 
-?>

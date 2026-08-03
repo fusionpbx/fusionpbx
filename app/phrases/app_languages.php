@@ -594,4 +594,3 @@ $text['description-enabled']['zh-cn'] = "2. 确定该短语的地位。";
 $text['description-enabled']['ja-jp'] = "フレーズの状態を設定します。";
 $text['description-enabled']['ko-kr'] = "구문의 상태를 설정합니다.";
 
-?>

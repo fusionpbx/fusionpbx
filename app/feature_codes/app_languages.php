@@ -234,4 +234,3 @@ $text['label-no_features']['zh-cn'] = "未找到功能代码。";
 $text['label-no_features']['ja-jp'] = "機能コードが見つかりません。";
 $text['label-no_features']['ko-kr'] = "기능 코드를 찾을 수 없습니다.";
 
-?>

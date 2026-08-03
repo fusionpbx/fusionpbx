@@ -567,4 +567,3 @@ $text['description-active_queues']['zh-cn'] = "列出一个或多个呼叫者当
 $text['description-active_queues']['ja-jp'] = "1 人以上の呼び出し元で現在アクティブになっているすべてのキューをリストします。";
 $text['description-active_queues']['ko-kr'] = "하나 이상의 발신자와 함께 현재 활성 상태인 모든 대기열을 나열합니다.";
 
-?>

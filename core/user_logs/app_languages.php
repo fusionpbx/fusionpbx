@@ -592,4 +592,3 @@ $text['description-location']['zh-cn'] = "进入地点。";
 $text['description-location']['ja-jp'] = "所在地を入力してください。";
 $text['description-location']['ko-kr'] = "위치를 입력하십시오.";
 
-?>

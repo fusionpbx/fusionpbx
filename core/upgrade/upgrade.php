@@ -415,20 +415,22 @@
 
 		// Send a message to the console
 			if ($display_type === 'text') {
-				echo "[ Update ] Table and field structure.\n";
+				echo "[ Update ] Database Schema\n";
 			}
 
 		// Update the table and field structure.
 			$response = $schema->upgrade("text");
 			if ($display_type === 'text') {
 				foreach(explode("\n", $response) as $row) {
-					echo trim($row)."\n";
+					if (!empty($row)) {
+						echo trim($row)."\n";
+					}
 				}
 			}
 
 		// Send a message to the console
 			if ($display_type === 'text') {
-				echo "[ Update ] Application defaults.\n";
+				echo "[ Update ] Application Defaults\n";
 			}
 
 		// Update php fpm service

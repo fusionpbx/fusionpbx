@@ -2686,5 +2686,3 @@ $text['label-alternate_voicemail']['en-gb'] = "Alternate Voicemail Location";
 
 $text['description-alternate_voicemail']['en-us'] = "When enabled, callers reaching this voicemail box are routed to this destination instead of leaving a message. The original Caller ID is preserved.";
 $text['description-alternate_voicemail']['en-gb'] = "When enabled, callers reaching this voicemail box are routed to this destination instead of leaving a message. The original Caller ID is preserved.";
-
-?>

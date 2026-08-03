@@ -494,4 +494,3 @@ $text['description-control_data']['zh-cn'] = "输入数据。";
 $text['description-control_data']['ja-jp'] = "データを入力します。";
 $text['description-control_data']['ko-kr'] = "데이터를 입력합니다.";
 
-?>

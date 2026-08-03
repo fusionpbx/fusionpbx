@@ -1154,4 +1154,3 @@ $text['description-agents']['zh-cn'] = "选择代理，设置等待时间，结�
 $text['description-agents']['ja-jp'] = "アーカイブを選択し、待ち時間、終了時間、有効化を設定します。";
 $text['description-agents']['ko-kr'] = "대리자를 선택하고 대기 시간, 종료 시간, 활성화를 설정하세요.";
 
-?>

@@ -3132,4 +3132,3 @@ $text['message-permissions_reloaded']['zh-cn'] = "重新加载权限";
 $text['message-permissions_reloaded']['ja-jp'] = "権限がリロードされました";
 $text['message-permissions_reloaded']['ko-kr'] = "다시 로드된 권한";
 
-?>

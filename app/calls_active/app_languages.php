@@ -1041,4 +1041,3 @@ $text['message-calls_ended']['zh-cn'] = "通话结束";
 $text['message-calls_ended']['ja-jp'] = "通話が終了しました";
 $text['message-calls_ended']['ko-kr'] = "종료된 통화";
 
-?>

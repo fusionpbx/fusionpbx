@@ -32,5 +32,35 @@
 	$apps[$x]['menu'][$y]['order'] = "";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$y++;
+	$apps[$x]['menu'][$y]['title']['en-us'] = "Global Profile";
+	$apps[$x]['menu'][$y]['title']['en-gb'] = "Global Profile";
+	$apps[$x]['menu'][$y]['title']['ar-eg'] = "الملف الشخصي العالمي";
+	$apps[$x]['menu'][$y]['title']['de-at'] = "Globales Profil";
+	$apps[$x]['menu'][$y]['title']['es-cl'] = "Perfil global";
+	$apps[$x]['menu'][$y]['title']['es-mx'] = "Perfil global";
+	$apps[$x]['menu'][$y]['title']['fr-ca'] = "Profil global";
+	$apps[$x]['menu'][$y]['title']['fr-fr'] = "Profil global";
+	$apps[$x]['menu'][$y]['title']['he-il'] = "פרופיל גלובלי";
+	$apps[$x]['menu'][$y]['title']['it-it'] = "Profilo globale";
+	$apps[$x]['menu'][$y]['title']['ka-ge'] = "გლობალური პროფილი";
+	$apps[$x]['menu'][$y]['title']['nl-nl'] = "Globaal profiel";
+	$apps[$x]['menu'][$y]['title']['pl-pl'] = "Globalny profil";
+	$apps[$x]['menu'][$y]['title']['pt-br'] = "Perfil global";
+	$apps[$x]['menu'][$y]['title']['pt-pt'] = "Perfil global";
+	$apps[$x]['menu'][$y]['title']['ro-ro'] = "Profil global";
+	$apps[$x]['menu'][$y]['title']['ru-ru'] = "Глобальный профиль";
+	$apps[$x]['menu'][$y]['title']['sv-se'] = "Global profil";
+	$apps[$x]['menu'][$y]['title']['uk-ua'] = "Глобальний профіль";
+	$apps[$x]['menu'][$y]['title']['zh-cn'] = "全局个人资料";
+	$apps[$x]['menu'][$y]['title']['ja-jp'] = "グローバルプロフィール";
+	$apps[$x]['menu'][$y]['title']['ko-kr'] = "글로벌 프로필";
+	$apps[$x]['menu'][$y]['uuid'] = "bc4a097c-8509-4525-8d82-4e27289b2910";
+	$apps[$x]['menu'][$y]['parent_uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
+	$apps[$x]['menu'][$y]['category'] = "internal";
+	$apps[$x]['menu'][$y]['icon'] = "";
+	$apps[$x]['menu'][$y]['path'] = "/core/default_settings/default_setting_profile.php";
+	$apps[$x]['menu'][$y]['order'] = "";
+	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+	$y++;
 
 ?>

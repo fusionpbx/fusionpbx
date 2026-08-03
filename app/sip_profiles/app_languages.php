@@ -891,4 +891,3 @@ $text['message-sip_profile_unique']['zh-cn'] = "无效的 SIP 配置文件名称
 $text['message-sip_profile_unique']['ja-jp'] = "無効な SIP プロファイル名 - 一意である必要があります";
 $text['message-sip_profile_unique']['ko-kr'] = "잘못된 SIP 프로필 이름 - 고유해야 함";
 
-?>

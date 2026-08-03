@@ -832,4 +832,3 @@ $text['button-call']['zh-cn'] = "称呼";
 $text['button-call']['ja-jp'] = "電話";
 $text['button-call']['ko-kr'] = "부르다";
 
-?>

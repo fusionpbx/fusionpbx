@@ -215,7 +215,9 @@ if (!empty($_GET)) {
 			header("Content-type: image/png");
 			$im = $qr->createImage(5, 10);
 			imagepng($im);
-			imagedestroy($im);
+			if (PHP_VERSION_ID < 80000) {
+				imagedestroy($im);
+			}
 		}
 
 	//show the vcard in an html qr code

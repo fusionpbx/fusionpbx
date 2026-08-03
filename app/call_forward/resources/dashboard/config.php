@@ -54,7 +54,7 @@ $x++;
 $array['dashboard_widgets'][$x]['dashboard_uuid'] = '3e2cbaa4-2bec-41b2-a626-999a59b8b19c';
 $array['dashboard_widgets'][$x]['dashboard_widget_uuid'] = '714e513d-be78-4c63-8f8d-951d48a7fc0e';
 $array['dashboard_widgets'][$x]['widget_name'] = 'Follow Me';
-$array['dashboard_widgets'][$x]['widget_path'] = 'core/dashboard/resources/dashboard/icon.php';
+$array['dashboard_widgets'][$x]['widget_path'] = 'dashboard/icon';
 $array['dashboard_widgets'][$x]['widget_icon'] = 'fa-forward';
 $array['dashboard_widgets'][$x]['widget_url'] = '/app/call_forward/call_forward.php';
 $array['dashboard_widgets'][$x]['widget_target'] = 'self';

@@ -29,7 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!permission_exists('domain_profile')) {
+	if (!permission_exists('default_setting_profile')) {
 		echo "access denied";
 		exit;
 	}
@@ -46,22 +46,20 @@
 	$sql = "select * from v_languages order by language asc ";
 	$languages = $database->select($sql, null, 'all');
 
-//get domain settings
-	$sql = "select * from v_domain_settings ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$parameters['domain_uuid'] = $domain_uuid;
-	$result = $database->select($sql, $parameters, 'all');
-	$domain_settings = [];
+//get default settings
+	$sql = "select * from v_default_settings ";
+	$result = $database->select($sql, null, 'all');
+	$default_settings = [];
 	if (is_array($result)) {
 		foreach($result as $row) {
-			$category = $row['domain_setting_category'];
-			$subcategory = $row['domain_setting_subcategory'];
+			$category = $row['default_setting_category'];
+			$subcategory = $row['default_setting_subcategory'];
 			if (empty($subcategory)) {
-				//$$category[$name] = $row['domain_setting_value'];
-				$domain_settings[$category] = $row;
+				//$$category[$name] = $row['default_setting_value'];
+				$default_settings[$category] = $row;
 			}
 			else {
-				$domain_settings[$category][$subcategory] = $row;
+				$default_settings[$category][$subcategory] = $row;
 			}
 		}
 	}
@@ -70,9 +68,9 @@
 //process the http post
 	if (!empty($_POST)) {
 		//get the HTTP values and set as variables
-			$domain_language = $_POST["domain_language"];
-			$domain_time_zone = $_POST["domain_time_zone"];
-			$domain_time_format = $_POST["domain_time_format"];
+			$global_language = $_POST["global_language"];
+			$global_time_zone = $_POST["global_time_zone"];
+			$global_time_format = $_POST["global_time_format"];
 
 		//validate the token
 			$token = new token;
@@ -83,44 +81,42 @@
 			}
 
 		//check to see if domain language is set
-			$row = $domain_settings['domain']['language'] ?? [];
+			$row = $default_settings['domain']['language'] ?? [];
 			$i = 0;
-			if (!empty($domain_language) && (empty($row) || (!empty($row['domain_setting_uuid']) && !is_uuid($row['domain_setting_uuid'])))) {
+			if (!empty($global_language) && (empty($row) || (!empty($row['default_setting_uuid']) && !is_uuid($row['default_setting_uuid'])))) {
 				//add user setting to array for insert
-				$array['domain_settings'][$i]['domain_setting_uuid'] = uuid();
-				$array['domain_settings'][$i]['domain_uuid'] = $domain_uuid;
-				$array['domain_settings'][$i]['domain_setting_category'] = 'domain';
-				$array['domain_settings'][$i]['domain_setting_subcategory'] = 'language';
-				$array['domain_settings'][$i]['domain_setting_name'] = 'code';
-				$array['domain_settings'][$i]['domain_setting_value'] = $domain_language;
-				$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
-				$array['domain_settings'][$i]['domain_setting_description'] = '';
+				$array['default_settings'][$i]['default_setting_uuid'] = uuid();
+				$array['default_settings'][$i]['default_setting_category'] = 'domain';
+				$array['default_settings'][$i]['default_setting_subcategory'] = 'language';
+				$array['default_settings'][$i]['default_setting_name'] = 'code';
+				$array['default_settings'][$i]['default_setting_value'] = $global_language;
+				$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+				$array['default_settings'][$i]['default_setting_description'] = '';
 				$i++;
 			}
 			else {
-				if (empty($row['domain_setting_value']) || empty($domain_language)) {
-					$array_delete['domain_settings'][0]['domain_setting_category'] = 'domain';
-					$array_delete['domain_settings'][0]['domain_setting_subcategory'] = 'language';
-					$array_delete['domain_settings'][0]['domain_uuid'] = $domain_uuid;
+				if (!empty($row['default_setting_uuid']) && (empty($row['default_setting_value']) || empty($global_language))) {
+					$array_delete['default_settings'][0]['default_setting_category'] = 'domain';
+					$array_delete['default_settings'][0]['default_setting_subcategory'] = 'language';
+					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'];
 
 					$p = permissions::new();
-					$p->add('domain_setting_delete', 'temp');
+					$p->add('default_setting_delete', 'temp');
 
 					$database->delete($array_delete);
 					unset($array_delete);
 
-					$p->delete('domain_setting_delete', 'temp');
+					$p->delete('default_setting_delete', 'temp');
 				}
-				if (!empty($domain_language)) {
+				if (!empty($global_language)) {
 					//add user setting to array for update
-					$array['domain_settings'][$i]['domain_setting_uuid'] = $row['domain_setting_uuid'];
-					$array['domain_settings'][$i]['domain_uuid'] = $domain_uuid;
-					$array['domain_settings'][$i]['domain_setting_category'] = 'domain';
-					$array['domain_settings'][$i]['domain_setting_subcategory'] = 'language';
-					$array['domain_settings'][$i]['domain_setting_name'] = 'code';
-					$array['domain_settings'][$i]['domain_setting_value'] = $domain_language;
-					$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
-					$array['domain_settings'][$i]['domain_setting_description'] = $row['domain_setting_description'] ?? '';
+					$array['default_settings'][$i]['default_setting_uuid'] = $row['default_setting_uuid'];
+					$array['default_settings'][$i]['default_setting_category'] = 'domain';
+					$array['default_settings'][$i]['default_setting_subcategory'] = 'language';
+					$array['default_settings'][$i]['default_setting_name'] = 'code';
+					$array['default_settings'][$i]['default_setting_value'] = $global_language;
+					$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'] ?? '';
 					$i++;
 				}
 			}
@@ -128,22 +124,18 @@
 
 		//update switch timezone variables
 			if (permission_exists('dialplan_view')) {
-				//get the dialplan_uuid using the domain-variables app_uuid
+				//get the dialplan_uuid using the global-variables app_uuid
 					$sql = "select dialplan_uuid from v_dialplans ";
-					$sql .= "where domain_uuid = :domain_uuid ";
-					$sql .= "and app_uuid = '9f356fe7-8cf8-4c14-8fe2-6daf89304458' ";
-					$parameters['domain_uuid'] = $domain_uuid;
-					$dialplan_uuid = $database->select($sql, $parameters, 'column');
+					$sql .= "where app_uuid = 'd49ee3bd-5085-4619-a2f9-2b62c8c461c5' ";
+					$dialplan_uuid = $database->select($sql, null, 'column');
 					unset($sql, $parameters);
 
 				//get the action
 					$sql = "select dialplan_detail_uuid from v_dialplan_details ";
-					$sql .= "where domain_uuid = :domain_uuid ";
-					$sql .= "and dialplan_uuid = :dialplan_uuid ";
+					$sql .= "where dialplan_uuid = :dialplan_uuid ";
 					$sql .= "and dialplan_detail_tag = 'action' ";
 					$sql .= "and dialplan_detail_type = 'set' ";
 					$sql .= "and dialplan_detail_data like 'timezone=%' ";
-					$parameters['domain_uuid'] = $domain_uuid;
 					$parameters['dialplan_uuid'] = $dialplan_uuid;
 					$dialplan_detail_uuid = $database->select($sql, $parameters, 'column');
 					$detail_action = is_uuid($dialplan_detail_uuid) ? 'update' : 'add';
@@ -153,17 +145,16 @@
 					$p = permissions::new();
 					if ($detail_action == "update") {
 						$array['dialplan_details'][0]['dialplan_detail_uuid'] = $dialplan_detail_uuid;
-						$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$domain_time_zone;
+						$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$global_time_zone;
 						$array['dialplan_details'][0]['dialplan_detail_enabled'] = 'true';
 						$p->add('dialplan_detail_edit', 'temp');
 					}
 					else {
 						$array['dialplan_details'][0]['dialplan_detail_uuid'] = uuid();
-						$array['dialplan_details'][0]['domain_uuid'] = $domain_uuid;
 						$array['dialplan_details'][0]['dialplan_uuid'] = $dialplan_uuid;
 						$array['dialplan_details'][0]['dialplan_detail_tag'] = 'action';
 						$array['dialplan_details'][0]['dialplan_detail_type'] = 'set';
-						$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$domain_time_zone;
+						$array['dialplan_details'][0]['dialplan_detail_data'] = 'timezone='.$global_time_zone;
 						$array['dialplan_details'][0]['dialplan_detail_inline'] = 'true';
 						$array['dialplan_details'][0]['dialplan_detail_group'] = '0';
 						$array['dialplan_details'][0]['dialplan_detail_order'] = '20';
@@ -191,86 +182,82 @@
 			}
 
 		//check to see if domain time zone is set
-			$row = $domain_settings['domain']['time_zone'] ?? [];
-			if (!empty($domain_time_zone) && (empty($row) || (!empty($row['domain_setting_uuid']) && !is_uuid($row['domain_setting_uuid'])))) {
+			$row = $default_settings['domain']['time_zone'] ?? [];
+			if (!empty($global_time_zone) && (empty($row) || (!empty($row['default_setting_uuid']) && !is_uuid($row['default_setting_uuid'])))) {
 				//add user setting to array for insert
-				$array['domain_settings'][$i]['domain_setting_uuid'] = uuid();
-				$array['domain_settings'][$i]['domain_uuid'] = $domain_uuid;
-				$array['domain_settings'][$i]['domain_setting_category'] = 'domain';
-				$array['domain_settings'][$i]['domain_setting_subcategory'] = 'time_zone';
-				$array['domain_settings'][$i]['domain_setting_name'] = 'name';
-				$array['domain_settings'][$i]['domain_setting_value'] = $domain_time_zone;
-				$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
-				$array['domain_settings'][$i]['domain_setting_description'] = '';
+				$array['default_settings'][$i]['default_setting_uuid'] = uuid();
+				$array['default_settings'][$i]['default_setting_category'] = 'domain';
+				$array['default_settings'][$i]['default_setting_subcategory'] = 'time_zone';
+				$array['default_settings'][$i]['default_setting_name'] = 'name';
+				$array['default_settings'][$i]['default_setting_value'] = $global_time_zone;
+				$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+				$array['default_settings'][$i]['default_setting_description'] = '';
 				$i++;
 			}
 			else {
-				if (empty($row['domain_setting_value']) || empty($domain_time_zone)) {
-					$array_delete['domain_settings'][0]['domain_setting_category'] = 'domain';
-					$array_delete['domain_settings'][0]['domain_setting_subcategory'] = 'time_zone';
-					$array_delete['domain_settings'][0]['domain_uuid'] = $domain_uuid;
+				if (!empty($row['default_setting_uuid']) && (empty($row['default_setting_value']) || empty($global_time_zone))) {
+					$array_delete['default_settings'][0]['default_setting_category'] = 'domain';
+					$array_delete['default_settings'][0]['default_setting_subcategory'] = 'time_zone';
+					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'];
 
 					$p = permissions::new();
-					$p->add('domain_setting_delete', 'temp');
+					$p->add('default_setting_delete', 'temp');
 
 					$database->delete($array_delete);
 					unset($array_delete);
 
-					$p->delete('domain_setting_delete', 'temp');
+					$p->delete('default_setting_delete', 'temp');
 				}
-				if (!empty($domain_time_zone)) {
+				if (!empty($global_time_zone)) {
 					//add user setting to array for update
-					$array['domain_settings'][$i]['domain_setting_uuid'] = $row['domain_setting_uuid'];
-					$array['domain_settings'][$i]['domain_uuid'] = $domain_uuid;
-					$array['domain_settings'][$i]['domain_setting_category'] = 'domain';
-					$array['domain_settings'][$i]['domain_setting_subcategory'] = 'time_zone';
-					$array['domain_settings'][$i]['domain_setting_name'] = 'name';
-					$array['domain_settings'][$i]['domain_setting_value'] = $domain_time_zone;
-					$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
-					$array['domain_settings'][$i]['domain_setting_description'] = $row['domain_setting_description'] ?? '';
+					$array['default_settings'][$i]['default_setting_uuid'] = $row['default_setting_uuid'];
+					$array['default_settings'][$i]['default_setting_category'] = 'domain';
+					$array['default_settings'][$i]['default_setting_subcategory'] = 'time_zone';
+					$array['default_settings'][$i]['default_setting_name'] = 'name';
+					$array['default_settings'][$i]['default_setting_value'] = $global_time_zone;
+					$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'] ?? '';
 					$i++;
 				}
 			}
 			unset($sql, $parameters, $row);
 
-		//check to see if domain time_format is set
-			$row = $domain_settings['domain']['time_format'] ?? [];
-			if (!empty($domain_time_format) && (empty($row) || (!empty($row['domain_setting_uuid']) && !is_uuid($row['domain_setting_uuid'])))) {
+		//check to see if global time_format is set
+			$row = $default_settings['domain']['time_format'] ?? [];
+			if (!empty($global_time_format) && (empty($row) || (!empty($row['default_setting_uuid']) && !is_uuid($row['default_setting_uuid'])))) {
 				//add user setting to array for insert
-				$array['domain_settings'][$i]['domain_setting_uuid'] = uuid();
-				$array['domain_settings'][$i]['domain_uuid'] = $domain_uuid;
-				$array['domain_settings'][$i]['domain_setting_category'] = 'domain';
-				$array['domain_settings'][$i]['domain_setting_subcategory'] = 'time_format';
-				$array['domain_settings'][$i]['domain_setting_name'] = 'text';
-				$array['domain_settings'][$i]['domain_setting_value'] = $domain_time_format;
-				$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
-				$array['domain_settings'][$i]['domain_setting_description'] = 'Toggle between 24 hour and 12 hour time formats. Default is 12 hour when disabled.';
+				$array['default_settings'][$i]['default_setting_uuid'] = uuid();
+				$array['default_settings'][$i]['default_setting_category'] = 'domain';
+				$array['default_settings'][$i]['default_setting_subcategory'] = 'time_format';
+				$array['default_settings'][$i]['default_setting_name'] = 'text';
+				$array['default_settings'][$i]['default_setting_value'] = $global_time_format;
+				$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+				$array['default_settings'][$i]['default_setting_description'] = 'Toggle between 24 hour and 12 hour time formats. Default is 12 hour when disabled.';
 				$i++;
 			}
 			else {
-				if (empty($row['domain_setting_value']) || empty($domain_time_format)) {
-					$array_delete['domain_settings'][0]['domain_setting_category'] = 'domain';
-					$array_delete['domain_settings'][0]['domain_setting_subcategory'] = 'time_format';
-					$array_delete['domain_settings'][0]['domain_uuid'] = $domain_uuid;
+				if (!empty($row['default_setting_uuid']) && (empty($row['default_setting_value']) || empty($global_time_format))) {
+					$array_delete['default_settings'][0]['default_setting_category'] = 'domain';
+					$array_delete['default_settings'][0]['default_setting_subcategory'] = 'time_format';
+					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'];
 
 					$p = permissions::new();
-					$p->add('domain_setting_delete', 'temp');
+					$p->add('default_setting_delete', 'temp');
 
 					$database->delete($array_delete);
 					unset($array_delete);
 
-					$p->delete('domain_setting_delete', 'temp');
+					$p->delete('default_setting_delete', 'temp');
 				}
-				if (!empty($domain_time_format)) {
+				if (!empty($global_time_format)) {
 					//add user setting to array for update
-					$array['domain_settings'][$i]['domain_setting_uuid'] = $row['domain_setting_uuid'];
-					$array['domain_settings'][$i]['domain_uuid'] = $domain_uuid;
-					$array['domain_settings'][$i]['domain_setting_category'] = 'domain';
-					$array['domain_settings'][$i]['domain_setting_subcategory'] = 'time_format';
-					$array['domain_settings'][$i]['domain_setting_name'] = 'text';
-					$array['domain_settings'][$i]['domain_setting_value'] = $domain_time_format;
-					$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
-					$array['domain_settings'][$i]['domain_setting_description'] = $row['domain_setting_description'] ?? '';
+					$array['default_settings'][$i]['default_setting_uuid'] = $row['default_setting_uuid'];
+					$array['default_settings'][$i]['default_setting_category'] = 'domain';
+					$array['default_settings'][$i]['default_setting_subcategory'] = 'time_format';
+					$array['default_settings'][$i]['default_setting_name'] = 'text';
+					$array['default_settings'][$i]['default_setting_value'] = $global_time_format;
+					$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'] ?? '';
 					$i++;
 				}
 			}
@@ -280,8 +267,8 @@
 			$p = permissions::new();
 
 		//add temporary permissions
-			$p->add("domain_setting_add", "temp");
-			$p->add("domain_setting_edit", "temp");
+			$p->add("default_setting_add", "temp");
+			$p->add("default_setting_edit", "temp");
 
 		//save the data
 			if (!empty($array)) {
@@ -290,8 +277,8 @@
 			}
 
 		//remove the temporary permissions
-			$p->delete("domain_setting_add", "temp");
-			$p->delete("domain_setting_edit", "temp");
+			$p->delete("default_setting_add", "temp");
+			$p->delete("default_setting_edit", "temp");
 
 		//clear the menu
 			unset($_SESSION["menu"]);
@@ -304,7 +291,7 @@
 			message::add($text['message-update'],'positive');
 
 		//redirect
-			header('Location: domain_profile.php');
+			header('Location: default_setting_profile.php');
 			exit;
 	}
 
@@ -322,19 +309,19 @@
 
 //include the header
 	require_once "resources/header.php";
-	$document['title'] = $text['title-domain_profile'];
+	$document['title'] = $text['title-global_profile'];
 
 //show the content
 	echo "<form name='frm' id='frm' method='post' enctype='multipart/form-data'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-domain_profile']."</b></div>\n";
+	echo "	<div class='heading'><b>".$text['title-global_profile']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (!empty($unsaved)) {
 		echo "<div class='unsaved'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle'></i></div>";
 	}
-	if (permission_exists('domain_setting_view')) {
-		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$settings->get('theme', 'button_icon_settings'),'id'=>'btn_back','style'=>'margin-right: 2px;','link'=>PROJECT_PATH.'/core/domain_settings/domain_settings.php?id='.urlencode($domain_uuid)]);
+	if (permission_exists('default_setting_view')) {
+		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$settings->get('theme', 'button_icon_settings'),'id'=>'btn_back','style'=>'margin-right: 2px;','link'=>PROJECT_PATH.'/core/default_settings/default_settings.php']);
 	}
 	$button_margin = 'margin-left: 15px;';
 	echo button::create(['type'=>'button','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;','onclick'=>'submit_form();']);
@@ -343,7 +330,7 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	echo $text['description-domain_profile']."\n";
+	echo $text['description-default_setting_profile']."\n";
 	echo "<br /><br />\n";
 
 	echo "<div class='card'>\n";
@@ -360,7 +347,7 @@
 	echo "		".$text['label-language']."\n";
 	echo "	</td>\n";
 	echo "	<td class=\"vtable\" align='left'>\n";
-	echo "		<select id='domain_language' name='domain_language' class='formfld' style=''>\n";
+	echo "		<select id='global_language' name='global_language' class='formfld' style=''>\n";
 	echo "		<option value=''></option>\n";
 	if (!empty($languages) && is_array($languages) && sizeof($languages) != 0) {
 		foreach ($languages as $row) {
@@ -370,7 +357,7 @@
 	unset($sql, $languages, $row);
 	if (is_array($_SESSION['app']['languages']) && sizeof($_SESSION['app']['languages']) != 0) {
 		foreach ($_SESSION['app']['languages'] as $code) {
-			$selected = (isset($domain_language) && $code == $domain_language) || (!empty($domain_settings['domain']['language']['domain_setting_enabled']) && $code == $domain_settings['domain']['language']['domain_setting_value']) ? "selected" : null;
+			$selected = (isset($global_language) && $code == $global_language) || (!empty($default_settings['domain']['language']['default_setting_enabled']) && $code == $default_settings['domain']['language']['default_setting_value']) ? "selected" : null;
 			echo "	<option value='".$code."' ".$selected.">".escape($language_codes[$code] ?? $language_codes[explode('-', $code)[0]] ?? null)." [".escape($code ?? null)."]</option>\n";
 		}
 	}
@@ -385,7 +372,7 @@
 	echo "		".$text['label-time_zone']."\n";
 	echo "	</td>\n";
 	echo "	<td class=\"vtable\" align='left'>\n";
-	echo "		<select id='domain_time_zone' name='domain_time_zone' class='formfld searchable_select' style=''>\n";
+	echo "		<select id='global_time_zone' name='global_time_zone' class='formfld searchable_select' style=''>\n";
 	echo "		<option value=''></option>\n";
 	//$list = DateTimeZone::listAbbreviations();
 	$time_zone_identifiers = DateTimeZone::listIdentifiers();
@@ -400,7 +387,7 @@
 			}
 			echo "		<optgroup label='".$category."'>\n";
 		}
-		$selected = (isset($domain_time_zone) && $row == $domain_time_zone) || (!empty($domain_settings['domain']['time_zone']['domain_setting_enabled']) && $row == $domain_settings['domain']['time_zone']['domain_setting_value']) ? "selected" : null;
+		$selected = (isset($global_time_zone) && $row == $global_time_zone) || (!empty($default_settings['domain']['time_zone']['default_setting_enabled']) && $row == $default_settings['domain']['time_zone']['default_setting_value']) ? "selected" : null;
 		echo "			<option value='".escape($row)."' ".$selected.">".escape($row)."</option>\n";
 		$previous_category = $category;
 		$x++;
@@ -416,10 +403,10 @@
 	echo "		".$text['label-time_format']."\n";
 	echo "	</td>\n";
 	echo "	<td class=\"vtable\" align='left'>\n";
-	echo "	<select class='formfld' id='domain_time_format' name='domain_time_format'>\n";
+	echo "	<select class='formfld' id='global_time_format' name='global_time_format'>\n";
 	echo "	 	<option value=''></option>\n";
-	echo "	 	<option value='12h' ".((!empty($domain_settings['domain']['time_format']['domain_setting_enabled']) && $domain_settings['domain']['time_format']['domain_setting_value'] == "12h") ? "selected" : null).">".$text['label-12-hour']."</option>\n";
-	echo "		<option value='24h' ".((!empty($domain_settings['domain']['time_format']['domain_setting_enabled']) && $domain_settings['domain']['time_format']['domain_setting_value'] == "24h") ? "selected" : null).">".$text['label-24-hour']."</option>\n";
+	echo "	 	<option value='12h' ".((!empty($default_settings['domain']['time_format']['default_setting_enabled']) && $default_settings['domain']['time_format']['default_setting_value'] == "12h") ? "selected" : null).">".$text['label-12-hour']."</option>\n";
+	echo "		<option value='24h' ".((!empty($default_settings['domain']['time_format']['default_setting_enabled']) && $default_settings['domain']['time_format']['default_setting_value'] == "24h") ? "selected" : null).">".$text['label-24-hour']."</option>\n";
 	echo "	</select>\n";
 	echo "		<br />\n";
 	echo "		".$text['description-time_format']."<br />\n";

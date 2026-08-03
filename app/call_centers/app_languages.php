@@ -3926,4 +3926,3 @@ $text['label-call_center_agents']['zh-cn'] = "呼叫中心队列";
 $text['label-call_center_agents']['ja-jp'] = "コールセンターの待ち行列";
 $text['label-call_center_agents']['ko-kr'] = "콜센터 대기열";
 
-?>

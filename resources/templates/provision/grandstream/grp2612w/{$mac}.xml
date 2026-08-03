@@ -2081,7 +2081,7 @@
 		<!-- ############################################################################## -->
 		<!-- Enable TR-069 -->
 		<!-- Pvalue P1409 -->
-		<item name="tr069.enable">Yes</item>
+		<item name="tr069.enable">{$grandstream_tr069_enable}</item>
 		<!-- ACS URL -->
 		<!-- Pvalue P4503 -->
 		<item name="tr069.url">https://acs.gdms.cloud</item>

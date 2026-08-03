@@ -945,4 +945,3 @@ $text['sounds']['zh-cn'] = "声音";
 $text['sounds']['ja-jp'] = "サウンド";
 $text['sounds']['ko-kr'] = "소리";
 
-?>

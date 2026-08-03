@@ -621,4 +621,3 @@ $text['option-ip']['zh-cn'] = "IP地址";
 $text['option-ip']['ja-jp'] = "IPアドレス";
 $text['option-ip']['ko-kr'] = "IP 주소";
 
-?>

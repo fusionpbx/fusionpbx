@@ -36,7 +36,6 @@ class remember_me {
 		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database]);
 
 		// Assign private variables
-		$this->cookie_name = self::$cookie_name;
 		$this->expiry_days = 7;
 	}
 
@@ -48,11 +47,11 @@ class remember_me {
 	 * @return array|null
 	 */
 	public function authenticate($contacts_exists = false) {
-		if (!$this->settings->get('login', 'remember_me', false) || !isset($_COOKIE[$this->cookie_name])) {
+		if (!$this->settings->get('login', 'remember_me', false) || !isset($_COOKIE[self::$cookie_name])) {
 			return null;
 		}
 
-		$cookie_data = $this->parse_cookie($_COOKIE[$this->cookie_name]);
+		$cookie_data = $this->parse_cookie($_COOKIE[self::$cookie_name]);
 		if (!$cookie_data) {
 			return null;
 		}
@@ -90,7 +89,7 @@ class remember_me {
 		$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
 
 		// Set Cookie
-		setcookie($this->cookie_name, $selector . ':' . $validator, [
+		setcookie(self::$cookie_name, $selector . ':' . $validator, [
 			'expires' => strtotime("+".$this->expiry_days." days"),
 			'path' => '/',
 			'secure' => true,
@@ -147,7 +146,7 @@ class remember_me {
 		$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
 
 		// Update Cookie
-		setcookie($this->cookie_name, $selector . ':' . $validator, [
+		setcookie(self::$cookie_name, $selector . ':' . $validator, [
 			'expires' => strtotime("+".$this->expiry_days." days"),
 			'path' => '/',
 			'secure' => true,
