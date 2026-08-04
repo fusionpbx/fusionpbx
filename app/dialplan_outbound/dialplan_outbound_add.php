@@ -933,41 +933,6 @@
 	$document['title'] = $text['title-dialplan-outbound-add'];
 	require_once "resources/header.php";
 
-?>
-
-<script type="text/javascript">
-<!--
-function type_onchange(dialplan_detail_type) {
-	var field_value = document.getElementById(dialplan_detail_type).value;
-
-	if (dialplan_detail_type == "condition_field_1") {
-		if (field_value == "destination_number") {
-			document.getElementById("desc_condition_expression_1").innerHTML = "expression: ^12081231234$";
-		}
-		else if (field_value == "zzz") {
-			document.getElementById("desc_condition_expression_1").innerHTML = "";
-		}
-		else {
-			document.getElementById("desc_condition_expression_1").innerHTML = "";
-		}
-	}
-	if (dialplan_detail_type == "condition_field_2") {
-		if (field_value == "destination_number") {
-			document.getElementById("desc_condition_expression_2").innerHTML = "expression: ^12081231234$";
-		}
-		else if (field_value == "zzz") {
-			document.getElementById("desc_condition_expression_2").innerHTML = "";
-		}
-		else {
-			document.getElementById("desc_condition_expression_2").innerHTML = "";
-		}
-	}
-}
--->
-</script>
-
-<?php
-
 //show the content
 	echo "<form method='post' name='frm' id='frm'>\n";
 
