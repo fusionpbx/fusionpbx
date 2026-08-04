@@ -188,6 +188,14 @@
 			exit;
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//include the header
+	$document['title'] = $text['title-dialplan_add'];
+	require_once "resources/header.php";
+
 //javascript type on change
 	?><script type="text/javascript">
 	<!--
@@ -219,14 +227,6 @@
 	-->
 	</script>
 	<?php
-
-//create token
-	$object = new token;
-	$token = $object->create($_SERVER['PHP_SELF']);
-
-//include the header
-	$document['title'] = $text['title-dialplan_add'];
-	require_once "resources/header.php";
 
 //show the content
 	echo "<form method='post' name='frm' id='frm'>\n";
