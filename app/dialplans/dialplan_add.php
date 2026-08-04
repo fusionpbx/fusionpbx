@@ -188,38 +188,6 @@
 			exit;
 	}
 
-//javascript type on change
-	?><script type="text/javascript">
-	<!--
-	function type_onchange(dialplan_detail_type) {
-		var field_value = document.getElementById(dialplan_detail_type).value;
-		if (dialplan_detail_type == "condition_field_1") {
-			if (field_value == "destination_number") {
-				document.getElementById("desc_condition_expression_1").innerHTML = "expression: ^12081231234$";
-			}
-			else if (field_value == "zzz") {
-				document.getElementById("desc_condition_expression_1").innerHTML = "";
-			}
-			else {
-				document.getElementById("desc_condition_expression_1").innerHTML = "";
-			}
-		}
-		if (dialplan_detail_type == "condition_field_2") {
-			if (field_value == "destination_number") {
-				document.getElementById("desc_condition_expression_2").innerHTML = "expression: ^12081231234$";
-			}
-			else if (field_value == "zzz") {
-				document.getElementById("desc_condition_expression_2").innerHTML = "";
-			}
-			else {
-				document.getElementById("desc_condition_expression_2").innerHTML = "";
-			}
-		}
-	}
-	-->
-	</script>
-	<?php
-
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -367,7 +335,6 @@
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
-	echo "	<div id='desc_condition_expression_1'></div>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -456,7 +423,6 @@
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
-	echo "	<div id='desc_condition_expression_2'></div>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
