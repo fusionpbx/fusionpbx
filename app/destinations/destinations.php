@@ -123,12 +123,21 @@
 													$text2 = $language2->get($settings->get('domain', 'language', 'en-us'), 'app/dialplans');
 												}
 											}
-											$actions[] = trim($text2['title-other'].' &#x203A; '.$text2['option-'.str_replace('&lowbar;','_',$key)]);
+											$language_key = strtolower($key ?? '');
+											$language_key = str_replace(' ', '_', $language_key);
+											$language_key = str_replace('&lowbar;', '_', $language_key);
+											$actions[] = trim($text2['title-other'].' &#x203A; '.$text2['option-'.$language_key]);
 										}
 										else {
+											if (in_array($group, ['check_voicemail', 'company_directory', 'hangup', 'record'])) { 
+												$group = 'dialplans';
+											}
 											if (file_exists(dirname(__DIR__, 2)."/app/".$group."/app_languages.php")) {
 												$language3 = new text;
 												$text3 = $language3->get($settings->get('domain', 'language', 'en-us'), 'app/'.$group);
+												$language_key = strtolower($key ?? '');
+												$language_key = str_replace(' ', '_', $language_key);
+												$language_key = str_replace('&lowbar;', '_', $language_key);
 												$actions[] = trim($text3['title-'.$group].' &#x203A; '.$key);
 											}
 										}
@@ -254,10 +263,11 @@
 			$destinations[$x]['actions'] = '';
 			if (!empty($row['destination_actions'])) {
 				//prepare the destination actions
-				if (!empty(json_decode($row['destination_actions'], true))) {
+				$destination_actions = json_decode($row['destination_actions'], true);
+				if (!empty($destination_actions)) {
 					//add the actions to the array
 					$destination_app_data = [];
-					foreach (json_decode($row['destination_actions'], true) as $action) {
+					foreach ($destination_actions as $action) {
 						$destination_app_data[] = $action['destination_app'].':'.$action['destination_data'];
 					}
 					$actions = action_name($destination_array, $destination_app_data);
