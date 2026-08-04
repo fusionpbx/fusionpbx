@@ -24,13 +24,13 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//includes files
+// Includes files
 	global $settings, $domain_uuid, $database;
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
-//check permissions
+// Check the permissions
 	if (!(permission_exists('dialplan_view') || permission_exists('inbound_route_view') || permission_exists('outbound_route_view'))) {
 		echo "access denied";
 		exit;
@@ -59,38 +59,98 @@
 			}
 
 			// If the dialplan name already exists, skip this file to avoid overwriting
-			if(isset($dialplan_templates[$dialplan_name])) {
+			if (isset($dialplan_templates[$dialplan_name])) {
 				continue;
 			}
 
+			// Get the values
+			$app_uuid = (string)$xml->attributes()->app_uuid ?? '';
+			$dialplan_context = (string)$xml->attributes()->context ?? 'public';
+			$dialplan_continue = (string)trim($xml->attributes()->continue) ?? '';
+			$dialplan_global = (string)$xml->attributes()->global ?? 'false';
+			$dialplan_order = (string)$xml->attributes()->order ?? 0;
+			$dialplan_enabled = (string)$xml->attributes()->enabled ?? '';
+
+			// Replace the domain_name variable with the domain name
+			$dialplan_context = str_replace('${domain_name}', $domain_name, $dialplan_context);
+
 			// If the enabled attribute is not set, default to 'true'
-			$enabled = (string)$xml->attributes()->enabled ?? '';
-			if ($enabled === '') {
-				$enabled = 'true';
+			if ($dialplan_enabled === '') {
+				$dialplan_enabled = 'true';
+			}
+
+			// If the enabled attribute is not set, default to 'false'
+			if ($dialplan_continue === '') {
+				$dialplan_continue = 'false';
 			}
 
 			// Create the array of the dialplan attributes
 			$dialplan_templates[$dialplan_name] = [];
-			$dialplan_templates[$dialplan_name]['enabled'] = $enabled;
-			$dialplan_templates[$dialplan_name]['uuid'] = (string)$xml->attributes()->app_uuid ?? '';
-			$dialplan_templates[$dialplan_name]['context'] = (string)$xml->attributes()->context ?? 'public';
-			$dialplan_templates[$dialplan_name]['continue'] = (string)$xml->attributes()->continue ?? 'false';
-			$dialplan_templates[$dialplan_name]['global'] = (string)$xml->attributes()->global ?? 'false';
-			$dialplan_templates[$dialplan_name]['order'] = (int)$xml->attributes()->order ?? 0;
+			$dialplan_templates[$dialplan_name]['dialplan_name'] = $dialplan_name ?? '';
+			$dialplan_templates[$dialplan_name]['app_uuid'] = $app_uuid;
+			$dialplan_templates[$dialplan_name]['dialplan_context'] = $dialplan_context;
+			$dialplan_templates[$dialplan_name]['dialplan_continue'] = $dialplan_continue;
+			// $dialplan_templates[$dialplan_name]['dialplan_global'] = $dialplan_global;
+			$dialplan_templates[$dialplan_name]['dialplan_order'] = (int)$dialplan_order;
+			$dialplan_templates[$dialplan_name]['dialplan_enabled'] = $dialplan_enabled;
 
-			// Replace dynamic content
+			// Replace the dynamic content
 			if ($dialplan_templates[$dialplan_name]['context'] === '${domain_name}' && !empty($domain_name)) {
 				$dialplan_templates[$dialplan_name]['context'] = $domain_name;
+			}
+
+			// Add the dialplan details
+			if (isset($xml->condition)) {
+				$y = 0;
+				foreach ($xml->condition as $cond) {
+					// Extract Condition Attributes
+					$cond_attrs = $cond->attributes();
+					$dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_tag'] = 'condition';
+					$dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_type'] = (string)$cond_attrs->field ?? '';
+					$dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_data'] = (string)$cond_attrs->expression ?? '';
+					// $dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_break'] = (string)$cond_attrs->{'break'} ?? 'continue';
+					// $dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_inline'] = '';
+					// $dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_enabled'] = (string)$cond_attrs->enabled ?? 'true';
+					$y++;
+
+					// Extract Actions for this condition
+					if (isset($cond->action)) {
+						foreach ($cond->action as $act) {
+							$act_attrs = $act->attributes();
+							$dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
+							$dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_type'] = (string)$act_attrs->application ?? '';
+							$dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_data'] = (string)$act_attrs->data ?? '';
+							// $dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_break'] = '';
+							// $dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_inline'] = (string)$act_attrs->inline ?? '';
+							// $dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_enabled'] = (string)$act_attrs->attributes()->enabled ?? 'true';
+							$y++;
+						}
+					}
+
+					// Extract Anti-Actions for this condition
+					if (isset($cond->{'anti-action'})) { // Use curly braces for tags with hyphens
+						foreach ($cond->{'anti-action'} as $ant) {
+							$ant_attrs = $ant->attributes();
+							$dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_tag'] = 'anti-action';
+							$dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_type'] = (string)$ant_attrs->application ?? '';
+							$dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_data'] = (string)$ant_attrs->data ?? '';
+							// $dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_break'] = '';
+							// $dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_inline'] = (string)$ant_attrs->inline ?? '';
+							// $dialplan_templates[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_enabled'] = (string)$ant_attrs->attributes()->enabled ?? 'true';
+							$y++;
+						}
+					}
+				}
 			}
 		}
 		unset($dialplan_files, $file, $xml, $dialplan_name);
 	}
 
-//add multi-lingual support
+// Add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
-//drop app uuid from the query if not from specific apps
+// Drop app uuid from the query if not from specific apps
 	$allowed_app_uuids = [
 		'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4', //inbound routes
 		'8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3', //outbound routes
@@ -103,7 +163,7 @@
 		exit;
 	}
 
-//get posted data
+// Get posted data
 	if (!empty($_POST['dialplans'])) {
 		$action = $_POST['action'];
 		$dialplans = $_POST['dialplans'];
@@ -143,10 +203,10 @@
 	}
 	$query_string = http_build_query($url_params);
 
-//process the http post data by action
+// Process the http post data by action
 	if (!empty($action) && is_array($dialplans) && @sizeof($dialplans) != 0) {
 
-		//process action
+		// Process action
 			switch ($action) {
 				case 'copy':
 					if (permission_exists('dialplan_add')) {
@@ -174,12 +234,12 @@
 					break;
 			}
 
-		//redirect
+		// Redirect
 			header('Location: dialplans.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 	}
 
-//make sure all dialplans with context of public have the inbound route app_uuid
+// Make sure all dialplans with context of public have the inbound route app_uuid
 	if (!empty($app_uuid) && $app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') {
 		$sql = "update v_dialplans set ";
 		$sql .= "app_uuid = 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
@@ -189,7 +249,7 @@
 		unset($sql);
 	}
 
-//set from session variables
+// Set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 	$button_icon_add = $settings->get('theme', 'button_icon_add') ?? '';
 	$button_icon_copy = $settings->get('theme', 'button_icon_copy') ?? '';
@@ -200,7 +260,7 @@
 	$button_icon_edit = $settings->get('theme', 'button_icon_edit') ?? '';
 	$button_icon_reset = $settings->get('theme', 'button_icon_reset') ?? '';
 
-//get the number of rows in the dialplan
+// Get the number of rows in the dialplan
 	$sql = "select count(dialplan_uuid) from v_dialplans ";
 	if ($show == "all" && permission_exists('dialplan_all')) {
 		$sql .= "where true ";
@@ -214,10 +274,10 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (empty($app_uuid)) {
-		//hide inbound routes
+		// Hide inbound routes
 			$sql .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
 			$sql .= "and dialplan_context <> 'public' ";
-		//hide outbound routes
+		// Hide outbound routes
 			//$sql .= "and app_uuid <> '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 	}
 	else {
@@ -248,13 +308,13 @@
 	}
 	$num_rows = $database->select($sql, $parameters  ?? null, 'column');
 
-//prepare the paging
+// Prepare the paging
 	$rows_per_page = $settings->get('domain', 'paging', 50);
 	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
 
-//get the list of dialplans
+// Get the list of dialplans
 	$sql = "select ";
 	$sql .= "domain_uuid, ";
 	$sql .= "dialplan_uuid, ";
@@ -283,10 +343,10 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!is_uuid($app_uuid)) {
-		//hide inbound routes
+		// Hide inbound routes
 			$sql .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
 			$sql .= "and dialplan_context <> 'public' ";
-		//hide outbound routes
+		// Hide outbound routes
 			//$sql .= "and app_uuid <> '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 	}
 	else {
@@ -330,7 +390,63 @@
 	$dialplans = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
-//get the list of all dialplan contexts
+// Build an array of the dialplan primary keys
+	foreach($dialplans as $row) {
+		$dialplan_uuids[] = $row['dialplan_uuid'];
+	}
+
+// Get the dialplan details
+	if (!empty($dialplan_uuids)) {
+		// Create a string of placeholders (?, ?, ?) based on the number of UUIDs
+		$placeholders = implode(',', array_fill(0, count($dialplan_uuids), '?'));
+
+		// Get the dialplan details
+		$sql = "select * from v_dialplan_details ";
+		$sql .= "where dialplan_uuid in (".$placeholders.")";
+		$sql .= "order by dialplan_detail_order asc ";
+		$dialplan_details = $database->select($sql, $dialplan_uuids, 'all');
+		// echo "<pre>\n";
+		// print_r($dialplan_details);
+		// echo "</pre>\n";
+	}
+
+// Build the production dialplan array
+	foreach($dialplans as $row) {
+		$dialplan_name = $row['dialplan_name'];
+		$dialplan_context = $row['dialplan_context'];
+
+		// Replace the domain_name variable with the domain name
+		$dialplan_context = str_replace('${domain_name}', $domain_name, $dialplan_context);
+
+		$dialplan_production[$dialplan_name] = [];
+		$dialplan_production[$dialplan_name]['dialplan_name'] = $dialplan_name ?? 'true';
+		$dialplan_production[$dialplan_name]['app_uuid'] = $row['app_uuid'] ?? '';
+		$dialplan_production[$dialplan_name]['dialplan_context'] = $dialplan_context;
+		$dialplan_production[$dialplan_name]['dialplan_continue'] = $row['dialplan_continue'] ?? 'false';
+		// $dialplan_production[$dialplan_name]['global_global'] = $row['domain_uuid'] ?? 'false';
+		$dialplan_production[$dialplan_name]['dialplan_order'] = (int)$row['dialplan_order'] ?? 0;
+		$dialplan_production[$dialplan_name]['dialplan_enabled'] = $row['dialplan_enabled'] ?? 'true';
+
+		$y = 0;
+		foreach($dialplan_details as $sub_row) {
+			if ($row['dialplan_uuid'] == $sub_row['dialplan_uuid']) {
+				// $dialplan_production[$dialplan_name]['dialplan_details'][$y]['domain_uuid'] = $sub_row['domain_uuid'];
+				// $dialplan_production[$dialplan_name]['dialplan_details'][$y]['dialplan_uuid'] = $sub_row['dialplan_uuid'];
+				// $dialplan_production[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_uuid'] = $sub_row['dialplan_detail_uuid'];
+				$dialplan_production[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_tag'] = $sub_row['dialplan_detail_tag'];
+				$dialplan_production[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_type'] = $sub_row['dialplan_detail_type'] ?? '';
+				$dialplan_production[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_data'] = $sub_row['dialplan_detail_data'] ?? '';
+				// $dialplan_production[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_break'] = $sub_row['dialplan_detail_break'];
+				// $dialplan_production[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_inline'] = $sub_row['dialplan_detail_inline'];
+				// $dialplan_production[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_group'] = $sub_row['dialplan_detail_group'];
+				// $dialplan_production[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_order'] = $sub_row['dialplan_detail_order'];
+				// $dialplan_production[$dialplan_name]['dialplan_details'][$y]['dialplan_detail_enabled'] = $sub_row['dialplan_detail_enabled'];
+				$y++;
+			}
+		}
+	}
+
+// Get the list of all dialplan contexts
 	$sql = "select dc.* from ( ";
 	$sql .= "select distinct dialplan_context from v_dialplans ";
 	if ($show == "all" && permission_exists('dialplan_all')) {
@@ -341,7 +457,7 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	if (!is_uuid($app_uuid)) {
-		//hide inbound routes
+		// Hide inbound routes
 		$sql .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
 		$sql .= "and dialplan_context <> 'public' ";
 	}
@@ -353,26 +469,28 @@
 	$rows = $database->select($sql, $parameters ?? null, 'all');
 	if (is_array($rows) && @sizeof($rows) != 0) {
 		foreach ($rows as $row) {
-			//reverse the array's (string) values in preparation to sort
+			// Reverse the array's (string) values in preparation to sort
 			$dialplan_contexts[] = strrev($row['dialplan_context']);
 		}
-		//sort the reversed context values, now grouping them by the domain
+		// Sort the reversed context values, now grouping them by the domain
 		sort($dialplan_contexts, SORT_NATURAL);
-		//create new array
+		// Create new array
 		foreach ($dialplan_contexts as $dialplan_context) {
-			//if no subcontext (doesn't contain '@'), create new key in array with a null value
+			// If no subcontext (doesn't contain '@'), create new key in array with a null value
 			if (!substr_count($dialplan_context, '@') || strrev($dialplan_context) == 'global' || strrev($dialplan_context) == 'public') {
 				$array[strrev($dialplan_context)] = null;
 			}
-			//subcontext (contains '@'), create new key in array, and place subcontext in subarray
+			// Subcontext (contains '@'), create new key in array, and place subcontext in subarray
 			else {
 				$dialplan_context_parts = explode('@', $dialplan_context);
 				$array[strrev($dialplan_context_parts[0])][] = strrev($dialplan_context_parts[1]);
 			}
 		}
-		// sort array by key (domain)
+
+		// Sort the array by key (domain)
 		ksort($array, SORT_NATURAL);
-		// move global and public to beginning of array
+
+		// Move global and public to beginning of array
 		if (array_key_exists('global', $array)) {
 			unset($array['global']);
 			$array = array_merge(['global'=>null], $array);
@@ -386,11 +504,11 @@
 	}
 	unset($sql, $parameters, $rows, $row);
 
-//create token
+// Create the token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
-//include the header
+// Include the header
 	switch ($app_uuid) {
 		case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4": $document['title'] = $text['title-inbound_routes']; break;
 		case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3": $document['title'] = $text['title-outbound_routes']; break;
@@ -400,7 +518,7 @@
 	}
 	require_once "resources/header.php";
 
-//show the content
+// Show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>";
 	switch ($app_uuid) {
@@ -485,7 +603,7 @@
 	}
 	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$button_icon_search,'type'=>'submit','id'=>'btn_search']);
-	//echo button::create(['label'=>$text['button-reset'],'icon'=>$button_icon_reset,'type'=>'button','id'=>'btn_reset','link'=>'dialplans.php?app_uuid='.urlencode($app_uuid),'style'=>($search == '' ? 'display: none;' : null)]);
+	// echo button::create(['label'=>$text['button-reset'],'icon'=>$button_icon_reset,'type'=>'button','id'=>'btn_reset','link'=>'dialplans.php?app_uuid='.urlencode($app_uuid),'style'=>($search == '' ? 'display: none;' : null)]);
 	if (!empty($paging_controls_mini)) {
 		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>";
 	}
@@ -561,6 +679,7 @@
 		echo th_order_by('dialplan_context', $text['label-context'], $order_by, $order, null, null, $query_string);
 	}
 	echo th_order_by('dialplan_order', $text['label-order'], $order_by, $order, null, "class='center shrink'", $query_string);
+	// echo "<th>" . $text['label-status'] . " &nbsp;</th>\n";
 	echo th_order_by('dialplan_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $query_string);
 	echo th_order_by('dialplan_description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn' style='min-width: 100px;'", $query_string);
 	if ((
@@ -577,10 +696,33 @@
 	if (!empty($dialplans)) {
 		$x = 0;
 		foreach ($dialplans as $row) {
-			//set the dialplan description
+			// Set the dialplan description
 			$dialplan_description = $row['dialplan_description'] ?? $text['description-dialplan_'.$row['dialplan_name']] ?? '';
 			$dialplan_description = str_replace('${number}', $row['dialplan_number'] ?? '', $dialplan_description);
 
+			// Compare the database dialplans with the default dialplan templates. Set the dialplan name to bold when the dialplan has been modified.
+			$dialplan_status = '';
+			$dialplan_diff = '';
+			$dialplan_tooltip = '';
+			if (isset($dialplan_templates[$row['dialplan_name']]) && isset($dialplan_production[$row['dialplan_name']])) {
+				$template_hash = serialize($dialplan_templates[$row['dialplan_name']]);
+				$production_hash = serialize($dialplan_production[$row['dialplan_name']]);
+				if ($template_hash == $production_hash) {
+					$dialplan_status = $text['label-default'];
+					$dialplan_tooltip = 'Default';
+				}
+				else {
+					$dialplan_status = 'custom';
+					$dialplan_tooltip = $text['label-modified'];
+				}
+				// if (!empty($dialplan_production[$row['dialplan_name']])) {
+				// 	$dialplan_diff = array_diff_deep($dialplan_templates[$row['dialplan_name']], $dialplan_production[$row['dialplan_name']]);
+				// }
+			}
+			$dialplan_bold = ($dialplan_status == 'custom') ? true : false;
+			$hover_tooltip = (!empty($dialplan_status)) ? " title='".escape($dialplan_tooltip)."'" : '';
+
+			// Prepare the List URL
 			$list_row_url = '';
 			if ($row['app_uuid'] == "4b821450-926b-175a-af93-a03c441818b1") {
 				if (permission_exists('time_condition_edit') || permission_exists('dialplan_edit')) {
@@ -601,6 +743,8 @@
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid'] ?? '').'&domain_change=true';
 				}
 			}
+
+			// Show the dialplan rows
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (
 				(!is_uuid($app_uuid) && (permission_exists('dialplan_add') || permission_exists('dialplan_edit') || permission_exists('dialplan_delete'))) ||
@@ -625,7 +769,7 @@
 			}
 			echo "	<td>";
 			if ($list_row_url) {
-				echo "<a href='".$list_row_url."'>".escape($row['dialplan_name'])."</a>";
+				echo "<a href='".$list_row_url."' ".($dialplan_bold ? " style='font-weight: bold;'" : "").$hover_tooltip.">".escape($row['dialplan_name'])."</a>";
 			}
 			else {
 				echo escape($row['dialplan_name']);
@@ -636,7 +780,13 @@
 				echo "	<td>".escape($row['dialplan_context'])."</td>\n";
 			}
 			echo "	<td class='center'>".escape($row['dialplan_order'])."</td>\n";
-			$original_enabled = $dialplan_templates[$row['dialplan_name']]['enabled'] ?? $row['dialplan_enabled'];
+
+			// echo "	<td class='left'>".$dialplan_status."</td>\n";
+			// if (!empty($dialplan_diff)) {
+			//	echo "	<td class='left'><pre>".print_r($dialplan_diff, true)."</pre></td>\n";
+			// }
+
+			$original_enabled = $dialplan_templates[$row['dialplan_name']]['dialplan_enabled'] ?? $row['dialplan_enabled'];
 			$bold_enabled = $row['dialplan_enabled'] != $original_enabled;
 			if (
 				(!is_uuid($app_uuid) && permission_exists('dialplan_edit')) ||
@@ -680,7 +830,7 @@
 
 	echo "</form>\n";
 
-//include the footer
+// Include the footer
 	require_once "resources/footer.php";
 
 ?>
