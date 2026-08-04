@@ -2881,6 +2881,46 @@ if (!function_exists('array_key_first')) {
 	}
 }
 
+// Define function array_diff_deep to return the difference between arrays
+if (!function_exists('array_diff_deep')) {
+	function array_diff_deep($array1, $array2) {
+		// Guard clause: Handle non-array inputs safely
+		if (!is_array($array1) || !is_array($array2)) {
+			return ($array1 !== $array2) ? ['old' => $array1, 'new' => $array2] : [];
+		}
+
+		// Initialize the diff array
+		$diff = [];
+
+		// Compare keys in array1 against array2
+		foreach ($array1 as $key => $value) {
+			// Defensive check ensures array_key_exists only receives an array (PHP 8+ safe)
+			if (!is_array($array2) || !array_key_exists($key, $array2)) {
+				$diff[$key] = ['removed' => $value];
+			}
+			elseif (is_array($value) && is_array($array2[$key])) {
+				// Recurse only when both sides are arrays
+				$sub_diff = array_diff_deep($value, $array2[$key]);
+				if ($sub_diff !== []) {
+					$diff[$key] = $sub_diff;
+				}
+			}
+			elseif ($value !== $array2[$key]) {
+				$diff[$key] = ['old' => $value, 'new' => $array2[$key]];
+			}
+		}
+
+		// Compare keys in array2 against array1 (find added keys)
+		foreach ($array2 as $key => $value) {
+			if (!is_array($array1) || !array_key_exists($key, $array1)) {
+				$diff[$key] = ['added' => $value];
+			}
+		}
+
+		return $diff;
+	}
+}
+
 //get accountcode
 if (!function_exists('get_accountcode')) {
 	/**
