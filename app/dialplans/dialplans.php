@@ -66,7 +66,7 @@
 			// Get the values
 			$app_uuid = (string)$xml->attributes()->app_uuid ?? '';
 			$dialplan_context = (string)$xml->attributes()->context ?? 'public';
-			$dialplan_continue = (string)trim($xml->attributes()->continue) ?? '';
+			$dialplan_continue = (string)trim($xml->attributes()->continue ?? '');
 			$dialplan_global = (string)$xml->attributes()->global ?? 'false';
 			$dialplan_order = (string)$xml->attributes()->order ?? 0;
 			$dialplan_enabled = (string)$xml->attributes()->enabled ?? '';
@@ -93,11 +93,6 @@
 			// $dialplan_templates[$dialplan_name]['dialplan_global'] = $dialplan_global;
 			$dialplan_templates[$dialplan_name]['dialplan_order'] = (int)$dialplan_order;
 			$dialplan_templates[$dialplan_name]['dialplan_enabled'] = $dialplan_enabled;
-
-			// Replace the dynamic content
-			if ($dialplan_templates[$dialplan_name]['context'] === '${domain_name}' && !empty($domain_name)) {
-				$dialplan_templates[$dialplan_name]['context'] = $domain_name;
-			}
 
 			// Add the dialplan details
 			if (isset($xml->condition)) {
