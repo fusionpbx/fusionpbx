@@ -888,6 +888,7 @@ class voicemail {
 		$sql                                  .= "	to_char(timezone(:time_zone, to_timestamp(vm.created_epoch)), 'Day DD Mon YYYY HH:MI:SS PM') as message_date, ";
 		$sql                                  .= "	v.voicemail_id, ";
 		$sql                                  .= "	v.voicemail_mail_to, ";
+		$sql                                  .= "	v.voicemail_sms_to, ";
 		$sql                                  .= "	v.voicemail_description, ";
 		$sql                                  .= "	v.voicemail_file, ";
 		$sql                                  .= "	d.domain_name ";
@@ -1098,6 +1099,128 @@ class voicemail {
 			@unlink($voicemail_message_path . '/' . $voicemail_message_file);
 			@unlink($voicemail_message_path . '/' . $voicemail_intro_file);
 			@unlink($voicemail_message_path . '/' . $voicemail_combined_file);
+		}
+
+		//queue SMS/MMS notification via messages app when voicemail_sms_to is set
+		if (!empty($message['voicemail_sms_to']) && file_exists(dirname(__DIR__, 4) . '/app/messages/')) {
+			$sms_from = $settings->get('voicemail', 'voicemail_to_sms_did', '');
+
+			if (!empty($sms_from)) {
+				$sms_body_template = $settings->get('voicemail', 'voicemail_sms_body',
+					"New voicemail from ${caller_id_name} <${caller_id_number}>\nDuration: ${message_duration}");
+				$msg_duration = '0' . gmdate("G:i:s", ($message['message_length'] ?? 0));
+				$transcription_plain = '';
+				if (!empty($message['message_transcription'])) {
+					$transcription_plain = trim(preg_replace('/\s+/', ' ', strip_tags($message['message_transcription'])));
+				}
+				$sms_body = str_replace('${caller_id_name}',   $message['caller_id_name'] ?? '',   $sms_body_template);
+				$sms_body = str_replace('${caller_id_number}', $message['caller_id_number'] ?? '', $sms_body);
+				$sms_body = str_replace('${message_duration}', $msg_duration,                     $sms_body);
+				$sms_body = str_replace('${message_text}',     $transcription_plain,              $sms_body);
+				//if template didn't include \${message_text} and transcription is available, append it
+				if (!empty($transcription_plain) && !str_contains($sms_body_template, '${message_text}')) {
+					$sms_body .= "\nTranscription: " . $transcription_plain;
+				}
+
+				$sms_from_clean = preg_replace('/[^\+0-9]/', '', $sms_from);
+				$sms_to_clean   = preg_replace('/[^\+0-9]/', '', $message['voicemail_sms_to']);
+					//normalize to E.164: 10-digit NANP → +1XXXXXXXXXX, 11-digit starting with 1 → +1XXXXXXXXXX
+					if (!str_starts_with($sms_to_clean, '+')) {
+						if (strlen($sms_to_clean) === 10) {
+							$sms_to_clean = '+1' . $sms_to_clean;
+						} elseif (strlen($sms_to_clean) === 11 && $sms_to_clean[0] === '1') {
+							$sms_to_clean = '+' . $sms_to_clean;
+						}
+					}
+
+				//look up the provider via the FROM DID in v_destinations
+				$sql  = "select provider_uuid from v_destinations where ";
+				$sql .= "( destination_prefix || destination_area_code || destination_number = :dn ";
+				$sql .= " or destination_trunk_prefix || destination_area_code || destination_number = :dn ";
+				$sql .= " or destination_prefix || destination_number = :dn ";
+				$sql .= " or '+' || destination_prefix || destination_number = :dn ";
+				$sql .= " or '+' || destination_prefix || destination_area_code || destination_number = :dn ";
+				$sql .= " or destination_area_code || destination_number = :dn ";
+				$sql .= " or destination_number = :dn) ";
+				$sql .= "and provider_uuid is not null and destination_enabled = 'true' limit 1";
+				$parameters['dn'] = $sms_from_clean;
+				$dest_row = $this->database->select($sql, $parameters, 'row');
+				$provider_uuid_sms = $dest_row['provider_uuid'] ?? null;
+				unset($parameters, $dest_row);
+
+				if (!empty($provider_uuid_sms)) {
+					$message_queue_uuid = uuid();
+					$message_media_uuid = uuid();
+
+					//determine MMS media when voicemail_file = attach
+					$msg_type     = 'sms';
+					$media_base64 = null;
+					$media_name   = null;
+					$media_ext    = null;
+					if (!empty($message['voicemail_file']) && $message['voicemail_file'] === 'attach') {
+						$media_candidate = $voicemail_message_path . '/' . ($voicemail_combined_file ?? $voicemail_message_file);
+						if (!file_exists($media_candidate)) {
+							$media_candidate = $voicemail_message_path . '/' . $voicemail_message_file;
+						}
+						if (file_exists($media_candidate)) {
+							$media_base64 = !empty($message['message_combined_base64'])
+								? $message['message_combined_base64']
+								: (!empty($message['message_base64']) ? $message['message_base64'] : base64_encode(file_get_contents($media_candidate)));
+							$media_name   = basename($media_candidate);
+							$media_ext    = strtolower(pathinfo($media_candidate, PATHINFO_EXTENSION));
+							$msg_type     = 'mms';
+						}
+					}
+
+
+					//build the media URL for MMS — provider fetches this URL to get the audio
+					$media_url = null;
+					if (!empty($media_base64)) {
+						$sql_dn = "select domain_name from v_domains where domain_uuid = :domain_uuid limit 1";
+						$dn_row = $this->database->select($sql_dn, ['domain_uuid' => $this->domain_uuid], 'row');
+						$domain_name_for_url = $dn_row['domain_name'] ?? gethostname();
+						$media_url = 'https://' . $domain_name_for_url . '/app/messages/message_media_outbound.php?id=' . $message_media_uuid;
+					}
+					//insert into v_message_queue
+					$sql = "insert into v_message_queue ";
+					$sql .= "(message_queue_uuid, domain_uuid, provider_uuid, hostname, ";
+					$sql .= " message_status, message_type, message_direction, message_date, ";
+					$sql .= " message_from, message_to, message_text) ";
+					$sql .= "values (:message_queue_uuid, :domain_uuid, :provider_uuid, :hostname, ";
+					$sql .= " :message_status, :message_type, :message_direction, now(), ";
+					$sql .= " :message_from, :message_to, :message_text)";
+					$parameters['message_queue_uuid'] = $message_queue_uuid;
+					$parameters['domain_uuid']        = $this->domain_uuid;
+					$parameters['provider_uuid']      = $provider_uuid_sms;
+					$parameters['hostname']           = gethostname();
+					$parameters['message_status']     = 'waiting';
+					$parameters['message_type']       = $msg_type;
+					$parameters['message_direction']  = 'outbound';
+					$parameters['message_from']       = $sms_from_clean;
+					$parameters['message_to']         = $sms_to_clean;
+					$parameters['message_text']       = $sms_body;
+					$this->database->execute($sql, $parameters);
+					unset($parameters);
+
+					//insert MMS media record with URL so the provider can fetch the audio
+					if (!empty($media_base64)) {
+						$sql = "insert into v_message_media ";
+						$sql .= "(message_media_uuid, message_uuid, domain_uuid, ";
+						$sql .= " message_media_name, message_media_type, message_media_date, message_media_url, message_media_content) ";
+						$sql .= "values (:message_media_uuid, :message_uuid, :domain_uuid, ";
+						$sql .= " :message_media_name, :message_media_type, now(), :message_media_url, :message_media_content)";
+						$parameters['message_media_uuid']    = $message_media_uuid;
+						$parameters['message_uuid']          = $message_queue_uuid;
+						$parameters['domain_uuid']           = $this->domain_uuid;
+						$parameters['message_media_name']    = $media_name;
+						$parameters['message_media_type']    = $media_ext;
+						$parameters['message_media_url']     = $media_url;
+						$parameters['message_media_content'] = $media_base64;
+						$this->database->execute($sql, $parameters);
+						unset($parameters);
+					}
+				}
+			}
 		}
 
 		return true;

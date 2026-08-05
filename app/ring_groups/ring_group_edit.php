@@ -352,6 +352,16 @@
 			//if (empty($ring_group_greeting)) { $msg .= $text['message-greeting']."<br>\n"; }
 			if (empty($ring_group_strategy)) { $msg .= $text['message-strategy']."<br>\n"; }
 			if (empty($ring_group_call_timeout)) { $msg .= $text['message-call_timeout']."<br>\n"; }
+			if (($ring_group_missed_call_app === 'sms' || $ring_group_missed_call_app === 'text') && !empty($ring_group_missed_call_data)) {
+				$_sms_check = array_filter(array_map('trim', explode(',', $ring_group_missed_call_data)));
+				foreach ($_sms_check as $_n) {
+					if (!preg_match('/^\+[0-9]+$/', $_n)) {
+						$msg .= $text['message-missed_call_sms']."<br>\n";
+						break;
+					}
+				}
+				unset($_sms_check, $_n);
+			}
 			//if (empty($ring_group_timeout_app)) { $msg .= $text['message-timeout_action']."<br>\n"; }
 			//if (empty($ring_group_cid_name_prefix)) { $msg .= "Please provide: Caller ID Name Prefix<br>\n"; }
 			//if (empty($ring_group_cid_number_prefix)) { $msg .= "Please provide: Caller ID Number Prefix<br>\n"; }
@@ -393,13 +403,16 @@
 						}
 					}
 					break;
+				case 'sms':
 				case 'text':
-					$ring_group_missed_call_data = str_replace('-','',$ring_group_missed_call_data);
-					$ring_group_missed_call_data = str_replace('.','',$ring_group_missed_call_data);
-					$ring_group_missed_call_data = str_replace('(','',$ring_group_missed_call_data);
-					$ring_group_missed_call_data = str_replace(')','',$ring_group_missed_call_data);
-					$ring_group_missed_call_data = str_replace(' ','',$ring_group_missed_call_data);
-					if (!is_numeric($ring_group_missed_call_data)) { unset($ring_group_missed_call_app, $ring_group_missed_call_data); }
+					// Numbers are E.164-validated above; just normalize whitespace and rejoin.
+					if (!empty($ring_group_missed_call_data)) {
+						$_sms_numbers = array_filter(array_map('trim', explode(',', $ring_group_missed_call_data)));
+						$ring_group_missed_call_data = implode(',', $_sms_numbers);
+						unset($_sms_numbers);
+					} else {
+						unset($ring_group_missed_call_app, $ring_group_missed_call_data);
+					}
 					break;
 				default:
 					unset($ring_group_missed_call_app, $ring_group_missed_call_data);
@@ -1768,11 +1781,12 @@
 		echo "    <select class='formfld' name='ring_group_missed_call_app' id='ring_group_missed_call_app' onchange=\"if (this.selectedIndex != 0) { document.getElementById('ring_group_missed_call_data').style.display = ''; document.getElementById('ring_group_missed_call_data').focus(); } else { document.getElementById('ring_group_missed_call_data').style.display='none'; }\">\n";
 		echo "		<option value=''></option>\n";
 		echo "    	<option value='email' ".(($ring_group_missed_call_app == "email" && $ring_group_missed_call_data != '') ? "selected='selected'" : null).">".$text['label-email']."</option>\n";
-		//echo "    	<option value='text' ".(($ring_group_missed_call_app == "text" && $ring_group_missed_call_data != '') ? "selected='selected'" : null).">".$text['label-text']."</option>\n";
-		//echo "    	<option value='url' ".(($ring_group_missed_call_app == "url" && $ring_group_missed_call_data != '') ? "selected='selected'" : null).">".$text['label-url']."</option>\n";
+		// Show SMS option only when the messages app is installed.
+		if (file_exists(dirname(__DIR__, 2).'/app/messages/')) {
+			echo "    	<option value='sms' ".(($ring_group_missed_call_app == "sms" && $ring_group_missed_call_data != '') ? "selected='selected'" : null).">SMS</option>\n";
+		}
 		echo "    </select>\n";
-		$ring_group_missed_call_data = ($ring_group_missed_call_app == 'text') ? format_phone($ring_group_missed_call_data) : $ring_group_missed_call_data;
-		echo "    <input class='formfld' type='text' name='ring_group_missed_call_data' id='ring_group_missed_call_data' maxlength='255' value=\"".escape($ring_group_missed_call_data)."\" style='min-width: 200px; width: 200px; ".(($ring_group_missed_call_app == '' || $ring_group_missed_call_data == '') ? "display: none;" : null)."'>\n";
+		echo "    <input class='formfld' type='text' name='ring_group_missed_call_data' id='ring_group_missed_call_data' maxlength='255' placeholder='+15551234567,+14161234567' value=\"".escape($ring_group_missed_call_data)."\" style='min-width: 200px; width: 200px; ".(($ring_group_missed_call_app == '' || $ring_group_missed_call_data == '') ? "display: none;" : null)."'>\n";
 		echo "<br />\n";
 		echo $text['description-missed_call']."\n";
 		echo "</td>\n";
