@@ -3537,7 +3537,6 @@ else { //default: white
 		float: right;
 		white-space: normal;
 		overflow-wrap: break-word;
-		overflow: hidden;
 		}
 
 	div.action_bar > div.actions > div.unsaved {
@@ -4162,7 +4161,8 @@ else { //default: white
 		border-top: none;
 		box-shadow: 0 4px 8px rgba(0,0,0,0.12);
 		z-index: 4;
-		width: 100%;
+		min-width: 100%;
+		width: max-content;
 		max-height: 300px;
 		overflow-y: auto;
 		box-sizing: border-box;
@@ -4172,13 +4172,7 @@ else { //default: white
 		color: <?=$input_text_color?>;
 	}
 
-	.searchable_select_wrapper .search_results {
-		min-width: 100%;
-		width: max-content;
-	}
-
 	.domain-search-results {
-		position: fixed;
 		z-index: 1000;
 	}
 
