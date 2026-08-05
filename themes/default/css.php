@@ -4162,7 +4162,8 @@ else { //default: white
 		border-top: none;
 		box-shadow: 0 4px 8px rgba(0,0,0,0.12);
 		z-index: 4;
-		width: 100%;
+		min-width: 100%;
+		width: max-content;
 		max-height: 300px;
 		overflow-y: auto;
 		box-sizing: border-box;
@@ -4210,7 +4211,7 @@ else { //default: white
 		position: absolute;
 		top: 0;
 		right: 0;
-		padding: 4px 6px;
+		padding: 1px 4px 0 4px;
 		gap: 6px;
 		height: 100%;
 		display: flex;
