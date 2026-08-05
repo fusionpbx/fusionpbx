@@ -4162,8 +4162,7 @@ else { //default: white
 		border-top: none;
 		box-shadow: 0 4px 8px rgba(0,0,0,0.12);
 		z-index: 4;
-		min-width: 100%;
-		width: max-content;
+		width: 100%;
 		max-height: 300px;
 		overflow-y: auto;
 		box-sizing: border-box;
@@ -4171,6 +4170,11 @@ else { //default: white
 		font-family: <?=$input_text_font?>;
 		font-size: <?=$input_text_size?>;
 		color: <?=$input_text_color?>;
+	}
+
+	.searchable_select_wrapper .search_results {
+		min-width: 100%;
+		width: max-content;
 	}
 
 	.domain-search-results {
