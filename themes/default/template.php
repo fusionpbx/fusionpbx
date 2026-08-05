@@ -975,6 +975,9 @@
 
 					var picker = document.createElement('div');
 					picker.className = 'domain-search-picker';
+					if (select.id) {
+						picker.id = select.id + '_domain_search_picker';
+					}
 
 					var input = document.createElement('input');
 					input.type = 'text';
@@ -986,7 +989,16 @@
 					clear_button.className = 'domain-search-clear';
 					clear_button.innerHTML = '&times;';
 					clear_button.setAttribute('aria-label', 'Clear search');
+
+					var results = document.createElement('div');
+					results.className = 'domain-search-results'; 
+					results.setAttribute('role', 'listbox');
+					results.style.display = 'none';
+
+					picker.appendChild(input);
 					picker.appendChild(clear_button);
+					picker.appendChild(results);
+					select.parentNode.insertBefore(picker, select);
 
 					clear_button.addEventListener('click', function(e) {
 						e.preventDefault();
@@ -997,24 +1009,6 @@
 						render_results();
 						input.focus();
 					});
-
-					var results = document.createElement('div');
-					results.className = 'domain-search-results';
-					results.setAttribute('role', 'listbox');
-					picker.appendChild(input);
-					select.parentNode.insertBefore(picker, select.nextSibling);
-					document.body.appendChild(results);
-
-					select.style.position = 'absolute';
-					select.style.left = '-10000px';
-					select.style.width = '1px';
-					select.style.height = '1px';
-					select.style.opacity = '0';
-					select.style.pointerEvents = 'none';
-					select.setAttribute('tabindex', '-1');
-					if (select.id) {
-						picker.id = select.id + '_domain_search_picker';
-					}
 
 					var dataset = [];
 					var active_index = -1;
@@ -1036,40 +1030,6 @@
 					function sync_input_to_select() {
 						input.value = get_selected_label();
 						clear_button.style.display = (input.value.trim() !== '') ? 'inline-flex' : 'none';
-					}
-
-					// Results panel is on document.body; match .formfld / theme input typography
-					function sync_results_typography_from_input() {
-						var cs = window.getComputedStyle(input);
-						results.style.fontFamily = cs.fontFamily;
-						results.style.fontSize = cs.fontSize;
-						results.style.fontWeight = cs.fontWeight;
-						results.style.fontStyle = cs.fontStyle;
-						results.style.lineHeight = cs.lineHeight;
-						results.style.letterSpacing = cs.letterSpacing;
-						results.style.color = cs.color;
-					}
-
-					function position_results_panel() {
-						if (results.style.display === 'none' || results.style.display === '') { return; }
-						var rect = input.getBoundingClientRect();
-						var vw = window.innerWidth || document.documentElement.clientWidth;
-						var vh = window.innerHeight || document.documentElement.clientHeight;
-						var panel_width = Math.min(Math.max(rect.width, 160), vw - 16);
-						var left = rect.left;
-						if (left + panel_width > vw - 8) { left = Math.max(8, vw - panel_width - 8); }
-						else if (left < 8) { left = 8; }
-						results.style.left = left + 'px';
-						var max_h = Math.min(260, Math.max(120, vh - 16));
-						results.style.maxHeight = max_h + 'px';
-						results.style.width = panel_width + 'px';
-						var top = rect.bottom + 2;
-						var h = results.offsetHeight || 1;
-						if (top + h > vh - 8 && rect.top > h + 8) {
-							top = rect.top - h - 2;
-						}
-						if (top < 8) { top = 8; }
-						results.style.top = top + 'px';
 					}
 
 					function close_results() {
@@ -1095,7 +1055,6 @@
 					}
 
 					function render_results() {
-						sync_results_typography_from_input();
 						var query = (input.value || '').toLowerCase().trim();
 						var matches = [];
 						if (global_option !== null) {
@@ -1133,7 +1092,6 @@
 							empty.innerText = '{/literal}{$text.label_no_matching_domains}{literal}...';
 							results.appendChild(empty);
 							open_results();
-							window.requestAnimationFrame(position_results_panel);
 							return;
 						}
 
@@ -1157,7 +1115,6 @@
 						clear_button.style.display = (input.value.trim() !== '') ? 'inline-flex' : 'none';
 
 						open_results();
-						window.requestAnimationFrame(position_results_panel);
 					}
 
 					function update_active_row() {
@@ -1228,19 +1185,14 @@
 					function sync_picker_visibility() {
 						var hide = window.getComputedStyle(select).display === 'none';
 						picker.style.display = hide ? 'none' : 'inline-block';
+						select.style.display = 'none';
 						if (hide) { close_results(); }
 					}
 					sync_picker_visibility();
 					select._domainSearchSyncVisibility = sync_picker_visibility;
 
-					function on_reposition_results() {
-						if (results.style.display === 'block') { position_results_panel(); }
-					}
-					window.addEventListener('scroll', on_reposition_results, true);
-					window.addEventListener('resize', on_reposition_results);
-
 					document.addEventListener('mousedown', function(event) {
-						if (!picker.contains(event.target) && !results.contains(event.target)) {
+						if (!picker.contains(event.target)) {
 							close_results();
 						}
 					});
@@ -1270,7 +1222,6 @@
 						var width_ch = Math.max(18, Math.min(longest_label + 2, 80));
 						input.style.width = width_ch + 'ch';
 						sync_input_to_select();
-						sync_results_typography_from_input();
 					});
 				}
 
