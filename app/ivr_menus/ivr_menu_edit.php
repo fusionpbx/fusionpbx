@@ -50,6 +50,7 @@
 	$ivr_menu_greet_short = '';
 	$ivr_menu_description = '';
 	$ivr_menu_ringback = $settings->get('ivr_menu','default_ringback', 'local_stream://default');
+	$ivr_menu_exit_sound = '';
 	$recording_name = '';
 	$recording_message = '';
 	$recording_description = '';

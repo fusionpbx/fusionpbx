@@ -129,7 +129,7 @@ class switch_recordings {
 				$recordings[$switch_recordings_domain_dir . "/" . $row['recording_filename']] = $row['recording_filename'];
 			}
 		} else {
-			$recordings = false;
+			$recordings = [];
 		}
 		unset($sql, $parameters, $result, $row);
 		return $recordings;
