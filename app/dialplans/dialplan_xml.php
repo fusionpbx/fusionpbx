@@ -35,6 +35,9 @@
 		exit;
 	}
 
+//set the defaults
+	$dialplan_uuid = '';
+
 //get and the domain_uuid from the PHP session
 	$domain_uuid = $_SESSION['domain_uuid'];
 	$domain_name = $_SESSION['domain_name'];

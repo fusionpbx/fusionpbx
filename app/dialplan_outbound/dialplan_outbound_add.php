@@ -49,6 +49,7 @@
 	$limit = '';
 	$accountcode = '';
 	$toll_allow = '';
+	$pin_number = '';
 
 //set the defaults
 	$domain_uuid = $_SESSION['domain_uuid'];

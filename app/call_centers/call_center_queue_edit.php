@@ -45,6 +45,7 @@
 //set the defaults
 	$queue_name = '';
 	$queue_extension = '';
+	$queue_limit = '';
 	$queue_time_base_score_sec = '';
 	$queue_cid_prefix = '';
 	$queue_announce_frequency = '';

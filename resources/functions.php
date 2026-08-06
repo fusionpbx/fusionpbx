@@ -2824,7 +2824,7 @@ if (!function_exists('byte_convert')) {
 			$bytes = $bytes / $step;
 			$i++;
 		}
-		return round($bytes, $precision) . ' ' . $units[$i];
+		return round($bytes ?? 0, $precision) . ' ' . $units[$i];
 	}
 }
 
