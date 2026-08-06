@@ -355,6 +355,7 @@
 	require "app.voicemail.resources.functions.record_message";
 	require "app.voicemail.resources.functions.record_menu";
 	require "app.voicemail.resources.functions.forward_add_intro";
+	require "app.voicemail.resources.functions.forward_menu";
 	require "app.voicemail.resources.functions.forward_to_extension";
 	require "app.voicemail.resources.functions.main_menu";
 	require "app.voicemail.resources.functions.listen_to_recording";
