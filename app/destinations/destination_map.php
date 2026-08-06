@@ -72,6 +72,7 @@ foreach($array as $key => $value) {
 }
 
 //include the header
+$document['title'] = $text['title-destination_map'];
 require_once "resources/header.php";
 
 //show the content
