@@ -146,7 +146,7 @@ class sounds {
 		}
 
 		//send the results
-		return $array;
+		return $array ?? [];
 
 	}
 
