@@ -2581,7 +2581,7 @@ if (permission_exists('contact_setting_view')) {
 if (permission_exists('contact_attachment_view')) {
 	$x = 0;
 	foreach($contact_attachments as $row) {
-		$attachment_type = strtolower(pathinfo($row['attachment_filename'], PATHINFO_EXTENSION));
+		$attachment_type = strtolower(pathinfo($row['attachment_filename'] ?? '', PATHINFO_EXTENSION));
 		$attachment_type_label = $attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png' ? $text['label-image'] : $text['label-file'];
 		echo "<div class='form_set card'>\n";
 		echo "	<div class='heading'>\n";
@@ -2615,7 +2615,7 @@ if (permission_exists('contact_attachment_view')) {
 		echo "		".$text['label-attachment']."\n";
 		echo "	</div>\n";
 		echo "	<div class='field no-wrap'>\n";
-		$attachment_type = strtolower(pathinfo($row['attachment_filename'], PATHINFO_EXTENSION));
+		$attachment_type = strtolower(pathinfo($row['attachment_filename'] ?? '', PATHINFO_EXTENSION));
 		//if ($action == 'update') {
 			echo "<input type='hidden' name='attachment_filename' value=\"".escape($row['attachment_filename'])."\">\n";
 			if ($attachment_type == 'jpg' || $attachment_type == 'jpeg' || $attachment_type == 'gif' || $attachment_type == 'png') {
