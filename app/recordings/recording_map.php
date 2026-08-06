@@ -136,7 +136,7 @@
 	$language = $settings->get('domain', 'language', 'en-us');
 
 //additional includes
-	$document['title'] = $text['title-music_on_hold_map'];
+	$document['title'] = $text['title-recordings_map'];
 	require_once "resources/header.php";
 
 //show the content
