@@ -1354,8 +1354,8 @@ class menu {
 		$html .= "		<style>\n";
 		$html .= "		div#body_header_user_menu {\n";
 		$html .= "				position-anchor: --user-menu;\n";
-		$html .= "				top: anchor(bottom);\n";
-		$html .= "				right: anchor(right);\n";
+		$html .= "				top: calc(anchor(bottom) - 8px);\n";
+		$html .= "				right: calc(anchor(right) - 12px);\n";
 		$html .= "			}\n";
 		$html .= "		</style>\n";
 
@@ -1531,8 +1531,8 @@ class menu {
 		$html .= "<style>\n";
 		$html .= "div#body_header_user_menu {\n";
 		$html .= "		position-anchor: --user-menu;\n";
-		$html .= "		top: calc(anchor(bottom) + 19.5px);\n";
-		$html .= "		right: calc(anchor(right) + 15px);\n";
+		$html .= "		top: calc(anchor(bottom) + 8px);\n";
+		$html .= "		right: calc(anchor(right) + 4px);\n";
 		$html .= "	}\n";
 		$html .= "</style>\n";
 
