@@ -244,6 +244,7 @@
 				$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
 				$array['dialplan_details'][$x]['dialplan_detail_group'] = 0;
 				$array['dialplan_details'][$x]['dialplan_detail_order'] = 10;
+				$array['dialplan_details'][$x]['dialplan_detail_enabled'] = 'true';
 				$x++;
 				$array['dialplan_details'][$x]['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : null;
 				$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
@@ -255,6 +256,7 @@
 				$array['dialplan_details'][$x]['dialplan_detail_inline'] = 'true';
 				$array['dialplan_details'][$x]['dialplan_detail_group'] = 0;
 				$array['dialplan_details'][$x]['dialplan_detail_order'] = 20;
+				$array['dialplan_details'][$x]['dialplan_detail_enabled'] = 'true';
 				$x++;
 			}
 
@@ -494,6 +496,7 @@
 									$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
 									$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
 									$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+									$array['dialplan_details'][$x]['dialplan_detail_enabled'] = 'true';
 									$x++;
 								}
 
@@ -510,6 +513,7 @@
 									$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
 									$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
 									$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+									$array['dialplan_details'][$x]['dialplan_detail_enabled'] = 'true';
 									$x++;
 								}
 
@@ -552,6 +556,7 @@
 												$array['dialplan_details'][$x]['dialplan_detail_inline'] = 'true';
 												$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
 												$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+												$array['dialplan_details'][$x]['dialplan_detail_enabled'] = 'true';
 												$x++;
 											}
 										}
@@ -584,6 +589,7 @@
 							$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
 							$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
 							$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+							$array['dialplan_details'][$x]['dialplan_detail_enabled'] = 'true';
 							$x++;
 						}
 					}
@@ -610,6 +616,7 @@
 				$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
 				$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
 				$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+				$array['dialplan_details'][$x]['dialplan_detail_enabled'] = 'true';
 				$x++;
 
 				// Add anti-action
@@ -626,6 +633,7 @@
 				$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
 				$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
 				$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+				$array['dialplan_details'][$x]['dialplan_detail_enabled'] = 'true';
 				$x++;
 			}
 
