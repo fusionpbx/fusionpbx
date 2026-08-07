@@ -1138,9 +1138,7 @@ else { //default: white
 		z-index: 6;
 		display: none;
 		position: absolute;
-		<?php if ($menu_style != 'inline') { ?>
-			top: 50px;
-		<?php } ?>
+		/* top: specified in /resources/classes/menu.php */
 		/* right: specified in /resources/classes/menu.php */
 		padding: 15px;
 		background-color: <?=$body_header_background_color?>;
@@ -1158,7 +1156,7 @@ else { //default: white
 	@media (max-width: 575.98px) {
 		div#body_header_user_menu {
 			width: calc(100% - 20px);
-			/* right: specified in /resources/classes/menu.php */
+			right: 10px !important;
 			}
 		}
 
