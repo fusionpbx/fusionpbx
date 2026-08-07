@@ -1323,7 +1323,7 @@ class menu {
 			if ($this->settings->get('theme', 'body_header_user_image', true) == true && !empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image'])) {
 				$user_graphic = "<span style=\"display: inline-block; vertical-align: middle; width: 15px; height: 15px; border-radius: 50%; margin-top: -2px; background-image: url('" . PROJECT_PATH . "/core/contacts/contact_attachment.php?id=" . $_SESSION['user']['contact_image'] . "&action=download&sid=" . session_id() . "'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
 			}
-			$html .= "		<li class='nav-item'>\n";
+			$html .= "		<li class='nav-item' style='anchor-name: --user-menu;'>\n";
 			$html .= "			<a class='nav-link header_user d-block d-sm-none' href='show:usermenu' title=\"" . $this->username . "\" style='border-top: 1px solid " . ($this->settings->get('theme', 'menu_sub_background_color') ?? 'rgba(0,0,0,0.90)') . "' data-toggle='collapse' data-target='#main_navbar' onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">" . ($user_graphic ?? null) . "<span style='margin-left: 7px;'>" . escape($this->username) . "</span></a>";
 			$html .= "			<a class='nav-link header_user d-none d-sm-block' href='show:usermenu' title=\"" . $this->username . "\" onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">" . ($user_graphic ?? null) . "<span class='d-none d-md-inline' style='margin-left: 7px;'>" . escape($this->username) . "</span></a>";
 			$html .= "		</li>\n";
@@ -1348,48 +1348,45 @@ class menu {
 		$html .= "			</ul>\n";
 
 		$html .= "		</div>\n";
-		$html .= "	</div>\n";
-		$html .= "</nav>\n";
 
 		//user menu on menu bar
 		//styles below are defined here to prevent caching (following a permission change, etc)
-		$html .= "<style>\n";
-		$html .= "div#body_header_user_menu {\n";
-		$html .= "	position: fixed;\n";
-		$html .= "	right: " . (permission_exists('domain_select') ? '170px' : '30px') . " !important;\n";
-		$html .= "	}\n";
-		$html .= "@media (max-width: 575.98px) {\n";
-		$html .= "	div#body_header_user_menu {\n";
-		$html .= "		right: 10px !important;;\n";
-		$html .= "		}\n";
-		$html .= "	}\n";
-		$html .= "</style>\n";
+		$html .= "		<style>\n";
+		$html .= "		div#body_header_user_menu {\n";
+		$html .= "				position-anchor: --user-menu;\n";
+		$html .= "				top: anchor(bottom);\n";
+		$html .= "				right: anchor(right);\n";
+		$html .= "			}\n";
+		$html .= "		</style>\n";
 
-		$html .= "<div id='body_header_user_menu'>\n";
-		$html .= "	<div class='row m-0'>\n";
+		$html .= "		<div id='body_header_user_menu'>\n";
+		$html .= "			<div class='row m-0'>\n";
 		if (!empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image'])) {
-			$html .= "	<div class='col-5 col-sm-6 p-0' style=\"min-width: 130px; background-image: url('" . PROJECT_PATH . "/core/contacts/contact_attachment.php?id=" . $_SESSION['user']['contact_image'] . "&action=download&sid=" . session_id() . "'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></div>\n";
+			$html .= "			<div class='col-5 col-sm-6 p-0' style=\"min-width: 130px; background-image: url('" . PROJECT_PATH . "/core/contacts/contact_attachment.php?id=" . $_SESSION['user']['contact_image'] . "&action=download&sid=" . session_id() . "'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></div>\n";
 		} else {
-			$html .= "	<div class='col-5 col-sm-6 p-0 pt-1' style=\"min-width: 130px; cursor: help;\" title=\"" . $this->text['label-primary-contact-attachment-image'] . "\"><i class='fa-solid fa-user-circle fa-8x' style='opacity: 0.1;'></i></div>\n";
+			$html .= "			<div class='col-5 col-sm-6 p-0 pt-1' style=\"min-width: 130px; cursor: help;\" title=\"" . $this->text['label-primary-contact-attachment-image'] . "\"><i class='fa-solid fa-user-circle fa-8x' style='opacity: 0.1;'></i></div>\n";
 		}
-		// $html .= "	<div class='".(!empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image']) ? 'col-7 col-sm-6 pr-0' : 'col-12 p-0')." ' style='min-width: 130px; text-align: left;'>\n";
-		$html .= "		<div class='col-7 col-sm-6 pr-0' style='min-width: 130px; text-align: left;'>\n";
+		// $html .= "			<div class='".(!empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image']) ? 'col-7 col-sm-6 pr-0' : 'col-12 p-0')." ' style='min-width: 130px; text-align: left;'>\n";
+		$html .= "				<div class='col-7 col-sm-6 pr-0' style='min-width: 130px; text-align: left;'>\n";
 		if (!empty($_SESSION['user']['contact_name'])) {
-			$html .= "		<div style='line-height: 95%;'><strong>" . $_SESSION['user']['contact_name'] . "</strong></div>\n";
+			$html .= "				<div style='line-height: 95%;'><strong>" . $_SESSION['user']['contact_name'] . "</strong></div>\n";
 		}
 		if (!empty($_SESSION['user']['contact_organization'])) {
-			$html .= "		<div class='mt-2' style='font-size: 85%; line-height: 95%;'>" . $_SESSION['user']['contact_organization'] . "</div>\n";
+			$html .= "				<div class='mt-2' style='font-size: 85%; line-height: 95%;'>" . $_SESSION['user']['contact_organization'] . "</div>\n";
 		}
 		if (!empty($_SESSION['user']['extension'][0]['destination'])) {
-			$html .= "		<div class='mt-2' style='font-size: 90%;'><i class='fa-solid fa-phone' style='margin-right: 5px; color: #00b043;'></i><strong>" . $_SESSION['user']['extension'][0]['destination'] . "</strong></div>\n";
+			$html .= "				<div class='mt-2' style='font-size: 90%;'><i class='fa-solid fa-phone' style='margin-right: 5px; color: #00b043;'></i><strong>" . $_SESSION['user']['extension'][0]['destination'] . "</strong></div>\n";
 		}
-		$html .= "			<div class='pt-2 mt-3' style='border-top: 1px solid " . color_adjust($this->settings->get('theme', 'body_header_shadow_color'), 0.05) . ";'>\n";
-		$html .= "				<a href='" . PROJECT_PATH . "/core/users/user_profile.php'>" . $this->text['title-user_profile'] . "</a><br>\n";
-		$html .= "				<a href='" . PROJECT_PATH . "/logout.php'>" . $this->text['title-logout'] . "</a>\n";
+		$html .= "					<div class='pt-2 mt-3' style='border-top: 1px solid " . color_adjust($this->settings->get('theme', 'body_header_shadow_color'), 0.05) . ";'>\n";
+		$html .= "						<a href='" . PROJECT_PATH . "/core/users/user_profile.php'>" . $this->text['title-user_profile'] . "</a><br>\n";
+		$html .= "						<a href='" . PROJECT_PATH . "/logout.php'>" . $this->text['title-logout'] . "</a>\n";
+		$html .= "					</div>";
+		$html .= "				</div>";
 		$html .= "			</div>";
 		$html .= "		</div>";
-		$html .= "	</div>";
-		$html .= "</div>";
+
+		$html .= "	</div>\n";
+		$html .= "</nav>\n";
 
 		//modal for logout icon (above)
 		if (!empty($this->username) && $this->settings->get('theme', 'logout_icon_visible', 'false') == "true") {
@@ -1486,16 +1483,56 @@ class menu {
 		}
 		$html .= "<div id='content_container' " . $content_container_onclick . ">\n";
 
+		$html .= "	<div id='body_header'>\n";
+		//header: left
+		$html .= "		<div class='float-left'>\n";
+		// $html .= button::create(['type'=>'button','id'=>'menu_side_state_hidden_button','title'=>$this->text['theme-label-expand_menu'],'icon'=>'bars','class'=>'default '.($this->settings->get('theme', 'menu_side_state') != 'hidden' ? 'hide-sm-up ' : null).'float-left','onclick'=>'menu_side_expand();']);
+		$html .= "		<a id='menu_side_state_hidden_button' class='$menu_side_state_class' href='show:menu' onclick=\"event.preventDefault(); menu_side_expand(); event.stopPropagation();\" title=\"" . $this->text['theme-label-expand_menu'] . "\"><i class='fa-solid fa-bars fa-fw' style='margin: 7px 10px 5px 10px;'></i></a>";
+		$body_header_brand_text = escape($this->settings->get('theme', 'body_header_brand_text', 'FusionPBX'));
+		if ($this->settings->get('theme', 'body_header_brand_type') == 'image' || $this->settings->get('theme', 'body_header_brand_type') == 'image_text') {
+			$body_header_brand_image = $this->settings->get('theme', 'body_header_brand_image', PROJECT_PATH . '/themes/default/images/logo_side_expanded.png');
+			$html .= "		<div id='body_header_brand_image'>";
+			$html .= "		<a href='" . PROJECT_PATH . "/'><img id='body_header_brand_image' src='" . escape($body_header_brand_image) . "' title=\"" . escape($body_header_brand_text) . "\"></a>";
+			$html .= "		</div>";
+		}
+		if ($this->settings->get('theme', 'body_header_brand_type') == 'text' || $this->settings->get('theme', 'body_header_brand_type') == 'image_text') {
+			$html .= "		<div id='body_header_brand_text'><a href='" . PROJECT_PATH . "/'>" . $body_header_brand_text . "</a></div>";
+		}
+		$html .= "	</div>\n";
+		//header: right
+		$html .= "	<div class='float-right' style='white-space: nowrap;'>";
+		//current user
+		//set (default) user graphic size and icon
+		$user_graphic_size = 18;
+		$user_graphic = "		<i class='" . $this->settings->get('theme', 'body_header_icon_user', 'fa-solid fa-user-circle') . " fa-lg fa-fw' style='margin-right: 5px;'></i>";
+		//overwrite user graphic with image from session, if exists
+		if ($this->settings->get('theme', 'body_header_user_image', true) === true && !empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image'])) {
+			$user_graphic_size = str_replace(['px', '%'], '', intval($this->settings->get('theme', 'body_header_user_image_size', 18)));
+			$user_graphic = "		<span style=\"display: inline-block; vertical-align: middle; width: " . $user_graphic_size . "px; height: " . $user_graphic_size . "px; border-radius: 50%; margin-right: 7px; margin-top: " . ($user_graphic_size > 18 ? '-' . (ceil(($user_graphic_size - 18) / 2) - 4) : '-4') . "px; background-image: url('" . PROJECT_PATH . "/core/contacts/contact_attachment.php?id=" . $_SESSION['user']['contact_image'] . "&action=download&sid=" . session_id() . "'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
+		}
+		$html .= "		<span style='anchor-name: --user-menu; display: inline-block; padding-right: 20px; font-size: 90%;'>\n";
+		$html .= "			<a href='show:usermenu' title=\"" . $this->username . "\" onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">" . ($user_graphic ?? null) . "<span class='d-none d-sm-inline'>" . escape($this->username) . "</span></a>";
+		$html .= "		</span>\n";
+		//domain name/selector (sm+)
+		if (!empty($this->username) && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $this->settings->get('theme', 'domain_visible') == 'true') {
+			$html .= "		<span style='display: inline-block; padding-right: 10px; font-size: 90%;'>\n";
+			$html .= "			<a href='select:domain' onclick='event.preventDefault();' title='" . $this->text['theme-label-open_selector'] . "' class='header_domain_selector_domain'><i class='" . $this->settings->get('theme', 'body_header_icon_domain', 'fa-solid fa-earth-americas') . " fa-fw' style='vertical-align: middle; font-size: " . ($user_graphic_size - 1) . "px; margin-top: " . ($user_graphic_size > 18 ? '-' . (ceil(($user_graphic_size - 18) / 2) - 4) : '-3') . "px; margin-right: 3px; line-height: 40%;'></i><span class='d-none d-sm-inline'>" . escape($this->domain_name) . "</span></a>";
+			$html .= "		</span>\n";
+		}
+		//logout icon
+		if (!empty($this->username) && $this->settings->get('theme', 'logout_icon_visible') == "true") {
+			$html .= "		<a id='header_logout_icon' href='#' title=\"" . $this->text['theme-label-logout'] . "\" onclick=\"modal_open('modal-logout','btn_logout');\"><span class='fa-solid fa-right-from-bracket'></span></a>";
+		}
+		$html .= "		</div>";
+		$html .= "	</div>\n";
+
 		//user menu on body header when side menu
 		//styles below are defined here to prevent caching (following a permission change, etc)
 		$html .= "<style>\n";
 		$html .= "div#body_header_user_menu {\n";
-		$html .= "	right: " . (permission_exists('domain_select') ? '170px' : '30px') . " !important;\n";
-		$html .= "	}\n";
-		$html .= "@media (max-width: 575.98px) {\n";
-		$html .= "	div#body_header_user_menu {\n";
-		$html .= "		right: 10px !important;;\n";
-		$html .= "		}\n";
+		$html .= "		position-anchor: --user-menu;\n";
+		$html .= "		top: calc(anchor(bottom) + 19.5px);\n";
+		$html .= "		right: calc(anchor(right) + 15px);\n";
 		$html .= "	}\n";
 		$html .= "</style>\n";
 
@@ -1524,49 +1561,6 @@ class menu {
 		$html .= "		</div>";
 		$html .= "	</div>";
 		$html .= "</div>";
-
-		$html .= "	<div id='body_header'>\n";
-		//header: left
-		$html .= "<div class='float-left'>\n";
-		// $html .= button::create(['type'=>'button','id'=>'menu_side_state_hidden_button','title'=>$this->text['theme-label-expand_menu'],'icon'=>'bars','class'=>'default '.($this->settings->get('theme', 'menu_side_state') != 'hidden' ? 'hide-sm-up ' : null).'float-left','onclick'=>'menu_side_expand();']);
-		$html .= "<a id='menu_side_state_hidden_button' class='$menu_side_state_class' href='show:menu' onclick=\"event.preventDefault(); menu_side_expand(); event.stopPropagation();\" title=\"" . $this->text['theme-label-expand_menu'] . "\"><i class='fa-solid fa-bars fa-fw' style='margin: 7px 10px 5px 10px;'></i></a>";
-		$body_header_brand_text = escape($this->settings->get('theme', 'body_header_brand_text', 'FusionPBX'));
-		if ($this->settings->get('theme', 'body_header_brand_type') == 'image' || $this->settings->get('theme', 'body_header_brand_type') == 'image_text') {
-			$body_header_brand_image = $this->settings->get('theme', 'body_header_brand_image', PROJECT_PATH . '/themes/default/images/logo_side_expanded.png');
-			$html .= "<div id='body_header_brand_image'>";
-			$html .= "<a href='" . PROJECT_PATH . "/'><img id='body_header_brand_image' src='" . escape($body_header_brand_image) . "' title=\"" . escape($body_header_brand_text) . "\"></a>";
-			$html .= "</div>";
-		}
-		if ($this->settings->get('theme', 'body_header_brand_type') == 'text' || $this->settings->get('theme', 'body_header_brand_type') == 'image_text') {
-			$html .= "<div id='body_header_brand_text'><a href='" . PROJECT_PATH . "/'>" . $body_header_brand_text . "</a></div>";
-		}
-		$html .= "</div>\n";
-		//header: right
-		$html .= "<div class='float-right' style='white-space: nowrap;'>";
-		//current user
-		//set (default) user graphic size and icon
-		$user_graphic_size = 18;
-		$user_graphic = "<i class='" . $this->settings->get('theme', 'body_header_icon_user', 'fa-solid fa-user-circle') . " fa-lg fa-fw' style='margin-right: 5px;'></i>";
-		//overwrite user graphic with image from session, if exists
-		if ($this->settings->get('theme', 'body_header_user_image', true) === true && !empty($_SESSION['user']['contact_image']) && is_uuid($_SESSION['user']['contact_image'])) {
-			$user_graphic_size = str_replace(['px', '%'], '', intval($this->settings->get('theme', 'body_header_user_image_size', 18)));
-			$user_graphic = "<span style=\"display: inline-block; vertical-align: middle; width: " . $user_graphic_size . "px; height: " . $user_graphic_size . "px; border-radius: 50%; margin-right: 7px; margin-top: " . ($user_graphic_size > 18 ? '-' . (ceil(($user_graphic_size - 18) / 2) - 4) : '-4') . "px; background-image: url('" . PROJECT_PATH . "/core/contacts/contact_attachment.php?id=" . $_SESSION['user']['contact_image'] . "&action=download&sid=" . session_id() . "'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
-		}
-		$html .= "<span style='display: inline-block; padding-right: 20px; font-size: 90%;'>\n";
-		$html .= "	<a href='show:usermenu' title=\"" . $this->username . "\" onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">" . ($user_graphic ?? null) . "<span class='d-none d-sm-inline'>" . escape($this->username) . "</span></a>";
-		$html .= "</span>\n";
-		//domain name/selector (sm+)
-		if (!empty($this->username) && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $this->settings->get('theme', 'domain_visible') == 'true') {
-			$html .= "<span style='display: inline-block; padding-right: 10px; font-size: 90%;'>\n";
-			$html .= "	<a href='select:domain' onclick='event.preventDefault();' title='" . $this->text['theme-label-open_selector'] . "' class='header_domain_selector_domain'><i class='" . $this->settings->get('theme', 'body_header_icon_domain', 'fa-solid fa-earth-americas') . " fa-fw' style='vertical-align: middle; font-size: " . ($user_graphic_size - 1) . "px; margin-top: " . ($user_graphic_size > 18 ? '-' . (ceil(($user_graphic_size - 18) / 2) - 4) : '-3') . "px; margin-right: 3px; line-height: 40%;'></i><span class='d-none d-sm-inline'>" . escape($this->domain_name) . "</span></a>";
-			$html .= "</span>\n";
-		}
-		//logout icon
-		if (!empty($this->username) && $this->settings->get('theme', 'logout_icon_visible') == "true") {
-			$html .= "<a id='header_logout_icon' href='#' title=\"" . $this->text['theme-label-logout'] . "\" onclick=\"modal_open('modal-logout','btn_logout');\"><span class='fa-solid fa-right-from-bracket'></span></a>";
-		}
-		$html .= "</div>";
-		$html .= "	</div>\n";
 
 		//modal for logout icon (above)
 		if (!empty($this->username) && $this->settings->get('theme', 'logout_icon_visible') == "true") {
