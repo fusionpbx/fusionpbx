@@ -43,9 +43,31 @@
 		$domain_uuid = $_GET['id'];
 	}
 
-//set additional variables
-	//$search = !empty($_GET["search"]) ? $_GET["search"] : '';
-	$show = !empty($_GET["show"]) ? $_GET["show"] : '';
+// Set variables from GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'setting_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$param = [];
+	if (!empty($page)) {
+		$param['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$param['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$param['order'] = $order;
+	}
+	if (!empty($search)) {
+		$param['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('domain_setting_all')) {
+		$param['show'] = $show;
+	}
+	$query_string = http_build_query($param);
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
@@ -86,7 +108,7 @@
 			}
 
 		//redirect
-			header('Location: '.PROJECT_PATH.'/core/domain_settings/domain_settings.php?id='.urlencode($_REQUEST['domain_uuid']));
+			header('Location: '.PROJECT_PATH.'/core/domain_settings/domain_settings.php?id='.urlencode($_REQUEST['domain_uuid']).($query_string ? '&'.$query_string : ''));
 			exit;
 	}
 
@@ -105,19 +127,32 @@
 	$sql .= "where domain_uuid = :domain_uuid ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$num_rows = $database->select($sql, $parameters, 'column');
+	unset($parameters);
 
 //get the list
-	$sql = "select domain_setting_uuid, domain_setting_category, domain_setting_subcategory, domain_setting_name, ";
+	$sql = "select domain_uuid, domain_setting_uuid, domain_setting_category, domain_setting_subcategory, domain_setting_name, ";
 	$sql .= "domain_setting_value, cast(domain_setting_enabled as text), domain_setting_description ";
 	$sql .= "from v_domain_settings ";
-	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "where true ";
+	if ($show != "all" || !permission_exists('domain_setting_all')) {
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
+	if (!empty($search)) {
+		$sql .= "and (";
+		$sql .= "lower(domain_setting_category) like :search ";
+		$sql .= "or lower(domain_setting_subcategory) like :search ";
+		$sql .= "or lower(domain_setting_name) like :search ";
+		$sql .= "or lower(domain_setting_description) like :search ";
+		$sql .= ") ";
+		$parameters['search'] = '%'.lower_case($search).'%';
+	}
 	if ($order_by == '') {
 		$sql .= "order by domain_setting_category, domain_setting_subcategory, domain_setting_order asc, domain_setting_name, domain_setting_value ";
 	}
 	else {
 		$sql .= order_by($order_by, $order);
 	}
-	$parameters['domain_uuid'] = $domain_uuid;
 	$domain_settings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -157,7 +192,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar_sub'>\n";
-	echo "	<div class='heading'><b id='heading_sub'>".$domain_name."</b><div class='count'>".number_format($num_rows)."</div></div>\n"; //$text['title-domain_settings']
+	echo "	<div class='heading'><b id='heading_sub'>".($show != "all" || !permission_exists('domain_setting_all') ? $domain_name : $text['title-domain_settings'])."</b><div class='count'>".number_format($num_rows)."</div></div>\n"; //$text['title-domain_settings']
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'action_bar_sub_button_back','style'=>'','link'=>PROJECT_PATH.'/core/domains/domains.php']);
 	if (permission_exists('default_setting_view') && $num_rows) {
@@ -167,6 +202,21 @@
 	if (permission_exists('domain_setting_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".urlencode($domain_uuid)]);
 	}
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($param as $key => $value) {
+		if (in_array($key, ['order_by', 'order', 'show'])) {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
+		}
+	}
+	if ($show !== 'all' && permission_exists('domain_setting_all')) {
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
+	}
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
+	if ($paging_controls_mini != '') {
+		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+	}
+	echo "		</form>\n";
 	if (permission_exists("domain_select") && permission_exists("domain_setting_add") && $num_rows) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'id'=>'btn_copy','icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','onclick'=>'show_domains();']);
 		echo button::create(['type'=>'button','label'=>$text['button-cancel'],'id'=>'btn_copy_cancel','icon'=>$settings->get('theme', 'button_icon_cancel'),'style'=>'display: none;','onclick'=>'hide_domains();']);
@@ -248,13 +298,13 @@
 					echo "		<input type='checkbox' id='checkbox_all_".$domain_setting_category."' name='checkbox_all' onclick=\"list_all_toggle('".$domain_setting_category."');\">\n";
 					echo "	</th>\n";
 				}
-				if ($show == 'all' && permission_exists('domain_setting_all')) {
-					echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
+				if (!empty($show) && $show == 'all' && permission_exists('domain_setting_all')) {
+					echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $param);
 				}
-				echo th_order_by('domain_setting_subcategory', $text['label-subcategory'], $order_by, $order, null, "class='pct-35'");
-				echo th_order_by('domain_setting_name', $text['label-type'], $order_by, $order, null, "class='pct-10 hide-sm-dn'");
-				echo th_order_by('domain_setting_value', $text['label-value'], $order_by, $order, null, "class='pct-30'");
-				echo th_order_by('domain_setting_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
+				echo th_order_by('domain_setting_subcategory', $text['label-subcategory'], $order_by, $order, null, "class='pct-35'", $param);
+				echo th_order_by('domain_setting_name', $text['label-type'], $order_by, $order, null, "class='pct-10 hide-sm-dn'", $param);
+				echo th_order_by('domain_setting_value', $text['label-value'], $order_by, $order, null, "class='pct-30'", $param);
+				echo th_order_by('domain_setting_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $param);
 				echo "	<th class='pct-25 hide-sm-dn'>".$text['label-description']."</th>\n";
 				if (permission_exists('domain_setting_edit') && $list_row_edit_button) {
 					echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -262,7 +312,10 @@
 				echo "</tr>\n";
 			}
 			if (permission_exists('domain_setting_edit')) {
-				$list_row_url = PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".urlencode($domain_uuid)."&id=".urlencode($row['domain_setting_uuid']);
+				$list_row_url = PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".urlencode($domain_uuid)."&id=".urlencode($row['domain_setting_uuid']).($query_string ? '&'.$query_string : '');
+			}
+			if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('domain_setting_add') || permission_exists('domain_setting_edit') || permission_exists('domain_setting_delete')) {
@@ -270,6 +323,15 @@
 				echo "		<input type='checkbox' name='domain_settings[$x][checked]' id='checkbox_".$x."' class='checkbox_".$domain_setting_category."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$domain_setting_category."').checked = false; }\">\n";
 				echo "		<input type='hidden' name='domain_settings[$x][uuid]' value='".escape($row['domain_setting_uuid'])."' />\n";
 				echo "	</td>\n";
+			}
+			if ($show == "all" && permission_exists('domain_setting_all')) {
+				if (!empty($_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
+					$domain = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+				}
+				else {
+					$domain = $text['label-global'];
+				}
+				echo "	<td>".escape($domain)."</td>\n";
 			}
 			echo "	<td class='overflow no-wrap'>";
 			if (permission_exists('domain_setting_edit')) {
