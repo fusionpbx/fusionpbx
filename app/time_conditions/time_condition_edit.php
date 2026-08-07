@@ -442,6 +442,7 @@
 									$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
 									$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
 									$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+									$array['dialplan_details'][$x]['dialplan_detail_enabled'] = 'true';
 									$x++;
 								}
 
@@ -458,6 +459,7 @@
 									$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
 									$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
 									$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+									$array['dialplan_details'][$x]['dialplan_detail_enabled'] = 'true';
 									$x++;
 								}
 
@@ -500,6 +502,7 @@
 												$array['dialplan_details'][$x]['dialplan_detail_inline'] = 'true';
 												$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
 												$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+												$array['dialplan_details'][$x]['dialplan_detail_enabled'] = 'true';
 												$x++;
 											}
 										}
@@ -532,6 +535,7 @@
 							$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
 							$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
 							$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+							$array['dialplan_details'][$x]['dialplan_detail_enabled'] = 'true';
 							$x++;
 						}
 					}
@@ -558,6 +562,7 @@
 				$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
 				$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
 				$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+				$array['dialplan_details'][$x]['dialplan_detail_enabled'] = 'true';
 				$x++;
 
 				//add anti-action
@@ -574,6 +579,7 @@
 				$array['dialplan_details'][$x]['dialplan_detail_inline'] = null;
 				$array['dialplan_details'][$x]['dialplan_detail_group'] = $dialplan_detail_group;
 				$array['dialplan_details'][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+				$array['dialplan_details'][$x]['dialplan_detail_enabled'] = 'true';
 				$x++;
 			}
 
