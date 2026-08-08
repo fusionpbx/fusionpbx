@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+	<!-- ################################################################################### -->
+	<!-- ## Configuration template for 2N IP Verso firmware version 2.48.1.72.5             ## -->
+	<!-- ################################################################################### -->
+<DeviceDatabase>
+	<WebServer>
+		<DeviceName>{$account.1.display_name}</DeviceName>
+		<Port>80</Port>
+		<Language>17</Language>
+		<RemoteAccessEnabled>1</RemoteAccessEnabled>
+		<Customization/>
+		<SecurePort>443</SecurePort>
+		<ServerCert>#self-signed</ServerCert>
+		<MinTlsVersion>3</MinTlsVersion>
+	</WebServer>
+	<Phone>
+		<Sip At="0">
+			<Enabled>{if isset($account.1.password)}1{else}0{/if}</Enabled>
+			<User>
+				<DisplayName>{$account.1.display_name}</DisplayName>
+				<Id>{$account.1.label}</Id>
+				<AuthId>{$account.1.auth_id}</AuthId>
+				<PasswordString>{$account.1.password}</PasswordString>
+				<CommunicationType>1</CommunicationType>
+			</User>
+			<Client>
+				<Domain>{$account.1.server_address}</Domain>
+				<Port>{$account.1.sip_port}</Port>
+			</Client>
+			<Proxy>
+				<Address>{$account.1.server_address}</Address>
+				<Port>0</Port>
+				<BackupAddress>{$account.1.outbound_proxy_secondary}</BackupAddress>
+				<BackupPort>{$outbound_proxy_2_port}</BackupPort>
+			</Proxy>
+			<Registrar>
+				<Enabled>{if isset($account.1.password)}1{else}0{/if}</Enabled>
+				<Address>{$account.1.server_address}</Address>
+				<Port>0</Port>
+				<ExpireTime>{$account.1.register_expires}</ExpireTime>
+				<BackupAddress>{$account.1.server.2.address}</BackupAddress>
+				<BackupPort>0</BackupPort>
+			</Registrar>
+			<Stun>
+				<Enabled>{if isset($stun_server)}1{else}0{/if}</Enabled>
+				<Address>{$stun_server}</Address>
+				<Port>{if isset($stun_port)}{$stun_port}{else}3478{/if}</Port>
+			</Stun>
+			<Misc>
+				<AnswerMode>0</AnswerMode>
+				<KeepAlive>0</KeepAlive>
+				<Dscp>0</Dscp>
+				<IpFilter>0</IpFilter>
+				<PrackEnabled>0</PrackEnabled>
+				<ReferEnabled>0</ReferEnabled>
+				<ExternalIpAddress></ExternalIpAddress>
+				<IncomingSecureOnly>0</IncomingSecureOnly>
+				<OutgoingSecure>0</OutgoingSecure>
+				<MkiEnabled>0</MkiEnabled>
+				<IgnoreEarlyMedia>0</IgnoreEarlyMedia>
+				<BroadsoftCompatibility>0</BroadsoftCompatibility>
+				<RotateSrvRecords>0</RotateSrvRecords>
+				<AdaptiveVideoQuality>0</AdaptiveVideoQuality>
+			</Misc>
+			<Tls>
+				<MinVersion>1</MinVersion>
+				<VerifyServerCert>0</VerifyServerCert>
+				<ClientCert>#self-signed</ClientCert>
+			</Tls>
+			<Audio>
+				<JitterComp>1</JitterComp>
+				<Dscp>0</Dscp>
+				<Codecs>
+					<PCMU>
+						<Priority>{if isset($yealink_codec_pcmu_priority)}{$yealink_codec_pcmu_priority}{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_pcmu_enable) && $yealink_codec_pcmu_enable}1{else}{0}{/if}</Enabled>
+					</PCMU>
+					<PCMA>
+						<Priority>{if isset($yealink_codec_pcma_priority)}{$yealink_codec_pcma_priority}{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_pcma_enable) && $yealink_codec_pcma_enable}1{else}{0}{/if}</Enabled>
+					</PCMA>
+					<L16>
+						<Priority>4</Priority>
+						<Enabled>0</Enabled>
+					</L16>
+					<G729>
+						<Priority>{if isset($yealink_codec_g729_enable) && $yealink_codec_g729_enable}1{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_g729_enable) && $yealink_codec_g729_enable}1{else}0{/if}</Enabled>
+					</G729>
+					<G722>
+						<Priority>{if isset($yealink_codec_g722_priority)}{$yealink_codec_g722_priority}{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_g722_enable) && $yealink_codec_g722_enable}1{else}0{/if}</Enabled>
+					</G722>
+				</Codecs>
+			</Audio>
+			<Dtmf>
+				<SendMode>0</SendMode>
+				<SendInAudio>0</SendInAudio>
+				<SendInRtp>1</SendInRtp>
+				<SendInSip>0</SendInSip>
+				<ReceiveFromAudio>1</ReceiveFromAudio>
+				<ReceiveFromRtp>1</ReceiveFromRtp>
+				<ReceiveFromSip>0</ReceiveFromSip>
+			</Dtmf>
+			<Video>
+				<Dscp>0</Dscp>
+				<MaxPacketSize>1400</MaxPacketSize>
+				<PtzFaceZooming>
+					<Mode>2</Mode>
+					<DefaultWidescreenScene>50</DefaultWidescreenScene>
+				</PtzFaceZooming>
+				<Codecs>
+					<h264>
+						<Priority>1</Priority>
+						<Enabled>1</Enabled>
+					</h264>
+				</Codecs>
+				<h264>
+					<Framerate>1</Framerate>
+					<Resolution>11</Resolution>
+					<Bitrate>8</Bitrate>
+					<Sendrecv>0</Sendrecv>
+					<SdpVideoConnectionAddress></SdpVideoConnectionAddress>
+					<SdpVideoConnectionPort>0</SdpVideoConnectionPort>
+					<PayloadType1>123</PayloadType1>
+					<PayloadType2>124</PayloadType2>
+					<ProfileSupport At="0">
+						<PayloadType1Enabled>1</PayloadType1Enabled>
+						<PayloadType2Enabled>1</PayloadType2Enabled>
+					</ProfileSupport>
+					<ProfileSupport At="1">
+						<PayloadType1Enabled>1</PayloadType1Enabled>
+						<PayloadType2Enabled>0</PayloadType2Enabled>
+					</ProfileSupport>
+					<ProfileSupport At="2">
+						<PayloadType1Enabled>0</PayloadType1Enabled>
+						<PayloadType2Enabled>0</PayloadType2Enabled>
+					</ProfileSupport>
+					<ProfileSupport At="3">
+						<PayloadType1Enabled>0</PayloadType1Enabled>
+						<PayloadType2Enabled>0</PayloadType2Enabled>
+					</ProfileSupport>
+				</h264>
+			</Video>
+		</Sip>
+		<Sip At="1">
+			<Enabled>{if isset($account.2.password)}1{else}0{/if}</Enabled>
+			<User>
+				<DisplayName>{$account.2.display_name}</DisplayName>
+				<Id>{$account.2.label}</Id>
+				<AuthId>{$account.2.auth_id}</AuthId>
+				<PasswordString>{$account.2.password}</PasswordString>
+				<CommunicationType>1</CommunicationType>
+			</User>
+			<Client>
+				<Domain>{$account.2.server_address}</Domain>
+				<Port>{$account.2.sip_port}</Port>
+			</Client>
+			<Proxy>
+				<Address>{$account.2.server_address}</Address>
+				<Port>0</Port>
+				<BackupAddress>{$account.2.outbound_proxy_secondary}</BackupAddress>
+				<BackupPort>{$outbound_proxy_2_port}</BackupPort>
+			</Proxy>
+			<Registrar>
+				<Enabled>{if isset($account.2.password)}1{else}0{/if}</Enabled>
+				<Address>{$account.2.server_address}</Address>
+				<Port>0</Port>
+				<ExpireTime>{$account.2.register_expires}</ExpireTime>
+				<BackupAddress>{$account.2.server.2.address}</BackupAddress>
+				<BackupPort>{$account.2.sip_port}</BackupPort>
+			</Registrar>
+			<Stun>
+				<Enabled>{if isset($stun_server)}1{else}0{/if}</Enabled>
+				<Address>{$stun_server}</Address>
+				<Port>{if isset($stun_port)}{$stun_port}{else}3478{/if}</Port>
+			</Stun>
+			<Misc>
+				<AnswerMode>0</AnswerMode>
+				<KeepAlive>0</KeepAlive>
+				<Dscp>0</Dscp>
+				<IpFilter>0</IpFilter>
+				<PrackEnabled>0</PrackEnabled>
+				<ReferEnabled>0</ReferEnabled>
+				<ExternalIpAddress></ExternalIpAddress>
+				<IncomingSecureOnly>0</IncomingSecureOnly>
+				<OutgoingSecure>0</OutgoingSecure>
+				<MkiEnabled>0</MkiEnabled>
+				<IgnoreEarlyMedia>0</IgnoreEarlyMedia>
+				<BroadsoftCompatibility>0</BroadsoftCompatibility>
+				<RotateSrvRecords>0</RotateSrvRecords>
+				<AdaptiveVideoQuality>0</AdaptiveVideoQuality>
+			</Misc>
+			<Tls>
+				<MinVersion>1</MinVersion>
+				<VerifyServerCert>0</VerifyServerCert>
+				<ClientCert>#self-signed</ClientCert>
+			</Tls>
+			<Audio>
+				<JitterComp>1</JitterComp>
+				<Dscp>0</Dscp>
+				<Codecs>
+					<PCMU>
+						<Priority>{if isset($yealink_codec_pcmu_priority)}{$yealink_codec_pcmu_priority}{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_pcmu_enable) && $yealink_codec_pcmu_enable}1{else}{0}{/if}</Enabled>
+					</PCMU>
+					<PCMA>
+						<Priority>{if isset($yealink_codec_pcma_priority)}{$yealink_codec_pcma_priority}{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_pcma_enable) && $yealink_codec_pcma_enable}1{else}{0}{/if}</Enabled>
+					</PCMA>
+					<L16>
+						<Priority>4</Priority>
+						<Enabled>0</Enabled>
+					</L16>
+					<G729>
+						<Priority>{if isset($yealink_codec_g729_enable) && $yealink_codec_g729_enable}1{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_g729_enable) && $yealink_codec_g729_enable}1{else}0{/if}</Enabled>
+					</G729>
+					<G722>
+						<Priority>{if isset($yealink_codec_g722_priority)}{$yealink_codec_g722_priority}{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_g722_enable) && $yealink_codec_g722_enable}1{else}0{/if}</Enabled>
+					</G722>
+				</Codecs>
+			</Audio>
+			<Dtmf>
+				<SendMode>0</SendMode>
+				<SendInAudio>0</SendInAudio>
+				<SendInRtp>1</SendInRtp>
+				<SendInSip>0</SendInSip>
+				<ReceiveFromAudio>1</ReceiveFromAudio>
+				<ReceiveFromRtp>1</ReceiveFromRtp>
+				<ReceiveFromSip>0</ReceiveFromSip>
+			</Dtmf>
+			<Video>
+				<Dscp>0</Dscp>
+				<MaxPacketSize>1400</MaxPacketSize>
+				<PtzFaceZooming>
+					<Mode>2</Mode>
+					<DefaultWidescreenScene>50</DefaultWidescreenScene>
+				</PtzFaceZooming>
+				<Codecs>
+					<h264>
+						<Priority>1</Priority>
+						<Enabled>1</Enabled>
+					</h264>
+				</Codecs>
+				<h264>
+					<Framerate>1</Framerate>
+					<Resolution>11</Resolution>
+					<Bitrate>8</Bitrate>
+					<Sendrecv>0</Sendrecv>
+					<SdpVideoConnectionAddress></SdpVideoConnectionAddress>
+					<SdpVideoConnectionPort>0</SdpVideoConnectionPort>
+					<PayloadType1>123</PayloadType1>
+					<PayloadType2>124</PayloadType2>
+					<ProfileSupport At="0">
+						<PayloadType1Enabled>1</PayloadType1Enabled>
+						<PayloadType2Enabled>1</PayloadType2Enabled>
+					</ProfileSupport>
+					<ProfileSupport At="1">
+						<PayloadType1Enabled>1</PayloadType1Enabled>
+						<PayloadType2Enabled>0</PayloadType2Enabled>
+					</ProfileSupport>
+					<ProfileSupport At="2">
+						<PayloadType1Enabled>0</PayloadType1Enabled>
+						<PayloadType2Enabled>0</PayloadType2Enabled>
+					</ProfileSupport>
+					<ProfileSupport At="3">
+						<PayloadType1Enabled>0</PayloadType1Enabled>
+						<PayloadType2Enabled>0</PayloadType2Enabled>
+					</ProfileSupport>
+				</h264>
+			</Video>
+		</Sip>
+		<Sip At="2">
+			<Enabled>{if isset($account.3.password)}1{else}0{/if}</Enabled>
+			<User>
+				<DisplayName>{$account.3.display_name}</DisplayName>
+				<Id>{$account.3.label}</Id>
+				<AuthId>{$account.3.auth_id}</AuthId>
+				<PasswordString>{$account.3.password}</PasswordString>
+				<CommunicationType>1</CommunicationType>
+			</User>
+			<Client>
+				<Domain>{$account.3.server_address}</Domain>
+				<Port>{$account.3.sip_port}</Port>
+			</Client>
+			<Proxy>
+				<Address>{$account.3.server_address}</Address>
+				<Port>0</Port>
+				<BackupAddress>{$account.3.outbound_proxy_secondary}</BackupAddress>
+				<BackupPort>{$outbound_proxy_3_port}</BackupPort>
+			</Proxy>
+			<Registrar>
+				<Enabled>{if isset($account.3.password)}1{else}0{/if}</Enabled>
+				<Address>{$account.3.server_address}</Address>
+				<Port>0</Port>
+				<ExpireTime>{$account.3.register_expires}</ExpireTime>
+				<BackupAddress>{$account.3.server.2.address}</BackupAddress>
+				<BackupPort>{$account.3.sip_port}</BackupPort>
+			</Registrar>
+			<Stun>
+				<Enabled>{if isset($stun_server)}1{else}0{/if}</Enabled>
+				<Address>{$stun_server}</Address>
+				<Port>{if isset($stun_port)}{$stun_port}{else}3478{/if}</Port>
+			</Stun>
+			<Misc>
+				<AnswerMode>0</AnswerMode>
+				<KeepAlive>0</KeepAlive>
+				<Dscp>0</Dscp>
+				<IpFilter>0</IpFilter>
+				<PrackEnabled>0</PrackEnabled>
+				<ReferEnabled>0</ReferEnabled>
+				<ExternalIpAddress></ExternalIpAddress>
+				<IncomingSecureOnly>0</IncomingSecureOnly>
+				<OutgoingSecure>0</OutgoingSecure>
+				<MkiEnabled>0</MkiEnabled>
+				<IgnoreEarlyMedia>0</IgnoreEarlyMedia>
+				<BroadsoftCompatibility>0</BroadsoftCompatibility>
+				<RotateSrvRecords>0</RotateSrvRecords>
+				<AdaptiveVideoQuality>0</AdaptiveVideoQuality>
+			</Misc>
+			<Tls>
+				<MinVersion>1</MinVersion>
+				<VerifyServerCert>0</VerifyServerCert>
+				<ClientCert>#self-signed</ClientCert>
+			</Tls>
+			<Audio>
+				<JitterComp>1</JitterComp>
+				<Dscp>0</Dscp>
+				<Codecs>
+					<PCMU>
+						<Priority>{if isset($yealink_codec_pcmu_priority)}{$yealink_codec_pcmu_priority}{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_pcmu_enable) && $yealink_codec_pcmu_enable}1{else}{0}{/if}</Enabled>
+					</PCMU>
+					<PCMA>
+						<Priority>{if isset($yealink_codec_pcma_priority)}{$yealink_codec_pcma_priority}{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_pcma_enable) && $yealink_codec_pcma_enable}1{else}{0}{/if}</Enabled>
+					</PCMA>
+					<L16>
+						<Priority>4</Priority>
+						<Enabled>0</Enabled>
+					</L16>
+					<G729>
+						<Priority>{if isset($yealink_codec_g729_enable) && $yealink_codec_g729_enable}1{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_g729_enable) && $yealink_codec_g729_enable}1{else}0{/if}</Enabled>
+					</G729>
+					<G722>
+						<Priority>{if isset($yealink_codec_g722_priority)}{$yealink_codec_g722_priority}{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_g722_enable) && $yealink_codec_g722_enable}1{else}0{/if}</Enabled>
+					</G722>
+				</Codecs>
+			</Audio>
+			<Dtmf>
+				<SendMode>0</SendMode>
+				<SendInAudio>0</SendInAudio>
+				<SendInRtp>1</SendInRtp>
+				<SendInSip>0</SendInSip>
+				<ReceiveFromAudio>1</ReceiveFromAudio>
+				<ReceiveFromRtp>1</ReceiveFromRtp>
+				<ReceiveFromSip>0</ReceiveFromSip>
+			</Dtmf>
+			<Video>
+				<Dscp>0</Dscp>
+				<MaxPacketSize>1400</MaxPacketSize>
+				<PtzFaceZooming>
+					<Mode>2</Mode>
+					<DefaultWidescreenScene>50</DefaultWidescreenScene>
+				</PtzFaceZooming>
+				<Codecs>
+					<h264>
+						<Priority>1</Priority>
+						<Enabled>1</Enabled>
+					</h264>
+				</Codecs>
+				<h264>
+					<Framerate>1</Framerate>
+					<Resolution>11</Resolution>
+					<Bitrate>8</Bitrate>
+					<Sendrecv>0</Sendrecv>
+					<SdpVideoConnectionAddress></SdpVideoConnectionAddress>
+					<SdpVideoConnectionPort>0</SdpVideoConnectionPort>
+					<PayloadType1>123</PayloadType1>
+					<PayloadType2>124</PayloadType2>
+					<ProfileSupport At="0">
+						<PayloadType1Enabled>1</PayloadType1Enabled>
+						<PayloadType2Enabled>1</PayloadType2Enabled>
+					</ProfileSupport>
+					<ProfileSupport At="1">
+						<PayloadType1Enabled>1</PayloadType1Enabled>
+						<PayloadType2Enabled>0</PayloadType2Enabled>
+					</ProfileSupport>
+					<ProfileSupport At="2">
+						<PayloadType1Enabled>0</PayloadType1Enabled>
+						<PayloadType2Enabled>0</PayloadType2Enabled>
+					</ProfileSupport>
+					<ProfileSupport At="3">
+						<PayloadType1Enabled>0</PayloadType1Enabled>
+						<PayloadType2Enabled>0</PayloadType2Enabled>
+					</ProfileSupport>
+				</h264>
+			</Video>
+		</Sip>
+		<Sip At="3">
+			<Enabled>{if isset($account.4.password)}1{else}0{/if}</Enabled>
+			<User>
+				<DisplayName>{$account.4.display_name}</DisplayName>
+				<Id>{$account.4.label}</Id>
+				<AuthId>{$account.4.auth_id}</AuthId>
+				<PasswordString>{$account.4.password}</PasswordString>
+				<CommunicationType>1</CommunicationType>
+			</User>
+			<Client>
+				<Domain>{$account.4.server_address}</Domain>
+				<Port>{$account.4.sip_port}</Port>
+			</Client>
+			<Proxy>
+				<Address>{$account.4.server_address}</Address>
+				<Port>0</Port>
+				<BackupAddress>{$account.4.outbound_proxy_secondary}</BackupAddress>
+				<BackupPort>{$outbound_proxy_4_port}</BackupPort>
+			</Proxy>
+			<Registrar>
+				<Enabled>{if isset($account.4.password)}1{else}0{/if}</Enabled>
+				<Address>{$account.4.server_address}</Address>
+				<Port>0</Port>
+				<ExpireTime>{$account.4.register_expires}</ExpireTime>
+				<BackupAddress>{$account.4.server.2.address}</BackupAddress>
+				<BackupPort>{$account.4.sip_port}</BackupPort>
+			</Registrar>
+			<Stun>
+				<Enabled>{if isset($stun_server)}1{else}0{/if}</Enabled>
+				<Address>{$stun_server}</Address>
+				<Port>{if isset($stun_port)}{$stun_port}{else}3478{/if}</Port>
+			</Stun>
+			<Misc>
+				<AnswerMode>0</AnswerMode>
+				<KeepAlive>0</KeepAlive>
+				<Dscp>0</Dscp>
+				<IpFilter>0</IpFilter>
+				<PrackEnabled>0</PrackEnabled>
+				<ReferEnabled>0</ReferEnabled>
+				<ExternalIpAddress></ExternalIpAddress>
+				<IncomingSecureOnly>0</IncomingSecureOnly>
+				<OutgoingSecure>0</OutgoingSecure>
+				<MkiEnabled>0</MkiEnabled>
+				<IgnoreEarlyMedia>0</IgnoreEarlyMedia>
+				<BroadsoftCompatibility>0</BroadsoftCompatibility>
+				<RotateSrvRecords>0</RotateSrvRecords>
+				<AdaptiveVideoQuality>0</AdaptiveVideoQuality>
+			</Misc>
+			<Tls>
+				<MinVersion>1</MinVersion>
+				<VerifyServerCert>0</VerifyServerCert>
+				<ClientCert>#self-signed</ClientCert>
+			</Tls>
+			<Audio>
+				<JitterComp>1</JitterComp>
+				<Dscp>0</Dscp>
+				<Codecs>
+					<PCMU>
+						<Priority>{if isset($yealink_codec_pcmu_priority)}{$yealink_codec_pcmu_priority}{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_pcmu_enable) && $yealink_codec_pcmu_enable}1{else}{0}{/if}</Enabled>
+					</PCMU>
+					<PCMA>
+						<Priority>{if isset($yealink_codec_pcma_priority)}{$yealink_codec_pcma_priority}{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_pcma_enable) && $yealink_codec_pcma_enable}1{else}{0}{/if}</Enabled>
+					</PCMA>
+					<L16>
+						<Priority>4</Priority>
+						<Enabled>0</Enabled>
+					</L16>
+					<G729>
+						<Priority>{if isset($yealink_codec_g729_enable) && $yealink_codec_g729_enable}1{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_g729_enable) && $yealink_codec_g729_enable}1{else}0{/if}</Enabled>
+					</G729>
+					<G722>
+						<Priority>{if isset($yealink_codec_g722_priority)}{$yealink_codec_g722_priority}{else}0{/if}</Priority>
+						<Enabled>{if isset($yealink_codec_g722_enable) && $yealink_codec_g722_enable}1{else}0{/if}</Enabled>
+					</G722>
+				</Codecs>
+			</Audio>
+			<Dtmf>
+				<SendMode>0</SendMode>
+				<SendInAudio>0</SendInAudio>
+				<SendInRtp>1</SendInRtp>
+				<SendInSip>0</SendInSip>
+				<ReceiveFromAudio>1</ReceiveFromAudio>
+				<ReceiveFromRtp>1</ReceiveFromRtp>
+				<ReceiveFromSip>0</ReceiveFromSip>
+			</Dtmf>
+			<Video>
+				<Dscp>0</Dscp>
+				<MaxPacketSize>1400</MaxPacketSize>
+				<PtzFaceZooming>
+					<Mode>2</Mode>
+					<DefaultWidescreenScene>50</DefaultWidescreenScene>
+				</PtzFaceZooming>
+				<Codecs>
+					<h264>
+						<Priority>1</Priority>
+						<Enabled>1</Enabled>
+					</h264>
+				</Codecs>
+				<h264>
+					<Framerate>1</Framerate>
+					<Resolution>11</Resolution>
+					<Bitrate>8</Bitrate>
+					<Sendrecv>0</Sendrecv>
+					<SdpVideoConnectionAddress></SdpVideoConnectionAddress>
+					<SdpVideoConnectionPort>0</SdpVideoConnectionPort>
+					<PayloadType1>123</PayloadType1>
+					<PayloadType2>124</PayloadType2>
+					<ProfileSupport At="0">
+						<PayloadType1Enabled>1</PayloadType1Enabled>
+						<PayloadType2Enabled>1</PayloadType2Enabled>
+					</ProfileSupport>
+					<ProfileSupport At="1">
+						<PayloadType1Enabled>1</PayloadType1Enabled>
+						<PayloadType2Enabled>0</PayloadType2Enabled>
+					</ProfileSupport>
+					<ProfileSupport At="2">
+						<PayloadType1Enabled>0</PayloadType1Enabled>
+						<PayloadType2Enabled>0</PayloadType2Enabled>
+					</ProfileSupport>
+					<ProfileSupport At="3">
+						<PayloadType1Enabled>0</PayloadType1Enabled>
+						<PayloadType2Enabled>0</PayloadType2Enabled>
+					</ProfileSupport>
+				</h264>
+			</Video>
+		</Sip>
+		<Rtp>
+			<BasePort>4900</BasePort>
+			<Timeout>60</Timeout>
+			<EarlyMedia>
+				<MulticastAddress>232.0.0.16</MulticastAddress>
+				<AudioPort>12000</AudioPort>
+				<VideoPort>12002</VideoPort>
+			</EarlyMedia>
+		</Rtp>
+		<Calls>
+			<MaxCallDuration>120</MaxCallDuration>
+			<Outgoing>
+				<MaxConnectingDuration>32</MaxConnectingDuration>
+				<MaxRingingDuration>32</MaxRingingDuration>
+				<MaxAutoDialingCycles>3</MaxAutoDialingCycles>
+				<TerminateGroupOnRejected>0</TerminateGroupOnRejected>
+				<SuppressCallProgressTones>0</SuppressCallProgressTones>
+				<RepPressFunction>1</RepPressFunction>
+			</Outgoing>
+			<Incoming>
+				<MaxRingingDuration>32</MaxRingingDuration>
+				<AutoAnswerTimeout>0</AutoAnswerTimeout>
+				<AnswerButton>0</AnswerButton>
+				<TerminationEnabled>1</TerminationEnabled>
+			</Incoming>
+		</Calls>
+	</Phone>
+	<DoorControl>
+		<!--<Door At="0">
+			<Switch></Switch>
+			<Rex>
+				<InputPort></InputPort>
+				<Inverted></Inverted>
+			</Rex>
+			<Sensor>
+				<InputPort></InputPort>
+				<Inverted></Inverted>
+				<UnauthorisedOpen></UnauthorisedOpen>
+				<OpenTooLong></OpenTooLong>
+				<TimeLimit></TimeLimit>
+			</Sensor>
+		</Door>-->
+	</DoorControl>
+	<AutoUpdate>
+		<!--<Firmware>
+			<Enabled>1</Enabled>
+			<ServerAddress></ServerAddress>
+			<VerifyServerCert>0</VerifyServerCert>
+			<ClientCert>#factory</ClientCert>
+			<PrefferedAddress></PrefferedAddress>
+			<FilePath>/</FilePath>
+			<CheckAtBootTime>1</CheckAtBootTime>
+			<Period>86400</Period>
+			<UpdateTime>05:00</UpdateTime>
+			<CheckBetaVer>0</CheckBetaVer>
+		</Firmware> -->
+		<Configuration>
+			<Enabled>1</Enabled>
+			<ServerAddress>https://{$domain_name}/app/provision</ServerAddress>
+			<VerifyServerCert>0</VerifyServerCert>
+			<ClientCert>#factory</ClientCert>
+			<PrefferedAddress>1</PrefferedAddress>
+			<FilePath>/</FilePath>
+			<AuthEnabled>0</AuthEnabled>
+			<Username></Username>
+			<Password Encryption="1"></Password>
+			<CheckAtBootTime>1</CheckAtBootTime>
+			<Period>86400</Period>
+			<UpdateTime>05:30</UpdateTime>
+		</Configuration>
+	</AutoUpdate>
+</DeviceDatabase>
