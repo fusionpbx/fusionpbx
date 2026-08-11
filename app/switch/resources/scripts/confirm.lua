@@ -57,7 +57,7 @@ require "resources.functions.config";
 			api = freeswitch.API();
 
 		--get the domain_name with a different variable if the domain_name is not set
-			if (not domain_name) then 
+			if (domain_name ~= nil) then
 				domain_name = session:getVariable("sip_invite_domain");
 			end
 
@@ -81,12 +81,13 @@ require "resources.functions.config";
 				record_ext = 'wav';
 			end
 
-		--prepare the recording path
-			record_path = recordings_dir .. "/" .. domain_name .. "/archive/" .. os.date("%Y/%b/%d");
-			record_path = record_path:gsub("\\", "/");
-
 		--if the screen file is found then set confirm to true
 			if (domain_name ~= nil) then
+				--prepare the recording path
+				record_path = recordings_dir .. "/" .. domain_name .. "/archive/" .. os.date("%Y/%b/%d");
+				record_path = record_path:gsub("\\", "/");
+
+				-- set the call screen file
 				if (file_exists(temp_dir .. "/" .. domain_name .. "-" .. caller_id_number .. "." .. record_ext)) then
 					call_screen_file = temp_dir .. "/" .. domain_name .. "-" .. caller_id_number .. "." .. record_ext;
 					confirm = "true";
