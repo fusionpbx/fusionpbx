@@ -795,13 +795,13 @@
 
 //get the extensions and the users assigned to them
 	$sql = "select ";
-	$sql .= "e.extension, ";
-	$sql .= "u.username ";
-	$sql .= "from v_extensions e ";
-	$sql .= "left join v_extension_users eu on e.extension_uuid = eu.extension_uuid ";
-	$sql .= "left join v_users u on eu.user_uuid = u.user_uuid and u.user_enabled = true ";
-	$sql .= "where e.domain_uuid = :domain_uuid ";
-	$sql .= "order by e.extension asc ";
+	$sql .= " extension, ";
+	$sql .= " effective_caller_id_name, ";
+	$sql .= " description ";
+	$sql .= "from v_extensions ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and enabled = 'true' ";
+	$sql .= "order by extension asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$extensions = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
@@ -809,12 +809,8 @@
 	$extension_users = [];
 	foreach ($extensions as $row) {
 		$ext = $row['extension'];
-		if (!isset($extension_users[$ext])) {
-			$extension_users[$ext] = ['extension' => $ext, 'users' => []];
-		}
-		if (!empty($row['username'])) {
-			$extension_users[$ext]['users'][] = $row['username'];
-		}
+		$extension_users[$ext]['extension'] = $row['extension'];
+		$extension_users[$ext]['name'] = $row['effective_caller_id_name'] ?? $row['description'];
 	}
 
 //get the ring backs
@@ -1396,8 +1392,7 @@
 		echo "						<div class='search_results'></div>\n";
 		echo "						<select class='extension_hidden_select' style='display:none;'>\n";
 		foreach ($extension_users as $ext_data) {
-			$users_string = implode(', ', array_map('htmlspecialchars', $ext_data['users']));
-			echo "						<option value='".escape($ext_data['extension'])."' data-users='".$users_string."'>".escape($ext_data['extension'])."</option>";
+			echo "						<option value='".escape($ext_data['extension'])."' data-users='".$ext_data['name']."'>".escape($ext_data['extension'])."</option>";
 		}
 		echo "						</select>\n";
 		echo "					</div>\n";
