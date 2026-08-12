@@ -42,11 +42,11 @@
 		$apps[$x]['destinations'][$y]['field']['destination'] = "number_alias,extension";
 		$apps[$x]['destinations'][$y]['field']['extension'] = "number_alias,extension";
 		$apps[$x]['destinations'][$y]['field']['context'] = "user_context";
-		$apps[$x]['destinations'][$y]['field']['description'] = "description";
+		$apps[$x]['destinations'][$y]['field']['name'] = "effective_caller_id_name";
 		$apps[$x]['destinations'][$y]['select_value']['user_contact'] = "user/\${destination}@\${domain_name}";
 		$apps[$x]['destinations'][$y]['select_value']['dialplan'] = "transfer:\${destination} XML \${context}";
 		$apps[$x]['destinations'][$y]['select_value']['ivr'] = "menu-exec-app:transfer \${destination} XML \${context}";
-		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${description}";
+		$apps[$x]['destinations'][$y]['select_label'] = "\${destination} \${name}";
 		$y++;
 		$apps[$x]['destinations'][$y]['type'] = "sql";
 		$apps[$x]['destinations'][$y]['label'] = "call_groups";
