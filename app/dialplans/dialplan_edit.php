@@ -114,7 +114,7 @@
 	}
 	$query_string = http_build_query($url_params);
 
-//get the http post values and set them as php variables
+//get the HTTP POST values and set them as PHP variables
 	if (count($_POST) > 0) {
 		$hostname = $_POST["hostname"];
 		$dialplan_name = $_POST["dialplan_name"];
@@ -156,7 +156,6 @@
 					if (
 						$application != "name"
 						&& $application != "system"
-						&& $application != "bgsystem"
 						&& $application != "spawn"
 						&& $application != "bg_spawn"
 						&& $application != "spawn_stream"
