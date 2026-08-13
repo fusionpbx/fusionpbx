@@ -3679,8 +3679,13 @@ class database {
 				continue;
 			}
 
-			// loop through all columns in the table
-			foreach ($table['fields'] as $column) {
+		// skip tables that don't exist in the database
+		if (!$this->table_exists($table_name)) {
+			continue;
+		}
+
+		// loop through all columns in the table
+		foreach ($table['fields'] as $column) {
 				// skip deprecated columns
 				if (isset($column['deprecated'])) {
 					continue;
