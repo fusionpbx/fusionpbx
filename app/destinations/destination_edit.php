@@ -24,6 +24,9 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+//declare global variables
+	global $database;
+
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
@@ -38,7 +41,9 @@
 	$text = $language->get();
 
 //initialize the settings object
-	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
+	$domain_uuid = $domain_uuid ?? $_SESSION['domain_uuid'] ?? null;
+	$user_uuid = $user_uuid ?? $_SESSION['user_uuid'] ?? null;
+	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 
 //initialize the destination object
 	$destination = new destinations;
