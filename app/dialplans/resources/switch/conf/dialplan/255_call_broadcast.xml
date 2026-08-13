@@ -1,0 +1,11 @@
+<extension name="call-broadcast" number="*780" context="${domain_name}" continue="false" app_uuid="75e9dd2a-f4d9-4b71-8e2d-fa67c473fd68" enabled="false" order="255">
+	<condition field="destination_number" expression="^\*780$">
+		<action application="answer" data=""/>
+		<action application="sleep" data="1000"/>
+		<action application="set" data="pin_number="/>
+		<action application="lua" data="pin_number.lua"/>
+		<action application="set" data="call_broadcast_uuid=e3bfd483-42f6-4042-8ffe-788b95960c93" inline="true"/>
+		<action application="bgsystem" data="php /var/www/fusionpbx/app/call_broadcast/call_broadcast_send.php --uuid=${call_broadcast_uuid}"/>
+		<action application="playback" data="misc/transfer2.wav"/>
+	</condition>
+</extension>
