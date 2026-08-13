@@ -185,26 +185,22 @@
 		$sql .= "where call_broadcast_uuid = :call_broadcast_uuid ";
 		$sql .= "and b.domain_uuid = d.domain_uuid ";
 		$parameters['call_broadcast_uuid'] = $call_broadcast_uuid;
-		$row = $database->select($sql_get_domain, $parameters_get_domain, 'row');
-		if (!empty($row) && !empty($row['domain_uuid'])) {
+		$row = $database->select($sql, $parameters, 'row');
+		if (!empty($row)) {
 			$domain_uuid = $row['domain_uuid'];
+			$domain_name = $row['domain_name'];
 		}
-		unset($sql, $parameters, $row_get_domain);
 	}
 
 //get the call broadcast details from the database
-	$sql = "select * from v_call_broadcasts ";
+	$sql = "select * ";
+	$sql .= "from v_call_broadcasts ";
 	$sql .= "where call_broadcast_uuid = :call_broadcast_uuid ";
-	if (!empty($domain_uuid)) {
-		$sql .= "and domain_uuid = :domain_uuid ";
-	}
+	$sql .= "and domain_uuid = :domain_uuid ";
+	$parameters['domain_uuid'] = $domain_uuid;
 	$parameters['call_broadcast_uuid'] = $call_broadcast_uuid;
-	if (!empty($domain_uuid)) {
-		$parameters['domain_uuid'] = $domain_uuid;
-	}
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row)) {
-		$domain_uuid = $row["domain_uuid"];
 		$broadcast_name = $row["broadcast_name"] ?? 'Broadcast';
 		$broadcast_start_time = $row["broadcast_start_time"];
 		$broadcast_timeout = $row["broadcast_timeout"];
