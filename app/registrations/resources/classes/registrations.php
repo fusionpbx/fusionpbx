@@ -164,15 +164,26 @@ class registrations {
 					$xml_response = "<error_msg>" . escape($text['label-message']) . "</error_msg>";
 				}
 
-				//sanitize the XML
+				// Replace unescaped ampersands (&) with valid XML entities to avoid malformed XML (e.g., "&" → "&amp;")
+				$xml_response = preg_replace('/&(?!(?:lt|gt|amp|quot|apos|#\d+|#x[\da-f]+);)/i', '&', $xml_response);
+
+				// Sanitizes the string by stripping out any invalid or malformed UTF-8 sequences
 				if (function_exists('iconv')) {
 					$xml_response = iconv("utf-8", "utf-8//IGNORE", $xml_response);
 				}
+
+				// Remove invalid XML 1.0 control characters (single pass)
 				$xml_response = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $xml_response);
+
+				// Replace invalid dash character in the XML Tag name
 				$xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
 				$xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
+
+				// Removes less than and greater than characters
 				$xml_response = str_replace("&lt;", "", $xml_response);
 				$xml_response = str_replace("&gt;", "", $xml_response);
+
+				// Decode the XML and convert it to an array
 				if (strlen($xml_response) > 101) {
 					try {
 						$xml = new SimpleXMLElement($xml_response);
