@@ -44,8 +44,8 @@
 			echo "  --caller_id_number=<number>  Optional: Override caller ID number\n";
 			echo "  --sched_seconds=<seconds>    Optional: Initial delay in seconds (default: 3)\n";
 			echo "\nExample:\n";
-			echo "  php call_broadcast_send.php --u=broadcast-uuid-123\n";
-			echo "  php call_broadcast_send.php --id=broadcast-uuid-123 --caller_id_name='Announcer' --sched_seconds=5\n";
+			echo "  php call_broadcast_send.php --u=call_broadcast_uuid \n";
+			echo "  php call_broadcast_send.php --uuid=call_broadcast_uuid --caller_id_name='Announcer' --sched_seconds=5\n";
 			exit(1);
 		}
 
@@ -70,11 +70,6 @@
 				'short_option' => 's',
 				'long_option' => 'sched_seconds:',
 				'description' => 'Initial delay in seconds'
-			]),
-			command_option::new([
-				'short_option' => 'd',
-				'long_option' => 'domain_uuid:',
-				'description' => 'Domain UUID'
 			]),
 		];
 
@@ -101,10 +96,6 @@
 				}
 			}
 		}
-
-		// Set session domain info from CLI parameters
-		$domain_uuid = $cli_args['domain_uuid'] ?? '';
-		$domain_name = $cli_args['domain_name'] ?? '';
 	}
 	else {
 		// Include the check_auth file
@@ -164,6 +155,7 @@
 //get the call broadcast uuid from CLI or GET
 	if ($is_cli) {
 		$call_broadcast_uuid = $cli_args['uuid'] ?? $cli_args['u'];
+		$domain_uuid = $cli_args['domain_uuid'] ?? $cli_args['d'];
 	}
 	else {
 		$call_broadcast_uuid = $_GET["id"] ?? '';
@@ -182,27 +174,34 @@
 
 //get the domain uuid and name
 	if (!$is_cli) {
-		$domain_uuid = $_SESSION['domain_uuid'];
-		$domain_name = $_SESSION['domain_name'];
+		$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+		$domain_name = $_SESSION['domain_name'] ?? '';
 	}
 
-//get the call broadcast details from the database
-	if (!empty($domain_uuid) && empty($domain_name)) {
-		$sql = "select domain_name from v_domains ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$parameters['domain_uuid'] = $domain_uuid;
-		$row = $database->select($sql, $parameters, 'row');
-		if (!empty($row)) {
-			$domain_name = $row['domain_name'];
+//use the call_broadcast_uuid to get the domain_uuid and domain_name
+	if (empty($domain_uuid) && !empty($call_broadcast_uuid)) {
+		$sql = "select d.domain_name, b.domain_uuid ";
+		$sql .= "from v_call_broadcasts as b, v_domains as d ";
+		$sql .= "where call_broadcast_uuid = :call_broadcast_uuid ";
+		$sql .= "and b.domain_uuid = d.domain_uuid ";
+		$parameters['call_broadcast_uuid'] = $call_broadcast_uuid;
+		$row = $database->select($sql_get_domain, $parameters_get_domain, 'row');
+		if (!empty($row) && !empty($row['domain_uuid'])) {
+			$domain_uuid = $row['domain_uuid'];
 		}
+		unset($sql, $parameters, $row_get_domain);
 	}
 
 //get the call broadcast details from the database
 	$sql = "select * from v_call_broadcasts ";
 	$sql .= "where call_broadcast_uuid = :call_broadcast_uuid ";
-	$sql .= "and domain_uuid = :domain_uuid ";
+	if (!empty($domain_uuid)) {
+		$sql .= "and domain_uuid = :domain_uuid ";
+	}
 	$parameters['call_broadcast_uuid'] = $call_broadcast_uuid;
-	$parameters['domain_uuid'] = $domain_uuid;
+	if (!empty($domain_uuid)) {
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row)) {
 		$domain_uuid = $row["domain_uuid"];
@@ -393,7 +392,6 @@
 					echo "</table>\n";
 					echo "</div>\n";
 				}
-
 			}
 			elseif ($is_cli) {
 				echo "Warning: No phone numbers found for this broadcast.\n";
