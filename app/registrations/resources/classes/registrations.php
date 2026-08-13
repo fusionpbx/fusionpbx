@@ -90,7 +90,7 @@ class registrations {
 		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
 
 		//set objects
-		$this->database     = $setting_array['database'] ?? database::new();
+		$this->database = $setting_array['database'] ?? database::new();
 		$this->event_socket = $setting_array['event_socket'] ?? event_socket::create();
 
 		//trap passing an invalid connection object for communicating to the switch
@@ -101,8 +101,8 @@ class registrations {
 
 		//assign private variables
 		$this->permission_prefix = 'registration_';
-		$this->list_page         = 'registrations.php';
-		$this->show              = 'local';
+		$this->list_page = 'registrations.php';
+		$this->show = 'local';
 	}
 
 	/**
@@ -116,7 +116,7 @@ class registrations {
 
 		//add multi-lingual support
 		$language = new text;
-		$text     = $language->get(null, '/app/registrations');
+		$text = $language->get(null, '/app/registrations');
 
 		//initialize the id used in the registrations array
 		$id = 0;
@@ -140,10 +140,10 @@ class registrations {
 		$sql = "select sip_profile_name from v_sip_profiles ";
 		$sql .= "where true ";
 		if (!empty($profile) && $profile != 'all') {
-			$sql                            .= "and sip_profile_name = :sip_profile_name ";
+			$sql .= "and sip_profile_name = :sip_profile_name ";
 			$parameters['sip_profile_name'] = $profile;
 		}
-		$sql          .= "and sip_profile_enabled = true ";
+		$sql .= "and sip_profile_enabled = true ";
 		$sip_profiles = $this->database->select($sql, $parameters ?? null, 'all');
 
 		if (!empty($sip_profiles)) {
@@ -155,7 +155,7 @@ class registrations {
 				$field = $sip_profiles[$i++];
 
 				//get sofia status profile information including registrations
-				$cmd          = "api sofia xmlstatus profile '" . $field['sip_profile_name'] . "' reg";
+				$cmd = "api sofia xmlstatus profile '" . $field['sip_profile_name'] . "' reg";
 				$xml_response = trim($event_socket->request($cmd));
 
 				//show an error message
@@ -165,7 +165,7 @@ class registrations {
 				}
 
 				// Replace unescaped ampersands (&) with valid XML entities to avoid malformed XML (e.g., "&" → "&amp;")
-				$xml_response = preg_replace('/&(?!(?:lt|gt|amp|quot|apos|#\d+|#x[\da-f]+);)/i', '&', $xml_response);
+				$xml_response = preg_replace('/&(?!(?:lt|gt|amp|quot|apos|#\d+|#x[\da-f]+);)/i', '&amp;', $xml_response);
 
 				// Sanitizes the string by stripping out any invalid or malformed UTF-8 sequences
 				if (function_exists('iconv')) {
@@ -210,7 +210,7 @@ class registrations {
 
 						//build the registrations array
 						//$registrations[0] = $row;
-						$user_array                             = explode('@', $row['user'] ?? '');
+						$user_array = explode('@', $row['user'] ?? '');
 						$registrations[$id]['user']             = $row['user'] ?? '';
 						$registrations[$id]['call-id']          = $row['call-id'] ?? '';
 						$registrations[$id]['contact']          = $row['contact'] ?? '';
@@ -251,10 +251,10 @@ class registrations {
 							$registrations[$id]['lan-ip'] = $lan_ip;
 						} elseif (preg_match('/real=\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $row['contact'] ?? '', $ip_match)) {
 							//get ip address for snom phones
-							$lan_ip                       = str_replace('real=', '', $ip_match[0]);
+							$lan_ip = str_replace('real=', '', $ip_match[0]);
 							$registrations[$id]['lan-ip'] = $lan_ip;
 						} elseif (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $row['contact'] ?? '', $ip_match)) {
-							$lan_ip                       = preg_replace('/_/', '.', $ip_match[0]);
+							$lan_ip = preg_replace('/_/', '.', $ip_match[0]);
 							$registrations[$id]['lan-ip'] = $lan_ip;
 						} else {
 							$registrations[$id]['lan-ip'] = '';
@@ -350,7 +350,7 @@ class registrations {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -373,7 +373,7 @@ class registrations {
 			if (is_array($registrations) && @sizeof($registrations) != 0) {
 
 				//retrieve sip profiles list
-				$sql          = "select sip_profile_name as name from v_sip_profiles ";
+				$sql = "select sip_profile_name as name from v_sip_profiles ";
 				$sip_profiles = $this->database->select($sql, null, 'all');
 				unset($sql);
 
@@ -418,18 +418,18 @@ class registrations {
 							if (!empty($profile) && $user) {
 								switch ($action) {
 									case 'unregister':
-										$command          = "sofia profile " . $profile . " flush_inbound_reg " . $user;
+										$command = "sofia profile " . $profile . " flush_inbound_reg " . $user;
 										$response_message = $text['message-registrations_unregistered'];
 										break;
 									case 'provision':
 										if ($vendor && $host) {
-											$command          = "lua app.lua event_notify " . $profile . " check_sync " . $user . " " . $vendor . " " . $host;
+											$command = "lua app.lua event_notify " . $profile . " check_sync " . $user . " " . $vendor . " " . $host;
 											$response_message = $text['message-registrations_provisioned'];
 										}
 										break;
 									case 'reboot':
 										if ($vendor && $host) {
-											$command          = "lua app.lua event_notify " . $profile . " reboot " . $user . " " . $vendor . " " . $host;
+											$command = "lua app.lua event_notify " . $profile . " reboot " . $user . " " . $vendor . " " . $host;
 											$response_message = $text['message-registrations_rebooted'];
 										}
 										break;
@@ -441,9 +441,9 @@ class registrations {
 
 							//send the api command
 							if (!empty($command) && $event_socket->is_connected()) {
-								$response                       = $event_socket->request('api ' . $command);
+								$response = $event_socket->request('api ' . $command);
 								$response_api[$user]['command'] = $command;
-								$response_api[$user]['log']     = $response;
+								$response_api[$user]['log'] = $response;
 							}
 						}
 					}
