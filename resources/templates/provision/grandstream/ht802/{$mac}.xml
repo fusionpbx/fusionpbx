@@ -7,7 +7,6 @@
     <!-- ## Configuration template for HT80x firmware version 1.0.10.6                              ## -->
     <!-- ############################################################################################ -->
 
-
     <!-- ############################################################################## -->
     <!-- ##  Advanced Settings.                                                      ## -->
     <!-- ############################################################################## -->
@@ -84,7 +83,7 @@
     <!-- # 0 - No, 1 - Yes (default is No) -->
     <P22030>0</P22030>
 
-    <!-- # Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade, 3 - FTP Upgrade, 4 - FTPS Upgrade. -->
+    <!-- # Firmware Upgrade and Provisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade, 3 - FTP Upgrade, 4 - FTPS Upgrade. -->
     <!-- # Number: 0, 1, 2, 3, 4 -->
     <!-- # Mandatory -->
     {if isset($grandstream_firmware_upgrade_protocol) }
@@ -151,7 +150,7 @@
     <!-- # 3CX Auto Provision. 0 - No, 1 - Yes. Default is Yes. -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P1414>1</P1414>
+    <P1414>0</P1414>
 
     <!-- # Automatic Upgrade. 0 - No, 1 - Check daily, 2 - Check weekly, 3 - Check every () minutes. Default is No. -->
     <!-- # Number: 0, 1, 2, 3 -->
@@ -185,7 +184,7 @@
     <!-- # Randomized Automatic Upgrade. 0 - No, 1 - Yes, default is 0. -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P8458>0 </P8458>
+    <P8458>0</P8458>
 
     <!-- # 0=Always Check for New Firmware  -->
     <!-- # 1=Check New Firmware only when F/W pre/suffix changes  -->
@@ -198,8 +197,6 @@
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
     <P4428>1</P4428>
-
-
 
     <!-- #Authenticate Conf File -->
     <!-- #Number: 0 No, 1 Yes  (cfg file would be authenticated before acceptance if set to Yes)  -->
@@ -232,7 +229,6 @@
 <P1409>0</P1409>
 {/if}
 
-
     <!-- # ACS URL -->
     {if isset($grandstream_acs_url)}<P4503>{$grandstream_acs_url}</P4503>{else}<P4503></P4503>{/if}
 
@@ -252,7 +248,6 @@
 {else}
 <P4506>0</P4506>
 {/if}
-
 
     <!-- # Periodic Inform Interval (default is 300) -->
     <!-- # Number: 1-99999 -->
@@ -331,7 +326,7 @@
     <!-- # SNMPv3 Security Level. 0 - noAuthUser, 1 - authUser, 2 - privUser. Default value is 0. -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P21910>0 </P21910>
+    <P21910>0</P21910>
 
     <!-- # SNMPv3 Authentication Protocol. 0 - None, 1- MD5, 2- SHA. Default value is 0. -->
     <!-- # Number: 0, 1, 2 -->
@@ -356,7 +351,7 @@
     <!-- # SNMPv3 Trap Security Level. 0 - noAuthUser, 1 - authUser, 2 - privUser. Default value is 0. -->
     <!-- # Number: 0, 1, 2 -->
     <!-- # Mandatory -->
-    <P21916>0 </P21916>
+    <P21916>0</P21916>
 
     <!-- # SNMPv3 Trap Authentication Protocol. 0 - None, 1- MD5, 2- SHA. Default value is 0. -->
     <!-- # Number: 0, 1, 2 -->
@@ -683,7 +678,7 @@
     <!-- # Reregister before Expiration (in seconds. Default 0 second) -->
     <!-- # Number: 1 to 64800 -->
     <!-- # Mandatory -->
-    <P2330>0 </P2330>
+    <P2330>0</P2330>
 
     <!-- # SIP Registration Failure Retry Wait Time, in seconds. Between 1-3600, default is 20 -->
     <!-- # Number: 1 to 3600 -->
@@ -871,7 +866,6 @@
     {else}
     <P850>101</P850>
     {/if}
-
 
     <!-- # Priority 2 -->
     <!-- # Number: 100, 101, 102 -->
@@ -1704,7 +1698,7 @@
     <!-- # Check SIP User ID for incoming INVITE. 0 - No, 1 - Yes -->
     <!-- # Number: 0, 1 -->
     <!-- # Mandatory -->
-    <P449>0 </P449>
+    <P449>0</P449>
 
     <!-- # Authenticate incoming INVITE -->
     <!-- # Number: 0, 1 -->
@@ -2294,7 +2288,7 @@
     <!-- # <value=6> -6dB -->
     <!-- # Number: 0, 1, 2, 3, 4, 5, 6 -->
     <!-- # Mandatory -->
-    <P248>0 </P248>
+    <P248>0</P248>
 
     <!-- # RX  -->
     <!-- # <value=1> +6dB -->
