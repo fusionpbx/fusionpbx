@@ -56,13 +56,17 @@
 				--say the message number
 					if (session:ready()) then
 						if (string.len(dtmf_digits) == 0) then
-							session:execute("playback", "phrase:voicemail_say_message_number:" .. message_status .. ":" .. message_number);
+							--keep 4, 5 and 6 as transport keys so they don't reach the menu
+							stream_seek = true;
+							session:streamFile("phrase:voicemail_say_message_number:" .. message_status .. ":" .. message_number);
+							stream_seek = false;
 						end
 					end
 
 				--say the caller id number first (default)
 					if (
 						session:ready() and
+						string.len(dtmf_digits) == 0 and
 						caller_id_number ~= nil and (
 							vm_say_caller_id_number == nil or
 							vm_say_caller_id_number == "true" or
@@ -257,7 +261,7 @@
 					return listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number, message_status);
 				elseif (dtmf_digits == "2") then
 					message_saved(voicemail_id, uuid);
-					session:execute("playback", "phrase:voicemail_ack:saved");
+					session:streamFile("phrase:voicemail_ack:saved");
 				elseif (dtmf_digits == "3") then
 					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-from.wav");
 					session:say(caller_id_number, default_language, "name_spelled", "iterated");
@@ -273,7 +277,7 @@
 				elseif (dtmf_digits == "7") then
 					if (use_deletion_queue == "true" and message_status ~= "deleted") then
 						message_saved(voicemail_id, uuid, "deleted");
-						session:execute("playback", "phrase:voicemail_ack:deleted");
+						session:streamFile("phrase:voicemail_ack:deleted");
 					else
 						delete_recording(voicemail_id, uuid);
 					end
@@ -288,7 +292,7 @@
 				elseif (dtmf_digits == "9") then
 					send_email(voicemail_id, uuid);
 					dtmf_digits = '';
-					session:execute("playback", "phrase:voicemail_ack:emailed");
+					session:streamFile("phrase:voicemail_ack:emailed");
 				elseif (dtmf_digits == "*") then
 					timeouts = 0;
 					return main_menu();
@@ -299,7 +303,7 @@
 					return;
 				else
 					message_saved(voicemail_id, uuid);
-					session:execute("playback", "phrase:voicemail_ack:saved");
+					session:streamFile("phrase:voicemail_ack:saved");
 				end
 				session:execute("sleep", "400");
 			end
