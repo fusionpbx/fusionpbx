@@ -5,13 +5,32 @@ local log = require "resources.functions.log".presence
 local function turn_lamp(on, user, uuid)
 	log.debugf('turn_lamp: %s - %s(%s)', tostring(user), tostring(on), type(on))
 
-	local userid, domain, proto = split_first(user, "@", true)
-	proto, userid = split_first(userid, "+", true)
-	if userid then
-		user = userid  .. "@" .. domain
+	-- Parse user in format: [proto+]extension@domain
+	-- split_first returns: (part_before_separator, part_after_separator)
+	local before_at, domain = split_first(user, "@", true)
+
+	-- If no @ found, before_at equals user (split_first returns single value)
+	if before_at == user and not domain then
+		-- No @ in user string - invalid format
+		log.warningf('turn_lamp: invalid user format: %s', tostring(user))
+		return
+	end
+
+	-- Determine proto and extension from the part before @
+	-- e.g., "voicemail+1234" -> proto="voicemail", ext="1234"
+	-- e.g., "1234" -> proto="sip" (default), ext="1234"
+	local proto, ext
+	local plus_pos = string.find(before_at, "+", 1, true)
+	if plus_pos then
+		proto = string.sub(before_at, 1, plus_pos - 1)
+		ext = string.sub(before_at, plus_pos + 1)
 	else
 		proto = "sip"
+		ext = before_at
 	end
+
+	-- Reconstruct user as extension@domain (proto is used in the event header)
+	user = ext .. "@" .. domain
 
 	uuid = uuid or api:execute('create_uuid')
 
