@@ -169,6 +169,16 @@
 			$msg = '';
 			if (!is_numeric($voicemail_id)) { $msg .= $text['message-required']." ".$text['label-voicemail_id']."<br>\n"; }
 			if (trim($voicemail_password) == '') { $msg .= $text['message-required']." ".$text['label-voicemail_password']."<br>\n"; }
+			if (!empty($voicemail_sms_to)) {
+				$_sms_check = array_filter(array_map('trim', explode(',', $voicemail_sms_to)));
+				foreach ($_sms_check as $_n) {
+					if (!preg_match('/^\+[0-9]+$/', $_n)) {
+						$msg .= $text['message-voicemail_sms_to_invalid']."<br>\n";
+						break;
+					}
+				}
+				unset($_sms_check, $_n);
+			}
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -204,6 +214,12 @@
 					$array['voicemails'][0]['greeting_id'] = $greeting_id != '' ? $greeting_id : null;
 					$array['voicemails'][0]['voicemail_alternate_greet_id'] = $voicemail_alternate_greet_id != '' ? preg_replace('/[^0-9+]/', '', $voicemail_alternate_greet_id) : null;
 					$array['voicemails'][0]['voicemail_mail_to'] = $voicemail_mail_to;
+					// Numbers are E.164-validated above; just normalize whitespace and rejoin.
+					if (!empty($voicemail_sms_to)) {
+						$_sms_numbers = array_filter(array_map('trim', explode(',', $voicemail_sms_to)));
+						$voicemail_sms_to = !empty($_sms_numbers) ? implode(',', $_sms_numbers) : null;
+						unset($_sms_numbers);
+					}
 					$array['voicemails'][0]['voicemail_sms_to'] = $voicemail_sms_to;
 					$array['voicemails'][0]['voicemail_transcription_enabled'] = $voicemail_transcription_enabled;
 					if ($transcribe_enabled && permission_exists('voicemail_transcription_enabled')) {
@@ -903,13 +919,13 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists('voicemail_sms_edit') && file_exists(dirname(__DIR__, 2).'/app/sms/')) {
+	if (permission_exists('voicemail_sms_edit') && file_exists(dirname(__DIR__, 2).'/app/messages/')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-voicemail_sms_to']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='voicemail_sms_to' maxlength='255' value=\"".escape($voicemail_sms_to)."\">\n";
+		echo "	<input class='formfld' type='text' name='voicemail_sms_to' maxlength='255' placeholder='+15551234567,+14161234567' value=\"".escape($voicemail_sms_to)."\">\n";
 		echo "<br />\n";
 		echo $text['description-voicemail_sms_to']."\n";
 		echo "</td>\n";
