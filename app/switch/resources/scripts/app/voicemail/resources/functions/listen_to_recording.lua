@@ -247,9 +247,9 @@
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
 					if (use_deletion_queue == "true" and message_status == "deleted") then
-						dtmf_digits = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:voicemail_listen_file_options:deleted:1:2:3:5:7:8:0", "", "^[\\d\\*#]$");
+						dtmf_digits = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:voicemail_listen_file_options:deleted:1:2:3:5:7:8:9:0", "", "^[\\d\\*#]$");
 					else
-						dtmf_digits = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:voicemail_listen_file_options:1:2:3:5:7:8:0", "", "^[\\d\\*#]$");
+						dtmf_digits = session:playAndGetDigits(1, 1, max_tries, digit_timeout, "#", "phrase:voicemail_listen_file_options:1:2:3:5:7:8:9:0", "", "^[\\d\\*#]$");
 					end
 				end
 			end
@@ -300,6 +300,9 @@
 						end
 				elseif (action == "8") then
 					forward_message(voicemail_id, uuid);
+					dtmf_digits = '';
+				elseif (action == "9") then
+					--skip to the next message, leaving the message status unchanged
 					dtmf_digits = '';
 				elseif (action == "*") then
 					timeouts = 0;
