@@ -34,6 +34,7 @@
 			timeout = 2000;
 		--clear the dtmf
 			dtmf_digits = '';
+			dtmf_carry = '';
 		--flush dtmf digits from the input buffer
 			--session:flushDigits();
 		--set the message number
