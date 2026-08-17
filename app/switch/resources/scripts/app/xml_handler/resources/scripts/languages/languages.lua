@@ -46,8 +46,8 @@
 
 --get the action
 	--action = params:getHeader("action");
-	language = params:getHeader("lang");
-	macro_name = params:getHeader("macro_name");
+	language = params:getHeader("lang") or '';
+	macro_name = params:getHeader("macro_name") or '';
 
 --get the cache
 	local cache = require "resources.functions.cache"
