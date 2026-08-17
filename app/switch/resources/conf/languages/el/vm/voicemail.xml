@@ -256,4 +256,12 @@
     </input>
   </macro>
 
+  <macro name="voicemail_invalid_option">
+   <input>
+      <match>
+        <action function="play-file" data="ivr/ivr-that_was_an_invalid_entry.wav"/>
+      </match>
+   </input>
+  </macro>
+
 </include>

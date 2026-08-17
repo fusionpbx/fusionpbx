@@ -269,6 +269,7 @@
 					dtmf_digits = '';
 
 				if (action == "1") then
+					timeouts = 0;
 					return listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number, message_status);
 				elseif (action == "2") then
 					message_saved(voicemail_id, uuid);
@@ -281,6 +282,7 @@
 					end
 					session:say(created_epoch, default_language, "current_date_time", "pronounced");
 					session:sleep(1000);
+					timeouts = 0;
 					dtmf_carry = dtmf_digits;
 					return listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number, message_status, 'false');
 				elseif (action == "5") then
@@ -312,10 +314,24 @@
 					session:transfer("0", "XML", context);
 				elseif (action == "#") then
 					return;
+				elseif (action ~= '') then
+					--an unhandled key says the entry was invalid and replays the options,
+					--giving up after max_timeouts so the mailbox is never stuck on one message
+					timeouts = timeouts + 1;
+					if (timeouts <= max_timeouts) then
+						session:streamFile("phrase:voicemail_invalid_option");
+						dtmf_carry = dtmf_digits;
+						return listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number, message_status, 'false');
+					end
+					timeouts = 0;
+					message_saved(voicemail_id, uuid);
+					session:streamFile("phrase:voicemail_ack:saved");
 				else
+					--the options timed out with no key pressed
 					message_saved(voicemail_id, uuid);
 					session:streamFile("phrase:voicemail_ack:saved");
 				end
+				timeouts = 0;
 				session:sleep(400);
 
 				--carry the digit pressed during the acknowledgement to the next message,
