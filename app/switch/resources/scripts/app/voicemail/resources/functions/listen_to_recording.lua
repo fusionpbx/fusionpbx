@@ -30,14 +30,20 @@
 	function listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number, message_status, message_play)
 
 		--set default values
-			dtmf_digits = '';
 			max_digits = 1;
 			if (message_play == nil) then
 				message_play = 'true';
 			end
 
-		--flush dtmf digits from the input buffer
-			session:flushDigits();
+		--act on the digit pressed during the previous acknowledgement, otherwise
+		--start with an empty buffer and discard anything typed before this message
+			if (dtmf_carry ~= nil and string.len(dtmf_carry) > 0) then
+				dtmf_digits = dtmf_carry;
+				dtmf_carry = '';
+			else
+				dtmf_digits = '';
+				session:flushDigits();
+			end
 
 		--set the callback function
 			if (session:ready()) then
@@ -56,13 +62,17 @@
 				--say the message number
 					if (session:ready()) then
 						if (string.len(dtmf_digits) == 0) then
-							session:execute("playback", "phrase:voicemail_say_message_number:" .. message_status .. ":" .. message_number);
+							--keep 4, 5 and 6 as transport keys so they don't reach the menu
+							stream_seek = true;
+							session:streamFile("phrase:voicemail_say_message_number:" .. message_status .. ":" .. message_number);
+							stream_seek = false;
 						end
 					end
 
 				--say the caller id number first (default)
 					if (
 						session:ready() and
+						string.len(dtmf_digits) == 0 and
 						caller_id_number ~= nil and (
 							vm_say_caller_id_number == nil or
 							vm_say_caller_id_number == "true" or
@@ -253,27 +263,35 @@
 
 		--process the dtmf
 			if (session:ready()) then
-				if (dtmf_digits == "1") then
+				--keep the action then empty the buffer so that a digit pressed during the
+				--acknowledgement is carried to the next message instead of being discarded
+					local action = dtmf_digits;
+					dtmf_digits = '';
+
+				if (action == "1") then
+					timeouts = 0;
 					return listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number, message_status);
-				elseif (dtmf_digits == "2") then
+				elseif (action == "2") then
 					message_saved(voicemail_id, uuid);
-					session:execute("playback", "phrase:voicemail_ack:saved");
-				elseif (dtmf_digits == "3") then
+					session:streamFile("phrase:voicemail_ack:saved");
+				elseif (action == "3") then
 					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-from.wav");
 					session:say(caller_id_number, default_language, "name_spelled", "iterated");
 					if (current_time_zone ~= nil) then
 						session:execute("set", "timezone="..current_time_zone.."");
 					end
 					session:say(created_epoch, default_language, "current_date_time", "pronounced");
-					session:execute("sleep", "1000");
+					session:sleep(1000);
+					timeouts = 0;
+					dtmf_carry = dtmf_digits;
 					return listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number, message_status, 'false');
-				elseif (dtmf_digits == "5") then
+				elseif (action == "5") then
 					message_saved(voicemail_id, uuid);
 					return_call(caller_id_number);
-				elseif (dtmf_digits == "7") then
+				elseif (action == "7") then
 					if (use_deletion_queue == "true" and message_status ~= "deleted") then
 						message_saved(voicemail_id, uuid, "deleted");
-						session:execute("playback", "phrase:voicemail_ack:deleted");
+						session:streamFile("phrase:voicemail_ack:deleted");
 					else
 						delete_recording(voicemail_id, uuid);
 					end
@@ -282,25 +300,47 @@
 						if (voicemail_id_copy ~= voicemail_id  and voicemail_id_copy ~= nil) then
 							message_waiting(voicemail_id_copy, domain_uuid);
 						end
-				elseif (dtmf_digits == "8") then
-					forward_to_extension(voicemail_id, uuid);
+				elseif (action == "8") then
+					forward_message(voicemail_id, uuid);
 					dtmf_digits = '';
-				elseif (dtmf_digits == "9") then
-					send_email(voicemail_id, uuid);
+				elseif (action == "9") then
+					--skip to the next message, leaving the message status unchanged
 					dtmf_digits = '';
-					session:execute("playback", "phrase:voicemail_ack:emailed");
-				elseif (dtmf_digits == "*") then
+				elseif (action == "*") then
 					timeouts = 0;
 					return main_menu();
-				elseif (dtmf_digits == "0") then
+				elseif (action == "0") then
 					message_saved(voicemail_id, uuid);
 					session:transfer("0", "XML", context);
-				elseif (dtmf_digits == "#") then
+				elseif (action == "#") then
 					return;
-				else
+				elseif (action ~= '') then
+					--an unhandled key says the entry was invalid and replays the options,
+					--giving up after max_timeouts so the mailbox is never stuck on one message
+					timeouts = timeouts + 1;
+					if (timeouts <= max_timeouts) then
+						session:streamFile("phrase:voicemail_invalid_option");
+						dtmf_carry = dtmf_digits;
+						return listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number, message_status, 'false');
+					end
+					timeouts = 0;
 					message_saved(voicemail_id, uuid);
-					session:execute("playback", "phrase:voicemail_ack:saved");
+					session:streamFile("phrase:voicemail_ack:saved");
+				else
+					--the options timed out with no key pressed
+					message_saved(voicemail_id, uuid);
+					session:streamFile("phrase:voicemail_ack:saved");
 				end
-				session:execute("sleep", "400");
+				timeouts = 0;
+				session:sleep(400);
+
+				--carry the digit pressed during the acknowledgement to the next message,
+				--except 5 which would return the call to the next caller rather than this one
+					if (dtmf_digits == "5") then
+						dtmf_carry = '';
+					else
+						dtmf_carry = dtmf_digits;
+					end
+					dtmf_digits = '';
 			end
 	end

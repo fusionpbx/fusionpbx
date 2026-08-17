@@ -60,7 +60,7 @@
         <action function="play-file" data="voicemail/vm-to_forward.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$6" method="pronounced" type="name_spelled"/>
-        <action function="play-file" data="voicemail/vm-forward_to_email.wav"/>
+        <action function="play-file" data="voicemail/vm-play_next_message.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$7" method="pronounced" type="name_spelled"/>
       </match>
@@ -85,7 +85,7 @@
         <action function="play-file" data="voicemail/vm-to_forward.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$6" method="pronounced" type="name_spelled"/>
-        <action function="play-file" data="voicemail/vm-forward_to_email.wav"/>
+        <action function="play-file" data="voicemail/vm-play_next_message.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$7" method="pronounced" type="name_spelled"/>
       </match>
@@ -241,6 +241,27 @@
         <action function="say" data="$2" method="pronounced" type="name_spelled"/>
       </match>
     </input>
+  </macro>
+
+  <macro name="voicemail_forward_message_options">
+    <input pattern="^([0-9#*]):(.*)$">
+      <match>
+        <action function="play-file" data="voicemail/vm-to_forward.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$1" method="pronounced" type="name_spelled"/>
+        <action function="play-file" data="voicemail/vm-forward_to_email.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$2" method="pronounced" type="name_spelled"/>
+      </match>
+    </input>
+  </macro>
+
+  <macro name="voicemail_invalid_option">
+   <input>
+      <match>
+        <action function="play-file" data="ivr/ivr-that_was_an_invalid_entry.wav"/>
+      </match>
+   </input>
   </macro>
 
 </include>
