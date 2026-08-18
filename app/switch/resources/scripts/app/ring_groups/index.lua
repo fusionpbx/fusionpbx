@@ -250,6 +250,8 @@
 	if (session:ready()) then
 		session:setAutoHangup(false);
 		ring_group_uuid = session:getVariable("ring_group_uuid");
+		domain_uuid = session:getVariable("domain_uuid");
+		domain_name = session:getVariable("domain_name");
 		recordings_dir = session:getVariable("recordings_dir");
 		sounds_dir = session:getVariable("sounds_dir");
 		username = session:getVariable("username");
