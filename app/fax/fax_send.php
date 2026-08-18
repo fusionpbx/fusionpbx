@@ -990,14 +990,24 @@ if (!defined('STDIN')) {
 
 		echo "	function toggle(field) {";
 		echo "		if (field == 'fax_recipient') {";
+		echo "			var searchable = document.getElementById('fax_recipient_select_search') ? '_search' : '';";
 		echo "			document.getElementById('fax_recipient_select').selectedIndex = 0;";
-		echo "			$('#fax_recipient_select').toggle();";
+		echo "			$('#fax_recipient_select' + searchable).toggle();";
 		echo "			$('#fax_recipient').toggle();";
-		echo "			if ($('#fax_recipient').is(':visible')) { $('#fax_recipient').trigger('focus'); } else { $('#fax_recipient_select').trigger('focus'); }";
+		echo "			if ($('#fax_recipient').is(':visible')) { $('#fax_recipient').trigger('focus'); } else { $('#fax_recipient_select' + searchable).trigger('focus'); }";
 		echo "		}";
 		echo "	}";
 
 		echo "	function contact_load(obj_sel) {";
+		echo "		var searchable_select = document.getElementById('fax_recipient_select_search');";
+		echo "		if (searchable_select) {";
+		echo "			var input = searchable_select.querySelector('input');";
+		echo "			if (input.value == '') {";
+		echo "				return false;";
+		echo "			} else {";
+		echo "				searchable_select.style.display='none';";
+		echo "			}";
+		echo "		}";
 		echo "		obj_sel.style.display='none';";
 		echo "		document.getElementById('fax_recipient').style.display='';";
 		echo "		var selected_option_value = obj_sel.options[obj_sel.selectedIndex].value;";
@@ -1083,7 +1093,7 @@ if (!defined('STDIN')) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if (is_array($contacts) && @sizeof($contacts) != 0) {
-			echo "	<select class='formfld' style='display: none;' id='fax_recipient_select' onchange='contact_load(this);'>\n";
+			echo "	<select class='formfld searchable_select' style='display: none;' id='fax_recipient_select' onchange='contact_load(this);'>\n";
 			echo "		<option value=''></option>\n";
 			if (is_array($contact_labels) && @sizeof($contact_labels) != 0) {
 				foreach ($contact_labels as $index => $contact_label) {
