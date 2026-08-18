@@ -26,6 +26,7 @@
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
 --  Gill Abada <gill.abada@gmail.com>
+--	Norman King <norman@nsinnovations.net>
 
 --include the log
 	log = require "resources.functions.log".ring_group
@@ -323,6 +324,7 @@
 	end
 
 --set exit key action
+	exit_key_bound = false;
 	if (ring_group_timeout_app and #ring_group_timeout_app > 0 and ring_group_timeout_data and #ring_group_timeout_data > 0) then
 		if (not ring_group_exit_key or #ring_group_exit_key == 0) then
 			--use a default exit key of 9
@@ -331,6 +333,7 @@
 
 		--use the user defined or default exit key
 		session:execute("bind_digit_action", "exit_key,"..ring_group_exit_key..",exec:"..ring_group_timeout_app..","..ring_group_timeout_data..",both,self");
+		exit_key_bound = true;
 	end
 
 --play the greeting
@@ -1303,6 +1306,14 @@
 							end
 						end
 						-- log.noticef("bridge done: originate_disposition:%s answered:%s ready:%s bridged:%s", session:getVariable("originate_disposition"), session:answered() and "true" or "false", session:ready() and "true" or "false", session:bridged() and "true" or "false")
+					end
+
+				--release the exit key binding and return to the feature key realm so the exit
+				--key is not intercepted by the destination the call is sent to
+					if (exit_key_bound) then
+						session:execute("clear_digit_action", "exit_key,both");
+						session:execute("digit_action_set_realm", "local");
+						session:execute("digit_action_set_realm", "local,peer");
 					end
 
 				--timeout destination
