@@ -82,10 +82,12 @@
 					headers["X-FusionPBX-Email-Type"]  = 'missed';
 
 				--remove quotes from caller id name and number
-					caller_id_name = caller_id_name:gsub("'", "&#39;");
-					caller_id_name = caller_id_name:gsub([["]], "&#34;");
-					caller_id_number = caller_id_number:gsub("'", "&#39;");
-					caller_id_number = caller_id_number:gsub([["]], "&#34;");
+				if (caller_id_name == nil) then caller_id_name = ''; end
+				if (caller_id_number == nil) then caller_id_number = ''; end
+				caller_id_name = caller_id_name:gsub("'", "&#39;");
+				caller_id_name = caller_id_name:gsub([["]], "&#34;");
+				caller_id_number = caller_id_number:gsub("'", "&#39;");
+				caller_id_number = caller_id_number:gsub([["]], "&#34;");
 
 				--prepare the subject
 					subject = subject:gsub("${caller_id_name}", caller_id_name);
