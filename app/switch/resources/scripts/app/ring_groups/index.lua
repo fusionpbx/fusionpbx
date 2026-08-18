@@ -332,7 +332,7 @@
 		end
 
 		--use the user defined or default exit key
-		session:execute("bind_digit_action", "exit_key,"..ring_group_exit_key..",exec:"..ring_group_timeout_app..","..ring_group_timeout_data..",both,self");
+		session:execute("bind_digit_action", "exit_key,"..ring_group_exit_key..",exec:"..ring_group_timeout_app..","..ring_group_timeout_data..",self,self");
 		exit_key_bound = true;
 	end
 
@@ -1229,6 +1229,14 @@
 					end
 					session:execute("digit_action_set_realm", "local");
 
+				--select the exit key realm for the ring and return to the feature key realm
+				--when the call is answered, only one realm can be active at a time
+					if (exit_key_bound) then
+						session:execute("digit_action_set_realm", "exit_key");
+						session:setVariable("bridge_pre_execute_aleg_app", "digit_action_set_realm");
+						session:setVariable("bridge_pre_execute_aleg_data", "local");
+					end
+
 				--if the user is busy rollover to the next destination
 					if (ring_group_strategy == "rollover") then
 						timeout = 0;
@@ -1311,9 +1319,8 @@
 				--release the exit key binding and return to the feature key realm so the exit
 				--key is not intercepted by the destination the call is sent to
 					if (exit_key_bound) then
-						session:execute("clear_digit_action", "exit_key,both");
+						session:execute("clear_digit_action", "exit_key");
 						session:execute("digit_action_set_realm", "local");
-						session:execute("digit_action_set_realm", "local,peer");
 					end
 
 				--timeout destination
