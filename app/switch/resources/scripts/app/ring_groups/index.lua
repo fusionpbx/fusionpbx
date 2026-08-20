@@ -330,7 +330,7 @@
 		end
 
 		--use the user defined or default exit key
-		session:execute("bind_digit_action", "exit_key,"..ring_group_exit_key..",exec:"..ring_group_timeout_app..","..ring_group_timeout_data..",both,self");
+		session:execute("bind_digit_action", "local,"..ring_group_exit_key..",exec:"..ring_group_timeout_app..","..ring_group_timeout_data..",both,self");
 	end
 
 --play the greeting
