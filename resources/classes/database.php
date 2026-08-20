@@ -778,9 +778,13 @@ class database {
 				}
 				break;
 			case 'app_uuid':
+				if (is_uuid($value)) {
+					$this->app_uuid = $value;
+				}
+				break;
 			case 'domain_uuid':
 				if (is_uuid($value)) {
-					$this->{$name} = $value;
+					$this->domain_uuid = $value;
 				}
 				break;
 			case 'type':
