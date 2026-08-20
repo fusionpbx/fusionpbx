@@ -746,7 +746,7 @@ class database {
 				$this->db_name = self::sanitize($value);
 				break;
 			case 'db':
-				if ($name instanceof PDO) {
+				if ($value instanceof PDO) {
 					$this->db = $value;
 				} else {
 					trigger_error('db property must be a PDO object!', E_USER_ERROR);
@@ -778,6 +778,10 @@ class database {
 				}
 				break;
 			case 'app_uuid':
+				if (is_uuid($value)) {
+					$this->app_uuid = $value;
+				}
+				break;
 			case 'domain_uuid':
 				if (is_uuid($value)) {
 					$this->domain_uuid = $value;
@@ -795,23 +799,21 @@ class database {
 						break;
 					default:
 						trigger_error('Type/Driver must be set to pgsql,mysql,sqlite,odbc', E_USER_ERROR);
-						break;
 				}
+				break;
 			case 'offset':
 			case 'limit':
 				if (is_int($value)) {
-					$this->$name = $value;
+					$this->{$name} = $value;
 				} else {
 					trigger_error('Offset or Limit not set to valid integer. Resetting to zero!', E_USER_WARNING);
 				}
 				break;
 			case '':
 				trigger_error('Database property must not be empty', E_USER_ERROR);
-				break;
 			case 'null':
 			case null:
 				trigger_error('Database property must not be null', E_USER_ERROR);
-				break;
 			case 'debug':
 				$this->debug = $value;
 		}
@@ -826,7 +828,7 @@ class database {
 	 * @see preg_replace()
 	 */
 	public static function sanitize(string $value) {
-		return preg_replace('#[^a-zA-Z0-9_\-]#', '', $value);
+		return preg_replace('#[^a-zA-Z0-9_]#', '', $value);
 	}
 
 	/**
@@ -1287,6 +1289,7 @@ class database {
 
 		// get data from the database
 		$sql = 'select * from ' . $this->table . ' ';
+		$params = [];
 		if ($this->where) {
 			$i = 0;
 			if (is_array($this->where)) {
@@ -1962,6 +1965,7 @@ class database {
 
 		// build the query
 		$sql = 'SELECT * FROM ' . self::TABLE_PREFIX . $this->name . ' ';
+		$params = [];
 		if (isset($this->uuid)) {
 			// get the specific uuid
 			$sql .= 'WHERE ' . self::singular($this->name) . "_uuid = '" . $this->uuid . "' ";
@@ -1994,9 +1998,9 @@ class database {
 
 						// build the sql
 						if ($i == 0) {
-							$sql .= 'WHERE ' . $row['name'] . ' ' . $row['operator'] . ' :' . $row['value'] . ' ';
+							$sql .= 'WHERE ' . $row['name'] . ' ' . $row['operator'] . ' :' . $row['name'] . ' ';
 						} else {
-							$sql .= 'AND ' . $row['name'] . ' ' . $row['operator'] . ' :' . $row['value'] . ' ';
+							$sql .= 'AND ' . $row['name'] . ' ' . $row['operator'] . ' :' . $row['name'] . ' ';
 						}
 					}
 					// add the name and value to the params array
@@ -2396,6 +2400,10 @@ class database {
 										$prep_statement->execute();
 										$parent_results = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 									} catch (PDOException $e) {
+										// rollback the transaction if in progress
+										if ($this->db->inTransaction()) {
+											$this->db->rollback();
+										}
 										$message['type'] = 'error';
 										$message['code'] = $e->getCode();
 										$message['message'] = $e->getMessage();
@@ -2607,7 +2615,7 @@ class database {
 											}
 
 											// increment the id
-											$i;
+											$i++;
 										}
 									}
 
@@ -2825,6 +2833,10 @@ class database {
 													}
 													unset($prep_statement);
 												} catch (PDOException $e) {
+													// rollback the transaction if in progress
+													if ($this->db->inTransaction()) {
+														$this->db->rollback();
+													}
 													$message['message'] = $e->getMessage();
 													$message['code'] = $e->getCode();
 													$message['line'] = $e->getLine();
@@ -3363,7 +3375,7 @@ class database {
 				return false;
 			}
 		}
-		return $this->message;
+		return $retval ? $this->message : false;
 	}
 
 	/**
