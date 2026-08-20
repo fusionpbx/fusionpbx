@@ -1248,7 +1248,6 @@
 					for _, str in ipairs(bindings) do
 						session:execute("bind_digit_action", str .. "," .. bind_target)
 					end
-					session:execute("digit_action_set_realm", "local");
 
 				--if the user is busy rollover to the next destination
 					if (ring_group_strategy == "rollover") then
