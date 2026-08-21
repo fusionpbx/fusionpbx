@@ -319,10 +319,12 @@ if (!function_exists('recursive_delete')) {
 	/**
 	 * Safely deletes a directory and all its contents recursively
 	 *
-	 * @param string $path The path to the directory to delete
+	 * @param string $path  The path to the directory to delete
+	 * @param int    $depth The current depth of recursion (used internally)
+	 *
 	 * @return bool True on success, false on failure
 	 */
-	function recursive_delete($path) {
+	function recursive_delete($path, int $depth = 0): bool {
 		// Verify the path exists and is a directory
 		if (!file_exists($path) || !is_dir($path)) {
 			return false;
@@ -331,8 +333,8 @@ if (!function_exists('recursive_delete')) {
 		// Prepare the directory handle
 		$handle = opendir($path);
 
-		// No handle, send a return
-		if (!$handle) return;
+		// No handle, send a false return to indicate failure
+		if (!$handle) return false;
 
 		// Loop through all files and subdirectories
 		while (false !== ($file = readdir($handle))) {
@@ -346,7 +348,8 @@ if (!function_exists('recursive_delete')) {
 
 			// If this is a directory, recursively delete it
 			if (is_dir($full_path)) {
-				if (!recursive_delete($full_path)) {
+				if (!recursive_delete($full_path, ++$depth)) {
+					// If the recursive delete fails, close the directory handle and return false to indicate failure
 					closedir($handle);
 					return false;
 				}
@@ -354,6 +357,7 @@ if (!function_exists('recursive_delete')) {
 			else {
 				// If this is a file, delete it
 				if (!unlink($full_path)) {
+					// If the file cannot be deleted, close the directory handle and return false to indicate failure
 					closedir($handle);
 					return false;
 				}
@@ -363,8 +367,8 @@ if (!function_exists('recursive_delete')) {
 		// Close the directory handle
 		closedir($handle);
 
-		// Remove the now-empty directory
-		return rmdir($path);
+		// Remove the now-empty directory only when depth is greater than 0 to prevent deletion of the original path
+		return $depth > 0 ? rmdir($path) : true;
 	}
 }
 
