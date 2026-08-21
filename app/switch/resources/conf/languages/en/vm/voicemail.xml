@@ -83,9 +83,11 @@
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$5" method="pronounced" type="name_spelled"/>
         <action function="play-file" data="voicemail/vm-to_forward.wav"/>
+        <action function="play-file" data="currency/and.wav"/>
+        <action function="play-file" data="voicemail/vm-forward_to_email.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$6" method="pronounced" type="name_spelled"/>
-        <action function="play-file" data="voicemail/vm-forward_to_email.wav"/>
+        <action function="play-file" data="voicemail/vm-mark_message_new.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$7" method="pronounced" type="name_spelled"/>
       </match>
@@ -159,6 +161,21 @@
         <action function="play-file" data="voicemail/vm-delete_recording.wav"/>
         <action function="play-file" data="voicemail/vm-press.wav"/>
         <action function="say" data="$4" method="pronounced" type="name_spelled"/>
+      </match>
+    </input>
+  </macro>
+
+    <macro name="voicemail_forward_menu">
+    <input pattern="^(1):(2)$">
+      <match>
+      <!-- forward to extension -->
+        <action function="play-file" data="voicemail/vm-to_forward.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$1" method="pronounced" type="name_spelled"/>
+       <!-- forward to email  -->
+        <action function="play-file" data="voicemail/vm-forward_to_email.wav"/>
+        <action function="play-file" data="voicemail/vm-press.wav"/>
+        <action function="say" data="$2" method="pronounced" type="name_spelled"/>
       </match>
     </input>
   </macro>
