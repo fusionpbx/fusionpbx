@@ -571,7 +571,7 @@ function load_config_php() {
 	$conf .= "php.bin = php\n";
 	$conf .= "\n";
 	$conf .= "#security settings\n";
-	$conf .= "security.content_security_policy.frame_ancestors =\n";
+	$conf .= "security.header.content_security_policy.frame_ancestors =\n";
 	$conf .= "\n";
 	$conf .= "#session settings\n";
 	$conf .= "session.cookie_httponly = true\n";
