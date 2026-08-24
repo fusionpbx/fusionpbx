@@ -218,7 +218,7 @@ class database {
 	public $fields;
 
 	/**
-	 * Unknown property
+	 * Stores the row count
 	 *
 	 * @var int
 	 * @access public
@@ -226,7 +226,7 @@ class database {
 	public $count;
 
 	/**
-	 * Unknown property
+	 * Stores the SQL Query String
 	 *
 	 * @var string
 	 * @access public
@@ -502,21 +502,12 @@ class database {
 						$this->port = '5432';
 					}
 					if ($this->db_secure === true) {
-						$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password sslmode=$this->ssl_mode sslrootcert=$this->db_cert_authority", null, null, [
-							PDO::ATTR_ERRMODE,
-							PDO::ERRMODE_EXCEPTION,
-						]);
+						$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password sslmode=$this->ssl_mode sslrootcert=$this->db_cert_authority");
 					} else {
-						$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password", null, null, [
-							PDO::ATTR_ERRMODE,
-							PDO::ERRMODE_EXCEPTION,
-						]);
+						$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->db_name user=$this->username password=$this->password");
 					}
 				} else {
-					$this->db = new PDO("pgsql:dbname=$this->db_name user=$this->username password=$this->password", null, null, [
-						PDO::ATTR_ERRMODE,
-						PDO::ERRMODE_EXCEPTION,
-					]);
+					$this->db = new PDO("pgsql:dbname=$this->db_name user=$this->username password=$this->password");
 				}
 			} catch (PDOException $e) {
 				$message['message'] = $e->getMessage();
@@ -533,10 +524,7 @@ class database {
 		if ($this->driver == 'odbc') {
 			// database connection
 			try {
-				$this->db = new PDO('odbc:' . $this->db_name, $this->username, $this->password, [
-					PDO::ATTR_ERRMODE,
-					PDO::ERRMODE_EXCEPTION,
-				]);
+				$this->db = new PDO('odbc:' . $this->db_name, $this->username, $this->password);
 			} catch (PDOException $e) {
 				$message['message'] = $e->getMessage();
 				$message['code'] = $e->getCode();
@@ -1283,6 +1271,10 @@ class database {
 			trigger_error('Table Name or DB Name must be a valid identifier', E_USER_WARNING);
 			return false;
 		}
+
+		// initialize the parameters array
+		$parameters = array();
+
 		if ($this->type == 'sqlite') {
 			$sql = 'PRAGMA table_info(' . $this->table . ');';
 		}
@@ -1296,8 +1288,10 @@ class database {
 			$sql .= 'numeric_precision ';
 			$sql .= 'FROM information_schema.columns ';
 			$sql .= "WHERE table_name = :table_name ";
-			$sql .= "and table_catalog = :db_name ";
+			$sql .= "and table_catalog = :table_catalog ";
 			$sql .= 'ORDER BY ordinal_position; ';
+			$parameters['table_name'] = $table_name;
+			$parameters['table_catalog'] = $db_name;
 		}
 		if ($this->type == 'mysql') {
 			$sql = 'DESCRIBE ' . $this->table . ';';
@@ -1307,10 +1301,7 @@ class database {
 		}
 		if (!empty($sql)) {
 			$prep_statement = $this->db->prepare($sql);
-			$prep_statement->execute([
-				'table_name' => $this->table,
-				'db_name' => $this->db_name
-			]);
+			$prep_statement->execute($parameters);
 			return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 		}
 
@@ -2472,7 +2463,6 @@ class database {
 									} catch (PDOException $e) {
 										// rollback the transaction on error
 										if ($this->db->inTransaction()) {
-											// transaction is in progress so rollback
 											$this->db->rollback();
 										}
 										$message['type'] = 'error';
@@ -2914,7 +2904,6 @@ class database {
 												} catch (PDOException $e) {
 													// rollback the transaction on error
 													if ($this->db->inTransaction()) {
-														// transaction is in progress so rollback
 														$this->db->rollback();
 													}
 													$message['message'] = $e->getMessage();
@@ -3765,13 +3754,13 @@ class database {
 				continue;
 			}
 
-			// skip tables that don't exist in the database
-			if (!$this->table_exists($table_name)) {
-				continue;
-			}
+		// skip tables that don't exist in the database
+		if (!$this->table_exists($table_name)) {
+			continue;
+		}
 
-			// loop through all columns in the table
-			foreach ($table['fields'] as $column) {
+		// loop through all columns in the table
+		foreach ($table['fields'] as $column) {
 				// skip deprecated columns
 				if (isset($column['deprecated'])) {
 					continue;
