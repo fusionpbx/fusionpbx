@@ -570,6 +570,9 @@ function load_config_php() {
 	$conf .= "php.dir = " . PHP_BINDIR . "\n";
 	$conf .= "php.bin = php\n";
 	$conf .= "\n";
+	$conf .= "#content security policy\n";
+	$conf .= "csp.frame_ancestors =\n";
+	$conf .= "\n";
 	$conf .= "#session settings\n";
 	$conf .= "session.cookie_httponly = true\n";
 	$conf .= "session.cookie_secure = true\n";
