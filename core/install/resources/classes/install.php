@@ -127,6 +127,9 @@ class install {
 		$conf .= "php.dir = " . $php_dir . "\n";
 		$conf .= "php.bin = php\n";
 		$conf .= "\n";
+		$conf .= "#security settings\n";
+		$conf .= "security.header.content_security_policy.frame_ancestors\n";
+		$conf .= "\n";
 		$conf .= "#session settings\n";
 		$conf .= "session.cookie_httponly = true\n";
 		$conf .= "session.cookie_secure = true\n";

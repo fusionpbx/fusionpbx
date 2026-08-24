@@ -85,11 +85,9 @@
 
 //security headers
 	if (!defined('STDIN') && session_status() === PHP_SESSION_NONE) {
-		header("X-Frame-Options: SAMEORIGIN");
-		header("Content-Security-Policy: frame-ancestors 'self';");
+		header("Content-Security-Policy: frame-ancestors 'self' ".$config->get('security.header.content_security_policy.frame_ancestors').";");
 		header("X-Content-Type-Options: nosniff");
 		header("Referrer-Policy: strict-origin-when-cross-origin");
-		//header("Strict-Transport-Security: max-age=63072000; includeSubDomains; preload");
 	}
 
 //start the session if not using the command line
