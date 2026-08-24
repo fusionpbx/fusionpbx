@@ -85,7 +85,7 @@
 
 //security headers
 	if (!defined('STDIN') && session_status() === PHP_SESSION_NONE) {
-		header("Content-Security-Policy: frame-ancestors 'self' ".$config->get('csp.frame_ancestors').";");
+		header("Content-Security-Policy: frame-ancestors 'self' ".$config->get('security.header.content_security_policy.frame_ancestors').";");
 		header("X-Content-Type-Options: nosniff");
 		header("Referrer-Policy: strict-origin-when-cross-origin");
 	}
