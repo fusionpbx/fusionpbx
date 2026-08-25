@@ -98,7 +98,6 @@ function send_email(id, uuid)
 						us.domain_uuid = :domain_uuid and
 						us.user_setting_category = 'domain' and
 						us.user_setting_subcategory = 'time_zone' and
-						us.user_setting_name = 'name' and
 						us.user_setting_enabled = true
 					order by
 						eu.insert_date asc
@@ -114,7 +113,7 @@ function send_email(id, uuid)
 
 			--default/domain setting time zone
 				if (time_zone == nil or time_zone == '') then
-					time_zone = settings:get('domain', 'time_zone', 'name');
+					time_zone = settings:get('domain', 'time_zone', 'text');
 				end
 
 			--default time zone

@@ -188,7 +188,7 @@
 				$array['default_settings'][$i]['default_setting_uuid'] = uuid();
 				$array['default_settings'][$i]['default_setting_category'] = 'domain';
 				$array['default_settings'][$i]['default_setting_subcategory'] = 'time_zone';
-				$array['default_settings'][$i]['default_setting_name'] = 'name';
+				$array['default_settings'][$i]['default_setting_name'] = 'text';
 				$array['default_settings'][$i]['default_setting_value'] = $global_time_zone;
 				$array['default_settings'][$i]['default_setting_enabled'] = 'true';
 				$array['default_settings'][$i]['default_setting_description'] = '';
@@ -213,7 +213,7 @@
 					$array['default_settings'][$i]['default_setting_uuid'] = $row['default_setting_uuid'];
 					$array['default_settings'][$i]['default_setting_category'] = 'domain';
 					$array['default_settings'][$i]['default_setting_subcategory'] = 'time_zone';
-					$array['default_settings'][$i]['default_setting_name'] = 'name';
+					$array['default_settings'][$i]['default_setting_name'] = 'text';
 					$array['default_settings'][$i]['default_setting_value'] = $global_time_zone;
 					$array['default_settings'][$i]['default_setting_enabled'] = 'true';
 					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'] ?? '';

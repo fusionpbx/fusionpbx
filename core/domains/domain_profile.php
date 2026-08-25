@@ -198,7 +198,7 @@
 				$array['domain_settings'][$i]['domain_uuid'] = $domain_uuid;
 				$array['domain_settings'][$i]['domain_setting_category'] = 'domain';
 				$array['domain_settings'][$i]['domain_setting_subcategory'] = 'time_zone';
-				$array['domain_settings'][$i]['domain_setting_name'] = 'name';
+				$array['domain_settings'][$i]['domain_setting_name'] = 'text';
 				$array['domain_settings'][$i]['domain_setting_value'] = $domain_time_zone;
 				$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
 				$array['domain_settings'][$i]['domain_setting_description'] = '';
@@ -224,7 +224,7 @@
 					$array['domain_settings'][$i]['domain_uuid'] = $domain_uuid;
 					$array['domain_settings'][$i]['domain_setting_category'] = 'domain';
 					$array['domain_settings'][$i]['domain_setting_subcategory'] = 'time_zone';
-					$array['domain_settings'][$i]['domain_setting_name'] = 'name';
+					$array['domain_settings'][$i]['domain_setting_name'] = 'text';
 					$array['domain_settings'][$i]['domain_setting_value'] = $domain_time_zone;
 					$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
 					$array['domain_settings'][$i]['domain_setting_description'] = $row['domain_setting_description'] ?? '';
