@@ -427,13 +427,10 @@
 
 --set exit key action
 	if (ring_group_timeout_app and #ring_group_timeout_app > 0 and ring_group_timeout_data and #ring_group_timeout_data > 0) then
-		if (not ring_group_exit_key or #ring_group_exit_key == 0) then
-			--use a default exit key of 9
-			ring_group_exit_key = "9";
+		if (ring_group_exit_key ~= nil and #ring_group_exit_key > 0) then
+			--use the user defined or default exit key
+			session:execute("bind_digit_action", "local,"..ring_group_exit_key..",exec:"..ring_group_timeout_app..","..ring_group_timeout_data..",both,self");
 		end
-
-		--use the user defined or default exit key
-		session:execute("bind_digit_action", "local,"..ring_group_exit_key..",exec:"..ring_group_timeout_app..","..ring_group_timeout_data..",both,self");
 	end
 
 --play the greeting
