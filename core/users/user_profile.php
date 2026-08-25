@@ -349,7 +349,7 @@
 				$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
 				$array['user_settings'][$i]['user_setting_category'] = 'domain';
 				$array['user_settings'][$i]['user_setting_subcategory'] = 'time_zone';
-				$array['user_settings'][$i]['user_setting_name'] = 'name';
+				$array['user_settings'][$i]['user_setting_name'] = 'text';
 				$array['user_settings'][$i]['user_setting_value'] = $user_time_zone;
 				$array['user_settings'][$i]['user_setting_enabled'] = 'true';
 				$i++;
