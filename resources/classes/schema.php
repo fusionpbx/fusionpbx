@@ -601,7 +601,7 @@ class schema {
 
 		//loop line by line through all the lines of sql code
 		$x = 0;
-		if (!empty($sql_update) && $format == "text") {
+		if (!empty($sql_update)) {
 
 			//$this->db->beginTransaction();
 			$update_array = explode(";", $sql_update);
