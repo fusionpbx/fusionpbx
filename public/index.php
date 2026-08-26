@@ -109,12 +109,29 @@ class router {
 	 * @param string $request_path The request path (e.g., "/core/domains" or "/core/domains/domains.php")
 	 * @return array|null Route result or null if not found
 	 */
-	private function resolve_route(string $request_path): ?array {
+	private function resolve_route(string $request_path, array $query = []): ?array {
 		// Decode URL-encoded characters before validation
 		$decoded_path = rawurldecode($request_path);
 
 		// Remove trailing slash (except for root) to handle URLs like /core/dashboard/
 		$decoded_path = rtrim($decoded_path, '/');
+
+		// Return the provision route with the query string
+		$original_path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '/';
+		if (($_SERVER['SCRIPT_NAME'] ?? '') === '/public/index.php'
+			&& stripos($original_path, '/provision') === 0
+			&& array_intersect(array_keys($query), ['mac', 'address', 'file', 'ext']) !== []) {
+			$target_file = PROJECT_ROOT . '/app/provision/index.php';
+			if (file_exists($target_file)) {
+				return [
+					'target'   => realpath($target_file),
+					'app_name' => 'provision',
+					'action'   => 'provision',
+					'file'     => 'app/provision/index.php',
+					'query'    => $query,
+				];
+			}
+		}
 
 		// Set the script name
 		$script_name = $decoded_path;
@@ -151,10 +168,9 @@ class router {
 		    $file_path = $script_name;
 		}
 		if (!empty($file_name) && $app_name == 'provision') {
-			// App name equals file name (e.g., /app/extensions/extensions -> extensions_list.php)
-			$action_name = 'list';
-			$file_path = $prefix_name . '/' . $app_name . '/' . $app_name . '.php';
-			view_array($path_array);
+			// Provision app (nginx vendor rewrites land here with address/file query params)
+			$action_name = 'index';
+			$file_path = $prefix_name . '/' . $app_name . '/index.php';
 		}
 		elseif (!empty($file_name) && $app_name == $file_name) {
 			// App name equals file name (e.g., /app/extensions/extensions -> extensions_list.php)
@@ -222,7 +238,7 @@ class router {
 	 * @param string $request_path The request path
 	 * @return array|null Route result or null (triggers 404 or default)
 	 */
-	public function route(string $request_path): ?array {
+	public function route(string $request_path, array $query = []): ?array {
 		// Validate HTTP method first
 		if (!$this->validate_method()) {
 			http_response_code(405);
@@ -231,8 +247,9 @@ class router {
 		}
 
 		// Check for routes starting with /app/, /core/, or /modules/
+		// $query is the parsed query string, e.g. ?a=1&b=2&c=3 -> ['a'=>'1','b'=>'2','c'=>'3']
 		try {
-			return $this->resolve_route($request_path);
+			return $this->resolve_route($request_path, $query);
 		} catch (\Exception $e) {
 			error_log("Routing error: " . $e->getMessage());
 			return null;
@@ -538,8 +555,8 @@ try {
 	if ($request_path === '/health' || $request_path === '/healthz') {
 		echo $router->handle_health_check();
 	} else {
-		// Attempt to resolve the route
-		$resolved_route = $router->route($request_path);
+		// Attempt to resolve the route, send the query params to the route
+		$resolved_route = $router->route($request_path, $_GET);
 		if ($resolved_route !== null) {
 			// Route found - follow
 			$router->follow_route($resolved_route);
