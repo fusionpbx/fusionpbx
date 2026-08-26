@@ -50,7 +50,8 @@
 	$summary_style = $settings->get('cdr', 'summary_style', 'horizontal');
 
 //get the http values and set them to a variable
-	if (is_uuid($_REQUEST["id"])) {
+	$uuid = '';
+	if (is_uuid($_REQUEST["id"] ?? '')) {
 		$uuid = $_REQUEST["id"];
 	}
 
@@ -65,8 +66,10 @@
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
 	$parameters['xml_cdr_uuid'] = $uuid;
+	$found = false;
 	$row = $database->select($sql, $parameters, 'row');
 	if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
+		$found = true;
 		$caller_id_name = trim($row["caller_id_name"] ?? '');
 		$caller_id_number = trim($row["caller_id_number"] ?? '');
 		$caller_destination = trim($row["caller_destination"] ?? '');
@@ -88,6 +91,23 @@
 	}
 	unset($sql, $parameters, $row);
 
+	//if the record was not found or is not accessible in this domain, stop here
+	if (!$found) {
+		$document_title = $text['label-xml-cdr-details'];
+		$back_link = 'xml_cdr.php'.(!empty($_SESSION['xml_cdr']['last_query']) ? '?'.$_SESSION['xml_cdr']['last_query'] : null);
+		require_once "resources/header.php";
+		echo "<div style='max-width: 540px; margin: 40px auto;'>\n";
+		echo "	<div class='card' style='text-align: center; padding: 32px;'>\n";
+		echo "		<span class='fa-solid fa-circle-exclamation' style='display: block; font-size: 46px; color: #c0392b; margin-bottom: 16px;'></span>\n";
+		echo "		<h2 style='margin: 0 0 12px; font-weight: 600;'>".escape($text['label-record-not-found'] ?? 'Record Not Found')."</h2>\n";
+		echo "		<p style='margin: 0 0 24px; color: #6c757d;'>".escape($text['text-record-not-found'] ?? 'The requested call record could not be found, may have been deleted, or you do not have permission to view it in this domain.')."</p>\n";
+		echo "		".button::create(['label'=>$text['button-back'] ?? 'Back', 'icon'=>$settings->get('theme', 'button_icon_back'), 'link'=>$back_link])."\n";
+		echo "	</div>\n";
+		echo "</div>\n";
+		require_once "resources/footer.php";
+		exit;
+	}
+
 //transcribe the call recording
 	if (!empty($_GET['action']) && $_GET['action'] == 'transcribe' &&
 		$transcribe_enabled && !empty($transcribe_engine) &&
@@ -100,15 +120,15 @@
 			$params['call_direction'] = $call_direction;
 
 			//add the recording to the transcribe queue
-			$array['transcribe_queue'][$x]['transcribe_queue_uuid'] = uuid();
-			$array['transcribe_queue'][$x]['domain_uuid'] = $domain_uuid;
-			$array['transcribe_queue'][$x]['hostname'] = gethostname();
-			$array['transcribe_queue'][$x]['transcribe_status'] = 'pending';
-			$array['transcribe_queue'][$x]['transcribe_app_class'] = 'call_recordings';
-			$array['transcribe_queue'][$x]['transcribe_app_method'] = 'transcribe_queue';
-			$array['transcribe_queue'][$x]['transcribe_app_params'] = json_encode($params);
-			$array['transcribe_queue'][$x]['transcribe_audio_path'] = $record_path;
-			$array['transcribe_queue'][$x]['transcribe_audio_name'] = $record_name;
+			$array['transcribe_queue'][0]['transcribe_queue_uuid'] = uuid();
+			$array['transcribe_queue'][0]['domain_uuid'] = $domain_uuid;
+			$array['transcribe_queue'][0]['hostname'] = gethostname();
+			$array['transcribe_queue'][0]['transcribe_status'] = 'pending';
+			$array['transcribe_queue'][0]['transcribe_app_class'] = 'call_recordings';
+			$array['transcribe_queue'][0]['transcribe_app_method'] = 'transcribe_queue';
+			$array['transcribe_queue'][0]['transcribe_app_params'] = json_encode($params);
+			$array['transcribe_queue'][0]['transcribe_audio_path'] = $record_path;
+			$array['transcribe_queue'][0]['transcribe_audio_name'] = $record_name;
 
 			//add the checked rows
 			if (is_array($array) && @sizeof($array) != 0) {
@@ -269,7 +289,7 @@
 		$parameters['xml_cdr_uuid'] = $uuid;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
-			$log_content = $row["log_content"];
+			$log_content = $row["log_content"] ?? '';
 		}
 		unset($sql, $parameters, $row);
 	}
@@ -296,7 +316,7 @@
 
 //format the call recording transcript text
 	$transcription_array = json_decode($transcript_json ?? '', true) ?? [];
-	$call_transcript = conversational_html($transcription_array['segments']);
+	$call_transcript = conversational_html($transcription_array['segments'] ?? []);
 
 //format the call recording transcript summary
 	require_once "resources/classes/parsedown.php";
@@ -349,27 +369,27 @@
 	}
 
 //get the variables
-	$xml_cdr_uuid = urldecode($array["variables"]["uuid"]);
+	$xml_cdr_uuid = urldecode($array["variables"]["uuid"] ?? '');
 	$language = urldecode($array["variables"]["language"] ?? '');
-	$start_epoch = urldecode($array["variables"]["start_epoch"]);
-	$start_stamp = urldecode($array["variables"]["start_stamp"]);
-	$start_uepoch = urldecode($array["variables"]["start_uepoch"]);
+	$start_epoch = urldecode($array["variables"]["start_epoch"] ?? '');
+	$start_stamp = urldecode($array["variables"]["start_stamp"] ?? '');
+	$start_uepoch = urldecode($array["variables"]["start_uepoch"] ?? '');
 	$answer_stamp = urldecode($array["variables"]["answer_stamp"] ?? '');
-	$answer_epoch = urldecode($array["variables"]["answer_epoch"]);
-	$answer_uepoch = urldecode($array["variables"]["answer_uepoch"]);
-	$end_epoch = urldecode($array["variables"]["end_epoch"]);
-	$end_uepoch = urldecode($array["variables"]["end_uepoch"]);
-	$end_stamp = urldecode($array["variables"]["end_stamp"]);
+	$answer_epoch = urldecode($array["variables"]["answer_epoch"] ?? '');
+	$answer_uepoch = urldecode($array["variables"]["answer_uepoch"] ?? '');
+	$end_epoch = urldecode($array["variables"]["end_epoch"] ?? '');
+	$end_uepoch = urldecode($array["variables"]["end_uepoch"] ?? '');
+	$end_stamp = urldecode($array["variables"]["end_stamp"] ?? '');
 	//$duration = urldecode($array["variables"]["duration"]);
-	$mduration = urldecode($array["variables"]["mduration"]);
-	$billsec = urldecode($array["variables"]["billsec"]);
-	$billmsec = urldecode($array["variables"]["billmsec"]);
+	$mduration = urldecode($array["variables"]["mduration"] ?? '');
+	$billsec = urldecode($array["variables"]["billsec"] ?? '');
+	$billmsec = urldecode($array["variables"]["billmsec"] ?? '');
 	$bridge_uuid = urldecode($array["variables"]["bridge_uuid"] ?? '');
 	$read_codec = urldecode($array["variables"]["read_codec"] ?? '');
 	$write_codec = urldecode($array["variables"]["write_codec"] ?? '');
 	$remote_media_ip = urldecode($array["variables"]["remote_media_ip"] ?? '');
-	$hangup_cause = urldecode($array["variables"]["hangup_cause"]);
-	$hangup_cause_q850 = urldecode($array["variables"]["hangup_cause_q850"]);
+	$hangup_cause = urldecode($array["variables"]["hangup_cause"] ?? '');
+	$hangup_cause_q850 = urldecode($array["variables"]["hangup_cause_q850"] ?? '');
 	$network_address = urldecode($array["variables"]["network_address"] ?? '');
 	$outbound_caller_id_name = urldecode($array["variables"]["outbound_caller_id_name"] ?? '');
 	$outbound_caller_id_number = urldecode($array["variables"]["outbound_caller_id_number"] ?? '');
@@ -404,7 +424,7 @@
 		$call_flow_array = json_decode($call_flow, true);
 	}
 	//prepares the raw call flow data to be displayed
-	$call_flow_summary = $xml_cdr->call_flow_summary($call_flow_array);
+	$call_flow_summary = $xml_cdr->call_flow_summary(is_array($call_flow_array) ? $call_flow_array : array());
 	//add the application_icon to the array
 	foreach($call_flow_summary as $id => $row) {
 		$call_flow_summary[$id]["application_icon"] = $application_icons[$row["application_name"] ?? ''] ?? '';
@@ -641,11 +661,11 @@
 
 			echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('../recordings/recording_play.php?a=download&type=moh&filename=".urlencode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$uuid.'.wav')."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 			//$tmp_file_array = explode("\.",$file);
-			echo 	$caller_id_name.' ';
+			echo 	escape($caller_id_name).' ';
 			echo "	  </a>";
 		}
 		else {
-			echo 	$caller_id_name.' ';
+			echo 	escape($caller_id_name).' ';
 		}
 		echo "	</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>";
@@ -665,7 +685,7 @@
 			echo "	<td valign='top' class='".$row_style[$c]."'>".escape($hangup_cause)."</td>\n";
 		}
 		echo "	<td valign='top' class='".$row_style[$c]."'>".escape(gmdate("G:i:s", (int)$duration))."</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$status])."</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".escape($text['label-'.$status] ?? '')."</td>\n";
 		echo "</table>";
 		echo "</div>\n";
 		echo "<br /><br />\n";
