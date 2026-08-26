@@ -542,8 +542,15 @@
 
 //convert the transcription into a conversation
 	function conversational_html($transcription) {
+		//set the text array to global
 		global $text;
 
+		// if the transcription is empty return an empty string
+		if (empty($transcription)) {
+			return '';
+		}
+
+		// use html to format the conversation
 		$html = '';
 		$previous_speaker = '';
 		$i = 0;
@@ -552,7 +559,7 @@
 				if ($i > 0) { $html .= "</div>\n"; }
 				$speaker_class = $segment['speaker'] === '0' ? 'message-bubble-em' : 'message-bubble-me';
 				$html .= "<div class='message-bubble {$speaker_class}'>";
-				$html .= "<div ><strong>" . $text['label-speaker'] . " " . $segment['speaker'] . "</strong></div>\n";
+				$html .= "<div ><strong>" . $text['label-speaker'] . " " . escape($segment['speaker']) . "</strong></div>\n";
 			}
 			//$html .= "	<span class='time'>".round($segment['start'])."</span>";
 			$html .= "".escape(trim($segment['text']))." ";
