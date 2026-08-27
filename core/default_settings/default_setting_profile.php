@@ -71,6 +71,7 @@
 			$global_language = $_POST["global_language"];
 			$global_time_zone = $_POST["global_time_zone"];
 			$global_time_format = $_POST["global_time_format"];
+			$global_menu_style = $_POST["global_menu_style"];
 
 		//validate the token
 			$token = new token;
@@ -263,6 +264,47 @@
 			}
 			unset($sql, $parameters, $row);
 
+		//check to see if global menu_style is set
+			$row = $default_settings['theme']['menu_style'] ?? [];
+			if (!empty($global_menu_style) && (empty($row) || (!empty($row['default_setting_uuid']) && !is_uuid($row['default_setting_uuid'])))) {
+				//add user setting to array for insert
+				$array['default_settings'][$i]['default_setting_uuid'] = uuid();
+				$array['default_settings'][$i]['default_setting_category'] = 'theme';
+				$array['default_settings'][$i]['default_setting_subcategory'] = 'menu_style';
+				$array['default_settings'][$i]['default_setting_name'] = 'text';
+				$array['default_settings'][$i]['default_setting_value'] = $global_menu_style;
+				$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+				$array['default_settings'][$i]['default_setting_description'] = 'Set the style of the main menu.';
+				$i++;
+			}
+			else {
+				if (!empty($row['default_setting_uuid']) && (empty($row['default_setting_value']) || empty($global_menu_style))) {
+					$array_delete['default_settings'][0]['default_setting_category'] = 'theme';
+					$array_delete['default_settings'][0]['default_setting_subcategory'] = 'menu_style';
+					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'];
+
+					$p = permissions::new();
+					$p->add('default_setting_delete', 'temp');
+
+					$database->delete($array_delete);
+					unset($array_delete);
+
+					$p->delete('default_setting_delete', 'temp');
+				}
+				if (!empty($global_menu_style)) {
+					//add user setting to array for update
+					$array['default_settings'][$i]['default_setting_uuid'] = $row['default_setting_uuid'];
+					$array['default_settings'][$i]['default_setting_category'] = 'theme';
+					$array['default_settings'][$i]['default_setting_subcategory'] = 'menu_style';
+					$array['default_settings'][$i]['default_setting_name'] = 'text';
+					$array['default_settings'][$i]['default_setting_value'] = $global_menu_style;
+					$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'] ?? '';
+					$i++;
+				}
+			}
+			unset($sql, $parameters, $row);
+
 		//initialize the permissing object
 			$p = permissions::new();
 
@@ -412,6 +454,23 @@
 	echo "		".$text['description-time_format']."<br />\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
+
+	echo "	<tr>\n";
+	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
+	echo "		".$text['label-menu_style']."\n";
+	echo "	</td>\n";
+	echo "	<td class=\"vtable\" align='left'>\n";
+	echo "		<select class='formfld' id='global_menu_style' name='global_menu_style'>\n";
+	echo "			<option value='fixed' ".((!empty($default_settings['theme']['menu_style']['default_setting_value']) && $default_settings['theme']['menu_style']['default_setting_value'] == "fixed") ? "selected='selected'" : null).">".$text['label-fixed']."</option>\n";
+	echo "			<option value='static' ".((!empty($default_settings['theme']['menu_style']['default_setting_value']) && $default_settings['theme']['menu_style']['default_setting_value'] == "static") ? "selected='selected'" : null).">".$text['label-static']."</option>\n";
+	echo "			<option value='inline' ".((!empty($default_settings['theme']['menu_style']['default_setting_value']) && $default_settings['theme']['menu_style']['default_setting_value'] == "inline") ? "selected='selected'" : null).">".$text['label-inline']."</option>\n";
+	echo "			<option value='side' ".((!empty($default_settings['theme']['menu_style']['default_setting_value']) && $default_settings['theme']['menu_style']['default_setting_value'] == "side") ? "selected='selected'" : null).">".$text['label-side']."</option>\n";
+	echo "		</select>\n";
+	echo "		<br />\n";
+	echo "		".$text['description-menu_style']."<br />\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
+
 
 	echo "</table>";
 	echo "</div>\n";
