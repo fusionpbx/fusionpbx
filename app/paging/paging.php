@@ -138,6 +138,7 @@
 //get the list
 	$sql = "select ";
 	$sql .= "paging_uuid, ";
+	$sql .= "paging_name, ";
 	$sql .= "paging_extension, ";
 	$sql .= "dialplan_uuid, ";
 	$sql .= "paging_pin_number, ";
@@ -225,6 +226,7 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".empty($paging ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
+	echo th_order_by('paging_name', $text['label-paging_name'], $order_by, $order, null, null, $query_string);
 	echo th_order_by('paging_extension', $text['label-paging_extension'], $order_by, $order, null, null, $query_string);
 	echo th_order_by('paging_delay', $text['label-paging_delay'], $order_by, $order, null, "class='center'", $query_string);
 	echo th_order_by('paging_mute', $text['label-paging_mute'], $order_by, $order, null, "class='center'", $query_string);
@@ -252,12 +254,13 @@
 			}
 			echo "	<td>\n";
 			if (permission_exists('paging_edit')) {
-				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['paging_extension'])."</a>\n";
+				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['paging_name'])."</a>\n";
 			}
 			else {
-				echo "	".escape($row['paging_extension']);
+				echo "	".escape($row['paging_name']);
 			}
 			echo "	</td>\n";
+			echo "	<td class='center'>".$row['paging_extension']."&nbsp;</td>\n";
 			echo "	<td class='center'>".$text['label-'.$row['paging_delay']]."&nbsp;</td>\n";
 			echo "	<td class='center'>".$text['label-'.$row['paging_mute']]."&nbsp;</td>\n";
 			echo "	<td class='center'>".$text['label-'.$row['paging_hangup_all']]."&nbsp;</td>\n";

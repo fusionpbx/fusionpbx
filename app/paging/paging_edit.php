@@ -62,6 +62,7 @@
 	}
 
 //set the defaults
+	$paging_name = '';
 	$paging_extension = '';
 	$paging_pin_number = '';
 	$paging_caller_id_name = '';
@@ -78,6 +79,7 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
+		$paging_name = $_POST["paging_name"] ?? null;
 		$paging_extension = $_POST["paging_extension"] ?? null;
 		$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
 		$paging_pin_number = $_POST["paging_pin_number"] ?? null;
@@ -143,6 +145,7 @@
 
 		//check for all required data
 			$msg = '';
+			if (empty($paging_name)) { $msg .= $text['message-required']." ".$text['label-paging_name']."<br>\n"; }
 			if (empty($paging_extension)) { $msg .= $text['message-required']." ".$text['label-paging_extension']."<br>\n"; }
 			//if (strlen($dialplan_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-dialplan_uuid']."<br>\n"; }
 			//if (strlen($paging_pin_number) == 0) { $msg .= $text['message-required']." ".$text['label-paging_pin_number']."<br>\n"; }
@@ -180,9 +183,6 @@
 				$dialplan_uuid = uuid();
 			}
 
-		//add the paging name
-			$paging_name = 'paging_'.$paging_extension;
-
 		//build the destinations string
 			$destinations = '';
 			if (is_array($paging_destinations)) {
@@ -194,7 +194,7 @@
 			}
 
 		//build the xml dialplan
-			$dialplan_xml = "<extension name=\"$paging_name\">\n";
+			$dialplan_xml = "<extension name=\"".xml::sanitize($paging_name)."\">\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($paging_extension)."\$\" >\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"caller_id_name=".xml::sanitize($paging_caller_id_name)."\" />\n";
 			$dialplan_xml .= "		<action application=\"set\" data=\"caller_id_number=".xml::sanitize($paging_caller_id_number)."\" />\n";
@@ -229,6 +229,7 @@
 
 		//prepare the array
 			$array['paging'][0]['paging_uuid'] = $paging_uuid;
+			$array['paging'][0]['paging_name'] = $paging_name;
 			$array['paging'][0]['paging_extension'] = $paging_extension;
 			$array['paging'][0]['dialplan_uuid'] = $dialplan_uuid;
 			$array['paging'][0]['paging_pin_number'] = $paging_pin_number;
@@ -279,6 +280,7 @@
 		$paging_uuid = $_GET['id'];
 		$sql = "select ";
 		$sql .= " paging_uuid, ";
+		$sql .= " paging_name, ";
 		$sql .= " paging_extension, ";
 		$sql .= " dialplan_uuid, ";
 		$sql .= " paging_pin_number, ";
@@ -297,6 +299,7 @@
 		$parameters['paging_uuid'] = $paging_uuid;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
+			$paging_name = $row["paging_name"];
 			$paging_extension = $row["paging_extension"];
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$paging_pin_number = $row["paging_pin_number"];
@@ -384,6 +387,17 @@
 	}
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-paging_name']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='paging_name' maxlength='255' value='".escape($paging_name)."'>\n";
+	echo "<br />\n";
+	echo $text['description-paging_name']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
