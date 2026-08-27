@@ -105,7 +105,7 @@
 		$sql = "select * from v_menu_items ";
 		$sql .= "where menu_uuid = :menu_uuid ";
 		$sql .= "and menu_item_parent_uuid = :menu_item_parent_uuid ";
-		$sql .= "order by menu_item_title, menu_item_order asc ";
+		$sql .= "order by menu_item_order, menu_item_title asc";
 		$parameters['menu_uuid'] = $menu_uuid;
 		$parameters['menu_item_parent_uuid'] = $menu_item_uuid;
 		$result2 = $database->select($sql, $parameters, 'all');
