@@ -139,8 +139,8 @@ class router {
 		// Extract path details
 		$path_array = explode('/', $decoded_path);
 		$path_count = count($path_array);
-		$prefix_name = $path_array[1];
-		$app_name = $path_array[2];
+		$prefix_name = $path_array[1] ?? null;
+		$app_name = $path_array[2] ?? null;
 		$file_name = array_pop($path_array) ?? 'index.php';
 
 		// Initialize the variable
@@ -172,15 +172,15 @@ class router {
 			$action_name = 'index';
 			$file_path = $prefix_name . '/' . $app_name . '/index.php';
 		}
+		elseif ($path_count <= 3 && !empty($app_name)) {
+			// Set the default index in 2 directories - core/dashboard and others
+			$action_name = 'list';
+			$file_path = $prefix_name . '/' . $app_name . '/index.php';
+		}
 		elseif (!empty($file_name) && $app_name == $file_name) {
 			// App name equals file name (e.g., /app/extensions/extensions -> extensions_list.php)
 			$action_name = 'list';
 			$file_path = $prefix_name . '/' . $app_name . '/' . $app_name . '.php';
-		}
-		elseif ($path_count <= 3) {
-			// Set the default index in 2 directories - core/dashboard and others
-			$action_name = 'list';
-			$file_path = $prefix_name . '/' . $app_name . '/index.php';
 		}
 		elseif (!empty($file_name) && ($file_name == 'edit' || $file_name == $app_name_singular . '_edit')) {
 			// Edit action (e.g., /app/extensions/edit -> extension_edit.php
@@ -219,7 +219,7 @@ class router {
 
 		// No target_file found - return null for 404
 		if ($target_file === null || !file_exists($target_file)) {
-			http_response_code(405);
+			http_response_code(404);
 			return null;
 		}
 
@@ -560,7 +560,7 @@ try {
 		if ($resolved_route !== null) {
 			// Route found - follow
 			$router->follow_route($resolved_route);
-		} elseif ($request_path === '/' || $request_path === '/public' || $request_path === '/public/') {
+		} elseif ($request_path === '/' || $request_path === '/public') {
 			// Root path - load main index
 			include PROJECT_ROOT . '/index.php';
 		} else {
