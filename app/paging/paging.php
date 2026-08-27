@@ -260,7 +260,7 @@
 				echo "	".escape($row['paging_name']);
 			}
 			echo "	</td>\n";
-			echo "	<td class='center'>".$row['paging_extension']."&nbsp;</td>\n";
+			echo "	<td>".$row['paging_extension']."&nbsp;</td>\n";
 			echo "	<td class='center'>".$text['label-'.$row['paging_delay']]."&nbsp;</td>\n";
 			echo "	<td class='center'>".$text['label-'.$row['paging_mute']]."&nbsp;</td>\n";
 			echo "	<td class='center'>".$text['label-'.$row['paging_hangup_all']]."&nbsp;</td>\n";
