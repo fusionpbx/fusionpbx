@@ -1353,6 +1353,8 @@ class menu {
 		//styles below are defined here to prevent caching (following a permission change, etc)
 		$html .= "		<style>\n";
 		$html .= "		div#body_header_user_menu {\n";
+		$html .= "				top: 58px;\n";
+		$html .= "				right: 10px;\n";
 		$html .= "				position-anchor: --user-menu;\n";
 		$html .= "				top: calc(anchor(bottom) - 8px);\n";
 		$html .= "				right: calc(anchor(right) - 12px);\n";
@@ -1530,6 +1532,8 @@ class menu {
 		//styles below are defined here to prevent caching (following a permission change, etc)
 		$html .= "<style>\n";
 		$html .= "div#body_header_user_menu {\n";
+		$html .= "		top: 60px;\n";
+		$html .= "		right: 10px;\n";
 		$html .= "		position-anchor: --user-menu;\n";
 		$html .= "		top: calc(anchor(bottom) + 8px);\n";
 		$html .= "		right: calc(anchor(right) + 4px);\n";

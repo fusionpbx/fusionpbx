@@ -717,6 +717,15 @@ else { //default: white
 			}
 		}
 
+	/* enable hover open in the sm-lg range where the fixed/inline/static
+	   menu bar is already expanded (navbar-expand-sm = 576px) but the
+	   hover rule above (768px) does not apply yet */
+	@media(min-width: 576px) and (max-width: 767.98px) {
+		.navbar .dropdown:hover .dropdown-menu {
+			display: block;
+			}
+		}
+
 	/* sub menu container */
 	ul.navbar-nav > li.nav-item > ul.dropdown-menu {
 		margin-top: 0;
@@ -2678,10 +2687,11 @@ else { //default: white
 	#message_container {
 		z-index: 99998;
 		position: absolute;
-		top: 0;
+		<?php if ($menu_style == 'fixed') { echo "top: 49px;\n"; } else { echo "top: 0;\n"; } ?>
 		left: 0;
 		right: 0;
 		padding: 0;
+		pointer-events: none;
 		}
 
 	.message_text {
@@ -2695,6 +2705,7 @@ else { //default: white
 		background: <?=$message_default_background_color?>;
 		box-shadow: inset 0px 7px 8px -10px <?=$message_default_color?>;
 		opacity: 0;
+		pointer-events: auto;
 		<?php
 		if ($menu_style == 'side') {
 			echo "padding: 20px;\n";
