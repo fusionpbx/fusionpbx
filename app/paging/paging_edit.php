@@ -109,7 +109,7 @@
 			}
 
 		//process the http post data by submitted action
-			if ($_POST['action'] != '' && strlen($_POST['action']) > 0) {
+			if (!empty($_POST['action']) && strlen($_POST['action']) > 0) {
 
 				//prepare the array
 				$array[0]['checked'] = 'true';
@@ -248,7 +248,7 @@
 			if (is_array($paging_destinations)) {
 				foreach ($paging_destinations as $row) {
 					if (strlen($row['destination_number']) > 0) {
-						$array['paging'][0]['paging_destinations'][$y]['paging_destination_uuid'] = $row["paging_destination_uuid"];
+						$array['paging'][0]['paging_destinations'][$y]['paging_destination_uuid'] = $row['paging_destination_uuid'];
 						$array['paging'][0]['paging_destinations'][$y]['destination_number'] = $row["destination_number"];
 						$array['paging'][0]['paging_destinations'][$y]['destination_enabled'] = $row["destination_enabled"];
 						$array['paging'][0]['paging_destinations'][$y]['destination_description'] = $row["destination_description"];
@@ -333,18 +333,32 @@
 		unset ($sql, $parameters);
 	}
 
-//add the $paging_destination_uuid
-	if (!is_uuid($paging_destination_uuid)) {
-		$paging_destination_uuid = uuid();
-	}
-
 //add an empty row
 	$x = is_array($paging_destinations) ? count($paging_destinations) : 0;
 	$paging_destinations[$x]['paging_uuid'] = $paging_uuid;
-	$paging_destinations[$x]['paging_destination_uuid'] = uuid();
 	$paging_destinations[$x]['destination_number'] = '';
 	$paging_destinations[$x]['destination_enabled'] = '';
 	$paging_destinations[$x]['destination_description'] = '';
+
+//get the extensions and the users assigned to them
+	$sql = "select ";
+	$sql .= " extension, ";
+	$sql .= " effective_caller_id_name, ";
+	$sql .= " description ";
+	$sql .= "from v_extensions ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "and enabled = 'true' ";
+	$sql .= "order by extension asc ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$extensions = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+
+	$extension_users = [];
+	foreach ($extensions as $row) {
+		$ext = $row['extension'];
+		$extension_users[$ext]['extension'] = $row['extension'];
+		$extension_users[$ext]['name'] = $row['effective_caller_id_name'] ?? $row['description'];
+	}
 
 //create token
 	$object = new token;
@@ -442,17 +456,103 @@
 	$x = 0;
 	if (permission_exists('paging_destination_edit')) {
 		foreach($paging_destinations as $row) {
+			if (!empty($row['paging_destination_uuid']) && is_uuid($row['paging_destination_uuid'])) {
+				$paging_destination_uuid = $row['paging_destination_uuid'];
+			}
+			else {
+				$paging_destination_uuid = uuid();
+			}
 			echo "			<tr>\n";
 			echo "				<td class='formfld'>\n";
-				echo "			<input type='hidden' name='paging_destinations[$x][paging_uuid]' value=\"".escape($row["paging_uuid"])."\">\n";
-				echo "			<input type='hidden' name='paging_destinations[$x][paging_destination_uuid]' value=\"".escape($row["paging_destination_uuid"])."\">\n";
-			echo "				<input class='formfld' type='text' name='paging_destinations[$x][destination_number]' maxlength='255' value=\"".escape($row["destination_number"])."\">\n";
-			echo "			</td>\n";
+			echo "					<input type='hidden' name='paging_destinations[$x][paging_uuid]' value=\"".escape($row["paging_uuid"])."\">\n";
+			echo "					<input type='hidden' name='paging_destinations[$x][paging_destination_uuid]' value=\"".escape($paging_destination_uuid)."\">\n";
+			$oninput = !isset($row['paging_destination_uuid']) ? "oninput=\"document.getElementById('paging_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\"" : null; // new record
+			echo "					<div class='searchable_select_wrapper'>\n";
+			echo "						<input class='formfld extension_search_input' type='text' name='paging_destinations[$x][destination_number]' value='".escape($row['destination_number'])."' ".$oninput.">\n";
+			echo "						<div class='search_results'></div>\n";
+			echo "						<select class='extension_hidden_select' style='display:none;'>\n";
+			foreach ($extension_users as $ext_data) {
+				echo "						<option value='".escape($ext_data['extension'])."' data-users='".$ext_data['name']."'>".escape($ext_data['extension'])."</option>";
+			}
+			echo "						</select>\n";
+			echo "					</div>\n";
+
+			?>
+			<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				const wrappers = document.querySelectorAll('.searchable_select_wrapper:has(.extension_hidden_select)');
+
+				wrappers.forEach(wrapper => {
+					const input = wrapper.querySelector('.extension_search_input');
+					const hidden_select = wrapper.querySelector('.extension_hidden_select');
+					const results = wrapper.querySelector('.search_results');
+
+					// Cache options once for performance
+					const options = Array.from(hidden_select.querySelectorAll('option'));
+
+					if (!input || !results) return;
+
+					function render_results() {
+						// Hide other dropdowns before showing the active one
+						document.querySelectorAll('.search_results').forEach(dropdown => { dropdown.style.display = 'none'; });
+						results.style.display = 'block';
+
+						const term = this.value.trim().toLowerCase();
+
+						// Clear previous results
+						results.innerHTML = '';
+
+						options.forEach(option => {
+							const extension = option.value.trim().toLowerCase();
+							const users = (option.getAttribute('data-users') || '').split(',').map(u => u.trim()).filter(Boolean);
+							const users_lower = users.map(user => user.toLowerCase());
+
+							// Match if extension or username contains the search term
+							const matches_extension = extension.includes(term);
+							const matches_user = users_lower.some(user => user.includes(term));
+
+							if (matches_extension || matches_user) {
+								const item = document.createElement('div');
+								item.className = 'search_result_item';
+
+								const extension = document.createElement('div');
+								extension.className = 'search_result_name';
+								extension.textContent = option.value;
+
+								const username = document.createElement('div');
+								username.className = 'search_result_description';
+								username.textContent = option.getAttribute('data-users') || '';
+
+								item.appendChild(extension);
+								item.appendChild(username);
+
+								// Click to populate input & hidden select
+								item.addEventListener('click', () => {
+									input.value = option.value;
+									hidden_select.value = option.value;
+									results.style.display = 'none';
+
+									input.dispatchEvent(new Event('focus', { bubbles: true }));
+									input.dispatchEvent(new Event('input',  { bubbles: true }));
+								});
+
+								results.appendChild(item);
+							}
+						});
+					}
+
+					input.addEventListener('focus',  render_results);
+					input.addEventListener('input',  render_results);
+				});
+			});
+			</script>
+			<?php
+			echo "				</td>\n";
 			echo "				<td class='formfld'>\n";
 			if ($input_toggle_style_switch) {
 				echo "	<span class='switch'>\n";
 			}
-			echo "	<select class='formfld' id='destination_enabled' name='paging_destinations[$x][destination_enabled]'>\n";
+			echo "	<select class='formfld' id='paging_destinations_".$x."_destination_enabled' name='paging_destinations[$x][destination_enabled]'>\n";
 			echo "		<option value='true' ".($row['destination_enabled'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
 			echo "		<option value='false' ".($row['destination_enabled'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
 			echo "	</select>\n";
@@ -465,7 +565,7 @@
 			echo "				<textarea class='formfld' name='paging_destinations[$x][destination_description]' style='line-height: 1;'>".escape($row["destination_description"])."</textarea>\n";
 			echo "			</td>\n";
 			if (is_array($paging_destinations) && @sizeof($paging_destinations) > 1 && permission_exists('paging_destination_delete')) {
-				if (is_uuid($row['paging_destination_uuid'])) {
+				if (!empty($row['paging_destination_uuid']) && is_uuid($row['paging_destination_uuid'])) {
 					echo "		<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
 					echo "			<input type='checkbox' name='paging_destinations[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"checkbox_on_change(this);\">\n";
 					echo "		</td>\n";
