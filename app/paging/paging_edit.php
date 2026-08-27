@@ -49,32 +49,32 @@
 	$input_toggle_style = $settings->get('theme', 'input_toggle_style', 'switch round');
 
 //action add or update
-	if (is_uuid($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"]) || !empty($_REQUEST["paging_uuid"])) {
 		$action = "update";
 		$paging_uuid = $_REQUEST["id"];
-		$id = $_REQUEST["id"];
+		if (!empty($_REQUEST["paging_uuid"])) {
+			$paging_uuid = $_REQUEST["paging_uuid"];
+		}
 	}
 	else {
 		$action = "add";
+		$paging_uuid = '';
 	}
 
 //set the defaults
-	$paging_uuid = '';
 	$paging_extension = '';
-	$dialplan_uuid = '';
 	$paging_pin_number = '';
 	$paging_caller_id_name = '';
 	$paging_caller_id_number = '';
 	$paging_sound = '';
 	$paging_delay = '';
-	$paging_mute = '';
+	$paging_mute = 'true';
 	$paging_destination_status = '';
-	$paging_hangup_all = '';
+	$paging_hangup_all = 'true';
 	$paging_schedule_hangup = '';
-	$paging_enabled = '';
+	$paging_enabled = 'true';
 	$paging_description = '';
 	$paging_destinations = [];
-	$paging_destination_uuid = '';
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
@@ -136,7 +136,7 @@
 
 				//redirect the user
 				if (in_array($_POST['action'], array('copy', 'delete', 'toggle'))) {
-					header('Location: paging_edit.php?id='.$id);
+					header('Location: paging_edit.php?id='.$paging_uuid);
 					exit;
 				}
 			}
