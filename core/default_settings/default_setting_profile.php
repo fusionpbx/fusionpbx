@@ -329,6 +329,13 @@
 			$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid']]);
 			settings::clear_cache();
 
+		//set the domain
+			$domain = new domains(['database' => $database]);
+			$domain->set();
+
+		//update the settings
+			$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'], 'user_uuid' => $_SESSION['user_uuid']]);
+
 		//response message
 			message::add($text['message-update'],'positive');
 
