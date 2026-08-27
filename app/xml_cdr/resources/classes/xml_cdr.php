@@ -2153,7 +2153,7 @@ class xml_cdr {
 
 		//download the file
 		if ($record_file != '/' && file_exists($record_file)) {
-			ob_clean();
+			$fd = ob_clean();
 			$fd = fopen($record_file, "rb");
 			if ($this->binary) {
 				header("Content-Type: application/force-download");
