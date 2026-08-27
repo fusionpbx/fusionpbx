@@ -95,6 +95,7 @@
 		$paging_schedule_hangup = $_POST["paging_schedule_hangup"] ?? null;
 		$paging_enabled = $_POST["paging_enabled"] ?? null;
 		$paging_description = $_POST["paging_description"] ?? null;
+		$paging_destinations_delete = $_POST["paging_destinations_delete"] ?? null;
 	}
 
 //process the data and save it to the database
@@ -247,12 +248,23 @@
 			$y = 0;
 			if (is_array($paging_destinations)) {
 				foreach ($paging_destinations as $row) {
+					if (!empty($row['paging_destination_uuid']) && is_uuid($row['paging_destination_uuid'])) {
+						$paging_destination_uuid = $row['paging_destination_uuid'];
+					}
+					else {
+						$paging_destination_uuid = uuid();
+					}
 					if (strlen($row['destination_number']) > 0) {
-						$array['paging'][0]['paging_destinations'][$y]['paging_destination_uuid'] = $row['paging_destination_uuid'];
+						$array['paging'][0]['paging_destinations'][$y]['paging_destination_uuid'] = $paging_destination_uuid;
 						$array['paging'][0]['paging_destinations'][$y]['destination_number'] = $row["destination_number"];
 						$array['paging'][0]['paging_destinations'][$y]['destination_enabled'] = $row["destination_enabled"];
 						$array['paging'][0]['paging_destinations'][$y]['destination_description'] = $row["destination_description"];
 						$y++;
+					} elseif (strlen($row['destination_number']) == 0 && !empty($row['paging_destination_uuid']) && is_uuid($row['paging_destination_uuid'])) {
+						$paging_destinations_delete[] = [
+							'checked' => 'true',
+							'uuid' => $row['paging_destination_uuid']
+						];
 					}
 				}
 			}
@@ -262,6 +274,18 @@
 			$database->app_uuid = 'bae044dd-e773-471c-a890-5220ebca3bc9';
 			$database->save($array);
 
+		//remove checked destinations
+			if (
+				$action == 'update'
+				&& permission_exists('paging_destination_delete')
+				&& is_array($paging_destinations_delete)
+				&& @sizeof($paging_destinations_delete) != 0
+				) {
+				$obj = new paging;
+				$obj->paging_uuid = $paging_uuid;
+				$obj->delete_destinations($paging_destinations_delete);
+			}
+
 		//redirect the user
 			if (isset($action)) {
 				if ($action == "add") {
@@ -270,7 +294,6 @@
 				if ($action == "update") {
 					$_SESSION["message"] = $text['message-update'];
 				}
-				//header('Location: paging.php');
 				header('Location: paging_edit.php?id='.urlencode($paging_uuid));
 				return;
 			}
@@ -336,6 +359,7 @@
 //add an empty row
 	$x = is_array($paging_destinations) ? count($paging_destinations) : 0;
 	$paging_destinations[$x]['paging_uuid'] = $paging_uuid;
+	$paging_destinations[$x]['paging_destination_uuid'] = '';
 	$paging_destinations[$x]['destination_number'] = '';
 	$paging_destinations[$x]['destination_enabled'] = '';
 	$paging_destinations[$x]['destination_description'] = '';
@@ -448,7 +472,7 @@
 	echo "			<td class='vtable'>".$text['label-destination_description']."</td>\n";
 	if (is_array($paging_destinations) && @sizeof($paging_destinations) > 1 && permission_exists('paging_destination_delete')) {
 		echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_details', 'delete_toggle_details');\" onmouseout=\"swap_display('delete_label_details', 'delete_toggle_details');\">\n";
-		echo "				<span id='delete_label_details'>".$text['label-action']."</span>\n";
+		echo "				<span id='delete_label_details'>".$text['label-delete']."</span>\n";
 		echo "				<span id='delete_toggle_details'><input type='checkbox' id='checkbox_all_details' name='checkbox_all' onclick=\"edit_all_toggle('details'); checkbox_on_change(this);\"></span>\n";
 		echo "			</td>\n";
 	}
@@ -456,17 +480,11 @@
 	$x = 0;
 	if (permission_exists('paging_destination_edit')) {
 		foreach($paging_destinations as $row) {
-			if (!empty($row['paging_destination_uuid']) && is_uuid($row['paging_destination_uuid'])) {
-				$paging_destination_uuid = $row['paging_destination_uuid'];
-			}
-			else {
-				$paging_destination_uuid = uuid();
-			}
 			echo "			<tr>\n";
 			echo "				<td class='formfld'>\n";
 			echo "					<input type='hidden' name='paging_destinations[$x][paging_uuid]' value=\"".escape($row["paging_uuid"])."\">\n";
-			echo "					<input type='hidden' name='paging_destinations[$x][paging_destination_uuid]' value=\"".escape($paging_destination_uuid)."\">\n";
-			$oninput = !isset($row['paging_destination_uuid']) ? "oninput=\"document.getElementById('paging_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\"" : null; // new record
+			echo "					<input type='hidden' name='paging_destinations[$x][paging_destination_uuid]' value=\"".escape($row['paging_destination_uuid'])."\">\n";
+			$oninput = empty($row['paging_destination_uuid']) ? "oninput=\"document.getElementById('paging_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\"" : null; // new record
 			echo "					<div class='searchable_select_wrapper'>\n";
 			echo "						<input class='formfld extension_search_input' type='text' name='paging_destinations[$x][destination_number]' value='".escape($row['destination_number'])."' ".$oninput.">\n";
 			echo "						<div class='search_results'></div>\n";
@@ -567,7 +585,8 @@
 			if (is_array($paging_destinations) && @sizeof($paging_destinations) > 1 && permission_exists('paging_destination_delete')) {
 				if (!empty($row['paging_destination_uuid']) && is_uuid($row['paging_destination_uuid'])) {
 					echo "		<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
-					echo "			<input type='checkbox' name='paging_destinations[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"checkbox_on_change(this);\">\n";
+					echo "			<input type='checkbox' name='paging_destinations_delete[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"checkbox_on_change(this);\">\n";
+					echo "			<input type='hidden' name='paging_destinations_delete[".$x."][uuid]' value='".escape($row['paging_destination_uuid'])."' />\n";
 					echo "		</td>\n";
 				}
 				else {
