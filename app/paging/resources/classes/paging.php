@@ -121,6 +121,72 @@ if (!class_exists('paging')) {
 		}
 
 		/**
+		 * Deletes multiple destination records from the database.
+		 *
+		 * @param array $records An array of destination records to delete, where each record contains 'uuid' and 'checked' keys.
+		 *
+		 * @return void
+		 */
+		public function delete_destinations($records) {
+
+			//assign private variables
+			$this->permission_prefix = 'paging_destination_';
+			$this->table = 'paging_destinations';
+			$this->uuid_prefix = 'paging_destination_';
+
+			if (permission_exists($this->permission_prefix . 'delete')) {
+
+				//add multi-lingual support
+				$language = new text;
+				$text = $language->get();
+
+				//validate the token
+				$token = new token;
+				if (!$token->validate($_SERVER['PHP_SELF'])) {
+					message::add($text['message-invalid_token'], 'negative');
+					header('Location: ' . $this->list_page);
+					exit;
+				}
+
+				//delete multiple records
+				if (is_array($records) && @sizeof($records) != 0) {
+
+					//filter out unchecked paging, build where clause for below
+					foreach ($records as $record) {
+						if (!empty($record['checked']) && $record['checked'] == 'true' && !empty($record['uuid']) && is_uuid($record['uuid'])) {
+							$uuids[] = $record['uuid'];
+						}
+					}
+
+					//build the delete array
+					if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
+						$x = 0;
+						foreach ($uuids as $uuid) {
+							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
+							$x++;
+						}
+					}
+
+					//delete the checked rows
+					if (!empty($array) && is_array($array) && @sizeof($array) != 0) {
+
+						//execute delete
+						$this->database = new database;
+						$this->database->app_name = $this->app_name;
+						$this->database->app_uuid = $this->app_uuid;
+						$this->database->delete($array);
+						unset($array);
+
+						//apply settings reminder
+						$_SESSION["reload_xml"] = true;
+
+					}
+					unset($records);
+				}
+			}
+		}
+
+		/**
 		 * toggle a field between two values
 		 */
 		public function toggle($records) {
