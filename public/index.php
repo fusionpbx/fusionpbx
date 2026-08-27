@@ -167,21 +167,6 @@ class router {
 		    // Fallback for missing app_name
 		    $file_path = $script_name;
 		}
-		if (!empty($file_name) && $app_name == 'provision') {
-			// Provision app (nginx vendor rewrites land here with address/file query params)
-			$action_name = 'index';
-			$file_path = $prefix_name . '/' . $app_name . '/index.php';
-		}
-		elseif ($path_count <= 3 && !empty($app_name)) {
-			// Set the default index in 2 directories - core/dashboard and others
-			$action_name = 'list';
-			$file_path = $prefix_name . '/' . $app_name . '/index.php';
-		}
-		elseif (!empty($file_name) && $app_name == $file_name) {
-			// App name equals file name (e.g., /app/extensions/extensions -> extensions_list.php)
-			$action_name = 'list';
-			$file_path = $prefix_name . '/' . $app_name . '/' . $app_name . '.php';
-		}
 		elseif (!empty($file_name) && ($file_name == 'edit' || $file_name == $app_name_singular . '_edit')) {
 			// Edit action (e.g., /app/extensions/edit -> extension_edit.php
 			$action_name = 'edit';
@@ -191,6 +176,21 @@ class router {
 			// Delete action (e.g., /app/extensions/extension_delete -> extension_delete.php)
 			$action_name = 'delete';
 			$file_path = $prefix_name . '/' . $app_name . '/' . $app_name_singular . '_delete.php';
+		}
+		if (!empty($file_name) && $app_name == 'provision') {
+			// Provision app (nginx vendor rewrites land here with address/file query params)
+			$action_name = 'index';
+			$file_path = $prefix_name . '/' . $app_name . '/index.php';
+		}
+		elseif ($path_count <= 3 && !empty($app_name) && file_exists(PROJECT_ROOT . '/' . $prefix_name . '/' . $app_name . '/index.php')) {
+			// Set the default index in 2 directories - core/dashboard and others
+			$action_name = 'index';
+			$file_path = $prefix_name . '/' . $app_name . '/index.php';
+		}
+		elseif (!empty($file_name)) {
+			// App name equals file name (e.g., /app/extensions/extensions -> extensions_list.php)
+			$action_name = 'list';
+			$file_path = $prefix_name . '/' . $app_name . '/' . $app_name . '.php';
 		}
 		elseif (!empty($file_name) && $file_name == 'index.php') {
 			// Index file
