@@ -248,7 +248,7 @@
 			if (is_array($paging_destinations)) {
 				foreach ($paging_destinations as $row) {
 					if (strlen($row['destination_number']) > 0) {
-						$array['paging'][0]['paging_destinations'][$y]['paging_destination_uuid'] = $row["paging_destination_uuid"];
+						$array['paging'][0]['paging_destinations'][$y]['paging_destination_uuid'] = $row['paging_destination_uuid'];
 						$array['paging'][0]['paging_destinations'][$y]['destination_number'] = $row["destination_number"];
 						$array['paging'][0]['paging_destinations'][$y]['destination_enabled'] = $row["destination_enabled"];
 						$array['paging'][0]['paging_destinations'][$y]['destination_description'] = $row["destination_description"];
@@ -331,11 +331,6 @@
 		$parameters['paging_uuid'] = $paging_uuid;
 		$paging_destinations = $database->select($sql, $parameters, 'all');
 		unset ($sql, $parameters);
-	}
-
-//add the $paging_destination_uuid
-	if (!is_uuid($paging_destination_uuid)) {
-		$paging_destination_uuid = uuid();
 	}
 
 //add an empty row
@@ -467,12 +462,10 @@
 			else {
 				$paging_destination_uuid = uuid();
 			}
-			if (!empty($row['paging_destination_uuid']) && is_uuid($row['paging_destination_uuid'])) {
-				echo "		<input type='hidden' name='paging_destinations[$x][paging_uuid]' value=\"".escape($row["paging_uuid"])."\">\n";
-				echo "		<input type='hidden' name='paging_destinations[$x][paging_destination_uuid]' value=\"".escape($paging_destination_uuid)."\">\n";
-			}
 			echo "			<tr>\n";
 			echo "				<td class='formfld'>\n";
+			echo "					<input type='hidden' name='paging_destinations[$x][paging_uuid]' value=\"".escape($row["paging_uuid"])."\">\n";
+			echo "					<input type='hidden' name='paging_destinations[$x][paging_destination_uuid]' value=\"".escape($paging_destination_uuid)."\">\n";
 			$oninput = !isset($row['paging_destination_uuid']) ? "oninput=\"document.getElementById('paging_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\"" : null; // new record
 			echo "					<div class='searchable_select_wrapper'>\n";
 			echo "						<input class='formfld extension_search_input' type='text' name='paging_destinations[$x][destination_number]' value='".escape($row['destination_number'])."' ".$oninput.">\n";
