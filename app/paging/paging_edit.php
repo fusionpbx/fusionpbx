@@ -479,7 +479,6 @@
 		}
 	}
 	echo "	</table>\n";
-	echo "<br />\n";
 	echo $text['description-destination_description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
