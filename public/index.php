@@ -162,10 +162,28 @@ class router {
 		// Calculate singular form for app_name
 		$app_name_singular = database::singular($app_name ?? '');
 
-		// Determine the target file based on routing rules
+		// Direct access to static assets (css, js, fonts, images, etc.).
+		$asset_extensions = ['css', 'js', 'json', 'txt', 'csv', 'pdf', 'xml',
+			'svg', 'png', 'jpg', 'jpeg', 'gif', 'webp', 'ico',
+			'woff', 'woff2', 'ttf', 'otf', 'eot',
+			'htm', 'html', 'mp4', 'webm', 'ogg'];
+		$asset_file_ext = strtolower(pathinfo(ltrim($script_name, '/'), PATHINFO_EXTENSION));
 		if (empty($app_name)) {
 		    // Fallback for missing app_name
 		    $file_path = $script_name;
+		}
+		elseif ($asset_file_ext !== '' && in_array($asset_file_ext, $asset_extensions, true)
+			&& is_file(PROJECT_ROOT . '/' . ltrim($script_name, '/'))) {
+			// Static asset (e.g., /resources/sortablejs/sortable.min.js,
+			// /core/dashboard/resources/javascript/ws_client.js,
+			// /app/maintenance/resources/javascript/maintenance_functions.js)
+			$action_name = 'static';
+			$file_path = $script_name;
+		}
+		elseif (!empty($file_name) && $app_name == 'provision') {
+			// Provision app (nginx vendor rewrites land here with address/file query params)
+			$action_name = 'index';
+			$file_path = $prefix_name . '/' . $app_name . '/index.php';
 		}
 		elseif (!empty($file_name) && ($file_name == 'edit' || $file_name == $app_name_singular . '_edit')) {
 			// Edit action (e.g., /app/extensions/edit -> extension_edit.php
@@ -176,11 +194,6 @@ class router {
 			// Delete action (e.g., /app/extensions/extension_delete -> extension_delete.php)
 			$action_name = 'delete';
 			$file_path = $prefix_name . '/' . $app_name . '/' . $app_name_singular . '_delete.php';
-		}
-		if (!empty($file_name) && $app_name == 'provision') {
-			// Provision app (nginx vendor rewrites land here with address/file query params)
-			$action_name = 'index';
-			$file_path = $prefix_name . '/' . $app_name . '/index.php';
 		}
 		elseif ($path_count <= 3 && !empty($app_name) && file_exists(PROJECT_ROOT . '/' . $prefix_name . '/' . $app_name . '/index.php')) {
 			// Set the default index in 2 directories - core/dashboard and others
@@ -287,7 +300,7 @@ class router {
 			'gif'   => 'image/gif',
 			'webp'  => 'image/webp',
 			'svg'   => 'image/svg+xml',
-			'ico'   => 'image/png',
+			'ico'   => 'image/x-icon',
 			'js'    => 'application/javascript',
 			'css'   => 'text/css',
 			'json'  => 'application/json',
@@ -298,8 +311,11 @@ class router {
 			'html'  => 'text/html',
 			'map'   => 'application/json',
 			'txt'   => 'text/plain',
+			'woff'  => 'font/woff',
 			'woff2' => 'font/woff2',
 			'ttf'   => 'font/sfnt',
+			'otf'   => 'font/otf',
+			'eot'   => 'application/vnd.ms-fontobject',
 			'htm'   => 'text/html',
 			'mp4'   => 'video/mp4',
 			'webm'  => 'video/webm',
