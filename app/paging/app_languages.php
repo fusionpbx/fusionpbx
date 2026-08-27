@@ -79,6 +79,33 @@
 		$text['label-paging_name']['ja-jp'] = '名前';
 		$text['label-paging_name']['ko-kr'] = '이름';
 
+		$text['description-paging_name']['en-us'] = "Enter the name.";
+		$text['description-paging_name']['ka-ge'] = "შეიყვანეთ სახელი.";
+		$text['description-paging_name']['en-gb'] = "Enter the name.";
+		$text['description-paging_name']['ar-eg'] = "أدخل الاسم.";
+		$text['description-paging_name']['de-at'] = "Geben Sie den Namen ein.";
+		$text['description-paging_name']['de-ch'] = "Geben Sie den Namen ein.";
+		$text['description-paging_name']['de-de'] = "Geben Sie den Namen ein.";
+		$text['description-paging_name']['el-gr'] = "Εισάγετ το όνομα.";
+		$text['description-paging_name']['es-cl'] = "Escriba el nombre";
+		$text['description-paging_name']['es-mx'] = "Escriba el nombre";
+		$text['description-paging_name']['fr-ca'] = "Entrer Le Nom";
+		$text['description-paging_name']['fr-fr'] = "Écrivez votre nom";
+		$text['description-paging_name']['he-il'] = "הזן את השם.";
+		$text['description-paging_name']['it-it'] = "Inserire il nome.";
+		$text['description-paging_name']['nl-nl'] = "Voer de naam in.";
+		$text['description-paging_name']['pl-pl'] = "Wprowadź nazwę.";
+		$text['description-paging_name']['pt-br'] = "Entre com o nome.";
+		$text['description-paging_name']['pt-pt'] = "Digite o nome.";
+		$text['description-paging_name']['ro-ro'] = "Introduceți numele.";
+		$text['description-paging_name']['ru-ru'] = "Введите имя.";
+		$text['description-paging_name']['sv-se'] = "Ange namnet.";
+		$text['description-paging_name']['uk-ua'] = "Введіть назву.";
+		$text['description-paging_name']['tr-tr'] = "İsim girin.";
+		$text['description-paging_name']['zh-cn'] = "输入名称。";
+		$text['description-paging_name']['ja-jp'] = "名前を入力します。";
+		$text['description-paging_name']['ko-kr'] = "이름을 입력하세요.";
+
 		$text['label-paging_extension']['en-us'] = 'Extension';
 		$text['label-paging_extension']['en-gb'] = 'Extension';
 		$text['label-paging_extension']['ar-eg'] = 'الامتداد';
@@ -910,5 +937,3 @@
 		$text['description-destination_description']['zh-cn'] = '输入目的地描述。';
 		$text['description-destination_description']['ja-jp'] = '宛先の説明を入力してください。';
 		$text['description-destination_description']['ko-kr'] = '목적지 설명을 입력하세요.';
-
-?>

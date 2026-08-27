@@ -49,7 +49,7 @@
 	$input_toggle_style = $settings->get('theme', 'input_toggle_style', 'switch round');
 
 //action add or update
-	if (is_uuid($_REQUEST["id"]) || !empty($_REQUEST["paging_uuid"])) {
+	if ((!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) || !empty($_REQUEST["paging_uuid"])) {
 		$action = "update";
 		$paging_uuid = $_REQUEST["id"];
 		if (!empty($_REQUEST["paging_uuid"])) {
@@ -76,6 +76,7 @@
 	$paging_enabled = 'true';
 	$paging_description = '';
 	$paging_destinations = [];
+	$paging_destination_uuid = '';
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
