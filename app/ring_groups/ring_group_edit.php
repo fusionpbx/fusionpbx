@@ -527,6 +527,11 @@
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_prompt"] = $row['destination_prompt'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["destination_enabled"] = $row['destination_enabled'];
 					$array['ring_groups'][0]["ring_group_destinations"][$y]["domain_uuid"] = $domain_uuid;
+				} elseif (strlen($row['destination_number']) == 0 && !empty($row['ring_group_destination_uuid']) && is_uuid($row['ring_group_destination_uuid'])) {
+					$ring_group_destinations_delete[] = [
+						'checked' => 'true',
+						'uuid' => $row['ring_group_destination_uuid']
+					];
 				}
 				$y++;
 				unset($output_array, $range_first_extension, $range_second_extension);
@@ -1386,7 +1391,7 @@
 
 		echo "			<tr>\n";
 		echo "				<td class='formfld'>\n";
-		$oninput = !isset($row['ring_group_destination_uuid']) ? "oninput=\"document.getElementById('ring_group_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\"" : null; // new record
+		$oninput = empty($row['ring_group_destination_uuid']) ? "oninput=\"document.getElementById('ring_group_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\"" : null; // new record
 		echo "					<div class='searchable_select_wrapper'>\n";
 		echo "						<input type='text' name='ring_group_destinations[".$x."][destination_number]' class='formfld extension_search_input' value='".escape($row['destination_number'])."' ".$oninput.">\n";
 		echo "						<div class='search_results'></div>\n";
