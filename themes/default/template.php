@@ -19,7 +19,7 @@
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-tempusdominus.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/bootstrap/css/bootstrap-colorpicker.min.css.php'>
 	<link rel='stylesheet' type='text/css' href='{$project_path}/resources/fontawesome/css/all.min.css.php'>
-	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202605220330'>
+	<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php?updated=202608261400'>
 {*//link to custom css file *}
 	{if !empty($settings.theme.custom_css)}
 		<link rel='stylesheet' type='text/css' href='{$settings.theme.custom_css}'>
@@ -67,9 +67,10 @@
 					message_text.html(msg);
 					message_text.on('click', function() {
 						var object = $(this);
-						object.clearQueue().finish();
+						object.stop(true);
+						$('#message_container').stop(true);
 						$('#message_container div').remove();
-						$('#message_container').css({opacity: 0, 'height': 0}).css({'height': 'auto'});
+						$('#message_container').css({'opacity': 1, 'height': 0});
 					} );
 					$('#message_container').append(message_text);
 					message_text.css({'height': 'auto'}).animate({opacity: 1}, 250, function(){
@@ -238,8 +239,9 @@
 		//message bar hide on hover
 			{literal}
 			$('#message_container').on('mouseenter',function() {
+				$('#message_container').stop(true);
 				$('#message_container div').remove();
-				$('#message_container').css({opacity: 0, 'height': 0}).css({'height': 'auto'});
+				$('#message_container').css({'opacity': 1, 'height': 0});
 			});
 			{/literal}
 
@@ -268,16 +270,26 @@
 
 				function hide_domains() {
 					$('#domains_visible').val(0);
-					$(document).ready(function() {
-						$('#domains_block').animate({marginRight: '-=300'}, 400, function() {
-							$('#domains_search').val('');
-							$('.navbar').css('margin-right','0'); //restore navbar margin
-							$('#domains_container').css('right','0'); //domain container right position
-							$('#domains_container').hide();
-							$('body').css({'margin-right':'0','overflow':'auto'}); //enable body scroll bars
-							document.activeElement.blur();
-						});
+					//stop queued/running animations so the cleanup below is deterministic
+					$('#domains_block').stop(true);
+					$('#domains_block').animate({marginRight: '-=300'}, 400, function() {
+						$('#domains_search').val('');
+						$('.navbar').css('margin-right','0'); //restore navbar margin
+						$('#domains_container').css('right','0'); //domain container right position
+						$('#domains_container').hide();
+						$('body').css({'margin-right':'0','overflow':'auto'}); //enable body scroll bars
+						try { document.activeElement.blur(); } catch (e) {}
 					});
+					//safety net: the overlay must never remain as an invisible
+					//full-height dead zone above the fixed menu (z-index 99990)
+					window.setTimeout(function() {
+						if ($('#domains_visible').val() == 0) {
+							$('.navbar').css('margin-right','0');
+							$('#domains_container').css('right','0');
+							$('#domains_container').hide();
+							$('body').css({'margin-right':'0','overflow':'auto'});
+						}
+					}, 800);
 				}
 				{/literal}
 			{/if}
