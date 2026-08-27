@@ -156,7 +156,7 @@
 			//if (strlen($paging_hangup_all) == 0) { $msg .= $text['message-required']." ".$text['label-paging_hangup_all']."<br>\n"; }
 			//if (strlen($paging_schedule_hangup) == 0) { $msg .= $text['message-required']." ".$text['label-paging_schedule_hangup']."<br>\n"; }
 			//if (strlen($paging_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-paging_enabled']."<br>\n"; }
-			if (empty($paging_description)) { $msg .= $text['message-required']." ".$text['label-paging_description']."<br>\n"; }
+			//if (empty($paging_description)) { $msg .= $text['message-required']." ".$text['label-paging_description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -619,7 +619,7 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-paging_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
