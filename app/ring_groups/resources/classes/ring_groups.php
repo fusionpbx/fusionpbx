@@ -238,7 +238,7 @@ class ring_groups {
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'], 'negative');
-				header('L$ring_group_uuidocation: ' . $this->list_page);
+				header('Location: ' . $this->list_page);
 				exit;
 			}
 
