@@ -1,8 +1,4 @@
 <?php
-/*
- * Contributor(s):
- * denisent dev team
- */
 
 	//application details
 		$apps[$x]['name'] = "Paging and Intercom";
