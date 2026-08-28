@@ -819,21 +819,9 @@
 					dropdown.className = 'search_results';
 					wrapper.appendChild(dropdown);
 
-					// Extract options safely & isolate per instance
-					let all_options = [];
-					original_select.querySelectorAll('option').forEach(option => {
-						if (option.value) {
-							all_options.push({
-								value: option.value,
-								label: option.textContent.trim(),
-								group: option.parentNode?.tagName === 'OPTGROUP' ? option.parentNode.label : ''
-							});
-						}
-					});
-
 					// Handle initial selection
 					if (original_select.value) {
-						const initial_option = all_options.find(option => option.value === original_select.value);
+						const initial_option = original_select.querySelector(`option[value="${original_select.value}"]`);
 						if (initial_option) input.value = initial_option.label;
 					}
 					update_visibility();
@@ -844,14 +832,17 @@
 						let current_group = null;
 						let has_results = false;
 
-						all_options.forEach(option => {
-							const matches_label = option.label.toLowerCase().includes(lower_filter);
-							const matches_group = option.group.toLowerCase().includes(lower_filter);
+						original_select.querySelectorAll('option').forEach(option => {
+							let option_value = option.value;
+							let option_label = option.textContent.trim();
+							let option_group = option.parentNode?.tagName === 'OPTGROUP' ? option.parentNode.label : '';
+							const matches_label = option_label.toLowerCase().includes(lower_filter);
+							const matches_group = option_group.toLowerCase().includes(lower_filter);
 
 							if (matches_label || matches_group) {
 								has_results = true;
-								if (option.group && option.group !== current_group) {
-									current_group = option.group;
+								if (option_group && option_group !== current_group) {
+									current_group = option_group;
 									const group_title = document.createElement('div');
 									group_title.className = 'optgroup_header_row';
 									group_title.textContent = current_group;
@@ -860,11 +851,11 @@
 
 								const item = document.createElement('div');
 								item.className = 'search_result_item';
-								if (original_select.value === option.value) item.classList.add('active');
+								if (original_select.value === option_value) item.classList.add('active');
 
-								item.dataset.value = option.value;
-								item.textContent = option.label;
-								item.style.paddingLeft = option.group ? '26px' : '';
+								item.dataset.value = option_value;
+								item.textContent = option_label;
+								item.style.paddingLeft = option_group ? '26px' : '';
 
 								dropdown.appendChild(item);
 							}
@@ -911,7 +902,7 @@
 					dropdown.addEventListener('click', (event) => {
 						const item = event.target.closest('.search_result_item');
 						if (item && !item.classList.contains('no_results_message')) {
-							const option_found = all_options.find(option => option.value === item.dataset.value);
+							const option_found = original_select.querySelector(`option[value="${item.dataset.value}"]`);
 							if (option_found) select_item(option_found);
 						}
 					});
