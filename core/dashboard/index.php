@@ -649,6 +649,9 @@ window.addEventListener('resize', update_parent_height);
 
 <?php
 
+// Define the global variables
+	global $widget_chart_type;
+
 //include the widgets
 	echo "<div class='widgets' id='widgets' style='padding: 0 5px;'>\n";
 	$x = 0;
