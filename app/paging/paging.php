@@ -119,7 +119,8 @@
 	$sql .= "where true ";
 	if (!empty($search)) {
 		$sql .= "and ( ";
-		$sql .= "	lower(paging_extension) like :search ";
+		$sql .= "	lower(paging_name) like :search ";
+		$sql .= "	or lower(paging_extension) like :search ";
 		$sql .= "	or lower(paging_pin_number) like :search ";
 		$sql .= "	or lower(paging_caller_id_name) like :search ";
 		$sql .= "	or lower(paging_caller_id_number) like :search ";
@@ -155,7 +156,8 @@
 	$sql .= "from v_paging ";
 	if (!empty($search)) {
 		$sql .= "where ( ";
-		$sql .= "	lower(paging_extension) like :search ";
+		$sql .= "	lower(paging_name) like :search ";
+		$sql .= "	or lower(paging_extension) like :search ";
 		$sql .= "	or lower(paging_pin_number) like :search ";
 		$sql .= "	or lower(paging_caller_id_name) like :search ";
 		$sql .= "	or lower(paging_caller_id_number) like :search ";
