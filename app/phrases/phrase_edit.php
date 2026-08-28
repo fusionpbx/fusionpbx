@@ -417,6 +417,10 @@
 		echo "		action_to_input();\n";
 		echo "	}\n";
 	}
+	echo "	let searchable_select = document.querySelector('#phrase_detail_data_search > input');\n";
+	echo "	if (searchable_select) {\n";
+	echo "		searchable_select.value = '';\n";
+	echo "	}\n";
 	echo "}\n";
 
 	echo "function clear_action_options() {\n";
@@ -452,6 +456,10 @@
 		echo "		document.getElementById('phrase_detail_data_switch').style.display='';\n";
 		echo "	}\n";
 		echo "	else {\n";
+		echo "		const searchable_select = document.getElementById('phrase_detail_data_search');\n";
+		echo "		if (searchable_select) {\n";
+		echo "			searchable_select.style.display='none';\n";
+		echo "		}\n";
 		echo "		tb.focus();\n";
 		echo "	}\n";
 		echo "}\n";
@@ -590,7 +598,7 @@
 	echo "		</select>\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' style='border-bottom: none;' align='left' nowrap='nowrap'>\n";
-	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld searchable_select' style='width: 300px; min-width: 300px; max-width: 300px;' ".((permission_exists("phrase_execute")) ? "onchange='action_to_input();'" : null)."></select>";
+	echo "		<select name='phrase_detail_data' id='phrase_detail_data' class='formfld searchable_select' style='width: 300px; min-width: 300px; max-width: 300px;' ".((permission_exists("phrase_execute")) ? "onchange=\"if (!this.classList.contains('searchable_select')) { action_to_input(); }\"" : null)."></select>";
 	if (permission_exists("phrase_execute")) {
 		echo "	<input id='phrase_detail_data_switch' type='button' class='btn' style='margin-left: 4px; display: none;' value='&#9665;' onclick=\"action_to_select(); load_action_options(document.getElementById('phrase_detail_function').selectedIndex);\">\n";
 	}
