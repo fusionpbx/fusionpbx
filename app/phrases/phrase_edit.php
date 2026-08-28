@@ -417,7 +417,7 @@
 		echo "		action_to_input();\n";
 		echo "	}\n";
 	}
-	echo "	let searchable_select = document.querySelector('#phrase_detail_data_search > input');\n";
+	echo "	const searchable_select = document.querySelector('#phrase_detail_data_search > input');\n";
 	echo "	if (searchable_select) {\n";
 	echo "		searchable_select.value = '';\n";
 	echo "	}\n";
