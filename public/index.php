@@ -166,7 +166,7 @@ class router {
 		$asset_extensions = ['css', 'js', 'json', 'txt', 'csv', 'pdf', 'xml',
 			'svg', 'png', 'jpg', 'jpeg', 'gif', 'webp', 'ico',
 			'woff', 'woff2', 'ttf', 'otf', 'eot',
-			'htm', 'html', 'mp4', 'webm', 'ogg'];
+			'htm', 'html', 'mp4', 'webm', 'ogg', 'map'];
 		$asset_file_ext = strtolower(pathinfo(ltrim($script_name, '/'), PATHINFO_EXTENSION));
 		if (empty($app_name)) {
 		    // Fallback for missing app_name
