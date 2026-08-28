@@ -425,6 +425,7 @@
 		}
 	}
 
+	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -763,6 +764,7 @@
 	echo "</tr>\n";
 
 	echo "</table>";
+	echo "</div>";
 	echo "<br /><br />";
 
 	if (!empty($dialplan_uuid)) {
