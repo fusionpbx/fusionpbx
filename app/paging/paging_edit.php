@@ -1,9 +1,5 @@
 <?php
 /*
- * Contributor(s):
- * denisent dev team
- */
-/*
 	FusionPBX
 	Version: MPL 1.1
 
@@ -23,6 +19,9 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Portions created by the Initial Developer are Copyright (C) 2026
 	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	denisent dev team
 */
 
 //includes
@@ -40,7 +39,6 @@
 	$text = $language->get();
 
 //set variables
-	$database = new database;
 	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid']]);
 	$domain_uuid = $_SESSION['domain_uuid'];
 	$domain_name = $_SESSION['domain_name'] ?? $_SESSION['domain']['name'] ?? '';
@@ -57,10 +55,8 @@
 	$button_advanced = $text['button-advanced'];
 
 //get the defaults
-	$paging_group_enabled = 'true';
 	$paging_group_extension = '';
 	$paging_group_name = '';
-	$paging_group_description = '';
 	$paging_group_cid_name = '';
 	$paging_group_cid_number = '';
 	$paging_group_type = 'page';
@@ -74,8 +70,6 @@
 	$paging_group_registered_only = 'true';
 	$paging_group_include_originator = 'false';
 	$paging_group_auto_answer = 'default';
-	$paging_group_join_tone = 'false';
-	$paging_group_leave_tone = 'false';
 	$paging_group_waiver_enabled = 'false';
 	$paging_group_waiver_accept_user = null;
 	$paging_group_waiver_accept_date = null;
@@ -83,6 +77,8 @@
 	$paging_group_waiver_remove_date = null;
 	$paging_group_destinations = [];
 	$show_destination_delete = false;
+	$paging_group_enabled = 'true';
+	$paging_group_description = '';
 
 //save the data
 	if (is_array($_POST) && @sizeof($_POST) != 0) {
@@ -100,8 +96,6 @@
 			$dialplan_uuid = $_POST['dialplan_uuid'] ?? '';
 			$paging_group_extension = trim($_POST['paging_group_extension'] ?? '');
 			$paging_group_name = trim($_POST['paging_group_name'] ?? '');
-			$paging_group_description = $_POST['paging_group_description'] ?? '';
-			$paging_group_enabled = $_POST['paging_group_enabled'] ?? 'false';
 			$paging_group_cid_name = trim($_POST['paging_group_cid_name'] ?? '');
 			$paging_group_cid_number = trim($_POST['paging_group_cid_number'] ?? '');
 			$paging_group_type = $_POST['paging_group_type'] ?? 'page';
@@ -115,11 +109,11 @@
 			$paging_group_registered_only = 'true';
 			$paging_group_include_originator = 'false';
 			$paging_group_auto_answer = $_POST['paging_group_auto_answer'] ?? 'default';
-			$paging_group_join_tone = $_POST['paging_group_join_tone'] ?? 'false';
-			$paging_group_leave_tone = $_POST['paging_group_leave_tone'] ?? 'false';
 			$paging_group_waiver_enabled_posted = $_POST['paging_group_waiver_enabled'] ?? 'false';
 			$paging_group_destinations = $_POST['paging_group_destinations'] ?? [];
 			$paging_group_destinations_delete = $_POST['paging_group_destinations_delete'] ?? [];
+			$paging_group_enabled = $_POST['paging_group_enabled'] ?? 'false';
+			$paging_group_description = $_POST['paging_group_description'] ?? '';
 
 		//normalize posted values
 			if (!in_array($paging_group_type, ['page', 'intercom'])) {
@@ -286,6 +280,7 @@
 				foreach ($paging_group_destinations as $destination) {
 					$destination_number = trim($destination['destination_number'] ?? '');
 					$destination_enabled = $destination['destination_enabled'] ?? 'false';
+					$destination_description = trim($destination['destination_description'] ?? '');
 					if ($destination_number != '' && ($destination_enabled === true || $destination_enabled == 'true' || $destination_enabled == 't' || $destination_enabled == '1')) {
 						$paging_member_numbers[] = $destination_number;
 					}
@@ -300,8 +295,6 @@
 			$array['paging_groups'][0]['dialplan_uuid'] = $dialplan_uuid;
 			$array['paging_groups'][0]['paging_group_extension'] = $paging_group_extension;
 			$array['paging_groups'][0]['paging_group_name'] = $paging_group_name;
-			$array['paging_groups'][0]['paging_group_description'] = $paging_group_description;
-			$array['paging_groups'][0]['paging_group_enabled'] = $paging_group_enabled;
 			$array['paging_groups'][0]['paging_group_cid_name'] = $paging_group_cid_name;
 			$array['paging_groups'][0]['paging_group_cid_number'] = $paging_group_cid_number;
 			$array['paging_groups'][0]['paging_group_type'] = $paging_group_type;
@@ -315,8 +308,6 @@
 			$array['paging_groups'][0]['paging_group_registered_only'] = $paging_group_registered_only;
 			$array['paging_groups'][0]['paging_group_include_originator'] = $paging_group_include_originator;
 			$array['paging_groups'][0]['paging_group_auto_answer'] = $paging_group_auto_answer;
-			$array['paging_groups'][0]['paging_group_join_tone'] = $paging_group_join_tone;
-			$array['paging_groups'][0]['paging_group_leave_tone'] = $paging_group_leave_tone;
 			$array['paging_groups'][0]['paging_group_waiver_enabled'] = $paging_group_waiver_enabled;
 			$waiver_accept_user = $existing_waiver_accept_user;
 			$waiver_accept_date = $existing_waiver_accept_date;
@@ -338,10 +329,8 @@
 			$array['paging_groups'][0]['paging_group_waiver_accept_date'] = $waiver_accept_date;
 			$array['paging_groups'][0]['paging_group_waiver_remove_user'] = $waiver_remove_user;
 			$array['paging_groups'][0]['paging_group_waiver_remove_date'] = $waiver_remove_date;
-			if ($action == 'add') {
-				$array['paging_groups'][0]['insert_date'] = date('Y-m-d H:i:s');
-				$array['paging_groups'][0]['insert_user'] = $_SESSION['user_uuid'];
-			}
+			$array['paging_groups'][0]['paging_group_enabled'] = $paging_group_enabled;
+			$array['paging_groups'][0]['paging_group_description'] = $paging_group_description;
 
 		//build the XML dialplan
 			$dialplan_xml = "<extension name=\"".xml::sanitize($paging_group_name)."\" continue=\"false\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
@@ -405,54 +394,30 @@
 			$array['dialplans'][0]['dialplan_continue'] = 'false';
 			$array['dialplans'][0]['dialplan_xml'] = $dialplan_xml;
 			$array['dialplans'][0]['dialplan_order'] = '101';
-			$array['dialplans'][0]['dialplan_enabled'] = ($paging_group_enabled === true || $paging_group_enabled == 'true' || $paging_group_enabled == 't' || $paging_group_enabled == '1') ? 'true' : 'false';
+			$array['dialplans'][0]['dialplan_enabled'] = $paging_group_enabled;
 			$array['dialplans'][0]['dialplan_description'] = $paging_group_description;
 			$array['dialplans'][0]['app_uuid'] = 'bae044dd-e773-471c-a890-5220ebca3bc9';
 
 
 			$p = permissions::new();
-			$p->add('paging_group_add', 'temp');
-			$p->add('paging_group_edit', 'temp');
-			$p->add('paging_group_destination_add', 'temp');
-			$p->add('paging_group_destination_edit', 'temp');
-			$p->add('paging_group_destination_delete', 'temp');
 			$p->add('dialplan_add', 'temp');
 			$p->add('dialplan_edit', 'temp');
 
 		//save to the data
 			$database->save($array);
 			$message = $database->message;
-
-		//sync the dialplan enabled flag after save
-			//Fusion's database save class creates/updates the dialplan row, but on this app the enabled
-			//flag can remain unchanged on existing dialplans. Keep it explicitly tied to the paging group.
-			$sql = "update v_dialplans set ";
-			$sql .= "dialplan_enabled = :dialplan_enabled ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$sql .= "and dialplan_uuid = :dialplan_uuid ";
-			$parameters = [];
-			$parameters['dialplan_enabled'] = ($paging_group_enabled === true || $paging_group_enabled == 'true' || $paging_group_enabled == 't' || $paging_group_enabled == '1') ? 'true' : 'false';
-			$parameters['domain_uuid'] = $domain_uuid;
-			$parameters['dialplan_uuid'] = $dialplan_uuid;
-			$database->execute($sql, $parameters);
-			unset($sql, $parameters);
-
 			unset($array);
 
 		//delete checked destinations
 			if (is_array($paging_group_destinations_delete) && @sizeof($paging_group_destinations_delete) != 0) {
 				foreach ($paging_group_destinations_delete as $delete_row) {
 					if (!empty($delete_row['checked']) && !empty($delete_row['uuid']) && is_uuid($delete_row['uuid'])) {
-						$sql = "delete from v_paging_group_destinations ";
-						$sql .= "where domain_uuid = :domain_uuid ";
-						$sql .= "and paging_group_uuid = :paging_group_uuid ";
-						$sql .= "and paging_group_destination_uuid = :paging_group_destination_uuid ";
-						$parameters['domain_uuid'] = $domain_uuid;
-						$parameters['paging_group_uuid'] = $paging_group_uuid;
-						$parameters['paging_group_destination_uuid'] = $delete_row['uuid'];
-						$database->execute($sql, $parameters);
-						unset($sql, $parameters);
+						$array['paging_group_destinations'][]['paging_group_destination_uuid'] = $delete_row['uuid'];
 					}
+				}
+				if (!empty($array)) {
+					$database->delete($array);
+					unset($array);
 				}
 			}
 
@@ -463,53 +428,29 @@
 					$paging_group_destination_uuid = $destination['paging_group_destination_uuid'] ?? '';
 					$destination_number = trim($destination['destination_number'] ?? '');
 					$destination_enabled = $destination['destination_enabled'] ?? 'false';
+					$destination_description = trim($destination['destination_description'] ?? '');
 
 					if (empty($destination_number)) {
 						continue;
 					}
 
 					$order += 10;
-
-					if (is_uuid($paging_group_destination_uuid)) {
-						$sql = "update v_paging_group_destinations set ";
-						$sql .= "destination_number = :destination_number, ";
-						$sql .= "destination_order = :destination_order, ";
-						$sql .= "destination_enabled = :destination_enabled, ";
-						$sql .= "update_date = :update_date, ";
-						$sql .= "update_user = :update_user ";
-						$sql .= "where domain_uuid = :domain_uuid ";
-						$sql .= "and paging_group_uuid = :paging_group_uuid ";
-						$sql .= "and paging_group_destination_uuid = :paging_group_destination_uuid ";
-						$parameters['paging_group_destination_uuid'] = $paging_group_destination_uuid;
-					}
-					else {
-						$sql = "insert into v_paging_group_destinations ";
-						$sql .= "(paging_group_destination_uuid, paging_group_uuid, domain_uuid, destination_number, destination_order, destination_enabled, insert_date, insert_user, update_date, update_user) ";
-						$sql .= "values ";
-						$sql .= "(:paging_group_destination_uuid, :paging_group_uuid, :domain_uuid, :destination_number, :destination_order, :destination_enabled, :insert_date, :insert_user, :update_date, :update_user) ";
-						$parameters['paging_group_destination_uuid'] = uuid();
-						$parameters['insert_date'] = date('Y-m-d H:i:s');
-						$parameters['insert_user'] = $_SESSION['user_uuid'];
-					}
-
-					$parameters['paging_group_uuid'] = $paging_group_uuid;
-					$parameters['domain_uuid'] = $domain_uuid;
-					$parameters['destination_number'] = $destination_number;
-					$parameters['destination_order'] = $order;
-					$parameters['destination_enabled'] = ($destination_enabled == 'true' ? 'true' : 'false');
-					$parameters['update_date'] = date('Y-m-d H:i:s');
-					$parameters['update_user'] = $_SESSION['user_uuid'];
-					$database->execute($sql, $parameters);
-					unset($sql, $parameters);
+					$x = count($array['paging_group_destinations'] ?? []);
+					$array['paging_group_destinations'][$x]['paging_group_destination_uuid'] = is_uuid($paging_group_destination_uuid) ? $paging_group_destination_uuid : uuid();
+					$array['paging_group_destinations'][$x]['paging_group_uuid'] = $paging_group_uuid;
+					$array['paging_group_destinations'][$x]['domain_uuid'] = $domain_uuid;
+					$array['paging_group_destinations'][$x]['destination_number'] = $destination_number;
+					$array['paging_group_destinations'][$x]['destination_order'] = $order;
+					$array['paging_group_destinations'][$x]['destination_enabled'] = $destination_enabled;
+					$array['paging_group_destinations'][$x]['destination_description'] = $destination_description;
+				}
+				if (!empty($array)) {
+					$database->save($array);
+					unset($array);
 				}
 			}
 
 		//remove the temporary permissions
-			$p->delete('paging_group_add', 'temp');
-			$p->delete('paging_group_edit', 'temp');
-			$p->delete('paging_group_destination_add', 'temp');
-			$p->delete('paging_group_destination_edit', 'temp');
-			$p->delete('paging_group_destination_delete', 'temp');
 			$p->delete('dialplan_add', 'temp');
 			$p->delete('dialplan_edit', 'temp');
 
@@ -537,8 +478,6 @@
 		if (is_array($row) && @sizeof($row) != 0) {
 			$paging_group_extension = $row['paging_group_extension'];
 			$paging_group_name = $row['paging_group_name'];
-			$paging_group_description = $row['paging_group_description'];
-			$paging_group_enabled = $row['paging_group_enabled'];
 			$dialplan_uuid = $row['dialplan_uuid'] ?? '';
 			$paging_group_cid_name = $row['paging_group_cid_name'] ?? '';
 			$paging_group_cid_number = $row['paging_group_cid_number'] ?? '';
@@ -553,13 +492,13 @@
 			$paging_group_registered_only = $row['paging_group_registered_only'] ?? 'true';
 			$paging_group_include_originator = $row['paging_group_include_originator'] ?? 'false';
 			$paging_group_auto_answer = $row['paging_group_auto_answer'] ?? 'default';
-			$paging_group_join_tone = $row['paging_group_join_tone'] ?? 'false';
-			$paging_group_leave_tone = $row['paging_group_leave_tone'] ?? 'false';
 			$paging_group_waiver_enabled = $row['paging_group_waiver_enabled'] ?? 'false';
 			$paging_group_waiver_accept_user = $row['paging_group_waiver_accept_user'] ?? null;
 			$paging_group_waiver_accept_date = $row['paging_group_waiver_accept_date'] ?? null;
 			$paging_group_waiver_remove_user = $row['paging_group_waiver_remove_user'] ?? null;
 			$paging_group_waiver_remove_date = $row['paging_group_waiver_remove_date'] ?? null;
+			$paging_group_enabled = $row['paging_group_enabled'];
+			$paging_group_description = $row['paging_group_description'];
 		}
 		else {
 			message::add($text['message-invalid_uuid'], 'negative');
@@ -596,6 +535,7 @@
 			'destination_number' => '',
 			'destination_order' => '',
 			'destination_enabled' => 'false',
+			'destination_description' => '',
 		];
 	}
 
@@ -810,7 +750,8 @@
 	echo "\t\t<table border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "\t\t\t<tr>\n";
 	echo "\t\t\t\t<td class='vtable'>".$text['label-member_extension']."</td>\n";
-		echo "\t\t\t\t<td class='vtable'>".$text['label-enabled']."</td>\n";
+	echo "\t\t\t\t<td class='vtable'>".$text['label-enabled']."</td>\n";
+	echo "\t\t\t\t<td class='vtable'>".$text['label-description']."</td>\n";
 	if ($show_destination_delete && permission_exists('paging_group_destination_delete')) {
 		echo "\t\t\t\t<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_destinations', 'delete_toggle_destinations');\" onmouseout=\"swap_display('delete_label_destinations', 'delete_toggle_destinations');\">\n";
 		echo "\t\t\t\t\t<span id='delete_label_destinations'>".$text['label-delete']."</span>\n";
@@ -822,6 +763,7 @@
 	$x = 0;
 	foreach ($paging_group_destinations as $row) {
 		$row['destination_number'] = $row['destination_number'] ?? '';
+		$row['destination_description'] = $row['destination_description'] ?? '';
 		$row['destination_enabled'] = ($row['destination_enabled'] === true || $row['destination_enabled'] === 't' || $row['destination_enabled'] === 'true' || $row['destination_enabled'] === '1') ? true : false;
 
 		if (!empty($row['paging_group_destination_uuid']) && is_uuid($row['paging_group_destination_uuid'])) {
@@ -849,6 +791,9 @@
 		echo "\t\t\t\t\t\t<option value='false' ".($row['destination_enabled'] == false ? "selected='selected'" : null).">".$label_false."</option>\n";
 		echo "\t\t\t\t\t</select>\n";
 		if ($input_toggle_style_switch) { echo "\t\t\t\t\t<span class='slider'></span></span>\n"; }
+		echo "\t\t\t\t</td>\n";
+		echo "\t\t\t\t<td class='formfld'>\n";
+		echo "\t\t\t\t\t<input type='text' name='paging_group_destinations[".$x."][destination_description]' class='formfld' value='".escape($row['destination_description'])."'>\n";
 		echo "\t\t\t\t</td>\n";
 		if ($show_destination_delete && permission_exists('paging_group_destination_delete')) {
 			if (!empty($row['paging_group_destination_uuid']) && is_uuid($row['paging_group_destination_uuid'])) {
@@ -1027,14 +972,6 @@
 	echo "	</td>";
 	echo "</tr>";
 	}
-	echo "<tr class='advanced-row' style='display: none;'>\n";
-	echo "\t<td class='vncell' valign='top'>".$text['label-join_tone']."</td>\n";
-	echo "\t<td class='vtable'><select class='formfld' name='paging_group_join_tone'><option value='true'".(($paging_group_join_tone === true || $paging_group_join_tone === 't' || $paging_group_join_tone === 'true' || $paging_group_join_tone === '1') ? " selected='selected'" : null).">".$label_true."</option><option value='false'".(($paging_group_join_tone === false || $paging_group_join_tone === 'f' || $paging_group_join_tone === 'false' || $paging_group_join_tone === '0') ? " selected='selected'" : null).">".$label_false."</option></select><br />".$text['description-join_tone']."</td>\n";
-	echo "</tr>\n";
-	echo "<tr class='advanced-row' style='display: none;'>\n";
-	echo "\t<td class='vncell' valign='top'>".$text['label-leave_tone']."</td>\n";
-	echo "\t<td class='vtable'><select class='formfld' name='paging_group_leave_tone'><option value='true'".(($paging_group_leave_tone === true || $paging_group_leave_tone === 't' || $paging_group_leave_tone === 'true' || $paging_group_leave_tone === '1') ? " selected='selected'" : null).">".$label_true."</option><option value='false'".(($paging_group_leave_tone === false || $paging_group_leave_tone === 'f' || $paging_group_leave_tone === 'false' || $paging_group_leave_tone === '0') ? " selected='selected'" : null).">".$label_false."</option></select><br />".$text['description-leave_tone']."</td>\n";
-	echo "</tr>\n";
 	echo "<tr class='advanced-row' style='display: none;'>";
 	echo "	<td class='vncell' valign='top'>".$text['label-two_way_waiver']."</td>";
 	echo "	<td class='vtable'>";

@@ -1,9 +1,5 @@
 <?php
 /*
- * Contributor(s):
- * denisent dev team
- */
-/*
 	FusionPBX
 	Version: MPL 1.1
 
@@ -23,6 +19,9 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Portions created by the Initial Developer are Copyright (C) 2026
 	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	denisent dev team
 */
 
 //includes
@@ -64,8 +63,7 @@
 	}
 	$query_string = http_build_query($param);
 
-//set database and domain variables
-	$database = new database;
+//set domain variables
 	$domain_uuid = $_SESSION['domain_uuid'];
 	$domain_name = $_SESSION['domain_name'] ?? $_SESSION['context'] ?? '';
 
@@ -279,7 +277,7 @@
 							$array['dialplans'][0]['dialplan_continue'] = 'false';
 							$array['dialplans'][0]['dialplan_xml'] = $dialplan_xml;
 							$array['dialplans'][0]['dialplan_order'] = '101';
-							$array['dialplans'][0]['dialplan_enabled'] = paging_bool($source['paging_group_enabled'] ?? 'true') ? 'true' : 'false';
+							$array['dialplans'][0]['dialplan_enabled'] = $source['paging_group_enabled'] ?? 'true';
 							$array['dialplans'][0]['dialplan_description'] = $source['paging_group_description'] ?? null;
 							$array['dialplans'][0]['app_uuid'] = 'bae044dd-e773-471c-a890-5220ebca3bc9';
 							unset($copied_group, $paging_destinations, $dialplan_xml, $paging_member_numbers);
@@ -288,17 +286,9 @@
 							$database->app_name = 'paging';
 							$database->app_uuid = 'bae044dd-e773-471c-a890-5220ebca3bc9';
 							$p = permissions::new();
-							$p->add('paging_group_add', 'temp');
-							$p->add('paging_group_edit', 'temp');
-							$p->add('paging_group_destination_add', 'temp');
-							$p->add('paging_group_destination_edit', 'temp');
 							$p->add('dialplan_add', 'temp');
 							$p->add('dialplan_edit', 'temp');
 							$database->save($array);
-							$p->delete('paging_group_add', 'temp');
-							$p->delete('paging_group_edit', 'temp');
-							$p->delete('paging_group_destination_add', 'temp');
-							$p->delete('paging_group_destination_edit', 'temp');
 							$p->delete('dialplan_add', 'temp');
 							$p->delete('dialplan_edit', 'temp');
 							unset($array);
@@ -312,54 +302,31 @@
 		//toggle
 			if ($action == 'toggle' && permission_exists('paging_group_edit')) {
 				foreach ($paging_groups as $row) {
-					if (empty($row['checked']) || empty($row['paging_group_uuid']) || !is_uuid($row['paging_group_uuid'])) {
+					if (empty($row['checked']) || !is_uuid($row['paging_group_uuid'] ?? '')) {
 						continue;
 					}
-
-					$sql = "select paging_group_enabled from v_paging_groups ";
-					$sql .= "where domain_uuid = :domain_uuid ";
-					$sql .= "and paging_group_uuid = :paging_group_uuid ";
+					$sql = "select paging_group_enabled, dialplan_uuid from v_paging_groups ";
+					$sql .= "where domain_uuid = :domain_uuid and paging_group_uuid = :paging_group_uuid ";
 					$parameters['domain_uuid'] = $domain_uuid;
 					$parameters['paging_group_uuid'] = $row['paging_group_uuid'];
-					$current_enabled = $database->select($sql, $parameters, 'column');
+					$current = $database->select($sql, $parameters, 'row');
 					unset($sql, $parameters);
-
-					$enabled = ($current_enabled === true || $current_enabled === 't' || $current_enabled === 'true' || $current_enabled === '1') ? 'false' : 'true';
-
-					$sql = "update v_paging_groups ";
-					$sql .= "set paging_group_enabled = :paging_group_enabled, ";
-					$sql .= "update_date = :update_date, ";
-					$sql .= "update_user = :update_user ";
-					$sql .= "where domain_uuid = :domain_uuid ";
-					$sql .= "and paging_group_uuid = :paging_group_uuid ";
-					$parameters['paging_group_enabled'] = $enabled;
-					$parameters['update_date'] = date('Y-m-d H:i:s');
-					$parameters['update_user'] = $_SESSION['user_uuid'];
-					$parameters['domain_uuid'] = $domain_uuid;
-					$parameters['paging_group_uuid'] = $row['paging_group_uuid'];
-					$database->execute($sql, $parameters);
-					unset($sql, $parameters);
-
-					//sync the linked dialplan enabled state
-					$sql = "update v_dialplans ";
-					$sql .= "set dialplan_enabled = :dialplan_enabled, ";
-					$sql .= "update_date = :update_date, ";
-					$sql .= "update_user = :update_user ";
-					$sql .= "where domain_uuid = :domain_uuid ";
-					$sql .= "and dialplan_uuid = (";
-					$sql .= "	select dialplan_uuid from v_paging_groups ";
-					$sql .= "	where domain_uuid = :domain_uuid ";
-					$sql .= "	and paging_group_uuid = :paging_group_uuid";
-					$sql .= ") ";
-					$parameters['dialplan_enabled'] = $enabled;
-					$parameters['update_date'] = date('Y-m-d H:i:s');
-					$parameters['update_user'] = $_SESSION['user_uuid'];
-					$parameters['domain_uuid'] = $domain_uuid;
-					$parameters['paging_group_uuid'] = $row['paging_group_uuid'];
-					$database->execute($sql, $parameters);
-					unset($sql, $parameters);
+					$enabled = paging_bool($current['paging_group_enabled'] ?? 'false') ? 'false' : 'true';
+					$array['paging_groups'][0]['paging_group_uuid'] = $row['paging_group_uuid'];
+					$array['paging_groups'][0]['paging_group_enabled'] = $enabled;
+					if (is_uuid($current['dialplan_uuid'] ?? '')) {
+						$array['dialplans'][0]['dialplan_uuid'] = $current['dialplan_uuid'];
+						$array['dialplans'][0]['dialplan_enabled'] = $enabled;
+						$p = permissions::new();
+						$p->add('dialplan_edit', 'temp');
+					}
+					$database->save($array);
+					if (isset($p)) {
+						$p->delete('dialplan_edit', 'temp');
+						unset($p);
+					}
+					unset($array, $current);
 				}
-
 				$_SESSION['reload_xml'] = true;
 				message::add($text['message-update']);
 			}
@@ -367,53 +334,31 @@
 		//delete
 			if ($action == 'delete' && permission_exists('paging_group_delete')) {
 				foreach ($paging_groups as $row) {
-					if (empty($row['checked']) || empty($row['paging_group_uuid']) || !is_uuid($row['paging_group_uuid'])) {
+					if (empty($row['checked']) || !is_uuid($row['paging_group_uuid'] ?? '')) {
 						continue;
 					}
-
-					//get the linked dialplan uuid before deleting the paging group
-						$sql = "select dialplan_uuid from v_paging_groups ";
-						$sql .= "where domain_uuid = :domain_uuid ";
-						$sql .= "and paging_group_uuid = :paging_group_uuid ";
-						$parameters['domain_uuid'] = $domain_uuid;
-						$parameters['paging_group_uuid'] = $row['paging_group_uuid'];
-						$dialplan_uuid = $database->select($sql, $parameters, 'column');
-						unset($sql, $parameters);
-
-					//delete child destinations first
-						$sql = "delete from v_paging_group_destinations ";
-						$sql .= "where domain_uuid = :domain_uuid ";
-						$sql .= "and paging_group_uuid = :paging_group_uuid ";
-						$parameters['domain_uuid'] = $domain_uuid;
-						$parameters['paging_group_uuid'] = $row['paging_group_uuid'];
-						$database->execute($sql, $parameters);
-						unset($sql, $parameters);
-
-					//delete paging group
-						$sql = "delete from v_paging_groups ";
-						$sql .= "where domain_uuid = :domain_uuid ";
-						$sql .= "and paging_group_uuid = :paging_group_uuid ";
-						$parameters['domain_uuid'] = $domain_uuid;
-						$parameters['paging_group_uuid'] = $row['paging_group_uuid'];
-						$database->execute($sql, $parameters);
-						unset($sql, $parameters);
-
-					//delete linked dialplan
-						if (!empty($dialplan_uuid) && is_uuid($dialplan_uuid)) {
-							$sql = "delete from v_dialplans ";
-							$sql .= "where domain_uuid = :domain_uuid ";
-							$sql .= "and dialplan_uuid = :dialplan_uuid ";
-							$parameters['domain_uuid'] = $domain_uuid;
-							$parameters['dialplan_uuid'] = $dialplan_uuid;
-							$database->execute($sql, $parameters);
-							unset($sql, $parameters);
-						}
-						unset($dialplan_uuid);
+					$sql = "select dialplan_uuid from v_paging_groups ";
+					$sql .= "where domain_uuid = :domain_uuid and paging_group_uuid = :paging_group_uuid ";
+					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['paging_group_uuid'] = $row['paging_group_uuid'];
+					$dialplan_uuid = $database->select($sql, $parameters, 'column');
+					unset($sql, $parameters);
+					$array['paging_groups'][]['paging_group_uuid'] = $row['paging_group_uuid'];
+					if (is_uuid($dialplan_uuid)) {
+						$array['dialplans'][]['dialplan_uuid'] = $dialplan_uuid;
+					}
 				}
-
+				if (!empty($array)) {
+					$p = permissions::new();
+					$p->add('dialplan_delete', 'temp');
+					$database->delete($array);
+					$p->delete('dialplan_delete', 'temp');
+					unset($array);
+				}
 				$_SESSION['reload_xml'] = true;
 				message::add($text['message-delete']);
 			}
+
 
 		header('Location: paging.php'.($query_string ? '?'.$query_string : ''));
 		exit;
