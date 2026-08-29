@@ -1,8 +1,4 @@
 <?php
-/*
- * Contributor(s):
- * denisent dev team
- */
 
     $y=0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Paging and Intercom";
