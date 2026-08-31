@@ -2974,6 +2974,7 @@ else { //default: white
 			echo "box-shadow: none;\n";
 		}
 		?>
+		position: initial;
 		}
 
 		div.card:has(.datetimepicker),
