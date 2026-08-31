@@ -1,6 +1,8 @@
 .project
 .vscode
 /phpinfo.php
+/AGENTS.md
+/CLAUDE.md
 resources/config.php
 secure/mailto.bat
 secure/*.db
