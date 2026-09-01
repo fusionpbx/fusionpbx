@@ -2559,7 +2559,6 @@ class database {
 									// validate changes
 									$data_modified = false;
 									if (is_array($parent_field_array)) {
-										$i = 0;
 										foreach ($parent_field_array as $array_key => $array_value) {
 											// skip child array
 											if (is_array($array_value)) {
@@ -2567,7 +2566,7 @@ class database {
 											}
 
 											// get the variable type of the value
-											$database_field_type = gettype($parent_results[$i][$array_key]);
+											$database_field_type = gettype($parent_results[0][$array_key]);
 											$user_field_type = gettype($array_value);
 
 											// trim the string and update the value
@@ -2607,15 +2606,12 @@ class database {
 											}
 
 											// verify if the data in the database has been modified
-											if ($parent_results[$i][$array_key] !== $array_value) {
+											if ($parent_results[0][$array_key] !== $array_value) {
 												// not matched
-												// echo "$parent_name.$array_key ".($parent_results[$i][$array_key])." != ".$array_value."\n\n";
+												// echo "$parent_name.$array_key ".($parent_results[0][$array_key])." != ".$array_value."\n\n";
 												$data_modified = true;
 												break;
 											}
-
-											// increment the id
-											$i++;
 										}
 									}
 
