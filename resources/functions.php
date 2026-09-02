@@ -138,28 +138,57 @@ if (!function_exists('check_cidr')) {
 	 * @return bool return true if the IP address is in CIDR or if it is empty
 	 */
 	function check_cidr($cidr, string $ip_address): bool {
+	    // No CIDR restriction
+	    if ($cidr === null || $cidr === '' || $cidr === []) {
+	        return true;
+	    }
 
-		// No CIDR restriction
-		if (empty($cidr)) {
-			return true;
-		}
+	    // Handle an array of CIDR ranges
+	    if (is_array($cidr)) {
+	        foreach ($cidr as $range) {
+	            if (check_cidr($range, $ip_address)) {
+	                return true;
+	            }
+	        }
+	        return false;
+	    }
 
-		// Check to see if the user's remote address is in the CIDR array
-		if (is_array($cidr)) {
-		    // CIDR is an array
-			foreach ($cidr as $value) {
-				if (check_cidr($value, $ip_address)) {
-					return true;
-				}
-			}
-		} else {
-			// CIDR is a string
-			[$subnet, $mask] = explode('/', $cidr);
-			return (ip2long($ip_address) & ~((1 << (32 - $mask)) - 1)) == ip2long($subnet);
-		}
+	    // Validate the client IP
+	    $ip = ip2long($ip_address);
+	    if ($ip === false) {
+	        return false;
+	    }
 
-		// Value not found in CIDR
-		return false;
+	    // Parse "subnet/mask"
+	    $parts  = explode('/', $cidr, 2);
+	    $subnet = $parts[0];
+	    $mask   = $parts[1] ?? '32';
+
+	    // Strict validation: digits only, no signs, no floats, no sci-notation
+	    if (!ctype_digit($mask) || (int) $mask > 32) {
+	        return false;
+	    }
+	    $mask = (int) $mask;
+
+	    $subnet_long = ip2long($subnet);
+	    if ($subnet_long === false) {
+	        return false;
+	    }
+
+	    // /0 matches every IPv4 address
+	    if ($mask === 0) {
+	        return true;
+	    }
+
+	    // /32 → exact match (avoids bit-shift edge case entirely)
+	    if ($mask === 32) {
+	        return $ip === $subnet_long;
+	    }
+
+	    // For 1–31: build the netmask and compare the network portions
+	    $netmask = (~((1 << (32 - $mask)) - 1)) & 0xFFFFFFFF;
+
+	    return ($ip & $netmask) === ($subnet_long & $netmask);
 	}
 }
 
