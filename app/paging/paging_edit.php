@@ -19,14 +19,17 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Portions created by the Initial Developer are Copyright (C) 2026
 	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	denisent dev team
 */
 
-//includes files
+//includes
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!(permission_exists('paging_add') || permission_exists('paging_edit'))) {
+	if (!permission_exists('paging_group_add') && !permission_exists('paging_group_edit')) {
 		echo "access denied";
 		exit;
 	}
@@ -35,747 +38,985 @@
 	$language = new text;
 	$text = $language->get();
 
-//connect to the database
-	$database = database::new();
+//set variables
+	$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid']]);
+	$domain_uuid = $_SESSION['domain_uuid'];
+	$domain_name = $_SESSION['domain_name'] ?? $_SESSION['domain']['name'] ?? '';
+	$paging_group_uuid = $_GET['id'] ?? $_POST['paging_group_uuid'] ?? '';
+	$dialplan_uuid = $_POST['dialplan_uuid'] ?? '';
+	$action = empty($paging_group_uuid) ? 'add' : 'update';
+	$input_toggle_style_switch = $settings->get('theme', 'input_toggle_style_switch', false);
 
-//add the settings object
-	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+//labels / fallback text
+	$label_true = $text['option-true'];
+	$label_false = $text['option-false'];
+	$button_back = $text['button-back'];
+	$button_save = $text['button-save'];
+	$button_advanced = $text['button-advanced'];
 
-//set from session variables
-	$button_icon_back = $settings->get('theme', 'button_icon_back', '');
-	$button_icon_copy = $settings->get('theme', 'button_icon_copy', '');
-	$button_icon_delete = $settings->get('theme', 'button_icon_delete', '');
-	$button_icon_save = $settings->get('theme', 'button_icon_save', '');
-	$input_toggle_style = $settings->get('theme', 'input_toggle_style', 'switch round');
+//get the defaults
+	$paging_group_extension = '';
+	$paging_group_name = '';
+	$paging_group_cid_name = '';
+	$paging_group_cid_number = '';
+	$paging_group_type = 'page';
+	$paging_group_pin_number = '';
+	$paging_group_recording_uuid = '';
+	$paging_group_announcement_source = 'none';
+	$paging_group_announcement_sound = '';
+	$paging_group_announcement_recording_uuid = '';
+	$paging_group_timeout = '30';
+	$paging_group_skip_busy = 'true';
+	$paging_group_registered_only = 'true';
+	$paging_group_include_originator = 'false';
+	$paging_group_auto_answer = 'default';
+	$paging_group_waiver_enabled = 'false';
+	$paging_group_waiver_accept_user = null;
+	$paging_group_waiver_accept_date = null;
+	$paging_group_waiver_remove_user = null;
+	$paging_group_waiver_remove_date = null;
+	$paging_group_destinations = [];
+	$show_destination_delete = false;
+	$paging_group_enabled = 'true';
+	$paging_group_description = '';
 
-//action add or update
-	if ((!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) || !empty($_REQUEST["paging_uuid"])) {
-		$action = "update";
-		$paging_uuid = $_REQUEST["id"];
-		if (!empty($_REQUEST["paging_uuid"])) {
-			$paging_uuid = $_REQUEST["paging_uuid"];
-		}
-	}
-	else {
-		$action = "add";
-		$paging_uuid = '';
-	}
+//save the data
+	if (is_array($_POST) && @sizeof($_POST) != 0) {
 
-//set the defaults
-	$paging_name = '';
-	$paging_extension = '';
-	$paging_pin_number = '';
-	$paging_caller_id_name = '';
-	$paging_caller_id_number = '';
-	$paging_sound = '';
-	$paging_delay = '';
-	$paging_mute = 'true';
-	$paging_destination_status = '';
-	$paging_hangup_all = 'true';
-	$paging_schedule_hangup = '';
-	$paging_enabled = 'true';
-	$paging_description = '';
-	$paging_destinations = [];
-	$paging_destination_uuid = '';
-
-//get http post variables and set them to php variables
-	if (!empty($_POST)) {
-		$paging_name = $_POST["paging_name"] ?? null;
-		$paging_extension = $_POST["paging_extension"] ?? null;
-		$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
-		$paging_pin_number = $_POST["paging_pin_number"] ?? null;
-		$paging_destinations = $_POST["paging_destinations"] ?? null;
-		$paging_caller_id_name = $_POST["paging_caller_id_name"] ?? null;
-		$paging_caller_id_number = $_POST["paging_caller_id_number"] ?? null;
-		$paging_sound = $_POST["paging_sound"] ?? null;
-		$paging_delay = $_POST["paging_delay"] ?? null;
-		$paging_mute = $_POST["paging_mute"] ?? null;
-		$paging_destination_status = $_POST["paging_destination_status"] ?? null;
-		$paging_hangup_all = $_POST["paging_hangup_all"] ?? null;
-		$paging_schedule_hangup = $_POST["paging_schedule_hangup"] ?? null;
-		$paging_enabled = $_POST["paging_enabled"] ?? null;
-		$paging_description = $_POST["paging_description"] ?? null;
-		$paging_destinations_delete = $_POST["paging_destinations_delete"] ?? null;
-	}
-
-//process the data and save it to the database
-	if (!empty($_POST) && empty($_POST["persistformvar"])) {
-
-		//validate the token
+		//check the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
+				message::add($text['message-invalid_token'], 'negative');
 				header('Location: paging.php');
 				exit;
 			}
 
-		//process the http post data by submitted action
-			if (!empty($_POST['action']) && strlen($_POST['action']) > 0) {
+		//get posted values
+			$paging_group_uuid = $_POST['paging_group_uuid'] ?? '';
+			$dialplan_uuid = $_POST['dialplan_uuid'] ?? '';
+			$paging_group_extension = trim($_POST['paging_group_extension'] ?? '');
+			$paging_group_name = trim($_POST['paging_group_name'] ?? '');
+			$paging_group_cid_name = trim($_POST['paging_group_cid_name'] ?? '');
+			$paging_group_cid_number = trim($_POST['paging_group_cid_number'] ?? '');
+			$paging_group_type = $_POST['paging_group_type'] ?? 'page';
+			$paging_group_pin_number = trim($_POST['paging_group_pin_number'] ?? '');
+			$paging_group_recording_uuid = $_POST['paging_group_recording_uuid'] ?? '';
+			$paging_group_announcement_source = $_POST['paging_group_announcement_source'] ?? 'none';
+			$paging_group_announcement_sound = trim($_POST['paging_group_announcement_sound'] ?? '');
+			$paging_group_announcement_recording_uuid = $_POST['paging_group_announcement_recording_uuid'] ?? '';
+			$paging_group_timeout = $_POST['paging_group_timeout'] ?? '30';
+			$paging_group_skip_busy = 'true';
+			$paging_group_registered_only = 'true';
+			$paging_group_include_originator = 'false';
+			$paging_group_auto_answer = $_POST['paging_group_auto_answer'] ?? 'default';
+			$paging_group_waiver_enabled_posted = $_POST['paging_group_waiver_enabled'] ?? 'false';
+			$paging_group_destinations = $_POST['paging_group_destinations'] ?? [];
+			$paging_group_destinations_delete = $_POST['paging_group_destinations_delete'] ?? [];
+			$paging_group_enabled = $_POST['paging_group_enabled'] ?? 'false';
+			$paging_group_description = $_POST['paging_group_description'] ?? '';
 
-				//prepare the array
-				$array[0]['checked'] = 'true';
-				$array[0]['uuid'] = $paging_uuid;
-
-				//send the array to the database class
-				switch ($_POST['action']) {
-					case 'copy':
-						if (permission_exists('paging_add')) {
-							$obj = new paging;
-							$obj->copy($array);
-						}
-						break;
-					case 'delete':
-						if (permission_exists('paging_delete')) {
-							$obj = new paging;
-							$obj->delete($array);
-						}
-						break;
-					case 'toggle':
-						if (permission_exists('paging_edit')) {
-							$obj = new paging;
-							$obj->toggle($array);
-						}
-						break;
+		//normalize posted values
+			if (!in_array($paging_group_type, ['page', 'intercom'])) {
+				$paging_group_type = 'page';
+			}
+			if (!in_array($paging_group_auto_answer, ['default', 'yealink', 'disabled'])) {
+				$paging_group_auto_answer = 'default';
+			}
+			if (!is_numeric($paging_group_timeout)) {
+				$paging_group_timeout = '30';
+			}
+			if (!empty($paging_group_recording_uuid) && !is_uuid($paging_group_recording_uuid)) {
+				$paging_group_recording_uuid = null;
+			}
+			if (empty($paging_group_recording_uuid)) {
+				$paging_group_recording_uuid = null;
+			}
+			if (!in_array($paging_group_announcement_source, ['none', 'sound', 'recording'])) {
+				$paging_group_announcement_source = 'none';
+			}
+			if ($paging_group_announcement_source == 'sound') {
+				$paging_group_announcement_recording_uuid = null;
+			}
+			else if ($paging_group_announcement_source == 'recording') {
+				$paging_group_announcement_sound = '';
+				if (!is_uuid($paging_group_announcement_recording_uuid)) {
+					$paging_group_announcement_recording_uuid = null;
 				}
+			}
+			else {
+				$paging_group_announcement_sound = '';
+				$paging_group_announcement_recording_uuid = null;
+			}
 
-				//redirect the user
-				if (in_array($_POST['action'], array('copy', 'delete', 'toggle'))) {
-					header('Location: paging_edit.php?id='.$paging_uuid);
-					exit;
+		//determine add/update after posted uuid is known
+			$action = empty($paging_group_uuid) ? 'add' : 'update';
+
+		//permission check for action
+			if ($action == 'add' && !permission_exists('paging_group_add')) {
+				echo "access denied";
+				exit;
+			}
+			if ($action == 'update' && !permission_exists('paging_group_edit')) {
+				echo "access denied";
+				exit;
+			}
+
+		//validate required fields
+			if (empty($paging_group_extension) || empty($paging_group_name)) {
+				message::add($text['message-required_fields'], 'negative');
+				header('Location: paging_edit.php'.(!empty($paging_group_uuid) ? '?id='.urlencode($paging_group_uuid) : ''));
+				exit;
+			}
+
+		//validate extension format
+			if (!preg_match('/^[0-9*#]+$/', $paging_group_extension)) {
+				message::add($text['message-extension_format'], 'negative');
+				header('Location: paging_edit.php'.(!empty($paging_group_uuid) ? '?id='.urlencode($paging_group_uuid) : ''));
+				exit;
+			}
+
+		//check for duplicate paging group extension in this domain
+			$sql = "select count(*) as count from v_paging_groups ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and paging_group_extension = :paging_group_extension ";
+			if (!empty($paging_group_uuid) && is_uuid($paging_group_uuid)) {
+				$sql .= "and paging_group_uuid <> :paging_group_uuid ";
+				$parameters['paging_group_uuid'] = $paging_group_uuid;
+			}
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['paging_group_extension'] = $paging_group_extension;
+			$row = $database->select($sql, $parameters, 'row');
+			unset($sql, $parameters);
+			if (isset($row['count']) && (int) $row['count'] > 0) {
+				message::add($text['message-extension_exists'], 'negative');
+				header('Location: paging_edit.php'.(!empty($paging_group_uuid) ? '?id='.urlencode($paging_group_uuid) : ''));
+				exit;
+			}
+
+		//check for generated dialplan destination conflict in this domain
+			$sql = "select count(*) as count ";
+			$sql .= "from v_dialplans dp ";
+			$sql .= "join v_dialplan_details dd on dd.dialplan_uuid = dp.dialplan_uuid ";
+			$sql .= "where dp.domain_uuid = :domain_uuid ";
+			$sql .= "and dd.dialplan_detail_tag = 'condition' ";
+			$sql .= "and dd.dialplan_detail_type = 'destination_number' ";
+			$sql .= "and dd.dialplan_detail_data in (:pattern_plain, :pattern_exact) ";
+			if (!empty($paging_group_uuid) && is_uuid($paging_group_uuid)) {
+				$sql .= "and dp.dialplan_uuid not in (select dialplan_uuid from v_paging_groups where paging_group_uuid = :paging_group_uuid and domain_uuid = :domain_uuid and dialplan_uuid is not null) ";
+				$parameters['paging_group_uuid'] = $paging_group_uuid;
+			}
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['pattern_plain'] = $paging_group_extension;
+			$parameters['pattern_exact'] = '^'.$paging_group_extension.'$';
+			$row = $database->select($sql, $parameters, 'row');
+			unset($sql, $parameters);
+			if (isset($row['count']) && (int) $row['count'] > 0) {
+				message::add($text['message-dialplan_destination_exists'], 'negative');
+				header('Location: paging_edit.php'.(!empty($paging_group_uuid) ? '?id='.urlencode($paging_group_uuid) : ''));
+				exit;
+			}
+
+		//get existing waiver state before save
+			$existing_waiver_enabled = 'false';
+			$existing_waiver_accept_user = null;
+			$existing_waiver_accept_date = null;
+			$existing_waiver_remove_user = null;
+			$existing_waiver_remove_date = null;
+			if (!empty($paging_group_uuid) && is_uuid($paging_group_uuid)) {
+				$sql = "select paging_group_waiver_enabled, paging_group_waiver_accept_user, paging_group_waiver_accept_date, paging_group_waiver_remove_user, paging_group_waiver_remove_date ";
+				$sql .= "from v_paging_groups ";
+				$sql .= "where domain_uuid = :domain_uuid and paging_group_uuid = :paging_group_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters['paging_group_uuid'] = $paging_group_uuid;
+				$row = $database->select($sql, $parameters, 'row');
+				if (is_array($row)) {
+					$existing_waiver_enabled = $row['paging_group_waiver_enabled'] ?? 'false';
+					$existing_waiver_accept_user = $row['paging_group_waiver_accept_user'] ?? null;
+					$existing_waiver_accept_date = $row['paging_group_waiver_accept_date'] ?? null;
+					$existing_waiver_remove_user = $row['paging_group_waiver_remove_user'] ?? null;
+					$existing_waiver_remove_date = $row['paging_group_waiver_remove_date'] ?? null;
 				}
+				unset($sql, $parameters, $row);
+			}
+			$existing_waiver_enabled = ($existing_waiver_enabled === true || $existing_waiver_enabled === 't' || $existing_waiver_enabled === 'true' || $existing_waiver_enabled === '1') ? 'true' : 'false';
+			$paging_group_waiver_enabled = ($paging_group_waiver_enabled_posted == 'true' ? 'true' : 'false');
+
+		//auto answer options are only available after waiver acknowledgement
+			if ($paging_group_waiver_enabled != 'true') {
+				$paging_group_auto_answer = 'default';
 			}
 
-		//check for all required data
-			$msg = '';
-			if (empty($paging_name)) { $msg .= $text['message-required']." ".$text['label-paging_name']."<br>\n"; }
-			if (empty($paging_extension)) { $msg .= $text['message-required']." ".$text['label-paging_extension']."<br>\n"; }
-			//if (strlen($dialplan_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-dialplan_uuid']."<br>\n"; }
-			//if (strlen($paging_pin_number) == 0) { $msg .= $text['message-required']." ".$text['label-paging_pin_number']."<br>\n"; }
-			//if (strlen($paging_destinations) == 0) { $msg .= $text['message-required']." ".$text['label-paging_destinations']."<br>\n"; }
-			//if (strlen($paging_caller_id_name) == 0) { $msg .= $text['message-required']." ".$text['label-paging_caller_id_name']."<br>\n"; }
-			//if (strlen($paging_caller_id_number) == 0) { $msg .= $text['message-required']." ".$text['label-paging_caller_id_number']."<br>\n"; }
-			//if (strlen($paging_sound) == 0) { $msg .= $text['message-required']." ".$text['label-paging_sound']."<br>\n"; }
-			//if (strlen($paging_delay) == 0) { $msg .= $text['message-required']." ".$text['label-paging_delay']."<br>\n"; }
-			//if (strlen($paging_mute) == 0) { $msg .= $text['message-required']." ".$text['label-paging_mute']."<br>\n"; }
-			//if (strlen($paging_destination_status) == 0) { $msg .= $text['message-required']." ".$text['label-paging_destination_status']."<br>\n"; }
-			//if (strlen($paging_hangup_all) == 0) { $msg .= $text['message-required']." ".$text['label-paging_hangup_all']."<br>\n"; }
-			//if (strlen($paging_schedule_hangup) == 0) { $msg .= $text['message-required']." ".$text['label-paging_schedule_hangup']."<br>\n"; }
-			//if (strlen($paging_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-paging_enabled']."<br>\n"; }
-			//if (empty($paging_description)) { $msg .= $text['message-required']." ".$text['label-paging_description']."<br>\n"; }
-			if (!empty($msg) && empty($_POST["persistformvar"])) {
-				require_once "resources/header.php";
-				require_once "resources/persist_form_var.php";
-				echo "<div align='center'>\n";
-				echo "<table><tr><td>\n";
-				echo $msg."<br />";
-				echo "</td></tr></table>\n";
-				persistformvar($_POST);
-				echo "</div>\n";
-				require_once "resources/footer.php";
-				return;
+		//two-way intercom requires waiver acknowledgement
+			if ($paging_group_type == 'intercom' && $paging_group_waiver_enabled != 'true') {
+				$paging_group_type = 'page';
+				message::add($text['message-waiver_required'], 'negative');
+			}
+			if ($existing_waiver_enabled == 'true' && $paging_group_waiver_enabled != 'true') {
+				$paging_group_type = 'page';
 			}
 
-		//add the paging_uuid
-			if (!is_uuid($_POST["paging_uuid"])) {
-				$paging_uuid = uuid();
+		//create uuid for add
+			if (empty($paging_group_uuid)) {
+				$paging_group_uuid = uuid();
 			}
 
-		//add the dialplan_uuid
-			if (empty($_POST["dialplan_uuid"]) || !is_uuid($_POST["dialplan_uuid"])) {
+		//get or create the dialplan uuid
+			if (!is_uuid($dialplan_uuid) && !empty($paging_group_uuid) && is_uuid($paging_group_uuid)) {
+				$sql = "select dialplan_uuid from v_paging_groups ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and paging_group_uuid = :paging_group_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters['paging_group_uuid'] = $paging_group_uuid;
+				$dialplan_uuid = $database->select($sql, $parameters, 'column');
+				unset($sql, $parameters);
+			}
+			if (!is_uuid($dialplan_uuid)) {
 				$dialplan_uuid = uuid();
 			}
 
-		//build the destinations string
-			$destinations = '';
-			if (is_array($paging_destinations)) {
-				foreach ($paging_destinations as $row) {
-					if (!empty($row['destination_number']) && trim($row['destination_number']) != '') {
-						$destinations .= ($destinations != '' ? ',' : '').$row['destination_number'];
+		//build enabled paging member list for page.lua
+			$paging_member_numbers = [];
+			if (is_array($paging_group_destinations)) {
+				foreach ($paging_group_destinations as $destination) {
+					$destination_number = trim($destination['destination_number'] ?? '');
+					$destination_enabled = $destination['destination_enabled'] ?? 'false';
+					$destination_description = trim($destination['destination_description'] ?? '');
+					if ($destination_number != '' && ($destination_enabled === true || $destination_enabled == 'true' || $destination_enabled == 't' || $destination_enabled == '1')) {
+						$paging_member_numbers[] = $destination_number;
 					}
 				}
 			}
+			$paging_member_numbers = array_values(array_unique($paging_member_numbers));
+			$paging_destinations = implode(',', $paging_member_numbers);
 
-		//build the xml dialplan
-			$dialplan_xml = "<extension name=\"".xml::sanitize($paging_name)."\">\n";
-			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($paging_extension)."\$\" >\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"caller_id_name=".xml::sanitize($paging_caller_id_name)."\" />\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"caller_id_number=".xml::sanitize($paging_caller_id_number)."\" />\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"pin_number=".xml::sanitize($paging_pin_number)."\" />\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"destinations=".xml::sanitize($destinations). "\" />\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"moderator=false\" />\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"mute=".xml::sanitize($paging_mute)."\" />\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"delay=".xml::sanitize($paging_delay)."\" />\n";
-			$dialplan_xml .= "		<action application=\"set\" data=\"check_destination_status=".xml::sanitize($paging_destination_status)."\" />\n";
-			if ($paging_hangup_all) {
-				$dialplan_xml .= "		<action application=\"set\" data=\"api_hangup_hook=conference page-\${destination_number}@\${domain_name} hup all\" />\n";
+		//save the paging group
+			$array['paging_groups'][0]['paging_group_uuid'] = $paging_group_uuid;
+			$array['paging_groups'][0]['domain_uuid'] = $domain_uuid;
+			$array['paging_groups'][0]['dialplan_uuid'] = $dialplan_uuid;
+			$array['paging_groups'][0]['paging_group_extension'] = $paging_group_extension;
+			$array['paging_groups'][0]['paging_group_name'] = $paging_group_name;
+			$array['paging_groups'][0]['paging_group_cid_name'] = $paging_group_cid_name;
+			$array['paging_groups'][0]['paging_group_cid_number'] = $paging_group_cid_number;
+			$array['paging_groups'][0]['paging_group_type'] = $paging_group_type;
+			$array['paging_groups'][0]['paging_group_pin_number'] = $paging_group_pin_number;
+			$array['paging_groups'][0]['paging_group_recording_uuid'] = is_uuid($paging_group_recording_uuid) ? $paging_group_recording_uuid : null;
+			$array['paging_groups'][0]['paging_group_announcement_source'] = $paging_group_announcement_source;
+			$array['paging_groups'][0]['paging_group_announcement_sound'] = $paging_group_announcement_sound;
+			$array['paging_groups'][0]['paging_group_announcement_recording_uuid'] = is_uuid($paging_group_announcement_recording_uuid) ? $paging_group_announcement_recording_uuid : null;
+			$array['paging_groups'][0]['paging_group_timeout'] = $paging_group_timeout;
+			$array['paging_groups'][0]['paging_group_skip_busy'] = $paging_group_skip_busy;
+			$array['paging_groups'][0]['paging_group_registered_only'] = $paging_group_registered_only;
+			$array['paging_groups'][0]['paging_group_include_originator'] = $paging_group_include_originator;
+			$array['paging_groups'][0]['paging_group_auto_answer'] = $paging_group_auto_answer;
+			$array['paging_groups'][0]['paging_group_waiver_enabled'] = $paging_group_waiver_enabled;
+			$waiver_accept_user = $existing_waiver_accept_user;
+			$waiver_accept_date = $existing_waiver_accept_date;
+			$waiver_remove_user = $existing_waiver_remove_user;
+			$waiver_remove_date = $existing_waiver_remove_date;
+			if ($existing_waiver_enabled != 'true' && $paging_group_waiver_enabled == 'true') {
+				$waiver_accept_user = $_SESSION['user_uuid'];
+				$waiver_accept_date = date('Y-m-d H:i:s');
+				$waiver_remove_user = null;
+				$waiver_remove_date = null;
 			}
-			if (!empty($paging_schedule_hangup) && is_numeric($paging_schedule_hangup) && $paging_schedule_hangup > 0) {
-				$dialplan_xml .= "		<action application=\"set\" data=\"execute_on_answer=sched_hangup +".xml::sanitize($paging_schedule_hangup)." allotted_timeout\" />\n";
+			if ($existing_waiver_enabled == 'true' && $paging_group_waiver_enabled != 'true') {
+				$waiver_accept_user = null;
+				$waiver_accept_date = null;
+				$waiver_remove_user = $_SESSION['user_uuid'];
+				$waiver_remove_date = date('Y-m-d H:i:s');
 			}
-			$dialplan_xml .= "		<action application=\"lua\" data=\"page.lua\" />\n";
-			$dialplan_xml .= "	</condition>\n";
+			$array['paging_groups'][0]['paging_group_waiver_accept_user'] = $waiver_accept_user;
+			$array['paging_groups'][0]['paging_group_waiver_accept_date'] = $waiver_accept_date;
+			$array['paging_groups'][0]['paging_group_waiver_remove_user'] = $waiver_remove_user;
+			$array['paging_groups'][0]['paging_group_waiver_remove_date'] = $waiver_remove_date;
+			$array['paging_groups'][0]['paging_group_enabled'] = $paging_group_enabled;
+			$array['paging_groups'][0]['paging_group_description'] = $paging_group_description;
+
+		//build the XML dialplan
+			$dialplan_xml = "<extension name=\"".xml::sanitize($paging_group_name)."\" continue=\"false\" uuid=\"".xml::sanitize($dialplan_uuid)."\">\n";
+			$dialplan_xml .= "      <condition field=\"destination_number\" expression=\"^".xml::sanitize($paging_group_extension)."$\">\n";
+			$dialplan_xml .= "              <action application=\"set\" data=\"destinations=".xml::sanitize($paging_destinations)."\"/>\n";
+			$dialplan_xml .= "              <action application=\"set\" data=\"check_destination_status=true\"/>\n";
+			$dialplan_xml .= "              <action application=\"set\" data=\"mute=".($paging_group_type == 'intercom' ? 'false' : 'true')."\"/>\n";
+			if (!empty($paging_group_pin_number)) {
+				$dialplan_xml .= "              <action application=\"set\" data=\"pin_number=".xml::sanitize($paging_group_pin_number)."\"/>\n";
+			}
+			if (!empty($paging_group_timeout) && is_numeric($paging_group_timeout)) {
+				$dialplan_xml .= "              <action application=\"set\" data=\"api_hangup_hook=conference page-\${destination_number}@\${domain_name} hup all\"/>\n";
+				$dialplan_xml .= "              <action application=\"set\" data=\"execute_on_answer=sched_hangup +".xml::sanitize($paging_group_timeout)." allotted_timeout\"/>\n";
+			}
+			if (!empty($paging_group_cid_name)) {
+				$dialplan_xml .= "              <action application=\"set\" data=\"caller_id_name=".xml::sanitize($paging_group_cid_name)."\"/>\n";
+			}
+			else {
+				$dialplan_xml .= "              <action application=\"set\" data=\"caller_id_name=".xml::sanitize($paging_group_type)."\"/>\n";
+			}
+			if (!empty($paging_group_cid_number)) {
+				$dialplan_xml .= "              <action application=\"set\" data=\"caller_id_number=".xml::sanitize($paging_group_cid_number)."\"/>\n";
+			}
+			if ($paging_group_auto_answer == 'yealink') {
+				$dialplan_xml .= "              <action application=\"set\" data=\"auto_answer=call_info\"/>\n";
+				$dialplan_xml .= "              <action application=\"set\" data=\"alert_info=auto_answer\"/>\n";
+			}
+			else if ($paging_group_auto_answer == 'disabled') {
+				$dialplan_xml .= "              <action application=\"set\" data=\"auto_answer=call_info\"/>\n";
+				$dialplan_xml .= "              <action application=\"set\" data=\"alert_info=ring_answer\"/>\n";
+			}
+			else {
+				$dialplan_xml .= "              <action application=\"set\" data=\"auto_answer=call_info\"/>\n";
+				$dialplan_xml .= "              <action application=\"set\" data=\"alert_info=ring_answer\"/>\n";
+			}
+			if ($paging_group_announcement_source == 'sound' && !empty($paging_group_announcement_sound)) {
+				$dialplan_xml .= "              <action application=\"set\" data=\"recording_filename=\$\${sounds_dir}/".xml::sanitize($paging_group_announcement_sound)."\"/>\n";
+			}
+			else if ($paging_group_announcement_source == 'recording' && is_uuid($paging_group_announcement_recording_uuid)) {
+				$sql = "select recording_filename from v_recordings ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and recording_uuid = :recording_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters['recording_uuid'] = $paging_group_announcement_recording_uuid;
+				$announcement_recording_filename = $database->select($sql, $parameters, 'column');
+				unset($sql, $parameters);
+				if (!empty($announcement_recording_filename)) {
+					$dialplan_xml .= "              <action application=\"set\" data=\"recording_filename=".xml::sanitize($settings->get('switch', 'recordings').'/'.$domain_name.'/'.$announcement_recording_filename)."\"/>\n";
+				}
+			}
+			$dialplan_xml .= "              <action application=\"lua\" data=\"page.lua\"/>\n";
+			$dialplan_xml .= "      </condition>\n";
 			$dialplan_xml .= "</extension>\n";
 
 		//build the dialplan array
-			$array["dialplans"][0]["domain_uuid"] = $_SESSION["domain_uuid"];
-			$array["dialplans"][0]["dialplan_uuid"] = $dialplan_uuid;
-			$array["dialplans"][0]["dialplan_name"] = $paging_name;
-			$array["dialplans"][0]["dialplan_number"] = $paging_extension;
-			$array["dialplans"][0]["dialplan_context"] = $_SESSION['domain_name'];
-			$array["dialplans"][0]["dialplan_continue"] = 'false';
-			$array["dialplans"][0]["dialplan_xml"] = $dialplan_xml;
-			$array["dialplans"][0]["dialplan_order"] = "240";
-			$array["dialplans"][0]["dialplan_enabled"] = $paging_enabled;
-			$array["dialplans"][0]["dialplan_description"] = $paging_description;
-			$array["dialplans"][0]["app_uuid"] = "1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2";
+			$array['dialplans'][0]['domain_uuid'] = $domain_uuid;
+			$array['dialplans'][0]['dialplan_uuid'] = $dialplan_uuid;
+			$array['dialplans'][0]['dialplan_name'] = $paging_group_name;
+			$array['dialplans'][0]['dialplan_number'] = $paging_group_extension;
+			$array['dialplans'][0]['dialplan_context'] = $domain_name;
+			$array['dialplans'][0]['dialplan_continue'] = 'false';
+			$array['dialplans'][0]['dialplan_xml'] = $dialplan_xml;
+			$array['dialplans'][0]['dialplan_order'] = '101';
+			$array['dialplans'][0]['dialplan_enabled'] = $paging_group_enabled;
+			$array['dialplans'][0]['dialplan_description'] = $paging_group_description;
+			$array['dialplans'][0]['app_uuid'] = 'bae044dd-e773-471c-a890-5220ebca3bc9';
 
-		//prepare the array
-			$array['paging'][0]['paging_uuid'] = $paging_uuid;
-			$array['paging'][0]['paging_name'] = $paging_name;
-			$array['paging'][0]['paging_extension'] = $paging_extension;
-			$array['paging'][0]['dialplan_uuid'] = $dialplan_uuid;
-			$array['paging'][0]['paging_pin_number'] = $paging_pin_number;
-			$array['paging'][0]['paging_caller_id_name'] = $paging_caller_id_name;
-			$array['paging'][0]['paging_caller_id_number'] = $paging_caller_id_number;
-			$array['paging'][0]['paging_sound'] = $paging_sound;
-			$array['paging'][0]['paging_delay'] = $paging_delay;
-			$array['paging'][0]['paging_mute'] = $paging_mute;
-			$array['paging'][0]['paging_destination_status'] = $paging_destination_status;
-			$array['paging'][0]['paging_hangup_all'] = $paging_hangup_all;
-			$array['paging'][0]['paging_schedule_hangup'] = $paging_schedule_hangup;
-			$array['paging'][0]['paging_enabled'] = $paging_enabled;
-			$array['paging'][0]['paging_description'] = $paging_description;
-			$y = 0;
-			if (is_array($paging_destinations)) {
-				foreach ($paging_destinations as $row) {
-					if (!empty($row['paging_destination_uuid']) && is_uuid($row['paging_destination_uuid'])) {
-						$paging_destination_uuid = $row['paging_destination_uuid'];
-					}
-					else {
-						$paging_destination_uuid = uuid();
-					}
-					if (strlen($row['destination_number']) > 0) {
-						$array['paging'][0]['paging_destinations'][$y]['paging_destination_uuid'] = $paging_destination_uuid;
-						$array['paging'][0]['paging_destinations'][$y]['destination_number'] = $row["destination_number"];
-						$array['paging'][0]['paging_destinations'][$y]['destination_enabled'] = $row["destination_enabled"];
-						$array['paging'][0]['paging_destinations'][$y]['destination_description'] = $row["destination_description"];
-						$y++;
-					} elseif (strlen($row['destination_number']) == 0 && !empty($row['paging_destination_uuid']) && is_uuid($row['paging_destination_uuid'])) {
-						$paging_destinations_delete[] = [
-							'checked' => 'true',
-							'uuid' => $row['paging_destination_uuid']
-						];
-					}
-				}
-			}
 
-		//save the data
-			$database->app_name = 'paging';
-			$database->app_uuid = 'bae044dd-e773-471c-a890-5220ebca3bc9';
+			$p = permissions::new();
+			$p->add('dialplan_add', 'temp');
+			$p->add('dialplan_edit', 'temp');
+
+		//save to the data
 			$database->save($array);
+			$message = $database->message;
+			unset($array);
 
-		//remove checked destinations
-			if (
-				$action == 'update'
-				&& permission_exists('paging_destination_delete')
-				&& is_array($paging_destinations_delete)
-				&& @sizeof($paging_destinations_delete) != 0
-				) {
-				$obj = new paging;
-				$obj->paging_uuid = $paging_uuid;
-				$obj->delete_destinations($paging_destinations_delete);
+		//delete checked destinations
+			if (is_array($paging_group_destinations_delete) && @sizeof($paging_group_destinations_delete) != 0) {
+				foreach ($paging_group_destinations_delete as $delete_row) {
+					if (!empty($delete_row['checked']) && !empty($delete_row['uuid']) && is_uuid($delete_row['uuid'])) {
+						$array['paging_group_destinations'][]['paging_group_destination_uuid'] = $delete_row['uuid'];
+					}
+				}
+				if (!empty($array)) {
+					$database->delete($array);
+					unset($array);
+				}
 			}
 
-		//redirect the user
-			if (isset($action)) {
-				if ($action == "add") {
-					$_SESSION["message"] = $text['message-add'];
+		//save the destinations
+			if (is_array($paging_group_destinations)) {
+				$order = 0;
+				foreach ($paging_group_destinations as $destination) {
+					$paging_group_destination_uuid = $destination['paging_group_destination_uuid'] ?? '';
+					$destination_number = trim($destination['destination_number'] ?? '');
+					$destination_enabled = $destination['destination_enabled'] ?? 'false';
+					$destination_description = trim($destination['destination_description'] ?? '');
+
+					if (empty($destination_number)) {
+						continue;
+					}
+
+					$order += 10;
+					$x = count($array['paging_group_destinations'] ?? []);
+					$array['paging_group_destinations'][$x]['paging_group_destination_uuid'] = is_uuid($paging_group_destination_uuid) ? $paging_group_destination_uuid : uuid();
+					$array['paging_group_destinations'][$x]['paging_group_uuid'] = $paging_group_uuid;
+					$array['paging_group_destinations'][$x]['domain_uuid'] = $domain_uuid;
+					$array['paging_group_destinations'][$x]['destination_number'] = $destination_number;
+					$array['paging_group_destinations'][$x]['destination_order'] = $order;
+					$array['paging_group_destinations'][$x]['destination_enabled'] = $destination_enabled;
+					$array['paging_group_destinations'][$x]['destination_description'] = $destination_description;
 				}
-				if ($action == "update") {
-					$_SESSION["message"] = $text['message-update'];
+				if (!empty($array)) {
+					$database->save($array);
+					unset($array);
 				}
-				header('Location: paging_edit.php?id='.urlencode($paging_uuid));
-				return;
 			}
+
+		//remove the temporary permissions
+			$p->delete('dialplan_add', 'temp');
+			$p->delete('dialplan_edit', 'temp');
+
+		//apply settings reminder
+			$_SESSION['reload_xml'] = true;
+
+		//clear the cache
+			$cache = new cache;
+			$cache->delete('dialplan:'.$domain_name);
+
+		//redirect
+			message::add($action == 'add' ? $text['message-add'] : $text['message-update']);
+			header('Location: paging.php');
+			exit;
 	}
 
-//pre-populate the form
-	if (!empty($_GET['id']) && is_uuid($_GET['id']) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
-		$paging_uuid = $_GET['id'];
-		$sql = "select ";
-		$sql .= " paging_uuid, ";
-		$sql .= " paging_name, ";
-		$sql .= " paging_extension, ";
-		$sql .= " dialplan_uuid, ";
-		$sql .= " paging_pin_number, ";
-		$sql .= " paging_caller_id_name, ";
-		$sql .= " paging_caller_id_number, ";
-		$sql .= " paging_sound, ";
-		$sql .= " paging_delay , ";
-		$sql .= " paging_mute , ";
-		$sql .= " paging_destination_status , ";
-		$sql .= " paging_hangup_all , ";
-		$sql .= " paging_schedule_hangup, ";
-		$sql .= " paging_enabled , ";
-		$sql .= " paging_description ";
-		$sql .= "from v_paging ";
-		$sql .= "where paging_uuid = :paging_uuid ";
-		$parameters['paging_uuid'] = $paging_uuid;
+//get existing data
+	if (!empty($paging_group_uuid)) {
+		$sql = "select * from v_paging_groups ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and paging_group_uuid = :paging_group_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['paging_group_uuid'] = $paging_group_uuid;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
-			$paging_name = $row["paging_name"];
-			$paging_extension = $row["paging_extension"];
-			$dialplan_uuid = $row["dialplan_uuid"];
-			$paging_pin_number = $row["paging_pin_number"];
-			$paging_caller_id_name = $row["paging_caller_id_name"];
-			$paging_caller_id_number = $row["paging_caller_id_number"];
-			$paging_sound = $row["paging_sound"];
-			$paging_delay = $row["paging_delay"];
-			$paging_mute = $row["paging_mute"];
-			$paging_destination_status = $row["paging_destination_status"];
-			$paging_hangup_all = $row["paging_hangup_all"];
-			$paging_schedule_hangup = $row["paging_schedule_hangup"];
-			$paging_enabled = $row["paging_enabled"];
-			$paging_description = $row["paging_description"];
+			$paging_group_extension = $row['paging_group_extension'];
+			$paging_group_name = $row['paging_group_name'];
+			$dialplan_uuid = $row['dialplan_uuid'] ?? '';
+			$paging_group_cid_name = $row['paging_group_cid_name'] ?? '';
+			$paging_group_cid_number = $row['paging_group_cid_number'] ?? '';
+			$paging_group_type = $row['paging_group_type'] ?? 'page';
+			$paging_group_pin_number = $row['paging_group_pin_number'] ?? '';
+			$paging_group_recording_uuid = $row['paging_group_recording_uuid'] ?? '';
+			$paging_group_announcement_source = $row['paging_group_announcement_source'] ?? (!empty($paging_group_recording_uuid) ? 'recording' : 'none');
+			$paging_group_announcement_sound = $row['paging_group_announcement_sound'] ?? '';
+			$paging_group_announcement_recording_uuid = $row['paging_group_announcement_recording_uuid'] ?? $paging_group_recording_uuid;
+			$paging_group_timeout = $row['paging_group_timeout'] ?? '30';
+			$paging_group_skip_busy = $row['paging_group_skip_busy'] ?? 'true';
+			$paging_group_registered_only = $row['paging_group_registered_only'] ?? 'true';
+			$paging_group_include_originator = $row['paging_group_include_originator'] ?? 'false';
+			$paging_group_auto_answer = $row['paging_group_auto_answer'] ?? 'default';
+			$paging_group_waiver_enabled = $row['paging_group_waiver_enabled'] ?? 'false';
+			$paging_group_waiver_accept_user = $row['paging_group_waiver_accept_user'] ?? null;
+			$paging_group_waiver_accept_date = $row['paging_group_waiver_accept_date'] ?? null;
+			$paging_group_waiver_remove_user = $row['paging_group_waiver_remove_user'] ?? null;
+			$paging_group_waiver_remove_date = $row['paging_group_waiver_remove_date'] ?? null;
+			$paging_group_enabled = $row['paging_group_enabled'];
+			$paging_group_description = $row['paging_group_description'];
+		}
+		else {
+			message::add($text['message-invalid_uuid'], 'negative');
+			header('Location: paging.php');
+			exit;
 		}
 		unset($sql, $parameters, $row);
+
+		$sql = "select * from v_paging_group_destinations ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and paging_group_uuid = :paging_group_uuid ";
+		$sql .= "order by destination_order asc, destination_number asc ";
+		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['paging_group_uuid'] = $paging_group_uuid;
+		$paging_group_destinations = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
 	}
 
-//get the child data
-	if (is_uuid($paging_uuid)) {
-		$sql = "select ";
-		$sql .= " paging_destination_uuid, ";
-		$sql .= " paging_uuid, ";
-		$sql .= " destination_number, ";
-		$sql .= " destination_enabled , ";
-		$sql .= " destination_description ";
-		$sql .= "from v_paging_destinations ";
-		$sql .= "where paging_uuid = :paging_uuid ";
-		$parameters['paging_uuid'] = $paging_uuid;
-		$paging_destinations = $database->select($sql, $parameters, 'all');
-		unset ($sql, $parameters);
+//normalize destinations and add blank rows similar to Ring Groups
+	if (!is_array($paging_group_destinations)) {
+		$paging_group_destinations = [];
+	}
+	if (count($paging_group_destinations) == 0) {
+		$rows = 5;
+		$show_destination_delete = false;
+	}
+	else {
+		$rows = 1;
+		$show_destination_delete = true;
+	}
+	for ($i = 0; $i < $rows; $i++) {
+		$paging_group_destinations[] = [
+			'paging_group_destination_uuid' => '',
+			'destination_number' => '',
+			'destination_order' => '',
+			'destination_enabled' => 'false',
+			'destination_description' => '',
+		];
 	}
 
-//add an empty row
-	$x = is_array($paging_destinations) ? count($paging_destinations) : 0;
-	$paging_destinations[$x]['paging_uuid'] = $paging_uuid;
-	$paging_destinations[$x]['paging_destination_uuid'] = '';
-	$paging_destinations[$x]['destination_number'] = '';
-	$paging_destinations[$x]['destination_enabled'] = '';
-	$paging_destinations[$x]['destination_description'] = '';
-
-//get the extensions and the users assigned to them
+//get the extensions and the users assigned to them - copied pattern from Ring Groups
 	$sql = "select ";
-	$sql .= " extension, ";
-	$sql .= " effective_caller_id_name, ";
-	$sql .= " description ";
-	$sql .= "from v_extensions ";
-	$sql .= "where domain_uuid = :domain_uuid ";
-	$sql .= "and enabled = 'true' ";
-	$sql .= "order by extension asc ";
+	$sql .= "e.extension, ";
+	$sql .= "u.username ";
+	$sql .= "from v_extensions e ";
+	$sql .= "left join v_extension_users eu on e.extension_uuid = eu.extension_uuid ";
+	$sql .= "left join v_users u on eu.user_uuid = u.user_uuid and u.user_enabled = true ";
+	$sql .= "where e.domain_uuid = :domain_uuid ";
+	$sql .= "order by e.extension asc ";
 	$parameters['domain_uuid'] = $domain_uuid;
 	$extensions = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 	$extension_users = [];
-	foreach ($extensions as $row) {
-		$ext = $row['extension'];
-		$extension_users[$ext]['extension'] = $row['extension'];
-		$extension_users[$ext]['name'] = $row['effective_caller_id_name'] ?? $row['description'];
+	if (is_array($extensions)) {
+		foreach ($extensions as $row) {
+			$ext = $row['extension'];
+			if (!isset($extension_users[$ext])) {
+				$extension_users[$ext] = ['extension' => $ext, 'users' => []];
+			}
+			if (!empty($row['username'])) {
+				$extension_users[$ext]['users'][] = $row['username'];
+			}
+		}
 	}
+
+//get sounds for announcement select
+	$sounds = new sounds;
+	$audio_files = $sounds->get();
+	$sound_files = [];
+	if (!empty($audio_files['sounds']) && is_array($audio_files['sounds'])) {
+		$sound_files = $audio_files['sounds'];
+	}
+
+//get recordings for announcement select
+	$sql = "select recording_uuid, recording_name, recording_filename ";
+	$sql .= "from v_recordings ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "order by recording_name asc, recording_filename asc ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$recordings = $database->select($sql, $parameters, 'all');
+	unset($sql, $parameters);
+	if (!is_array($recordings)) {
+		$recordings = [];
+	}
+
+//get waiver audit user display names
+	$waiver_accept_username = '';
+	$waiver_remove_username = '';
+	$user_uuids = [];
+	if (!empty($paging_group_waiver_accept_user) && is_uuid($paging_group_waiver_accept_user)) { $user_uuids[] = $paging_group_waiver_accept_user; }
+	if (!empty($paging_group_waiver_remove_user) && is_uuid($paging_group_waiver_remove_user)) { $user_uuids[] = $paging_group_waiver_remove_user; }
+	$user_uuids = array_values(array_unique($user_uuids));
+	if (count($user_uuids) > 0) {
+		$placeholders = [];
+		$parameters = [];
+		foreach ($user_uuids as $index => $user_uuid) {
+			$key = 'user_uuid_'.$index;
+			$placeholders[] = ':'.$key;
+			$parameters[$key] = $user_uuid;
+		}
+		$sql = "select user_uuid, username from v_users where user_uuid in (".implode(',', $placeholders).") ";
+		$users = $database->select($sql, $parameters, 'all');
+		if (is_array($users)) {
+			foreach ($users as $user) {
+				if ($user['user_uuid'] == $paging_group_waiver_accept_user) { $waiver_accept_username = $user['username']; }
+				if ($user['user_uuid'] == $paging_group_waiver_remove_user) { $waiver_remove_username = $user['username']; }
+			}
+		}
+		unset($sql, $parameters, $users);
+	}
+
+//set the title
+	$document['title'] = $text['title-paging_group'];
 
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
-//show the header
-	$document['title'] = $text['title-paging'];
+//include the header
 	require_once "resources/header.php";
 
+//audio playback javascript
+	if (permission_exists('recording_play') || permission_exists('recording_download')) {
+		echo "<script type='text/javascript' language='JavaScript'>\n";
+		echo "	function set_playable(id, audio_selected, audio_type) {\n";
+		echo "		if (!audio_selected) { audio_selected = ''; }\n";
+		echo "		file_ext = audio_selected.split('.').pop();\n";
+		echo "		var mime_type = '';\n";
+		echo "		switch (file_ext) {\n";
+		echo "			case 'wav': mime_type = 'audio/wav'; break;\n";
+		echo "			case 'mp3': mime_type = 'audio/mpeg'; break;\n";
+		echo "			case 'ogg': mime_type = 'audio/ogg'; break;\n";
+		echo "		}\n";
+		echo "		if (mime_type != '' && (audio_type == 'recordings' || audio_type == 'sounds')) {\n";
+		echo "			if (audio_type == 'recordings') {\n";
+		echo "				$('#recording_audio_' + id).attr('src', '../recordings/recordings.php?action=download&type=rec&filename=' + audio_selected);\n";
+		echo "			}\n";
+		echo "			else if (audio_type == 'sounds') {\n";
+		echo "				$('#recording_audio_' + id).attr('src', '../switch/sounds.php?action=download&filename=' + audio_selected);\n";
+		echo "			}\n";
+		echo "			$('#recording_audio_' + id).attr('type', mime_type);\n";
+		echo "			$('#recording_button_' + id).show();\n";
+		echo "		}\n";
+		echo "		else {\n";
+		echo "			$('#recording_button_' + id).hide();\n";
+		echo "			$('#recording_audio_' + id).attr('src','').attr('type','');\n";
+		echo "		}\n";
+		echo "	}\n";
+		echo "</script>\n";
+	}
+
+//advanced display javascript
+	echo "<script type='text/javascript'>\n";
+	echo "function show_advanced_config() {\n";
+	echo "\tconst rows = document.querySelectorAll('.advanced-row');\n";
+	echo "\trows.forEach(function(row) { row.style.display = ''; });\n";
+	echo "\tconst button = document.getElementById('btn_advanced');\n";
+	echo "\tif (button) { button.style.display = 'none'; }\n";
+	echo "}\n";
+	echo "function update_announcement_source() {\n";
+	echo "\tconst source = document.getElementById('paging_group_announcement_source');\n";
+	echo "\tconst soundRow = document.getElementById('paging_group_announcement_sound_row');\n";
+	echo "\tconst recordingRow = document.getElementById('paging_group_announcement_recording_row');\n";
+	echo "\tif (soundRow) { soundRow.style.display = source && source.value == 'sound' ? '' : 'none'; }\n";
+	echo "\tif (recordingRow) { recordingRow.style.display = source && source.value == 'recording' ? '' : 'none'; }\n";
+	echo "}\n";
+	echo "document.addEventListener('DOMContentLoaded', function() {\n";
+	echo "\tupdate_announcement_source();\n";
+	echo "\tconst wrappers = document.querySelectorAll('.searchable_select_wrapper');\n";
+	echo "\twrappers.forEach(wrapper => {\n";
+	echo "\t\tconst input = wrapper.querySelector('.extension_search_input');\n";
+	echo "\t\tconst hidden_select = wrapper.querySelector('.extension_hidden_select');\n";
+	echo "\t\tconst results = wrapper.querySelector('.search_results');\n";
+	echo "\t\tif (!input || !hidden_select || !results) return;\n";
+	echo "\t\tconst options = Array.from(hidden_select.querySelectorAll('option'));\n";
+	echo "\t\tfunction render_results() {\n";
+	echo "\t\t\tdocument.querySelectorAll('.search_results').forEach(dropdown => { dropdown.style.display = 'none'; });\n";
+	echo "\t\t\tresults.style.display = 'block';\n";
+	echo "\t\t\tconst term = input.value.trim().toLowerCase();\n";
+	echo "\t\t\tresults.innerHTML = '';\n";
+	echo "\t\t\toptions.forEach(option => {\n";
+	echo "\t\t\t\tconst extension_value = option.value.trim().toLowerCase();\n";
+	echo "\t\t\t\tconst users = (option.getAttribute('data-users') || '').split(',').map(u => u.trim()).filter(Boolean);\n";
+	echo "\t\t\t\tconst users_lower = users.map(user => user.toLowerCase());\n";
+	echo "\t\t\t\tif (term === '' || extension_value.includes(term) || users_lower.some(user => user.includes(term))) {\n";
+	echo "\t\t\t\t\tconst item = document.createElement('div');\n";
+	echo "\t\t\t\t\titem.className = 'search_result_item';\n";
+	echo "\t\t\t\t\tconst extension = document.createElement('div');\n";
+	echo "\t\t\t\t\textension.className = 'search_result_name';\n";
+	echo "\t\t\t\t\textension.textContent = option.value;\n";
+	echo "\t\t\t\t\tconst username = document.createElement('div');\n";
+	echo "\t\t\t\t\tusername.className = 'search_result_description';\n";
+	echo "\t\t\t\t\tusername.textContent = option.getAttribute('data-users') || '';\n";
+	echo "\t\t\t\t\titem.appendChild(extension);\n";
+	echo "\t\t\t\t\titem.appendChild(username);\n";
+	echo "\t\t\t\t\titem.addEventListener('click', () => {\n";
+	echo "\t\t\t\t\t\tinput.value = option.value;\n";
+	echo "\t\t\t\t\t\thidden_select.value = option.value;\n";
+	echo "\t\t\t\t\t\tresults.style.display = 'none';\n";
+	echo "\t\t\t\t\t\tinput.dispatchEvent(new Event('input', { bubbles: true }));\n";
+	echo "\t\t\t\t\t});\n";
+	echo "\t\t\t\t\tresults.appendChild(item);\n";
+	echo "\t\t\t\t}\n";
+	echo "\t\t\t});\n";
+	echo "\t\t}\n";
+	echo "\t\tinput.addEventListener('focus', render_results);\n";
+	echo "\t\tinput.addEventListener('input', render_results);\n";
+	echo "\t});\n";
+	echo "});\n";
+	echo "</script>\n";
+
 //show the content
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
-	echo "<input class='formfld' type='hidden' name='paging_uuid' value='".escape($paging_uuid)."'>\n";
-
-	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-paging']."</b></div>\n";
-	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$button_icon_back,'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'paging.php']);
-	if ($action == 'update') {
-		if (permission_exists('paging_add')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$button_icon_copy,'id'=>'btn_copy','name'=>'btn_copy','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
-		}
-		if (permission_exists('paging_delete')) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
-		}
-	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$button_icon_save,'id'=>'btn_save','collapse'=>'hide-xs']);
-	echo "	</div>\n";
-	echo "	<div style='clear: both;'></div>\n";
-	echo "</div>\n";
-
-	echo $text['title_description-paging']."\n";
-	echo "<br /><br />\n";
-
-	if ($action == 'update') {
-		if (permission_exists('paging_add')) {
-			echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'copy','onclick'=>"modal_close();"])]);
-		}
-		if (permission_exists('paging_delete')) {
-			echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
-		}
-	}
-
-	echo "<div class='card'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-paging_name']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='paging_name' maxlength='255' value='".escape($paging_name)."'>\n";
-	echo "<br />\n";
-	echo $text['description-paging_name']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-paging_extension']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='paging_extension' maxlength='255' value='".escape($paging_extension)."'>\n";
-	echo "<br />\n";
-	echo $text['description-paging_extension']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-paging_pin_number']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='paging_pin_number' maxlength='255' value='".escape($paging_pin_number)."'>\n";
-	echo "<br />\n";
-	echo $text['description-paging_pin_number']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-paging_destinations']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<table>\n";
-	echo "		<tr>\n";
-	echo "			<td class='vtable'>".$text['label-destination_number']."</td>\n";
-	echo "			<td class='vtable'>".$text['label-destination_enabled']."</td>\n";
-	echo "			<td class='vtable'>".$text['label-destination_description']."</td>\n";
-	if (is_array($paging_destinations) && @sizeof($paging_destinations) > 1 && permission_exists('paging_destination_delete')) {
-		echo "			<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_details', 'delete_toggle_details');\" onmouseout=\"swap_display('delete_label_details', 'delete_toggle_details');\">\n";
-		echo "				<span id='delete_label_details'>".$text['label-delete']."</span>\n";
-		echo "				<span id='delete_toggle_details'><input type='checkbox' id='checkbox_all_details' name='checkbox_all' onclick=\"edit_all_toggle('details'); checkbox_on_change(this);\"></span>\n";
-		echo "			</td>\n";
-	}
-	echo "		</tr>\n";
-	$x = 0;
-	if (permission_exists('paging_destination_edit')) {
-		foreach($paging_destinations as $row) {
-			echo "			<tr>\n";
-			echo "				<td class='formfld'>\n";
-			echo "					<input type='hidden' name='paging_destinations[$x][paging_uuid]' value=\"".escape($row["paging_uuid"])."\">\n";
-			echo "					<input type='hidden' name='paging_destinations[$x][paging_destination_uuid]' value=\"".escape($row['paging_destination_uuid'])."\">\n";
-			$oninput = empty($row['paging_destination_uuid']) ? "oninput=\"document.getElementById('paging_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\"" : null; // new record
-			echo "					<div class='searchable_select_wrapper'>\n";
-			echo "						<input class='formfld extension_search_input' type='text' name='paging_destinations[$x][destination_number]' value='".escape($row['destination_number'])."' ".$oninput.">\n";
-			echo "						<div class='search_results'></div>\n";
-			echo "						<select class='extension_hidden_select' style='display:none;'>\n";
-			foreach ($extension_users as $ext_data) {
-				echo "						<option value='".escape($ext_data['extension'])."' data-users='".$ext_data['name']."'>".escape($ext_data['extension'])."</option>";
-			}
-			echo "						</select>\n";
-			echo "					</div>\n";
-
-			?>
-			<script>
-			document.addEventListener('DOMContentLoaded', function() {
-				const wrappers = document.querySelectorAll('.searchable_select_wrapper:has(.extension_hidden_select)');
-
-				wrappers.forEach(wrapper => {
-					const input = wrapper.querySelector('.extension_search_input');
-					const hidden_select = wrapper.querySelector('.extension_hidden_select');
-					const results = wrapper.querySelector('.search_results');
-
-					// Cache options once for performance
-					const options = Array.from(hidden_select.querySelectorAll('option'));
-
-					if (!input || !results) return;
-
-					function render_results() {
-						// Hide other dropdowns before showing the active one
-						document.querySelectorAll('.search_results').forEach(dropdown => { dropdown.style.display = 'none'; });
-						results.style.display = 'block';
-
-						const term = this.value.trim().toLowerCase();
-
-						// Clear previous results
-						results.innerHTML = '';
-
-						options.forEach(option => {
-							const extension = option.value.trim().toLowerCase();
-							const users = (option.getAttribute('data-users') || '').split(',').map(u => u.trim()).filter(Boolean);
-							const users_lower = users.map(user => user.toLowerCase());
-
-							// Match if extension or username contains the search term
-							const matches_extension = extension.includes(term);
-							const matches_user = users_lower.some(user => user.includes(term));
-
-							if (matches_extension || matches_user) {
-								const item = document.createElement('div');
-								item.className = 'search_result_item';
-
-								const extension = document.createElement('div');
-								extension.className = 'search_result_name';
-								extension.textContent = option.value;
-
-								const username = document.createElement('div');
-								username.className = 'search_result_description';
-								username.textContent = option.getAttribute('data-users') || '';
-
-								item.appendChild(extension);
-								item.appendChild(username);
-
-								// Click to populate input & hidden select
-								item.addEventListener('click', () => {
-									input.value = option.value;
-									hidden_select.value = option.value;
-									results.style.display = 'none';
-
-									input.dispatchEvent(new Event('focus', { bubbles: true }));
-									input.dispatchEvent(new Event('input',  { bubbles: true }));
-								});
-
-								results.appendChild(item);
-							}
-						});
-					}
-
-					input.addEventListener('focus',  render_results);
-					input.addEventListener('input',  render_results);
-				});
-			});
-			</script>
-			<?php
-			echo "				</td>\n";
-			echo "				<td class='formfld'>\n";
-			if ($input_toggle_style_switch) {
-				echo "	<span class='switch'>\n";
-			}
-			echo "	<select class='formfld' id='paging_destinations_".$x."_destination_enabled' name='paging_destinations[$x][destination_enabled]'>\n";
-			echo "		<option value='true' ".($row['destination_enabled'] == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-			echo "		<option value='false' ".($row['destination_enabled'] == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-			echo "	</select>\n";
-			if ($input_toggle_style_switch) {
-				echo "		<span class='slider'></span>\n";
-				echo "	</span>\n";
-			}
-			echo "			</td>\n";
-			echo "				<td class='formfld'>\n";
-			echo "				<textarea class='formfld' name='paging_destinations[$x][destination_description]' style='line-height: 1;'>".escape($row["destination_description"])."</textarea>\n";
-			echo "			</td>\n";
-			if (is_array($paging_destinations) && @sizeof($paging_destinations) > 1 && permission_exists('paging_destination_delete')) {
-				if (!empty($row['paging_destination_uuid']) && is_uuid($row['paging_destination_uuid'])) {
-					echo "		<td class='vtable' style='text-align: center; padding-bottom: 3px;'>\n";
-					echo "			<input type='checkbox' name='paging_destinations_delete[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"checkbox_on_change(this);\">\n";
-					echo "			<input type='hidden' name='paging_destinations_delete[".$x."][uuid]' value='".escape($row['paging_destination_uuid'])."' />\n";
-					echo "		</td>\n";
-				}
-				else {
-					echo "		<td></td>\n";
-				}
-			}
-			echo "		</tr>\n";
-			$x++;
-		}
-	}
-	echo "	</table>\n";
-	echo $text['description-destination_description']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-paging_caller_id_name']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='paging_caller_id_name' maxlength='255' value='".escape($paging_caller_id_name)."'>\n";
-	echo "<br />\n";
-	echo $text['description-paging_caller_id_name']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-paging_caller_id_number']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='paging_caller_id_number' maxlength='255' value='".escape($paging_caller_id_number)."'>\n";
-	echo "<br />\n";
-	echo $text['description-paging_caller_id_number']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	// echo "<tr>\n";
-	// echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	// echo "	".$text['label-paging_sound']."\n";
-	// echo "</td>\n";
-	// echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	// echo "	<input class='formfld' type='text' name='paging_sound' maxlength='255' value='".escape($paging_sound)."'>\n";
-	// echo "<br />\n";
-	// echo $text['description-paging_sound']."\n";
-	// echo "</td>\n";
-	// echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-paging_delay']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if ($input_toggle_style_switch) {
-		echo "	<span class='switch'>\n";
-	}
-	echo "	<select class='formfld' id='paging_delay' name='paging_delay'>\n";
-	echo "		<option value='true' ".($paging_delay == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($paging_delay == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-	echo "	</select>\n";
-	if ($input_toggle_style_switch) {
-		echo "		<span class='slider'></span>\n";
-		echo "	</span>\n";
-	}
-	echo "<br />\n";
-	echo $text['description-paging_delay']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-paging_mute']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if ($input_toggle_style_switch) {
-		echo "	<span class='switch'>\n";
-	}
-	echo "	<select class='formfld' id='paging_mute' name='paging_mute'>\n";
-	echo "		<option value='true' ".($paging_mute == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($paging_mute == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-	echo "	</select>\n";
-	if ($input_toggle_style_switch) {
-		echo "		<span class='slider'></span>\n";
-		echo "	</span>\n";
-	}
-	echo "<br />\n";
-	echo $text['description-paging_mute']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-paging_destination_status']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if ($input_toggle_style_switch) {
-		echo "	<span class='switch'>\n";
-	}
-	echo "	<select class='formfld' id='paging_destination_status' name='paging_destination_status'>\n";
-	echo "		<option value='true' ".($paging_destination_status == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($paging_destination_status == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-	echo "	</select>\n";
-	if ($input_toggle_style_switch) {
-		echo "		<span class='slider'></span>\n";
-		echo "	</span>\n";
-	}
-	echo "<br />\n";
-	echo $text['description-paging_destination_status']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-paging_hangup_all']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if ($input_toggle_style_switch) {
-		echo "	<span class='switch'>\n";
-	}
-	echo "	<select class='formfld' id='paging_hangup_all' name='paging_hangup_all'>\n";
-	echo "		<option value='true' ".($paging_hangup_all == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($paging_hangup_all == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-	echo "	</select>\n";
-	if ($input_toggle_style_switch) {
-		echo "		<span class='slider'></span>\n";
-		echo "	</span>\n";
-	}
-	echo "<br />\n";
-	echo $text['description-paging_hangup_all']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-paging_schedule_hangup']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='paging_schedule_hangup' maxlength='255' value='".escape($paging_schedule_hangup)."'>\n";
-	echo "<br />\n";
-	echo $text['description-paging_schedule_hangup']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-paging_enabled']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if ($input_toggle_style_switch) {
-		echo "	<span class='switch'>\n";
-	}
-	echo "	<select class='formfld' id='paging_enabled' name='paging_enabled'>\n";
-	echo "		<option value='true' ".($paging_enabled == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($paging_enabled == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-	echo "	</select>\n";
-	if ($input_toggle_style_switch) {
-		echo "		<span class='slider'></span>\n";
-		echo "	</span>\n";
-	}
-	echo "<br />\n";
-	echo $text['description-paging_enabled']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-paging_description']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<textarea class='formfld' name='paging_description' style='width: 185px; height: 80px;'>".escape($paging_description)."</textarea>\n";
-	echo "<br />\n";
-	echo $text['description-paging_description']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "</table>";
-	echo "</div>";
-	echo "<br /><br />";
-
-	if (!empty($dialplan_uuid)) {
-		echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
-	}
-	if (!empty($paging_uuid)) {
-		echo "<input type='hidden' name='paging_uuid' value='".escape($paging_uuid)."'>\n";
-	}
+	echo "<form method='post' name='frm' id='frm' action=''>\n";
+	echo "<input type='hidden' name='paging_group_uuid' value='".escape($paging_group_uuid)."'>\n";
+	echo "<input type='hidden' name='dialplan_uuid' value='".escape($dialplan_uuid)."'>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
-	echo "</form>";
+	echo "<div class='action_bar' id='action_bar'>\n";
+	echo "\t<div class='heading'><b>".$text['title-paging_group']."</b></div>\n";
+	echo "\t<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$button_back,'icon'=>$settings->get('theme', 'button_icon_back'),'link'=>'paging.php']);
+	echo button::create(['type'=>'submit','label'=>$button_save,'icon'=>$settings->get('theme', 'button_icon_save'),'form'=>'frm']);
+	echo "\t</div>\n";
+	echo "\t<div style='clear: both;'></div>\n";
+	echo "</div>\n";
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
+//basic fields
+	echo "<tr>\n";
+	echo "\t<td class='vncellreq' valign='top'>".$text['label-name']."</td>\n";
+	echo "\t<td class='vtable'>\n";
+	echo "\t\t<input class='formfld' type='text' name='paging_group_name' maxlength='255' value='".escape($paging_group_name ?? '')."' required='required'>\n";
+	echo "\t\t<br />".$text['description-name']."\n";
+	echo "\t</td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	echo "\t<td class='vncellreq' valign='top'>".$text['label-extension']."</td>\n";
+	echo "\t<td class='vtable'>\n";
+	echo "\t\t<input class='formfld' type='text' name='paging_group_extension' maxlength='255' value='".escape($paging_group_extension ?? '')."' required='required' placeholder='".escape($settings->get('paging', 'extension_range', '') ?? '')."'>\n";
+	echo "\t\t<br />".$text['description-extension']."\n";
+	echo "\t</td>\n";
+	echo "</tr>\n";
+//paging members - Ring Groups style block
+	echo "<tr>\n";
+	echo "\t<td class='vncellreq' valign='top'>".$text['label-members']."</td>\n";
+	echo "\t<td class='vtable' align='left'>\n";
+	echo "\t\t<table border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "\t\t\t<tr>\n";
+	echo "\t\t\t\t<td class='vtable'>".$text['label-member_extension']."</td>\n";
+	echo "\t\t\t\t<td class='vtable'>".$text['label-enabled']."</td>\n";
+	echo "\t\t\t\t<td class='vtable'>".$text['label-description']."</td>\n";
+	if ($show_destination_delete && permission_exists('paging_group_destination_delete')) {
+		echo "\t\t\t\t<td class='vtable edit_delete_checkbox_all' onmouseover=\"swap_display('delete_label_destinations', 'delete_toggle_destinations');\" onmouseout=\"swap_display('delete_label_destinations', 'delete_toggle_destinations');\">\n";
+		echo "\t\t\t\t\t<span id='delete_label_destinations'>".$text['label-delete']."</span>\n";
+		echo "\t\t\t\t\t<span id='delete_toggle_destinations'><input type='checkbox' id='checkbox_all_destinations' name='checkbox_all' onclick=\"edit_all_toggle('destinations');\"></span>\n";
+		echo "\t\t\t\t</td>\n";
+	}
+	echo "\t\t\t</tr>\n";
+
+	$x = 0;
+	foreach ($paging_group_destinations as $row) {
+		$row['destination_number'] = $row['destination_number'] ?? '';
+		$row['destination_description'] = $row['destination_description'] ?? '';
+		$row['destination_enabled'] = ($row['destination_enabled'] === true || $row['destination_enabled'] === 't' || $row['destination_enabled'] === 'true' || $row['destination_enabled'] === '1') ? true : false;
+
+		if (!empty($row['paging_group_destination_uuid']) && is_uuid($row['paging_group_destination_uuid'])) {
+			echo "\t\t\t<input name='paging_group_destinations[".$x."][paging_group_destination_uuid]' type='hidden' value=\"".escape($row['paging_group_destination_uuid'])."\">\n";
+		}
+
+		echo "\t\t\t<tr>\n";
+		echo "\t\t\t\t<td class='formfld'>\n";
+		$oninput = empty($row['paging_group_destination_uuid']) ? "oninput=\"document.getElementById('paging_group_destinations_".$x."_destination_enabled').value = (this.value != '' ? true : false);\"" : null;
+		echo "\t\t\t\t\t<div class='searchable_select_wrapper'>\n";
+		echo "\t\t\t\t\t\t<input type='text' name='paging_group_destinations[".$x."][destination_number]' class='formfld extension_search_input' value='".escape($row['destination_number'])."' ".$oninput.">\n";
+		echo "\t\t\t\t\t\t<div class='search_results'></div>\n";
+		echo "\t\t\t\t\t\t<select class='extension_hidden_select' style='display:none;'>\n";
+		foreach ($extension_users as $ext_data) {
+			$users_string = implode(', ', array_map('htmlspecialchars', $ext_data['users']));
+			echo "\t\t\t\t\t\t\t<option value='".escape($ext_data['extension'])."' data-users='".$users_string."'>".escape($ext_data['extension'])."</option>\n";
+		}
+		echo "\t\t\t\t\t\t</select>\n";
+		echo "\t\t\t\t\t</div>\n";
+		echo "\t\t\t\t</td>\n";
+		echo "\t\t\t\t<td class='formfld'>\n";
+		if ($input_toggle_style_switch) { echo "\t\t\t\t\t<span class='switch'>\n"; }
+		echo "\t\t\t\t\t<select class='formfld' id='paging_group_destinations_".$x."_destination_enabled' name='paging_group_destinations[".$x."][destination_enabled]'>\n";
+		echo "\t\t\t\t\t\t<option value='true' ".($row['destination_enabled'] == true ? "selected='selected'" : null).">".$label_true."</option>\n";
+		echo "\t\t\t\t\t\t<option value='false' ".($row['destination_enabled'] == false ? "selected='selected'" : null).">".$label_false."</option>\n";
+		echo "\t\t\t\t\t</select>\n";
+		if ($input_toggle_style_switch) { echo "\t\t\t\t\t<span class='slider'></span></span>\n"; }
+		echo "\t\t\t\t</td>\n";
+		echo "\t\t\t\t<td class='formfld'>\n";
+		echo "\t\t\t\t\t<input type='text' name='paging_group_destinations[".$x."][destination_description]' class='formfld' value='".escape($row['destination_description'])."'>\n";
+		echo "\t\t\t\t</td>\n";
+		if ($show_destination_delete && permission_exists('paging_group_destination_delete')) {
+			if (!empty($row['paging_group_destination_uuid']) && is_uuid($row['paging_group_destination_uuid'])) {
+				echo "\t\t\t\t<td class='vtable' style='text-align: center; padding-bottom: 3px;'>";
+				echo "<input type='checkbox' name='paging_group_destinations_delete[".$x."][checked]' value='true' class='chk_delete checkbox_destinations' onclick=\"edit_delete_action('destinations');\">\n";
+				echo "<input type='hidden' name='paging_group_destinations_delete[".$x."][uuid]' value='".escape($row['paging_group_destination_uuid'])."' />\n";
+			}
+			else {
+				echo "\t\t\t\t<td>\n";
+			}
+			echo "\t\t\t\t</td>\n";
+		}
+		echo "\t\t\t</tr>\n";
+		$x++;
+	}
+	echo "\t\t</table>\n";
+	echo "\t\t".$text['description-members']."\n";
+	echo "\t\t<br />\n";
+	echo "\t</td>\n";
+	echo "</tr>\n";
+
+//paging mode
+	$waiver_is_enabled = ($paging_group_waiver_enabled === true || $paging_group_waiver_enabled === 't' || $paging_group_waiver_enabled === 'true' || $paging_group_waiver_enabled === '1');
+	echo "<tr>";
+	echo "	<td class='vncell' valign='top'>".$text['label-paging_mode']."</td>";
+	echo "	<td class='vtable'>";
+	echo "		<select class='formfld' name='paging_group_type'>";
+	echo "			<option value='page'".($paging_group_type == 'page' ? " selected='selected'" : null).">".$text['option-one_way_paging']."</option>";
+	echo "			<option value='intercom'".($paging_group_type == 'intercom' ? " selected='selected'" : null).($waiver_is_enabled ? "" : " disabled='disabled'").">".$text['option-two_way_intercom'].($waiver_is_enabled ? "" : " - ".$text['option-waiver_required'])."</option>
+";
+	echo "		</select>
+";
+	echo "		<br />".$text['description-paging_mode']."
+";
+	echo "	</td>
+";
+	echo "</tr>
+";
+
+//pin
+	echo "<tr>\n";
+	echo "\t<td class='vncell' valign='top'>".$text['label-pin']."</td>\n";
+	echo "\t<td class='vtable'>\n";
+	echo "\t\t<input class='formfld' type='text' name='paging_group_pin_number' maxlength='32' value='".escape($paging_group_pin_number ?? '')."'>\n";
+	echo "\t\t<br />".$text['description-pin']."\n";
+	echo "\t</td>\n";
+	echo "</tr>\n";
+
+//announcement
+	echo "<tr>";
+	echo "	<td class='vncell' valign='top'>".$text['label-announcement_source']."</td>";
+	echo "	<td class='vtable'>";
+	echo "		<select class='formfld' id='paging_group_announcement_source' name='paging_group_announcement_source' onchange='update_announcement_source();'>";
+	echo "			<option value='none'".($paging_group_announcement_source == 'none' ? " selected='selected'" : null).">".$text['option-none']."</option>";
+	echo "			<option value='sound'".($paging_group_announcement_source == 'sound' ? " selected='selected'" : null).">".$text['option-sound']."</option>";
+	echo "			<option value='recording'".($paging_group_announcement_source == 'recording' ? " selected='selected'" : null).">".$text['option-recording']."</option>";
+	echo "		</select>";
+	echo "		<br />".$text['description-announcement_source'];
+	echo "	</td>";
+	echo "</tr>";
+
+//announcement sound
+	$instance_id = 'paging_announcement_sound';
+	$instance_value = $paging_group_announcement_sound;
+	$playable = '';
+	$mime_type = '';
+	echo "<tr id='paging_group_announcement_sound_row'>\n";
+	echo "\t<td class='vncell' valign='top'>".$text['label-sound']."</td>\n";
+	echo "\t<td class='vtable'>\n";
+	echo "\t\t<div class='playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('paging_group_announcement_sound').value, 'sounds');\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important; max-width: 480px;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></div>\n";
+	echo "\t\t<select class='formfld searchable_select' id='paging_group_announcement_sound' name='paging_group_announcement_sound' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, 'sounds');\"" : null).">\n";
+	echo "\t\t\t<option value=''></option>\n";
+	foreach ($sound_files as $sound) {
+		$sound_value = $sound['value'] ?? '';
+		$sound_name = $sound['name'] ?? $sound_value;
+		if (!empty($sound_value) && $paging_group_announcement_sound == $sound_value) {
+			$playable = '../switch/sounds.php?action=download&filename='.$sound_value;
+		}
+		echo "\t\t\t<option value='".escape($sound_value)."'".($paging_group_announcement_sound == $sound_value ? " selected='selected'" : null).">".escape($sound_name)."</option>\n";
+	}
+	echo "\t\t</select>\n";
+	if ((permission_exists('recording_play') || permission_exists('recording_download'))) {
+		if (!empty($playable)) {
+			switch (pathinfo($playable, PATHINFO_EXTENSION)) {
+				case 'wav' : $mime_type = 'audio/wav'; break;
+				case 'mp3' : $mime_type = 'audio/mpeg'; break;
+				case 'ogg' : $mime_type = 'audio/ogg'; break;
+			}
+		}
+		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('paging_group_announcement_sound').value, 'sounds');"]);
+	}
+	echo "\t\t<br />".$text['description-sound']."\n";
+	echo "\t</td>\n";
+	echo "</tr>\n";
+
+//announcement recording
+	$instance_id = 'paging_announcement_recording';
+	$selected_recording_filename = '';
+	$playable = '';
+	$mime_type = '';
+	echo "<tr id='paging_group_announcement_recording_row'>\n";
+	echo "\t<td class='vncell' valign='top'>".$text['label-recording']."</td>\n";
+	echo "\t<td class='vtable'>\n";
+	echo "\t\t<div class='playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('paging_group_announcement_recording_uuid').options[document.getElementById('paging_group_announcement_recording_uuid').selectedIndex].getAttribute('data-filename'), 'recordings');\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important; max-width: 480px;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></div>\n";
+	echo "\t\t<select class='formfld searchable_select' id='paging_group_announcement_recording_uuid' name='paging_group_announcement_recording_uuid' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.options[this.selectedIndex].getAttribute('data-filename'), 'recordings');\"" : null).">\n";
+	echo "\t\t\t<option value='' data-filename=''></option>\n";
+	foreach ($recordings as $recording) {
+		$recording_label = !empty($recording['recording_name']) ? $recording['recording_name'] : $recording['recording_filename'];
+		$recording_filename = $recording['recording_filename'] ?? '';
+		if ($paging_group_announcement_recording_uuid == $recording['recording_uuid']) {
+			$selected_recording_filename = $recording_filename;
+			$playable = '../recordings/recordings.php?action=download&type=rec&filename='.$recording_filename;
+		}
+		echo "\t\t\t<option value='".escape($recording['recording_uuid'])."' data-filename='".escape($recording_filename)."'".($paging_group_announcement_recording_uuid == $recording['recording_uuid'] ? " selected='selected'" : null).">".escape($recording_label)."</option>\n";
+	}
+	echo "\t\t</select>\n";
+	if ((permission_exists('recording_play') || permission_exists('recording_download'))) {
+		if (!empty($playable)) {
+			switch (pathinfo($playable, PATHINFO_EXTENSION)) {
+				case 'wav' : $mime_type = 'audio/wav'; break;
+				case 'mp3' : $mime_type = 'audio/mpeg'; break;
+				case 'ogg' : $mime_type = 'audio/ogg'; break;
+			}
+		}
+		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('paging_group_announcement_recording_uuid').options[document.getElementById('paging_group_announcement_recording_uuid').selectedIndex].getAttribute('data-filename'), 'recordings');"]);
+	}
+	if (count($recordings) == 0) {
+		echo "\t\t<br />".$text['description-no_recordings']."\n";
+	}
+	else {
+		echo "\t\t<br />".$text['description-recording']."\n";
+	}
+	echo "\t</td>\n";
+	echo "</tr>\n";
+
+//timeout
+	echo "<tr>\n";
+	echo "\t<td class='vncell' valign='top'>".$text['label-paging_timeout']."</td>\n";
+	echo "\t<td class='vtable'>\n";
+	echo "\t\t<select class='formfld' name='paging_group_timeout'>\n";
+	foreach ([15, 30, 60, 90, 120, 180, 300] as $timeout) {
+		echo "\t\t\t<option value='".$timeout."'".((string)$paging_group_timeout == (string)$timeout ? " selected='selected'" : null).">".$timeout." ".$text['label-seconds']."</option>\n";
+	}
+	echo "\t\t</select>\n";
+	echo "\t\t<br />".$text['description-paging_timeout']."\n";
+	echo "\t</td>\n";
+	echo "</tr>\n";
+
+//advanced button
+	echo "<tr>\n";
+	echo "\t<td class='vncell' valign='top'>&nbsp;</td>\n";
+	echo "\t<td class='vtable'>".button::create(['type'=>'button','label'=>$button_advanced,'icon'=>'tools','id'=>'btn_advanced','onclick'=>'show_advanced_config();'])."</td>\n";
+	echo "</tr>\n";
+
+//advanced fields
+	echo "<tr class='advanced-row' style='display: none;'>\n";
+	echo "\t<td class='vncell' valign='top'>".$text['label-caller_id_name']."</td>\n";
+	echo "\t<td class='vtable'><input class='formfld' type='text' name='paging_group_cid_name' maxlength='255' value='".escape($paging_group_cid_name ?? '')."'><br />".$text['description-caller_id_name']."</td>\n";
+	echo "</tr>\n";
+	echo "<tr class='advanced-row' style='display: none;'>\n";
+	echo "\t<td class='vncell' valign='top'>".$text['label-caller_id_number']."</td>\n";
+	echo "\t<td class='vtable'><input class='formfld' type='text' name='paging_group_cid_number' maxlength='255' value='".escape($paging_group_cid_number ?? '')."'><br />".$text['description-caller_id_number']."</td>\n";
+	echo "</tr>\n";
+		if ($waiver_is_enabled) {
+	echo "<tr class='advanced-row' style='display: none;'>";
+	echo "	<td class='vncell' valign='top'>".$text['label-auto_answer']."</td>";
+	echo "	<td class='vtable'>";
+	echo "		<select class='formfld' name='paging_group_auto_answer'>";
+	echo "			<option value='default'".($paging_group_auto_answer == 'default' ? " selected='selected'" : null).">".$text['option-default']."</option>";
+	echo "			<option value='yealink'".($paging_group_auto_answer == 'yealink' ? " selected='selected'" : null).">".$text['option-yealink']."</option>";
+	echo "			<option value='disabled'".($paging_group_auto_answer == 'disabled' ? " selected='selected'" : null).">".$text['option-disabled']."</option>";
+	echo "		</select>";
+	echo "		<br />".$text['description-auto_answer'];
+	echo "	</td>";
+	echo "</tr>";
+	}
+	echo "<tr class='advanced-row' style='display: none;'>";
+	echo "	<td class='vncell' valign='top'>".$text['label-two_way_waiver']."</td>";
+	echo "	<td class='vtable'>";
+	echo "		<div style='max-width: 760px; padding: 12px; border: 1px solid #ccc; border-radius: 4px;'>";
+	echo "			<strong>".strtoupper($text['label-warning']).":</strong><br /><br />";
+	echo "			".$text['description-waiver_microphone']."<br /><br />";
+	echo "			".$text['description-waiver_legal']."<br /><br />";
+	echo "			<label><input type='checkbox' name='paging_group_waiver_enabled' value='true'".($waiver_is_enabled ? " checked='checked'" : null)."> ".$text['label-waiver_on_file']."</label><br /><br />";
+	if (!empty($paging_group_waiver_accept_date) && !empty($waiver_accept_username)) {
+		echo "			".$text['label-accepted_by'].": ".escape($waiver_accept_username)."<br />";
+		echo "			".$text['label-accepted'].": ".escape($paging_group_waiver_accept_date)."<br /><br />";
+	}
+	if (!empty($paging_group_waiver_remove_date) && !empty($waiver_remove_username)) {
+		echo "			".$text['label-removed_by'].": ".escape($waiver_remove_username)."<br />";
+		echo "			".$text['label-removed'].": ".escape($paging_group_waiver_remove_date)."<br /><br />";
+	}
+	echo "			".$text['description-waiver_save'];
+	echo "		</div>";
+	echo "	</td>";
+	echo "</tr>";
+
+//enabled
+	echo "<tr>\n";
+	echo "\t<td class='vncell' valign='top'>".$text['label-enabled']."</td>\n";
+	echo "\t<td class='vtable'>\n";
+	if ($input_toggle_style_switch) { echo "\t\t<span class='switch'>\n"; }
+	echo "\t\t<select class='formfld' name='paging_group_enabled'>\n";
+	echo "\t\t\t<option value='true'".(($paging_group_enabled == 'true' || $paging_group_enabled === true || $paging_group_enabled === 't') ? " selected='selected'" : null).">".$label_true."</option>\n";
+	echo "\t\t\t<option value='false'".(($paging_group_enabled == 'false' || $paging_group_enabled === false || $paging_group_enabled === 'f') ? " selected='selected'" : null).">".$label_false."</option>\n";
+	echo "\t\t</select>\n";
+	if ($input_toggle_style_switch) { echo "\t\t<span class='slider'></span></span>\n"; }
+	echo "\t</td>\n";
+	echo "</tr>\n";
+
+//description
+	echo "<tr>\n";
+	echo "\t<td class='vncell' valign='top'>".$text['label-description']."</td>\n";
+	echo "\t<td class='vtable'>\n";
+	echo "\t\t<textarea class='formfld' name='paging_group_description' rows='3'>".escape($paging_group_description ?? '')."</textarea>\n";
+	echo "\t\t<br />".$text['description-description']."\n";
+	echo "\t</td>\n";
+	echo "</tr>\n";
+
+	echo "</table>\n";
+	echo "</form>\n";
 
 //include the footer
 	require_once "resources/footer.php";
