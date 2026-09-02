@@ -176,7 +176,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "SPA PC VLAN ID. Options 0 to 4094.";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "78637de4-ec12-4d41-8c65-39afe50d2b02";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bf4e2c20-c8e8-4bef-a74e-b3d865a7b7f1";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "spa_router_mode";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
