@@ -46,6 +46,10 @@
 	$sql = "select * from v_languages order by language asc ";
 	$languages = $database->select($sql, null, 'all');
 
+//get themes from database
+	$sql = "select theme_name from v_themes where theme_enabled = true ";
+	$themes = $database->select($sql, null, 'all');
+
 //get domain settings
 	$sql = "select * from v_domain_settings ";
 	$sql .= "where domain_uuid = :domain_uuid ";
@@ -73,6 +77,7 @@
 			$domain_language = $_POST["domain_language"];
 			$domain_time_zone = $_POST["domain_time_zone"];
 			$domain_time_format = $_POST["domain_time_format"];
+			$domain_theme = $_POST["domain_theme"];
 
 		//validate the token
 			$token = new token;
@@ -276,6 +281,50 @@
 			}
 			unset($sql, $parameters, $row);
 
+		//check to see if domain theme is set
+			$row = $domain_settings['domain']['theme'] ?? [];
+			if (!empty($domain_theme) && (empty($row) || (!empty($row['domain_setting_uuid']) && !is_uuid($row['domain_setting_uuid'])))) {
+				//add user setting to array for insert
+				$array['domain_settings'][$i]['domain_setting_uuid'] = uuid();
+				$array['domain_settings'][$i]['domain_uuid'] = $domain_uuid;
+				$array['domain_settings'][$i]['domain_setting_category'] = 'domain';
+				$array['domain_settings'][$i]['domain_setting_subcategory'] = 'theme';
+				$array['domain_settings'][$i]['domain_setting_name'] = 'text';
+				$array['domain_settings'][$i]['domain_setting_value'] = $domain_theme;
+				$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
+				$array['domain_settings'][$i]['domain_setting_description'] = '';
+				$i++;
+			}
+			else {
+				if (!empty($row['domain_setting_uuid']) && (empty($row['domain_setting_value']) || empty($domain_theme))) {
+					$array_delete['domain_settings'][0]['domain_setting_category'] = 'domain';
+					$array_delete['domain_settings'][0]['domain_uuid'] = $domain_uuid;
+					$array_delete['domain_settings'][0]['domain_setting_subcategory'] = 'theme';
+					$array_delete['domain_settings'][0]['domain_setting_uuid'] = $row['domain_setting_uuid'];
+
+					$p = permissions::new();
+					$p->add('domain_setting_delete', 'temp');
+
+					$database->delete($array_delete);
+					unset($array_delete);
+
+					$p->delete('domain_setting_delete', 'temp');
+				}
+				if (!empty($domain_theme)) {
+					//add user setting to array for update
+					$array['domain_settings'][$i]['domain_setting_uuid'] = $row['domain_setting_uuid'];
+					$array['domain_settings'][$i]['domain_uuid'] = $domain_uuid;
+					$array['domain_settings'][$i]['domain_setting_category'] = 'domain';
+					$array['domain_settings'][$i]['domain_setting_subcategory'] = 'theme';
+					$array['domain_settings'][$i]['domain_setting_name'] = 'text';
+					$array['domain_settings'][$i]['domain_setting_value'] = $domain_theme;
+					$array['domain_settings'][$i]['domain_setting_enabled'] = 'true';
+					$array['domain_settings'][$i]['domain_setting_description'] = $row['domain_setting_description'] ?? '';
+					$i++;
+				}
+			}
+			unset($sql, $parameters, $row);
+
 		//initialize the permissing object
 			$p = permissions::new();
 
@@ -425,6 +474,25 @@
 	echo "		".$text['description-time_format']."<br />\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
+
+	if (permission_exists('theme_view')) {
+		echo "	<tr>\n";
+		echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
+		echo "		".$text['label-theme']."\n";
+		echo "	</td>\n";
+		echo "	<td class=\"vtable\" align='left'>\n";
+		echo "		<select class='formfld' id='domain_theme' name='domain_theme'>\n";
+		echo "			<option value=''></option>\n";
+		echo "			<option value='default' ".($domain_settings['domain']['theme']['domain_setting_value'] == 'default' ? "selected" : null).">".$text['label-default']."</option>\n";
+		foreach ($themes as $theme) {
+			echo "			<option value='".$theme['theme_name']."' ".($domain_settings['domain']['theme']['domain_setting_value'] == $theme['theme_name'] ? "selected='selected'" : null).">".$theme['theme_name']."</option>\n";
+		}
+		echo "		</select>\n";
+		echo "		<br />\n";
+		echo "		".$text['description-theme']."<br />\n";
+		echo "	</td>\n";
+		echo "	</tr>\n";
+	}
 
 	echo "</table>";
 	echo "</div>\n";

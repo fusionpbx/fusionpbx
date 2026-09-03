@@ -46,6 +46,10 @@
 	$sql = "select * from v_languages order by language asc ";
 	$languages = $database->select($sql, null, 'all');
 
+//get themes from database
+	$sql = "select theme_name from v_themes where theme_enabled = true ";
+	$themes = $database->select($sql, null, 'all');
+
 //get default settings
 	$sql = "select * from v_default_settings ";
 	$result = $database->select($sql, null, 'all');
@@ -72,6 +76,7 @@
 			$global_time_zone = $_POST["global_time_zone"];
 			$global_time_format = $_POST["global_time_format"];
 			$global_menu_style = $_POST["global_menu_style"];
+			$global_theme = $_POST["global_theme"];
 
 		//validate the token
 			$token = new token;
@@ -305,6 +310,47 @@
 			}
 			unset($sql, $parameters, $row);
 
+		//check to see if global theme is set
+			$row = $default_settings['domain']['theme'] ?? [];
+			if (!empty($global_theme) && (empty($row) || (!empty($row['default_setting_uuid']) && !is_uuid($row['default_setting_uuid'])))) {
+				//add user setting to array for insert
+				$array['default_settings'][$i]['default_setting_uuid'] = uuid();
+				$array['default_settings'][$i]['default_setting_category'] = 'domain';
+				$array['default_settings'][$i]['default_setting_subcategory'] = 'theme';
+				$array['default_settings'][$i]['default_setting_name'] = 'text';
+				$array['default_settings'][$i]['default_setting_value'] = $global_theme;
+				$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+				$array['default_settings'][$i]['default_setting_description'] = '';
+				$i++;
+			}
+			else {
+				if (!empty($row['default_setting_uuid']) && (empty($row['default_setting_value']) || empty($global_theme))) {
+					$array_delete['default_settings'][0]['default_setting_category'] = 'domain';
+					$array_delete['default_settings'][0]['default_setting_subcategory'] = 'theme';
+					$array_delete['default_settings'][0]['default_setting_uuid'] = $row['default_setting_uuid'];
+
+					$p = permissions::new();
+					$p->add('default_setting_delete', 'temp');
+
+					$database->delete($array_delete);
+					unset($array_delete);
+
+					$p->delete('default_setting_delete', 'temp');
+				}
+				if (!empty($global_theme)) {
+					//add user setting to array for update
+					$array['default_settings'][$i]['default_setting_uuid'] = $row['default_setting_uuid'];
+					$array['default_settings'][$i]['default_setting_category'] = 'domain';
+					$array['default_settings'][$i]['default_setting_subcategory'] = 'theme';
+					$array['default_settings'][$i]['default_setting_name'] = 'text';
+					$array['default_settings'][$i]['default_setting_value'] = $global_theme;
+					$array['default_settings'][$i]['default_setting_enabled'] = 'true';
+					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'] ?? '';
+					$i++;
+				}
+			}
+			unset($sql, $parameters, $row);
+
 		//initialize the permissing object
 			$p = permissions::new();
 
@@ -368,6 +414,9 @@
 	echo "	<div class='actions'>\n";
 	if (!empty($unsaved)) {
 		echo "<div class='unsaved'>".$text['message-unsaved_changes']." <i class='fas fa-exclamation-triangle'></i></div>";
+	}
+	if (permission_exists('theme_view')) {
+		echo button::create(['type'=>'button','label'=>$text['button-themes'],'icon'=>'brush','id'=>'btn_back','style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/core/themes/themes.php']);
 	}
 	if (permission_exists('default_setting_view')) {
 		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$settings->get('theme', 'button_icon_settings'),'id'=>'btn_back','style'=>'margin-right: 2px;','link'=>PROJECT_PATH.'/core/default_settings/default_settings.php']);
@@ -478,6 +527,23 @@
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
+	if (permission_exists('theme_view')) {
+		echo "	<tr>\n";
+		echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
+		echo "		".$text['label-theme']."\n";
+		echo "	</td>\n";
+		echo "	<td class=\"vtable\" align='left'>\n";
+		echo "		<select class='formfld' id='global_theme' name='global_theme'>\n";
+		echo "			<option value='default' ".($default_settings['domain']['theme']['default_setting_value'] == 'default' ? "selected" : null).">".$text['label-default']."</option>\n";
+		foreach ($themes as $theme) {
+			echo "			<option value='".$theme['theme_name']."' ".($default_settings['domain']['theme']['default_setting_value'] == $theme['theme_name'] ? "selected" : null).">".$theme['theme_name']."</option>\n";
+		}
+		echo "		</select>\n";
+		echo "		<br />\n";
+		echo "		".$text['description-theme']."<br />\n";
+		echo "	</td>\n";
+		echo "	</tr>\n";
+	}
 
 	echo "</table>";
 	echo "</div>\n";

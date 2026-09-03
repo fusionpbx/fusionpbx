@@ -48,6 +48,10 @@
 //process the http post
 	if (!empty($_POST)) {
 
+
+//get themes from database
+	$sql = "select theme_name from v_themes where theme_enabled = true ";
+	$themes = $database->select($sql, null, 'all');
 		//get the HTTP values and set as variables
 			$password = $_POST["password"];
 			$password_confirm = $_POST["password_confirm"];
@@ -64,6 +68,7 @@
 			$user_status = $_POST["user_status"] ?? '';
 			$user_language = $_POST["user_language"];
 			$user_time_zone = $_POST["user_time_zone"];
+			$user_theme = $_POST["user_theme"];
 			$contact_attachment_uuid = $_POST['contact_attachment_uuid'] ?? '';
 			$contact_attachment = $_FILES['contact_attachment'];
 
@@ -383,6 +388,56 @@
 			}
 			unset($sql, $parameters, $row);
 
+		//check to see if user theme is set
+			$sql = "select user_setting_uuid, user_setting_value from v_user_settings ";
+			$sql .= "where user_setting_category = 'domain' ";
+			$sql .= "and user_setting_subcategory = 'theme' ";
+			$sql .= "and user_uuid = :user_uuid ";
+			$parameters['user_uuid'] = $user_uuid;
+			$row = $database->select($sql, $parameters, 'row');
+			if (!empty($user_theme) && (empty($row) || (!empty($row['user_setting_uuid']) && !is_uuid($row['user_setting_uuid'])))) {
+				//add user setting to array for insert
+				$array['user_settings'][$i]['user_setting_uuid'] = uuid();
+				$array['user_settings'][$i]['user_uuid'] = $user_uuid;
+				$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
+				$array['user_settings'][$i]['user_setting_category'] = 'domain';
+				$array['user_settings'][$i]['user_setting_subcategory'] = 'theme';
+				$array['user_settings'][$i]['user_setting_name'] = 'text';
+				$array['user_settings'][$i]['user_setting_value'] = $user_theme;
+				$array['user_settings'][$i]['user_setting_enabled'] = 'true';
+				$array['user_settings'][$i]['user_setting_description'] = '';
+				$i++;
+			}
+			else {
+				if (!empty($row['user_setting_uuid']) && (empty($row['user_setting_value']) || empty($user_theme))) {
+					$array_delete['user_settings'][0]['user_setting_category'] = 'domain';
+					$array_delete['user_settings'][0]['user_setting_subcategory'] = 'theme';
+					$array_delete['user_settings'][0]['user_uuid'] = $user_uuid;
+
+					$p = permissions::new();
+					$p->add('user_setting_delete', 'temp');
+
+					$database->delete($array_delete);
+					unset($array_delete);
+
+					$p->delete('user_setting_delete', 'temp');
+				}
+				if (!empty($user_theme)) {
+					//add user setting to array for update
+					$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
+					$array['user_settings'][$i]['user_uuid'] = $user_uuid;
+					$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
+					$array['user_settings'][$i]['user_setting_category'] = 'domain';
+					$array['user_settings'][$i]['user_setting_subcategory'] = 'theme';
+					$array['user_settings'][$i]['user_setting_name'] = 'text';
+					$array['user_settings'][$i]['user_setting_value'] = $user_theme;
+					$array['user_settings'][$i]['user_setting_enabled'] = 'true';
+					$array['user_settings'][$i]['user_setting_description'] = $row['user_setting_description'] ?? '';
+					$i++;
+				}
+			}
+			unset($sql, $parameters, $row);
+
 		//set the password hash cost
 			$options = array('cost' => 10);
 
@@ -666,6 +721,10 @@
 				}
 			}
 			unset($sql, $parameters, $result, $row);
+
+		//get themes from database
+			$sql = "select theme_name from v_themes where theme_enabled = true ";
+			$themes = $database->select($sql, null, 'all');
 	}
 
 //set the defaults
@@ -975,6 +1034,25 @@
 	echo "		".$text['description-time_zone']."<br />\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
+
+	if (permission_exists('theme_view')) {
+		echo "	<tr>\n";
+		echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
+		echo "		".$text['label-theme']."\n";
+		echo "	</td>\n";
+		echo "	<td class=\"vtable\" align='left'>\n";
+		echo "		<select class='formfld' id='user_theme' name='user_theme'>\n";
+		echo "			<option value=''></option>\n";
+		echo "			<option value='default' ".($user_settings['domain']['theme']['text'] == 'default' ? "selected" : null).">".$text['label-default']."</option>\n";
+		foreach ($themes as $theme) {
+			echo "			<option value='".$theme['theme_name']."' ".($user_settings['domain']['theme']['text'] == $theme['theme_name'] ? "selected='selected'" : null).">".$theme['theme_name']."</option>\n";
+		}
+		echo "		</select>\n";
+		echo "		<br />\n";
+		echo "		".$text['description-theme']."<br />\n";
+		echo "	</td>\n";
+		echo "	</tr>\n";
+	}
 
 	echo "	<tr>\n";
 	echo "	<td class=\"vncell\" valign='top'>\n";
