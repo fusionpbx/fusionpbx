@@ -27,7 +27,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (!permission_exists('paging_view')) {
+	if (!permission_exists('paging_group_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -89,19 +89,19 @@
 		//process the http post data by action
 		switch ($action) {
 			case 'copy':
-				if (permission_exists('paging_add')) {
+				if (permission_exists('paging_group_add')) {
 					$obj = new paging;
 					$obj->copy($paging);
 				}
 				break;
 			case 'toggle':
-				if (permission_exists('paging_edit')) {
+				if (permission_exists('paging_group_edit')) {
 					$obj = new paging;
 					$obj->toggle($paging);
 				}
 				break;
 			case 'delete':
-				if (permission_exists('paging_delete')) {
+				if (permission_exists('paging_group_delete')) {
 					$obj = new paging;
 					$obj->delete($paging);
 				}
@@ -114,16 +114,16 @@
 	}
 
 //get the count
-	$sql = "select count(paging_uuid) ";
-	$sql .= "from v_paging ";
+	$sql = "select count(paging_group_uuid) ";
+	$sql .= "from v_paging_groups ";
 	$sql .= "where true ";
 	if (!empty($search)) {
 		$sql .= "and ( ";
-		$sql .= "	lower(paging_name) like :search ";
-		$sql .= "	or lower(paging_extension) like :search ";
-		$sql .= "	or lower(paging_pin_number) like :search ";
-		$sql .= "	or lower(paging_caller_id_name) like :search ";
-		$sql .= "	or lower(paging_caller_id_number) like :search ";
+		$sql .= "	lower(paging_group_name) like :search ";
+		$sql .= "	or lower(paging_group_extension) like :search ";
+		$sql .= "	or lower(paging_group_pin_number) like :search ";
+		$sql .= "	or lower(paging_group_caller_id_name) like :search ";
+		$sql .= "	or lower(paging_group_caller_id_number) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
@@ -138,29 +138,29 @@
 
 //get the list
 	$sql = "select ";
-	$sql .= "paging_uuid, ";
-	$sql .= "paging_name, ";
-	$sql .= "paging_extension, ";
+	$sql .= "paging_group_uuid, ";
+	$sql .= "paging_group_name, ";
+	$sql .= "paging_group_extension, ";
 	$sql .= "dialplan_uuid, ";
-	$sql .= "paging_pin_number, ";
-	$sql .= "paging_caller_id_name, ";
-	$sql .= "paging_caller_id_number, ";
-	$sql .= "paging_sound, ";
-	$sql .= "cast(paging_delay as text), ";
-	$sql .= "cast(paging_mute as text), ";
-	$sql .= "cast(paging_destination_status as text), ";
-	$sql .= "cast(paging_hangup_all as text), ";
-	$sql .= "paging_schedule_hangup, ";
-	$sql .= "cast(paging_enabled as text), ";
-	$sql .= "paging_description ";
-	$sql .= "from v_paging ";
+	$sql .= "paging_group_pin_number, ";
+	$sql .= "paging_group_caller_id_name, ";
+	$sql .= "paging_group_caller_id_number, ";
+	$sql .= "paging_group_sound, ";
+	$sql .= "cast(paging_group_delay as text), ";
+	$sql .= "cast(paging_group_mute as text), ";
+	$sql .= "cast(paging_group_destination_status as text), ";
+	$sql .= "cast(paging_group_hangup_all as text), ";
+	$sql .= "paging_group_schedule_hangup, ";
+	$sql .= "cast(paging_group_enabled as text), ";
+	$sql .= "paging_group_description ";
+	$sql .= "from v_paging_groups ";
 	if (!empty($search)) {
 		$sql .= "where ( ";
-		$sql .= "	lower(paging_name) like :search ";
-		$sql .= "	or lower(paging_extension) like :search ";
-		$sql .= "	or lower(paging_pin_number) like :search ";
-		$sql .= "	or lower(paging_caller_id_name) like :search ";
-		$sql .= "	or lower(paging_caller_id_number) like :search ";
+		$sql .= "	lower(paging_group_name) like :search ";
+		$sql .= "	or lower(paging_group_extension) like :search ";
+		$sql .= "	or lower(paging_group_pin_number) like :search ";
+		$sql .= "	or lower(paging_group_caller_id_name) like :search ";
+		$sql .= "	or lower(paging_group_caller_id_number) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
@@ -179,18 +179,18 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['title-paging']."</b><div class='count'>".$num_rows."</div></div>\n";
+	echo "	<div class='heading'><b>".$text['title-paging_groups']."</b><div class='count'>".$num_rows."</div></div>\n";
 	echo "	<div class='actions'>\n";
-	if (permission_exists('paging_add')) {
+	if (permission_exists('paging_group_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'paging_edit.php']);
 	}
-	if (permission_exists('paging_add') && $paging) {
+	if (permission_exists('paging_group_add') && $paging) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
-	if (permission_exists('paging_edit') && $paging) {
+	if (permission_exists('paging_group_edit') && $paging) {
 		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	}
-	if (permission_exists('paging_delete') && $paging) {
+	if (permission_exists('paging_group_delete') && $paging) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
@@ -204,13 +204,13 @@
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
-	if (permission_exists('paging_add') && $paging) {
+	if (permission_exists('paging_group_add') && $paging) {
 		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('copy'); list_form_submit('form_list');"])]);
 	}
-	if (permission_exists('paging_edit') && $paging) {
+	if (permission_exists('paging_group_edit') && $paging) {
 		echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
 	}
-	if (permission_exists('paging_delete') && $paging) {
+	if (permission_exists('paging_group_delete') && $paging) {
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
@@ -223,20 +223,20 @@
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
 	echo "<tr class='list-header'>\n";
-	if (permission_exists('paging_add') || permission_exists('paging_edit') || permission_exists('paging_delete')) {
+	if (permission_exists('paging_group_add') || permission_exists('paging_group_edit') || permission_exists('paging_group_delete')) {
 		echo "	<th class='checkbox'>\n";
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".empty($paging ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('paging_name', $text['label-paging_name'], $order_by, $order, null, null, $query_string);
-	echo th_order_by('paging_extension', $text['label-paging_extension'], $order_by, $order, null, null, $query_string);
-	echo th_order_by('paging_delay', $text['label-paging_delay'], $order_by, $order, null, "class='center'", $query_string);
-	echo th_order_by('paging_mute', $text['label-paging_mute'], $order_by, $order, null, "class='center'", $query_string);
-	echo th_order_by('paging_hangup_all', $text['label-paging_hangup_all'], $order_by, $order, null, "class='center'", $query_string);
-	echo th_order_by('paging_schedule_hangup', $text['label-paging_schedule_hangup'], $order_by, $order, null, null, $query_string);
-	echo th_order_by('paging_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $query_string);
-	echo "	<th class='hide-sm-dn'>".$text['label-paging_description']."</th>\n";
-	if (permission_exists('paging_edit') && $list_row_edit_button == 'true') {
+	echo th_order_by('paging_group_name', $text['label-paging_group_name'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('paging_group_extension', $text['label-paging_group_extension'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('paging_group_delay', $text['label-paging_group_delay'], $order_by, $order, null, "class='center'", $query_string);
+	echo th_order_by('paging_group_mute', $text['label-paging_group_mute'], $order_by, $order, null, "class='center'", $query_string);
+	echo th_order_by('paging_group_hangup_all', $text['label-paging_group_hangup_all'], $order_by, $order, null, "class='center'", $query_string);
+	echo th_order_by('paging_group_schedule_hangup', $text['label-paging_group_schedule_hangup'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('paging_group_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $query_string);
+	echo "	<th class='hide-sm-dn'>".$text['label-paging_group_description']."</th>\n";
+	if (permission_exists('paging_group_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -244,40 +244,40 @@
 	if (!empty($paging) && is_array($paging) && @sizeof($paging) != 0) {
 		$x = 0;
 		foreach ($paging as $row) {
-			if (permission_exists('paging_edit')) {
-				$list_row_url = "paging_edit.php?id=".urlencode($row['paging_uuid']);
+			if (permission_exists('paging_group_edit')) {
+				$list_row_url = "paging_edit.php?id=".urlencode($row['paging_group_uuid']);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			if (permission_exists('paging_add') || permission_exists('paging_edit') || permission_exists('paging_delete')) {
+			if (permission_exists('paging_group_add') || permission_exists('paging_group_edit') || permission_exists('paging_group_delete')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='paging[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-				echo "		<input type='hidden' name='paging[$x][uuid]' value='".escape($row['paging_uuid'])."' />\n";
+				echo "		<input type='hidden' name='paging[$x][uuid]' value='".escape($row['paging_group_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
 			echo "	<td>\n";
-			if (permission_exists('paging_edit')) {
-				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['paging_name'])."</a>\n";
+			if (permission_exists('paging_group_edit')) {
+				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['paging_group_name'])."</a>\n";
 			}
 			else {
-				echo "	".escape($row['paging_name']);
+				echo "	".escape($row['paging_group_name']);
 			}
 			echo "	</td>\n";
-			echo "	<td>".$row['paging_extension']."&nbsp;</td>\n";
-			echo "	<td class='center'>".$text['label-'.$row['paging_delay']]."&nbsp;</td>\n";
-			echo "	<td class='center'>".$text['label-'.$row['paging_mute']]."&nbsp;</td>\n";
-			echo "	<td class='center'>".$text['label-'.$row['paging_hangup_all']]."&nbsp;</td>\n";
-			echo "	<td>".escape($row['paging_schedule_hangup'])."</td>\n";
-			if (permission_exists('paging_edit')) {
+			echo "	<td>".$row['paging_group_extension']."&nbsp;</td>\n";
+			echo "	<td class='center'>".$text['label-'.$row['paging_group_delay']]."&nbsp;</td>\n";
+			echo "	<td class='center'>".$text['label-'.$row['paging_group_mute']]."&nbsp;</td>\n";
+			echo "	<td class='center'>".$text['label-'.$row['paging_group_hangup_all']]."&nbsp;</td>\n";
+			echo "	<td>".escape($row['paging_group_schedule_hangup'])."</td>\n";
+			if (permission_exists('paging_group_edit')) {
 				echo "	<td class='no-link center'>\n";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['paging_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['paging_group_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			}
 			else {
 				echo "	<td class='center'>\n";
-				echo $text['label-'.$row['paging_enabled']];
+				echo $text['label-'.$row['paging_group_enabled']];
 			}
 			echo "	</td>\n";
-			echo "	<td class='description overflow hide-sm-dn'>".escape($row['paging_description'])."</td>\n";
-			if (permission_exists('paging_edit') && $list_row_edit_button == 'true') {
+			echo "	<td class='description overflow hide-sm-dn'>".escape($row['paging_group_description'])."</td>\n";
+			if (permission_exists('paging_group_edit') && $list_row_edit_button == 'true') {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>$list_row_url]);
 				echo "	</td>\n";
