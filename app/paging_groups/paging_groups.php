@@ -70,19 +70,19 @@
 	$query_string = http_build_query($param);
 
 //get the http post data
-	if (!empty($_POST['paging'])) {
+	if (!empty($_POST['paging_groups'])) {
 		$action = $_POST['action'] ?? null;
-		$paging = $_POST['paging'];
+		$paging_groups = $_POST['paging_groups'];
 	}
 
 //process the http post data by action
-	if (!empty($action) && !empty($paging) && is_array($paging) && @sizeof($paging) != 0) {
+	if (!empty($action) && !empty($paging_groups) && is_array($paging_groups) && @sizeof($paging_groups) != 0) {
 
 		//validate the token
 		$token = new token;
 		if (!$token->validate($_SERVER['PHP_SELF'])) {
 			message::add($text['message-invalid_token'],'negative');
-			header('Location: paging.php'.($query_string ? '?'.$query_string : ''));
+			header('Location: paging_groups.php'.($query_string ? '?'.$query_string : ''));
 			exit;
 		}
 
@@ -90,26 +90,26 @@
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('paging_group_add')) {
-					$obj = new paging;
-					$obj->copy($paging);
+					$obj = new paging_groups;
+					$obj->copy($paging_groups);
 				}
 				break;
 			case 'toggle':
 				if (permission_exists('paging_group_edit')) {
-					$obj = new paging;
-					$obj->toggle($paging);
+					$obj = new paging_groups;
+					$obj->toggle($paging_groups);
 				}
 				break;
 			case 'delete':
 				if (permission_exists('paging_group_delete')) {
-					$obj = new paging;
-					$obj->delete($paging);
+					$obj = new paging_groups;
+					$obj->delete($paging_groups);
 				}
 				break;
 		}
 
 		//redirect the user
-		header('Location: paging.php'.($query_string ? '?'.$query_string : ''));
+		header('Location: paging_groups.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
 
@@ -182,7 +182,7 @@
 	echo "	<div class='heading'><b>".$text['title-paging_groups']."</b><div class='count'>".$num_rows."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('paging_group_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'paging_edit.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'paging_group_edit.php']);
 	}
 	if (permission_exists('paging_group_add') && $paging) {
 		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
@@ -214,7 +214,7 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
-	echo $text['title_description-paging']."\n";
+	echo $text['title_description-paging_groups']."\n";
 	echo "<br /><br />\n";
 
 	echo "<form id='form_list' method='post'>\n";
@@ -245,7 +245,7 @@
 		$x = 0;
 		foreach ($paging as $row) {
 			if (permission_exists('paging_group_edit')) {
-				$list_row_url = "paging_edit.php?id=".urlencode($row['paging_group_uuid']);
+				$list_row_url = "paging_group_edit.php?id=".urlencode($row['paging_group_uuid']);
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('paging_group_add') || permission_exists('paging_group_edit') || permission_exists('paging_group_delete')) {

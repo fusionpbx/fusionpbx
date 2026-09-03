@@ -120,19 +120,19 @@
 				switch ($_POST['action']) {
 					case 'copy':
 						if (permission_exists('paging_group_add')) {
-							$obj = new paging;
+							$obj = new paging_groups;
 							$obj->copy($array);
 						}
 						break;
 					case 'delete':
 						if (permission_exists('paging_group_delete')) {
-							$obj = new paging;
+							$obj = new paging_groups;
 							$obj->delete($array);
 						}
 						break;
 					case 'toggle':
 						if (permission_exists('paging_group_edit')) {
-							$obj = new paging;
+							$obj = new paging_groups;
 							$obj->toggle($array);
 						}
 						break;
@@ -281,7 +281,7 @@
 				&& is_array($paging_group_destinations_delete)
 				&& @sizeof($paging_group_destinations_delete) != 0
 				) {
-				$obj = new paging;
+				$obj = new paging_groups;
 				$obj->paging_group_uuid = $paging_group_uuid;
 				$obj->delete_destinations($paging_group_destinations_delete);
 			}
@@ -399,7 +399,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-paging_groups']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$button_icon_back,'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'paging.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$button_icon_back,'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'paging_groups.php']);
 	if ($action == 'update') {
 		if (permission_exists('paging_group_add')) {
 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$button_icon_copy,'id'=>'btn_copy','name'=>'btn_copy','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
@@ -581,7 +581,7 @@
 			}
 			echo "			</td>\n";
 			echo "				<td class='formfld'>\n";
-			echo "				<textarea class='formfld' name='paging_group_destinations[$x][destination_description]' style='line-height: 1;'>".escape($row["destination_description"])."</textarea>\n";
+			echo "				<input type='text' class='formfld' name='paging_group_destinations[$x][destination_description]' style='line-height: 1;' value='".escape($row["destination_description"])."'>\n";
 			echo "			</td>\n";
 			if (is_array($paging_group_destinations) && @sizeof($paging_group_destinations) > 1 && permission_exists('paging_group_destination_delete')) {
 				if (!empty($row['paging_group_destination_uuid']) && is_uuid($row['paging_group_destination_uuid'])) {
