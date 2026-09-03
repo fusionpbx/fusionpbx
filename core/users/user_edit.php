@@ -1060,22 +1060,24 @@
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
-	echo "	<tr>\n";
-	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
-	echo "		".$text['label-theme']."\n";
-	echo "	</td>\n";
-	echo "	<td class=\"vtable\" align='left'>\n";
-	echo "		<select class='formfld' id='user_theme' name='user_theme'>\n";
-	echo "			<option value=''></option>\n";
-	echo "			<option value='default' ' ".($user_settings['domain']['theme']['text'] == 'default' ? "selected='selected'" : null).">".$text['label-default']."</option>\n";
-	foreach ($themes as $theme) {
-		echo "			<option value='".$theme['theme_name']."' ".($user_settings['domain']['theme']['text'] == $theme['theme_name'] ? "selected='selected'" : null).">".$theme['theme_name']."</option>\n";
+	if (permission_exists('theme_view')) {
+		echo "	<tr>\n";
+		echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
+		echo "		".$text['label-theme']."\n";
+		echo "	</td>\n";
+		echo "	<td class=\"vtable\" align='left'>\n";
+		echo "		<select class='formfld' id='user_theme' name='user_theme'>\n";
+		echo "			<option value=''></option>\n";
+		echo "			<option value='default' ' ".($user_settings['domain']['theme']['text'] == 'default' ? "selected='selected'" : null).">".$text['label-default']."</option>\n";
+		foreach ($themes as $theme) {
+			echo "			<option value='".$theme['theme_name']."' ".($user_settings['domain']['theme']['text'] == $theme['theme_name'] ? "selected='selected'" : null).">".$theme['theme_name']."</option>\n";
+		}
+		echo "		</select>\n";
+		echo "		<br />\n";
+		echo "		".$text['description-theme']."<br />\n";
+		echo "	</td>\n";
+		echo "	</tr>\n";
 	}
-	echo "		</select>\n";
-	echo "		<br />\n";
-	echo "		".$text['description-theme']."<br />\n";
-	echo "	</td>\n";
-	echo "	</tr>\n";
 
 	if (permission_exists("user_status")) {
 		echo "	<tr>\n";
