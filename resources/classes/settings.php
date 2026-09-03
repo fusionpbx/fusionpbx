@@ -136,6 +136,9 @@ class settings implements clear_cache {
 				$this->user_settings();
 			}
 
+			//set the theme settings
+			$this->theme_settings();
+
 			//set the device profile settings
 			if (!empty($this->device_profile_uuid)) {
 				$this->device_profile_settings();
@@ -307,6 +310,55 @@ class settings implements clear_cache {
 							$this->settings[$category][$subcategory] = $row['user_setting_value'];
 						}
 
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Update the internal settings array with the theme settings from the database
+	 *
+	 * @access  private
+	 */
+	private function theme_settings() {
+		$theme = $this->settings['domain']['theme'];
+
+		// No theme set
+		if (empty($theme) || $theme == 'default') {
+			return;
+		}
+
+		// Get theme settings
+		$sql = "select * from v_theme_settings ";
+		$sql .= "where theme_uuid = (select theme_uuid from v_themes where theme_name = :theme_name and theme_enabled = 'true') ";
+		$parameters['theme_name'] = $theme;
+		$result = $this->database->select($sql, $parameters ?? null, 'all');
+		unset($parameters);
+
+		if (!empty($result)) {
+			// Clear array values
+			foreach ($result as $row) {
+				if ($row['theme_setting_enabled'] == true) {
+					if ($row['theme_setting_name'] === 'array' && isset($row['theme_setting_value']) && $row['theme_setting_value'] !== '' ) {
+						$this->settings[$row['theme_setting_category']][$row['theme_setting_subcategory']] = [];
+					}
+				}
+			}
+			// Apply theme settings
+			foreach ($result as $row) {
+				if ($row['theme_setting_enabled'] == true) {
+					$name = $row['theme_setting_name'];
+					$category = $row['theme_setting_category'];
+					$subcategory = $row['theme_setting_subcategory'];
+					if (isset($row['theme_setting_value']) && $row['theme_setting_value'] !== '') {
+						if ($name == "boolean") {
+							$this->settings[$category][$subcategory] = filter_var($row['theme_setting_value'], FILTER_VALIDATE_BOOLEAN);
+						} elseif ($name == "array") {
+							$this->settings[$category][$subcategory][] = $row['theme_setting_value'];
+						} else {
+							$this->settings[$category][$subcategory] = $row['theme_setting_value'];
+						}
 					}
 				}
 			}
