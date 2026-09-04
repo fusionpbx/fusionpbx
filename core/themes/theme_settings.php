@@ -170,7 +170,7 @@
 	}
 	$sql .= "and theme_uuid = :theme_uuid ";
 	$parameters['theme_uuid'] = $theme_uuid;
-	$sql .= order_by($order_by, $order, 'theme_setting_category', 'asc');
+	$sql .= order_by($order_by, $order, 'theme_setting_subcategory', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$theme_settings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
