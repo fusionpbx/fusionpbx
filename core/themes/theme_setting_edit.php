@@ -113,7 +113,7 @@
 
 				//redirect the user
 				if (in_array($_POST['action'], array('copy', 'delete', 'toggle'))) {
-					header('Location: theme_setting_edit.php?id='.$theme_setting_uuid);
+					header('Location: theme_edit.php?id='.$theme_setting_uuid);
 					exit;
 				}
 			}
@@ -169,7 +169,7 @@
 					$_SESSION["message"] = $text['message-update'];
 				}
 				//header('Location: theme_settings.php');
-				header('Location: theme_settings.php?id='.urlencode($theme_uuid));
+				header('Location: theme_edit.php?id='.urlencode($theme_uuid));
 				return;
 			}
 	}
