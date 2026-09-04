@@ -704,7 +704,7 @@ class xml_cdr {
 			}
 
 			//sanitize the caller ID
-			$caller_id_name   = preg_replace('#[^a-zA-Z0-9\-.\#*@ ]#', '', $caller_id_name);
+			$caller_id_name   = preg_replace('#[^\p{L}\p{N}\-.\#*@ ]#u', '', $caller_id_name);
 			$caller_id_number = preg_replace('#[^0-9\-\#\*]#', '', $caller_id_number);
 
 			//get the extension_uuid and then add it to the database fields array
