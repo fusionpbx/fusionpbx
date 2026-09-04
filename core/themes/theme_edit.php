@@ -54,6 +54,7 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
+		$action = $_POST["action"] ?? null;
 		$theme_name = $_POST["theme_name"] ?? null;
 		$theme_enabled = $_POST["theme_enabled"] ?? null;
 		$theme_description = $_POST["theme_description"] ?? null;
