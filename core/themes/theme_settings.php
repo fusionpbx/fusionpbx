@@ -86,20 +86,20 @@
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('theme_setting_add')) {
-					$obj = new theme_settings;
-					$obj->copy($theme_settings);
+					$obj = new themes;
+					$obj->copy_settings($theme_settings);
 				}
 				break;
 			case 'toggle':
 				if (permission_exists('theme_setting_edit')) {
-					$obj = new theme_settings;
-					$obj->toggle($theme_settings);
+					$obj = new themes;
+					$obj->toggle_settings($theme_settings);
 				}
 				break;
 			case 'delete':
 				if (permission_exists('theme_setting_delete')) {
-					$obj = new theme_settings;
-					$obj->delete($theme_settings);
+					$obj = new themes;
+					$obj->delete_settings($theme_settings);
 				}
 				break;
 		}
