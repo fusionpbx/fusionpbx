@@ -35,12 +35,6 @@
 	$language = new text;
 	$text = $language->get();
 
-//connect to the database
-	$database = database::new();
-
-//add the settings object
-	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-
 //set from session variables
 	$button_icon_back = $settings->get('theme', 'button_icon_back', '');
 	$button_icon_copy = $settings->get('theme', 'button_icon_copy', '');
@@ -49,12 +43,9 @@
 	$input_toggle_style = $settings->get('theme', 'input_toggle_style', 'switch round');
 
 //action add or update
-	if ((!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) || !empty($_REQUEST["theme_uuid"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$theme_uuid = $_REQUEST["id"];
-		if (!empty($_REQUEST["theme_uuid"])) {
-			$theme_uuid = $_REQUEST["theme_uuid"];
-		}
 	}
 	else {
 		$action = "add";
@@ -66,6 +57,7 @@
 		$theme_name = $_POST["theme_name"] ?? null;
 		$theme_enabled = $_POST["theme_enabled"] ?? null;
 		$theme_description = $_POST["theme_description"] ?? null;
+		$theme_settings = $_POST['theme_settings' ?? null];
 	}
 
 //process the data and save it to the database
@@ -75,47 +67,43 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: themes.php');
+				header('Location: theme_edit.php?id='.urlencode($theme_uuid));
 				exit;
 			}
 
-		//process the http post data by submitted action
-			if (!empty($_POST['action'])) {
-
-				//prepare the array(s)
-				//send the array to the database class
-				switch ($_POST['action']) {
+		//process the http post data by action
+			if (!empty($action) && !empty($theme_settings)) {
+				//process the http post data by action
+				switch ($action) {
 					case 'copy':
-						if (permission_exists('theme_add')) {
+						if (permission_exists('theme_setting_add')) {
 							$obj = new themes;
-							$obj->copy($array);
-						}
-						break;
-					case 'delete':
-						if (permission_exists('theme_delete')) {
-							$obj = new themes;
-							$obj->delete($array);
+							$obj->copy_settings($theme_settings);
 						}
 						break;
 					case 'toggle':
-						if (permission_exists('theme_edit')) {
+						if (permission_exists('theme_setting_edit')) {
 							$obj = new themes;
-							$obj->toggle($array);
+							$obj->toggle_settings($theme_settings);
+						}
+						break;
+					case 'delete':
+						if (permission_exists('theme_setting_delete')) {
+							$obj = new themes;
+							$obj->delete_settings($theme_settings);
 						}
 						break;
 				}
 
 				//redirect the user
-				if (in_array($_POST['action'], array('copy', 'delete', 'toggle'))) {
-					header('Location: theme_edit.php?id='.$theme_uuid);
-					exit;
-				}
+				header('Location: theme_edit.php?id='.urlencode($theme_uuid));
+				exit;
 			}
 
 		//check for all required data
 			$msg = '';
-			if (empty($theme_name)) { $msg .= $text['message-required']." ".$text['label-theme_name']."<br>\n"; }
-			if (empty($theme_enabled)) { $msg .= $text['message-required']." ".$text['label-theme_enabled']."<br>\n"; }
+			// if (empty($theme_name)) { $msg .= $text['message-required']." ".$text['label-theme_name']."<br>\n"; }
+			// if (empty($theme_enabled)) { $msg .= $text['message-required']." ".$text['label-theme_enabled']."<br>\n"; }
 			// if (empty($theme_description)) { $msg .= $text['message-required']." ".$text['label-theme_description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -131,7 +119,7 @@
 			}
 
 		//add the theme_uuid
-			if (!is_uuid($_POST["theme_uuid"])) {
+			if (!is_uuid($theme_uuid)) {
 				$theme_uuid = uuid();
 			}
 
@@ -142,8 +130,6 @@
 			$array['themes'][0]['theme_description'] = $theme_description;
 
 		//save the data
-			$database->app_name = 'themes';
-			$database->app_uuid = '26b2a370-1769-4275-9ed7-a2e1a2b058bf';
 			$database->save($array);
 
 		//redirect the user
@@ -154,10 +140,10 @@
 				if ($action == "update") {
 					$_SESSION["message"] = $text['message-update'];
 				}
-				//header('Location: themes.php');
 				header('Location: theme_edit.php?id='.urlencode($theme_uuid));
 				return;
 			}
+
 	}
 
 //pre-populate the form
@@ -188,24 +174,13 @@
 	require_once "resources/header.php";
 
 //show the content
-	echo "<form name='frm' id='frm' method='post' action=''>\n";
+	echo "<form name='frm' id='frm' method='post'>\n";
 	echo "<input class='formfld' type='hidden' name='theme_uuid' value='".escape($theme_uuid)."'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-theme']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$button_icon_back,'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'themes.php']);
-	if (permission_exists('theme_setting_view')) {
-		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$settings->get('theme', 'button_icon_settings'),'id'=>'btn_back','style'=>'margin-right: 2px;','link'=>PROJECT_PATH.'/core/themes/theme_settings.php?id='.$theme_uuid]);
-	}
-	if ($action == 'update') {
-		if (permission_exists('theme_add')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$button_icon_copy,'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
-		}
-		if (permission_exists('theme_delete')) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
-		}
-	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$button_icon_save,'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -213,15 +188,6 @@
 
 	echo $text['title_description-themes']."\n";
 	echo "<br /><br />\n";
-
-	if ($action == 'update') {
-		if (permission_exists('theme_add')) {
-			echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'copy','onclick'=>"modal_close();"])]);
-		}
-		if (permission_exists('theme_delete')) {
-			echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
-		}
-	}
 
 	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -269,13 +235,17 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "</div>";
 	echo "</table>";
+	echo "</div>";
 	echo "<br /><br />";
 
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "</form>";
+
+	if ($action == "update") {
+		require_once "core/themes/theme_setting_list.php";
+	}
 
 //include the footer
 	require_once "resources/footer.php";
