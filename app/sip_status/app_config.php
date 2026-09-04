@@ -37,7 +37,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "system_status_sofia_status_profile";
-		$apps[$x]['permissions'][$y]['menu']['uuid'] = "b7aea9f7-d3cf-711f-828e-46e56e2e5328";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "8a999985-566b-4dc2-92f0-723f25191528";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "sip_status_switch_status";
