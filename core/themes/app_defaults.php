@@ -1065,16 +1065,6 @@
 	$array['theme_settings'][$x]['theme_setting_order'] = '20';
 	$array['theme_settings'][$x]['theme_setting_enabled'] = 'true';
 	$array['theme_settings'][$x]['theme_setting_description'] = 'Set the alternating background color of the inactive domains in the side menu.';
-	// $x++;
-	// $array['theme_settings'][$x]['theme_uuid'] = 'eda762b3-e356-4225-a394-38b5f092fd44';
-	// $array['theme_settings'][$x]['theme_setting_uuid'] = 'zzz';
-	// $array['theme_settings'][$x]['theme_setting_category'] = 'theme';
-	// $array['theme_settings'][$x]['theme_setting_subcategory'] = '';
-	// $array['theme_settings'][$x]['theme_setting_name'] = 'text';
-	// $array['theme_settings'][$x]['theme_setting_value'] = '';
-	// $array['theme_settings'][$x]['theme_setting_order'] = '';
-	// $array['theme_settings'][$x]['theme_setting_enabled'] = 'true';
-	// $array['theme_settings'][$x]['theme_setting_description'] = '';
 
 	//save the data
 	if (!empty($array)) {
