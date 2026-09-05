@@ -47,11 +47,21 @@
 	$array['theme_settings'][$x]['theme_setting_description'] = 'rgba(54,86,103,0.8)';
 	$x++;
 	$array['theme_settings'][$x]['theme_uuid'] = 'eda762b3-e356-4225-a394-38b5f092fd44';
+	$array['theme_settings'][$x]['theme_setting_uuid'] = '8aa4c216-0f77-4b46-a575-56dd77b25796';
+	$array['theme_settings'][$x]['theme_setting_category'] = 'theme';
+	$array['theme_settings'][$x]['theme_setting_subcategory'] = 'body_header_background_color';
+	$array['theme_settings'][$x]['theme_setting_name'] = 'text';
+	$array['theme_settings'][$x]['theme_setting_value'] = '#161718';
+	$array['theme_settings'][$x]['theme_setting_order'] = '';
+	$array['theme_settings'][$x]['theme_setting_enabled'] = 'true';
+	$array['theme_settings'][$x]['theme_setting_description'] = 'Set the background color for the body (content) header bar (Side Menu only).';
+	$x++;
+	$array['theme_settings'][$x]['theme_uuid'] = 'eda762b3-e356-4225-a394-38b5f092fd44';
 	$array['theme_settings'][$x]['theme_setting_uuid'] = 'b9d2f75a-6e4c-4b1d-9f3a-8c2e6d4a1b53';
 	$array['theme_settings'][$x]['theme_setting_category'] = 'theme';
 	$array['theme_settings'][$x]['theme_setting_subcategory'] = 'body_header_shadow_color';
 	$array['theme_settings'][$x]['theme_setting_name'] = 'text';
-	$array['theme_settings'][$x]['theme_setting_value'] = '#d0d8e5';
+	$array['theme_settings'][$x]['theme_setting_value'] = '#101010';
 	$array['theme_settings'][$x]['theme_setting_order'] = '';
 	$array['theme_settings'][$x]['theme_setting_enabled'] = 'true';
 	$array['theme_settings'][$x]['theme_setting_description'] = 'Set the shadow color of the body header bar.';
@@ -367,6 +377,26 @@
 	$array['theme_settings'][$x]['theme_setting_description'] = 'Set the text color (and opacity) for domain name.';
 	$x++;
 	$array['theme_settings'][$x]['theme_uuid'] = 'eda762b3-e356-4225-a394-38b5f092fd44';
+	$array['theme_settings'][$x]['theme_setting_uuid'] = '7388565a-cbdb-4d9e-870d-77cb5f3b9381';
+	$array['theme_settings'][$x]['theme_setting_category'] = 'theme';
+	$array['theme_settings'][$x]['theme_setting_subcategory'] = 'domain_inactive_background_color';
+	$array['theme_settings'][$x]['theme_setting_name'] = 'array';
+	$array['theme_settings'][$x]['theme_setting_value'] = '#212526';
+	$array['theme_settings'][$x]['theme_setting_order'] = '20';
+	$array['theme_settings'][$x]['theme_setting_enabled'] = 'true';
+	$array['theme_settings'][$x]['theme_setting_description'] = 'Set the alternating background color of the inactive domains in the side menu.';
+	$x++;
+	$array['theme_settings'][$x]['theme_uuid'] = 'eda762b3-e356-4225-a394-38b5f092fd44';
+	$array['theme_settings'][$x]['theme_setting_uuid'] = 'd85c0529-51fc-4cd2-973f-a1801a310bb7';
+	$array['theme_settings'][$x]['theme_setting_category'] = 'theme';
+	$array['theme_settings'][$x]['theme_setting_subcategory'] = 'domain_inactive_background_color';
+	$array['theme_settings'][$x]['theme_setting_name'] = 'array';
+	$array['theme_settings'][$x]['theme_setting_value'] = '#282c33';
+	$array['theme_settings'][$x]['theme_setting_order'] = '20';
+	$array['theme_settings'][$x]['theme_setting_enabled'] = 'true';
+	$array['theme_settings'][$x]['theme_setting_description'] = 'Set the alternating background color of the inactive domains in the side menu.';
+	$x++;
+	$array['theme_settings'][$x]['theme_uuid'] = 'eda762b3-e356-4225-a394-38b5f092fd44';
 	$array['theme_settings'][$x]['theme_setting_uuid'] = '5e8b1d3f-7a9c-4b2e-6d4f-0a3c5e7b9d1f';
 	$array['theme_settings'][$x]['theme_setting_category'] = 'theme';
 	$array['theme_settings'][$x]['theme_setting_subcategory'] = 'domain_inactive_text_color';
@@ -391,7 +421,7 @@
 	$array['theme_settings'][$x]['theme_setting_category'] = 'theme';
 	$array['theme_settings'][$x]['theme_setting_subcategory'] = 'domain_selector_background_color';
 	$array['theme_settings'][$x]['theme_setting_name'] = 'text';
-	$array['theme_settings'][$x]['theme_setting_value'] = '#131313';
+	$array['theme_settings'][$x]['theme_setting_value'] = '#1C1C1C';
 	$array['theme_settings'][$x]['theme_setting_order'] = '';
 	$array['theme_settings'][$x]['theme_setting_enabled'] = 'true';
 	$array['theme_settings'][$x]['theme_setting_description'] = 'Set the background color of the domain selector pane.';
@@ -1056,15 +1086,6 @@
 	$array['theme_settings'][$x]['theme_setting_enabled'] = 'true';
 	$array['theme_settings'][$x]['theme_setting_description'] = 'Set the color (and opacity) of the Dashboard block label text.';
 	$x++;
-	$array['theme_settings'][$x]['theme_uuid'] = 'eda762b3-e356-4225-a394-38b5f092fd44';
-	$array['theme_settings'][$x]['theme_setting_uuid'] = '7388565a-cbdb-4d9e-870d-77cb5f3b9381';
-	$array['theme_settings'][$x]['theme_setting_category'] = 'theme';
-	$array['theme_settings'][$x]['theme_setting_subcategory'] = 'domain_inactive_background_color';
-	$array['theme_settings'][$x]['theme_setting_name'] = 'array';
-	$array['theme_settings'][$x]['theme_setting_value'] = '#bd48d5';
-	$array['theme_settings'][$x]['theme_setting_order'] = '20';
-	$array['theme_settings'][$x]['theme_setting_enabled'] = 'true';
-	$array['theme_settings'][$x]['theme_setting_description'] = 'Set the alternating background color of the inactive domains in the side menu.';
 
 	//save the data
 	if (!empty($array)) {
