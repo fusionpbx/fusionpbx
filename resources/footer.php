@@ -109,16 +109,17 @@
 		$view->assign('domain_json_token_name', $domain_json_token['name']);
 		$view->assign('domain_json_token_hash', $domain_json_token['hash']);
 	//theme settings
-		if (is_array($_SESSION['theme']) && @sizeof($_SESSION['theme']) != 0) {
+		$theme_settings = $settings->get('theme');
+		if (is_array($theme_settings) && !empty($theme_settings)) {
 			//load into array
-				foreach ($_SESSION['theme'] as $subcategory => $setting) {
+				foreach ($theme_settings as $subcategory => $setting) {
 					switch($subcategory) {
 						//exceptions
 							case 'favicon':
 							case 'custom_css':
-								if ($setting['text'] != '') {
-									$tmp_url = parse_url($setting['text']);
-									$tmp_path = pathinfo($setting['text']);
+								if (!empty($setting) && !is_array($setting)) {
+									$tmp_url = parse_url($setting);
+									$tmp_path = pathinfo($setting);
 									if (
 										is_array($tmp_url) && @sizeof($tmp_url) != 0 &&
 										is_array($tmp_path) && @sizeof($tmp_path) != 0 &&
@@ -126,24 +127,21 @@
 											(!empty($tmp_url['scheme']) && $tmp_url['scheme'].'://'.$tmp_url['host'].$tmp_url['path'] == $tmp_path['dirname'].'/'.$tmp_path['filename'].'.'.$tmp_path['extension']) //is url
 											|| $tmp_url['path'] == $tmp_path['dirname'].'/'.$tmp_path['filename'].'.'.$tmp_path['extension'] //is path
 										)) {
-										$settings_array['theme'][$subcategory] = $setting['text'];
+										$settings_array['theme'][$subcategory] = $setting;
 									}
 									unset($tmp_url, $tmp_path);
 								}
 								break;
 						//otherwise
 							default:
-								if (isset($setting['text']) && $setting['text'] != '') {
-									$settings_array['theme'][$subcategory] = str_replace('&lowbar;','_',escape($setting['text']));
+								if (is_array($setting)) {
+									$settings_array['theme'][$subcategory] = $setting;
 								}
-								else if (isset($setting['numeric']) && is_numeric($setting['numeric'])) {
-									$settings_array['theme'][$subcategory] = $setting['numeric'];
+								elseif (is_bool($setting)) {
+									$settings_array['theme'][$subcategory] = $setting;
 								}
-								else if (isset($setting['boolean'])) {
-									$settings_array['theme'][$subcategory] = $setting['boolean'] == 'true' ? true : false;
-								}
-								else {
-									$settings_array['theme'][$subcategory] = escape($setting);
+								elseif ($setting != '') {
+									$settings_array['theme'][$subcategory] = str_replace('&lowbar;','_',escape($setting));
 								}
 					}
 				}
@@ -165,8 +163,8 @@
 				$view->assign('settings', $settings_array);
 		}
 	//background video
-		if (!empty($_SESSION['theme']['background_video']) && is_array($_SESSION['theme']['background_video'])) {
-			$view->assign('background_video', $_SESSION['theme']['background_video'][0]);
+		if (!empty($settings->get('theme', 'background_video')) && is_array($settings->get('theme', 'background_video'))) {
+			$view->assign('background_video', $settings->get('theme', 'background_video')[0]);
 		}
 	//document title
 		if (!empty($settings->get('theme', 'title')) && $settings->get('theme', 'title') != '') {
@@ -190,8 +188,8 @@
 	//domain count
 		$view->assign('domain_count', $domain_count);
 	//domain selector row background colors
-		$view->assign('domain_selector_background_color_1', !empty($_SESSION['theme']['domain_inactive_background_color'][0]) != '' ? $_SESSION['theme']['domain_inactive_background_color'][0] : '#eaedf2');
-		$view->assign('domain_selector_background_color_2', !empty($_SESSION['theme']['domain_inactive_background_color'][1]) != '' ? $_SESSION['theme']['domain_inactive_background_color'][1] : '#ffffff');
+		$view->assign('domain_selector_background_color_1', !empty($settings->get('theme', 'domain_inactive_background_color')[0]) != '' ? $settings->get('theme', 'domain_inactive_background_color')[0] : '#eaedf2');
+		$view->assign('domain_selector_background_color_2', !empty($settings->get('theme', 'domain_inactive_background_color')[1]) != '' ? $settings->get('theme', 'domain_inactive_background_color')[1] : '#ffffff');
 		$view->assign('domain_active_background_color', !empty($settings->get('theme', 'domain_active_background_color')) ? $settings->get('theme', 'domain_active_background_color') : '#eeffee');
 	//domain list
 		$view->assign('domains', $domains);
