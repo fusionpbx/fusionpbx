@@ -25,14 +25,14 @@
 */
 
 /**
- * paging class
+ * paging_groups class
  *
  * @method null delete
  * @method null toggle
  * @method null copy
  */
-if (!class_exists('paging')) {
-	class paging {
+if (!class_exists('paging_groups')) {
+	class paging_groups {
 
 		/**
 		* declare the variables
