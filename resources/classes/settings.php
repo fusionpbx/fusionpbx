@@ -305,6 +305,9 @@ class settings implements clear_cache {
 						if ($name == "boolean") {
 							$this->settings[$category][$subcategory] = filter_var($row['user_setting_value'], FILTER_VALIDATE_BOOLEAN);
 						} elseif ($name == "array") {
+							if (!isset($this->settings[$category][$subcategory]) || !is_array($this->settings[$category][$subcategory])) {
+								$this->settings[$category][$subcategory] = [];
+							}
 							$this->settings[$category][$subcategory][] = $row['user_setting_value'];
 						} else {
 							$this->settings[$category][$subcategory] = $row['user_setting_value'];
@@ -355,6 +358,9 @@ class settings implements clear_cache {
 						if ($name == "boolean") {
 							$this->settings[$category][$subcategory] = filter_var($row['theme_setting_value'], FILTER_VALIDATE_BOOLEAN);
 						} elseif ($name == "array") {
+							if (!isset($this->settings[$category][$subcategory]) || !is_array($this->settings[$category][$subcategory])) {
+								$this->settings[$category][$subcategory] = [];
+							}
 							$this->settings[$category][$subcategory][] = $row['theme_setting_value'];
 						} else {
 							$this->settings[$category][$subcategory] = $row['theme_setting_value'];
