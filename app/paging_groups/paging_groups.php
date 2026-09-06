@@ -19,6 +19,10 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Portions created by the Initial Developer are Copyright (C) 2026
 	the Initial Developer. All Rights Reserved.
+  
+  Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+	denisent dev team
 */
 
 //includes files
@@ -145,9 +149,8 @@
 	$sql .= "paging_group_pin_number, ";
 	$sql .= "paging_group_caller_id_name, ";
 	$sql .= "paging_group_caller_id_number, ";
-	$sql .= "paging_group_sound, ";
 	$sql .= "cast(paging_group_delay as text), ";
-	$sql .= "cast(paging_group_mute as text), ";
+	$sql .= "paging_group_type, ";
 	$sql .= "cast(paging_group_destination_status as text), ";
 	$sql .= "cast(paging_group_hangup_all as text), ";
 	$sql .= "cast(paging_group_timeout as text), ";
@@ -231,7 +234,7 @@
 	echo th_order_by('paging_group_name', $text['label-paging_group_name'], $order_by, $order, null, null, $query_string);
 	echo th_order_by('paging_group_extension', $text['label-paging_group_extension'], $order_by, $order, null, null, $query_string);
 	echo th_order_by('paging_group_delay', $text['label-paging_group_delay'], $order_by, $order, null, "class='center'", $query_string);
-	echo th_order_by('paging_group_mute', $text['label-paging_group_mute'], $order_by, $order, null, "class='center'", $query_string);
+	//echo th_order_by('paging_group_type', $text['label-paging_group_type'], $order_by, $order, null, "class='center'", $query_string);
 	echo th_order_by('paging_group_hangup_all', $text['label-paging_group_hangup_all'], $order_by, $order, null, "class='center'", $query_string);
 	echo th_order_by('paging_group_timeout', $text['label-paging_group_timeout'], $order_by, $order, null, null, $query_string);
 	echo th_order_by('paging_group_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $query_string);
@@ -264,7 +267,7 @@
 			echo "	</td>\n";
 			echo "	<td>".$row['paging_group_extension']."&nbsp;</td>\n";
 			echo "	<td class='center'>".$text['label-'.$row['paging_group_delay']]."&nbsp;</td>\n";
-			echo "	<td class='center'>".$text['label-'.$row['paging_group_mute']]."&nbsp;</td>\n";
+			//echo "	<td class='center'>".$text['label-'.$row['paging_group_type']]."&nbsp;</td>\n";
 			echo "	<td class='center'>".$text['label-'.$row['paging_group_hangup_all']]."&nbsp;</td>\n";
 			echo "	<td>".escape($row['paging_group_timeout'])."</td>\n";
 			if (permission_exists('paging_group_edit')) {

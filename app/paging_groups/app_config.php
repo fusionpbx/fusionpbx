@@ -8,7 +8,32 @@
 		$apps[$x]['version'] = "1.0";
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "https://www.fusionpbx.com";
-		$apps[$x]['description']['en-us'] = "";
+		$apps[$x]['description']['en-us'] = "Manage paging groups and intercom features.";
+
+	//destination details
+		$y = 0;
+		$apps[$x]['destinations'][$y]['type'] = "sql";
+		$apps[$x]['destinations'][$y]['label'] = "paging_groups";
+		$apps[$x]['destinations'][$y]['name'] = "paging_groups";
+		$apps[$x]['destinations'][$y]['where'] = "where domain_uuid = '\${domain_uuid}' and paging_group_enabled = true ";
+		$apps[$x]['destinations'][$y]['order_by'] = "natural_sort(paging_group_extension) asc";
+		$apps[$x]['destinations'][$y]['field']['uuid'] = "paging_group_uuid";
+		$apps[$x]['destinations'][$y]['field']['name'] = "paging_group_name";
+		$apps[$x]['destinations'][$y]['field']['extension'] = "paging_group_extension";
+		$apps[$x]['destinations'][$y]['select_value']['dialplan_detail_data'] = "paging_group_extension";
+		$apps[$x]['destinations'][$y]['select_label']['dialplan_detail_data'] = "concat(paging_group_name, ' ', paging_group_extension)";
+		$y++;
+
+	//default settings
+		$y = 0;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "8f5c3d4a-2a15-4a2e-96c8-0f1f70b47001";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "paging_groups";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "400-499";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the suggested extension range(s) for paging groups.";
+		$y++;
 
 	//permission details
 		$y = 0;
@@ -102,10 +127,32 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = "1";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the extension number.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "paging_group_type";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = "";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the paging mode (page or intercom).";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "paging_group_pin_number";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = "1";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "When the PIN number is provided it will be required before the paging.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "paging_group_announcement_source";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = "";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the announcement source (none, sound, or recording).";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "paging_group_announcement_sound";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = "";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the announcement sound.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "paging_group_announcement_recording_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
+		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = "";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the announcement recording UUID.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "paging_group_caller_id_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
@@ -117,20 +164,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = "1";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Set the paging caller ID number.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "paging_group_sound";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['search_by'] = "";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select the sound.";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "paging_group_delay";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
 		$apps[$x]['db'][$y]['fields'][$z]['toggle'] = ['true','false'];
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "When this is enabled it will record the call, and then start the page and then play the recording.";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "paging_group_mute";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";
-		$apps[$x]['db'][$y]['fields'][$z]['toggle'] = ['true','false'];
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Use the mute toggle the control mute on answer.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "paging_group_destination_status";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "boolean";

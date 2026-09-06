@@ -19,6 +19,10 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Portions created by the Initial Developer are Copyright (C) 2026
 	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+	denisent dev team
 */
 
 //includes files
@@ -38,8 +42,12 @@
 //connect to the database
 	$database = database::new();
 
+//set the domain name
+	$domain_name = $_SESSION['domain_name'] ?? '';
+	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+
 //add the settings object
-	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+	$settings = new settings(["domain_uuid" => $domain_uuid, "user_uuid" => $_SESSION['user_uuid']]);
 
 //set from session variables
 	$button_icon_back = $settings->get('theme', 'button_icon_back', '');
@@ -47,6 +55,20 @@
 	$button_icon_delete = $settings->get('theme', 'button_icon_delete', '');
 	$button_icon_save = $settings->get('theme', 'button_icon_save', '');
 	$input_toggle_style = $settings->get('theme', 'input_toggle_style', 'switch round');
+
+//get the sounds
+	$sounds = new sounds(['domain_uuid' => $_SESSION['domain_uuid'], 'domain_name' => $domain_name]);
+	$sounds->sound_types = ['sounds'];
+	$audio_files = $sounds->get();
+	$sound_files = $audio_files['sounds'] ?? [];
+
+//get the recordings
+	$sql = "select recording_uuid, recording_name, recording_filename ";
+	$sql .= "from v_recordings ";
+	$sql .= "where domain_uuid = :domain_uuid ";
+	$sql .= "order by recording_name asc ";
+	$parameters['domain_uuid'] = $domain_uuid;
+	$recordings = $database->select($sql, $parameters, 'all');
 
 //action add or update
 	if ((!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) || !empty($_REQUEST["paging_group_uuid"])) {
@@ -65,11 +87,13 @@
 	$paging_group_name = '';
 	$paging_group_extension = '';
 	$paging_group_pin_number = '';
+	$paging_group_type = '';
+	$paging_group_announcement_source = 'none';
+	$paging_group_announcement_sound = '';
+	$paging_group_announcement_recording_uuid = '';
 	$paging_group_caller_id_name = '';
 	$paging_group_caller_id_number = '';
-	$paging_group_sound = '';
 	$paging_group_delay = '';
-	$paging_group_mute = 'true';
 	$paging_group_destination_status = '';
 	$paging_group_hangup_all = 'true';
 	$paging_group_timeout = '';
@@ -83,13 +107,15 @@
 		$paging_group_name = $_POST["paging_group_name"] ?? null;
 		$paging_group_extension = $_POST["paging_group_extension"] ?? null;
 		$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
+		$paging_group_type = $_POST["paging_group_type"] ?? null;
 		$paging_group_pin_number = $_POST["paging_group_pin_number"] ?? null;
+		$paging_group_announcement_source = $_POST["paging_group_announcement_source"] ?? null;
+		$paging_group_announcement_sound = $_POST["paging_group_announcement_sound"] ?? null;
+		$paging_group_announcement_recording_uuid = $_POST["paging_group_announcement_recording_uuid"] ?? null;
 		$paging_group_destinations = $_POST["paging_group_destinations"] ?? null;
 		$paging_group_caller_id_name = $_POST["paging_group_caller_id_name"] ?? null;
 		$paging_group_caller_id_number = $_POST["paging_group_caller_id_number"] ?? null;
-		$paging_group_sound = $_POST["paging_group_sound"] ?? null;
 		$paging_group_delay = $_POST["paging_group_delay"] ?? null;
-		$paging_group_mute = $_POST["paging_group_mute"] ?? null;
 		$paging_group_destination_status = $_POST["paging_group_destination_status"] ?? null;
 		$paging_group_hangup_all = $_POST["paging_group_hangup_all"] ?? null;
 		$paging_group_timeout = $_POST["paging_group_timeout"] ?? null;
@@ -154,9 +180,7 @@
 			//if (strlen($paging_group_destinations) == 0) { $msg .= $text['message-required']." ".$text['label-paging_group_destinations']."<br>\n"; }
 			//if (strlen($paging_group_caller_id_name) == 0) { $msg .= $text['message-required']." ".$text['label-paging_group_caller_id_name']."<br>\n"; }
 			//if (strlen($paging_group_caller_id_number) == 0) { $msg .= $text['message-required']." ".$text['label-paging_group_caller_id_number']."<br>\n"; }
-			//if (strlen($paging_group_sound) == 0) { $msg .= $text['message-required']." ".$text['label-paging_group_sound']."<br>\n"; }
 			//if (strlen($paging_group_delay) == 0) { $msg .= $text['message-required']." ".$text['label-paging_group_delay']."<br>\n"; }
-			//if (strlen($paging_group_mute) == 0) { $msg .= $text['message-required']." ".$text['label-paging_group_mute']."<br>\n"; }
 			//if (strlen($paging_group_destination_status) == 0) { $msg .= $text['message-required']." ".$text['label-paging_group_destination_status']."<br>\n"; }
 			//if (strlen($paging_group_hangup_all) == 0) { $msg .= $text['message-required']." ".$text['label-paging_group_hangup_all']."<br>\n"; }
 			//if (strlen($paging_group_timeout) == 0) { $msg .= $text['message-required']." ".$text['label-paging_group_timeout']."<br>\n"; }
@@ -195,6 +219,15 @@
 				}
 			}
 
+		//determine the mute setting based on the paging group type
+			$paging_group_mute = 'true';
+			if ($paging_group_type == 'page') {
+				$paging_group_mute = 'true';
+			}
+			else if ($paging_group_type == 'intercom') {
+				$paging_group_mute = 'false';
+			}
+
 		//build the xml dialplan
 			$dialplan_xml = "<extension name=\"".xml::sanitize($paging_group_name)."\">\n";
 			$dialplan_xml .= "	<condition field=\"destination_number\" expression=\"^".xml::sanitize($paging_group_extension)."\$\" >\n";
@@ -212,12 +245,27 @@
 			if (!empty($paging_group_timeout) && is_numeric($paging_group_timeout) && $paging_group_timeout > 0) {
 				$dialplan_xml .= "		<action application=\"set\" data=\"execute_on_answer=sched_hangup +".xml::sanitize($paging_group_timeout)." allotted_timeout\" />\n";
 			}
+			if ($paging_group_announcement_source == 'sound' && !empty($paging_group_announcement_sound)) {
+				$dialplan_xml .= "		<action application=\"set\" data=\"recording_filename=\$\${sounds_dir}/".xml::sanitize($paging_group_announcement_sound)."\"/>\n";
+			}
+			else if ($paging_group_announcement_source == 'recording' && is_uuid($paging_group_announcement_recording_uuid)) {
+				$sql = "select recording_filename from v_recordings ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and recording_uuid = :recording_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters['recording_uuid'] = $paging_group_announcement_recording_uuid;
+				$announcement_recording_filename = $database->select($sql, $parameters, 'column');
+				unset($sql, $parameters);
+				if (!empty($announcement_recording_filename)) {
+					$dialplan_xml .= "		<action application=\"set\" data=\"recording_filename=".xml::sanitize($settings->get('switch', 'recordings').'/'.$domain_name.'/'.$announcement_recording_filename)."\"/>\n";
+				}
+			}
 			$dialplan_xml .= "		<action application=\"lua\" data=\"page.lua\" />\n";
 			$dialplan_xml .= "	</condition>\n";
 			$dialplan_xml .= "</extension>\n";
 
 		//build the dialplan array
-			$array["dialplans"][0]["domain_uuid"] = $_SESSION["domain_uuid"];
+			$array["dialplans"][0]["domain_uuid"] = $domain_uuid;
 			$array["dialplans"][0]["dialplan_uuid"] = $dialplan_uuid;
 			$array["dialplans"][0]["dialplan_name"] = $paging_group_name;
 			$array["dialplans"][0]["dialplan_number"] = $paging_group_extension;
@@ -231,15 +279,18 @@
 
 		//prepare the array
 			$array['paging_groups'][0]['paging_group_uuid'] = $paging_group_uuid;
+			$array['paging_groups'][0]['domain_uuid'] = $domain_uuid;
 			$array['paging_groups'][0]['paging_group_name'] = $paging_group_name;
 			$array['paging_groups'][0]['paging_group_extension'] = $paging_group_extension;
 			$array['paging_groups'][0]['dialplan_uuid'] = $dialplan_uuid;
+			$array['paging_groups'][0]['paging_group_type'] = $paging_group_type;
 			$array['paging_groups'][0]['paging_group_pin_number'] = $paging_group_pin_number;
+			$array['paging_groups'][0]['paging_group_announcement_source'] = $paging_group_announcement_source;
+			$array['paging_groups'][0]['paging_group_announcement_sound'] = $paging_group_announcement_sound;
+			$array['paging_groups'][0]['paging_group_announcement_recording_uuid'] = is_uuid($paging_group_announcement_recording_uuid) ? $paging_group_announcement_recording_uuid : null;
 			$array['paging_groups'][0]['paging_group_caller_id_name'] = $paging_group_caller_id_name;
 			$array['paging_groups'][0]['paging_group_caller_id_number'] = $paging_group_caller_id_number;
-			$array['paging_groups'][0]['paging_group_sound'] = $paging_group_sound;
 			$array['paging_groups'][0]['paging_group_delay'] = $paging_group_delay;
-			$array['paging_groups'][0]['paging_group_mute'] = $paging_group_mute;
 			$array['paging_groups'][0]['paging_group_destination_status'] = $paging_group_destination_status;
 			$array['paging_groups'][0]['paging_group_hangup_all'] = $paging_group_hangup_all;
 			$array['paging_groups'][0]['paging_group_timeout'] = $paging_group_timeout;
@@ -270,8 +321,6 @@
 			}
 
 		//save the data
-			$database->app_name = 'paging';
-			$database->app_uuid = 'bae044dd-e773-471c-a890-5220ebca3bc9';
 			$database->save($array);
 
 		//remove checked destinations
@@ -307,12 +356,14 @@
 		$sql .= " paging_group_name, ";
 		$sql .= " paging_group_extension, ";
 		$sql .= " dialplan_uuid, ";
+		$sql .= " paging_group_type, ";
 		$sql .= " paging_group_pin_number, ";
+		$sql .= " paging_group_announcement_source, ";
+		$sql .= " paging_group_announcement_sound, ";
+		$sql .= " paging_group_announcement_recording_uuid, ";
 		$sql .= " paging_group_caller_id_name, ";
 		$sql .= " paging_group_caller_id_number, ";
-		$sql .= " paging_group_sound, ";
 		$sql .= " paging_group_delay , ";
-		$sql .= " paging_group_mute , ";
 		$sql .= " paging_group_destination_status , ";
 		$sql .= " paging_group_hangup_all , ";
 		$sql .= " paging_group_timeout, ";
@@ -320,18 +371,22 @@
 		$sql .= " paging_group_description ";
 		$sql .= "from v_paging_groups ";
 		$sql .= "where paging_group_uuid = :paging_group_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
 		$parameters['paging_group_uuid'] = $paging_group_uuid;
+		$parameters['domain_uuid'] = $domain_uuid;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$paging_group_name = $row["paging_group_name"];
 			$paging_group_extension = $row["paging_group_extension"];
 			$dialplan_uuid = $row["dialplan_uuid"];
+			$paging_group_type = $row["paging_group_type"];
 			$paging_group_pin_number = $row["paging_group_pin_number"];
+			$paging_group_announcement_source = $row["paging_group_announcement_source"];
+			$paging_group_announcement_sound = $row["paging_group_announcement_sound"];
+			$paging_group_announcement_recording_uuid = $row["paging_group_announcement_recording_uuid"];
 			$paging_group_caller_id_name = $row["paging_group_caller_id_name"];
 			$paging_group_caller_id_number = $row["paging_group_caller_id_number"];
-			$paging_group_sound = $row["paging_group_sound"];
 			$paging_group_delay = $row["paging_group_delay"];
-			$paging_group_mute = $row["paging_group_mute"];
 			$paging_group_destination_status = $row["paging_group_destination_status"];
 			$paging_group_hangup_all = $row["paging_group_hangup_all"];
 			$paging_group_timeout = $row["paging_group_timeout"];
@@ -392,6 +447,45 @@
 	$document['title'] = $text['title-paging_groups'];
 	require_once "resources/header.php";
 
+//add the announcement source and playback support
+	if (permission_exists('recording_play') || permission_exists('recording_download')) {
+		echo "<script type='text/javascript' language='JavaScript'>\n";
+		echo "	function set_playable(id, audio_selected, audio_type) {\n";
+		echo "		var file_ext = audio_selected.split('.').pop();\n";
+		echo "		var mime_type = '';\n";
+		echo "		switch (file_ext) {\n";
+		echo "			case 'wav': mime_type = 'audio/wav'; break;\n";
+		echo "			case 'mp3': mime_type = 'audio/mpeg'; break;\n";
+		echo "			case 'ogg': mime_type = 'audio/ogg'; break;\n";
+		echo "			case 'oga': mime_type = 'audio/ogg'; break;\n";
+		echo "		}\n";
+		echo "		if (audio_type == 'recordings') {\n";
+		echo "			if (audio_selected.includes('/')) { audio_selected = audio_selected.split('/').pop(); }\n";
+		echo "			if (mime_type != '') {\n";
+		echo "				$('#recording_audio_' + id).attr('src', '../recordings/recordings.php?action=download&type=rec&filename=' + audio_selected);\n";
+		echo "				$('#recording_audio_' + id).attr('type', mime_type);\n";
+		echo "				$('#recording_button_' + id).show();\n";
+		echo "			}\n";
+		echo "		}\n";
+		echo "		else if (audio_type == 'sounds') {\n";
+		echo "			if (mime_type == '') { mime_type = 'audio/wav'; }\n";
+		echo "			$('#recording_audio_' + id).attr('src', '../switch/sounds.php?action=download&filename=' + audio_selected);\n";
+		echo "			$('#recording_audio_' + id).attr('type', mime_type);\n";
+		echo "			$('#recording_button_' + id).show();\n";
+		echo "		}\n";
+		echo "	}\n";
+		echo "</script>\n";
+	}
+	echo "<script type='text/javascript' language='JavaScript'>\n";
+	echo "	function update_announcement_source() {\n";
+	echo "		const source = document.getElementById('paging_group_announcement_source').value;\n";
+	echo "		const soundRow = document.getElementById('paging_group_announcement_sound_row');\n";
+	echo "		const recordingRow = document.getElementById('paging_group_announcement_recording_row');\n";
+	echo "		soundRow.style.display = (source === 'sound') ? '' : 'none';\n";
+	echo "		recordingRow.style.display = (source === 'recording') ? '' : 'none';\n";
+	echo "	}\n";
+	echo "</script>\n";
+
 //show the content
 	echo "<form name='frm' id='frm' method='post' action=''>\n";
 	echo "<input class='formfld' type='hidden' name='paging_group_uuid' value='".escape($paging_group_uuid)."'>\n";
@@ -444,7 +538,7 @@
 	echo "	".$text['label-paging_group_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='paging_group_extension' maxlength='255' value='".escape($paging_group_extension)."'>\n";
+	echo "	<input class='formfld' type='text' name='paging_group_extension' maxlength='255' value='".escape($paging_group_extension)."' required='required' placeholder='".escape($settings->get('paging_groups', 'extension_range', '') ?? '')."'>\n";
 	echo "<br />\n";
 	echo $text['description-paging_group_extension']."\n";
 	echo "</td>\n";
@@ -594,6 +688,20 @@
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-paging_mode']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<select class='formfld' id='paging_group_type' name='paging_group_type'>\n";
+	echo "		<option value='page' ".($paging_group_type == 'page' ? "selected='selected'" : null).">".$text['option-one_way_paging']."</option>\n";
+	echo "		<option value='intercom' ".($paging_group_type == 'intercom' ? "selected='selected'" : null).">".$text['option-two_way_intercom']."</option>\n";
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-paging_mode']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-paging_group_pin_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
@@ -602,6 +710,127 @@
 	echo $text['description-paging_group_pin_number']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-announcement_source']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<select class='formfld' id='paging_group_announcement_source' name='paging_group_announcement_source' onchange='update_announcement_source();'>\n";
+	echo "		<option value='none' ".($paging_group_announcement_source == 'none' ? "selected='selected'" : null).">".$text['option-none']."</option>\n";
+	echo "		<option value='sound' ".($paging_group_announcement_source == 'sound' ? "selected='selected'" : null).">".$text['option-sound']."</option>\n";
+	echo "		<option value='recording' ".($paging_group_announcement_source == 'recording' ? "selected='selected'" : null).">".$text['option-recording']."</option>\n";
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-announcement_source']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "\n";
+
+	$instance_id = 'paging_announcement_sound';
+	echo "<tr id='paging_group_announcement_sound_row' style='".($paging_group_announcement_source == 'sound' ? '' : 'display: none;')."'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-sound']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	if (permission_exists('recording_play') || permission_exists('recording_download')) {
+		echo "	<div class='playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('paging_group_announcement_sound').value, 'sounds');\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important; max-width: 480px;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></div>\n";
+	}
+	echo "	<select class='formfld searchable_select' id='paging_group_announcement_sound' name='paging_group_announcement_sound' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, 'sounds');\"" : null).">\n";
+	echo "		<option value=''></option>\n";
+	$playable = '';
+	$mime_type = '';
+	foreach ($sound_files as $sound) {
+		$sound_value = $sound['value'] ?? $sound;
+		$sound_name = $sound['name'] ?? $sound;
+		if (!empty($paging_group_announcement_sound) && $paging_group_announcement_sound == $sound_value) {
+			$selected = "selected='selected'";
+			$playable = '../switch/sounds.php?action=download&filename='.$sound_value;
+		}
+		else {
+			$selected = null;
+		}
+		echo "		<option value='".escape($sound_value)."' ".$selected.">".escape($sound_name)."</option>\n";
+	}
+	if ((permission_exists('recording_play') || permission_exists('recording_download')) && !empty($paging_group_announcement_sound)) {
+		$mime_type = 'audio/wav';
+	}
+	if (permission_exists('recording_play') || permission_exists('recording_download')) {
+		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".$playable."' type='".$mime_type."'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($paging_group_announcement_sound) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('paging_group_announcement_sound').value, 'sounds');"]);
+	}
+	echo "<br />\n";
+	echo $text['description-sound']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "\n";
+
+	$instance_id = 'paging_announcement_recording';
+	echo "<tr id='paging_group_announcement_recording_row' style='".($paging_group_announcement_source == 'recording' ? '' : 'display: none;')."'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-recording']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	if (permission_exists('recording_play') || permission_exists('recording_download')) {
+		echo "	<div class='playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('paging_group_announcement_recording_uuid').options[document.getElementById('paging_group_announcement_recording_uuid').selectedIndex].getAttribute('data-filename'), 'recordings');\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important; max-width: 480px;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></div>\n";
+	}
+	echo "	<select class='formfld searchable_select' id='paging_group_announcement_recording_uuid' name='paging_group_announcement_recording_uuid' ".(permission_exists('recording_play') || permission_exists('recording_download') ? "onchange=\"recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.options[this.selectedIndex].getAttribute('data-filename'), 'recordings');\"" : null).">\n";
+	echo "		<option value=''></option>\n";
+	$playable = '';
+	$mime_type = '';
+	if (is_array($recordings) && @sizeof($recordings) != 0) {
+		foreach ($recordings as $recording) {
+			$recording_uuid = $recording['recording_uuid'];
+			$recording_name = $recording['recording_name'];
+			$recording_filename = $recording['recording_filename'];
+			if ($paging_group_announcement_recording_uuid == $recording_uuid) {
+				$selected = "selected='selected'";
+				$playable = '../recordings/recordings.php?action=download&type=rec&filename='.$recording_filename;
+			}
+			else {
+				$selected = null;
+			}
+			echo "		<option value='".escape($recording_uuid)."' data-filename='".escape($recording_filename)."' ".$selected.">".escape($recording_name)."</option>\n";
+		}
+	}
+	else {
+		echo $text['description-no_recordings']."\n";
+	}
+	if ((permission_exists('recording_play') || permission_exists('recording_download')) && !empty($playable)) {
+		$ext = pathinfo($playable, PATHINFO_EXTENSION);
+		switch ($ext) {
+			case 'wav' : $mime_type = 'audio/wav'; break;
+			case 'mp3' : $mime_type = 'audio/mpeg'; break;
+			case 'ogg' : $mime_type = 'audio/ogg'; break;
+			default: $mime_type = '';
+		}
+	}
+	if (permission_exists('recording_play') || permission_exists('recording_download')) {
+		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".$playable."' type='".$mime_type."'></audio>";
+		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('paging_group_announcement_recording_uuid').options[document.getElementById('paging_group_announcement_recording_uuid').selectedIndex].getAttribute('data-filename'), 'recordings');"]);
+	}
+	echo "<br />\n";
+	echo $text['description-recording']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-paging_group_timeout']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<select class='formfld' id='paging_group_timeout' name='paging_group_timeout'>\n";
+	$timeout_options = ['', '15', '30', '60', '90', '120', '180', '300', '600', '900'];
+	foreach ($timeout_options as $timeout_option) {
+		echo "		<option value='".$timeout_option."' ".((int)$paging_group_timeout == $timeout_option ? "selected='selected'" : null).">$timeout_option</option>\n";
+	}
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-paging_group_timeout']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "\n";
 
 	if (permission_exists('paging_group_caller_id_name')) {
 		echo "<tr>\n";
@@ -629,17 +858,6 @@
 		echo "</tr>\n";
 	}
 
-	// echo "<tr>\n";
-	// echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	// echo "	".$text['label-paging_group_sound']."\n";
-	// echo "</td>\n";
-	// echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	// echo "	<input class='formfld' type='text' name='paging_group_sound' maxlength='255' value='".escape($paging_group_sound)."'>\n";
-	// echo "<br />\n";
-	// echo $text['description-paging_group_sound']."\n";
-	// echo "</td>\n";
-	// echo "</tr>\n";
-
 	if (permission_exists('paging_group_delay')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -662,27 +880,6 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-paging_group_mute']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	if ($input_toggle_style_switch) {
-		echo "	<span class='switch'>\n";
-	}
-	echo "	<select class='formfld' id='paging_group_mute' name='paging_group_mute'>\n";
-	echo "		<option value='true' ".($paging_group_mute == true ? "selected='selected'" : null).">".$text['option-true']."</option>\n";
-	echo "		<option value='false' ".($paging_group_mute == false ? "selected='selected'" : null).">".$text['option-false']."</option>\n";
-	echo "	</select>\n";
-	if ($input_toggle_style_switch) {
-		echo "		<span class='slider'></span>\n";
-		echo "	</span>\n";
-	}
-	echo "<br />\n";
-	echo $text['description-paging_group_mute']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	if (permission_exists('paging_group_destination_status')) {
 		echo "<tr>\n";
@@ -729,17 +926,6 @@
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-paging_group_timeout']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='paging_group_timeout' maxlength='255' value='".escape($paging_group_timeout)."'>\n";
-	echo "<br />\n";
-	echo $text['description-paging_group_timeout']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
