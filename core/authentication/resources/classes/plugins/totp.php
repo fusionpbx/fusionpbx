@@ -354,10 +354,10 @@ class plugin_totp {
 			unset($parameters);
 
 			//create the authenticator object
-			$totp = new google_authenticator;
+			$totp = new authenticator;
 
 			//validate the code
-			if ($totp->checkCode($this->user_totp_secret, $_POST['authentication_code'])) {
+			if ($totp->check_code($this->user_totp_secret, $_POST['authentication_code'])) {
 				$auth_valid = true;
 			} else {
 				$auth_valid = false;
