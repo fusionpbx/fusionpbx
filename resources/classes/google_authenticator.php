@@ -34,9 +34,15 @@ class google_authenticator {
 	 * @return bool True if the code is valid, false otherwise.
 	 */
 	public function checkCode($secret, $code) {
+		// Only accept a fixed-length numeric code to prevent loose comparison
+		// (type juggling) and reduce the search space.
+		if (!is_string($code) || !ctype_digit($code) || strlen($code) !== self::$PASS_CODE_LENGTH) {
+			return false;
+		}
 		$time = floor(time() / 30);
 		for ($i = -1; $i <= 1; $i++) {
-			if ($this->getCode($secret, $time + $i) == $code) {
+			// Use a constant-time comparison to avoid timing attacks.
+			if (hash_equals($this->getCode($secret, $time + $i), $code)) {
 				return true;
 			}
 		}
