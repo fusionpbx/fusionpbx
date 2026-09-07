@@ -231,7 +231,8 @@ class plugin_email {
 			}
 
 			//authentication code
-			$_SESSION["user"]["authentication"]["email"]["code"] = generate_password(6, 1);
+			$email_code = generate_password(6, 1);
+			$_SESSION["user"]["authentication"]["email"]["code"] = hash('sha256', $email_code);
 			$_SESSION["user"]["authentication"]["email"]["epoch"] = time();
 			//reset the number of attempts for the newly generated code
 			$_SESSION["user"]["authentication"]["email"]["attempts"] = 0;
@@ -285,7 +286,7 @@ class plugin_email {
 
 			//replace variables in email body
 			$email_body = str_replace('${domain_name}', $_SESSION["domain_name"], $email_body);
-			$email_body = str_replace('${auth_code}', $_SESSION["user"]["authentication"]["email"]["code"], $email_body);
+			$email_body = str_replace('${auth_code}', $email_code, $email_body);
 
 			//get the email from name and address
 			$email_from_address = $settings->get('email', 'smtp_from');
@@ -434,8 +435,8 @@ class plugin_email {
 			if (!empty($_SESSION["user"]["authentication"]["email"]["attempts"]) && $_SESSION["user"]["authentication"]["email"]["attempts"] >= 5) {
 				$auth_valid = false;
 			} else {
-				//validate the code
-				if (!empty($_SESSION["user"]) && $_SESSION["user"]["authentication"]["email"]["code"] === $_POST['authentication_code']) {
+				//validate the code against the stored hash
+				if (!empty($_SESSION["user"]) && is_string($_POST['authentication_code'] ?? null) && hash_equals($_SESSION["user"]["authentication"]["email"]["code"], hash('sha256', $_POST['authentication_code']))) {
 					$auth_valid = true;
 				} else {
 					$auth_valid = false;
