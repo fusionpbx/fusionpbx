@@ -279,12 +279,14 @@
 			//unset the PHP session
 			unset($_SESSION);
 
-			//redirect the browser, force a relative (same-origin) redirect to prevent open-redirect via the Host header
+			//redirect the browser
+			//force a relative (same-origin) redirect to prevent open-redirect via the Host header
 			$redirect_uri = $_SERVER['REQUEST_URI'] ?? '/';
 			if (strpos($redirect_uri, '//') === 0) {
 				$redirect_uri = '/' . substr($redirect_uri, 2);
 			}
 			header('Location: '.$redirect_uri);
+			exit;
 		}
 	}
 
