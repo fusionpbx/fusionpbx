@@ -44,8 +44,22 @@ class plugin_ldap {
 	 */
 	function ldap(authentication $auth, settings $settings) {
 
+		//add multi-lingual support
+		$language = new text;
+		$text = $language->get(null, '/core/authentication');
+
+		//validate the token on login submission to prevent CSRF
+		if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_REQUEST['username'])) {
+			$token = new token;
+			if (!$token->validate('login')) {
+				message::add($text['message-invalid_token'], 'negative');
+				header('Location: login.php');
+				exit;
+			}
+		}
+
 		//show the authentication code view
-		if ($_REQUEST["username"]) {
+		if (empty($_REQUEST["username"])) {
 
 			//pre-process some settings
 			$theme_favicon = $settings->get('theme', 'favicon', PROJECT_PATH.'/themes/default/favicon.ico');
@@ -62,8 +76,8 @@ class plugin_ldap {
 			$domain_name = $domain_array[0];
 
 			//create token
-			//$object = new token;
-			//$token = $object->create('login');
+			$object = new token;
+			$token = $object->create('login');
 
 			//add multi-lingual support
 			$language = new text;
@@ -92,8 +106,8 @@ class plugin_ldap {
 			$view->assign("background_video", $theme_background_video);
 
 			//add the token name and hash to the view
-			//$view->assign("token_name", $token['name']);
-			//$view->assign("token_hash", $token['hash']);
+			$view->assign("token_name", $token['name']);
+			$view->assign("token_hash", $token['hash']);
 
 			//show the views
 			$content = $view->render('login.htm');
@@ -222,9 +236,6 @@ class plugin_ldap {
 		$result["ldap"]["plugin"] = "ldap";
 		$result["ldap"]["domain_name"] = $this->domain_name;
 		$result["ldap"]["username"] = $this->username;
-		if ($this->debug) {
-			$result["ldap"]["password"] = $this->password;
-		}
 		$result["ldap"]["user_uuid"] = $this->user_uuid;
 		$result["ldap"]["domain_uuid"] = $this->domain_uuid;
 		$result["ldap"]["authorized"] = $user_authorized ? true : false;

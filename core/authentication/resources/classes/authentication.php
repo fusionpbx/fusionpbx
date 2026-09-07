@@ -129,7 +129,9 @@ class authentication {
 					if ($name == 'database' && isset($this->key)) {
 						$object->key = $this->key;
 					}
-					if ($name == 'database' && isset($this->username)) {
+
+					//pass the submitted credentials to every authentication plugin
+					if (isset($this->username)) {
 						$object->username = $this->username;
 						$object->password = $this->password;
 					}
