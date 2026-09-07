@@ -109,6 +109,7 @@
 	if ($_SESSION['authorized'] && $_SESSION["user_hash"] !== hash('sha256', implode($server_array))) {
 		session_destroy();
 		header("Location: ".PROJECT_PATH."/logout.php");
+		exit;
 	}
 
 //if the session is not authorized, then verify the identity
