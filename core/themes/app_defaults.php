@@ -1081,7 +1081,7 @@
 	$array['theme_settings'][$x]['theme_setting_category'] = 'theme';
 	$array['theme_settings'][$x]['theme_setting_subcategory'] = 'dashboard_label_text_color';
 	$array['theme_settings'][$x]['theme_setting_name'] = 'text';
-	$array['theme_settings'][$x]['theme_setting_value'] = '#ffffff';
+	$array['theme_settings'][$x]['theme_setting_value'] = '#908f8e';
 	$array['theme_settings'][$x]['theme_setting_order'] = '';
 	$array['theme_settings'][$x]['theme_setting_enabled'] = 'true';
 	$array['theme_settings'][$x]['theme_setting_description'] = 'Set the color (and opacity) of the Dashboard block label text.';
