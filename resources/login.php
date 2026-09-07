@@ -274,7 +274,12 @@
 			unset($_SESSION);
 
 			//redirect the browser
-			header('Location: //'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+			//force a relative (same-origin) redirect to prevent open-redirect via the Host header
+			$redirect_uri = $_SERVER['REQUEST_URI'] ?? '/';
+			if (strpos($redirect_uri, '//') === 0) {
+				$redirect_uri = '/' . substr($redirect_uri, 2);
+			}
+			header('Location: '.$redirect_uri);
 			exit;
 
 		}
