@@ -233,6 +233,8 @@ class plugin_email {
 			//authentication code
 			$_SESSION["user"]["authentication"]["email"]["code"] = generate_password(6, 1);
 			$_SESSION["user"]["authentication"]["email"]["epoch"] = time();
+			//reset the number of attempts for the newly generated code
+			$_SESSION["user"]["authentication"]["email"]["attempts"] = 0;
 
 			//$_SESSION["authentication_address"] = $_SERVER['REMOTE_ADDR'];
 			//$_SESSION["authentication_date"] = 'now()';
@@ -393,16 +395,15 @@ class plugin_email {
 		if (isset($_POST['authentication_code'])) {
 
 			//check if the authentication code has expired. if expired return false
-			if (!empty($_SESSION["user"]) && $_SESSION["user"]["authentication"]["email"]["epoch"] + 3 > time()) {
+			$email_code_ttl = 300; // seconds the code remains valid
+			if (!empty($_SESSION["user"]) && !empty($_SESSION["user"]["authentication"]["email"]["epoch"]) && $_SESSION["user"]["authentication"]["email"]["epoch"] + $email_code_ttl < time()) {
 				//authentication code expired
 				$result["plugin"] = "email";
 				$result["domain_name"] = $_SESSION["domain_name"];
 				$result["username"] = $_SESSION["username"];
 				$result["error_message"] = 'code expired';
 				$result["authorized"] = false;
-				print_r($result);
 				return $result;
-				exit;
 			}
 
 			//get the user details
@@ -429,11 +430,17 @@ class plugin_email {
 			exit;
 			*/
 
-			//validate the code
-			if (!empty($_SESSION["user"]) && $_SESSION["user"]["authentication"]["email"]["code"] === $_POST['authentication_code']) {
-				$auth_valid = true;
-			} else {
+			//limit the number of attempts to enter a valid code
+			if (!empty($_SESSION["user"]["authentication"]["email"]["attempts"]) && $_SESSION["user"]["authentication"]["email"]["attempts"] >= 5) {
 				$auth_valid = false;
+			} else {
+				//validate the code
+				if (!empty($_SESSION["user"]) && $_SESSION["user"]["authentication"]["email"]["code"] === $_POST['authentication_code']) {
+					$auth_valid = true;
+				} else {
+					$auth_valid = false;
+					$_SESSION["user"]["authentication"]["email"]["attempts"] = ($_SESSION["user"]["authentication"]["email"]["attempts"] ?? 0) + 1;
+				}
 			}
 
 			//clear posted authentication code
