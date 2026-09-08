@@ -275,7 +275,8 @@ if (!class_exists('paging_groups')) {
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
 								$rows = $this->database->select($sql, null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
-									$x = $y = 0;
+									$x = 0;
+									$y = 0;
 									foreach ($rows as $row) {
 										//copy data
 										$array[$this->table][$x] = $row;
