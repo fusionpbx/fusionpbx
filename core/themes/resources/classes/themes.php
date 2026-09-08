@@ -27,20 +27,60 @@
 /**
  * themes class
  */
-if (!class_exists('themes')) {
 	class themes {
 
+		//declare the variables
+
 		/**
-		* declare the variables
-		*/
+		 * @var string
+		 */
 		private $app_name;
+
+
+		/**
+		 * @var string
+		 */
 		private $app_uuid;
+
+		/**
+		 * @var string
+		 */
 		private $name;
+
+		/**
+		 * @var string[]
+		 */
 		private $tables;
+
+		/**
+		 * @var string
+		 */
 		private $toggle_field;
+
+		/**
+		 * @var string[]
+		 */
 		private $toggle_values;
+
+		/**
+		 * @var string
+		 */
 		private $description_field;
+
+		/**
+		 * @var string
+		 */
 		private $location;
+
+		/**
+		 * @var database
+		 */
+		private $database;
+
+		/**
+		 * @var string
+		 */
+		private $table;
 
 		/**
 		 * called when the object is created
@@ -62,17 +102,11 @@ if (!class_exists('themes')) {
 		}
 
 		/**
-		 * called when there are no references to a particular object
-		 * unset the variables used in the class
-		 */
-		public function __destruct() {
-			foreach ($this as $key => $value) {
-				unset($this->$key);
-			}
-		}
-
-		/**
 		 * delete rows from the database
+		 *
+		 * @param array $records An array of records to delete, where each element is an associative array representing a record.
+		 * 
+		 * @return void
 		 */
 		public function delete($records) {
 			if (permission_exists($this->name.'_delete')) {
@@ -110,10 +144,7 @@ if (!class_exists('themes')) {
 						//delete the checked rows
 							if (is_array($array) && @sizeof($array) != 0) {
 								//execute delete
-									$database = new database;
-									$database->app_name = $this->app_name;
-									$database->app_uuid = $this->app_uuid;
-									$database->delete($array);
+									$this->database->delete($array);
 									unset($array);
 
 								//set message
@@ -126,6 +157,9 @@ if (!class_exists('themes')) {
 
 		/**
 		 * toggle a field between two values
+		 * 
+		 * @param array $records An array of records to toggle, where each element is an associative array representing a record.
+		 * @return void
 		 */
 		public function toggle($records) {
 			if (permission_exists($this->name.'_edit')) {
@@ -153,7 +187,7 @@ if (!class_exists('themes')) {
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, [], 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
 										$states[$row['uuid']] = $row['toggle'];
@@ -189,6 +223,10 @@ if (!class_exists('themes')) {
 
 		/**
 		 * copy rows from the database
+		 * 
+		 * @param array $records An array of records to copy, where each element is an associative array representing a record.
+		 * 
+		 * @return void
 		 */
 		public function copy($records) {
 			if (permission_exists($this->name.'_add')) {
@@ -219,7 +257,7 @@ if (!class_exists('themes')) {
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
 								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->database->select($sql, $parameters, 'all');
+								$rows = $this->database->select($sql, [], 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$x = 0;
 									foreach ($rows as $row) {
@@ -397,6 +435,10 @@ if (!class_exists('themes')) {
 
 		/**
 		 * copy rows from the database
+		 * 
+		 * @param array $records
+		 * 
+		 * @return false|null
 		 */
 		public function copy_settings($records) {
 			//assign the variables
@@ -434,7 +476,7 @@ if (!class_exists('themes')) {
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
 					$sql = "select * from v_".$this->table." ";
 					$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-					$rows = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, [], 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$x = 0;
 						foreach ($rows as $row) {
@@ -466,6 +508,3 @@ if (!class_exists('themes')) {
 		}
 
 	}
-}
-
-?>
