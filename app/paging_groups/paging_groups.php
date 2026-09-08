@@ -259,8 +259,8 @@
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('paging_group_add') || permission_exists('paging_group_edit') || permission_exists('paging_group_delete')) {
 				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='paging[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
-				echo "		<input type='hidden' name='paging[$x][uuid]' value='".escape($row['paging_group_uuid'])."' />\n";
+				echo "		<input type='checkbox' name='paging_groups[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
+				echo "		<input type='hidden' name='paging_groups[$x][uuid]' value='".escape($row['paging_group_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
 			echo "	<td>\n";
