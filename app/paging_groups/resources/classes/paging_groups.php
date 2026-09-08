@@ -57,7 +57,7 @@ if (!class_exists('paging_groups')) {
 			//assign the variables
 			$this->app_name = 'paging_groups';
 			$this->app_uuid = 'bae044dd-e773-471c-a890-5220ebca3bc9';
-			$this->name = 'paging_groups';
+			$this->name = 'paging_group';
 			$this->table = 'paging_groups';
 			$this->toggle_field = 'paging_group_enabled';
 			$this->toggle_values = ['true','false'];
