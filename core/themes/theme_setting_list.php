@@ -64,6 +64,42 @@
 	}
 	$query_string = http_build_query($url_params);
 
+//get http post variables and set them to php variables
+	if (!empty($_POST)) {
+		$action = $_POST["action"] ?? null;
+		$theme_uuid = $_POST['theme_uuid'] ?? null;
+		$theme_settings = $_POST['theme_settings'] ?? null;
+	}
+
+//process the http post data by action
+	if (!empty($action) && !empty($theme_settings)) {
+		//process the http post data by action
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('theme_setting_add')) {
+					$obj = new themes;
+					$obj->copy_settings($theme_settings);
+				}
+				break;
+			case 'toggle':
+				if (permission_exists('theme_setting_edit')) {
+					$obj = new themes;
+					$obj->toggle_settings($theme_settings);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('theme_setting_delete')) {
+					$obj = new themes;
+					$obj->delete_settings($theme_settings);
+				}
+				break;
+		}
+
+		//redirect the user
+		header('Location: theme_edit.php?id='.urlencode($theme_uuid));
+		exit;
+	}
+
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', 'false');
 
@@ -148,7 +184,7 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
-	echo "<form id='form_list' method='post' action=''>\n";
+	echo "<form id='form_list' method='post' action='theme_setting_list.php'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='theme_uuid' value='".escape($theme_uuid)."'>\n";
 
