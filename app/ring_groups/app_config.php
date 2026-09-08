@@ -146,6 +146,8 @@
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_call_screen_enabled";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_wait_announcement";
 
 	//default settings
 		$y=0;
@@ -578,4 +580,4 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
-?>
+		

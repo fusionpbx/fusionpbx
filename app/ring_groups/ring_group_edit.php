@@ -426,7 +426,9 @@
 			$array['ring_groups'][0]["ring_group_name"] = $ring_group_name;
 			$array['ring_groups'][0]["ring_group_extension"] = $ring_group_extension;
 			$array['ring_groups'][0]["ring_group_greeting"] = $ring_group_greeting;
-			$array['ring_groups'][0]["ring_group_wait_announcement"] = $ring_group_wait_announcement;
+			if (permission_exists('ring_group_wait_announcement')) {
+				$array['ring_groups'][0]["ring_group_wait_announcement"] = $ring_group_wait_announcement;
+			}
 			$array['ring_groups'][0]["ring_group_wait_interval"] = $ring_group_wait_interval;
 			$array['ring_groups'][0]["ring_group_strategy"] = $ring_group_strategy;
 			$array["ring_groups"][0]["ring_group_exit_key"] = $ring_group_exit_key;
@@ -1157,186 +1159,188 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	$instance_id = 'ring_group_wait_announcement';
-	$instance_label = 'wait_announcement';
-	$instance_value = $ring_group_wait_announcement;
-	echo "<tr>\n";
-	echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-wait_announcement']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld searchable_select' onchange=\"".(permission_exists('recording_play') || permission_exists('recording_download') ? "recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));" : null)." if (this.options[this.selectedIndex].getAttribute('data-tts') == 'new') {document.querySelectorAll('.".$instance_label."_tts').forEach(el => { el.classList.add('animate-in'); });} else {document.querySelectorAll('.".$instance_label."_tts').forEach(el => { el.classList.remove('animate-in'); });}\">\n";
-	echo "	<option value=''></option>\n";
-	if ($speech_enabled && !empty($speech_engine)) {
-		echo "<optgroup label='".$text['label-text_to_speech']."'>\n";
-		echo "	<option value='new' data-tts='new'>".$text['label-new']."</option>\n";
-		echo "</optgroup>\n";
-	}
-	$found = $playable = false;
-	if (!empty($audio_files) && is_array($audio_files) && @sizeof($audio_files) != 0) {
-		foreach ($audio_files as $key => $value) {
-			echo "<optgroup label=".$text['label-'.$key]." data-type='".$key."'>\n";
-			foreach ($value as $row) {
-				if ($key == 'recordings') {
-					if (
-						!empty($instance_value) &&
-						($instance_value == $row["value"] || $instance_value == $settings->get('switch', 'recordings', '')."/".$domain_name.'/'.$row["value"]) &&
-						file_exists($settings->get('switch', 'recordings', '')."/".$domain_name.'/'.pathinfo($row["value"], PATHINFO_BASENAME))
-						) {
-						$selected = "selected='selected'";
-						$playable = '../recordings/recordings.php?action=download&type=rec&filename='.pathinfo($row["value"], PATHINFO_BASENAME);
-						$found = true;
-					}
-					else {
-						unset($selected);
-					}
-				}
-				else if ($key == 'sounds') {
-					if (!empty($instance_value) && $instance_value == $row["value"]) {
-						$selected = "selected='selected'";
-						$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
-						$found = true;
-					}
-					else {
-						unset($selected);
-					}
-				}
-				else if ($key == 'phrases') {
-					if (!empty($instance_value) && $instance_value == $row["value"]) {
-						$selected = "selected='selected'";
-						$playable = '';
-						$found = true;
-					}
-					else {
-						unset($selected);
-					}
-				}
-				else {
-					unset($selected);
-				}
-				echo "	<option value='".escape($row["value"])."' ".($selected ?? '').">".escape($row["name"])."</option>\n";
-			}
+	if (permission_exists('ring_group_wait_announcement')) {
+		$instance_id = 'ring_group_wait_announcement';
+		$instance_label = 'wait_announcement';
+		$instance_value = $ring_group_wait_announcement;
+		echo "<tr>\n";
+		echo "<td class='vncell' rowspan='2' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-wait_announcement']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable playback_progress_bar_background' id='recording_progress_bar_".$instance_id."' onclick=\"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));\" style='display: none; border-bottom: none; padding-top: 0 !important; padding-bottom: 0 !important;' align='left'><span class='playback_progress_bar' id='recording_progress_".$instance_id."'></span></td>\n";
+		echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "<select name='".$instance_id."' id='".$instance_id."' class='formfld searchable_select' onchange=\"".(permission_exists('recording_play') || permission_exists('recording_download') ? "recording_reset('".$instance_id."'); set_playable('".$instance_id."', this.value, this.options[this.selectedIndex].parentNode.getAttribute('data-type'));" : null)." if (this.options[this.selectedIndex].getAttribute('data-tts') == 'new') {document.querySelectorAll('.".$instance_label."_tts').forEach(el => { el.classList.add('animate-in'); });} else {document.querySelectorAll('.".$instance_label."_tts').forEach(el => { el.classList.remove('animate-in'); });}\">\n";
+		echo "	<option value=''></option>\n";
+		if ($speech_enabled && !empty($speech_engine)) {
+			echo "<optgroup label='".$text['label-text_to_speech']."'>\n";
+			echo "	<option value='new' data-tts='new'>".$text['label-new']."</option>\n";
 			echo "</optgroup>\n";
 		}
-	}
-	if (if_group("superadmin") && !empty($instance_value) && !$found) {
-		echo "	<option value='".escape($instance_value)."' selected='selected'>".escape($instance_value)."</option>\n";
-	}
-	unset($selected);
-	echo "	</select>\n";
-	if (if_group("superadmin")) {
-		echo "<input type='button' id='btn_select_to_input_".$instance_id."' class='btn' name='' alt='back' onclick='toggle_select_input(document.getElementById(\"".$instance_id."\"), \"".$instance_id."\"); this.style.visibility=\"hidden\";' value='&#9665;'>";
-	}
-	if ((permission_exists('recording_play') || permission_exists('recording_download')) && (!empty($playable) || empty($instance_value))) {
-		switch (pathinfo($playable, PATHINFO_EXTENSION)) {
-			case 'wav' : $mime_type = 'audio/wav'; break;
-			case 'mp3' : $mime_type = 'audio/mpeg'; break;
-			case 'ogg' : $mime_type = 'audio/ogg'; break;
-		}
-		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
-		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'))"]);
-		unset($playable, $mime_type);
-	}
-	echo "<br />\n";
-	if ($speech_enabled && !empty($speech_engine)) {
-		echo "<div class='".$instance_label."_tts'>\n";
-
-		echo "	<strong>".$text['label-recording_name']."</strong><br />\n";
-		echo "	<input class='formfld' type='text' name='".$instance_label."[recording_name]' maxlength='255' value=\"".escape($recording_name)."\">\n";
-		echo "	<br /><br />\n";
-
-		echo "	<div style='display: flex; flex-wrap: wrap; column-gap: 10px; width: 400px;'>\n";
-
-		echo "		<div style='flex: 1; min-width: 200px;'>\n";
-		echo "			<strong>".$text['label-voice']."</strong>\n";
-		echo "		</div>\n";
-
-		if ($speed_enabled) {
-			echo "		<div style='flex: 1; min-width: 120px;'>\n";
-			echo "			<strong>".$text['label-speed']."</strong>\n";
-			echo "		</div>\n";
-		}
-
-		// Voice
-		echo "		<div style='flex: 1; min-width: 200px;'>\n";
-		if (!empty($voices)) {
-			if ($voices_array_type == 'single') {
-				echo "	<select class='formfld' name='".$instance_label."[recording_voice]' style='width: 100%;'>\n";
-				echo "		<option value=''></option>\n";
-				foreach ($voices as $key => $voice) {
-					$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
-					echo "		<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
-				}
-				echo "	</select>\n";
-			}
-			if ($voices_array_type == 'multi') {
-				echo "	<select class='formfld' id='recording_voice_source' name='".$instance_label."[recording_voice_source]' style='display: none;'>\n";
-				echo "		<option value=''></option>\n";
-				foreach ($voices as $category => $sub_array) {
-					$category = $text['label-'.$category] ?? $category;
-					echo "<optgroup label='".$category."' data-type='".$category."'>\n";
-					foreach ($sub_array as $key => $voice) {
-						$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
-						echo "	<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+		$found = $playable = false;
+		if (!empty($audio_files) && is_array($audio_files) && @sizeof($audio_files) != 0) {
+			foreach ($audio_files as $key => $value) {
+				echo "<optgroup label=".$text['label-'.$key]." data-type='".$key."'>\n";
+				foreach ($value as $row) {
+					if ($key == 'recordings') {
+						if (
+							!empty($instance_value) &&
+							($instance_value == $row["value"] || $instance_value == $settings->get('switch', 'recordings', '')."/".$domain_name.'/'.$row["value"]) &&
+							file_exists($settings->get('switch', 'recordings', '')."/".$domain_name.'/'.pathinfo($row["value"], PATHINFO_BASENAME))
+							) {
+							$selected = "selected='selected'";
+							$playable = '../recordings/recordings.php?action=download&type=rec&filename='.pathinfo($row["value"], PATHINFO_BASENAME);
+							$found = true;
+						}
+						else {
+							unset($selected);
+						}
 					}
-					echo "</optgroup>\n";
+					else if ($key == 'sounds') {
+						if (!empty($instance_value) && $instance_value == $row["value"]) {
+							$selected = "selected='selected'";
+							$playable = '../switch/sounds.php?action=download&filename='.$row["value"];
+							$found = true;
+						}
+						else {
+							unset($selected);
+						}
+					}
+					else if ($key == 'phrases') {
+						if (!empty($instance_value) && $instance_value == $row["value"]) {
+							$selected = "selected='selected'";
+							$playable = '';
+							$found = true;
+						}
+						else {
+							unset($selected);
+						}
+					}
+					else {
+						unset($selected);
+					}
+					echo "	<option value='".escape($row["value"])."' ".($selected ?? '').">".escape($row["name"])."</option>\n";
+				}
+				echo "</optgroup>\n";
+			}
+		}
+		if (if_group("superadmin") && !empty($instance_value) && !$found) {
+			echo "	<option value='".escape($instance_value)."' selected='selected'>".escape($instance_value)."</option>\n";
+		}
+		unset($selected);
+		echo "	</select>\n";
+		if (if_group("superadmin")) {
+			echo "<input type='button' id='btn_select_to_input_".$instance_id."' class='btn' name='' alt='back' onclick='toggle_select_input(document.getElementById(\"".$instance_id."\"), \"".$instance_id."\"); this.style.visibility=\"hidden\";' value='&#9665;'>";
+		}
+		if ((permission_exists('recording_play') || permission_exists('recording_download')) && (!empty($playable) || empty($instance_value))) {
+			switch (pathinfo($playable, PATHINFO_EXTENSION)) {
+				case 'wav' : $mime_type = 'audio/wav'; break;
+				case 'mp3' : $mime_type = 'audio/mpeg'; break;
+				case 'ogg' : $mime_type = 'audio/ogg'; break;
+			}
+			echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
+			echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'))"]);
+			unset($playable, $mime_type);
+		}
+		echo "<br />\n";
+		if ($speech_enabled && !empty($speech_engine)) {
+			echo "<div class='".$instance_label."_tts'>\n";
+
+			echo "	<strong>".$text['label-recording_name']."</strong><br />\n";
+			echo "	<input class='formfld' type='text' name='".$instance_label."[recording_name]' maxlength='255' value=\"".escape($recording_name)."\">\n";
+			echo "	<br /><br />\n";
+
+			echo "	<div style='display: flex; flex-wrap: wrap; column-gap: 10px; width: 400px;'>\n";
+
+			echo "		<div style='flex: 1; min-width: 200px;'>\n";
+			echo "			<strong>".$text['label-voice']."</strong>\n";
+			echo "		</div>\n";
+
+			if ($speed_enabled) {
+				echo "		<div style='flex: 1; min-width: 120px;'>\n";
+				echo "			<strong>".$text['label-speed']."</strong>\n";
+				echo "		</div>\n";
+			}
+
+			// Voice
+			echo "		<div style='flex: 1; min-width: 200px;'>\n";
+			if (!empty($voices)) {
+				if ($voices_array_type == 'single') {
+					echo "	<select class='formfld' name='".$instance_label."[recording_voice]' style='width: 100%;'>\n";
+					echo "		<option value=''></option>\n";
+					foreach ($voices as $key => $voice) {
+						$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
+						echo "		<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+					}
+					echo "	</select>\n";
+				}
+				if ($voices_array_type == 'multi') {
+					echo "	<select class='formfld' id='recording_voice_source' name='".$instance_label."[recording_voice_source]' style='display: none;'>\n";
+					echo "		<option value=''></option>\n";
+					foreach ($voices as $category => $sub_array) {
+						$category = $text['label-'.$category] ?? $category;
+						echo "<optgroup label='".$category."' data-type='".$category."'>\n";
+						foreach ($sub_array as $key => $voice) {
+							$recording_voice_selected = (!empty($recording_voice) && $key == $recording_voice) ? "selected='selected'" : null;
+							echo "	<option value='".escape($key)."' $recording_voice_selected>".escape(ucwords($voice))."</option>\n";
+						}
+						echo "</optgroup>\n";
+					}
+					echo "	</select>\n";
+
+					echo "	<select class='formfld' id='recording_voice_group_select' style='width: 100%; margin-bottom: 5px;'>\n";
+					echo "		<option value='' disabled='disabled' selected='selected'></option>\n";
+					echo "	</select>\n";
+
+					echo "	<select class='formfld' id='recording_voice_option_select' name='".$instance_label."[recording_voice]' style='width: 100%;' disabled='disabled'>\n";
+					echo "		<option value='' disabled='disabled' selected='selected'></option>\n";
+					echo "	</select>\n";
+
+					echo "<script>\n";
+					echo "	select_group_option('recording_voice_source', 'recording_voice_group_select', 'recording_voice_option_select');\n";
+					echo "</script>\n";
+				}
+			} else {
+				echo "	<input class='formfld' type='text' name='".$instance_label."[recording_voice]' maxlength='255' value=\"".escape($recording_voice)."\">\n";
+			}
+			echo "	</div>\n";
+
+			// Speed
+			if ($speed_enabled) {
+				echo "	<div style='flex: 1; min-width: 120px;'>\n";
+				echo "	<select class='formfld' name='".$instance_label."[recording_speed]' style='width: 100%;'>\n";
+				foreach ($speed_options as $speed_value => $speed_label) {
+					$selected = (string)$recording_speed === $speed_value ? "selected='selected'" : '';
+					echo "		<option value='".escape($speed_value)."' $selected>".escape($speed_label)."</option>\n";
 				}
 				echo "	</select>\n";
-
-				echo "	<select class='formfld' id='recording_voice_group_select' style='width: 100%; margin-bottom: 5px;'>\n";
-				echo "		<option value='' disabled='disabled' selected='selected'></option>\n";
-				echo "	</select>\n";
-
-				echo "	<select class='formfld' id='recording_voice_option_select' name='".$instance_label."[recording_voice]' style='width: 100%;' disabled='disabled'>\n";
-				echo "		<option value='' disabled='disabled' selected='selected'></option>\n";
-				echo "	</select>\n";
-
-				echo "<script>\n";
-				echo "	select_group_option('recording_voice_source', 'recording_voice_group_select', 'recording_voice_option_select');\n";
-				echo "</script>\n";
+				echo "	<br />\n";
+				echo "	</div>\n";
 			}
-		} else {
-			echo "	<input class='formfld' type='text' name='".$instance_label."[recording_voice]' maxlength='255' value=\"".escape($recording_voice)."\">\n";
-		}
-		echo "	</div>\n";
-
-		// Speed
-		if ($speed_enabled) {
-			echo "	<div style='flex: 1; min-width: 120px;'>\n";
-			echo "	<select class='formfld' name='".$instance_label."[recording_speed]' style='width: 100%;'>\n";
-			foreach ($speed_options as $speed_value => $speed_label) {
-				$selected = (string)$recording_speed === $speed_value ? "selected='selected'" : '';
-				echo "		<option value='".escape($speed_value)."' $selected>".escape($speed_label)."</option>\n";
-			}
-			echo "	</select>\n";
-			echo "	<br />\n";
 			echo "	</div>\n";
+
+			echo "	<br />\n";
+			echo "	<strong>".$text['label-message']."</strong><br />\n";
+			echo "	<textarea class='formfld' name='".$instance_label."[recording_message]' style='width: 300px; height: 150px;'></textarea>\n";
+
+			echo "</div>\n";
 		}
-		echo "	</div>\n";
+		echo $text['description-wait_announcement']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 
-		echo "	<br />\n";
-		echo "	<strong>".$text['label-message']."</strong><br />\n";
-		echo "	<textarea class='formfld' name='".$instance_label."[recording_message]' style='width: 300px; height: 150px;'></textarea>\n";
-
-		echo "</div>\n";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-wait_interval']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='number' name='ring_group_wait_interval' maxlength='255' value=\"".escape($ring_group_wait_interval)."\" min='1' max='300'>\n";
+		echo "<br />\n";
+		echo $text['description-wait_interval']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	echo $text['description-wait_announcement']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-wait_interval']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='ring_group_wait_interval' maxlength='255' value=\"".escape($ring_group_wait_interval)."\" min='1' max='300'>\n";
-	echo "<br />\n";
-	echo $text['description-wait_interval']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
