@@ -54,11 +54,9 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
-		$action = $_POST["action"] ?? null;
 		$theme_name = $_POST["theme_name"] ?? null;
 		$theme_enabled = $_POST["theme_enabled"] ?? null;
 		$theme_description = $_POST["theme_description"] ?? null;
-		$theme_settings = $_POST['theme_settings' ?? null];
 	}
 
 //process the data and save it to the database
@@ -68,35 +66,6 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: theme_edit.php?id='.urlencode($theme_uuid));
-				exit;
-			}
-
-		//process the http post data by action
-			if (!empty($action) && !empty($theme_settings)) {
-				//process the http post data by action
-				switch ($action) {
-					case 'copy':
-						if (permission_exists('theme_setting_add')) {
-							$obj = new themes;
-							$obj->copy_settings($theme_settings);
-						}
-						break;
-					case 'toggle':
-						if (permission_exists('theme_setting_edit')) {
-							$obj = new themes;
-							$obj->toggle_settings($theme_settings);
-						}
-						break;
-					case 'delete':
-						if (permission_exists('theme_setting_delete')) {
-							$obj = new themes;
-							$obj->delete_settings($theme_settings);
-						}
-						break;
-				}
-
-				//redirect the user
 				header('Location: theme_edit.php?id='.urlencode($theme_uuid));
 				exit;
 			}
