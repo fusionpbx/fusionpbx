@@ -277,7 +277,7 @@
 		accountcode = session:getVariable("accountcode");
 		local_ip_v4 = session:getVariable("local_ip_v4");
 		verto_enabled = session:getVariable("verto_enabled") or '';
-		sip_h_caller_destination = session:getVariable("sip_h_caller_destination") or '';
+		sip_h_caller_destination = session:getVariable("sip_h_caller_destination");
 	end
 
 --set caller id
