@@ -35,27 +35,73 @@
 	$language = new text;
 	$text = $language->get();
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'theme_setting_subcategory'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
+
+// Build the query string
+	$url_params = [];
+	if (!empty($theme_uuid)) {
+		$url_params['id'] = $theme_uuid;
+	}
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show) && $show == 'all' && permission_exists('theme_all')) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
+
+//get http post variables and set them to php variables
+	if (!empty($_POST)) {
+		$action = $_POST["action"] ?? null;
+		$theme_uuid = $_POST['theme_uuid'] ?? null;
+		$theme_settings = $_POST['theme_settings'] ?? null;
+	}
+
+//process the http post data by action
+	if (!empty($action) && !empty($theme_settings)) {
+		//process the http post data by action
+		switch ($action) {
+			case 'copy':
+				if (permission_exists('theme_setting_add')) {
+					$obj = new themes;
+					$obj->copy_settings($theme_settings);
+				}
+				break;
+			case 'toggle':
+				if (permission_exists('theme_setting_edit')) {
+					$obj = new themes;
+					$obj->toggle_settings($theme_settings);
+				}
+				break;
+			case 'delete':
+				if (permission_exists('theme_setting_delete')) {
+					$obj = new themes;
+					$obj->delete_settings($theme_settings);
+				}
+				break;
+		}
+
+		//redirect the user
+		header('Location: theme_edit.php?id='.urlencode($theme_uuid));
+		exit;
+	}
+
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', 'false');
-
-//get order and order by
-	$order_by = $_GET["order_by"] ?? null;
-	$order = $_GET["order"] ?? null;
-
-//define the variables
-	$search = '';
-	$show = '';
-	$list_row_url = '';
-
-//add the search variable
-	if (!empty($_GET["search"])) {
-		$search = strtolower($_GET["search"]);
-	}
-
-//add the show variable
-	if (!empty($_GET["show"])) {
-		$show = $_GET["show"];
-	}
 
 //get the count
 	$sql = "select count(theme_setting_uuid) ";
@@ -69,7 +115,7 @@
 		$sql .= "	or lower(theme_setting_value) like :search ";
 		$sql .= "	or lower(theme_setting_description) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
 	$sql .= "and theme_uuid = :theme_uuid ";
 	$parameters['theme_uuid'] = $theme_uuid;
@@ -95,7 +141,7 @@
 		$sql .= "	or lower(theme_setting_value) like :search ";
 		$sql .= "	or lower(theme_setting_description) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
 	$sql .= "and theme_uuid = :theme_uuid ";
 	$parameters['theme_uuid'] = $theme_uuid;
@@ -138,7 +184,7 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
-	echo "<form id='form_list' method='post' action=''>\n";
+	echo "<form id='form_list' method='post' action='theme_setting_list.php'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
 	echo "<input type='hidden' name='theme_uuid' value='".escape($theme_uuid)."'>\n";
 
@@ -150,11 +196,11 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".empty($theme_settings ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('theme_setting_category', $text['label-theme_setting_category'], $order_by, $order);
-	echo th_order_by('theme_setting_subcategory', $text['label-theme_setting_subcategory'], $order_by, $order);
-	echo th_order_by('theme_setting_name', $text['label-theme_setting_type'], $order_by, $order);
-	echo th_order_by('theme_setting_value', $text['label-theme_setting_value'], $order_by, $order);
-	echo th_order_by('theme_setting_enabled', $text['label-theme_setting_enabled'], $order_by, $order, null, "class='center'");
+	echo th_order_by('theme_setting_category', $text['label-theme_setting_category'], $order_by, $order, null, null, $url_params);
+	echo th_order_by('theme_setting_subcategory', $text['label-theme_setting_subcategory'], $order_by, $order, null, null, $url_params);
+	echo th_order_by('theme_setting_name', $text['label-theme_setting_type'], $order_by, $order, null, null, $url_params);
+	echo th_order_by('theme_setting_value', $text['label-theme_setting_value'], $order_by, $order, null, null, $url_params);
+	echo th_order_by('theme_setting_enabled', $text['label-theme_setting_enabled'], $order_by, $order, null, "class='center'", $url_params);
 	echo "	<th class='hide-sm-dn'>".$text['label-theme_setting_description']."</th>\n";
 	if (permission_exists('theme_setting_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -164,6 +210,7 @@
 	if (!empty($theme_settings) && is_array($theme_settings) && @sizeof($theme_settings) != 0) {
 		$x = 0;
 		foreach ($theme_settings as $row) {
+			$list_row_url = '';
 			if (permission_exists('theme_setting_edit')) {
 				$list_row_url = "theme_setting_edit.php?id=".urlencode($row['theme_setting_uuid']).'&theme_uuid='.$theme_uuid;
 			}
