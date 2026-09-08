@@ -113,8 +113,14 @@
 
 --check the missed calls
 	function missed()
+		--only run the missed call handling once per call
+			if (missed_sent == true) then
+				return;
+			end
+			missed_sent = true;
+
 		--add missed call channel variable
-			if (session) then
+			if (session and session:ready()) then
 				session:setVariable("missed_call", 'true');
 			end
 
@@ -125,9 +131,11 @@
 					mail_to = missed_call_data;
 
 				--set the sounds path for the language, dialect and voice
-					default_language = session:getVariable("default_language");
-					default_dialect = session:getVariable("default_dialect");
-					default_voice = session:getVariable("default_voice");
+					if (session and session:ready()) then
+						default_language = session:getVariable("default_language");
+						default_dialect = session:getVariable("default_dialect");
+						default_voice = session:getVariable("default_voice");
+					end
 					if (not default_language) then default_language = 'en'; end
 					if (not default_dialect) then default_dialect = 'us'; end
 					if (not default_voice) then default_voice = 'callie'; end
@@ -277,7 +285,7 @@
 		accountcode = session:getVariable("accountcode");
 		local_ip_v4 = session:getVariable("local_ip_v4");
 		verto_enabled = session:getVariable("verto_enabled") or '';
-		sip_h_caller_destination = session:getVariable("sip_h_caller_destination");
+		sip_h_caller_destination = session:getVariable("sip_h_caller_destination") or '';
 	end
 
 --set caller id
@@ -487,9 +495,10 @@
 
 		--callback function detecting dtmf
 		function on_dtmf(s, _type, obj, arg)
-			local k, v = nil, nil
 			if (_type == "dtmf") then
-				dtmf_entered = 1;
+				if (arg ~= nil) then
+					dtmf_digits = dtmf_digits .. tostring(arg);
+				end
 				return 'break'
 			else
 				return ''
@@ -519,7 +528,7 @@
 		silence_seconds = settings:get('recordings', 'recording_silence_seconds', 'numeric') or 3;
 
 		--create the call scree file name
-		call_sreen_name = 'call_screen.'..uuid..'.'..record_ext;
+		call_screen_name = 'call_screen.'..uuid..'.'..record_ext;
 
 		--make sure the recording directory exists
 		if (not file_exists(record_path)) then
@@ -531,7 +540,7 @@
 
 		--record the name and reason for calling
 		if (session:ready()) then
-			result = session:recordFile(record_path..'/'..call_sreen_name, max_length_seconds, silence_threshold, silence_seconds);
+			result = session:recordFile(record_path..'/'..call_screen_name, max_length_seconds, silence_threshold, silence_seconds);
 		end
 	end
 
@@ -556,6 +565,7 @@
 
 --get the destination and follow the forward
 	function get_forward_all(count, destination_number, domain_name)
+		local toll_allow = nil;
 		cmd = "user_exists id ".. destination_number .." "..domain_name;
 		--freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. cmd .. "\n");
 		user_exists = api:executeString(cmd);
@@ -564,7 +574,7 @@
 				cmd = "user_data ".. destination_number .."@" ..domain_name.." var forward_all_enabled";
 				if (api:executeString(cmd) == "true") then
 					--get the toll_allow var
-						cmd = "user_data ".. destination_number .."@" ..leg_domain_name.." var toll_allow";
+						cmd = "user_data ".. destination_number .."@" ..domain_name.." var toll_allow";
 						toll_allow = api:executeString(cmd);
 						--freeswitch.consoleLog("notice", "[ring groups][call forward all] " .. destination_number .. " toll_allow is ".. toll_allow .."\n");
 
@@ -583,6 +593,12 @@
 
 --process the ring group
 	if (ring_group_forward_enabled == 'true' and string.len(ring_group_forward_destination) > 0) then
+
+		--check if the caller is a local user
+			if (caller_is_local == nil and tonumber(caller_id_number) ~= nil) then
+				cmd = "user_exists id ".. caller_id_number .." "..domain_name;
+				caller_is_local = api:executeString(cmd);
+			end
 
 		--set the outbound caller id
 			if (caller_is_local == 'true' and outbound_caller_id_name ~= nil) then
@@ -700,7 +716,7 @@
 				row['toll_allow'] = toll_allow;
 
 				--check if the user exists
-				cmd = "user_exists id ".. destination_number .." "..domain_name;
+				cmd = "user_exists id ".. destination_number .." "..leg_domain_name;
 				user_exists = api:executeString(cmd);
 
 				--cmd = "user_exists id ".. destination_number .." "..domain_name;
@@ -870,9 +886,18 @@
 							freeswitch.consoleLog("NOTICE", "[ring_group] "..cmd.."\n");
 							not_registered_destination_number = api:executeString(cmd);
 							freeswitch.consoleLog("NOTICE", "[ring_group] "..not_registered_destination_number.."\n");
-							if (not_registered_destination_number ~= nil) then
+							if (not_registered_destination_number ~= nil and not_registered_destination_number ~= '') then
 								destination_number = not_registered_destination_number;
 								destinations[key]['destination_number'] = destination_number;
+								--the forward destination is a different number; re-evaluate whether it is a user
+								--so the main loop routes it correctly (an external forward number must not inherit
+								--the original member's user_exists=true, or it is dropped as an unregistered user)
+								cmd = "user_exists id ".. destination_number .." "..domain_name;
+								destinations[key]['user_exists'] = api:executeString(cmd);
+							else
+								--no forward destination for an unregistered user - remove this extension from the ring group
+								freeswitch.consoleLog("NOTICE", "[ring_group] no forward destination for unregistered user, removing extension "..row.destination_number.."@"..domain_name.."\n");
+								destinations[key] = nil;
 							end
 						end
 					end
@@ -937,6 +962,7 @@
 			end
 
 		--process the destinations
+			app_data = nil;
 			x = 1;
 			for key, row in pairs(destinations) do
 				if (tonumber(row.destination_timeout) > 0) then
@@ -961,12 +987,12 @@
 
 					--follow the forwards
 						if (row.ring_group_call_forward_enabled == 'true') then
-							count, destination_number = get_forward_all(0, destination_number, leg_domain_name);
+							count, destination_number = get_forward_all(0, destination_number, row.domain_name);
 						end
 
 					--check if the user exists
 						if (user_exists == nil) then
-							cmd = "user_exists id ".. destination_number .." "..domain_name;
+							cmd = "user_exists id ".. destination_number .." "..row.domain_name;
 							user_exists = api:executeString(cmd);
 						end
 
@@ -1122,7 +1148,7 @@
 							if (user_contact ~= "error/user_not_registered") then
 								dial_string = dial_string_user .. user_contact;
 							end
-							if (verto_enabled == 'true') then
+							if (verto_enabled == 'true' and dial_string ~= nil) then
 								dial_string = dial_string .. ","..api:executeString("verto_contact ".. row.destination_number .."@" ..domain_name);
 							end
 						elseif (tonumber(destination_number) == nil) then
@@ -1186,8 +1212,9 @@
 						end
 
 					--add a delimiter between destinations
+						freeswitch.consoleLog("notice", "[ring group] leg "..x..": destination_number="..tostring(destination_number).." user_exists="..tostring(user_exists).." dial_string="..tostring(dial_string).."\\n");
 						if (dial_string ~= nil) then
-							--freeswitch.consoleLog("notice", "[ring group] dial_string: " .. dial_string .. "\n");
+							freeswitch.consoleLog("notice", "[ring group] dial_string: " .. dial_string .. "\n");
 							if (x == 1) then
 								if (ring_group_strategy == "enterprise") then
 									app_data = dial_string;
@@ -1301,6 +1328,9 @@
 					end
 
 				--execute the bridge
+					if (app_data == nil) then
+						freeswitch.consoleLog("notice", "[ring group] WARNING: app_data is nil - no legs to bridge (check destination_timeout > 0 and member registration)\\n");
+					end
 					if (app_data ~= nil) then
 						if (ring_group_strategy == "enterprise") then
 							app_data = app_data:gsub("%[", "{");
