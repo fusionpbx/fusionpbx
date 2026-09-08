@@ -244,7 +244,7 @@ class active_conferences_service extends base_websocket_system_service implement
 		if ($this->connect_to_switch_server()) {
 			$this->register_event_socket_filters();
 		} else {
-			$this->warning('Failed to connect to switch server - conference events will not be received');
+			throw new RuntimeException('Failed to connect to switch server - critical functionality will not be available', 500);
 		}
 
 		// Add the switch event socket to the base websocket listener

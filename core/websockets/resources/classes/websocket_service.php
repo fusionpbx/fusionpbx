@@ -141,6 +141,10 @@ class websocket_service extends service {
 
 		// Save the setting
 		$this->port = $port;
+
+		// Notify in log
+		$this->info("Bind IP   : {$this->ip}");
+		$this->info("Bind Port : {$this->port}");
 	}
 
 	/**
