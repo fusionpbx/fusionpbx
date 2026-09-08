@@ -44,21 +44,27 @@
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', 'false');
 
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'theme_name'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+
 // Build the query string
-	$param = [];
+	$url_params = [];
 	if (!empty($page)) {
-		$param['page'] = $page;
+		$url_params['page'] = $page;
 	}
 	if (!empty($_GET['order_by'])) {
-		$param['order_by'] = $order_by;
+		$url_params['order_by'] = $order_by;
 	}
 	if (!empty($_GET['order'])) {
-		$param['order'] = $order;
+		$url_params['order'] = $order;
 	}
 	if (!empty($search)) {
-		$param['search'] = $search;
+		$url_params['search'] = $search;
 	}
-	$query_string = http_build_query($param);
+	$query_string = http_build_query($url_params);
 
 //get the http post data
 	if (!empty($_POST['themes'])) {
@@ -73,7 +79,7 @@
 		$token = new token;
 		if (!$token->validate($_SERVER['PHP_SELF'])) {
 			message::add($text['message-invalid_token'],'negative');
-			header('Location: themes.php'.($query_string ? '?'.$query_string : ''));
+			header('Location: themes.php');
 			exit;
 		}
 
@@ -104,35 +110,16 @@
 		exit;
 	}
 
-//get order and order by
-	$order_by = $_GET["order_by"] ?? null;
-	$order = $_GET["order"] ?? null;
-
-//define the variables
-	$search = '';
-	$show = '';
-	$list_row_url = '';
-
-//add the search variable
-	if (!empty($_GET["search"])) {
-		$search = strtolower($_GET["search"]);
-	}
-
-//add the show variable
-	if (!empty($_GET["show"])) {
-		$show = $_GET["show"];
-	}
-
 //get the count
 	$sql = "select count(theme_uuid) ";
 	$sql .= "from v_themes ";
 	$sql .= "where true ";
 	if (!empty($search)) {
-		$sql .= "where ( ";
+		$sql .= "and ( ";
 		$sql .= "	lower(theme_name) like :search ";
 		$sql .= "	or lower(theme_description) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
@@ -144,12 +131,13 @@
 	$sql .= "cast(theme_enabled as text), ";
 	$sql .= "theme_description ";
 	$sql .= "from v_themes ";
+	$sql .= "where true ";
 	if (!empty($search)) {
 		$sql .= "and ( ";
 		$sql .= "	lower(theme_name) like :search ";
 		$sql .= "	or lower(theme_description) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
 	$sql .= order_by($order_by, $order, 'theme_name', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
@@ -182,6 +170,11 @@
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($url_params as $key => $value) {
+		if (in_array($key, ['order_by', 'order', 'show'])) {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
+		}
+	}
 	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 	if ($paging_controls_mini != '') {
@@ -217,8 +210,8 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".empty($themes ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('theme_name', $text['label-theme_name'], $order_by, $order);
-	echo th_order_by('theme_enabled', $text['label-theme_enabled'], $order_by, $order, null, "class='center'");
+	echo th_order_by('theme_name', $text['label-theme_name'], $order_by, $order, null, null, $url_params);
+	echo th_order_by('theme_enabled', $text['label-theme_enabled'], $order_by, $order, null, "class='center'", $url_params);
 	echo "	<th class='hide-sm-dn'>".$text['label-theme_description']."</th>\n";
 	if (permission_exists('theme_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -228,6 +221,7 @@
 	if (!empty($themes) && is_array($themes) && @sizeof($themes) != 0) {
 		$x = 0;
 		foreach ($themes as $row) {
+			$list_row_url = '';
 			if (permission_exists('theme_edit')) {
 				$list_row_url = "theme_edit.php?id=".urlencode($row['theme_uuid']);
 			}
