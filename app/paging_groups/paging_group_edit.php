@@ -39,22 +39,50 @@
 	$language = new text;
 	$text = $language->get();
 
-//connect to the database
-	$database = database::new();
+//set the defaults
+	$paging_group_name = '';
+	$paging_group_extension = '';
+	$paging_group_pin_number = '';
+	$paging_group_type = '';
+	$paging_group_announcement_source = 'none';
+	$paging_group_announcement_sound = '';
+	$paging_group_announcement_recording_uuid = '';
+	$paging_group_caller_id_name = '';
+	$paging_group_caller_id_number = '';
+	$paging_group_delay = '';
+	$paging_group_destination_status = '';
+	$paging_group_hangup_all = 'true';
+	$paging_group_timeout = '';
+	$paging_group_enabled = 'true';
+	$paging_group_description = '';
+	$paging_group_destinations = [];
+	$paging_group_destination_uuid = '';
 
-//set the domain name
-	$domain_name = $_SESSION['domain_name'] ?? '';
-	$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+// Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'paging_group_extension'));
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
+	$search = $_GET['search'] ?? '';
+	$show = $_GET['show'] ?? '';
 
-//add the settings object
-	$settings = new settings(["domain_uuid" => $domain_uuid, "user_uuid" => $_SESSION['user_uuid']]);
-
-//set from session variables
-	$button_icon_back = $settings->get('theme', 'button_icon_back', '');
-	$button_icon_copy = $settings->get('theme', 'button_icon_copy', '');
-	$button_icon_delete = $settings->get('theme', 'button_icon_delete', '');
-	$button_icon_save = $settings->get('theme', 'button_icon_save', '');
-	$input_toggle_style = $settings->get('theme', 'input_toggle_style', 'switch round');
+// Build the query string
+	$url_params = [];
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
+	if (!empty($_GET['order_by'])) {
+		$url_params['order_by'] = $order_by;
+	}
+	if (!empty($_GET['order'])) {
+		$url_params['order'] = $order;
+	}
+	if (!empty($search)) {
+		$url_params['search'] = $search;
+	}
+	if (!empty($show)) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
 
 //get the sounds
 	$sounds = new sounds(['domain_uuid' => $_SESSION['domain_uuid'], 'domain_name' => $domain_name]);
@@ -82,25 +110,6 @@
 		$action = "add";
 		$paging_group_uuid = '';
 	}
-
-//set the defaults
-	$paging_group_name = '';
-	$paging_group_extension = '';
-	$paging_group_pin_number = '';
-	$paging_group_type = '';
-	$paging_group_announcement_source = 'none';
-	$paging_group_announcement_sound = '';
-	$paging_group_announcement_recording_uuid = '';
-	$paging_group_caller_id_name = '';
-	$paging_group_caller_id_number = '';
-	$paging_group_delay = '';
-	$paging_group_destination_status = '';
-	$paging_group_hangup_all = 'true';
-	$paging_group_timeout = '';
-	$paging_group_enabled = 'true';
-	$paging_group_description = '';
-	$paging_group_destinations = [];
-	$paging_group_destination_uuid = '';
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
@@ -343,7 +352,7 @@
 				if ($action == "update") {
 					$_SESSION["message"] = $text['message-update'];
 				}
-				header('Location: paging_group_edit.php?id='.urlencode($paging_group_uuid));
+				header('Location: paging_group_edit.php?id='.urlencode($paging_group_uuid).($query_string ? '&'.$query_string : null));
 				return;
 			}
 	}
@@ -493,16 +502,16 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-paging_groups']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$button_icon_back,'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'paging_groups.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back', ''),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'paging_groups.php'.($query_string ? '?'.$query_string : null)]);
 	if ($action == 'update') {
 		if (permission_exists('paging_group_add')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$button_icon_copy,'id'=>'btn_copy','name'=>'btn_copy','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy', ''),'id'=>'btn_copy','name'=>'btn_copy','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 		}
 		if (permission_exists('paging_group_delete')) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete', ''),'id'=>'btn_delete','name'=>'btn_delete','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$button_icon_save,'id'=>'btn_save','collapse'=>'hide-xs']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save', ''),'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -523,7 +532,7 @@
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncellreq' width='30%' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-paging_group_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
@@ -725,7 +734,6 @@
 	echo $text['description-announcement_source']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "\n";
 
 	$instance_id = 'paging_announcement_sound';
 	echo "<tr id='paging_group_announcement_sound_row' style='".($paging_group_announcement_source == 'sound' ? '' : 'display: none;')."'>\n";
@@ -763,7 +771,6 @@
 	echo $text['description-sound']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "\n";
 
 	$instance_id = 'paging_announcement_recording';
 	echo "<tr id='paging_group_announcement_recording_row' style='".($paging_group_announcement_source == 'recording' ? '' : 'display: none;')."'>\n";
@@ -813,7 +820,6 @@
 	echo $text['description-recording']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -830,7 +836,6 @@
 	echo $text['description-paging_group_timeout']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "\n";
 
 	if (permission_exists('paging_group_caller_id_name')) {
 		echo "<tr>\n";
