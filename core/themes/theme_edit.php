@@ -54,11 +54,11 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
-		$action = $_POST["action"] ?? null;
 		$theme_name = $_POST["theme_name"] ?? null;
 		$theme_enabled = $_POST["theme_enabled"] ?? null;
 		$theme_description = $_POST["theme_description"] ?? null;
 		$theme_settings = $_POST['theme_settings' ?? null];
+		$theme_setting_action = $_POST["action"] ?? null;
 	}
 
 //process the data and save it to the database
@@ -73,9 +73,9 @@
 			}
 
 		//process the http post data by action
-			if (!empty($action) && !empty($theme_settings)) {
+			if (!empty($theme_setting_action) && !empty($theme_settings)) {
 				//process the http post data by action
-				switch ($action) {
+				switch ($theme_setting_action) {
 					case 'copy':
 						if (permission_exists('theme_setting_add')) {
 							$obj = new themes;
