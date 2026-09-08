@@ -40,38 +40,34 @@
 	$language = new text;
 	$text = $language->get();
 
-//connect to the database
-	$database = database::new();
-
-//add the settings object
-	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', 'false');
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? ''));
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'paging_group_extension'));
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 	$search = $_GET['search'] ?? '';
 	$show = $_GET['show'] ?? '';
-	$list_row_url = '';
 
 // Build the query string
-	$param = [];
+	$url_params = [];
 	if (!empty($page)) {
-		$param['page'] = $page;
+		$url_params['page'] = $page;
 	}
 	if (!empty($_GET['order_by'])) {
-		$param['order_by'] = $order_by;
+		$url_params['order_by'] = $order_by;
 	}
 	if (!empty($_GET['order'])) {
-		$param['order'] = $order;
+		$url_params['order'] = $order;
 	}
 	if (!empty($search)) {
-		$param['search'] = $search;
+		$url_params['search'] = $search;
 	}
-	$query_string = http_build_query($param);
+	if (!empty($show)) {
+		$url_params['show'] = $show;
+	}
+	$query_string = http_build_query($url_params);
 
 //get the http post data
 	if (!empty($_POST['paging_groups'])) {
@@ -86,7 +82,7 @@
 		$token = new token;
 		if (!$token->validate($_SERVER['PHP_SELF'])) {
 			message::add($text['message-invalid_token'],'negative');
-			header('Location: paging_groups.php'.($query_string ? '?'.$query_string : ''));
+			header('Location: paging_groups.php');
 			exit;
 		}
 
@@ -129,7 +125,7 @@
 		$sql .= "	or lower(paging_group_caller_id_name) like :search ";
 		$sql .= "	or lower(paging_group_caller_id_number) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
@@ -157,17 +153,18 @@
 	$sql .= "cast(paging_group_enabled as text), ";
 	$sql .= "paging_group_description ";
 	$sql .= "from v_paging_groups ";
+	$sql .= "where true ";
 	if (!empty($search)) {
-		$sql .= "where ( ";
+		$sql .= "and ( ";
 		$sql .= "	lower(paging_group_name) like :search ";
 		$sql .= "	or lower(paging_group_extension) like :search ";
 		$sql .= "	or lower(paging_group_pin_number) like :search ";
 		$sql .= "	or lower(paging_group_caller_id_name) like :search ";
 		$sql .= "	or lower(paging_group_caller_id_number) like :search ";
 		$sql .= ") ";
-		$parameters['search'] = '%'.$search.'%';
+		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	$sql .= order_by($order_by, $order, '', '');
+	$sql .= order_by($order_by, $order, 'paging_group_extension', 'asc');
 	$sql .= limit_offset($rows_per_page, $offset);
 	$paging = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
@@ -196,11 +193,16 @@
 	if (permission_exists('paging_group_delete') && $paging) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
-	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($url_params as $key => $value) {
+		if (in_array($key, ['order_by', 'order', 'show'])) {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
+		}
+	}
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
 	if ($paging_controls_mini != '') {
-		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		</form>\n";
 	echo "	</div>\n";
@@ -231,13 +233,13 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".empty($paging ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('paging_group_name', $text['label-paging_group_name'], $order_by, $order, null, null, $query_string);
-	echo th_order_by('paging_group_extension', $text['label-paging_group_extension'], $order_by, $order, null, null, $query_string);
-	echo th_order_by('paging_group_delay', $text['label-paging_group_delay'], $order_by, $order, null, "class='center'", $query_string);
-	//echo th_order_by('paging_group_type', $text['label-paging_group_type'], $order_by, $order, null, "class='center'", $query_string);
-	echo th_order_by('paging_group_hangup_all', $text['label-paging_group_hangup_all'], $order_by, $order, null, "class='center'", $query_string);
-	echo th_order_by('paging_group_timeout', $text['label-paging_group_timeout'], $order_by, $order, null, null, $query_string);
-	echo th_order_by('paging_group_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $query_string);
+	echo th_order_by('paging_group_name', $text['label-paging_group_name'], $order_by, $order, null, null, $url_params);
+	echo th_order_by('paging_group_extension', $text['label-paging_group_extension'], $order_by, $order, null, null, $url_params);
+	echo th_order_by('paging_group_delay', $text['label-paging_group_delay'], $order_by, $order, null, "class='center'", $url_params);
+	//echo th_order_by('paging_group_type', $text['label-paging_group_type'], $order_by, $order, null, "class='center'", $url_params);
+	echo th_order_by('paging_group_hangup_all', $text['label-paging_group_hangup_all'], $order_by, $order, null, "class='center'", $url_params);
+	echo th_order_by('paging_group_timeout', $text['label-paging_group_timeout'], $order_by, $order, null, null, $url_params);
+	echo th_order_by('paging_group_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $url_params);
 	echo "	<th class='hide-sm-dn'>".$text['label-paging_group_description']."</th>\n";
 	if (permission_exists('paging_group_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -247,8 +249,12 @@
 	if (!empty($paging) && is_array($paging) && @sizeof($paging) != 0) {
 		$x = 0;
 		foreach ($paging as $row) {
+			$list_row_url = '';
 			if (permission_exists('paging_group_edit')) {
-				$list_row_url = "paging_group_edit.php?id=".urlencode($row['paging_group_uuid']);
+				$list_row_url = "paging_group_edit.php?id=".urlencode($row['paging_group_uuid']).($query_string ? '&'.$query_string : null);
+			}
+			if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+				$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('paging_group_add') || permission_exists('paging_group_edit') || permission_exists('paging_group_delete')) {
