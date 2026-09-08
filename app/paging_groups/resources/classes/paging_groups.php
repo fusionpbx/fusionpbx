@@ -264,7 +264,7 @@ if (!class_exists('paging_groups')) {
 
 						//get checked records
 							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+								if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 									$uuids[] = "'".$record['uuid']."'";
 								}
 							}
@@ -276,13 +276,28 @@ if (!class_exists('paging_groups')) {
 								$rows = $this->database->select($sql, null, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$x = 0;
+									$y = 0;
 									foreach ($rows as $row) {
 										//copy data
 										$array[$this->table][$x] = $row;
 
+										//generate new uuid
+										$uuid = uuid();
+
 										//add copy to the description
-										$array[$this->table][$x][$this->name.'_uuid'] = uuid();
+										$array[$this->table][$x][$this->name.'_uuid'] = $uuid;
 										$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field]).' ('.$text['label-copy'].')';
+
+										//copy destinations
+										$sql = "select * from v_".$this->name."_destinations ";
+										$sql .= "where ".$this->name."_uuid = ".$uuids[$x]." ";
+										$destinations = $this->database->select($sql, null, 'all');
+										foreach ($destinations as $destination) {
+											$array[$this->name.'_destinations'][$y] = $destination;
+											$array[$this->name.'_destinations'][$y][$this->name.'_uuid'] = $uuid;
+											$array[$this->name.'_destinations'][$y][$this->name.'_destination_uuid'] = uuid();
+											$y++;
+										}
 
 										//increment the id
 										$x++;
