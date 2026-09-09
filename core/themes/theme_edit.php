@@ -117,7 +117,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (is_array($_GET) && empty($_POST["persistformvar"])) {
 		$sql = "select ";
 		$sql .= " theme_uuid, ";
 		$sql .= " theme_name, ";
