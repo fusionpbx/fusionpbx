@@ -35,18 +35,12 @@
 	$language = new text;
 	$text = $language->get();
 
-//connect to the database
-	$database = database::new();
-
-//add the settings object
-	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
-
-//set from session variables
-	$button_icon_back = $settings->get('theme', 'button_icon_back', '');
-	$button_icon_copy = $settings->get('theme', 'button_icon_copy', '');
-	$button_icon_delete = $settings->get('theme', 'button_icon_delete', '');
-	$button_icon_save = $settings->get('theme', 'button_icon_save', '');
-	$input_toggle_style = $settings->get('theme', 'input_toggle_style', 'switch round');
+//set the defaults
+	$theme_setting_subcategory = '';
+	$theme_setting_name = '';
+	$theme_setting_value = '';
+	$theme_setting_order = '';
+	$theme_setting_description = '';
 
 //get the theme uuid
 	if (!empty($_REQUEST["theme_uuid"]) && is_uuid($_REQUEST["theme_uuid"])) {
@@ -175,7 +169,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (is_array($_GET) && empty($_POST["persistformvar"])) {
 		$sql = "select ";
 		$sql .= " theme_setting_uuid, ";
 		$sql .= " theme_setting_category, ";
@@ -220,16 +214,16 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-theme_setting']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$button_icon_back,'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'theme_edit.php?id='.$theme_uuid]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back', ''),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'theme_edit.php?id='.$theme_uuid]);
 	if ($action == 'update') {
 		if (permission_exists('theme_setting_add')) {
-			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$button_icon_copy,'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy', ''),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 		}
 		if (permission_exists('theme_setting_delete')) {
-			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete', ''),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
 	}
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$button_icon_save,'id'=>'btn_save','collapse'=>'hide-xs']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save', ''),'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -701,8 +695,6 @@
 	if ($category == "theme" && substr_count($subcategory, "_font") > 0 && $name == "text") {
 		echo "&nbsp;&nbsp;".$text['label-reference'].": <a href='https://fonts.google.com' target='_blank'>".$text['label-web_fonts']."</a>\n";
 	}
-	echo "<br />\n";
-	echo $text['description-theme_setting_value']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

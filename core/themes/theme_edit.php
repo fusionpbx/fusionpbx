@@ -35,12 +35,9 @@
 	$language = new text;
 	$text = $language->get();
 
-//set from session variables
-	$button_icon_back = $settings->get('theme', 'button_icon_back', '');
-	$button_icon_copy = $settings->get('theme', 'button_icon_copy', '');
-	$button_icon_delete = $settings->get('theme', 'button_icon_delete', '');
-	$button_icon_save = $settings->get('theme', 'button_icon_save', '');
-	$input_toggle_style = $settings->get('theme', 'input_toggle_style', 'switch round');
+//set the defaults
+	$theme_name = '';
+	$theme_description = '';
 
 //action add or update
 	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
@@ -117,7 +114,7 @@
 	}
 
 //pre-populate the form
-	if (is_array($_GET) && $_POST["persistformvar"] != "true") {
+	if (is_array($_GET) && empty($_POST["persistformvar"])) {
 		$sql = "select ";
 		$sql .= " theme_uuid, ";
 		$sql .= " theme_name, ";
@@ -135,6 +132,9 @@
 		unset($sql, $parameters, $row);
 	}
 
+//set the defaults
+	$theme_enabled = $theme_enabled ?? true;
+
 //create token
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
@@ -150,8 +150,8 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-theme']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$button_icon_back,'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'themes.php']);
-	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$button_icon_save,'id'=>'btn_save','collapse'=>'hide-xs']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'themes.php']);
+	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";

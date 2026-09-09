@@ -85,7 +85,7 @@
 	$query_string = http_build_query($url_params);
 
 //get the sounds
-	$sounds = new sounds(['domain_uuid' => $_SESSION['domain_uuid'], 'domain_name' => $domain_name]);
+	$sounds = new sounds;
 	$sounds->sound_types = ['sounds'];
 	$audio_files = $sounds->get();
 	$sound_files = $audio_files['sounds'] ?? [];
