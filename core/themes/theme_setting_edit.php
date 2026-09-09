@@ -117,7 +117,7 @@
 			if (empty($theme_setting_category)) { $msg .= $text['message-required']." ".$text['label-theme_setting_category']."<br>\n"; }
 			if (empty($theme_setting_subcategory)) { $msg .= $text['message-required']." ".$text['label-theme_setting_subcategory']."<br>\n"; }
 			if (empty($theme_setting_name)) { $msg .= $text['message-required']." ".$text['label-theme_setting_name']."<br>\n"; }
-			if (empty($theme_setting_value)) { $msg .= $text['message-required']." ".$text['label-theme_setting_value']."<br>\n"; }
+			// if (empty($theme_setting_value)) { $msg .= $text['message-required']." ".$text['label-theme_setting_value']."<br>\n"; }
 			if (empty($theme_setting_enabled)) { $msg .= $text['message-required']." ".$text['label-theme_setting_enabled']."<br>\n"; }
 			//if (empty($theme_setting_description)) { $msg .= $text['message-required']." ".$text['label-theme_setting_description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
@@ -286,7 +286,7 @@
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-theme_setting_value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
@@ -750,8 +750,8 @@
 	echo "	".$text['label-theme_setting_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='theme_setting_description' maxlength='255' value='".escape($theme_setting_description)."'>\n";
-	echo "<br />\n";
+	echo "	<textarea class='formfld' style='width: 185px; height: 80px;' name='theme_setting_description'>".escape($theme_setting_description)."</textarea>\n";
+	echo "	<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
