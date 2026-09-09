@@ -36,7 +36,6 @@
 	$text = $language->get();
 
 //set the defaults
-	$theme_setting_category = '';
 	$theme_setting_subcategory = '';
 	$theme_setting_name = '';
 	$theme_setting_value = '';
