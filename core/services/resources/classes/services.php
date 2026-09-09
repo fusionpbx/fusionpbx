@@ -891,7 +891,7 @@ class services {
 	public function is_running(string $name): array {
 		$name = escapeshellarg($name);
 		$command = "ps -aux | grep $name | grep -v grep | awk '{print \$2}' | head -n 1";
-		$pid = trim(shell_exec($command ?? ''));
+		$pid = trim(shell_exec($command) ?? '');
 		if ($pid && is_numeric($pid)) {
 			$command = "ps -p $pid -o etime= | tr -d '\n'";
 			$etime = trim(shell_exec($command) ?? '');
