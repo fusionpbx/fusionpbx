@@ -312,6 +312,7 @@ class xml_cdr {
 			$p->add("xml_cdr_json_add", "temp");
 			$p->add("xml_cdr_flow_add", "temp");
 			$p->add("xml_cdr_log_add", "temp");
+			$p->add("xml_cdr_extension_add", "temp");
 
 			//save the call details record to the database
 			$this->database->app_name = 'xml_cdr';
@@ -351,6 +352,7 @@ class xml_cdr {
 			$p->delete("xml_cdr_json_add", "temp");
 			$p->delete("xml_cdr_flow_add", "temp");
 			$p->delete("xml_cdr_log_add", "temp");
+			$p->delete("xml_cdr_extension_add", "temp");
 			unset($array);
 
 		}
@@ -1146,7 +1148,11 @@ class xml_cdr {
 			$this->array[$key][0]['xml_cdr_flow_uuid'] = uuid();
 			$this->array[$key][0]['xml_cdr_uuid'] = $call_uuid;
 			$this->array[$key][0]['domain_uuid'] = $domain_uuid ?? '';
-			$this->array[$key][0]['call_flow'] = json_encode($this->call_flow());
+			$call_flow_array = $this->call_flow();
+			$this->array[$key][0]['call_flow'] = json_encode($call_flow_array);
+
+			//add each extension that was part of the call to the v_xml_cdr_extensions table
+			$this->add_extensions($call_uuid, $domain_uuid, $call_flow_array);
 
 			//save to the database in json format
 			if ($this->settings->get('cdr', 'format') == "json" && $this->settings->get('cdr', 'storage') == "db") {
@@ -1267,6 +1273,202 @@ class xml_cdr {
 			//add the call_flow to the array
 			return $call_flow_array;
 		}
+	}
+
+	/**
+	 * Add each extension that was part of the call to the database
+	 *
+	 * This method resolves the domain for each leg of the call from the context values in the
+	 * origination and originatee caller profiles, maps the domain names to domain uuids and loads
+	 * the extensions from v_extensions into memory. It then loops through the call flow array
+	 * returned by the call_flow method to identify each SIP extension that was part of the call.
+	 * It adds a row for each extension to the v_xml_cdr_extensions table with details about its
+	 * participation in the call.
+	 *
+	 * @param string $xml_cdr_uuid    The unique identifier of the xml cdr record.
+	 * @param string $domain_uuid     The domain uuid of the call, used when a leg does not resolve a domain from its context.
+	 * @param array  $call_flow_array The call flow array returned by the call_flow method.
+	 *
+	 * @return void
+	 */
+	private function add_extensions($xml_cdr_uuid, $domain_uuid, $call_flow_array) {
+
+		//skip when the call flow array is empty
+		if (!is_array($call_flow_array) || empty($call_flow_array)) {
+			return;
+		}
+
+		//get all the domains in one query
+		$sql = "select domain_uuid, domain_name from v_domains ";
+		$domain_rows = $this->database->select($sql, array(), 'all');
+		if (!is_array($domain_rows)) {
+			$domain_rows = array();
+		}
+
+		//set the map of the domain names to their domain uuid
+		$domain_map = array();
+		foreach ($domain_rows as $domain_row) {
+			if (!empty($domain_row['domain_name']) && !empty($domain_row['domain_uuid'])) {
+				$domain_map[$domain_row['domain_name']] = $domain_row['domain_uuid'];
+			}
+		}
+
+		//resolve the domain names of each leg from the context values
+		$leg_domain_name_array = array();
+		foreach ($call_flow_array as $leg_index => $row) {
+			$leg_domain_name_array[$leg_index] = array();
+			//skip when the leg is not an array
+			if (!is_array($row)) {
+				continue;
+			}
+			//set the array of the context values of the leg
+			$context_array = array();
+			if (!empty($row['caller_profile']['context'])) {
+				$context_array[] = $row['caller_profile']['context'];
+			}
+			if (isset($row['caller_profile']['origination']['origination_caller_profile']) && is_array($row['caller_profile']['origination']['origination_caller_profile'])) {
+				foreach ($row['caller_profile']['origination']['origination_caller_profile'] as $profile) {
+					if (is_array($profile) && !empty($profile['context'])) {
+						$context_array[] = $profile['context'];
+					}
+				}
+			}
+			if (isset($row['caller_profile']['originatee']['originatee_caller_profile']) && is_array($row['caller_profile']['originatee']['originatee_caller_profile'])) {
+				foreach ($row['caller_profile']['originatee']['originatee_caller_profile'] as $profile) {
+					if (is_array($profile) && !empty($profile['context'])) {
+						$context_array[] = $profile['context'];
+					}
+				}
+			}
+			//extract the domain name from each context value
+			foreach ($context_array as $context) {
+				$domain_name = trim((string)$context);
+				//when the context contains a @ the domain name is the part after it
+				if (strpos($domain_name, '@') !== false) {
+					$domain_name = substr($domain_name, strrpos($domain_name, '@') + 1);
+				}
+				if ($domain_name !== '' && !in_array($domain_name, $leg_domain_name_array[$leg_index], true)) {
+					$leg_domain_name_array[$leg_index][] = $domain_name;
+				}
+			}
+		}
+
+		//get all the extensions in one query
+		$sql = "select extension_uuid, domain_uuid, extension, number_alias from v_extensions ";
+		$extension_rows = $this->database->select($sql, array(), 'all');
+		if (!is_array($extension_rows)) {
+			$extension_rows = array();
+		}
+
+		//set the map of the domain uuid to the extensions with their extension uuid
+		$extension_map = array();
+		foreach ($extension_rows as $extension_row) {
+			if (empty($extension_row['domain_uuid'])) {
+				continue;
+			}
+			foreach (array('extension', 'number_alias') as $field) {
+				if (!empty($extension_row[$field])) {
+					$extension_map[$extension_row['domain_uuid']][$extension_row[$field]] = $extension_row['extension_uuid'];
+				}
+			}
+		}
+
+		//skip when no extensions were found
+		if (empty($extension_map)) {
+			return;
+		}
+
+		//set the extension array
+		$extension_array = array();
+
+		//loop through each leg of the call flow
+		foreach ($call_flow_array as $leg_index => $row) {
+
+			//skip when the leg is not an array
+			if (!is_array($row)) {
+				continue;
+			}
+
+			//set the array of the domain uuids of the leg from the resolved domain names
+			$leg_domain_uuid_array = array();
+			foreach ($leg_domain_name_array[$leg_index] as $domain_name) {
+				if (!empty($domain_map[$domain_name]) && !in_array($domain_map[$domain_name], $leg_domain_uuid_array, true)) {
+					$leg_domain_uuid_array[] = $domain_map[$domain_name];
+				}
+			}
+
+			//use the domain of the call when the leg did not resolve a domain from its context
+			if (empty($leg_domain_uuid_array) && !empty($domain_uuid)) {
+				$leg_domain_uuid_array[] = $domain_uuid;
+			}
+
+			//skip this leg when no domain was found
+			if (empty($leg_domain_uuid_array)) {
+				continue;
+			}
+
+			//set the array of dialed numbers to check against the domain extensions
+			$dialed_user_array = array();
+			if (!empty($row['caller_profile']['callee_id_number'])) {
+				$dialed_user_array[] = urldecode($row['caller_profile']['callee_id_number']);
+			}
+			if (!empty($row['caller_profile']['destination_number'])) {
+				$dialed_user_array[] = urldecode($row['caller_profile']['destination_number']);
+			}
+			//the calling extension is part of the call too
+			if (!empty($row['caller_profile']['username'])) {
+				$dialed_user_array[] = urldecode($row['caller_profile']['username']);
+			}
+
+			//set the array of the unique extensions that participated in this leg
+			$leg_extension_array = array();
+			foreach ($dialed_user_array as $dialed_user) {
+				foreach ($leg_domain_uuid_array as $leg_domain_uuid) {
+					if (!empty($extension_map[$leg_domain_uuid][$dialed_user])
+						&& !isset($leg_extension_array[$extension_map[$leg_domain_uuid][$dialed_user]])
+					) {
+						$leg_extension_array[$extension_map[$leg_domain_uuid][$dialed_user]] = $leg_domain_uuid;
+					}
+				}
+			}
+
+			//skip this leg when no extension was found
+			if (empty($leg_extension_array)) {
+				continue;
+			}
+
+			//determine the start and end times of the extension participation from the call flow array
+			$start_stamp = null;
+			$end_stamp   = null;
+			$duration    = 0;
+			if (!empty($row['times']['profile_created_time']) && !empty($row['times']['profile_end_time'])) {
+				$start_epoch = floor($row['times']['profile_created_time'] / 1000000);
+				$end_epoch   = floor($row['times']['profile_end_time'] / 1000000);
+				$start_stamp = date('c', (int)$start_epoch);
+				$end_stamp   = date('c', (int)$end_epoch);
+				//calculate the duration the same way as the call_flow method
+				$duration = round(((int)$row['times']['profile_end_time']) / 1000000 - ((int)$row['times']['profile_created_time']) / 1000000);
+			}
+
+			//add each extension that participated in this leg to the array
+			foreach ($leg_extension_array as $extension_uuid => $leg_domain_uuid) {
+				$extension_array[] = array(
+					'xml_cdr_extension_uuid' => uuid(),
+					'domain_uuid'            => $leg_domain_uuid,
+					'xml_cdr_uuid'           => $xml_cdr_uuid,
+					'extension_uuid'         => $extension_uuid,
+					'start_stamp'            => $start_stamp,
+					'end_stamp'              => $end_stamp,
+					'duration'               => $duration,
+				);
+			}
+		}
+
+		//add the extension array to the array when there is a match
+		if (!empty($extension_array)) {
+			$this->array['xml_cdr_extensions'] = $extension_array;
+		}
+
 	}
 
 	/**
@@ -2411,7 +2613,7 @@ class xml_cdr {
 	} //method
 
 	/**
-	 * Removes old entries for in the database xml_cdr, xml_cdr_flow, xml_cdr_json, xml_cdr_logs table
+	 * Removes old entries for in the database xml_cdr, xml_cdr_extensions, xml_cdr_flow, xml_cdr_json, xml_cdr_logs table
 	 * see {@link https://github.com/fusionpbx/fusionpbx-app-maintenance/} FusionPBX Maintenance App
 	 *
 	 * @param settings $settings Settings object
@@ -2434,6 +2636,13 @@ class xml_cdr {
 
 			//get the retention days for xml cdr table using 'cdr' and 'database_retention_days'
 			$xml_cdr_retention_days = $domain_settings->get('cdr', 'database_retention_days', '');
+
+			//get the retention days for xml cdr extensions table
+			if ($database->table_exists(database::TABLE_PREFIX . 'xml_cdr_extensions')) {
+				$xml_cdr_extensions_retention_days = $domain_settings->get('cdr', 'extension_database_retention_days', $xml_cdr_retention_days);
+			} else {
+				$xml_cdr_extensions_retention_days = null;
+			}
 
 			//get the retention days for xml cdr flow table
 			if ($database->table_exists(database::TABLE_PREFIX . 'xml_cdr_flow')) {
@@ -2470,6 +2679,21 @@ class xml_cdr {
 				} else {
 					$message = $database->message['message'] ?? "An unknown error has occurred";
 					maintenance_service::log_write(self::class, "XML CDR " . "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
+				}
+
+				//clear out old xml_cdr_extensions records
+				if (!empty($xml_cdr_extensions_retention_days)) {
+					$sql = "DELETE FROM v_xml_cdr_extensions WHERE insert_date < NOW() - INTERVAL '{$xml_cdr_extensions_retention_days} days'"
+						. " and domain_uuid = '{$domain_uuid}'";
+					$database->execute($sql);
+					$code = $database->message['code'] ?? 0;
+					//record result
+					if ($database->message['code'] == 200) {
+						maintenance_service::log_write(self::class, "Successfully removed XML CDR EXTENSIONS entries from $domain_name", $domain_uuid);
+					} else {
+						$message = $database->message['message'] ?? "An unknown error has occurred";
+						maintenance_service::log_write(self::class, "XML CDR EXTENSIONS " . "Unable to remove old database records. Error message: $message ($code)", $domain_uuid, maintenance_service::LOG_ERROR);
+					}
 				}
 
 				//clear out old xml_cdr_flow records
