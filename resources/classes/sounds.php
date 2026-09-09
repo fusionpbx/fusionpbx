@@ -120,10 +120,9 @@ class sounds {
 			$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 			$phrases = $this->database->select($sql, $parameters, 'all');
 			if (is_array($phrases) && @sizeof($phrases) != 0) {
-				foreach ($phrases as $row) {
+				foreach ($phrases as $x => $row) {
 					$array['phrases'][$x]['name'] = "phrase:" . $row["phrase_name"];
 					$array['phrases'][$x]['value'] = "phrase:" . $row["phrase_uuid"];
-					$x++;
 				}
 			}
 			unset($sql, $parameters, $phrases, $row);
@@ -134,13 +133,12 @@ class sounds {
 			$file = new file;
 			$sound_files = $file->sounds();
 			if (is_array($sound_files) && @sizeof($sound_files) != 0) {
-				foreach ($sound_files as $value) {
+				foreach ($sound_files as $x => $value) {
 					if (substr($value, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
 						$value = substr($value, 71);
 					}
 					$array['sounds'][$x]['name'] = $value;
 					$array['sounds'][$x]['value'] = $value;
-					$x++;
 				}
 			}
 		}
