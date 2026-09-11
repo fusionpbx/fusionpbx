@@ -1527,8 +1527,6 @@ class database {
 		// if not checked, then copy the array to the delete array
 		if (!$checked) {
 			$new_array = $array;
-		} else {
-			$new_array = [];
 		}
 
 		// get the current data
