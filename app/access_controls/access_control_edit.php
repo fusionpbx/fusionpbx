@@ -159,13 +159,13 @@
 					if (isset($row["node_cidr"]) && $row["node_cidr"] != '') {
 						$cidr_array = explode("/", str_replace("\\", "/", $row["node_cidr"]));
 						if (filter_var($cidr_array[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-							if (isset($cidr_array[1]) && is_numeric($cidr_array[1])) {
+							if (isset($cidr_array[1]) && ctype_digit($cidr_array[1]) && (int) $cidr_array[1] <= 32) {
 								//valid IPv4 address and cidr notation
 								$node_cidr = $row["node_cidr"];
 							}
 							else {
 								//valid IPv4 address add the missing cidr notation
-								$node_cidr = $row["node_cidr"].'/32';
+								$node_cidr = $cidr_array[0].'/32';
 							}
 						}
 						else if(filter_var($cidr_array[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
@@ -173,7 +173,7 @@
 							$node_cidr = $row["node_cidr"];
 						}
 						else {
-							//domains hostname to lookup 
+							//domains hostname to lookup
 							$domains[] = [
 								'type'=>$row['node_type'],
 								'value'=>$row['node_cidr'],
