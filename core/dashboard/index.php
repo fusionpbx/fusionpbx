@@ -892,7 +892,7 @@ window.addEventListener('resize', update_parent_height);
 					let widget_ids_list = [];
 					let order = 10;
 
-					widgets.querySelectorAll(':scope > div.widget[id]').forEach(widget => {
+					widgets.querySelectorAll(':scope > div.widget[id], :scope > div.parent_widget[id]').forEach(widget => {
 						const widget_id = widget.id;
 
 						//add the widgets to the list
