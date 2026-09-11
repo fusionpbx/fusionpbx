@@ -302,13 +302,13 @@
 										if (isset($result[$key]) && $result[$key] != '') {
 											$cidr_array = explode("/", str_replace("\\", "/", $result[$key]));
 											if (filter_var($cidr_array[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-												if (isset($cidr_array[1]) && is_numeric($cidr_array[1])) {
+												if (isset($cidr_array[1]) && ctype_digit($cidr_array[1]) && (int) $cidr_array[1] <= 32) {
 													//valid IPv4 address and cidr notation
 													//$result[$key] = $result[$key];
 												}
 												else {
 													//valid IPv4 address add the missing cidr notation
-													$result[$key] = $result[$key].'/32';
+													$result[$key] = $cidr_array[1].'/32';
 												}
 											}
 											elseif(filter_var($cidr_array[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
