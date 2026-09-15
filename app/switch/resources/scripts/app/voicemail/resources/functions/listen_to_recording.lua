@@ -70,6 +70,7 @@
 						)) then
 						session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-from.wav");
 						session:say(caller_id_number, default_language, "name_spelled", "iterated");
+						session:execute("sleep", "1000");
 					end
 
 				--say the message date first (default)
@@ -214,6 +215,7 @@
 						)) then
 						session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-from.wav");
 						session:say(caller_id_number, default_language, "name_spelled", "iterated");
+						session:execute("sleep", "1000");
 					end
 
 				--say the message date last (optional)
@@ -261,6 +263,7 @@
 				elseif (dtmf_digits == "3") then
 					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-from.wav");
 					session:say(caller_id_number, default_language, "name_spelled", "iterated");
+					session:execute("sleep", "1000");
 					if (current_time_zone ~= nil) then
 						session:execute("set", "timezone="..current_time_zone.."");
 					end
