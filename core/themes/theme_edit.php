@@ -36,6 +36,7 @@
 	$text = $language->get();
 
 //set the defaults
+	$theme_category = '';
 	$theme_name = '';
 	$theme_description = '';
 
@@ -51,6 +52,7 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
+		$theme_category = $_POST["theme_category"] ?? null;
 		$theme_name = $_POST["theme_name"] ?? null;
 		$theme_enabled = $_POST["theme_enabled"] ?? null;
 		$theme_description = $_POST["theme_description"] ?? null;
@@ -92,6 +94,7 @@
 
 		//prepare the array
 			$array['themes'][0]['theme_uuid'] = $theme_uuid;
+			$array['themes'][0]['theme_category'] = $theme_category;
 			$array['themes'][0]['theme_name'] = $theme_name;
 			$array['themes'][0]['theme_enabled'] = $theme_enabled;
 			$array['themes'][0]['theme_description'] = $theme_description;
@@ -117,6 +120,7 @@
 	if (is_array($_GET) && empty($_POST["persistformvar"])) {
 		$sql = "select ";
 		$sql .= " theme_uuid, ";
+		$sql .= " theme_category, ";
 		$sql .= " theme_name, ";
 		$sql .= " theme_enabled , ";
 		$sql .= " theme_description ";
@@ -125,6 +129,7 @@
 		$parameters['theme_uuid'] = $theme_uuid;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
+			$theme_category = $row["theme_category"];
 			$theme_name = $row["theme_name"];
 			$theme_enabled = $row["theme_enabled"];
 			$theme_description = $row["theme_description"];
@@ -161,6 +166,17 @@
 
 	echo "<div class='card'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-category']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' style='position: relative;' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='theme_category' maxlength='255' value='".escape($theme_category)."'>\n";
+	echo "<br />\n";
+	echo $text['description-category']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";

@@ -47,7 +47,7 @@
 	$languages = $database->select($sql, null, 'all');
 
 //get themes from database
-	$sql = "select theme_name from v_themes where theme_enabled = true ";
+	$sql = "select theme_category, theme_name from v_themes where theme_enabled = true order by theme_category asc";
 	$themes = $database->select($sql, null, 'all');
 
 //get domain settings
@@ -484,8 +484,22 @@
 		echo "		<select class='formfld' id='domain_theme' name='domain_theme'>\n";
 		echo "			<option value=''></option>\n";
 		echo "			<option value='default' ".($domain_settings['domain']['theme']['domain_setting_value'] == 'default' ? "selected" : null).">".$text['label-default']."</option>\n";
+		$theme_categories = [];
 		foreach ($themes as $theme) {
-			echo "			<option value='".$theme['theme_name']."' ".($domain_settings['domain']['theme']['domain_setting_value'] == $theme['theme_name'] ? "selected='selected'" : null).">".$theme['theme_name']."</option>\n";
+			if (!empty($theme['theme_category']) && !in_array($theme['theme_category'], $theme_categories)) {
+				$theme_categories[] = $theme['theme_category'];
+			} elseif (empty($theme['theme_category'])) {
+				echo "			<option value='".escape($theme['theme_name'])."' ".($domain_settings['domain']['theme']['domain_setting_value'] == $theme['theme_name'] ? "selected" : null).">".escape($theme['theme_name'])."</option>\n";
+			}
+		}
+		foreach ($theme_categories as $category) {
+			echo "		<optgroup label='".escape($category)."'>\n";
+			foreach ($themes as $theme) {
+				if (!empty($theme['theme_category']) && $theme['theme_category'] == $category) {
+					echo "			<option value='".escape($theme['theme_name'])."' ".($domain_settings['domain']['theme']['domain_setting_value'] == $theme['theme_name'] ? "selected" : null).">".escape($theme['theme_name'])."</option>\n";
+				}
+			}
+			echo "		</optgroup>\n";
 		}
 		echo "		</select>\n";
 		echo "		<br />\n";

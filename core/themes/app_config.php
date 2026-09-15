@@ -90,6 +90,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "theme_category";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the category.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "theme_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
