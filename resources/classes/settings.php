@@ -343,8 +343,8 @@ class settings implements clear_cache {
 			// Clear array values
 			foreach ($result as $row) {
 				if ($row['theme_setting_enabled'] == true) {
-					if ($row['theme_setting_type'] === 'array' && isset($row['theme_setting_value']) && $row['theme_setting_value'] !== '' ) {
-						$this->settings[$row['theme_setting_category']][$row['theme_setting_name']] = [];
+					if ($row['theme_setting_type'] === 'array' && isset($row['theme_setting_value']) && $row['theme_setting_value'] !== '') {
+						$this->settings['theme'][$row['theme_setting_name']] = [];
 					}
 				}
 			}
