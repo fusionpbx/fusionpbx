@@ -351,13 +351,13 @@ class settings implements clear_cache {
 			// Apply theme settings
 			foreach ($result as $row) {
 				if ($row['theme_setting_enabled'] == true) {
-					$name = $row['theme_setting_type'];
+					$type = $row['theme_setting_type'];
 					$category = 'theme';
 					$subcategory = $row['theme_setting_name'];
 					if (isset($row['theme_setting_value']) && $row['theme_setting_value'] !== '') {
-						if ($name == "boolean") {
+						if ($type == "boolean") {
 							$this->settings[$category][$subcategory] = filter_var($row['theme_setting_value'], FILTER_VALIDATE_BOOLEAN);
-						} elseif ($name == "array") {
+						} elseif ($type == "array") {
 							if (!isset($this->settings[$category][$subcategory]) || !is_array($this->settings[$category][$subcategory])) {
 								$this->settings[$category][$subcategory] = [];
 							}
