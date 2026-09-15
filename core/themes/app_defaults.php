@@ -2,6 +2,7 @@
 
 	$x=0;
 	$array['themes'][$x]['theme_uuid'] = 'eda762b3-e356-4225-a394-38b5f092fd44';
+	$array['themes'][$x]['theme_category'] = 'Dark';
 	$array['themes'][$x]['theme_name'] = 'Dark';
 	$array['themes'][$x]['theme_enabled'] = 'true';
 	$array['themes'][$x]['theme_description'] = 'Dark Mode';
