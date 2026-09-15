@@ -121,6 +121,7 @@
 //get the list
 	$sql = "select ";
 	$sql .= "theme_uuid, ";
+	$sql .= "theme_category, ";
 	$sql .= "theme_name, ";
 	$sql .= "cast(theme_enabled as text), ";
 	$sql .= "theme_description ";
@@ -204,6 +205,7 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".empty($themes ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
+	echo th_order_by('theme_category', $text['label-category'], $order_by, $order, null, null, $url_params);
 	echo th_order_by('theme_name', $text['label-theme_name'], $order_by, $order, null, null, $url_params);
 	echo th_order_by('theme_enabled', $text['label-theme_enabled'], $order_by, $order, null, "class='center'", $url_params);
 	echo "	<th class='hide-sm-dn'>".$text['label-theme_description']."</th>\n";
@@ -226,6 +228,14 @@
 				echo "		<input type='hidden' name='themes[$x][theme_uuid]' value='".escape($row['theme_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
+			echo "	<td>\n";
+			if (permission_exists('theme_edit')) {
+				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['theme_category'])."</a>\n";
+			}
+			else {
+				echo "	".escape($row['theme_category']);
+			}
+			echo "	</td>\n";
 			echo "	<td>\n";
 			if (permission_exists('theme_edit')) {
 				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['theme_name'])."</a>\n";
