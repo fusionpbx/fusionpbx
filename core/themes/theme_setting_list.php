@@ -37,7 +37,7 @@
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'theme_setting_subcategory'));
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'theme_setting_name'));
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 	$search = $_GET['search'] ?? '';
 	$show = $_GET['show'] ?? '';
@@ -109,9 +109,8 @@
 	$sql .= "where true ";
 	if (!empty($search)) {
 		$sql .= "and ( ";
-		$sql .= "	lower(theme_setting_category) like :search ";
-		$sql .= "	or lower(theme_setting_subcategory) like :search ";
-		$sql .= "	or lower(theme_setting_name) like :search ";
+		$sql .= "	lower(theme_setting_name) like :search ";
+		$sql .= "	or lower(theme_setting_type) like :search ";
 		$sql .= "	or lower(theme_setting_value) like :search ";
 		$sql .= "	or lower(theme_setting_description) like :search ";
 		$sql .= ") ";
@@ -125,9 +124,8 @@
 //get the list
 	$sql = "select ";
 	$sql .= "theme_setting_uuid, ";
-	$sql .= "theme_setting_category, ";
-	$sql .= "theme_setting_subcategory, ";
 	$sql .= "theme_setting_name, ";
+	$sql .= "theme_setting_type, ";
 	$sql .= "theme_setting_value, ";
 	$sql .= "cast(theme_setting_enabled as text), ";
 	$sql .= "theme_setting_description ";
@@ -135,9 +133,8 @@
 	$sql .= "where true ";
 	if (!empty($search)) {
 		$sql .= "and ( ";
-		$sql .= "	lower(theme_setting_category) like :search ";
-		$sql .= "	or lower(theme_setting_subcategory) like :search ";
-		$sql .= "	or lower(theme_setting_name) like :search ";
+		$sql .= "	lower(theme_setting_name) like :search ";
+		$sql .= "	or lower(theme_setting_type) like :search ";
 		$sql .= "	or lower(theme_setting_value) like :search ";
 		$sql .= "	or lower(theme_setting_description) like :search ";
 		$sql .= ") ";
@@ -145,7 +142,7 @@
 	}
 	$sql .= "and theme_uuid = :theme_uuid ";
 	$parameters['theme_uuid'] = $theme_uuid;
-	$sql .= order_by($order_by, $order, 'theme_setting_subcategory', 'asc');
+	$sql .= order_by($order_by, $order, 'theme_setting_name', 'asc');
 	$theme_settings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -195,9 +192,8 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".empty($theme_settings ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('theme_setting_category', $text['label-theme_setting_category'], $order_by, $order, null, null, $url_params);
-	echo th_order_by('theme_setting_subcategory', $text['label-theme_setting_subcategory'], $order_by, $order, null, null, $url_params);
-	echo th_order_by('theme_setting_name', $text['label-theme_setting_type'], $order_by, $order, null, null, $url_params);
+	echo th_order_by('theme_setting_name', $text['label-theme_setting_name'], $order_by, $order, null, null, $url_params);
+	echo th_order_by('theme_setting_type', $text['label-theme_setting_type'], $order_by, $order, null, null, $url_params);
 	echo th_order_by('theme_setting_value', $text['label-theme_setting_value'], $order_by, $order, null, null, $url_params);
 	echo th_order_by('theme_setting_enabled', $text['label-theme_setting_enabled'], $order_by, $order, null, "class='center'", $url_params);
 	echo "	<th class='hide-sm-dn'>".$text['label-theme_setting_description']."</th>\n";
@@ -220,18 +216,10 @@
 				echo "		<input type='hidden' name='theme_settings[$x][theme_setting_uuid]' value='".escape($row['theme_setting_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
-			echo "	<td>\n";
-			if (permission_exists('theme_setting_edit')) {
-				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['theme_setting_category'])."</a>\n";
-			}
-			else {
-				echo "	".escape($row['theme_setting_category']);
-			}
-			echo "	</td>\n";
-			echo "	<td>".escape($row['theme_setting_subcategory'])."</td>\n";
 			echo "	<td>".escape($row['theme_setting_name'])."</td>\n";
+			echo "	<td>".escape($row['theme_setting_type'])."</td>\n";
 			echo "	<td>\n";
-			if (substr_count($row['theme_setting_subcategory'], "_color") > 0 && ($row['theme_setting_name'] == "text" || $row['theme_setting_name'] == 'array')) {
+			if (substr_count($row['theme_setting_name'], "_color") > 0 && ($row['theme_setting_type'] == "text" || $row['theme_setting_type'] == 'array')) {
 				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['theme_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['theme_setting_value'], -0.18)).'; padding: -1px;'));
 				echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".escape($row['theme_setting_value'])."</span>\n";
 			} else {

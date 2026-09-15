@@ -59,9 +59,6 @@
 		$apps[$x]['permissions'][$y]['name'] = "theme_setting_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		// $apps[$x]['permissions'][$y]['name'] = "theme_setting_category_edit";
-		// $apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		// $y++;
 		$apps[$x]['permissions'][$y]['name'] = "theme_setting_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
@@ -158,20 +155,15 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "theme_setting_category";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the category.";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "theme_setting_subcategory";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the subcategory.";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "theme_setting_name";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the name.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "theme_setting_type";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['search'] = "true";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the type.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "theme_setting_value";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

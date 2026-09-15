@@ -343,21 +343,21 @@ class settings implements clear_cache {
 			// Clear array values
 			foreach ($result as $row) {
 				if ($row['theme_setting_enabled'] == true) {
-					if ($row['theme_setting_name'] === 'array' && isset($row['theme_setting_value']) && $row['theme_setting_value'] !== '' ) {
-						$this->settings[$row['theme_setting_category']][$row['theme_setting_subcategory']] = [];
+					if ($row['theme_setting_type'] === 'array' && isset($row['theme_setting_value']) && $row['theme_setting_value'] !== '') {
+						$this->settings['theme'][$row['theme_setting_name']] = [];
 					}
 				}
 			}
 			// Apply theme settings
 			foreach ($result as $row) {
 				if ($row['theme_setting_enabled'] == true) {
-					$name = $row['theme_setting_name'];
-					$category = $row['theme_setting_category'];
-					$subcategory = $row['theme_setting_subcategory'];
+					$type = $row['theme_setting_type'];
+					$category = 'theme';
+					$subcategory = $row['theme_setting_name'];
 					if (isset($row['theme_setting_value']) && $row['theme_setting_value'] !== '') {
-						if ($name == "boolean") {
+						if ($type == "boolean") {
 							$this->settings[$category][$subcategory] = filter_var($row['theme_setting_value'], FILTER_VALIDATE_BOOLEAN);
-						} elseif ($name == "array") {
+						} elseif ($type == "array") {
 							if (!isset($this->settings[$category][$subcategory]) || !is_array($this->settings[$category][$subcategory])) {
 								$this->settings[$category][$subcategory] = [];
 							}
