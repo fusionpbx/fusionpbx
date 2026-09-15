@@ -93,8 +93,9 @@
 				$this->app_name = 'themes';
 				$this->app_uuid = '26b2a370-1769-4275-9ed7-a2e1a2b058bf';
 				$this->name = 'theme';
-				$this->tables[] = 'themes';
+				$this->table = 'themes';
 				$this->tables[] = 'theme_settings';
+				$this->tables[] = 'themes';
 				$this->toggle_field = 'theme_enabled';
 				$this->toggle_values = ['true','false'];
 				$this->description_field = 'theme_description';
@@ -232,60 +233,86 @@
 			if (permission_exists($this->name.'_add')) {
 
 				//add multi-lingual support
-					$language = new text;
-					$text = $language->get();
+				$language = new text;
+				$text = $language->get();
 
 				//validate the token
-					$token = new token;
-					if (!$token->validate($_SERVER['PHP_SELF'])) {
-						message::add($text['message-invalid_token'],'negative');
-						header('Location: '.$this->location);
-						exit;
+				$token = new token;
+				if (!$token->validate($_SERVER['PHP_SELF'])) {
+					message::add($text['message-invalid_token'],'negative');
+					header('Location: '.$this->location);
+					exit;
+				}
+
+				//get checked records
+				foreach($records as $record) {
+					if ($record['checked'] == 'true' && is_uuid($record['theme_uuid'])) {
+						$uuids[] = "'".$record['theme_uuid']."'";
 					}
+				}
 
 				//copy the checked records
-					if (is_array($records) && @sizeof($records) != 0) {
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+					foreach ($uuids as $uuid) {
+						$theme_uuid = uuid();
+						$setting_uuids   = [];
 
-						//get checked records
-							foreach($records as $record) {
-								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$uuids[] = "'".$record['uuid']."'";
-								}
-							}
+						foreach ($this->tables as $table) {
+							$sql      = "select * from v_" . $table . " ";
+							$sql      .= "where theme_uuid = " . $uuid . " ";
+							$rows     = $this->database->select($sql, $parameters ?? null, 'all');
+							if (is_array($rows) && @sizeof($rows) != 0) {
+								$x = 0;
+								foreach ($rows as $row) {
+									//prevent copying these fields
+									unset($row['insert_date'], $row['insert_user']);
+									unset($row['update_date'], $row['update_user']);
 
-						//create the array from existing data
-							if (is_array($uuids) && @sizeof($uuids) != 0) {
-								$sql = "select * from v_".$this->table." ";
-								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->database->select($sql, [], 'all');
-								if (is_array($rows) && @sizeof($rows) != 0) {
-									$x = 0;
-									foreach ($rows as $row) {
-										//copy data
-											$array[$this->table][$x] = $row;
-
-										//add copy to the description
-											$array[$this->table][$x][$this->name.'_uuid'] = uuid();
-											$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field]).' ('.$text['label-copy'].')';
-
-										//increment the id
-											$x++;
+									//convert boolean values to a string
+									foreach ($row as $key => $value) {
+										if (gettype($value) == 'boolean') {
+											$value     = $value ? 'true' : 'false';
+											$row[$key] = $value;
+										}
 									}
+
+									//copy data
+									$array[$table][$x] = $row;
+
+									//add copy to the description
+									$array[$table][$x]['theme_uuid'] = $theme_uuid;
+									if ($table === $this->table) {
+										$array[$table][$x][$this->description_field] = trim($row[$this->description_field]) . ' (' . $text['label-copy'] . ')';
+									}
+
+									//handle setting uuid
+									if (isset($row['theme_setting_uuid'])) {
+										$setting_uuid = uuid();
+										$setting_uuids[$array[$table][$x]['theme_setting_uuid']] = $setting_uuid;
+										$array[$table][$x]['theme_setting_uuid'] = $setting_uuid;
+									}
+
+									//increment the id
+									$x++;
 								}
-								unset($sql, $parameters, $rows, $row);
 							}
-
-						//save the changes and set the message
-							if (is_array($array) && @sizeof($array) != 0) {
-								//save the array
-									$this->database->save($array);
-									unset($array);
-
-								//set message
-									message::add($text['message-copy']);
-							}
-							unset($records);
+						}
 					}
+					unset($sql, $parameters, $rows, $row);
+				}
+
+				if (is_array($array) && @sizeof($array) != 0) {
+					//save the changes and set the message
+					if (is_array($array) && @sizeof($array) != 0) {
+						//save the array
+							$this->database->save($array);
+							unset($array);
+
+						//set message
+							message::add($text['message-copy']);
+					}
+				}
+				unset($records);
 			}
 		}
 
