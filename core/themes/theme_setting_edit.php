@@ -277,7 +277,10 @@
 	$category = 'theme';
 	$subcategory = $theme_setting_name;
 	$name = $theme_setting_type;
-	if ($category == "theme" && substr_count($subcategory, "_font") > 0 && $name == "text") {
+	if (substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
+		echo "	<input type='text' class='formfld colorpicker' id='theme_setting_value' name='theme_setting_value' value=\"".escape($theme_setting_value)."\">\n";
+	}
+	elseif ($category == "theme" && substr_count($subcategory, "_font") > 0 && $name == "text") {
 		$theme_setting_value = str_replace('"', "'", $theme_setting_value);
 		if ($fonts = get_available_fonts('alpha')) {
 			echo "	<select class='formfld' id='sel_theme_setting_value' onchange=\"if (this.selectedIndex == $('select#sel_theme_setting_value option').length - 1) { $('#txt_theme_setting_value').val('').fadeIn('fast'); $('#txt_theme_setting_value').trigger('focus'); } else { $('#txt_theme_setting_value').fadeOut('fast', function(){ $('#txt_theme_setting_value').val($('#sel_theme_setting_value').val()) }); } \">\n";
@@ -304,7 +307,6 @@
 			echo "	<input type='text' class='formfld' id='theme_setting_value' name='theme_setting_value' value=\"".$theme_setting_value."\">\n";
 		}
 	}
-
 	elseif ($category == "theme" && $subcategory == "domain_visible" && $name == "text" ) {
 		echo "    <select class='formfld' id='theme_setting_value' name='theme_setting_value'>\n";
 		echo "    	<option value='false' ".(($theme_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
@@ -383,13 +385,6 @@
 		echo "    	<option value='select'>".$text['option-select_box']."</option>\n";
 		echo "    	<option value='switch_round' ".(($theme_setting_value == "switch_round") ? "selected='selected'" : null).">".$text['option-switch_round']."</option>\n";
 		echo "    	<option value='switch_square' ".(($theme_setting_value == "switch_square") ? "selected='selected'" : null).">".$text['option-switch_square']."</option>\n";
-		echo "	</select>\n";
-	}
-	elseif ($category == "users" && $subcategory == "username_format" && $name == "text" ) {
-		echo "	<select class='formfld' id='theme_setting_value' name='theme_setting_value'>\n";
-		echo "    	<option value='any' ".($theme_setting_value == 'any' ? "selected='selected'" : null).">".$text['option-username_format_any']."</option>\n";
-		echo "    	<option value='email' ".($theme_setting_value == 'email' ? "selected='selected'" : null).">".$text['option-username_format_email']."</option>\n";
-		echo "    	<option value='no_email' ".($theme_setting_value == 'no_email' ? "selected='selected'" : null).">".$text['option-username_format_no_email']."</option>\n";
 		echo "	</select>\n";
 	}
 	elseif (is_json($theme_setting_value)) {
