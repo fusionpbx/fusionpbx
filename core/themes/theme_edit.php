@@ -309,7 +309,7 @@
 			echo "	<input type='hidden' name='theme_settings[$x][theme_uuid]' value='".escape($row['theme_uuid'])."'>\n";
 			echo "	<input type='hidden' name='theme_settings[$x][theme_setting_uuid]' value='".escape($row['theme_setting_uuid'])."'>\n";
 			echo "	<input type='hidden' name='theme_settings[$x][theme_setting_name]' value='".escape($row['theme_setting_name'])."'>\n";
-			if (str_starts_with($row['theme_setting_value'], "rgb") || str_starts_with($row['theme_setting_value'], "#")) {
+			if (!empty($row['theme_setting_value']) && (str_starts_with($row['theme_setting_value'], "rgb") || str_starts_with($row['theme_setting_value'], "#"))) {
 				echo "	<input type='text' class='formfld colorpicker' id='colorpicker_$x' name='theme_settings[$x][theme_setting_value]' value=\"".escape($row['theme_setting_value'])."\">\n";
 				echo "	<div id='color_$x' style='display: inline-block; width: 15px; height: 15px; background: ".escape($row['theme_setting_value'])."; margin-right: 4px; vertical-align: middle; border: 1px solid ".(color_adjust($row['theme_setting_value'], -0.18))."; padding: -1px;'></div>\n";
 				echo "	<script>\n";
