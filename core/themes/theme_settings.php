@@ -64,6 +64,11 @@
 	}
 	$query_string = http_build_query($url_params);
 
+//get theme uuid
+	if (permission_exists('theme_edit') && !empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
+		$theme_uuid = $_REQUEST["id"];
+	}
+
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$action = $_POST["action"] ?? null;
