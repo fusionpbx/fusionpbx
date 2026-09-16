@@ -120,6 +120,9 @@
 		//add the theme_uuid
 			if (!is_uuid($theme_uuid)) {
 				$theme_uuid = uuid();
+				foreach ($theme_settings as $x => $setting) {
+					$theme_settings[$x]['theme_uuid'] = $theme_uuid;
+				}
 			}
 
 		//prepare the array
@@ -174,9 +177,8 @@
 	$sql .= "theme_setting_uuid, ";
 	$sql .= "theme_setting_name, ";
 	$sql .= "theme_setting_type, ";
-	$sql .= "theme_setting_enabled, ";
 	$sql .= "theme_setting_value, ";
-	$sql .= "cast(theme_setting_enabled as text), ";
+	$sql .= "theme_setting_enabled, ";
 	$sql .= "theme_setting_description ";
 	$sql .= "from v_theme_settings ";
 	$sql .= "where theme_uuid = :theme_uuid ";
@@ -184,6 +186,31 @@
 	$sql .= order_by($order_by, $order, 'theme_setting_name', 'asc');
 	$theme_settings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
+
+//pre-populate the form with default setting colors
+	if ($action == "add") {
+		$sql = "select ";
+		$sql .= "default_setting_subcategory, ";
+		$sql .= "default_setting_name, ";
+		$sql .= "default_setting_value, ";
+		$sql .= "default_setting_order, ";
+		$sql .= "default_setting_enabled, ";
+		$sql .= "default_setting_description ";
+		$sql .= "from v_default_settings ";
+		$sql .= "where default_setting_category = 'theme' ";
+		$sql .= "and (default_setting_value like '#%' or default_setting_value like 'rgb%' or default_setting_category like '%color%') ";
+		$sql .= "order by default_setting_subcategory asc ";
+		$default_settings = $database->select($sql, $parameters ?? null, 'all');
+		unset($sql, $parameters);
+		foreach ($default_settings as $x => $setting) {
+			$theme_settings[$x]['theme_setting_uuid'] = uuid();
+			$theme_settings[$x]['theme_setting_name'] = $setting['default_setting_subcategory'];
+			$theme_settings[$x]['theme_setting_type'] = $setting['default_setting_name'];
+			$theme_settings[$x]['theme_setting_value'] = $setting['default_setting_value'];
+			$theme_settings[$x]['theme_setting_order'] = $setting['default_setting_order'];
+			$theme_settings[$x]['theme_setting_enabled'] = $setting['default_setting_enabled'];
+		}
+	}
 
 //set the defaults
 	$theme_enabled = $theme_enabled ?? true;
@@ -204,7 +231,7 @@
 	echo "	<div class='heading'><b>".$text['title-theme']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'themes.php']);
-	if (permission_exists('theme_setting_view')) {
+	if (permission_exists('theme_setting_view') && $action == 'update') {
 		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$settings->get('theme', 'button_icon_settings'),'id'=>'btn_back','style'=>'margin-right: 2px;','link'=>PROJECT_PATH.'/core/themes/theme_settings.php?id='.$theme_uuid]);
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','collapse'=>'hide-xs']);
