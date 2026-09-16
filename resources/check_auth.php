@@ -115,6 +115,13 @@
 //if the session is not authorized, then verify the identity
 	if (!$_SESSION['authorized']) {
 
+		//clear any stale authentication state from a previous (failed or abandoned) login attempt
+		unset($_SESSION['username']);
+		unset($_SESSION['user_uuid']);
+		unset($_SESSION['user_email']);
+		unset($_SESSION['contact_uuid']);
+		unset($_SESSION['authentication']['plugin']);
+
 		//clear the template only if the template has not been assigned by the superadmin
 			if (empty($settings->get('domain', 'template'))) {
 				$_SESSION["template_content"] = '';
