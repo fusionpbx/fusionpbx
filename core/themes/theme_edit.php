@@ -297,20 +297,19 @@
 			if ($previous_category != $category) {
 				echo "<tr>\n";
 				echo "<td colspan='7' class='no-link'>\n";
-				echo ($previous_category != '' ? '<br />' : null)."<b>".$category."</b>";
+				echo ($previous_category != '' ? '<br />' : null)."<b>".escape($category)."</b>";
 				echo "</td>\n";
 				echo "</tr>\n";
 			}
 			echo "<tr>\n";
 			echo "<td class='vncell no-link' width='32%' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".escape(str_replace($category, '', $label ?? ''))."\n";
-			// echo "	<a href='theme_setting_edit.php?id=".urlencode($row['theme_setting_uuid'])."&theme_uuid=".urlencode($theme_uuid)."'>".escape($label)."</a>\n";
+			echo "	".escape(str_replace($category, '', $label))."\n";
 			echo "</td>\n";
 			echo "<td class='vtable no-link' style='position: relative;' align='left'>\n";
 			echo "	<input type='hidden' name='theme_settings[$x][theme_uuid]' value='".escape($row['theme_uuid'])."'>\n";
 			echo "	<input type='hidden' name='theme_settings[$x][theme_setting_uuid]' value='".escape($row['theme_setting_uuid'])."'>\n";
 			echo "	<input type='hidden' name='theme_settings[$x][theme_setting_name]' value='".escape($row['theme_setting_name'])."'>\n";
-			if (substr_count($row['theme_setting_name'], "color") > 0) {
+			if (str_starts_with($row['theme_setting_value'], "rgb") || str_starts_with($row['theme_setting_value'], "#")) {
 				echo "	<input type='text' class='formfld colorpicker' id='colorpicker_$x' name='theme_settings[$x][theme_setting_value]' value=\"".escape($row['theme_setting_value'])."\">\n";
 				echo "	<div id='color_$x' style='display: inline-block; width: 15px; height: 15px; background: ".escape($row['theme_setting_value'])."; margin-right: 4px; vertical-align: middle; border: 1px solid ".(color_adjust($row['theme_setting_value'], -0.18))."; padding: -1px;'></div>\n";
 				echo "	<script>\n";
@@ -325,7 +324,7 @@
 			// echo ($row['theme_setting_description'] ?? '')."\n";
 			echo "</td>\n";
 			echo "</tr>\n";
-			$previous_category = explode(' ', $label)[0];
+			$previous_category = $category;
 			$x++;
 		}
 		unset($theme_settings);
