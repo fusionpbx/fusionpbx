@@ -174,6 +174,7 @@
 	$sql .= "theme_setting_uuid, ";
 	$sql .= "theme_setting_name, ";
 	$sql .= "theme_setting_type, ";
+	$sql .= "theme_setting_enabled, ";
 	$sql .= "theme_setting_value, ";
 	$sql .= "cast(theme_setting_enabled as text), ";
 	$sql .= "theme_setting_description ";
@@ -277,7 +278,7 @@
 	if (!empty($theme_settings) && is_array($theme_settings) && @sizeof($theme_settings) != 0) {
 		echo "<div class='action_bar' id='action_bar'>\n";
 		echo "	<div class='actions'>\n";
-		if (permission_exists('theme_setting_add')) {
+		if (permission_exists('theme_setting_add') && $action == 'update') {
 			echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'theme_setting_edit.php?theme_uuid='.$theme_uuid]);
 		}
 		echo "	</div>\n";
@@ -327,19 +328,30 @@
 			echo "	<input type='hidden' name='theme_settings[$x][theme_uuid]' value='".escape($row['theme_uuid'])."'>\n";
 			echo "	<input type='hidden' name='theme_settings[$x][theme_setting_uuid]' value='".escape($row['theme_setting_uuid'])."'>\n";
 			echo "	<input type='hidden' name='theme_settings[$x][theme_setting_name]' value='".escape($row['theme_setting_name'])."'>\n";
+			echo "	<input type='hidden' name='theme_settings[$x][theme_setting_type]' value='".escape($row['theme_setting_type'])."'>\n";
 			if (!empty($row['theme_setting_value']) && (str_starts_with($row['theme_setting_value'], "rgb") || str_starts_with($row['theme_setting_value'], "#"))) {
 				echo "	<input type='text' class='formfld colorpicker' id='colorpicker_$x' name='theme_settings[$x][theme_setting_value]' value=\"".escape($row['theme_setting_value'])."\">\n";
 				echo "	<div id='color_$x' style='display: inline-block; width: 15px; height: 15px; background: ".escape($row['theme_setting_value'])."; margin-right: 4px; vertical-align: middle; border: 1px solid ".(color_adjust($row['theme_setting_value'], -0.18))."; padding: -1px;'></div>\n";
 				echo "	<script>\n";
 				echo "	$('#colorpicker_$x').on('changeColor', function (event) {\n";
 				echo "		document.getElementById('color_$x').style.background = event.color.toHex();\n";
+				echo "		document.getElementById('theme_setting_enabled_$x').value = true;\n";
 				echo "	});\n";
 				echo "	</script>\n";
 			} else {
-				echo "	<input type='text' class='formfld' name='theme_settings[$x][theme_setting_value]' value=\"".escape($row['theme_setting_value'])."\">\n";
+				echo "	<input type='text' class='formfld' name='theme_settings[$x][theme_setting_value]' value=\"".escape($row['theme_setting_value'])."\" onchange=\"document.getElementById('theme_setting_enabled_$x').value = true;\">\n";
 			}
-			echo "<br />\n";
-			// echo ($row['theme_setting_description'] ?? '')."\n";
+			if ($input_toggle_style_switch) {
+				echo "	<span class='switch' style='scale: 0.6; float: right;'>\n";
+			}
+			echo "	<select class='formfld' id='theme_setting_enabled_$x' name='theme_settings[$x][theme_setting_enabled]' style='scale: 0.6; float: right;'>\n";
+			echo "		<option value='true' ".($row['theme_setting_enabled'] == true ? "selected" : null).">".$text['option-true']."</option>\n";
+			echo "		<option value='false' ".($row['theme_setting_enabled'] == false ? "selected" : null).">".$text['option-false']."</option>\n";
+			echo "	</select>\n";
+			if ($input_toggle_style_switch) {
+				echo "		<span class='slider'></span>\n";
+				echo "	</span>\n";
+			}
 			echo "</td>\n";
 			echo "</tr>\n";
 			$previous_category = $category;
