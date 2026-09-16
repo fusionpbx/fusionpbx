@@ -425,7 +425,7 @@
 					}
 				}
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql  = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql  = "select " . $this->name . "_uuid as uuid, cast(" . $this->toggle_field . " as text) as toggle from v_" . $this->table . " ";
 					$sql  .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
 					$rows = $this->database->select($sql, $parameters ?? null, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
