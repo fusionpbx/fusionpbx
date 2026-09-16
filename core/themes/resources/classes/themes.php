@@ -346,7 +346,7 @@
 
 			//validate the token
 			$token = new token;
-			if (!$token->validate('/core/themes/theme_edit.php')) {
+			if (!$token->validate('/core/themes/theme_settings.php')) {
 				message::add($text['message-invalid_token'], 'negative');
 				header('Location: ' . $this->location);
 				exit;
@@ -410,7 +410,7 @@
 
 			//validate the token
 			$token = new token;
-			if (!$token->validate('/core/themes/theme_edit.php')) {
+			if (!$token->validate('/core/themes/theme_settings.php')) {
 				message::add($text['message-invalid_token'], 'negative');
 				header('Location: ' . $this->location);
 				exit;
@@ -484,7 +484,7 @@
 
 			//validate the token
 			$token = new token;
-			if (!$token->validate('/core/themes/theme_edit.php')) {
+			if (!$token->validate('/core/themes/theme_settings.php')) {
 				message::add($text['message-invalid_token'], 'negative');
 				header('Location: ' . $this->location);
 				exit;
