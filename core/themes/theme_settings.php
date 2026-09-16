@@ -173,16 +173,16 @@
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back', ''),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'theme_edit.php?id='.$theme_uuid]);
 	if (permission_exists('theme_setting_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'theme_setting_edit.php?theme_uuid='.$theme_uuid]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'theme_setting_edit.php?theme_uuid='.$theme_uuid]);
 	}
 	if (permission_exists('theme_setting_add') && $theme_settings) {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
 	if (permission_exists('theme_setting_edit') && $theme_settings) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	}
 	if (permission_exists('theme_setting_delete') && $theme_settings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo "		<form id='form_search' class='inline' method='get'>\n";
 	foreach ($url_params as $key => $value) {
@@ -225,10 +225,10 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".empty($theme_settings ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('theme_setting_name', $text['label-theme_setting_name'], $order_by, $order);
-	echo th_order_by('theme_setting_type', $text['label-theme_setting_type'], $order_by, $order);
-	echo th_order_by('theme_setting_value', $text['label-theme_setting_value'], $order_by, $order);
-	echo th_order_by('theme_setting_enabled', $text['label-theme_setting_enabled'], $order_by, $order, null, "class='center'");
+	echo th_order_by('theme_setting_name', $text['label-theme_setting_name'], $order_by, $order, null, null, $url_params);
+	echo th_order_by('theme_setting_type', $text['label-theme_setting_type'], $order_by, $order, null, null, $url_params);
+	echo th_order_by('theme_setting_value', $text['label-theme_setting_value'], $order_by, $order, null, null, $url_params);
+	echo th_order_by('theme_setting_enabled', $text['label-theme_setting_enabled'], $order_by, $order, null, "class='center'", $url_params);
 	echo "	<th class='hide-sm-dn'>".$text['label-theme_setting_description']."</th>\n";
 	if (permission_exists('theme_setting_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -238,6 +238,7 @@
 	if (!empty($theme_settings) && is_array($theme_settings) && @sizeof($theme_settings) != 0) {
 		$x = 0;
 		foreach ($theme_settings as $row) {
+			$list_row_url = '';
 			if (permission_exists('theme_setting_edit')) {
 				$list_row_url = "theme_setting_edit.php?id=".urlencode($row['theme_setting_uuid']).'&theme_uuid='.$theme_uuid;
 			}
