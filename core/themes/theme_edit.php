@@ -202,10 +202,10 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-theme']."</b></div>\n";
 	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'themes.php']);
 	if (permission_exists('theme_setting_view')) {
 		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>$settings->get('theme', 'button_icon_settings'),'id'=>'btn_back','style'=>'margin-right: 2px;','link'=>PROJECT_PATH.'/core/themes/theme_settings.php?id='.$theme_uuid]);
 	}
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'themes.php']);
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','collapse'=>'hide-xs']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -218,7 +218,7 @@
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' width='30%' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-category']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
@@ -286,14 +286,32 @@
 
 		echo "<div class='card'>\n";
 		echo "<table class='list'>\n";
-		$x = 0;
 		$previous_category = '';
-		foreach ($theme_settings as $row) {
+		foreach ($theme_settings as $x => $row) {
 			if (empty($row['theme_setting_name'])) {
 				continue;
 			}
 			$label = ucwords(str_replace('_', ' ', $row['theme_setting_name'] ?? ''));
-			$category = explode(' ', $label)[0];
+			$first_word = explode(' ', $label)[0];
+			switch ($first_word) {
+				case 'Action':
+					$category = 'Action Bar';
+					break;
+				case 'Active':
+					$category = 'Active Conference';
+					break;
+				case 'Audio':
+					$category = 'Audio Player';
+					break;
+				case 'Form':
+					$category = 'Form Table';
+					break;
+				case 'Operator':
+					$category = 'Operator Panel';
+					break;
+				default:
+					$category = $first_word;
+			}
 			if ($previous_category != $category) {
 				echo "<tr>\n";
 				echo "<td colspan='7' class='no-link'>\n";
@@ -302,7 +320,7 @@
 				echo "</tr>\n";
 			}
 			echo "<tr>\n";
-			echo "<td class='vncell no-link' width='32%' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "<td class='vncell no-link' width='30%' valign='top' align='left' nowrap='nowrap'>\n";
 			echo "	".escape(str_replace($category, '', $label))."\n";
 			echo "</td>\n";
 			echo "<td class='vtable no-link' style='position: relative;' align='left'>\n";
@@ -325,7 +343,6 @@
 			echo "</td>\n";
 			echo "</tr>\n";
 			$previous_category = $category;
-			$x++;
 		}
 		unset($theme_settings);
 		echo "</table>\n";
