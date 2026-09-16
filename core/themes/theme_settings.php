@@ -72,7 +72,6 @@
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$action = $_POST["action"] ?? null;
-		$theme_uuid = $_POST['theme_uuid'] ?? null;
 		$theme_settings = $_POST['theme_settings'] ?? null;
 	}
 
@@ -256,7 +255,7 @@
 			if (permission_exists('theme_setting_edit')) {
 				echo "	<td class='no-link center'>\n";
 				echo "		<input type='hidden' name='number_translations[$x][theme_setting_enabled]' value='".escape($row['theme_setting_enabled'])."' />\n";
-				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['theme_setting_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
+				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.($row['theme_setting_enabled'] ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			}
 			else {
 				echo "	<td class='center'>\n";
