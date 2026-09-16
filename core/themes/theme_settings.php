@@ -64,15 +64,31 @@
 	}
 	$query_string = http_build_query($url_params);
 
-//get http post variables and set them to php variables
-	if (!empty($_POST)) {
-		$action = $_POST["action"] ?? null;
-		$theme_uuid = $_POST['theme_uuid'] ?? null;
-		$theme_settings = $_POST['theme_settings'] ?? null;
+//set from session variables
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', 'false');
+
+//get theme uuid
+	if (permission_exists('theme_edit') && !empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
+		$theme_uuid = $_REQUEST["id"];
+	}
+
+//get the http post data
+	if (!empty($_POST['theme_settings'])) {
+		$action = $_POST['action'] ?? null;
+		$theme_settings = $_POST['theme_settings'];
 	}
 
 //process the http post data by action
-	if (!empty($action) && !empty($theme_settings)) {
+	if (!empty($action) && !empty($theme_settings) && is_array($theme_settings) && @sizeof($theme_settings) != 0) {
+
+		//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: theme_settings.php'.($query_string ? '?'.$query_string : ''));
+			exit;
+		}
+
 		//process the http post data by action
 		switch ($action) {
 			case 'copy':
@@ -96,12 +112,9 @@
 		}
 
 		//redirect the user
-		header('Location: theme_edit.php?id='.urlencode($theme_uuid));
+		header('Location: theme_settings.php?id='.urlencode($theme_uuid));
 		exit;
 	}
-
-//set from session variables
-	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', 'false');
 
 //get the count
 	$sql = "select count(theme_setting_uuid) ";
@@ -148,24 +161,41 @@
 
 //create token
 	$object = new token;
-	$token = $object->create('/core/themes/theme_edit.php');
+	$token = $object->create($_SERVER['PHP_SELF']);
+
+//additional includes
+	$document['title'] = $text['label-settings'];
+	require_once "resources/header.php";
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['label-settings']."</b><div class='count'>".$num_rows."</div></div>\n";
 	echo "	<div class='actions'>\n";
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back', ''),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'theme_edit.php?id='.$theme_uuid]);
 	if (permission_exists('theme_setting_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'theme_setting_edit.php?theme_uuid='.$theme_uuid]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$_SESSION['theme']['button_icon_add'],'id'=>'btn_add','name'=>'btn_add','link'=>'theme_setting_edit.php?theme_uuid='.$theme_uuid]);
 	}
 	if (permission_exists('theme_setting_add') && $theme_settings) {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$_SESSION['theme']['button_icon_copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display:none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 	}
 	if (permission_exists('theme_setting_edit') && $theme_settings) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$_SESSION['theme']['button_icon_toggle'],'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display:none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	}
 	if (permission_exists('theme_setting_delete') && $theme_settings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'id'=>'btn_delete','name'=>'btn_delete','style'=>'display:none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
+	echo "		<form id='form_search' class='inline' method='get'>\n";
+	foreach ($url_params as $key => $value) {
+		if (in_array($key, ['id', 'order_by', 'order', 'show'])) {
+			echo "		<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
+		}
+	}
+	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_search']);
+	if (!empty($paging_controls_mini)) {
+		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+	}
+	echo "		</form>\n";
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -180,9 +210,12 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
-	echo "<form id='form_list' method='post' action='theme_setting_list.php'>\n";
+	echo $text['title_description-theme_settings']."\n";
+	echo "<br /><br />\n";
+
+	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
-	echo "<input type='hidden' name='theme_uuid' value='".escape($theme_uuid)."'>\n";
+	echo "<input type='hidden' name='search' value=\"".escape($search ?? '')."\">\n";
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
@@ -192,10 +225,10 @@
 		echo "		<input type='checkbox' id='checkbox_all' name='checkbox_all' onclick='list_all_toggle(); checkbox_on_change(this);' ".empty($theme_settings ? "style='visibility: hidden;'" : null).">\n";
 		echo "	</th>\n";
 	}
-	echo th_order_by('theme_setting_name', $text['label-theme_setting_name'], $order_by, $order, null, null, $url_params);
-	echo th_order_by('theme_setting_type', $text['label-theme_setting_type'], $order_by, $order, null, null, $url_params);
-	echo th_order_by('theme_setting_value', $text['label-theme_setting_value'], $order_by, $order, null, null, $url_params);
-	echo th_order_by('theme_setting_enabled', $text['label-theme_setting_enabled'], $order_by, $order, null, "class='center'", $url_params);
+	echo th_order_by('theme_setting_name', $text['label-theme_setting_name'], $order_by, $order);
+	echo th_order_by('theme_setting_type', $text['label-theme_setting_type'], $order_by, $order);
+	echo th_order_by('theme_setting_value', $text['label-theme_setting_value'], $order_by, $order);
+	echo th_order_by('theme_setting_enabled', $text['label-theme_setting_enabled'], $order_by, $order, null, "class='center'");
 	echo "	<th class='hide-sm-dn'>".$text['label-theme_setting_description']."</th>\n";
 	if (permission_exists('theme_setting_edit') && $list_row_edit_button == 'true') {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -205,7 +238,6 @@
 	if (!empty($theme_settings) && is_array($theme_settings) && @sizeof($theme_settings) != 0) {
 		$x = 0;
 		foreach ($theme_settings as $row) {
-			$list_row_url = '';
 			if (permission_exists('theme_setting_edit')) {
 				$list_row_url = "theme_setting_edit.php?id=".urlencode($row['theme_setting_uuid']).'&theme_uuid='.$theme_uuid;
 			}
@@ -218,14 +250,7 @@
 			}
 			echo "	<td>".escape($row['theme_setting_name'])."</td>\n";
 			echo "	<td>".escape($row['theme_setting_type'])."</td>\n";
-			echo "	<td>\n";
-			if (substr_count($row['theme_setting_name'], "_color") > 0 && ($row['theme_setting_type'] == "text" || $row['theme_setting_type'] == 'array')) {
-				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['theme_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['theme_setting_value'], -0.18)).'; padding: -1px;'));
-				echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".escape($row['theme_setting_value'])."</span>\n";
-			} else {
-				echo escape($row['theme_setting_value']);
-			}
-			echo "	</td>\n";
+			echo "	<td>".escape($row['theme_setting_value'])."</td>\n";
 			if (permission_exists('theme_setting_edit')) {
 				echo "	<td class='no-link center'>\n";
 				echo "		<input type='hidden' name='number_translations[$x][theme_setting_enabled]' value='".escape($row['theme_setting_enabled'])."' />\n";
@@ -251,8 +276,11 @@
 	echo "</table>\n";
 	echo "</div>\n";
 	echo "<br />\n";
+	echo "<div align='center'>".($paging_controls ?? '')."</div>\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
 
 //include the footer
 	require_once "resources/footer.php";
+
+?>
