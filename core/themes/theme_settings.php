@@ -64,22 +64,15 @@
 	}
 	$query_string = http_build_query($url_params);
 
-//set from session variables
-	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', 'false');
-
-//get theme uuid
-	if (permission_exists('theme_edit') && !empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
-		$theme_uuid = $_REQUEST["id"];
-	}
-
-//get the http post data
-	if (!empty($_POST['theme_settings'])) {
-		$action = $_POST['action'] ?? null;
-		$theme_settings = $_POST['theme_settings'];
+//get http post variables and set them to php variables
+	if (!empty($_POST)) {
+		$action = $_POST["action"] ?? null;
+		$theme_uuid = $_POST['theme_uuid'] ?? null;
+		$theme_settings = $_POST['theme_settings'] ?? null;
 	}
 
 //process the http post data by action
-	if (!empty($action) && !empty($theme_settings) && is_array($theme_settings) && @sizeof($theme_settings) != 0) {
+	if (!empty($action) && !empty($theme_settings)) {
 
 		//validate the token
 		$token = new token;
@@ -115,6 +108,9 @@
 		header('Location: theme_settings.php?id='.urlencode($theme_uuid));
 		exit;
 	}
+
+//set from session variables
+	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', 'false');
 
 //get the count
 	$sql = "select count(theme_setting_uuid) ";
