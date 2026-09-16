@@ -140,7 +140,7 @@
 	$sql .= "theme_setting_name, ";
 	$sql .= "theme_setting_type, ";
 	$sql .= "theme_setting_value, ";
-	$sql .= "cast(theme_setting_enabled as text), ";
+	$sql .= "theme_setting_enabled, ";
 	$sql .= "theme_setting_description ";
 	$sql .= "from v_theme_settings ";
 	$sql .= "where true ";
