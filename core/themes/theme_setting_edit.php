@@ -277,7 +277,7 @@
 	$category = 'theme';
 	$subcategory = $theme_setting_name;
 	$name = $theme_setting_type;
-	if (substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
+	if ((substr_count($subcategory, "_color") > 0 || str_starts_with($theme_setting_value ?? '', "rgb") || str_starts_with($theme_setting_value ?? '', "#")) && ($name == "text" || $name == 'array')) {
 		echo "	<input type='text' class='formfld colorpicker' id='theme_setting_value' name='theme_setting_value' value=\"".escape($theme_setting_value)."\">\n";
 	}
 	elseif ($category == "theme" && substr_count($subcategory, "_font") > 0 && $name == "text") {
