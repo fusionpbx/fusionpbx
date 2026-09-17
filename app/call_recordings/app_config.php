@@ -111,3 +111,11 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "ministral-3:8b";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "The language model name used to generate the call summary.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d9377c48-9310-4ae4-9bf0-91a5e5d27641";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_recordings";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "recording_coordinator_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Leave disabled until the coordinator has a durable shared store and controlled call-path rollout.";
