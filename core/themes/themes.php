@@ -40,7 +40,7 @@
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'theme_name'));
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? ''));
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 	$search = $_GET['search'] ?? '';
 
@@ -110,7 +110,8 @@
 	$sql .= "where true ";
 	if (!empty($search)) {
 		$sql .= "and ( ";
-		$sql .= "	lower(theme_name) like :search ";
+		$sql .= "	lower(theme_category) like :search ";
+		$sql .= "	or lower(theme_name) like :search ";
 		$sql .= "	or lower(theme_description) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.strtolower($search).'%';
@@ -129,12 +130,13 @@
 	$sql .= "where true ";
 	if (!empty($search)) {
 		$sql .= "and ( ";
-		$sql .= "	lower(theme_name) like :search ";
+		$sql .= "	lower(theme_category) like :search ";
+		$sql .= "	or lower(theme_name) like :search ";
 		$sql .= "	or lower(theme_description) like :search ";
 		$sql .= ") ";
 		$parameters['search'] = '%'.strtolower($search).'%';
 	}
-	$sql .= order_by($order_by, $order, 'theme_name', 'asc');
+	$sql .= order_by($order_by, $order, 'theme_category, theme_name', 'asc');
 	$sql .= limit_offset($rows_per_page ?? '', $offset ?? '');
 	$themes = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
