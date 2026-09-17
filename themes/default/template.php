@@ -37,6 +37,30 @@
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/momentjs/moment-with-locales.min.js.php'></script>
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/bootstrap/js/bootstrap.min.js.php'></script>
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/bootstrap/js/bootstrap-tempusdominus.min.js.php'></script>
+	<script language='JavaScript' type='text/javascript'>
+		{literal}
+			//set tempusdominus (calendar/datetime picker) defaults here, not on document ready, so that
+			//pickers built by inline page scripts during body parse also get the correct font awesome icons
+			$.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
+				buttons: {
+					showToday: true,
+					showClear: true,
+					showClose: true,
+				},
+				icons: {
+					time: 'fa-solid fa-clock',
+					date: 'fa-solid fa-calendar-days',
+					up: 'fa-solid fa-arrow-up',
+					down: 'fa-solid fa-arrow-down',
+					previous: 'fa-solid fa-chevron-left',
+					next: 'fa-solid fa-chevron-right',
+					today: 'fa-solid fa-calendar-check',
+					clear: 'fa-solid fa-trash',
+					close: 'fa-solid fa-xmark',
+				}
+			});
+		{/literal}
+	</script>
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/bootstrap/js/bootstrap-colorpicker.min.js.php'></script>
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/bootstrap/js/bootstrap-pwstrength.min.js.php'></script>
 	<script language='JavaScript' type='text/javascript'>{literal}window.FontAwesomeConfig = { autoReplaceSvg: false }{/literal}</script>
@@ -561,25 +585,6 @@
 		//initialize bootstrap tempusdominus (calendar/datetime picker) plugin
 			{literal}
 			$(function() {
-				//set defaults
-					$.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
-						buttons: {
-							showToday: true,
-							showClear: true,
-							showClose: true,
-						},
-						icons: {
-							time: 'fa-solid fa-clock',
-							date: 'fa-solid fa-calendar-days',
-							up: 'fa-solid fa-arrow-up',
-							down: 'fa-solid fa-arrow-down',
-							previous: 'fa-solid fa-chevron-left',
-							next: 'fa-solid fa-chevron-right',
-							today: 'fa-solid fa-calendar-check',
-							clear: 'fa-solid fa-trash',
-							close: 'fa-solid fa-xmark',
-						}
-					});
 				//define formatting of individual classes
 					$('.datepicker').datetimepicker({ format: 'YYYY-MM-DD', });
 					{/literal}
