@@ -230,6 +230,7 @@ class settings implements clear_cache {
 			$sql = "select * from v_domain_settings ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and domain_setting_enabled = true ";
+			$sql .= "order by domain_setting_order asc ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$result = $this->database->select($sql, $parameters, 'all');
 			//if the apcu extension is available, then store the result
@@ -335,6 +336,7 @@ class settings implements clear_cache {
 		// Get theme settings
 		$sql = "select * from v_theme_settings ";
 		$sql .= "where theme_uuid = (select theme_uuid from v_themes where theme_name = :theme_name and theme_enabled = 'true') ";
+		$sql .= "order by theme_setting_order asc ";
 		$parameters['theme_name'] = $theme;
 		$result = $this->database->select($sql, $parameters ?? null, 'all');
 		unset($parameters);
