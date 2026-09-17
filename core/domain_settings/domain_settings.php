@@ -213,7 +213,7 @@
 	}
 	echo "		<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
-	if ($paging_controls_mini != '') {
+	if (!empty($paging_controls_mini)) {
 		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
 	echo "		</form>\n";
@@ -404,7 +404,7 @@
 					echo "		".$text['option-'.$row['domain_setting_value']]."\n";
 				}
 			}
-			else if ($category == "theme" && substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
+			else if ((substr_count($subcategory, "_color") > 0 || str_starts_with($row['domain_setting_value'] ?? '', "rgb") || str_starts_with($row['domain_setting_value'] ?? '', "#")) && ($name == "text" || $name == 'array')) {
 				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['domain_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['domain_setting_value'], -0.18)).'; padding: -1px;'));
 				echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".escape($row['domain_setting_value'])."</span>\n";
 			}
