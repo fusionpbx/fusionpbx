@@ -227,6 +227,7 @@ class settings implements clear_cache {
 			$sql = "select * from v_domain_settings ";
 			$sql .= "where domain_uuid = :domain_uuid ";
 			$sql .= "and domain_setting_enabled = true ";
+			$sql .= "order by domain_setting_order asc ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$result = $this->database->select($sql, $parameters, 'all');
 			//if the apcu extension is available, then store the result
