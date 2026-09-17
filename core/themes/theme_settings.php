@@ -251,7 +251,14 @@
 			}
 			echo "	<td>".escape($row['theme_setting_name'])."</td>\n";
 			echo "	<td>".escape($row['theme_setting_type'])."</td>\n";
-			echo "	<td>".escape($row['theme_setting_value'])."</td>\n";
+			echo "	<td>\n";
+			if ((substr_count($row['theme_setting_name'], "_color") > 0 || str_starts_with($row['theme_setting_value'] ?? '', "rgb") || str_starts_with($row['theme_setting_value'] ?? '', "#")) && ($row['theme_setting_type'] == "text" || $row['theme_setting_type'] == 'array')) {
+				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['theme_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['theme_setting_value'], -0.18)).'; padding: -1px;'));
+				echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".escape($row['theme_setting_value'])."</span>\n";
+			} else {
+				echo escape($row['theme_setting_value']);
+			}
+			echo "	</td>\n";
 			if (permission_exists('theme_setting_edit')) {
 				echo "	<td class='no-link center'>\n";
 				echo "		<input type='hidden' name='number_translations[$x][theme_setting_enabled]' value='".escape($row['theme_setting_enabled'])."' />\n";
