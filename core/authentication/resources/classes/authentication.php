@@ -92,9 +92,11 @@ class authentication {
 		$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid]);
 
 		//set the default authentication method to the database
-		if (empty($_SESSION['authentication']['methods']) || !is_array($_SESSION['authentication']['methods'])) {
-			$_SESSION['authentication']['methods'][] = 'database';
+		$methods = $this->settings->get('authentication', 'methods', []);
+		if (empty($methods) || !is_array($methods)) {
+			$methods = ['database'];
 		}
+		$_SESSION['authentication']['methods'] = $methods;
 
 		//check if contacts app exists
 		$contacts_exists = file_exists(dirname(__DIR__, 4) . '/core/contacts/');
@@ -242,7 +244,17 @@ class authentication {
 							$object->domain_uuid = $this->domain_uuid;
 
 							// Plugins are supposed to short-circuit so the script should exit here if user is not authorized
-							$object->{$name}($this, $this->settings);
+							$array = $object->{$name}($this, $this->settings);
+
+							//save the plugin result in the authentication session
+							if (!empty($array) && is_array($array) && isset($array['authorized'])) {
+								$_SESSION['authentication']['plugin'][$name] = $array;
+
+								//use the plugin result when the user is authorized, so the session can be created
+								if (!empty($array['authorized'])) {
+									$result = $array;
+								}
+							}
 						}
 
 						// Check the last called plugin for authorization status and if any plugin returns false then the user is not authorized
