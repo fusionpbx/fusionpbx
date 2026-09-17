@@ -610,6 +610,9 @@
 								if (!empty($destination_ringback) && $ringbacks->valid($destination_ringback)) {
 									$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"ringback=".$destination_ringback."\" inline=\"true\"/>\n";
 									$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"transfer_ringback=".$destination_ringback."\" inline=\"true\"/>\n";
+								} else {
+									$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"ringback=\"\" inline=\"true\"/>\n";
+									$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"transfer_ringback=\"\" inline=\"true\"/>\n";
 								}
 								if (!empty($destination_accountcode)) {
 									$dialplan["dialplan_xml"] .= "		<action application=\"export\" data=\"accountcode=".xml::sanitize($destination_accountcode)."\" inline=\"true\"/>\n";
@@ -854,37 +857,38 @@
 										}
 
 									//set the ringback
+										$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+										$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
+										$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+										$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 										if (!empty($destination_ringback) && $ringbacks->valid($destination_ringback)) {
-											//set the ringback
-											$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
-											$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
-											$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-											$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
 											$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "ringback=".$destination_ringback;
-											$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
-											$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
-											$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-											$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
-											$y++;
-
-											//increment the dialplan detail order
-											$dialplan_detail_order = $dialplan_detail_order + 10;
-
-											//set the transfer ringback
-											$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
-											$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
-											$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-											$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-											$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "transfer_ringback=".$destination_ringback;
-											$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
-											$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
-											$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-											$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
-											$y++;
-
-											//increment the dialplan detail order
-											$dialplan_detail_order = $dialplan_detail_order + 10;
+										} else {
+											$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "ringback=\"\"";
 										}
+										$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
+										$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
+										$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+										$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
+										$y++;
+
+									//increment the dialplan detail order
+										$dialplan_detail_order = $dialplan_detail_order + 10;
+
+									//set the transfer ringback
+										$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
+										$dialplan["dialplan_details"][$y]["dialplan_uuid"] = $dialplan_uuid;
+										$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+										$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+										$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "transfer_ringback=".$destination_ringback;
+										$dialplan["dialplan_details"][$y]["dialplan_detail_inline"] = "true";
+										$dialplan["dialplan_details"][$y]["dialplan_detail_group"] = $dialplan_detail_group;
+										$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+										$dialplan["dialplan_details"][$y]["dialplan_detail_enabled"] = "true";
+										$y++;
+
+									//increment the dialplan detail order
+										$dialplan_detail_order = $dialplan_detail_order + 10;
 
 									//set the call accountcode
 										if (!empty($destination_accountcode)) {
@@ -1214,6 +1218,8 @@
 								$array['destinations'][$x]["destination_email"] = $destination_email;
 								if (!empty($destination_ringback) && $ringbacks->valid($destination_ringback)) {
 									$array['destinations'][$x]["destination_ringback"] = $destination_ringback;
+								} else {
+									$array['destinations'][$x]["destination_ringback"] = null;
 								}
 								$array['destinations'][$x]["destination_accountcode"] = $destination_accountcode;
 								$array['destinations'][$x]["destination_type_voice"] = $destination_type_voice ? 1 : null;
