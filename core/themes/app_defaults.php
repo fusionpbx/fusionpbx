@@ -483,7 +483,7 @@
 	$array['theme_settings'][$x]['theme_setting_type'] = 'text';
 	$array['theme_settings'][$x]['theme_setting_value'] = '#ec7373';
 	$array['theme_settings'][$x]['theme_setting_enabled'] = 'true';
-	$array['theme_settings'][$x]['theme_setting_description'] = '#6b3030';
+	$array['theme_settings'][$x]['theme_setting_description'] = 'Set the color (and opacity) of the page heading text.';
 	$x++;
 	$array['theme_settings'][$x]['theme_uuid'] = 'eda762b3-e356-4225-a394-38b5f092fd44';
 	$array['theme_settings'][$x]['theme_setting_uuid'] = '5c8f2a6d-9b3e-4f0c-4a7d-1e5b8f2a6d0c';
@@ -785,7 +785,7 @@
 	$array['theme_settings'][$x]['theme_setting_uuid'] = '2909786b-4737-430a-8f12-68661cff9c09';
 	$array['theme_settings'][$x]['theme_setting_name'] = 'table_row_border_color';
 	$array['theme_settings'][$x]['theme_setting_type'] = 'text';
-	$array['theme_settings'][$x]['theme_setting_value'] = '253a5b';
+	$array['theme_settings'][$x]['theme_setting_value'] = '#253a5b';
 	$array['theme_settings'][$x]['theme_setting_enabled'] = 'true';
 	$array['theme_settings'][$x]['theme_setting_description'] = 'Set the bottom border (dividing line) color (and opacity) of table data rows.';
 	$x++;
