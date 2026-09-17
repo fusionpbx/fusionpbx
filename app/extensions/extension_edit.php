@@ -113,7 +113,7 @@ if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 
 // Set variables from http GET parameters
 $page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'extension'));
+$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
 $order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 $search = $_GET['search'] ?? '';
 $show = $_GET['show'] ?? '';
