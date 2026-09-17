@@ -4225,7 +4225,7 @@ else { //default: white
 		display: flex;
 		align-items: center;
 		flex-wrap: wrap;
-		color: #000000cc;
+		color: <?=$input_text_color?>;
 	}
 
 	.clear_search_button,
@@ -4238,8 +4238,8 @@ else { //default: white
 		border: none;
 		cursor: pointer;
 		font-size: 16px;
-		color: #0000008b;
-		opacity: 0.6;
+		color: <?=$input_text_color?>;
+		opacity: 0.5;
 		padding: 0;
 		line-height: 1;
 		pointer-events: auto;
@@ -4247,7 +4247,7 @@ else { //default: white
 	}
 
 	.clear_search_button:hover {
-		color: #000000cc;
+		opacity: 0.6;
 	}
 
 	.domain-search-input, .domain-search-picker { max-width: 100%; }
