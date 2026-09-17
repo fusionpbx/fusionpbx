@@ -534,7 +534,7 @@
 		echo "	</td>\n";
 		echo "	<td class=\"vtable\" align='left'>\n";
 		echo "		<select class='formfld' id='global_theme' name='global_theme'>\n";
-		echo "			<option value='default' ".($default_settings['domain']['theme']['default_setting_value'] == 'default' ? "selected" : null).">".$text['label-default']."</option>\n";
+		echo "			<option value=''></option>\n";
 		$theme_categories = [];
 		foreach ($themes as $theme) {
 			if (!empty($theme['theme_category']) && !in_array($theme['theme_category'], $theme_categories)) {

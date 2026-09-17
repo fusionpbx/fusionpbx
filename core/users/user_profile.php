@@ -1288,7 +1288,6 @@
 		echo "	<td class=\"vtable\" align='left'>\n";
 		echo "		<select class='formfld' id='user_theme' name='user_theme'>\n";
 		echo "			<option value=''></option>\n";
-		echo "			<option value='default' ".($user_settings['domain']['theme']['text'] == 'default' ? "selected" : null).">".$text['label-default']."</option>\n";
 		$theme_categories = [];
 		foreach ($themes as $theme) {
 			if (!empty($theme['theme_category']) && !in_array($theme['theme_category'], $theme_categories)) {

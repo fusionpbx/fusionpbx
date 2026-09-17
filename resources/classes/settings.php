@@ -328,7 +328,7 @@ class settings implements clear_cache {
 		$theme = $this->settings['domain']['theme'];
 
 		// No theme set
-		if (empty($theme) || $theme == 'default') {
+		if (empty($theme)) {
 			return;
 		}
 
