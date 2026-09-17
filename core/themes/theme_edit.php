@@ -202,6 +202,7 @@
 		$sql .= "order by default_setting_subcategory asc ";
 		$default_settings = $database->select($sql, $parameters ?? null, 'all');
 		unset($sql, $parameters);
+		$theme_settings = [];
 		foreach ($default_settings as $x => $setting) {
 			$theme_settings[$x]['theme_setting_uuid'] = uuid();
 			$theme_settings[$x]['theme_setting_name'] = $setting['default_setting_subcategory'];
@@ -352,11 +353,11 @@
 			echo "	".escape(str_replace($category, '', $label))."\n";
 			echo "</td>\n";
 			echo "<td class='vtable no-link' style='position: relative;' align='left'>\n";
-			echo "	<input type='hidden' name='theme_settings[$x][theme_uuid]' value='".escape($row['theme_uuid'])."'>\n";
+			echo "	<input type='hidden' name='theme_settings[$x][theme_uuid]' value='".escape($row['theme_uuid'] ?? '')."'>\n";
 			echo "	<input type='hidden' name='theme_settings[$x][theme_setting_uuid]' value='".escape($row['theme_setting_uuid'])."'>\n";
 			echo "	<input type='hidden' name='theme_settings[$x][theme_setting_name]' value='".escape($row['theme_setting_name'])."'>\n";
 			echo "	<input type='hidden' name='theme_settings[$x][theme_setting_type]' value='".escape($row['theme_setting_type'])."'>\n";
-			if (!empty($row['theme_setting_value']) && (str_starts_with($row['theme_setting_value'], "rgb") || str_starts_with($row['theme_setting_value'], "#"))) {
+			if (substr_count($row['theme_setting_name'], "_color") > 0 || str_starts_with($row['theme_setting_value'] ?? '', "rgb") || str_starts_with($row['theme_setting_value'] ?? '', "#")) {
 				echo "	<input type='text' class='formfld colorpicker' id='colorpicker_$x' name='theme_settings[$x][theme_setting_value]' value=\"".escape($row['theme_setting_value'])."\">\n";
 				echo "	<div id='color_$x' style='display: inline-block; width: 15px; height: 15px; background: ".escape($row['theme_setting_value'])."; margin-right: 4px; vertical-align: middle; border: 1px solid ".(color_adjust($row['theme_setting_value'], -0.18))."; padding: -1px;'></div>\n";
 				echo "	<script>\n";
@@ -366,7 +367,7 @@
 				echo "	});\n";
 				echo "	</script>\n";
 			} else {
-				echo "	<input type='text' class='formfld' name='theme_settings[$x][theme_setting_value]' value=\"".escape($row['theme_setting_value'])."\" onchange=\"document.getElementById('theme_setting_enabled_$x').value = true;\">\n";
+				echo "	<input type='text' class='formfld' name='theme_settings[$x][theme_setting_value]' value=\"".escape($row['theme_setting_value'])."\" oninput=\"document.getElementById('theme_setting_enabled_$x').value = true;\">\n";
 			}
 			if ($input_toggle_style_switch) {
 				echo "	<span class='switch' style='scale: 0.6; float: right;'>\n";
