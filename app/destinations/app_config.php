@@ -224,6 +224,30 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: default, dynamic";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e5a6b7c8-d9e0-4f1a-8b2c-3d4e5f6a7b8c";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "destinations";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "required_fields";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "destination_caller_id_name";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "List of destination fields that are required. Valid Options: destination_caller_id_name, destination_caller_id_number.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f6b7c8d9-e0f1-4a2b-9c3d-4e5f6a7b8c9d";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "destinations";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "required_fields";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "array";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "destination_caller_id_number";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "List of destination fields that are required. Valid Options: destination_caller_id_name, destination_caller_id_number.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a7c8d9e0-f1a2-4b3c-8d4e-5f6a7b8c9d0e";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "destinations";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "caller_id_number_format";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "+1NXXNXXXXXX";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Format for the destination caller ID number. Allowed characters: N (digit 1-9), X (digit 0-9), + (E.164), digits 0-9 (literal). N and X may be lower case.";
+		$y++;
 
 	//cache details
 		$apps[$x]['cache']['key'] = "dialplan.\${destination_context}";
