@@ -49,6 +49,115 @@
 		$action = 'add';
 	}
 
+//process passkey deletion (admin management: view + rename + delete)
+//passkey registration cannot be done on a user's behalf (webauthn requires the
+//user's own authenticator), so the admin can only view, rename and delete existing ones
+if (permission_exists('user_edit') && $action == 'edit'
+	&& !empty($_POST['passkey_delete_uuid']) && is_uuid($_POST['passkey_delete_uuid'])
+	&& !empty($_SESSION['authentication']['methods']) && in_array('passkey', $_SESSION['authentication']['methods'])) {
+
+	//validate the token
+	$token = new token;
+	if (!$token->validate($_SERVER['PHP_SELF'])) {
+		message::add($text['message-invalid_token'], 'negative');
+		header("Location: user_edit.php?id=" . urlencode($user_uuid));
+		exit;
+	}
+
+	//only allow deleting a passkey that belongs to this user
+	$sql = "select count(*) as count \n";
+	$sql .= "from v_user_passkeys \n";
+	$sql .= "where user_passkey_uuid = :user_passkey_uuid \n";
+	$sql .= "and user_uuid = :user_uuid \n";
+	$parameters['user_passkey_uuid'] = $_POST['passkey_delete_uuid'];
+	$parameters['user_uuid'] = $user_uuid;
+	$count = $database->select($sql, $parameters, 'column');
+	unset($sql, $parameters);
+
+	if (!empty($count) && $count > 0) {
+		//add the user_passkey_delete permission
+		$p = permissions::new();
+		$p->add("user_passkey_delete", "temp");
+
+		$sql = "delete from v_user_passkeys \n";
+		$sql .= "where user_passkey_uuid = :user_passkey_uuid \n";
+		$sql .= "and user_uuid = :user_uuid \n";
+		$parameters['user_passkey_uuid'] = $_POST['passkey_delete_uuid'];
+		$parameters['user_uuid'] = $user_uuid;
+		$database->execute($sql, $parameters);
+		unset($sql, $parameters);
+
+		//remove the temporary permission
+		$p->delete("user_passkey_delete", "temp");
+
+		message::add($text['message-passkey_deleted'], 'positive');
+	}
+	else {
+		message::add($text['message-passkey_delete_failed'], 'negative');
+	}
+
+	header("Location: user_edit.php?id=" . urlencode($user_uuid));
+	exit;
+}
+
+	//process passkey rename (admin management: change the name of a registered passkey)
+	if (permission_exists('user_edit') && $action == 'edit'
+		&& !empty($_POST['passkey_rename_uuid']) && is_uuid($_POST['passkey_rename_uuid'])
+		&& !empty($_SESSION['authentication']['methods']) && in_array('passkey', $_SESSION['authentication']['methods'])) {
+
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'], 'negative');
+			header("Location: user_edit.php?id=" . urlencode($user_uuid));
+			exit;
+		}
+
+	//passkey rename
+		$rename_name = trim($_POST['passkey_rename_name'] ?? '');
+		if ($rename_name === '' || (function_exists('mb_strlen') ? mb_strlen($rename_name) : strlen($rename_name)) > 100) {
+			message::add($text['message-passkey_rename_failed'], 'negative');
+		}
+		else {
+			//only allow renaming a passkey that belongs to this user
+			$sql = "select count(*) as count \n";
+			$sql .= "from v_user_passkeys \n";
+			$sql .= "where user_passkey_uuid = :user_passkey_uuid \n";
+			$sql .= "and user_uuid = :user_uuid \n";
+			$parameters['user_passkey_uuid'] = $_POST['passkey_rename_uuid'];
+			$parameters['user_uuid'] = $user_uuid;
+			$count = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
+
+			if (!empty($count) && $count > 0) {
+				//add the user_passkey_edit permission
+				$p = permissions::new();
+				$p->add("user_passkey_edit", "temp");
+
+				$sql = "update v_user_passkeys \n";
+				$sql .= "set display_name = :display_name \n";
+				$sql .= "where user_passkey_uuid = :user_passkey_uuid \n";
+				$sql .= "and user_uuid = :user_uuid \n";
+				$parameters['display_name'] = $rename_name;
+				$parameters['user_passkey_uuid'] = $_POST['passkey_rename_uuid'];
+				$parameters['user_uuid'] = $user_uuid;
+				$database->execute($sql, $parameters);
+				unset($sql, $parameters);
+
+				//remove the temporary permission
+				$p->delete("user_passkey_edit", "temp");
+
+				message::add($text['message-passkey_renamed'], 'positive');
+			}
+			else {
+				message::add($text['message-passkey_rename_failed'], 'negative');
+			}
+		}
+
+		header("Location: user_edit.php?id=" . urlencode($user_uuid));
+		exit;
+	}
+
 // Check if the user has totp
 	// $user_has_totp_secret = false;
 	// $sql = "select user_setting_value from v_user_settings s ";
@@ -1425,6 +1534,117 @@
 		else {
 			echo "	<br />".$text['description-user_totp_view']."<br />\n";
 		}
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	//user passkeys (webauthn) - admin management (view + rename + delete)
+	//registration is not offered here: it must be done by the user in their own
+	//profile using their own authenticator. admins can view, rename and delete.
+	if ($action == 'edit'
+		&& !empty($_SESSION['authentication']['methods']) && in_array('passkey', $_SESSION['authentication']['methods'])) {
+
+		//get this user's passkey credentials
+		$sql = "select user_passkey_uuid, credential_id, display_name, aaguid, insert_date \n";
+		$sql .= "from v_user_passkeys \n";
+		$sql .= "where user_uuid = :user_uuid \n";
+		$sql .= "and passkey_enabled = true \n";
+		$sql .= "order by insert_date \n";
+		$parameters['user_uuid'] = $user_uuid;
+		$passkey_list = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-user_passkey']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left' valign='top'>\n";
+
+		//list the registered passkeys
+		if (!empty($passkey_list) && is_array($passkey_list)) {
+			foreach ($passkey_list as $credential) {
+				$passkey_uuid = $credential['user_passkey_uuid'];
+				echo "	<div style='margin-bottom: 5px;'>\n";
+				echo "		<span id='passkey-edit-view-".$passkey_uuid."' style='white-space:nowrap;'>\n";
+				echo "			".escape($credential['display_name'])." (".escape($credential['insert_date']).")\n";
+				echo "		".button::create(['type'=>'button',
+					'label'=>$text['button-passkey_edit'],
+					'icon'=>'edit',
+					'collapse'=>'never',
+					'style'=>'margin-left: 5px;',
+					'onclick'=>"passkey_edit_edit('".$passkey_uuid."');"])."\n";
+				echo "		".button::create(['type'=>'button',
+					'label'=>$text['button-passkey_delete'],
+					'icon'=>'trash',
+					'collapse'=>'never',
+					'style'=>'margin-left: 5px;',
+					'onclick'=>"passkey_edit_delete('".$passkey_uuid."');"])."\n";
+				echo "		</span>\n";
+				echo "		<span id='passkey-edit-edit-".$passkey_uuid."' style='display:none; white-space:nowrap;'>\n";
+				echo "			<input type='text' class='formfld' id='passkey-edit-name-".$passkey_uuid."' value='".escape($credential['display_name'])."' maxlength='100' style='width: 200px;' />\n";
+				echo "		".button::create(['type'=>'button',
+					'label'=>$text['button-passkey_save'],
+					'icon'=>'check',
+					'collapse'=>'never',
+					'style'=>'margin-left: 5px;',
+					'onclick'=>"passkey_edit_rename('".$passkey_uuid."');"])."\n";
+				echo "		".button::create(['type'=>'button',
+					'label'=>$text['button-passkey_cancel'],
+					'icon'=>'xmark',
+					'collapse'=>'never',
+					'style'=>'margin-left: 5px;',
+					'onclick'=>"passkey_edit_cancel('".$passkey_uuid."');"])."\n";
+				echo "		</span>\n";
+				echo "	</div>\n";
+			}
+		}
+		echo "	<br />".$text['description-user_passkey']."<br />\n";
+
+		//passkey javascript (view + rename + delete)
+		echo "<script>\n";
+		echo "	function passkey_edit_delete(user_passkey_uuid) {\n";
+		echo "		if (!confirm('".$text['message-passkey_delete_confirm']."')) {\n";
+		echo "			return;\n";
+		echo "		}\n";
+		echo "		var form = document.getElementById('frm');\n";
+		echo "		var input = document.createElement('input');\n";
+		echo "		input.type = 'hidden';\n";
+		echo "		input.name = 'passkey_delete_uuid';\n";
+		echo "		input.value = user_passkey_uuid;\n";
+		echo "		form.appendChild(input);\n";
+		echo "		form.submit();\n";
+		echo "	}\n";
+		echo "\n";
+		echo "function passkey_edit_edit(uuid) {\n";
+		echo "	document.getElementById('passkey-edit-view-' + uuid).style.display = 'none';\n";
+		echo "	document.getElementById('passkey-edit-edit-' + uuid).style.display = 'inline';\n";
+		echo "	var name_input = document.getElementById('passkey-edit-name-' + uuid);\n";
+		echo "	if (name_input) { name_input.focus(); name_input.select(); }\n";
+		echo "}\n";
+		echo "\n";
+		echo "function passkey_edit_cancel(uuid) {\n";
+		echo "	document.getElementById('passkey-edit-edit-' + uuid).style.display = 'none';\n";
+		echo "	document.getElementById('passkey-edit-view-' + uuid).style.display = 'inline';\n";
+		echo "}\n";
+		echo "\n";
+		echo "function passkey_edit_rename(uuid) {\n";
+		echo "	var name = document.getElementById('passkey-edit-name-' + uuid).value;\n";
+		echo "	if (name === null || name.trim() === '') { return; }\n";
+		echo "	var form = document.getElementById('frm');\n";
+		echo "	var input = document.createElement('input');\n";
+		echo "	input.type = 'hidden';\n";
+		echo "	input.name = 'passkey_rename_uuid';\n";
+		echo "	input.value = uuid;\n";
+		echo "	form.appendChild(input);\n";
+		echo "	var name_input = document.createElement('input');\n";
+		echo "	name_input.type = 'hidden';\n";
+		echo "	name_input.name = 'passkey_rename_name';\n";
+		echo "	name_input.value = name;\n";
+		echo "	form.appendChild(name_input);\n";
+		echo "	form.submit();\n";
+		echo "}\n";
+		echo "</script>\n";
+
 		echo "</td>\n";
 		echo "</tr>\n";
 	}

@@ -179,6 +179,53 @@
 					header('Location: user_profile.php');
 					exit;
 				}
+
+				//rename a passkey
+				if (isset($_POST['passkey_rename_uuid'])) {
+					if (is_uuid($_POST['passkey_rename_uuid'])) {
+						$rename_name = trim($_POST['passkey_rename_name'] ?? '');
+						if ($rename_name === '' || (function_exists('mb_strlen') ? mb_strlen($rename_name) : strlen($rename_name)) > 100) {
+							message::add($text['message-passkey_rename_failed'], 'negative');
+						}
+						else {
+							//only allow renaming the passkeys of this user
+							$sql = "select count(*) as count \n";
+							$sql .= "from v_user_passkeys \n";
+							$sql .= "where user_passkey_uuid = :user_passkey_uuid \n";
+							$sql .= "and user_uuid = :user_uuid \n";
+							$parameters['user_passkey_uuid'] = $_POST['passkey_rename_uuid'];
+							$parameters['user_uuid'] = $user_uuid;
+							$count = $database->select($sql, $parameters, 'column');
+							unset($sql, $parameters);
+
+							if (!empty($count) && $count > 0) {
+								//add the user_passkey_edit permission
+								$p = permissions::new();
+								$p->add("user_passkey_edit", "temp");
+
+								$sql = "update v_user_passkeys \n";
+								$sql .= "set display_name = :display_name \n";
+								$sql .= "where user_passkey_uuid = :user_passkey_uuid \n";
+								$sql .= "and user_uuid = :user_uuid \n";
+								$parameters['display_name'] = $rename_name;
+								$parameters['user_passkey_uuid'] = $_POST['passkey_rename_uuid'];
+								$parameters['user_uuid'] = $user_uuid;
+								$database->execute($sql, $parameters);
+								unset($sql, $parameters);
+
+								//remove the temporary permission
+								$p->delete("user_passkey_edit", "temp");
+
+								message::add($text['message-passkey_renamed'], 'positive');
+							}
+							else {
+								message::add($text['message-passkey_rename_failed'], 'negative');
+							}
+						}
+					}
+					header('Location: user_profile.php');
+					exit;
+				}
 			}
 
 		//remove any phone number formatting
@@ -1070,15 +1117,38 @@
 		//list the registered passkeys
 		if (!empty($user_passkeys) && is_array($user_passkeys)) {
 			foreach ($user_passkeys as $credential) {
+				$passkey_uuid = $credential['user_passkey_uuid'];
 				echo "	<div style='margin-bottom: 5px;'>\n";
-				echo "		".escape($credential['display_name'])." (".$credential['insert_date'].")\n";
+				echo "		<span id='passkey-profile-view-".$passkey_uuid."' style='white-space:nowrap;'>\n";
+				echo "			".escape($credential['display_name'])." (".escape($credential['insert_date']).")\n";
+				echo "		".button::create(['type'=>'button',
+					'label'=>$text['button-passkey_edit'],
+					'icon'=>'edit',
+					'collapse'=>'never',
+					'style'=>'margin-left: 5px;',
+					'onclick'=>"passkey_profile_edit('".$passkey_uuid."');"])."\n";
 				echo "		".button::create(['type'=>'button',
 					'label'=>$text['button-passkey_delete'],
 					'icon'=>'trash',
 					'collapse'=>'never',
-					'style'=>'margin-left: 10px;',
-					'onclick'=>"passkey_profile_delete('".$credential['user_passkey_uuid']."');"])."
-\n";
+					'style'=>'margin-left: 5px;',
+					'onclick'=>"passkey_profile_delete('".$passkey_uuid."');"])."\n";
+				echo "		</span>\n";
+				echo "		<span id='passkey-profile-edit-".$passkey_uuid."' style='display:none; white-space:nowrap;'>\n";
+				echo "			<input type='text' class='formfld' id='passkey-profile-name-".$passkey_uuid."' value='".escape($credential['display_name'])."' maxlength='100' style='width: 200px;' />\n";
+				echo "		".button::create(['type'=>'button',
+					'label'=>$text['button-passkey_save'],
+					'icon'=>'check',
+					'collapse'=>'never',
+					'style'=>'margin-left: 5px;',
+					'onclick'=>"passkey_profile_rename('".$passkey_uuid."');"])."\n";
+				echo "		".button::create(['type'=>'button',
+					'label'=>$text['button-passkey_cancel'],
+					'icon'=>'xmark',
+					'collapse'=>'never',
+					'style'=>'margin-left: 5px;',
+					'onclick'=>"passkey_profile_cancel('".$passkey_uuid."');"])."\n";
+				echo "		</span>\n";
 				echo "	</div>\n";
 			}
 		}
@@ -1165,6 +1235,35 @@
 		echo "		form.appendChild(input);\n";
 		echo "		form.submit();\n";
 		echo "	}\n";
+
+		echo "function passkey_profile_edit(uuid) {\n";
+		echo "	document.getElementById('passkey-profile-view-' + uuid).style.display = 'none';\n";
+		echo "	document.getElementById('passkey-profile-edit-' + uuid).style.display = 'inline';\n";
+		echo "	var name_input = document.getElementById('passkey-profile-name-' + uuid);\n";
+		echo "	if (name_input) { name_input.focus(); name_input.select(); }\n";
+		echo "}\n";
+		echo "\n";
+		echo "function passkey_profile_cancel(uuid) {\n";
+		echo "	document.getElementById('passkey-profile-edit-' + uuid).style.display = 'none';\n";
+		echo "	document.getElementById('passkey-profile-view-' + uuid).style.display = 'inline';\n";
+		echo "}\n";
+		echo "\n";
+		echo "function passkey_profile_rename(uuid) {\n";
+		echo "	var name = document.getElementById('passkey-profile-name-' + uuid).value;\n";
+		echo "	if (name === null || name.trim() === '') { return; }\n";
+		echo "	var form = document.getElementById('frm');\n";
+		echo "	var input = document.createElement('input');\n";
+		echo "	input.type = 'hidden';\n";
+		echo "	input.name = 'passkey_rename_uuid';\n";
+		echo "	input.value = uuid;\n";
+		echo "	form.appendChild(input);\n";
+		echo "	var name_input = document.createElement('input');\n";
+		echo "	name_input.type = 'hidden';\n";
+		echo "	name_input.name = 'passkey_rename_name';\n";
+		echo "	name_input.value = name;\n";
+		echo "	form.appendChild(name_input);\n";
+		echo "	form.submit();\n";
+		echo "}\n";
 		echo "</script>\n";
 
 		echo "</td>\n";
@@ -1288,19 +1387,20 @@
 		echo "	<td class=\"vtable\" align='left'>\n";
 		echo "		<select class='formfld' id='user_theme' name='user_theme'>\n";
 		echo "			<option value=''></option>\n";
+		echo "			<option value='default' ".($user_settings['domain']['theme']['text'] == 'default' ? "selected" : null).">".$text['label-default']."</option>\n";
 		$theme_categories = [];
 		foreach ($themes as $theme) {
 			if (!empty($theme['theme_category']) && !in_array($theme['theme_category'], $theme_categories)) {
 				$theme_categories[] = $theme['theme_category'];
 			} elseif (empty($theme['theme_category'])) {
-				echo "			<option value='".escape($theme['theme_name'])."' ".($user_settings['domain']['theme']['text'] == $theme['theme_name'] ? "selected" : null).">".escape($theme['theme_name'])."</option>\n";
+				echo "			<option value='".escape($theme['theme_name'])."' ".($user_settings['domain']['theme']['user_setting_value'] == $theme['theme_name'] ? "selected" : null).">".escape($theme['theme_name'])."</option>\n";
 			}
 		}
 		foreach ($theme_categories as $category) {
 			echo "		<optgroup label='".escape($category)."'>\n";
 			foreach ($themes as $theme) {
 				if (!empty($theme['theme_category']) && $theme['theme_category'] == $category) {
-					echo "			<option value='".escape($theme['theme_name'])."' ".($user_settings['domain']['theme']['text'] == $theme['theme_name'] ? "selected" : null).">".escape($theme['theme_name'])."</option>\n";
+					echo "			<option value='".escape($theme['theme_name'])."' ".($user_settings['domain']['theme']['user_setting_value'] == $theme['theme_name'] ? "selected" : null).">".escape($theme['theme_name'])."</option>\n";
 				}
 			}
 			echo "		</optgroup>\n";
