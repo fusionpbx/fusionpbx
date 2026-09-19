@@ -760,9 +760,10 @@
 					const wrapper = document.createElement('div');
 					wrapper.className = 'searchable_select_wrapper';
 					wrapper.id = original_select.id + '_search';
+					wrapper.style.display = getComputedStyle(original_select).display;
 					wrapper.style.width = getComputedStyle(original_select).width;
 					wrapper.style.marginRight = (parseInt(getComputedStyle(original_select).marginRight) * 2) + 'px';
-					wrapper.style.display = getComputedStyle(original_select).display;
+					wrapper.style.marginLeft = (parseInt(getComputedStyle(original_select).marginLeft) - 1) + 'px';
 
 					original_select.parentNode.insertBefore(wrapper, original_select);
 					original_select.style.display = 'none';
@@ -770,7 +771,7 @@
 					const input = document.createElement('input');
 					input.type = 'text';
 					input.className = 'formfld';
-					input.placeholder = '{/literal}{$text.label_search}{literal}';
+					input.placeholder = original_select.querySelector('option').innerText ? original_select.querySelector('option').innerText : '{/literal}{$text.label_search}{literal}';
 					wrapper.appendChild(input);
 
 					const actions = document.createElement('div');
@@ -791,7 +792,7 @@
 					});
 
 					const arrow_icon = document.createElement('i');
-					arrow_icon.style = 'transform: scale(0.80, 0.85);';
+					arrow_icon.style = 'transform: scale(0.75, 0.80);';
 					arrow_icon.className = 'fa-solid fa-angle-down';
 					actions.appendChild(arrow_icon);
 

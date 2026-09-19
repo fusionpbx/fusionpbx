@@ -338,7 +338,7 @@
 		}
 	}
 	if (!empty($categories)) {
-		echo "		<select name='default_setting_category' class='formfld' style='width: auto; margin-left: 15px;' id='select_category' onchange='this.form.submit();'>\n";
+		echo "		<select name='default_setting_category' class='formfld searchable_select' style='width: auto; margin-left: 15px;' id='select_category' onchange='this.form.submit();'>\n";
 		echo "			<option value=''>".$text['label-category']."...</option>\n";
 		echo "			<option value=''>".$text['label-all']."</option>\n";
 		foreach ($categories as $category_name => $category) {
