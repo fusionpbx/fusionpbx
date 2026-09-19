@@ -164,12 +164,12 @@
 	$token = $object->create($_SERVER['PHP_SELF']);
 
 //additional includes
-	$document['title'] = $text['label-settings'];
+	$document['title'] = $text['title-theme_settings'];
 	require_once "resources/header.php";
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['label-settings']."</b><div class='count'>".$num_rows."</div></div>\n";
+	echo "	<div class='heading'><b>".$text['title-theme_settings']."</b><div class='count'>".$num_rows."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back', ''),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'theme_edit.php?id='.$theme_uuid]);
 	if (permission_exists('theme_setting_add')) {
