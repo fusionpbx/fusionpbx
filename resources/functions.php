@@ -3373,3 +3373,23 @@ if (!function_exists('mb_convert_encoding')) {
 		return $result;
 	}
 }
+
+/**
+ * Returns the label cell CSS class based on whether the given field is required.
+ *
+ * If the field is present in the required fields list (e.g. extension/required),
+ * the class "vncellreq" is returned; otherwise, the default "vncell" class is used.
+ *
+ * @param string   $field          The field name to check.
+ * @param string[] $required_fields Array of field names considered required.
+ *
+ * @return string "vncellreq" if the field is required, "vncell" otherwise.
+ */
+if (!function_exists('required_field_vncell_class')) {
+	function required_field_vncell_class(string $field, $required_fields): string {
+		if (is_array($required_fields) && in_array($field, $required_fields, true)) {
+			return "vncellreq";
+		}
+		return "vncell";
+	}
+}
