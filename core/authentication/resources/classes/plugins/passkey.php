@@ -99,6 +99,9 @@ class plugin_passkey {
 		$login_destination = $settings->get('login', 'destination');
 		$users_unique = $settings->get('users', 'unique', '');
 
+		//in the "Login with Passkey" flow only a pre-registered passkey may be used to sign in
+		$passkey_only = !empty($_SESSION['authentication']['passkey_only']);
+
 		//set the default login type and image
 		if (empty($theme_login_type)) {
 			$theme_login_type = 'image';
@@ -301,6 +304,16 @@ class plugin_passkey {
 
 		//process the passkey registration (register a new passkey during sign in)
 		if (isset($_POST['passkey_registration'])) {
+
+			//the "Login with Passkey" flow only allows pre-registered passkeys - refuse first time registrations
+			if ($passkey_only) {
+				message::add($text['message-passkey_not_registered'] ?? 'No passkey is registered for this account. Please log in with your username and password.', 'negative');
+				unset($_SESSION['authentication']['passkey_only_until']);
+				$_SESSION['authentication']['passkey_only'] = false;
+				header('Location: ' . PROJECT_PATH . '/login.php');
+				exit;
+			}
+
 			$auth_valid = false;
 			$verified = null;
 
@@ -436,8 +449,16 @@ class plugin_passkey {
 			//render the template
 			$content = $view->render('passkey.htm');
 		}
+		elseif ($passkey_only) {
+			//the "Login with Passkey" flow requires a passkey to already be registered - first time registrations are not allowed
+			message::add($text['message-passkey_not_registered'] ?? 'No passkey is registered for this account. Please log in with your username and password.', 'negative');
+			unset($_SESSION['authentication']['passkey_only_until']);
+			$_SESSION['authentication']['passkey_only'] = false;
+			header('Location: ' . PROJECT_PATH . '/login.php');
+			exit;
+		}
 		else {
-			//register a new passkey
+			//register a new passkey (only in the multi-factor flow, not the "Login with Passkey" flow)
 			$view->assign("login_title", $text['title-passkey_register']);
 			$view->assign("passkey_description", $text['description-passkey_register']);
 			$view->assign("button_passkey", $text['button-passkey_register']);

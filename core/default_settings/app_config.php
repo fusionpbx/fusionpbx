@@ -260,6 +260,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Display a Remember Me checkbox on the login form.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "38b9f4b5-6a2b-4257-a731-d0e95179af9e";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "login";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "passkey_enabled";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Display the Passkey button on the login form (requires a registered user passkey).";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "962ac32c-74ce-4cce-b1d9-89f4d921493d";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "login";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "domain_name_visible";

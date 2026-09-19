@@ -96,6 +96,21 @@ class authentication {
 		if (empty($methods) || !is_array($methods)) {
 			$methods = ['database'];
 		}
+
+		//determine whether the "Login with Passkey" (passkey-only) flow is active
+		//when active, the user signs in with a pre-registered passkey only (no password)
+		$passkey_only = false;
+		$now = time();
+		$passkey_only_until = $_SESSION['authentication']['passkey_only_until'] ?? 0;
+		if ($this->settings->get('login', 'passkey_enabled', false)
+				&& ((isset($_REQUEST['passkey_login'])) || ($now < $passkey_only_until))) {
+			$methods = ['passkey'];
+			$_SESSION['authentication']['passkey_only_until'] = $now + 300;
+			$passkey_only = true;
+		} else {
+			unset($_SESSION['authentication']['passkey_only_until']);
+		}
+		$_SESSION['authentication']['passkey_only'] = $passkey_only;
 		$_SESSION['authentication']['methods'] = $methods;
 
 		//check if contacts app exists
@@ -218,7 +233,7 @@ class authentication {
 				// But, may still be blocked by other methods. Check the other methods in the user settings
 				// for any additional methods that are active on the user and not on the domain (ie. TOTP).
 				$authenticators = array_diff($this->settings->get('authentication', 'methods', []), $_SESSION['authentication']['methods'] ?? []);
-				if (!empty($authenticators) && $result['plugin'] !== 'remember_me') {
+				if (!$passkey_only && !empty($authenticators) && $result['plugin'] !== 'remember_me') {
 					foreach ($authenticators as $name) {
 						// Assume the plugin will not authorize the user until it is processed and returns true
 						$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
@@ -274,7 +289,12 @@ class authentication {
 					// user passed all authentication mechanisms and is authorized to login
 					self::create_user_session($result, $this->settings);
 
+					//the "Login with Passkey" flow is complete - clear the marker so a fresh login starts clean
+					unset($_SESSION['authentication']['passkey_only_until']);
+					$_SESSION['authentication']['passkey_only'] = false;
+
 					// Create remember me token
+					// if (($_SESSION['remember_me'] ?? '') === 'true' && $this->settings->get('login', 'remember_me', false) && $result['plugin'] !== 'remember_me') {
 					if (!empty($_SESSION['remember_me']) && $this->settings->get('login', 'remember_me', false) && $result['plugin'] !== 'remember_me') {
 						$token_data = $remember_me->issue_token();
 

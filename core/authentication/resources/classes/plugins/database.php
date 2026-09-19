@@ -136,6 +136,11 @@ class plugin_database {
 			$view->assign("button_cancel", $text['button-cancel']);
 			$view->assign("button_forgot_password", $text['button-forgot_password']);
 
+			//show the "Login with Passkey" button when the passkey login option is enabled
+			$view->assign("login_passkey_enabled", $settings->get('login', 'passkey_enabled', false));
+			$view->assign("button_login_passkey", $text['title-passkey_sign_in'] ?? 'Sign in with a passkey');
+			$view->assign("label_or", $text['label-or'] ?? 'Or');
+
 			//assign openid values to the template
 			if ($settings->get('open_id', 'enabled', false)) {
 				$classes = $settings->get('open_id', 'methods', []);
