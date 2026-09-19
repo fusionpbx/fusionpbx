@@ -19,7 +19,7 @@ class remember_me {
 	/**
 	 * Additional private variables
 	 */
-	private static $cookie_name = 'remember';
+	private static $cookie_name = 'remember_me';
 	private $expiry_days;
 
 	/**
