@@ -105,8 +105,8 @@ class plugin_email {
 			$_POST['username'] = $_SESSION['username'];
 			$_REQUEST['username'] = $_SESSION['username'];
 		}
-		if (isset($_POST["remember"])) {
-			$_SESSION['remember'] = $_POST["remember"];
+		if (isset($_POST["remember_me"])) {
+			$_SESSION['remember_me'] = $_POST["remember_me"];
 		}
 
 		//request the username

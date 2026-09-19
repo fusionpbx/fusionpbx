@@ -275,7 +275,7 @@ class authentication {
 					self::create_user_session($result, $this->settings);
 
 					// Create remember me token
-					if (!empty($_SESSION['remember']) && $this->settings->get('login', 'remember_me', false) && $result['plugin'] !== 'remember_me') {
+					if (!empty($_SESSION['remember_me']) && $this->settings->get('login', 'remember_me', false) && $result['plugin'] !== 'remember_me') {
 						$token_data = $remember_me->issue_token();
 
 						// Save token to the user log array
