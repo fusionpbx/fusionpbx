@@ -316,7 +316,7 @@
 			 */
 			function http_digest_request($realm) {
 				header('HTTP/1.1 401 Authorization Required');
-				header('WWW-Authenticate: Digest realm="'.$realm.'", qop="auth", nonce="'.uniqid().'", opaque="'.md5($realm).'"');
+				header('WWW-Authenticate: Digest realm="'.$realm.'", qop="auth", nonce="'.bin2hex(random_bytes(16)).'", opaque="'.md5($realm).'"');
 				header("Content-Type: text/html");
 				$content = 'Authorization Cancelled';
 				header("Content-Length: ".strval(strlen($content)));
