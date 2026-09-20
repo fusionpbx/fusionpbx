@@ -876,7 +876,36 @@
 	$array['theme_settings'][$x]['theme_setting_value'] = '#908f8e';
 	$array['theme_settings'][$x]['theme_setting_enabled'] = 'true';
 	$array['theme_settings'][$x]['theme_setting_description'] = 'Set the color (and opacity) of the Dashboard block label text.';
-	$x++;
+
+	//build array of theme uuids
+	$uuids = [];
+	foreach ($array['themes'] as $x => $row) {
+		if (is_uuid($row['theme_uuid'])) {
+			$uuids[] = "'".$row['theme_uuid']."'";
+		}
+	}
+
+	//remove existing themes from the array
+	if (!empty($uuids)) {
+		$sql = "select theme_uuid from v_themes where theme_uuid in (".implode(', ', $uuids).") ";
+		$themes = $database->select($sql, $parameters ?? null);
+		unset($sql, $parameters);
+
+		foreach ($themes as $theme) {
+			//build array of theme uuids
+			foreach ($array['themes'] as $x => $row) {
+				if (is_uuid($row['theme_uuid']) && $row['theme_uuid'] == $theme['theme_uuid']) {
+					unset($array['themes'][$x]);
+				}
+			}
+			//build array of theme settings uuids
+			foreach ($array['theme_settings'] as $x => $row) {
+				if (is_uuid($row['theme_uuid']) && $row['theme_uuid'] == $theme['theme_uuid']) {
+					unset($array['theme_settings'][$x]);
+				}
+			}
+		}
+	}
 
 	//save the data
 	if (!empty($array)) {
