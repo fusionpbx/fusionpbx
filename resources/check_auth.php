@@ -146,7 +146,7 @@
 			settings::clear_cache();
 
 		//if logged in, redirect to login destination
-			if (!isset($_REQUEST["key"]) && !isset($_COOKIE['remember'])) {
+			if (!isset($_REQUEST["key"]) && !isset($_COOKIE['remember_me'])) {
 				//redirect the user
 				if (isset($_SESSION['redirect_path'])) {
 					$redirect_path = $_SESSION['redirect_path'];

@@ -115,8 +115,8 @@ class plugin_passkey {
 			$this->username = $_POST['username'];
 			$_SESSION["username"] = $this->username;
 		}
-		if (isset($_POST["remember"])) {
-			$_SESSION['remember'] = $_POST["remember"];
+		if (isset($_POST["remember_me"])) {
+			$_SESSION['remember_me'] = $_POST["remember_me"];
 		}
 
 		//the username is required, the primary authentication must have been processed first
