@@ -1720,6 +1720,10 @@ else { //default: white
 			box-sizing: border-box;
 			width: calc(100vw - 32px);
 		}
+		#default_login .login_body_inner {
+			box-sizing: border-box;
+			width: 100% !important;
+		}
 		#default_login input.txt.login,
 		#default_login select.txt.login {
 			box-sizing: border-box;
