@@ -553,7 +553,7 @@
 				$array['user_settings'][$i]['domain_uuid'] = $domain_uuid;
 				$array['user_settings'][$i]['user_setting_category'] = 'domain';
 				$array['user_settings'][$i]['user_setting_subcategory'] = 'theme';
-				$array['user_settings'][$i]['user_setting_name'] = 'text';
+				$array['user_settings'][$i]['user_setting_name'] = 'uuid';
 				$array['user_settings'][$i]['user_setting_value'] = $user_theme;
 				$array['user_settings'][$i]['user_setting_enabled'] = 'true';
 				$array['user_settings'][$i]['user_setting_description'] = '';
@@ -580,7 +580,7 @@
 					$array['user_settings'][$i]['user_setting_uuid'] = $row['user_setting_uuid'];
 					$array['user_settings'][$i]['user_setting_category'] = 'domain';
 					$array['user_settings'][$i]['user_setting_subcategory'] = 'theme';
-					$array['user_settings'][$i]['user_setting_name'] = 'text';
+					$array['user_settings'][$i]['user_setting_name'] = 'uuid';
 					$array['user_settings'][$i]['user_setting_value'] = $user_theme;
 					$array['user_settings'][$i]['user_setting_enabled'] = 'true';
 					$array['user_settings'][$i]['user_setting_description'] = $row['user_setting_description'] ?? '';
@@ -874,7 +874,7 @@
 			unset($sql, $parameters, $result, $row);
 
 		//get themes from database
-			$sql = "select theme_category, theme_name from v_themes where theme_enabled = true order by theme_category asc ";
+			$sql = "select theme_uuid, theme_category, theme_name from v_themes where theme_enabled = true order by theme_category asc ";
 			$themes = $database->select($sql, null, 'all');
 	}
 
@@ -1393,14 +1393,14 @@
 			if (!empty($theme['theme_category']) && !in_array($theme['theme_category'], $theme_categories)) {
 				$theme_categories[] = $theme['theme_category'];
 			} elseif (empty($theme['theme_category'])) {
-				echo "			<option value='".escape($theme['theme_name'])."' ".($user_settings['domain']['theme']['user_setting_value'] == $theme['theme_name'] ? "selected" : null).">".escape($theme['theme_name'])."</option>\n";
+				echo "			<option value='".escape($theme['theme_uuid'])."' ".($user_settings['domain']['theme']['user_setting_value'] == $theme['theme_uuid'] ? "selected" : null).">".escape($theme['theme_name'])."</option>\n";
 			}
 		}
 		foreach ($theme_categories as $category) {
 			echo "		<optgroup label='".escape($category)."'>\n";
 			foreach ($themes as $theme) {
 				if (!empty($theme['theme_category']) && $theme['theme_category'] == $category) {
-					echo "			<option value='".escape($theme['theme_name'])."' ".($user_settings['domain']['theme']['user_setting_value'] == $theme['theme_name'] ? "selected" : null).">".escape($theme['theme_name'])."</option>\n";
+					echo "			<option value='".escape($theme['theme_uuid'])."' ".($user_settings['domain']['theme']['user_setting_value'] == $theme['theme_uuid'] ? "selected" : null).">".escape($theme['theme_name'])."</option>\n";
 				}
 			}
 			echo "		</optgroup>\n";
