@@ -119,6 +119,9 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "ring_group_exit_key";
+		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_caller_id_name";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;

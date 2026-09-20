@@ -431,7 +431,9 @@
 			}
 			$array['ring_groups'][0]["ring_group_wait_interval"] = $ring_group_wait_interval;
 			$array['ring_groups'][0]["ring_group_strategy"] = $ring_group_strategy;
-			$array["ring_groups"][0]["ring_group_exit_key"] = $ring_group_exit_key;
+			if (permission_exists('ring_group_exit_key')) {
+				$array["ring_groups"][0]["ring_group_exit_key"] = $ring_group_exit_key;
+			}
 			$array["ring_groups"][0]["ring_group_call_timeout"] = $ring_group_call_timeout;
 			if (permission_exists('ring_group_caller_id_name')) {
 				$array["ring_groups"][0]["ring_group_caller_id_name"] = $ring_group_caller_id_name;
@@ -1563,16 +1565,18 @@
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "  ".$text['label-ring_group_exit_key']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='ring_group_exit_key' value='".escape($ring_group_exit_key)."'>\n";
-	echo "<br />\n";
-	echo $text['description-ring_group_exit_key']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('ring_group_exit_key')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "  ".$text['label-ring_group_exit_key']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='text' name='ring_group_exit_key' value='".escape($ring_group_exit_key)."'>\n";
+		echo "<br />\n";
+		echo $text['description-ring_group_exit_key']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
