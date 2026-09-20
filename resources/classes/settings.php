@@ -326,18 +326,18 @@ class settings implements clear_cache {
 	 * @access  private
 	 */
 	private function theme_settings() {
-		$theme = $this->settings['domain']['theme'];
+		$theme_uuid = $this->settings['domain']['theme'];
 
 		// No theme set
-		if (empty($theme)) {
+		if (empty($theme_uuid) || !is_uuid($theme_uuid)) {
 			return;
 		}
 
 		// Get theme settings
 		$sql = "select * from v_theme_settings ";
-		$sql .= "where theme_uuid = (select theme_uuid from v_themes where theme_name = :theme_name and theme_enabled = 'true') ";
+		$sql .= "where theme_uuid = (select theme_uuid from v_themes where theme_uuid = :theme_uuid and theme_enabled = 'true') ";
 		$sql .= "order by theme_setting_order asc ";
-		$parameters['theme_name'] = $theme;
+		$parameters['theme_uuid'] = $theme_uuid;
 		$result = $this->database->select($sql, $parameters ?? null, 'all');
 		unset($parameters);
 
