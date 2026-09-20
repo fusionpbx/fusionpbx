@@ -175,23 +175,25 @@
 		<div id='background-color'></div>
 		<div id='page' align='center'>
 			<div id='default_login'>
-				<a href='{$project_path}/'><img id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}' /></a><br />
-				<form method='post' name='frm' id='frm' action=''>
-					<div class='login_text'>
-						{$passkey_description}
-						<br /><br />
-						<span id='passkey_message' style='display:none; color: #a94442;'></span>
-						<br /><br />
-					</div>
-					<div>
-						<input type='button' id='button-passkey' name='button-passkey' class='btn' style='width: 250px; margin-top: 15px;' value='{$button_passkey}' onclick='passkey_process();' />
-						<br /><br />
-						{if !empty($username)}
-						<a class='login_link' href='{$project_path}/logout.php'>{$button_cancel}</a>
-						{/if}
-					</div>
-					<input type='hidden' name='{$token_name}' value='{$token_hash}'>
-				</form>
+				<div id='default_login_card'>
+					<a href='{$project_path}/'><img id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}' /></a><br />
+					<form method='post' name='frm' id='frm' action=''>
+						<div class='login_text'>
+							{$passkey_description}
+							<br /><br />
+							<span id='passkey_message' style='display:none; color: #a94442;'></span>
+							<br /><br />
+						</div>
+						<div>
+							<input type='button' id='button-passkey' name='button-passkey' class='btn' style='width: 250px; margin-top: 15px;' value='{$button_passkey}' onclick='passkey_process();' />
+							<br /><br />
+							{if !empty($username)}
+							<a class='login_link' href='{$project_path}/logout.php'>{$button_cancel}</a>
+							{/if}
+						</div>
+						<input type='hidden' name='{$token_name}' value='{$token_hash}'>
+					</form>
+				</div>
 			</div>
 		</div>
 	</body>
