@@ -257,7 +257,7 @@
 
 //check for a valid match
 	if (empty($device_uuid) && !$settings->get('provision', 'auto_insert_enabled', false)) {
-		http_error(403);
+		http_error(404);
 	}
 
 //check the cidr range
