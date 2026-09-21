@@ -92,9 +92,26 @@ class authentication {
 		$this->settings = new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid]);
 
 		//set the default authentication method to the database
-		if (empty($_SESSION['authentication']['methods']) || !is_array($_SESSION['authentication']['methods'])) {
-			$_SESSION['authentication']['methods'][] = 'database';
+		$methods = $this->settings->get('authentication', 'methods', []);
+		if (empty($methods) || !is_array($methods)) {
+			$methods = ['database'];
 		}
+
+		//determine whether the "Login with Passkey" (passkey-only) flow is active
+		//when active, the user signs in with a pre-registered passkey only (no password)
+		$passkey_only = false;
+		$now = time();
+		$passkey_only_until = $_SESSION['authentication']['passkey_only_until'] ?? 0;
+		if ($this->settings->get('login', 'passkey_enabled', false)
+				&& ((isset($_REQUEST['passkey_login'])) || ($now < $passkey_only_until))) {
+			$methods = ['passkey'];
+			$_SESSION['authentication']['passkey_only_until'] = $now + 300;
+			$passkey_only = true;
+		} else {
+			unset($_SESSION['authentication']['passkey_only_until']);
+		}
+		$_SESSION['authentication']['passkey_only'] = $passkey_only;
+		$_SESSION['authentication']['methods'] = $methods;
 
 		//check if contacts app exists
 		$contacts_exists = file_exists(dirname(__DIR__, 4) . '/core/contacts/');
@@ -216,7 +233,7 @@ class authentication {
 				// But, may still be blocked by other methods. Check the other methods in the user settings
 				// for any additional methods that are active on the user and not on the domain (ie. TOTP).
 				$authenticators = array_diff($this->settings->get('authentication', 'methods', []), $_SESSION['authentication']['methods'] ?? []);
-				if (!empty($authenticators) && $result['plugin'] !== 'remember_me') {
+				if (!$passkey_only && !empty($authenticators) && $result['plugin'] !== 'remember_me') {
 					foreach ($authenticators as $name) {
 						// Assume the plugin will not authorize the user until it is processed and returns true
 						$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
@@ -242,7 +259,17 @@ class authentication {
 							$object->domain_uuid = $this->domain_uuid;
 
 							// Plugins are supposed to short-circuit so the script should exit here if user is not authorized
-							$object->{$name}($this, $this->settings);
+							$array = $object->{$name}($this, $this->settings);
+
+							//save the plugin result in the authentication session
+							if (!empty($array) && is_array($array) && isset($array['authorized'])) {
+								$_SESSION['authentication']['plugin'][$name] = $array;
+
+								//use the plugin result when the user is authorized, so the session can be created
+								if (!empty($array['authorized'])) {
+									$result = $array;
+								}
+							}
 						}
 
 						// Check the last called plugin for authorization status and if any plugin returns false then the user is not authorized
@@ -262,8 +289,13 @@ class authentication {
 					// user passed all authentication mechanisms and is authorized to login
 					self::create_user_session($result, $this->settings);
 
+					//the "Login with Passkey" flow is complete - clear the marker so a fresh login starts clean
+					unset($_SESSION['authentication']['passkey_only_until']);
+					$_SESSION['authentication']['passkey_only'] = false;
+
 					// Create remember me token
-					if (!empty($_SESSION['remember']) && $this->settings->get('login', 'remember_me', false) && $result['plugin'] !== 'remember_me') {
+					// if (($_SESSION['remember_me'] ?? '') === 'true' && $this->settings->get('login', 'remember_me', false) && $result['plugin'] !== 'remember_me') {
+					if (!empty($_SESSION['remember_me']) && $this->settings->get('login', 'remember_me', false) && $result['plugin'] !== 'remember_me') {
 						$token_data = $remember_me->issue_token();
 
 						// Save token to the user log array

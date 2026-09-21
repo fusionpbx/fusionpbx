@@ -70,6 +70,8 @@ class plugin_ldap {
 			$background_videos = $settings->get('theme', 'background_video', null);
 			$theme_background_video = (isset($background_videos) && is_array($background_videos)) ? $background_videos[0] : null;
 			$users_unique = $settings->get('users', 'unique', '');
+			$login_label_enabled = $settings->get('login', 'label_enabled', true);
+			$login_placeholder_enabled = $settings->get('login', 'placeholder_enabled', true);
 
 			//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
@@ -93,12 +95,15 @@ class plugin_ldap {
 			//add translations
 			$view->assign("login_title", $text['button-login']);
 			$view->assign("label_username", $text['label-username']);
+			$view->assign("label_username_or_email", $text['label-username_or_email']);
 			$view->assign("label_password", $text['label-password']);
 			$view->assign("button_login", $text['button-login']);
 
 			//assign default values to the template
 			$view->assign("project_path", PROJECT_PATH);
 			$view->assign("login_destination_url", $login_destination);
+			$view->assign("login_label_enabled", $login_label_enabled);
+			$view->assign("login_placeholder_enabled", $login_placeholder_enabled);
 			$view->assign("favicon", $theme_favicon);
 			$view->assign("login_logo_width", $theme_login_logo_width);
 			$view->assign("login_logo_height", $theme_login_logo_height);

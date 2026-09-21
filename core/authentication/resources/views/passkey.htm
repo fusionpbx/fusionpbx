@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+	<head>
+		<meta charset='utf-8' />
+		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+		<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+		<link rel='stylesheet' type='text/css' href='{$project_path}/themes/default/css.php' />
+		<link rel='icon' href='{$favicon}' />
+		<title>{$login_title}</title>
+		<script language='JavaScript' type='text/javascript'>
+			//webauthn passkey support
+			{literal}
+			var passkey_mode = "{/literal}{$passkey_mode}{literal}";
+			var passkey_options = {/literal}{$passkey_options}{literal};
+
+			//convert an array buffer (or typed array) to base64url
+			function passkey_to_base64url(buffer) {
+				if (buffer === undefined || buffer === null) {
+					return '';
+				}
+				//buffer may be an array buffer, a typed array, or an array of bytes
+				var bytes = new Uint8Array(buffer);
+				var binary = '';
+				var i;
+				for (i = 0; i < bytes.length; i++) {
+					binary += String.fromCharCode(bytes[i]);
+				}
+				return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+			}
+
+			//convert a base64url string to an array buffer (webauthn requires buffer sources)
+			function passkey_base64url_to_buffer(str) {
+				if (str === undefined || str === null || str === '') {
+					return new ArrayBuffer(0);
+				}
+				var b64 = str.replace(/-/g, '+').replace(/_/g, '/');
+				while (b64.length % 4 !== 0) {
+					b64 += '=';
+				}
+				var binary = atob(b64);
+				var bytes = new Uint8Array(binary.length);
+				var i;
+				for (i = 0; i < binary.length; i++) {
+					bytes[i] = binary.charCodeAt(i);
+				}
+				return bytes.buffer;
+			}
+
+			//convert the base64url string fields into array buffers as required by the webauthn api
+			function passkey_prepare_options(options) {
+				var prepared = JSON.parse(JSON.stringify(options));
+				if (prepared.challenge !== undefined) {
+					prepared.challenge = passkey_base64url_to_buffer(prepared.challenge);
+				}
+				if (prepared.user && prepared.user.id !== undefined) {
+					prepared.user.id = passkey_base64url_to_buffer(prepared.user.id);
+				}
+				if (prepared.allowCredentials) {
+					for (var a = 0; a < prepared.allowCredentials.length; a++) {
+						if (prepared.allowCredentials[a].id !== undefined) {
+							prepared.allowCredentials[a].id = passkey_base64url_to_buffer(prepared.allowCredentials[a].id);
+						}
+					}
+				}
+				if (prepared.excludeCredentials) {
+					for (var e = 0; e < prepared.excludeCredentials.length; e++) {
+						if (prepared.excludeCredentials[e].id !== undefined) {
+							prepared.excludeCredentials[e].id = passkey_base64url_to_buffer(prepared.excludeCredentials[e].id);
+						}
+					}
+				}
+				return prepared;
+			}
+
+			//build a serializable response object from the public key credential
+			function passkey_build_response(credential) {
+				var response = {};
+				response.id = credential.id;
+				response.rawId = passkey_to_base64url(credential.rawId);
+				response.type = credential.type;
+				response.response = {};
+				response.response.clientDataJSON = passkey_to_base64url(credential.response.clientDataJSON);
+				if (credential.response.authenticatorData) {
+					response.response.authenticatorData = passkey_to_base64url(credential.response.authenticatorData);
+				}
+				if (credential.response.signature) {
+					response.response.signature = passkey_to_base64url(credential.response.signature);
+				}
+				if (credential.response.userHandle) {
+					response.response.userHandle = passkey_to_base64url(credential.response.userHandle);
+				}
+				if (credential.response.attestationObject) {
+					response.response.attestationObject = passkey_to_base64url(credential.response.attestationObject);
+				}
+				return response;
+			}
+
+			//describe a caught error as a readable string
+			function passkey_error_text(error) {
+				if (!error) { return 'unknown error'; }
+				var name = error.name !== undefined ? error.name : 'Error';
+				var message = error.message !== undefined ? error.message : '';
+				return message ? (name + ': ' + message) : name;
+			}
+
+			//show an inline message
+			function passkey_show_message(msg) {
+				var element = document.getElementById('passkey_message');
+				if (!element) { return; }
+				element.innerHTML = msg;
+				element.style.display = 'inline';
+			}
+
+			//process the passkey request
+			function passkey_process() {
+				var button = document.getElementById('button-passkey');
+				if (typeof window.PublicKeyCredential === 'undefined' || typeof window.CredentialsContainer === 'undefined') {
+					passkey_show_message('{/literal}{$text_passkey_unsupported}{literal}');
+					return;
+				}
+
+				//disable the button while the authenticator is processing
+				button.disabled = true;
+
+				//sign in (assertion)
+				if (passkey_mode === 'assertion') {
+					var request = { publicKey: passkey_prepare_options(passkey_options) };
+					navigator.credentials.get(request)
+						.then(function(credential) {
+							var form = document.getElementById('frm');
+							var input = document.createElement('input');
+							input.type = 'hidden';
+							input.name = 'passkey_assertion';
+							input.value = JSON.stringify(passkey_build_response(credential));
+							form.appendChild(input);
+							form.submit();
+						})
+						.catch(function(error) {
+							button.disabled = false;
+							if (window.console && console.error) { console.error('passkey assertion error', error); }
+							passkey_show_message(passkey_error_text(error));
+						});
+				}
+
+				//register a new passkey
+				if (passkey_mode === 'registration') {
+					navigator.credentials.create({ publicKey: passkey_prepare_options(passkey_options) })
+						.then(function(credential) {
+							var form = document.getElementById('frm');
+							var input = document.createElement('input');
+							input.type = 'hidden';
+							input.name = 'passkey_registration';
+							input.value = JSON.stringify(passkey_build_response(credential));
+							form.appendChild(input);
+							form.submit();
+						})
+						.catch(function(error) {
+							button.disabled = false;
+							if (window.console && console.error) { console.error('passkey registration error', error); }
+							passkey_show_message(passkey_error_text(error));
+						});
+				}
+			}
+			{/literal}
+		</script>
+	</head>
+	<body>
+		{if !empty($background_video)}
+		<video id="background-video" autoplay muted poster="" disablePictureInPicture="true" onloadstart="this.playbackRate = 1;">
+			<source src="{$background_video}" type="video/mp4">
+		</video>
+		{/if}
+		<div id='background-image'></div>
+		<div id='background-color'></div>
+		<div id='page' align='center'>
+			<div id='default_login'>
+				<div id='default_login_card'>
+					<a href='{$project_path}/'><img id='login_logo' style='width: {$login_logo_width}; height: {$login_logo_height};' src='{$login_logo_source}' /></a><br />
+					<form method='post' name='frm' id='frm' action=''>
+						<div class='login_text'>
+							{$passkey_description}
+							<br /><br />
+							<span id='passkey_message' style='display:none; color: #a94442;'></span>
+							<br /><br />
+						</div>
+						<div>
+							<input type='button' id='button-passkey' name='button-passkey' class='btn' style='width: 250px; margin-top: 15px;' value='{$button_passkey}' onclick='passkey_process();' />
+							<br /><br />
+							{if !empty($username)}
+							<a class='login_link' href='{$project_path}/logout.php'>{$button_cancel}</a>
+							{/if}
+						</div>
+						<input type='hidden' name='{$token_name}' value='{$token_hash}'>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

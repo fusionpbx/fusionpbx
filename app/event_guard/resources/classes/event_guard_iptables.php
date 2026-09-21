@@ -139,9 +139,9 @@ class event_guard_iptables implements event_guard_interface {
 				$i++;
 			}
 		}
-		
+
 		// Send information to the user
-		echo "Unblock address " . $ip_address . " line " . $line_number . " command " . $command . " result " . $result . "\n";
+		echo "Unblock address " . $ip_address . " line " . __LINE__ . " command " . $command . " \n";
 
 		// Return success
 		return true;

@@ -47,7 +47,7 @@
 	$languages = $database->select($sql, null, 'all');
 
 //get themes from database
-	$sql = "select theme_category, theme_name from v_themes where theme_enabled = true ";
+	$sql = "select theme_uuid, theme_category, theme_name from v_themes where theme_enabled = true ";
 	$themes = $database->select($sql, null, 'all');
 
 //get default settings
@@ -317,7 +317,7 @@
 				$array['default_settings'][$i]['default_setting_uuid'] = uuid();
 				$array['default_settings'][$i]['default_setting_category'] = 'domain';
 				$array['default_settings'][$i]['default_setting_subcategory'] = 'theme';
-				$array['default_settings'][$i]['default_setting_name'] = 'text';
+				$array['default_settings'][$i]['default_setting_name'] = 'uuid';
 				$array['default_settings'][$i]['default_setting_value'] = $global_theme;
 				$array['default_settings'][$i]['default_setting_enabled'] = 'true';
 				$array['default_settings'][$i]['default_setting_description'] = '';
@@ -342,7 +342,7 @@
 					$array['default_settings'][$i]['default_setting_uuid'] = $row['default_setting_uuid'];
 					$array['default_settings'][$i]['default_setting_category'] = 'domain';
 					$array['default_settings'][$i]['default_setting_subcategory'] = 'theme';
-					$array['default_settings'][$i]['default_setting_name'] = 'text';
+					$array['default_settings'][$i]['default_setting_name'] = 'uuid';
 					$array['default_settings'][$i]['default_setting_value'] = $global_theme;
 					$array['default_settings'][$i]['default_setting_enabled'] = 'true';
 					$array['default_settings'][$i]['default_setting_description'] = $row['default_setting_description'] ?? '';
@@ -534,20 +534,20 @@
 		echo "	</td>\n";
 		echo "	<td class=\"vtable\" align='left'>\n";
 		echo "		<select class='formfld' id='global_theme' name='global_theme'>\n";
-		echo "			<option value='default' ".($default_settings['domain']['theme']['default_setting_value'] == 'default' ? "selected" : null).">".$text['label-default']."</option>\n";
+		echo "			<option value=''></option>\n";
 		$theme_categories = [];
 		foreach ($themes as $theme) {
 			if (!empty($theme['theme_category']) && !in_array($theme['theme_category'], $theme_categories)) {
 				$theme_categories[] = $theme['theme_category'];
 			} elseif (empty($theme['theme_category'])) {
-				echo "			<option value='".escape($theme['theme_name'])."' ".($default_settings['domain']['theme']['default_setting_value'] == $theme['theme_name'] ? "selected" : null).">".escape($theme['theme_name'])."</option>\n";
+				echo "			<option value='".escape($theme['theme_uuid'])."' ".($default_settings['domain']['theme']['default_setting_value'] == $theme['theme_uuid'] ? "selected" : null).">".escape($theme['theme_name'])."</option>\n";
 			}
 		}
 		foreach ($theme_categories as $category) {
 			echo "		<optgroup label='".escape($category)."'>\n";
 			foreach ($themes as $theme) {
 				if (!empty($theme['theme_category']) && $theme['theme_category'] == $category) {
-					echo "			<option value='".escape($theme['theme_name'])."' ".($default_settings['domain']['theme']['default_setting_value'] == $theme['theme_name'] ? "selected" : null).">".escape($theme['theme_name'])."</option>\n";
+					echo "			<option value='".escape($theme['theme_uuid'])."' ".($default_settings['domain']['theme']['default_setting_value'] == $theme['theme_uuid'] ? "selected" : null).">".escape($theme['theme_name'])."</option>\n";
 				}
 			}
 			echo "		</optgroup>\n";

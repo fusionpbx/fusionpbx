@@ -62,7 +62,7 @@
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'destination_number'));
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 	$search = $_GET['search'] ?? '';
 	$show = $_GET['show'] ?? '';
@@ -97,6 +97,14 @@
 
 //get the call recording extension
 	$record_extension = $settings->get('call_recordings', 'record_extension', 'mp3');
+
+//get the caller id name/number required + format settings
+	$destination_required_fields				= $settings->get('destinations', 'required_fields', []);
+	$destination_caller_id_number_format		= $settings->get('destinations', 'caller_id_number_format', '');
+	$destination_caller_id_name_required		= in_array('destination_caller_id_name', is_array($destination_required_fields) ? $destination_required_fields : []) ? " required='required'" : "";
+	$destination_caller_id_number_required		= in_array('destination_caller_id_number', is_array($destination_required_fields) ? $destination_required_fields : []) ? " required='required'" : "";
+	$destination_caller_id_name_cell			= required_field_vncell_class('destination_caller_id_name', $destination_required_fields);
+	$destination_caller_id_number_cell			= required_field_vncell_class('destination_caller_id_number', $destination_required_fields);
 
 //get total destination count from the database, check limit, if defined
 	if ($action == 'add' && $settings->get('limit', 'destinations', '') != '' && !permission_exists('destination_domain')) {
@@ -228,6 +236,22 @@
 			//if (empty($destination_prefix) && permission_exists('destination_prefix')) { $msg .= $text['message-required']." ".$text['label-destination_country_code']."<br>\n"; }
 			if (empty($destination_number)) { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
 			if (empty($destination_context)) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
+			//check required caller id fields defined in the destinations/required setting
+			if (is_array($destination_required_fields)) {
+				foreach ($destination_required_fields as $required_field) {
+					if (permission_exists($required_field) && empty($_POST[$required_field] ?? null)) {
+						$msg .= $text['message-required']." ".$text['label-'.$required_field]."<br>\n";
+					}
+				}
+			}
+			//check the caller id number format, when a format is defined (destinations/caller_id_number_format)
+			if (!empty($destination_caller_id_number_format) && permission_exists('destination_caller_id_number')) {
+				$destination_caller_id_number_value = trim($_POST['destination_caller_id_number'] ?? '');
+				if ($destination_caller_id_number_value !== '' && !caller_id_number_format_valid($destination_caller_id_number_value, $destination_caller_id_number_format)) {
+					$msg .= $text['message-caller_id_number_format']." ".$text['label-destination_caller_id_number']." (".$destination_caller_id_number_format.")<br>\n";
+				}
+			}
+
 
 		//check for duplicates
 			if ($action == 'add' && $destination_type == 'inbound' && $settings->get('destinations', 'unique', false)) {
@@ -1846,12 +1870,12 @@
 	//caller id name
 	if (permission_exists('destination_caller_id_name')) {
 		echo "<tr id='tr_caller_id_name'>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "<td class='" . $destination_caller_id_name_cell . "' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_caller_id_name']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='destination_caller_id_name' maxlength='255' value=\"".escape($destination_caller_id_name)."\">\n";
-		echo "<br />\n";
+		echo "	<input class='formfld' type='text' name='destination_caller_id_name' maxlength='255' value=\"".escape($destination_caller_id_name)."\" ". $destination_caller_id_name_required.">\n";
+		echo "<br />\n";	
 		echo $text['description-destination_caller_id_name']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -1860,11 +1884,11 @@
 	//caller id number
 	if (permission_exists('destination_caller_id_number')) {
 		echo "<tr id='tr_caller_id_number'>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "<td class='" . $destination_caller_id_number_cell . "' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-destination_caller_id_number']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='number' name='destination_caller_id_number' maxlength='255' min='0' step='1' value=\"".escape($destination_caller_id_number)."\">\n";
+		echo "	<input class='formfld' type='text' name='destination_caller_id_number' maxlength='255' value=\"".escape($destination_caller_id_number)."\" ". $destination_caller_id_number_required.">\n";
 		echo "<br />\n";
 		echo $text['description-destination_caller_id_number']."\n";
 		echo "</td>\n";

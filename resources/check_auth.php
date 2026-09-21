@@ -115,13 +115,6 @@
 //if the session is not authorized, then verify the identity
 	if (!$_SESSION['authorized']) {
 
-		//clear any stale authentication state from a previous (failed or abandoned) login attempt
-		unset($_SESSION['username']);
-		unset($_SESSION['user_uuid']);
-		unset($_SESSION['user_email']);
-		unset($_SESSION['contact_uuid']);
-		unset($_SESSION['authentication']['plugin']);
-
 		//clear the template only if the template has not been assigned by the superadmin
 			if (empty($settings->get('domain', 'template'))) {
 				$_SESSION["template_content"] = '';
@@ -153,7 +146,7 @@
 			settings::clear_cache();
 
 		//if logged in, redirect to login destination
-			if (!isset($_REQUEST["key"]) && !isset($_COOKIE['remember'])) {
+			if (!isset($_REQUEST["key"]) && !isset($_COOKIE['remember_me'])) {
 				//redirect the user
 				if (isset($_SESSION['redirect_path'])) {
 					$redirect_path = $_SESSION['redirect_path'];

@@ -74,6 +74,8 @@ class plugin_database {
 		$login_domain_name = $settings->get('login', 'domain_name');
 		$login_remember_me = $settings->get('login', 'remember_me');
 		$login_destination = $settings->get('login', 'destination');
+		$login_label_enabled = $settings->get('login', 'label_enabled', true);
+		$login_placeholder_enabled = $settings->get('login', 'placeholder_enabled', false);
 		$users_unique = $settings->get('users', 'unique', '');
 
 		//set the default login type and image
@@ -114,6 +116,7 @@ class plugin_database {
 			//add translations
 			$view->assign("login_title", $text['button-login']);
 			$view->assign("label_username", $text['label-username']);
+			$view->assign("label_username_or_email", $text['label-username_or_email']);
 			$view->assign("label_password", $text['label-password']);
 			$view->assign("label_domain", $text['label-domain']);
 			$view->assign("label_remember_me", $text['label-remember_me']);
@@ -125,6 +128,8 @@ class plugin_database {
 			$view->assign("login_domain_name_visible", $login_domain_name_visible);
 			$view->assign("login_domain_names", $login_domain_name);
 			$view->assign("login_remember_me", $login_remember_me);
+			$view->assign("login_label_enabled", $login_label_enabled);
+			$view->assign("login_placeholder_enabled", $login_placeholder_enabled);
 			$view->assign("login_password_reset_enabled", $login_password_reset_enabled);
 			$view->assign("favicon", $theme_favicon);
 			$view->assign("login_logo_width", $theme_login_logo_width);
@@ -135,6 +140,17 @@ class plugin_database {
 			$view->assign("login_password_description", $text['label-password_description']);
 			$view->assign("button_cancel", $text['button-cancel']);
 			$view->assign("button_forgot_password", $text['button-forgot_password']);
+
+			//show the "Login with Passkey" button when the passkey login option is enabled
+			$view->assign("login_passkey_enabled", $settings->get('login', 'passkey_enabled', false));
+			$view->assign("login_passkey_position", $settings->get('login', 'passkey_position', 'inside'));
+			$view->assign("button_login_passkey", $text['title-passkey_sign_in'] ?? 'Sign in with a passkey');
+			$view->assign("label_or", $text['label-or'] ?? 'Or');
+			$view->assign("login_logo_enabled", $settings->get('login', 'logo_enabled', true));
+			$view->assign("login_horizontal_rule_enabled", $settings->get('login', 'horizontal_rule_enabled', false));
+			$view->assign("login_horizontal_rule_color", $settings->get('theme', 'login_horizontal_rule_color', '#808080'));
+			$view->assign("passkey_button_text_color", $settings->get('theme', 'passkey_button_text_color', '#434E5A'));
+			$view->assign("passkey_button_background_color", $settings->get('theme', 'passkey_button_background_color', '#bec4cb'));
 
 			//assign openid values to the template
 			if ($settings->get('open_id', 'enabled', false)) {
@@ -189,8 +205,8 @@ class plugin_database {
 		if (isset($_REQUEST["password"])) {
 			$this->password = $_REQUEST["password"];
 		}
-		if (isset($_POST["remember"])) {
-			$_SESSION['remember'] = $_POST["remember"];
+		if (isset($_POST["remember_me"])) {
+			$_SESSION['remember_me'] = $_POST["remember_me"];
 		}
 		if (isset($_REQUEST["key"])) {
 			$this->key = $_REQUEST["key"];

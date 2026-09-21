@@ -228,9 +228,13 @@
 			$admin_username = $_SESSION['install']['admin_username'];
 			$admin_password = $_SESSION['install']['admin_password'];
 
+			//md5 password hash
+			// $user_salt = uuid();
+			// $password_hash = md5($user_salt . $admin_password);
+
 			//prepare the password hash
-			$user_salt = uuid();
-			$password_hash = md5($user_salt . $admin_password);
+			$options = ['cost' => 10];
+			$password_hash = password_hash($admin_password, PASSWORD_DEFAULT, $options);
 
 			//get the user_uuid if the user exists
 			$sql = "select user_uuid from v_users ";
@@ -271,7 +275,7 @@
 			$array['users'][0]['user_uuid'] = $user_uuid;
 			$array['users'][0]['username'] = $admin_username;
 			$array['users'][0]['password'] = $password_hash;
-			$array['users'][0]['salt'] = $user_salt;
+			$array['users'][0]['salt'] = $user_salt ?? null;
 			$array['users'][0]['user_enabled'] = 'true';
 			$array['user_groups'][0]['user_group_uuid'] = uuid();
 			$array['user_groups'][0]['domain_uuid'] = $domain_uuid;

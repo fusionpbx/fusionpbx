@@ -37,6 +37,30 @@
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/momentjs/moment-with-locales.min.js.php'></script>
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/bootstrap/js/bootstrap.min.js.php'></script>
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/bootstrap/js/bootstrap-tempusdominus.min.js.php'></script>
+	<script language='JavaScript' type='text/javascript'>
+		{literal}
+			//set tempusdominus (calendar/datetime picker) defaults here, not on document ready, so that
+			//pickers built by inline page scripts during body parse also get the correct font awesome icons
+			$.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
+				buttons: {
+					showToday: true,
+					showClear: true,
+					showClose: true,
+				},
+				icons: {
+					time: 'fa-solid fa-clock',
+					date: 'fa-solid fa-calendar-days',
+					up: 'fa-solid fa-arrow-up',
+					down: 'fa-solid fa-arrow-down',
+					previous: 'fa-solid fa-chevron-left',
+					next: 'fa-solid fa-chevron-right',
+					today: 'fa-solid fa-calendar-check',
+					clear: 'fa-solid fa-trash',
+					close: 'fa-solid fa-xmark',
+				}
+			});
+		{/literal}
+	</script>
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/bootstrap/js/bootstrap-colorpicker.min.js.php'></script>
 	<script language='JavaScript' type='text/javascript' src='{$project_path}/resources/bootstrap/js/bootstrap-pwstrength.min.js.php'></script>
 	<script language='JavaScript' type='text/javascript'>{literal}window.FontAwesomeConfig = { autoReplaceSvg: false }{/literal}</script>
@@ -561,25 +585,6 @@
 		//initialize bootstrap tempusdominus (calendar/datetime picker) plugin
 			{literal}
 			$(function() {
-				//set defaults
-					$.fn.datetimepicker.Constructor.Default = $.extend({}, $.fn.datetimepicker.Constructor.Default, {
-						buttons: {
-							showToday: true,
-							showClear: true,
-							showClose: true,
-						},
-						icons: {
-							time: 'fa-solid fa-clock',
-							date: 'fa-solid fa-calendar-days',
-							up: 'fa-solid fa-arrow-up',
-							down: 'fa-solid fa-arrow-down',
-							previous: 'fa-solid fa-chevron-left',
-							next: 'fa-solid fa-chevron-right',
-							today: 'fa-solid fa-calendar-check',
-							clear: 'fa-solid fa-trash',
-							close: 'fa-solid fa-xmark',
-						}
-					});
 				//define formatting of individual classes
 					$('.datepicker').datetimepicker({ format: 'YYYY-MM-DD', });
 					{/literal}
@@ -755,9 +760,10 @@
 					const wrapper = document.createElement('div');
 					wrapper.className = 'searchable_select_wrapper';
 					wrapper.id = original_select.id + '_search';
+					wrapper.style.display = getComputedStyle(original_select).display;
 					wrapper.style.width = getComputedStyle(original_select).width;
 					wrapper.style.marginRight = (parseInt(getComputedStyle(original_select).marginRight) * 2) + 'px';
-					wrapper.style.display = getComputedStyle(original_select).display;
+					wrapper.style.marginLeft = (parseInt(getComputedStyle(original_select).marginLeft) - 1) + 'px';
 
 					original_select.parentNode.insertBefore(wrapper, original_select);
 					original_select.style.display = 'none';
@@ -765,7 +771,7 @@
 					const input = document.createElement('input');
 					input.type = 'text';
 					input.className = 'formfld';
-					input.placeholder = '{/literal}{$text.label_search}{literal}';
+					input.placeholder = original_select.querySelector('option').innerText ? original_select.querySelector('option').innerText : '{/literal}{$text.label_search}{literal}';
 					wrapper.appendChild(input);
 
 					const actions = document.createElement('div');
@@ -786,7 +792,7 @@
 					});
 
 					const arrow_icon = document.createElement('i');
-					arrow_icon.style = 'transform: scale(0.80, 0.85);';
+					arrow_icon.style = 'transform: scale(0.75, 0.80);';
 					arrow_icon.className = 'fa-solid fa-angle-down';
 					actions.appendChild(arrow_icon);
 

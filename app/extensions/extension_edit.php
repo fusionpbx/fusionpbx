@@ -77,6 +77,16 @@ $extension_password_lowercase				= $settings->get('extension', 'password_lowerca
 $extension_password_uppercase				= $settings->get('extension', 'password_uppercase', false);
 $extension_password_special					= $settings->get('extension', 'password_special', false);
 $extension_user_record_default				= $settings->get('extension', 'user_record_default', '');
+$extension_required_fields					= $settings->get('extension', 'required_fields', []);
+$effective_caller_id_name_required			= in_array('effective_caller_id_name', is_array($extension_required_fields) ? $extension_required_fields : []) ? " required='required'" : "";
+$effective_caller_id_number_required		= in_array('effective_caller_id_number', is_array($extension_required_fields) ? $extension_required_fields : []) ? " required='required'" : "";
+$outbound_caller_id_name_required			= in_array('outbound_caller_id_name', is_array($extension_required_fields) ? $extension_required_fields : []) ? " required='required'" : "";
+$outbound_caller_id_number_required			= in_array('outbound_caller_id_number', is_array($extension_required_fields) ? $extension_required_fields : []) ? " required='required'" : "";
+$emergency_caller_id_name_required			= in_array('emergency_caller_id_name', is_array($extension_required_fields) ? $extension_required_fields : []) ? " required='required'" : "";
+$emergency_caller_id_number_required		= in_array('emergency_caller_id_number', is_array($extension_required_fields) ? $extension_required_fields : []) ? " required='required'" : "";
+$effective_caller_id_number_format			= $settings->get('extension', 'effective_caller_id_number_format', '');
+$outbound_caller_id_number_format			= $settings->get('extension', 'outbound_caller_id_number_format', '');
+$emergency_caller_id_number_format			= $settings->get('extension', 'emergency_caller_id_number_format', '');
 $extension_type								= $settings->get('extension', 'type', 'default');
 $provision_path								= $settings->get('provision', 'path', '');
 $provision_line_label						= $settings->get('provision', 'line_label', null);
@@ -97,6 +107,14 @@ $switch_extensions							= $settings->get('switch', 'extensions', '/etc/freeswit
 $switch_sounds								= $settings->get('switch', 'sounds', '/usr/share/freeswitch/sounds');
 $transcribe_enabled							= $settings->get('transcribe', 'enabled', false);
 
+//resolve the label cell class for each caller id field (vncellreq when required, otherwise vncell)
+$effective_caller_id_name_cell		= required_field_vncell_class('effective_caller_id_name', $extension_required_fields);
+$effective_caller_id_number_cell	= required_field_vncell_class('effective_caller_id_number', $extension_required_fields);
+$emergency_caller_id_name_cell		= required_field_vncell_class('emergency_caller_id_name', $extension_required_fields);
+$emergency_caller_id_number_cell	= required_field_vncell_class('emergency_caller_id_number', $extension_required_fields);
+$outbound_caller_id_name_cell		= required_field_vncell_class('outbound_caller_id_name', $extension_required_fields);
+$outbound_caller_id_number_cell		= required_field_vncell_class('outbound_caller_id_number', $extension_required_fields);
+
 //cast to integers if they have values
 if ($limit_extensions !== null) $limit_extensions = intval($limit_extensions);
 if ($limit_devices !== null) $limit_devices = intval($limit_devices);
@@ -113,7 +131,7 @@ if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 
 // Set variables from http GET parameters
 $page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'extension'));
+$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
 $order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 $search = $_GET['search'] ?? '';
 $show = $_GET['show'] ?? '';
@@ -401,6 +419,35 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	if (empty($extension)) {
 		$invalid[] = $text['label-extension'];
 	}
+	//check required fields defined in the extension/required setting
+	if (is_array($extension_required_fields)) {
+		foreach ($extension_required_fields as $required_field) {
+			if (permission_exists($required_field) && empty($_POST[$required_field] ?? null)) {
+				$invalid[] = $text['label-'.$required_field] ?? $required_field;
+			}
+		}
+	}
+	//check the caller id number format, when a format is defined for each field (extension/{effective,outbound,emergency}_caller_id_number_format)
+	$caller_id_number_format_fields = [
+		'effective_caller_id_number' => ['label' => $text['label-effective_caller_id_number'], 'format' => $effective_caller_id_number_format],
+		'emergency_caller_id_number' => ['label' => $text['label-emergency_caller_id_number'], 'format' => $emergency_caller_id_number_format],
+		'outbound_caller_id_number' => ['label' => $text['label-outbound_caller_id_number'], 'format' => $outbound_caller_id_number_format],
+	];
+	foreach ($caller_id_number_format_fields as $caller_id_field => $caller_id_details) {
+		if (empty($caller_id_details['format'])) {
+			continue;
+		}
+		if (!permission_exists($caller_id_field)) {
+			continue;
+		}
+		$caller_id_value = trim($_POST[$caller_id_field] ?? '');
+		if ($caller_id_value !== '' && !caller_id_number_format_valid($caller_id_value, $caller_id_details['format'])) {
+			message::add($text['message-caller_id_number_format'] . $caller_id_details['label'] . ' (' . $caller_id_details['format'] . ')', 'negative', 7500);
+		}
+	}
+
+
+
 
 	//require passwords with the defined required attributes: length, number, lower case, upper case, and special characters
 	// if (permission_exists('extension_password') && !empty($password)) {
@@ -1588,11 +1635,11 @@ if (permission_exists('device_edit') && (empty($extension_type) || $extension_ty
 
 if (permission_exists("effective_caller_id_name")) {
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='" . $effective_caller_id_name_cell . "' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    " . $text['label-effective_caller_id_name'] . "\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='effective_caller_id_name' maxlength='255' value=\"" . escape($effective_caller_id_name ?? '') . "\">\n";
+	echo "    <input class='formfld' type='text' name='effective_caller_id_name' maxlength='255' value=\"" . escape($effective_caller_id_name ?? '') . "\"" . $effective_caller_id_name_required . ">\n";
 	echo "<br />\n";
 	echo $text['description-effective_caller_id_name'] . "\n";
 	echo "</td>\n";
@@ -1601,7 +1648,7 @@ if (permission_exists("effective_caller_id_name")) {
 
 if (permission_exists("effective_caller_id_number")) {
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='" . $effective_caller_id_number_cell . "' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    " . $text['label-effective_caller_id_number'] . "\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -1614,13 +1661,13 @@ if (permission_exists("effective_caller_id_number")) {
 
 if (permission_exists("outbound_caller_id_name")) {
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='" . $outbound_caller_id_name_cell . "' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    " . $text['label-outbound_caller_id_name'] . "\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (permission_exists('outbound_caller_id_select')) {
 		if (!empty($destinations)) {
-			echo "	<select name='outbound_caller_id_name' id='outbound_caller_id_name' class='formfld'>\n";
+			echo "	<select name='outbound_caller_id_name' id='outbound_caller_id_name' class='formfld'" . $outbound_caller_id_name_required . ">\n";
 			echo "	<option value=''></option>\n";
 			foreach ($destinations as $row) {
 				if (!empty($row["destination_caller_id_name"])) {
@@ -1638,7 +1685,7 @@ if (permission_exists("outbound_caller_id_name")) {
 			echo "	<input type='button' class='btn' name='' alt=\"" . $text['button-add'] . "\" onclick=\"window.location='" . PROJECT_PATH . "/app/destinations/destinations.php'\" value='" . $text['button-add'] . "'>\n";
 		}
 	} else {
-		echo "    <input class='formfld' type='text' name='outbound_caller_id_name' maxlength='255' value=\"" . escape($outbound_caller_id_name ?? '') . "\">\n";
+		echo "    <input class='formfld' type='text' name='outbound_caller_id_name' maxlength='255' value=\"" . escape($outbound_caller_id_name ?? '') . "\"" . $outbound_caller_id_name_required . ">\n";
 		echo "<br />\n";
 		echo $text['description-outbound_caller_id_name-custom'] . "\n";
 	}
@@ -1648,13 +1695,13 @@ if (permission_exists("outbound_caller_id_name")) {
 
 if (permission_exists("outbound_caller_id_number")) {
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='" . $outbound_caller_id_number_cell . "' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    " . $text['label-outbound_caller_id_number'] . "\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (permission_exists('outbound_caller_id_select')) {
 		if (!empty($destinations)) {
-			echo "	<select name='outbound_caller_id_number' id='outbound_caller_id_number' class='formfld'>\n";
+			echo "	<select name='outbound_caller_id_number' id='outbound_caller_id_number' class='formfld'" . $outbound_caller_id_number_required . ">\n";
 			echo "	<option value=''></option>\n";
 			foreach ($destinations as $row) {
 				$tmp = $row["destination_caller_id_number"];
@@ -1676,7 +1723,7 @@ if (permission_exists("outbound_caller_id_number")) {
 			echo "	<input type='submit' class='btn' name='' alt=\"" . $text['button-add'] . "\" onclick=\"window.location='" . PROJECT_PATH . "/app/destinations/destinations.php'\" value='" . $text['button-add'] . "'>\n";
 		}
 	} else {
-		echo "    <input class='formfld' type='text' name='outbound_caller_id_number' maxlength='255' min='0' step='1' value=\"" . escape($outbound_caller_id_number ?? '') . "\">\n";
+		echo "    <input class='formfld' type='text' name='outbound_caller_id_number' maxlength='255' min='0' step='1' value=\"" . escape($outbound_caller_id_number ?? '') . "\"" . $outbound_caller_id_number_required . ">\n";
 		echo "<br />\n";
 		echo $text['description-outbound_caller_id_number-custom'] . "\n";
 	}
@@ -1686,13 +1733,13 @@ if (permission_exists("outbound_caller_id_number")) {
 
 if (permission_exists("emergency_caller_id_name")) {
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='" . $emergency_caller_id_name_cell . "' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    " . $text['label-emergency_caller_id_name'] . "\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (permission_exists('emergency_caller_id_select')) {
 		if (!empty($emergency_destinations)) {
-			echo "	<select name='emergency_caller_id_name' id='emergency_caller_id_name' class='formfld'>\n";
+			echo "	<select name='emergency_caller_id_name' id='emergency_caller_id_name' class='formfld'" . $emergency_caller_id_name_required . ">\n";
 			echo "		<option value=''></option>\n";
 			foreach ($emergency_destinations as $row) {
 				$tmp = $row["destination_caller_id_name"];
@@ -1712,7 +1759,7 @@ if (permission_exists("emergency_caller_id_name")) {
 			echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"" . $text['button-add'] . "\" onclick=\"window.location='" . PROJECT_PATH . "/app/destinations/destinations.php'\" value='" . $text['button-add'] . "'>\n";
 		}
 	} else {
-		echo "	<input class='formfld' type='text' name='emergency_caller_id_name' maxlength='255' value=\"" . escape($emergency_caller_id_name ?? '') . "\">\n";
+		echo "	<input class='formfld' type='text' name='emergency_caller_id_name' maxlength='255' value=\"" . escape($emergency_caller_id_name ?? '') . "\"" . $emergency_caller_id_name_required . ">\n";
 	}
 	echo "<br />\n";
 	if (permission_exists('outbound_caller_id_select') && count($destinations) > 0) {
@@ -1726,7 +1773,7 @@ if (permission_exists("emergency_caller_id_name")) {
 
 if (permission_exists("emergency_caller_id_number")) {
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='" . $emergency_caller_id_number_cell . "' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    " . $text['label-emergency_caller_id_number'] . "\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";

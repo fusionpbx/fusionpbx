@@ -1670,8 +1670,9 @@ else { //default: white
 		-webkit-transform: translate(-50%, -50%);
 		-khtml-transform: translate(-50%, -50%);
 		transform: translate(-50%, -50%);
-		padding: <?=$login_body_padding?>;
-		width: <?=$login_body_width?>;
+		}
+
+	#default_login_card {
 		background: <?=$login_body_background_color?>;
 		<?php $br = format_border_radius($login_body_border_radius, '4px'); ?>
 		-moz-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
@@ -1679,6 +1680,8 @@ else { //default: white
 		-khtml-border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 		border-radius: <?php echo $br['tl']['n'].$br['tl']['u']; ?> <?php echo $br['tr']['n'].$br['tr']['u']; ?> <?php echo $br['br']['n'].$br['br']['u']; ?> <?php echo $br['bl']['n'].$br['bl']['u']; ?>;
 		<?php unset($br); ?>
+		padding: <?=$login_body_padding?>;
+		width: <?=$login_body_width?>;
 		border-style: <?=$login_body_border_style?>;
 		border-width: <?=$login_body_border_size?>;
 		border-color: <?=$login_body_border_color?>;
@@ -1710,6 +1713,28 @@ else { //default: white
 		font-family: <?=$login_text_font?>;
 		text-decoration: none;
 		}
+
+	/*Login page - mobile: widen the card so it nearly fills the screen, leaving a comfortable margin on each side*/
+	@media (max-width: 480px) {
+		#default_login {
+			box-sizing: border-box;
+			width: calc(100vw - 32px);
+		}
+		#default_login .login_body_inner {
+			box-sizing: border-box;
+			width: 100% !important;
+		}
+		#default_login input.txt.login,
+		#default_login select.txt.login {
+			box-sizing: border-box;
+			width: 100% !important;
+			min-width: 0 !important;
+		}
+		#default_login .btn {
+			box-sizing: border-box;
+			width: 100% !important;
+		}
+	}
 
 	<?php
 	//determine body padding & margins (overides on main_content style below) based on menu selection
@@ -4225,7 +4250,7 @@ else { //default: white
 		display: flex;
 		align-items: center;
 		flex-wrap: wrap;
-		color: #000000cc;
+		color: <?=$input_text_color?>;
 	}
 
 	.clear_search_button,
@@ -4238,8 +4263,8 @@ else { //default: white
 		border: none;
 		cursor: pointer;
 		font-size: 16px;
-		color: #0000008b;
-		opacity: 0.6;
+		color: <?=$input_text_color?>;
+		opacity: 0.5;
 		padding: 0;
 		line-height: 1;
 		pointer-events: auto;
@@ -4247,7 +4272,7 @@ else { //default: white
 	}
 
 	.clear_search_button:hover {
-		color: #000000cc;
+		opacity: 0.6;
 	}
 
 	.domain-search-input, .domain-search-picker { max-width: 100%; }

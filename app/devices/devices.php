@@ -56,7 +56,7 @@
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'device_label'));
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 	$fields = $_GET['fields'] ?? '';
 	$search = $_GET['search'] ?? '';

@@ -1636,9 +1636,17 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "login_body_width";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "100%";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "auto";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the width of the login box.";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e1f2a3b4-c5d6-4e7f-8a8b-3c4d5e6f7a8b";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "login_horizontal_rule_color";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#808080";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Color of the horizontal rule divider on the login form.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "963d6315-4541-43c6-828f-86e6e4b8c702";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";

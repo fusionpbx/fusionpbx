@@ -59,7 +59,7 @@
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'dialplan_name'));
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 	$search = $_GET['search'] ?? '';
 	$show = $_GET['show'] ?? '';
@@ -1080,7 +1080,7 @@
 		input_element.setAttribute('style', 'position: relative; width: 130px; min-width: 130px; max-width: 130px; text-align: center;');
 		input_element.setAttribute('data-toggle', 'datetimepicker');
 		input_element.setAttribute('data-target', '#' + input_id);
-		input_element.setAttribute('onblur', "document.getElementById('" + input_id + "').dataset.hide = 'true';");
+		input_element.setAttribute('onblur', "$(this).datetimepicker('hide');");
 		obj.parentNode.insertBefore(input_element, obj);
 		obj.parentNode.removeChild(obj);
 

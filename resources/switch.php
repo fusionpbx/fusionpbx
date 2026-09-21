@@ -1258,4 +1258,49 @@ function force_close_port(string $port): void {
 	}
 }
 
+/**
+ * Validates a caller ID number against a caller ID number format pattern.
+ *
+ * Format pattern characters:
+ * - N (or n)   : matches a digit 1-9
+ * - X (or x)   : matches a digit 0-9
+ * - 0-9        : literal digit that must match exactly
+ * - any other  : literal character that must match exactly (e.g. +, -, ., space)
+ *
+ * An empty format string is considered valid for any value.
+ *
+ * @param string $value  The caller ID number to validate.
+ * @param string $format The format pattern to validate against.
+ *
+ * @return bool True if the value matches the format pattern, false otherwise.
+ *
+ * @example
+ * caller_id_number_format_valid('5551234567', 'NNNNNNNNNN'); // true
+ * caller_id_number_format_valid('+15551234567', '+NXXXXXXXXX'); // true
+ * caller_id_number_format_valid('0123456789', 'NXXXXXXXXX'); // false (0 is not 1-9)
+ * caller_id_number_format_valid('5551234567', ''); // true (empty format is always valid)
+ */
+function caller_id_number_format_valid(string $value, string $format): bool {
+	if ($format === '') {
+		return true;
+	}
+	$format = strtoupper($format);
+	$regex = '^';
+	$format_len = strlen($format);
+	for ($i = 0; $i < $format_len; $i++) {
+		$char = $format[$i];
+		if ($char === 'N') {
+			$regex .= '[1-9]';
+		} elseif ($char === 'X') {
+			$regex .= '[0-9]';
+		} elseif (ctype_digit($char)) {
+			$regex .= $char;
+		} else {
+			$regex .= preg_quote($char, '/');
+		}
+	}
+	$regex .= '$';
+	return (bool)preg_match('/' . $regex . '/', $value);
+}
+
 ?>

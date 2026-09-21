@@ -122,9 +122,14 @@ class event_guard_pf implements event_guard_interface {
 	 * @return bool True if the address is blocked, False otherwise
 	 */
 	public function block_exists(string $ip_address, string $filter) : bool {
+		// Invalid IP address
+		if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
+			return false;
+		}
+
 		// Determine whether to return true or false
 		// Check to see if the address is blocked
-		$command = $this->firewall_path.' -t ".$filter." -Ts | grep '.$ip_address;
+		$command = $this->firewall_path.' -t ' . escapeshellarg($filter) . ' -Ts | grep ' . $ip_address;
 		$result = shell_exec($command);
 		if (!empty($result) && strlen($result) > 3) {
 			return true;

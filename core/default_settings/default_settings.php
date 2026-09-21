@@ -59,7 +59,7 @@
 	}
 
 // Set variables from http GET parameters
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_GET['order_by'] ?? 'default_setting_category'));
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 	$search = $_GET['search'] ?? '';
 	$show = $_GET['show'] ?? '';
@@ -338,7 +338,7 @@
 		}
 	}
 	if (!empty($categories)) {
-		echo "		<select name='default_setting_category' class='formfld' style='width: auto; margin-left: 15px;' id='select_category' onchange='this.form.submit();'>\n";
+		echo "		<select name='default_setting_category' class='formfld searchable_select' style='width: auto; margin-left: 15px;' id='select_category' onchange='this.form.submit();'>\n";
 		echo "			<option value=''>".$text['label-category']."...</option>\n";
 		echo "			<option value=''>".$text['label-all']."</option>\n";
 		foreach ($categories as $category_name => $category) {
@@ -563,7 +563,7 @@
 					echo "		".$text['option-'.$row['default_setting_value']]."\n";
 				}
 			}
-			else if (substr_count($subcategory, "_color") > 0 && ($name == "text" || $name == 'array')) {
+			else if ((substr_count($subcategory, "_color") > 0 || str_starts_with($row['default_setting_value'] ?? '', "rgb") || str_starts_with($row['default_setting_value'] ?? '', "#")) && ($name == "text" || $name == 'array')) {
 				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['default_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['default_setting_value'], -0.18)).'; padding: -1px;'));
 				echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".escape($row['default_setting_value'])."</span>\n";
 			}
