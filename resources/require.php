@@ -51,20 +51,24 @@
 	$db_password = $config->get('database.0.password');
 
 //set the error reporting
-	ini_set('display_errors', '1');
 	$error_reporting_scope = $config->get('error.reporting', 'user');
 	switch ($error_reporting_scope) {
 	case 'user':
 		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED);
+		//do not display errors to the browser in production (prevents information disclosure)
+		ini_set('display_errors', '0');
 		break;
 	case 'dev':
 		error_reporting(E_ALL ^ E_NOTICE);
+		ini_set('display_errors', '1');
 		break;
 	case 'all':
 		error_reporting(E_ALL);
+		ini_set('display_errors', '1');
 		break;
 	default:
 		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED);
+		ini_set('display_errors', '0');
 	}
 
 //set runtime ini settings
@@ -104,7 +108,7 @@
 //get the domain_name and the domain_uuid
 	if (empty($_SESSION['domain_uuid'])) {
 		//get the domain from the url
-		$domain_name = $_SERVER["HTTP_HOST"];
+		$domain_name = $_SERVER["HTTP_HOST"] ?? '';
 
 		//get the domain name from the http value
 		if (!empty($_REQUEST["domain_name"])) {
