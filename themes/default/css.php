@@ -762,6 +762,62 @@ else { //default: white
 		margin-right: calc(<?=$menu_sub_text_size?> * 2);
 		}
 
+	/* Nested groups share the menu theme in fixed, static, inline and side layouts. */
+	.menu-nested-root, .menu-nested-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.menu-nested-list { padding-inline-start: 14px; }
+	.menu-nested-group > summary {
+		display: list-item;
+		list-style-position: inside;
+		cursor: pointer;
+	}
+	.menu-nested-item > a.nav-link,
+	.menu-nested-group > summary.nav-link {
+		font-family: <?=$menu_sub_text_font?>;
+		font-size: <?=$menu_sub_text_size?>;
+		color: <?=$menu_sub_text_color?>;
+		background: <?=$menu_sub_background_color?>;
+		padding: 3px 14px;
+		white-space: nowrap;
+	}
+	.menu-nested-item > a.nav-link:hover,
+	.menu-nested-item > a.nav-link:focus,
+	.menu-nested-group > summary:hover,
+	.menu-nested-group > summary:focus-visible {
+		color: <?=$menu_sub_text_color_hover?>;
+		background: <?=$menu_sub_background_color_hover?>;
+	}
+	.menu-nested-group > summary:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: -2px;
+	}
+	.menu-nested-group > summary.menu_side_item_sub {
+		width: 100%;
+		padding: 5px 20px 5px 45px;
+		font-family: <?=$menu_sub_text_font?>;
+		font-size: <?=$menu_sub_text_size?>;
+		color: <?=$menu_sub_text_color?>;
+		background: <?=$menu_sub_background_color?>;
+	}
+	.menu-nested-group > summary.menu_side_item_sub:hover,
+	.menu-nested-group > summary.menu_side_item_sub:focus-visible {
+		color: <?=$menu_sub_text_color_hover?>;
+		background: <?=$menu_sub_background_color_hover?>;
+	}
+	.menu-nested-label + span { margin-inline-start: 8px; }
+	@media (max-width: 575.98px) {
+		.menu-nested-group > summary.menu_side_item_sub { padding-block: 8px; }
+		ul.navbar-nav > li.nav-item > ul.dropdown-menu.menu-has-nested {
+			position: static;
+			float: none;
+			width: auto;
+		}
+		.menu-nested-item > a.nav-link, .menu-nested-group > summary.nav-link { white-space: normal; }
+	}
+
 	/* sub menu item */
 	ul.navbar-nav > li.nav-item > ul.dropdown-menu > li.nav-item > a.nav-link,
 	ul.navbar-nav > li.nav-item > ul.dropdown-menu.multi-column > div.row > div > ul.multi-column-dropdown > li.nav-item > a.nav-link {
