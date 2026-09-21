@@ -427,6 +427,18 @@
 --check messages
 	if (voicemail_action == "check") then
 		if (session ~= nil and session:ready()) then
+			--release the digit bindings before the mailbox menus
+			--bind_digit_action, used by the *5 and *6 call recording controls, installs a
+			--digit machine that intercepts every dtmf and re-queues it on the channel. the
+			--re-queued copy never reaches the on_dtmf callback, so dtmf_digits stays empty
+			--and none of the string.len(dtmf_digits) == 0 guards see it, but it still
+			--breaks the next playback. the message number phrase and the message itself
+			--then stream for zero milliseconds and the caller lands on the options menu
+			--having heard nothing. only mailboxes whose user has call recording enabled
+			--reach this script with a digit machine attached, which is why it looked like
+			--a per-user fault
+				session:execute("clear_digit_action", "all");
+
 			--check the voicemail password
 				if (voicemail_id) then
 					if (voicemail_authorized) then
