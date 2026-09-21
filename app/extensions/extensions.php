@@ -260,7 +260,7 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.$search.'%';
 	}
-	$sql .= order_by($order_by, $order, null, null, $sort);
+	$sql .= order_by($order_by, $order, 'extension', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$extensions = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
