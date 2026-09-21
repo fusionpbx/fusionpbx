@@ -1158,6 +1158,45 @@ class menu {
 	}
 
 	/**
+	* Render permission-filtered nested menu entries for either menu orientation.
+	* Linked group parents retain their destination inside the expanded group.
+	*/
+	private function menu_nested_item(array $item, bool $vertical = false) {
+		$title = escape($item['menu_language_title'] ?? $item['menu_item_title'] ?? '');
+		$link = $item['menu_item_link'] ?? '';
+		$category = $item['menu_item_category'] ?? 'internal';
+		if ($category === 'email' && $link !== '' && stripos($link, 'mailto:') !== 0) {
+			$link = 'mailto:' . $link;
+		}
+		$target = $category === 'external' ? " target='_blank' rel='noopener noreferrer'" : '';
+		$icon = '';
+		if ($this->settings->get('theme', 'menu_sub_icons', true) !== false
+			&& strpos($item['menu_item_icon'] ?? '', 'fa-') === 0) {
+			$icon = "<span aria-hidden='true' class='" . escape($item['menu_item_icon']) . " fa-fw'";
+			if (!empty($item['menu_item_icon_color'])) {
+				$icon .= " style='color:" . escape($item['menu_item_icon_color']) . "'";
+			}
+			$icon .= "></span>";
+		}
+		$class = $vertical ? 'menu_side_item_sub' : 'nav-link';
+		$label = "<span class='menu-nested-label'>" . $title . "</span>" . $icon;
+		$anchor = "<a class='" . $class . "' href='" . escape($link === '' ? '#' : $link) . "'" . $target . ">" . $label . "</a>";
+		$children = $item['menu_items'] ?? [];
+		if (!$children) {
+			return "<li class='nav-item menu-nested-item'>" . $anchor . "</li>\n";
+		}
+		$html = "<li class='nav-item menu-nested-item'><details class='menu-nested-group' onclick='event.stopPropagation();'>";
+		$html .= "<summary class='" . $class . "'>" . $label . "</summary><ul class='menu-nested-list'>";
+		if ($link !== '') {
+			$html .= "<li class='nav-item menu-nested-parent-link'>" . $anchor . "</li>";
+		}
+		foreach ($children as $child) {
+			$html .= $this->menu_nested_item($child, $vertical);
+		}
+		return $html . "</ul></details></li>\n";
+	}
+	
+	/**
 	 * build the fixed, static or inline horizontal menu html
 	 *
 	 * @param array $menu_array Associative array of menu items
@@ -1266,7 +1305,13 @@ class menu {
 				if ($submenu) {
 					$columns = @sizeof($menu_parent['menu_items']) > 20 ? 2 : 1;
 					$column_current = 1;
-					$mod_ul = $columns > 1 ? 'multi-column' : null;
+					$mod_ul = $columns > 1 ? 'multi-column' : '';
+					foreach ($menu_parent['menu_items'] as $candidate) {
+						if (!empty($candidate['menu_items'])) {
+							$mod_ul .= ' menu-has-nested';
+							break;
+						}
+					}
 					$html .= "					<ul class='dropdown-menu " . $mod_ul . "'>\n";
 					if ($columns > 1) {
 						$html .= "						<div class='row'>\n";
@@ -1274,6 +1319,10 @@ class menu {
 						$html .= "								<ul class='multi-column-dropdown'>\n";
 					}
 					foreach ($menu_parent['menu_items'] as $index_sub => $menu_sub) {
+						// A grouping item needs its children rendered at the third level.
+						if (!empty($menu_sub['menu_items'])) {
+							$html .= $this->menu_nested_item($menu_sub);
+						} else {
 						$mod_a_2 = $menu_sub['menu_item_link'];
 						if ($mod_a_2 == '') {
 							$mod_a_2 = '#';
@@ -1288,6 +1337,7 @@ class menu {
 							}
 						}
 						$html .= "						<li class='nav-item'><a class='nav-link' href='" . $mod_a_2 . "' " . $mod_a_3 . " onclick='event.stopPropagation();'>" . ($this->settings->get('theme', 'menu_sub_icons', true) != false ? "<span class='fa-solid fa-minus d-inline-block d-sm-none float-left' style='margin: 4px 10px 0 25px;'></span>" : '') . escape($menu_sub['menu_language_title']) . $menu_sub_icon . "</a></li>\n";
+							}
 						if ($columns > 1 && $column_current == 1 && ($index_sub + 1) > (ceil(@sizeof($menu_parent['menu_items']) / 2) - 1)) {
 							$html .= "								</ul>\n";
 							$html .= "							</div>\n";
@@ -1461,6 +1511,10 @@ class menu {
 				if (is_array($menu_item_main['menu_items']) && sizeof($menu_item_main['menu_items']) != 0) {
 					$html .= "	<div id='sub_" . $menu_item_main['menu_item_uuid'] . "' class='menu_side_sub' style='display: none;'>\n";
 					foreach ($menu_item_main['menu_items'] as $menu_item_sub) {
+						if (!empty($menu_item_sub['menu_items'])) {
+							$html .= "<ul class='menu-nested-root'>" . $this->menu_nested_item($menu_item_sub, true) . "</ul>";
+							continue;
+						}
 						$menu_sub_icon = null;
 						if ($this->settings->get('theme', 'menu_sub_icons', true) !== false) {
 							if (!empty($menu_item_sub['menu_item_icon']) && substr($menu_item_sub['menu_item_icon'], 0, 3) == 'fa-') { // font awesome icon
