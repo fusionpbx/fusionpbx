@@ -883,7 +883,7 @@
 	$array['themes'][$x]['theme_name'] = 'Blue Gradient';
 	$array['themes'][$x]['theme_enabled'] = 'true';
 	$array['themes'][$x]['theme_description'] = '';
-	$y=0;
+	$y++;
 	$array['theme_settings'][$y]['theme_uuid'] = '7ca4a961-2b70-457d-93b8-026d687a9741';
 	$array['theme_settings'][$y]['theme_setting_uuid'] = '7e697e5d-d437-4d3e-a8bb-c8ccf26ca210';
 	$array['theme_settings'][$y]['theme_setting_name'] = 'action_bar_background_scroll';
@@ -2810,9 +2810,19 @@
 					unset($array['themes'][$x]);
 				}
 			}
+		}
+	}
+
+	//remove existing theme settings from the array
+	if (!empty($uuids)) {
+		$sql = "select theme_setting_uuid from v_theme_settings where theme_uuid in (".implode(', ', $uuids).") ";
+		$theme_settings = $database->select($sql, $parameters ?? null);
+		unset($sql, $parameters);
+
+		foreach ($theme_settings as $setting) {
 			//build array of theme settings uuids
 			foreach ($array['theme_settings'] as $x => $row) {
-				if (is_uuid($row['theme_uuid']) && $row['theme_uuid'] == $theme['theme_uuid']) {
+				if (is_uuid($row['theme_setting_uuid']) && $row['theme_setting_uuid'] == $setting['theme_setting_uuid']) {
 					unset($array['theme_settings'][$x]);
 				}
 			}
