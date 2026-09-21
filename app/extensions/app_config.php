@@ -285,7 +285,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "emergency_caller_id_number_format";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "+1NXXNXXXXXX";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Format for caller ID numbers. Allowed characters: N (digit 1-9), X (digit 0-9), + (E.164). N and X may be lower case.";
 
 		$y++;
