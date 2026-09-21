@@ -114,14 +114,14 @@ class fifo {
 					//remove the members of the queues from mod_fifo
 					$event_socket = event_socket::create();
 					if ($event_socket->is_connected()) {
-						$sql                       = "select f.fifo_extension, d.domain_name, m.member_contact ";
-						$sql                       .= "from v_fifo_members as m ";
-						$sql                       .= "inner join v_fifo as f on f.fifo_uuid = m.fifo_uuid ";
-						$sql                       .= "inner join v_domains as d on d.domain_uuid = f.domain_uuid ";
-						$sql                       .= "where f.domain_uuid = :domain_uuid ";
-						$sql                       .= "and m.fifo_uuid in (" . implode(', ', $uuids) . ") ";
+						$sql = "select f.fifo_extension, d.domain_name, m.member_contact ";
+						$sql .= "from v_fifo_members as m ";
+						$sql .= "inner join v_fifo as f on f.fifo_uuid = m.fifo_uuid ";
+						$sql .= "inner join v_domains as d on d.domain_uuid = f.domain_uuid ";
+						$sql .= "where f.domain_uuid = :domain_uuid ";
+						$sql .= "and m.fifo_uuid in (" . implode(', ', $uuids) . ") ";
 						$parameters['domain_uuid'] = $this->domain_uuid;
-						$rows                      = $this->database->select($sql, $parameters, 'all');
+						$rows = $this->database->select($sql, $parameters, 'all');
 						if (is_array($rows) && @sizeof($rows) != 0) {
 							foreach ($rows as $row) {
 								$event_socket->command('api fifo_member del ' . $row['fifo_extension'] . '@' . $row['domain_name'] . ' {fifo_member_wait=nowait}' . $row['member_contact']);
