@@ -38,7 +38,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set provision enabled. Options: true, false";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "3790e46b-ef9e-4cdc-bfd2-6b3708751843";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
