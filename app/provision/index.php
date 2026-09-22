@@ -56,7 +56,7 @@
 		$domain_name = $domain_array[0];
 	}
 
-//define PHP variables from the HTTP values
+//get the device address from the request. These are commonly assigned by the web server's rewrite rules and are retained for backwards compatibility.
 	if (isset($_REQUEST['address'])) {
 		$device_address = $_REQUEST['address'];
 	}
@@ -68,6 +68,22 @@
 	//if (!empty($_REQUEST['template'])) {
 	//	$device_template = $_REQUEST['template'];
 	//}
+
+//when the single entry point is used, the mac, file, and ext can be extracted from the request path.
+	$device_address = $device_address ?? '';
+	$file = $file ?? '';
+	$ext = $ext ?? '';
+	$provision_path = rawurldecode(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '');
+	if ($provision_path !== '') {
+		$resolved = provision::resolve_from_path($provision_path, [
+			'address' => $device_address,
+			'file'    => $file,
+			'ext'     => $ext,
+		]);
+		$device_address = $resolved['address'];
+		$file = $resolved['file'];
+		$ext = $resolved['ext'];
+	}
 
 //get the device address for Cisco 79xx in the URL as &name=SEP000000000000
 	if (empty($device_address)) {

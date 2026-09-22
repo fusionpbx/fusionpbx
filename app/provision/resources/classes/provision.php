@@ -167,7 +167,119 @@ class provision {
 		return $this->domain_uuid;
 	}
 
-	// define the function which checks to see if the device address exists in devices
+	/**
+	 * Resolve provisioning request parameters (mac / file / ext) from the request
+	 * path.
+	 *
+	 * Mirrors the web-server rewrite rules (nginx / Apache .htaccess) so the
+	 * provisioning app works without them (e.g. behind the single-point-of-entry
+	 * front controller). Rules are evaluated in the same order, first match wins.
+	 * A value is only filled in if it is still empty, so parameters supplied by
+	 * the web server (query strings) always take precedence.
+	 *
+	 * @param string $path     Decoded request path, e.g. /provision/y000000000000.boot
+	 * @param array  $context  Existing values; keys: address, file, ext
+	 *
+	 * @return array Resolved values; keys: address, file, ext
+	 */
+	public static function resolve_from_path(string $path, array $context): array {
+		$address = $context['address'] ?? '';
+		$file    = $context['file'] ?? '';
+		$ext     = $context['ext'] ?? '';
+
+		// Only fill a value when it is still empty, so existing values win.
+		$set_if_empty = function (string &$value, string $candidate): void {
+			if ($value === '' && $candidate !== '') {
+				$value = $candidate;
+			}
+		};
+
+		// Vendor rules, in the same order as the nginx / Apache rewrite rules.
+		if (preg_match('#/provision/algom([A-Fa-f0-9]{12})\.conf$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Algo
+		} elseif (preg_match('#/provision/([A-Fa-f0-9]{12})\.txt$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Avaya
+		} elseif (preg_match('#/provision/MN_([A-Fa-f0-9]{12})\.cfg$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Mitel
+			$set_if_empty($file, 'MN_{$mac}.cfg');
+		} elseif (preg_match('#/provision/MN_Generic\.cfg$#i', $path, $match)) {
+			$set_if_empty($address, '08000f000000');         // Mitel (generic)
+			$set_if_empty($file, 'MN_Generic.cfg');
+		} elseif (preg_match('#/provision/cfg([A-Fa-f0-9]{12})(?:\.(xml|cfg))?$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Grandstream
+		} elseif (preg_match('#/provision/([A-Fa-f0-9]{12})/phonebook\.xml$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Grandstream
+			$set_if_empty($file, 'phonebook.xml');
+		} elseif (preg_match('#/provision/phonebook\.xml$#i', $path, $match)) {
+			$set_if_empty($file, 'phonebook.xml');           // Grandstream
+		} elseif (preg_match('#/provision/aastra\.cfg$#i', $path, $match)) {
+			$set_if_empty($file, 'aastra.cfg');              // Aastra
+		} elseif (preg_match('#/provision/(y[0-9]{12})\.cfg$#i', $path, $match)) {
+			$set_if_empty($file, $match[1] . '.cfg');        // Yealink
+		} elseif (preg_match('#/provision/(y[0-9]{12})\.boot$#i', $path, $match)) {
+			$set_if_empty($file, $match[1] . '.boot');       // Yealink
+		} elseif (preg_match('#/provision/([A-Fa-f0-9]{12})\.boot$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Yealink
+			$set_if_empty($file, '{$mac}.boot');
+		} elseif (preg_match('#/provision/([A-Fa-f0-9]{12})(?:\.(xml|cfg))?$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Yealink (general)
+		} elseif (preg_match('#/provision/000000000000\.cfg$#i', $path, $match)) {
+			$set_if_empty($file, '{$mac}.cfg');              // Polycom
+		} elseif (preg_match('#/provision/features\.cfg$#i', $path, $match)) {
+			$set_if_empty($file, 'features.cfg');            // Polycom
+		} elseif (preg_match('#/provision/([A-Fa-f0-9]{12})-sip\.cfg$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Polycom
+			$set_if_empty($file, 'sip.cfg');
+		} elseif (preg_match('#/provision/([A-Fa-f0-9]{12})-phone\.cfg$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Polycom
+		} elseif (preg_match('#/provision/([A-Fa-f0-9]{12})-registration\.cfg$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Polycom
+			$set_if_empty($file, '{$mac}-registration.cfg');
+		} elseif (preg_match('#/provision/([A-Fa-f0-9]{12})-directory\.xml$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Polycom
+			$set_if_empty($file, '{$mac}-directory.xml');
+		} elseif (preg_match('#/provision/file/(.*\.(xml|cfg))$#i', $path, $match)) {
+			$set_if_empty($file, $match[1]);                 // Cisco
+		} elseif (preg_match('#/provision/directory\.xml$#i', $path, $match)) {
+			$set_if_empty($file, 'directory.xml');           // Cisco
+		} elseif (preg_match('#/provision/([0-9]{1,11})_Extern\.xml$#i', $path, $match)) {
+			$set_if_empty($ext, $match[1]);                  // Escene
+			$set_if_empty($file, '{$mac}_extern.xml');
+		} elseif (preg_match('#/provision/([0-9]{1,11})_Phonebook\.xml$#i', $path, $match)) {
+			$set_if_empty($ext, $match[1]);                  // Escene
+			$set_if_empty($file, '{$mac}_phonebook.xml');
+		} elseif (preg_match('#/provision/VCS754_([A-Fa-f0-9]{12})\.cfg$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // V-tech
+		} elseif (preg_match('#/provision/pb([A-Fa-f0-9-]{12,17})/directory\.xml$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // V-tech
+			$set_if_empty($file, 'directory.xml');
+		} elseif (preg_match('#/provision/([A-Fa-f0-9]{12})-contacts\.cfg$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Digium
+			$set_if_empty($file, '{$mac}-contacts.cfg');
+		} elseif (preg_match('#/provision/([A-Fa-f0-9]{12})-smartblf\.cfg$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Digium
+			$set_if_empty($file, '{$mac}-smartblf.cfg');
+		} elseif (preg_match('#/provision/.*-([A-Fa-f0-9]{12})\.(?:cfg|htm)?$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Snom
+		} elseif (preg_match('#/provision/C520-WiMi_([A-Fa-f0-9]{12})\.cfg$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Snom
+		} elseif (preg_match('#/provision/([A-Fa-f0-9]{12})/directory\.xml$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Snom
+			$set_if_empty($file, 'directory.xml');
+		} elseif (preg_match('#/provision/m3/settings/([A-Fa-f0-9]{12})(?:\.cfg)?$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // Snom m3 (Apache)
+		} elseif (preg_match('#/provision/kt.*?-([A-Fa-f0-9]{12})\.xml$#i', $path, $match)) {
+			$set_if_empty($address, $match[1]);              // KT (Apache)
+		} elseif (preg_match('#([A-Fa-f0-9]{2}[:-]){5}[A-Fa-f0-9]{2}$#i', $path, $match)) {
+			$set_if_empty($address, $match[0]);              // Cisco colon-MAC (Apache)
+		}
+
+		return [
+			'address' => $address,
+			'file'    => $file,
+			'ext'     => $ext,
+		];
+	}
 
 	/**
 	 * Checks if a device exists in the database.
