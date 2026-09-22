@@ -269,23 +269,23 @@
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "effective_caller_id_number_format";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "extension";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "XXXX";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Format for caller ID numbers. Allowed characters: N (digit 1-9), X (digit 0-9), + (E.164). N and X may be lower case.";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Format for caller ID numbers. Allowed characters: N (digit 1-9), X (digit 0-9), + (E.164). N and X may be lowercase.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "75141e70-98c0-4a35-a00d-c0cfc9b8965e";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "outbound_caller_id_number_format";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "+1NXXNXXXXXX";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Format for caller ID numbers. Allowed characters: N (digit 1-9), X (digit 0-9), + (E.164). N and X may be lower case.";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Format for caller ID numbers. Allowed characters: N (digit 1-9), X (digit 0-9), + (E.164). N and X may be lowercase.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "895dad2d-b656-4516-a08f-07b0b5b61edd";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "extension";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "emergency_caller_id_number_format";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "+1NXXNXXXXXX";
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Format for caller ID numbers. Allowed characters: N (digit 1-9), X (digit 0-9), + (E.164). N and X may be lower case.";
 
 		$y++;
