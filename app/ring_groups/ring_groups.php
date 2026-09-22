@@ -186,7 +186,7 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.lower_case($search).'%';
 	}
-	$sql .= order_by($order_by, $order, null, null, $sort);
+	$sql .= order_by($order_by, $order, 'ring_group_extension', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$ring_groups = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
