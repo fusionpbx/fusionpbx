@@ -200,7 +200,7 @@
 		$sql .= ") ";
 		$parameters['search'] = '%'.lower_case($search).'%';
 	}
-	$sql .= order_by($order_by, $order, null, null, $sort);
+	$sql .= order_by($order_by, $order, 'voicemail_id', 'asc', $sort);
 	$sql .= limit_offset($rows_per_page, $offset);
 	$voicemails = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
