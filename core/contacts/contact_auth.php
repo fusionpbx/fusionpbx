@@ -93,7 +93,8 @@ if ($_SESSION['contact_auth']['source'] == 'google') {
 	curl_setopt($curl, CURLOPT_POST, 5);
 	curl_setopt($curl, CURLOPT_POSTFIELDS, $post_fields);
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, TRUE);
+	curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
 	$result = curl_exec($curl);
 	curl_close($curl);
 

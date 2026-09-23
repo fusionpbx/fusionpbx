@@ -599,7 +599,8 @@ function curl_file_get_contents($url) {
 	curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);	//To follow any "Location: " header that the server sends as part of the HTTP header.
 	curl_setopt($curl, CURLOPT_AUTOREFERER, TRUE);	//To automatically set the Referer: field in requests where it follows a Location: redirect.
 	curl_setopt($curl, CURLOPT_TIMEOUT, 10);	//The maximum number of seconds to allow cURL functions to execute.
-	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);	//To stop cURL from verifying the peer's certificate.
+	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, TRUE);
+	curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
 
 	$contents = curl_exec($curl);
 	curl_close($curl);
