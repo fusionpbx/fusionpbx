@@ -162,6 +162,9 @@ class install {
 		fwrite($file_handle, $conf);
 		fclose($file_handle);
 
+		//restrict the config file permissions
+		@chmod($config_file, 0640);
+
 		//if the config.conf file was saved return true
 		if (file_exists($config_file)) {
 			return true;
