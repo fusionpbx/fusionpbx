@@ -258,6 +258,9 @@ class websocket_client {
 	 * @link https://php.net/sys_get_temp_dir
 	 */
 	public static function get_token_file($token_name): string {
+		// Sanitize the token name to prevent path traversal / arbitrary file access.
+		// Legitimate token names are 64-char hex strings (token::create()), so [A-Za-z0-9_] is safe.
+		$token_name = preg_replace('/[^A-Za-z0-9_]/', '', (string) $token_name);
 		// Try to store in RAM first
 		if (is_dir('/dev/shm') && is_writable('/dev/shm')) {
 			$token_file = '/dev/shm/' . $token_name . '.php';
@@ -389,8 +392,8 @@ class websocket_client {
 			}
 		}
 
-		$meta = stream_get_meta_data($this->resource);
-		if ($meta['unread_bytes'] > 0) {
+			$meta = stream_get_meta_data($this->resource);
+			if ($meta['unread_bytes'] > 0) {
 			echo "[WARNING] {$meta['unread_bytes']} bytes left in socket after read\n";
 		}
 
