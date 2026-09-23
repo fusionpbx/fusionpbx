@@ -97,7 +97,7 @@ class token {
 	public function validate($key, $value = '') {
 
 		//allow only specific characters
-		$key = preg_replace('[^a-zA-Z0-9]', '', $key);
+		$key = preg_replace('[^a-zA-Z0-9\-\_@.\/]', '', $key);
 
 		//get the token name
 		if (!empty($_SESSION['tokens']) && is_array($_SESSION['tokens'][$key]) && @sizeof($_SESSION['tokens'][$key]) != 0) {
