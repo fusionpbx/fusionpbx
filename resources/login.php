@@ -41,7 +41,6 @@
 		$sql .= "from v_domains ";
 		$sql .= "where domain_name = :domain_name ";
 		$parameters['domain_name'] = $_SERVER['HTTP_HOST'];
-		$parameters['email'] = $email;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row)) {
 			$domain_uuid = $row['domain_uuid'];
