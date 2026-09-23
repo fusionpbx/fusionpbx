@@ -525,7 +525,7 @@
 				}
 				if ($error_found) { $error_style = 'color: red;'; }
 				echo "<pre".(!empty($error_style) ? " style='".$error_style."'" : null).">\n";
-				echo htmlspecialchars(implode("\n", $response), ENT_QUOTES, 'UTF-8');
+				echo implode("\n", $response);
 				echo "</pre>";
 				unset($error_found, $error_style);
 			}
