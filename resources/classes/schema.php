@@ -517,7 +517,7 @@ class schema {
 				$response .= "<br />\n";
 				$response .= "<strong>" . $text['label-sql_changes'] . ":</strong><br />\n";
 				$response .= "<pre>\n";
-				$response .= $sql_update;
+				$response .= escape($sql_update);
 				$response .= "</pre>\n";
 				$response .= "<br />\n";
 				$response .= "</td>\n";
@@ -543,7 +543,7 @@ class schema {
 
 						//check if the table exists
 						if ($row['exists'] == "true") {
-							$response .= "<td valign='top' class='row_style1'>" . $table_name . "</td>\n";
+							$response .= "<td valign='top' class='row_style1'>" . escape($table_name) . "</td>\n";
 							$response .= "<td valign='top' class='vncell' style='padding-top: 3px;'>" . $text['option-true'] . "</td>\n";
 
 							if (count($row['fields']) > 0) {
@@ -570,8 +570,8 @@ class schema {
 											$field_type = $field['type'];
 										}
 										$response .= "<tr>\n";
-										$response .= "<td class='row_style1' width='200'>" . $field_name . "</td>\n";
-										$response .= "<td class='row_style1'>" . $field_type . "</td>\n";
+										$response .= "<td class='row_style1' width='200'>" . escape($field_name) . "</td>\n";
+										$response .= "<td class='row_style1'>" . escape($field_type) . "</td>\n";
 										if ($field['exists'] == "true") {
 											$response .= "<td class='row_style0' style=''>" . $text['option-true'] . "</td>\n";
 											$response .= "<td>&nbsp;</td>\n";
@@ -586,7 +586,7 @@ class schema {
 								$response .= "</td>\n";
 							}
 						} else {
-							$response .= "<td valign='top' class='row_style1'>$table_name</td>\n";
+							$response .= "<td valign='top' class='row_style1'>".escape($table_name)."</td>\n";
 							$response .= "<td valign='top' class='row_style1' style='background-color:#444444;color:#CCCCCC;'><strong>" . $text['label-exists'] . "</strong><br />" . $text['option-false'] . "</td>\n";
 							$response .= "<td valign='top' class='row_style1'>&nbsp;</td>\n";
 						}
