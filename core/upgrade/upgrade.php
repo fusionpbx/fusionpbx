@@ -82,7 +82,7 @@
 
 		// Make the config directory
 		if (isset($config_path)) {
-			system('mkdir -p '.$config_path);
+			system('mkdir -p ' . escapeshellarg($config_path));
 		}
 		else {
 			echo "Config directory not found\n";
@@ -683,7 +683,7 @@ function update_php_fpm(settings $settings) {
 
 			// Prepared systemd to use the update
 			system('systemctl daemon-reload');
-			system('systemctl restart php'.$php_version.'-fpm');
+			system('systemctl restart ' . escapeshellarg('php' . $php_version . '-fpm'));
 		}
 
 	}
@@ -745,7 +745,7 @@ function update_file_permissions($text, settings $settings) {
 			}
 
 			// Update the file ownership to use the web server user
-			exec("chown -R www-data:www-data $dir");
+			exec("chown -R www-data:www-data " . escapeshellarg($dir));
 		}
 	} else {
 		echo ($text['label-not_running_as_root'] ?? "Not root user - operation skipped")."\n";
@@ -794,10 +794,11 @@ function upgrade_services($text, settings $settings) {
 				system("systemctl start " . escapeshellarg($service_name));
 			}
 			if (stristr(PHP_OS, 'FreeBSD')) {
-				system("cp " . $file . " /usr/local/etc/rc.d/".$service_name);
-				system("sysrc " . $service_name . "_enable=\"YES\"");
-				system("chmod 755 /usr/local/etc/rc.d/" . $service_name);
-				system("service " . $service_name . " start");
+				$service_name = preg_replace('/[^a-zA-Z0-9_-]/', '', $service_name);
+				system("cp " . escapeshellarg($file) . " /usr/local/etc/rc.d/" . escapeshellarg($service_name));
+				system("sysrc " . escapeshellarg($service_name) . "_enable=YES");
+				system("chmod 755 /usr/local/etc/rc.d/" . escapeshellarg($service_name));
+				system("service " . escapeshellarg($service_name) . " start");
 			}
 		}
 	}
@@ -839,10 +840,10 @@ function stop_services($text, settings $settings) {
 			}
 			// Stop the service
 			if (stristr(PHP_OS, 'Linux')) {
-				system("systemctl stop " . $service_name);
+				system("systemctl stop " . escapeshellarg($service_name));
 			}
 			if (stristr(PHP_OS, 'FreeBSD')) {
-				system("service " . $service_name . " stop");
+				system("service " . escapeshellarg($service_name) . " stop");
 			}
 		}
 	}
@@ -883,10 +884,10 @@ function restart_services($text, settings $settings) {
 			}
 			// Restart the service
 			if (stristr(PHP_OS, 'Linux')) {
-				system("systemctl restart ".$service_name);
+				system("systemctl restart " . escapeshellarg($service_name));
 			}
 			if (stristr(PHP_OS, 'FreeBSD')) {
-				system("service " . $service_name . " restart");
+				system("service " . escapeshellarg($service_name) . " restart");
 			}
 		}
 	}

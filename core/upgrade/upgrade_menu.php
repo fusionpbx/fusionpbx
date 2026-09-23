@@ -227,7 +227,7 @@ function do_file_permissions($text, settings $settings) {
 			echo "chown -R www-data:www-data $dir\n";
 
 			//execute
-			exec("chown -R www-data:www-data $dir");
+			exec("chown -R www-data:www-data " . escapeshellarg($dir));
 		}
 	}
 	else {
@@ -493,7 +493,8 @@ function do_restart_services($text, settings $settings) {
 	foreach($service_files as $file) {
 		$service_name = get_service_name($file);
 		echo " ".$service_name."\n";
-		system("systemctl restart ".$service_name);
+		$service_name = preg_replace('/[^a-zA-Z0-9_-]/', '', $service_name);
+		system("systemctl restart " . escapeshellarg($service_name));
 	}
 }
 
@@ -541,7 +542,7 @@ function load_config_php() {
 
 	//make the config directory
 	if (isset($config_path)) {
-		system('mkdir -p ' . $config_path);
+		system('mkdir -p ' . escapeshellarg($config_path));
 	} else {
 		echo "config directory not found\n";
 		exit;
