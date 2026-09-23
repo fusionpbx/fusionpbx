@@ -147,13 +147,6 @@
 				{if !empty($login_passkey_enabled) && $login_passkey_enabled && $login_passkey_position != 'inside'}
 					<input type='submit' id='btn_passkey' name='passkey_login' class='btn' style='width: 100%; margin-top: 15px; color: {$passkey_button_text_color}; background: {$passkey_button_background_color};' value='{$button_login_passkey}' /><br />
 				{/if}
-				{if isset($banners)}
-					{foreach $banners as $banner}
-						<a class='{$banner.class}' style='display: inline-block; margin-top: 10px;' href='{$project_path}{$banner.url}'>
-							{$banner.image}
-						</a><br />
-					{/foreach}
-				{/if}
 				</div>
 			</div>
 		</div>
