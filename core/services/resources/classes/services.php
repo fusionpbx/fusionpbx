@@ -641,12 +641,13 @@ class services {
 					}
 
 					// Install the service
-					system("cp " . $service_file . " /usr/local/etc/rc.d/".$service_name);
-					system("sysrc " . $service_name . "_enable=\"YES\"");
-					system("chmod 755 /usr/local/etc/rc.d/" . $service_name);
+					$service_name = preg_replace('/[^a-zA-Z0-9_-]/', '', $service_name);
+					system("cp " . escapeshellarg($service_file) . " /usr/local/etc/rc.d/" . escapeshellarg($service_name));
+					system("sysrc " . escapeshellarg($service_name) . "_enable=YES");
+					system("chmod 755 /usr/local/etc/rc.d/" . escapeshellarg($service_name));
 
 					// Start the service
-					system("service ".escapeshellarg(service_name). "start");
+					system("service " . escapeshellarg($service_name) . " start");
 				}
 			}
 		}
