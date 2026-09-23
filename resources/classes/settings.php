@@ -326,7 +326,7 @@ class settings implements clear_cache {
 	 * @access  private
 	 */
 	private function theme_settings() {
-		$theme_uuid = $this->settings['domain']['theme'];
+		$theme_uuid = $this->settings['domain']['theme'] ?? '';
 
 		// No theme set
 		if (empty($theme_uuid) || !is_uuid($theme_uuid)) {
