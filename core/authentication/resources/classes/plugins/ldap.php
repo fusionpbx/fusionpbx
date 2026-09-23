@@ -177,9 +177,10 @@ class plugin_ldap {
 					$this->contact_uuid = $row["contact_uuid"];
 				}
 				else {
-					//salt used with the password to create a one way hash
-						$salt = generate_password('32', '4');
-						$password = generate_password('32', '4');
+					//random placeholder password (real authentication is delegated to LDAP)
+					//use the modern password_hash() instead of the deprecated md5()
+						$placeholder_password = generate_password('32', '4');
+						$hash_options = ['cost' => 10];
 
 					//prepare the uuids
 						$this->user_uuid = uuid();
@@ -190,8 +191,8 @@ class plugin_ldap {
 						$array['users'][0]['domain_uuid'] = $this->domain_uuid;
 						$array['users'][0]['contact_uuid'] = $this->contact_uuid;
 						$array['users'][0]['username'] = strtolower($this->username);
-						$array['users'][0]['password'] = md5($salt.$password);
-						$array['users'][0]['salt'] = $salt;
+						$array['users'][0]['password'] = password_hash($placeholder_password, PASSWORD_DEFAULT, $hash_options);
+						$array['users'][0]['salt'] = null;
 						$array['users'][0]['add_date'] = 'now()';
 						$array['users'][0]['add_user'] = strtolower($this->username);
 						$array['users'][0]['user_enabled'] = true;
