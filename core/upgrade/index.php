@@ -247,7 +247,7 @@
 			echo "<div class='title'>".$text['header-source_code_upgrade_preview']."</div>\n";
 			echo "<br><br>\n";
 			if (!empty($response) && is_array($response)) {
-				echo str_replace('APP_NAME', (!empty($_GET['title']) ? "<strong>".$_GET['title']."</strong>" : null), $text['description-source_code_changes_found']);
+				echo str_replace('APP_NAME', (!empty($_GET['title']) ? "<strong>".htmlspecialchars($_GET['title'], ENT_QUOTES, 'UTF-8')."</strong>" : null), $text['description-source_code_changes_found']);
 				echo "<br><br><br>\n";
 				echo "<div class='file_paths'>\n";
 				if (!empty($response) && is_array($response)) {
@@ -256,7 +256,7 @@
 				echo "</div>\n";
 			}
 			else {
-				echo str_replace('APP_NAME', (!empty($_GET['title']) ? "<strong>".$_GET['title']."</strong>" : null), $text['description-source_code_no_changes_found']);
+				echo str_replace('APP_NAME', (!empty($_GET['title']) ? "<strong>".htmlspecialchars($_GET['title'], ENT_QUOTES, 'UTF-8')."</strong>" : null), $text['description-source_code_no_changes_found']);
 			}
 			echo "<br><br>\n";
 			echo "<center>\n";
@@ -504,12 +504,12 @@
 				}
 				if ($error_found) { $error_style = 'color: red;'; }
 				echo "<pre".(!empty($error_style) ? " style='".$error_style."'" : null).">\n";
-				echo implode("\n", $response);
+				echo htmlspecialchars(implode("\n", $response), ENT_QUOTES, 'UTF-8');
 				echo "</pre>";
 				unset($error_found, $error_style);
 			}
 			else {
-				echo $response;
+				echo htmlspecialchars($response, ENT_QUOTES, 'UTF-8');
 			}
 			echo "</div>\n";
 		}
