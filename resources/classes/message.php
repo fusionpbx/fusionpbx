@@ -62,8 +62,16 @@ class message {
 			}
 			if (!empty($_SESSION['messages']) && is_array($_SESSION['messages']) && @sizeof($_SESSION['messages']) != 0) {
 				foreach ($_SESSION['messages'] as $message_mood => $message) {
-					$message_text = str_replace(["\r\n", "\n", "\r"], '\\n', addslashes(join('<br/>', $message['message'])));
-					$message_delay = array_sum($message['delay']) / count($message['delay']);
+					//limit the mood to known values to prevent injection into the JS string
+					if (!in_array($message_mood, array('positive', 'negative', 'alert'), true)) {
+						$message_mood = 'positive';
+					}
+					//escape HTML characters in the content so it cannot break out of the script tag (e.g. </script>)
+					$message_parts = array_map(function ($message_part) {
+						return str_replace(array('<', '>'), array('&lt;', '&gt;'), (string)$message_part);
+					}, (array)($message['message'] ?? array()));
+					$message_text = str_replace(["\r\n", "\n", "\r"], '\\n', addslashes(join('<br/>', $message_parts)));
+					$message_delay = count($message['delay']) > 0 ? array_sum($message['delay']) / count($message['delay']) : 0;
 					$html .= "{$spacer}display_message('$message_text', '$message_mood', '$message_delay');\n";
 				}
 			}
