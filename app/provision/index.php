@@ -66,6 +66,22 @@
 	//	$device_template = $_REQUEST['template'];
 	//}
 
+//when the single entry point is used, the mac, file, and ext can be extracted from the request path.
+	$device_address = $device_address ?? '';
+	$file = $file ?? '';
+	$ext = $ext ?? '';
+	$provision_path = rawurldecode(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '');
+	if ($provision_path !== '') {
+		$resolved = provision::resolve_from_path($provision_path, [
+			'address' => $device_address,
+			'file'    => $file,
+			'ext'     => $ext,
+		]);
+		$device_address = $resolved['address'];
+		$file = $resolved['file'];
+		$ext = $resolved['ext'];
+	}
+
 //get the device address for Cisco 79xx in the URL as &name=SEP000000000000
 	if (empty($device_address)) {
 		$name = $_REQUEST['name'] ?? '';
