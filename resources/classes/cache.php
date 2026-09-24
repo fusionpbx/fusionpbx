@@ -1,422 +1,288 @@
 <?php
-/*
-	FusionPBX
-	Version: MPL 1.1
-
-	The contents of this file are subject to the Mozilla Public License Version
-	1.1 (the "License"); you may not use this file except in compliance with
-	the License. You may obtain a copy of the License at
-	http://www.mozilla.org/MPL/
-
-	Software distributed under the License is distributed on an "AS IS" basis,
-	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-	for the specific language governing rights and limitations under the
-	License.
-
-	The Original Code is FusionPBX
-
-	The Initial Developer of the Original Code is
-	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2026
-	the Initial Developer. All Rights Reserved.
-
-	Contributor(s):
-	Mark J Crane <markjcrane@fusionpbx.com>
-*/
 
 /**
- * plugin_database
- *
- * @method plugin_database validates the authentication using information from the database
+ * Provides an abstracted cache
  */
-class plugin_database {
+class cache {
+	private $settings;
+	private $syslog;
+	private $location;
+	private $method;
 
 	/**
-	 * Define variables and their scope
-	 */
-	public $domain_name;
-	public $domain_uuid;
-	public $user_uuid;
-	public $contact_uuid;
-	public $contact_organization;
-	public $contact_name_given;
-	public $contact_name_family;
-	public $contact_image;
-	public $username;
-	public $password;
-	public $key;
-	public $debug;
-	public $user_email;
-
-	/**
-	 * database checks the local database to authenticate the user or key
+	 * Initializes the cache object with default settings if none are provided.
 	 *
-	 * @return array [authorized] => true or false
+	 * @param settings|null $settings The settings to use for initialization. Defaults to null.
+	 *
+	 * @return void
 	 */
-	function database(authentication $auth, settings $settings) {
-
-		//add multi-lingual support
-		$language = new text;
-		$text     = $language->get(null, '/core/authentication');
-
-		//pre-process some settings
-		$theme_favicon = $settings->get('theme', 'favicon', PROJECT_PATH . '/themes/default/favicon.ico');
-		$theme_logo = $settings->get('theme', 'logo', PROJECT_PATH . '/themes/default/images/logo_login.png');
-		$theme_login_type = $settings->get('theme', 'login_brand_type', '');
-		$theme_login_image = $settings->get('theme', 'login_brand_image', '');
-		$theme_login_text = $settings->get('theme', 'login_brand_text', '');
-		$theme_login_logo_width = $settings->get('theme', 'login_logo_width', 'auto; max-width: 300px');
-		$theme_login_logo_height = $settings->get('theme', 'login_logo_height', 'auto; max-height: 300px');
-		$theme_message_delay = 1000 * (float)$settings->get('theme', 'message_delay', 3000);
-		$background_videos = $settings->get('theme', 'background_video', []);
-		$theme_background_video = (isset($background_videos[0])) ? $background_videos[0] : '';
-		$login_domain_name_visible = $settings->get('login', 'domain_name_visible', false);
-		$login_domain_name = $settings->get('login', 'domain_name');
-		$login_remember_me = $settings->get('login', 'remember_me');
-		$login_destination = $settings->get('login', 'destination');
-		$login_label_enabled = $settings->get('login', 'label_enabled', true);
-		$login_placeholder_enabled = $settings->get('login', 'placeholder_enabled', false);
-		$users_unique = $settings->get('users', 'unique', '');
-
-		//set the default login type and image
-		if (empty($theme_login_type)) {
-			$theme_login_type = 'image';
-			$theme_login_image = $theme_logo;
+	public function __construct(settings $settings = null) {
+		//set defaults
+		if ($settings === null) {
+			$settings = new settings();
 		}
 
-		//determine whether to show the forgot password for resetting the password
-		$login_password_reset_enabled = false;
-		if (!empty($settings->get('login', 'password_reset_key'))) {
-			$login_password_reset_enabled = true;
+		//get the settings
+		$this->settings = $settings;
+		$this->method = $this->settings->get('cache', 'method', 'file');
+		$this->syslog = $this->settings->get('cache', 'syslog', false);
+		$this->location = $this->settings->get('cache', 'location', '/var/cache/fusionpbx');
+	}
+
+	/**
+	 * Retrieve the value associated with a given cache key.
+	 *
+	 * @param string $key The cache key to retrieve. Delimiter is automatically changed from ':' to '.'.
+	 *
+	 * @return mixed The cached value, or null if it does not exist.
+	 */
+	/**
+	 * Sanitize a cache key to prevent path traversal
+	 *
+	 * Removes empty segments, "." and ".." so the key can never escape
+	 * the cache location directory.
+	 *
+	 * @param string $key The cache key to sanitize
+	 *
+	 * @return string A safe cache key
+	 */
+	private function sanitize_key($key) {
+		$key = str_replace("\\", "/", (string)$key);
+		$clean_segments = array();
+		foreach (explode('/', $key) as $segment) {
+			if ($segment !== '' && $segment !== '.' && $segment !== '..') {
+				$clean_segments[] = $segment;
+			}
 		}
+		return implode('/', $clean_segments);
+	}
 
-		//check if already authorized
-		if (isset($_SESSION['authentication']['plugin']['database']) && $_SESSION['authentication']['plugin']['database']["authorized"]) {
-			return;
-		}
+	public function get($key) {
 
-		//show the authentication code view
-		if (empty($_REQUEST["username"]) && empty($_REQUEST["key"])) {
+		//change the delimiter
+		$key = str_replace(":", ".", $key);
 
-			//get the domain
-			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-			$domain_name = $domain_array[0];
+		//sanitize the key to prevent path traversal
+		$key = $this->sanitize_key($key);
 
-			//create token
-			$object = new token;
-			$token = $object->create('login');
-
-			//initialize a template object
-			$view = new template();
-			$view->engine = 'smarty';
-			$view->template_dir = dirname(__DIR__, 5) . '/core/authentication/resources/views/';
-			$view->cache_dir = sys_get_temp_dir();
-			$view->init();
-
-			//add translations
-			$view->assign("login_title", $text['button-login']);
-			$view->assign("label_username", $text['label-username']);
-			$view->assign("label_username_or_email", $text['label-username_or_email']);
-			$view->assign("label_password", $text['label-password']);
-			$view->assign("label_domain", $text['label-domain']);
-			$view->assign("label_remember_me", $text['label-remember_me']);
-			$view->assign("button_login", $text['button-login']);
-
-			//assign default values to the template
-			$view->assign("project_path", PROJECT_PATH);
-			$view->assign("login_destination_url", $login_destination);
-			$view->assign("login_domain_name_visible", $login_domain_name_visible);
-			$view->assign("login_domain_names", $login_domain_name);
-			$view->assign("login_remember_me", $login_remember_me);
-			$view->assign("login_label_enabled", $login_label_enabled);
-			$view->assign("login_placeholder_enabled", $login_placeholder_enabled);
-			$view->assign("login_password_reset_enabled", $login_password_reset_enabled);
-			$view->assign("favicon", $theme_favicon);
-			$view->assign("login_logo_width", $theme_login_logo_width);
-			$view->assign("login_logo_height", $theme_login_logo_height);
-			$view->assign("login_logo_source", $theme_logo);
-			$view->assign("message_delay", $theme_message_delay);
-			$view->assign("background_video", $theme_background_video);
-			$view->assign("login_password_description", $text['label-password_description']);
-			$view->assign("button_cancel", $text['button-cancel']);
-			$view->assign("button_forgot_password", $text['button-forgot_password']);
-
-			//show the "Login with Passkey" button when the passkey login option is enabled
-			$view->assign("login_passkey_enabled", $settings->get('login', 'passkey_enabled', false));
-			$view->assign("login_passkey_position", $settings->get('login', 'passkey_position', 'inside'));
-			$view->assign("button_login_passkey", $text['title-passkey_sign_in'] ?? 'Sign in with a passkey');
-			$view->assign("label_or", $text['label-or'] ?? 'Or');
-			$view->assign("login_logo_enabled", $settings->get('login', 'logo_enabled', true));
-			$view->assign("login_horizontal_rule_enabled", $settings->get('login', 'horizontal_rule_enabled', false));
-			$view->assign("login_horizontal_rule_color", $settings->get('theme', 'login_horizontal_rule_color', '#808080'));
-			$view->assign("passkey_button_text_color", $settings->get('theme', 'passkey_button_text_color', '#434E5A'));
-			$view->assign("passkey_button_background_color", $settings->get('theme', 'passkey_button_background_color', 'rgba(238,238,238,0.5)'));
-
-			//assign openid values to the template
-			if ($settings->get('open_id', 'enabled', false)) {
-				$classes = $settings->get('open_id', 'methods', []);
-				$banners = [];
-				foreach ($classes as $open_id_class) {
-					if (class_exists($open_id_class)) {
-						$banners[] = [
-							'name' => $open_id_class,
-							'image' => $open_id_class::get_banner_image($settings),
-							'class' => $open_id_class::get_banner_css_class($settings),
-							'url' => '/app/open_id/open_id.php?action=' . $open_id_class,
-						];
-					}
-				}
-				if (count($banners) > 0) {
-					$view->assign('banners', $banners);
-				}
+		//cache method memcache
+		if ($this->method === "memcache") {
+			// connect to event socket
+			$esl = event_socket::create();
+			if (!$esl->is_connected()) {
+				return false;
 			}
 
-			//assign user to the template
-			if (!empty($_SESSION['username'])) {
-				$view->assign("username", escape($_SESSION['username']));
+			//send a custom event
+
+			//run the memcache
+			$command = "memcache get " . $key;
+			$result = event_socket::api($command);
+
+		}
+
+		//get the file cache
+		if ($this->method === "file") {
+			if (file_exists($this->location . "/" . $key)) {
+				$result = file_get_contents($this->location . "/" . $key);
+			}
+		}
+
+		//return result
+		return $result ?? null;
+	}
+
+	/**
+	 * Set a value in the cache based on the cache type in global default settings.
+	 *
+	 * Cache location is based on the global default setting for either "memcache" or "file".
+	 *
+	 * @param string $key   The key of the value to set.
+	 * @param mixed  $value The value to store.
+	 *
+	 * @return mixed When location is "file" the return value is in bytes written or null. When location is "memcache"
+	 *               return value is the return value from the switch socket response or false.
+	 */
+	public function set($key, $value) {
+
+		//change the delimiter
+		$key = str_replace(":", ".", $key);
+
+		//sanitize the key to prevent path traversal
+		$key = $this->sanitize_key($key);
+
+		//save to memcache
+		if ($this->method === "memcache") {
+			//connect to event socket
+			$esl = event_socket::create();
+			if ($esl === false) {
+				return false;
 			}
 
-			//messages
-			$view->assign('messages', message::html(true, '		'));
+			//run the memcache
+			$command = "memcache set " . $key . " " . $value;
+			$result = event_socket::api($command);
 
-			//add the token name and hash to the view
-			$view->assign("token_name", $token['name']);
-			$view->assign("token_hash", $token['hash']);
-
-			//show the views
-			$content = $view->render('login.htm');
-			echo $content;
-			exit;
 		}
 
-		//validate the token
-		$token = new token;
-		if (!$token->validate('login')) {
-			message::add($text['message-invalid_token'],'negative');
-			header('Location: login.php');
-			exit;
+		//save to the file cache
+		if ($this->method === "file") {
+			$result = file_put_contents($this->location . "/" . $key, $value);
 		}
 
-		//add the authentication details
-		if (isset($_REQUEST["username"])) {
-			$this->username = $_REQUEST["username"];
-			$_SESSION['username'] = $this->username;
-		}
-		if (isset($_REQUEST["password"])) {
-			$this->password = $_REQUEST["password"];
-		}
-		if (isset($_POST["remember_me"])) {
-			$_SESSION['remember_me'] = $_POST["remember_me"];
-		}
-		if (isset($_REQUEST["key"])) {
-			$this->key = $_REQUEST["key"];
-		}
-		if (isset($_REQUEST["domain_name"])) {
-			$domain_name = $_REQUEST["domain_name"];
-			$this->domain_name = $_REQUEST["domain_name"];
-		}
+		//return result
+		return $result;
+	}
 
-		//get the domain name
-		$auth->get_domain();
-		$this->username = $_SESSION['username'] ?? null;
-		//$this->domain_uuid = $_SESSION['domain_uuid'] ?? null;
-		//$this->domain_name = $_SESSION['domain_name'] ?? null;
+	/**
+	 * Delete a single cache key.
+	 *
+	 * @param string $key The cache key to delete
+	 *
+	 * @return bool When cache type is "memcache" false is returned on failure otherwise no value is returned
+	 */
+	public function delete($key) {
 
 		//debug information
-		//echo "domain_uuid: ".$this->domain_uuid."<br />\n";
-		//view_array($this->domain_uuid, false);
-		//echo "domain_name: ".$this->domain_name."<br />\n";
-		//echo "username: ".$this->username."<br />\n";
-
-		//set the default status
-		$user_authorized = false;
-
-		//check if contacts app exists
-		$contacts_exists = file_exists(dirname(__DIR__, 5) . '/core/contacts/') ? true : false;
-
-		//check the username and password if they don't match then redirect to the login
-		$sql = "select ";
-		$sql .= "	d.domain_name, ";
-		$sql .= "	u.user_uuid, ";
-		$sql .= "	u.contact_uuid, ";
-		$sql .= "	u.username, ";
-		$sql .= "	u.password, ";
-		$sql .= "	u.user_email, ";
-		$sql .= "	u.salt, ";
-		$sql .= "	u.api_key, ";
-		$sql .= "	u.domain_uuid ";
-		$sql .= "from ";
-		$sql .= "	v_domains as d, ";
-		$sql .= "	v_users as u ";
-		$sql .= "where ";
-		$sql .= "	u.domain_uuid = d.domain_uuid ";
-		$sql .= "	and (";
-		$sql .= "		user_type = 'default' ";
-		$sql .= "		or user_type is null";
-		$sql .= "	) ";
-		if (isset($this->key) && strlen($this->key) > 30) {
-			$sql .= "and u.api_key = :api_key ";
-			$parameters['api_key'] = $this->key;
-		} else {
-			$sql .= "and (\n";
-			$sql .= "	lower(u.username) = lower(:username)\n";
-			$sql .= "	or lower(u.user_email) = lower(:username)\n";
-			$sql .= ")\n";
-			$parameters['username'] = $this->username;
+		if ($this->syslog == true) {
+			openlog("fusionpbx", LOG_PID | LOG_PERROR, LOG_USER);
+			syslog(LOG_WARNING, "debug: cache: [key: " . $key . ", script: " . $_SERVER['SCRIPT_NAME'] . ", line: " . __line__ . "]");
+			closelog();
 		}
-		if ($users_unique === "global") {
-			//unique username - global (example: email address)
-		} else {
-			//unique username - per domain
-			$sql .= "and u.domain_uuid = :domain_uuid ";
-			$parameters['domain_uuid'] = $this->domain_uuid;
+
+		//key is required return false if empty
+		if (empty($key)) {
+			return false;
 		}
-		$sql .= "and (user_enabled = true or user_enabled is null) ";
-		$row = $settings->database()->select($sql, $parameters, 'row');
-		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
 
-			//validate the password
-			$valid_password = false;
-			if (isset($this->key) && strlen($this->key) > 30 && hash_equals((string)$row["api_key"], (string)$this->key)) {
-				$valid_password = true;
-			} elseif (substr($row["password"], 0, 1) === '$') {
-				if (isset($this->password) && !empty($this->password)) {
-					if (password_verify($this->password, $row["password"])) {
-						$valid_password = true;
-					}
-				}
-			} else {
-				//deprecated - compare the password provided by the user with the one in the database
-				if (md5($row["salt"] . $this->password) === $row["password"]) {
-					$row["password"] = crypt($this->password, '$1$' . $row['salt'] . '$');
-					$valid_password  = true;
-				}
+		//cache method memcache
+		if ($this->method === "memcache") {
+			//connect to event socket
+			$esl = event_socket::create();
+			if ($esl === false) {
+				return false;
 			}
 
-			//set the domain and user settings
-			if ($valid_password) {
-				//set the domain_uuid
-				$this->domain_uuid = $row["domain_uuid"];
-				$this->domain_name = $row["domain_name"];
+			//send a custom event
+			$event = "sendevent CUSTOM\n";
+			$event .= "Event-Name: CUSTOM\n";
+			$event .= "Event-Subclass: fusion::memcache\n";
+			$event .= "API-Command: memcache\n";
+			$event .= "API-Command-Argument: delete " . $key . "\n";
+			event_socket::command($event);
 
-				//set the domain session variables
-				$_SESSION["domain_uuid"] = $this->domain_uuid;
-				$_SESSION["domain_name"] = $this->domain_name;
-
-				//set the domain setting
-				if ($users_unique === "global" && $row["domain_uuid"] !== $this->domain_uuid) {
-					$domain = new domains();
-					$domain->set();
-				}
-
-				//set the variables
-				$this->user_uuid    = $row['user_uuid'];
-				$this->username     = $row['username'];
-				$this->user_email   = $row['user_email'];
-				$this->contact_uuid = $row['contact_uuid'];
-
-				//get the user contact details
-				if ($contacts_exists) {
-					unset($parameters);
-					$sql = "select ";
-					$sql .= " c.contact_organization, ";
-					$sql .= " c.contact_name_given, ";
-					$sql .= " c.contact_name_family, ";
-					$sql .= " a.contact_attachment_uuid ";
-					$sql .= "from v_contacts as c ";
-					$sql .= "left join v_contact_attachments as a on ( \n";
-					$sql .= "	c.contact_uuid = a.contact_uuid  \n";
-					$sql .= "	and a.attachment_primary = true  \n";
-					$sql .= "	and a.attachment_filename is not null  \n";
-					$sql .= "	and a.attachment_content is not null \n";
-					$sql .= ") \n";
-					$sql .= "where c.contact_uuid = :contact_uuid ";
-					$sql .= "and c.domain_uuid = :domain_uuid ";
-					$parameters['domain_uuid']  = $this->domain_uuid;
-					$parameters['contact_uuid'] = $this->contact_uuid;
-					$contact = $settings->database()->select($sql, $parameters, 'row');
-					$this->contact_organization = $contact['contact_organization'] ?? '';
-					$this->contact_name_given = $contact['contact_name_given'] ?? '';
-					$this->contact_name_family = $contact['contact_name_family'] ?? '';
-					$this->contact_image = $contact['contact_attachment_uuid'] ?? '';
-				}
-
-				//debug info
-				//echo "user_uuid ".$this->user_uuid."<br />\n";
-				//echo "username ".$this->username."<br />\n";
-				//echo "contact_uuid ".$this->contact_uuid."<br />\n";
-
-				//set a few session variables
-				$_SESSION["user_uuid"] = $row['user_uuid'];
-				$_SESSION["username"] = $row['username'];
-				$_SESSION["user_email"] = $row['user_email'];
-				$_SESSION["contact_uuid"] = $row["contact_uuid"];
-			}
-
-			//check to to see if the the password hash needs to be updated
-			if ($valid_password) {
-				//set the password hash cost
-				$options = ['cost' => 10];
-
-				//check if a newer hashing algorithm is available or the cost has changed
-				if (password_needs_rehash($row["password"], PASSWORD_DEFAULT, $options)) {
-
-					//build user insert array
-					$array = [];
-					$array['users'][0]['user_uuid'] = $this->user_uuid;
-					$array['users'][0]['domain_uuid'] = $this->domain_uuid;
-					$array['users'][0]['user_email'] = $this->user_email;
-					$array['users'][0]['password'] = password_hash($this->password, PASSWORD_DEFAULT, $options);
-					$array['users'][0]['salt'] = null;
-
-					//build user group insert array
-					$array['user_groups'][0]['user_group_uuid'] = uuid();
-					$array['user_groups'][0]['domain_uuid'] = $this->domain_uuid;
-					$array['user_groups'][0]['group_name'] = 'user';
-					$array['user_groups'][0]['user_uuid'] = $this->user_uuid;
-
-					//grant temporary permissions
-					$p = permissions::new();
-					$p->add('user_edit', 'temp');
-
-					//execute insert
-					$settings->database()->app_name = 'authentication';
-					$settings->database()->app_uuid = 'a8a12918-69a4-4ece-a1ae-3932be0e41f1';
-					$settings->database()->save($array);
-					unset($array);
-
-					//revoke temporary permissions
-					$p->delete('user_edit', 'temp');
-
-				}
-
-			}
-
-			//result array
-			if ($valid_password) {
-				$result["plugin"] = "database";
-				$result["domain_name"] = $this->domain_name;
-				$result["username"] = $this->username;
-				$result["user_uuid"] = $this->user_uuid;
-				$result["domain_uuid"] = $_SESSION['domain_uuid'];
-				$result["contact_uuid"] = $this->contact_uuid;
-				if ($contacts_exists) {
-					$result["contact_organization"] = $this->contact_organization;
-					$result["contact_name_given"] = $this->contact_name_given;
-					$result["contact_name_family"] = $this->contact_name_family;
-					$result["contact_image"] = $this->contact_image;
-				}
-				$result["user_email"] = $this->user_email;
-				$result["sql"] = $sql;
-				$result["authorized"] = $valid_password;
-			}
-
-			//return the results
-			return $result ?? false;
+			//run the memcache
+			$command = "memcache delete " . $key;
+			$result = event_socket::api($command);
 
 		}
 
-		return;
+		//cache method file
+		if ($this->method === "file") {
+			//change the delimiter
+			$key = str_replace(":", ".", $key);
 
+			//sanitize the key to prevent path traversal
+			$key = $this->sanitize_key($key);
+
+			//connect to event socket
+			$esl = event_socket::create();
+			if ($esl === false) {
+				return false;
+			}
+
+			//send a custom event
+			$event = "sendevent CUSTOM\n";
+			$event .= "Event-Name: CUSTOM\n";
+			$event .= "Event-Subclass: fusion::file\n";
+			$event .= "API-Command: cache\n";
+			$event .= "API-Command-Argument: delete " . $key . "\n";
+			event_socket::command($event);
+
+			//remove the local files
+			foreach (glob($this->location . "/" . $key) as $file) {
+				if (file_exists($file)) {
+					unlink($file);
+				}
+				if (file_exists($file)) {
+					unlink($file . ".tmp");
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Flushes the cache based on the current method setting.
+	 *
+	 * @return string|false The result of the flush operation, or false if an error occurred.
+	 */
+	public function flush() {
+
+		//debug information
+		if ($this->syslog == true) {
+			openlog("fusionpbx", LOG_PID | LOG_PERROR, LOG_USER);
+			syslog(LOG_WARNING, "debug: cache: [flush: all, script: " . $_SERVER['SCRIPT_NAME'] . ", line: " . __line__ . "]");
+			closelog();
+		}
+
+		//check for apcu extension
+		if (function_exists('apcu_enabled') && apcu_enabled()) {
+			//flush everything
+			apcu_clear_cache();
+		}
+
+		//remove the autoloader file cache
+		if (file_exists(sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE)) {
+			@unlink(sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE);
+		}
+
+		//cache method memcache
+		if ($this->method === "memcache") {
+			// connect to event socket
+			$esl = event_socket::create();
+			if ($esl === false) {
+				return false;
+			}
+
+			//send a custom event
+			$event = "sendevent CUSTOM\n";
+			$event .= "Event-Name: CUSTOM\n";
+			$event .= "Event-Subclass: fusion::memcache\n";
+			$event .= "API-Command: memcache\n";
+			$event .= "API-Command-Argument: flush\n";
+			event_socket::command($event);
+
+			//run the memcache
+			$command = "memcache flush";
+			$result = event_socket::api($command);
+
+		}
+
+		//cache method file
+		if ($this->method === "file") {
+			// connect to event socket
+			$esl = event_socket::create();
+			if ($esl === false) {
+				return false;
+			}
+
+			//send a custom event
+			$event = "sendevent CUSTOM\n";
+			$event .= "Event-Name: CUSTOM\n";
+			$event .= "Event-Subclass: fusion::file\n";
+			$event .= "API-Command: cache\n";
+			$event .= "API-Command-Argument: flush\n";
+			event_socket::command($event);
+
+			//remove the cache
+			recursive_delete($this->location);
+
+			//set message
+			$result = '+OK cache flushed';
+		}
+
+		//return result
+		return $result;
 	}
 }
