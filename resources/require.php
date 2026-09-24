@@ -108,11 +108,6 @@
 		//get the domain from the url
 		$domain_name = $_SERVER["HTTP_HOST"] ?? '';
 
-		//get the domain name from the http value
-		if (!empty($_REQUEST["domain_name"])) {
-			$domain_name = $_REQUEST["domain_name"];
-		}
-
 		//remote port number from the domain name
 		$domain_array = explode(":", $domain_name);
 		if (count($domain_array) > 1) {
