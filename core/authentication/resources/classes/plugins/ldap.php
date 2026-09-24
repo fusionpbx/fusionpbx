@@ -70,7 +70,7 @@ class plugin_ldap {
 			$background_videos = $settings->get('theme', 'background_video', null);
 			$theme_background_video = (isset($background_videos) && is_array($background_videos)) ? $background_videos[0] : null;
 			$users_unique = $settings->get('users', 'unique', '');
-			$login_label_enabled = $settings->get('login', 'label_enabled', true);
+			$login_label_enabled = $settings->get('login', 'label_enabled', false);
 			$login_placeholder_enabled = $settings->get('login', 'placeholder_enabled', true);
 
 			//get the domain
