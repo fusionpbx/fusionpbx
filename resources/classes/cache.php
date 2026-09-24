@@ -36,10 +36,34 @@ class cache {
 	 *
 	 * @return mixed The cached value, or null if it does not exist.
 	 */
+	/**
+	 * Sanitize a cache key to prevent path traversal
+	 *
+	 * Removes empty segments, "." and ".." so the key can never escape
+	 * the cache location directory.
+	 *
+	 * @param string $key The cache key to sanitize
+	 *
+	 * @return string A safe cache key
+	 */
+	private function sanitize_key($key) {
+		$key = str_replace("\\", "/", (string)$key);
+		$clean_segments = array();
+		foreach (explode('/', $key) as $segment) {
+			if ($segment !== '' && $segment !== '.' && $segment !== '..') {
+				$clean_segments[] = $segment;
+			}
+		}
+		return implode('/', $clean_segments);
+	}
+
 	public function get($key) {
 
 		//change the delimiter
 		$key = str_replace(":", ".", $key);
+
+		//sanitize the key to prevent path traversal
+		$key = $this->sanitize_key($key);
 
 		//cache method memcache
 		if ($this->method === "memcache") {
@@ -83,6 +107,9 @@ class cache {
 
 		//change the delimiter
 		$key = str_replace(":", ".", $key);
+
+		//sanitize the key to prevent path traversal
+		$key = $this->sanitize_key($key);
 
 		//save to memcache
 		if ($this->method === "memcache") {
@@ -154,6 +181,9 @@ class cache {
 		if ($this->method === "file") {
 			//change the delimiter
 			$key = str_replace(":", ".", $key);
+
+			//sanitize the key to prevent path traversal
+			$key = $this->sanitize_key($key);
 
 			//connect to event socket
 			$esl = event_socket::create();
