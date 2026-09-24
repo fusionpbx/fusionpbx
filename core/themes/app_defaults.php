@@ -3266,7 +3266,7 @@
 	$array['theme_settings'][$y]['theme_setting_uuid'] = '12110b90-215c-4e11-baa9-15b980efea2c';
 	$array['theme_settings'][$y]['theme_setting_name'] = 'passkey_button_background_color';
 	$array['theme_settings'][$y]['theme_setting_type'] = 'text';
-	$array['theme_settings'][$y]['theme_setting_value'] = '#eeeeee';
+	$array['theme_settings'][$y]['theme_setting_value'] = 'rgba(238,238,238,0.5)';
 	$array['theme_settings'][$y]['theme_setting_enabled'] = 'true';
 	$array['theme_settings'][$y]['theme_setting_description'] = '';
 	$y++;
@@ -3454,4 +3454,3 @@
 		$p->delete('theme_add', 'temp');
 		$p->delete('theme_setting_add', 'temp');
 	}
-

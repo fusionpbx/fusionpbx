@@ -320,7 +320,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "passkey_button_background_color";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "#bec4cb";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "rgba(238,238,238,0.5)";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Background color of the Sign in with a Passkey button on the login form.";
 		$y++;

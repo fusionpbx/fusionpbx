@@ -150,7 +150,7 @@ class plugin_database {
 			$view->assign("login_horizontal_rule_enabled", $settings->get('login', 'horizontal_rule_enabled', false));
 			$view->assign("login_horizontal_rule_color", $settings->get('theme', 'login_horizontal_rule_color', '#808080'));
 			$view->assign("passkey_button_text_color", $settings->get('theme', 'passkey_button_text_color', '#434E5A'));
-			$view->assign("passkey_button_background_color", $settings->get('theme', 'passkey_button_background_color', '#bec4cb'));
+			$view->assign("passkey_button_background_color", $settings->get('theme', 'passkey_button_background_color', 'rgba(238,238,238,0.5)'));
 
 			//assign openid values to the template
 			if ($settings->get('open_id', 'enabled', false)) {
