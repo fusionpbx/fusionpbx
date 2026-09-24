@@ -302,11 +302,11 @@
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "c3d4e5f6-7a8b-4c9d-a0b1-2c3d4e5f6a7b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "login";
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "passkey_position";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "options_position";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "inside";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Position of the Sign in with a Passkey button on the login form. Options: inside, outside.";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Position of the extra options on the login form. Options: inside, outside.";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d4e5f6a7-8b9c-4d0e-a1b2-3c4d5e6f7a8b";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "theme";
