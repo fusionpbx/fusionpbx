@@ -85,7 +85,11 @@ class captcha {
 		// Set the font size
 		$font_size = 16;
 		if (@$_GET['fontsize']) {
-			$font_size = $_GET['fontsize'];
+			$font_size = (int)$_GET['fontsize'];
+			//clamp the font size to a safe range to prevent resource exhaustion
+			if ($font_size < 8 || $font_size > 72) {
+				$font_size = 16;
+			}
 		}
 
 		// Create the image
