@@ -56,8 +56,20 @@
 //set the template base directory path
 	$template_base_path = dirname(__DIR__, 1).'/themes';
 
-//start the output buffer
-	include $template_base_path.'/'.$settings->get('domain', 'template', 'default').'/config.php';
+//get the theme name and validate it to prevent path traversal
+	$template_name = (string)$settings->get('domain', 'template', 'default');
+	if (!preg_match('#^[A-Za-z0-9._-]+$#', $template_name)) {
+		$template_name = 'default';
+	}
+	$template_config_path = $template_base_path.'/'.$template_name.'/config.php';
+	if (!file_exists($template_config_path) || !is_file($template_config_path)) {
+		$template_config_path = $template_base_path.'/default/config.php';
+	}
+
+//include the theme config file
+	if (file_exists($template_config_path) && is_file($template_config_path)) {
+		include $template_config_path;
+	}
 
 //start the output buffer
 	ob_start();
