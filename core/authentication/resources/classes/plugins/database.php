@@ -74,8 +74,8 @@ class plugin_database {
 		$login_domain_name = $settings->get('login', 'domain_name');
 		$login_remember_me = $settings->get('login', 'remember_me');
 		$login_destination = $settings->get('login', 'destination');
-		$login_label_enabled = $settings->get('login', 'label_enabled', true);
-		$login_placeholder_enabled = $settings->get('login', 'placeholder_enabled', false);
+		$login_label_enabled = $settings->get('login', 'label_enabled', false);
+		$login_placeholder_enabled = $settings->get('login', 'placeholder_enabled', true);
 		$users_unique = $settings->get('users', 'unique', '');
 
 		//set the default login type and image

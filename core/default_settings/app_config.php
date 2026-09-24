@@ -288,7 +288,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "login";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "label_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Displays the Username and Password labels above the input fields on the login form.";
 		$y++;
@@ -296,7 +296,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "login";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "placeholder_enabled";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Displays the placeholder text inside the Username and Password input fields on the login form.";
 		$y++;
