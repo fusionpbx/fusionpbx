@@ -746,7 +746,7 @@
 	echo "</div>\n";
 	echo "<br /><br />\n";
 
-//call recording
+	//call recording
 	if (permission_exists('xml_cdr_recording') && !empty($record_path) && $duration > 1) {
 		//recording properties
 		if (!empty($record_name) && permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
@@ -785,6 +785,29 @@
 		echo "</div>\n";
 		echo "<br /><br />\n";
 		echo "<script>recording_load('".escape($xml_cdr_uuid)."');</script>\n";
+	}
+
+	//additional coordinator segments are opt-in until the migration and runtime hook are enabled.
+	if ($settings->get('call_recordings', 'recording_segment_links_enabled', false)
+		&& permission_exists('xml_cdr_recording')
+		&& (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
+		require_once dirname(__DIR__).'/call_recordings/resources/classes/recording_segment_access.php';
+		$segment_access = new recording_segment_access($database);
+		$segment_links = $segment_access->for_cdr($uuid, $domain_uuid, permission_exists('xml_cdr_all'));
+		if (!empty($segment_links)) {
+			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+			echo "<tr><td align='left'><b>Recording segments</b></td></tr>\n";
+			echo "</table>\n<div class='card'>\n";
+			foreach ($segment_links as $segment_link) {
+				$segment_url = '../call_recordings/segment_download.php?id='.urlencode($segment_link['recording_segment_link_uuid']);
+				$segment_name = basename($segment_link['recording_path']);
+				echo "<div style='margin: 6px 0;'>".escape($segment_link['recording_kind']).": ".escape($segment_name);
+				if (permission_exists('xml_cdr_recording_play')) echo " <audio controls preload='none' src='".escape($segment_url)."'></audio>";
+				if (permission_exists('xml_cdr_recording_download')) echo " ".button::create(['type'=>'button','title'=>$text['label-download'],'icon'=>$settings->get('theme', 'button_icon_download'),'link'=>$segment_url.'&binary']);
+				echo "</div>\n";
+			}
+			echo "</div><br /><br />\n";
+		}
 	}
 
 //css styles
