@@ -143,7 +143,7 @@ class plugin_database {
 
 			//show the "Login with Passkey" button when the passkey login option is enabled
 			$view->assign("login_passkey_enabled", $settings->get('login', 'passkey_enabled', false));
-			$view->assign("login_passkey_position", $settings->get('login', 'passkey_position', 'inside'));
+			$view->assign("login_options_position", $settings->get('login', 'options_position', 'inside'));
 			$view->assign("button_login_passkey", $text['title-passkey_sign_in'] ?? 'Sign in with a passkey');
 			$view->assign("label_or", $text['label-or'] ?? 'Or');
 			$view->assign("login_logo_enabled", $settings->get('login', 'logo_enabled', true));
@@ -155,10 +155,10 @@ class plugin_database {
 			//assign openid values to the template
 			if ($settings->get('open_id', 'enabled', false)) {
 				$classes = $settings->get('open_id', 'methods', []);
-				$banners = [];
+				$login_options = [];
 				foreach ($classes as $open_id_class) {
 					if (class_exists($open_id_class)) {
-						$banners[] = [
+						$login_options[] = [
 							'name' => $open_id_class,
 							'image' => $open_id_class::get_banner_image($settings),
 							'class' => $open_id_class::get_banner_css_class($settings),
@@ -166,8 +166,8 @@ class plugin_database {
 						];
 					}
 				}
-				if (count($banners) > 0) {
-					$view->assign('banners', $banners);
+				if (count($login_options) > 0) {
+					$view->assign('login_options', $login_options);
 				}
 			}
 
@@ -277,7 +277,7 @@ class plugin_database {
 
 			//validate the password
 			$valid_password = false;
-			if (isset($this->key) && strlen($this->key) > 30 && $this->key === $row["api_key"]) {
+			if (isset($this->key) && strlen($this->key) > 30 && hash_equals((string)$row["api_key"], (string)$this->key)) {
 				$valid_password = true;
 			} elseif (substr($row["password"], 0, 1) === '$') {
 				if (isset($this->password) && !empty($this->password)) {
