@@ -72,12 +72,12 @@
 			$contact_attachment = $_FILES['contact_attachment'];
 
 		//get the totp secret
-			if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
+			if (in_array('totp', $settings->get('authentication', 'methods', []))) {
 				$user_totp_secret = strtoupper($_POST["user_totp_secret"]);
 			}
 
 		//process the passkey registration or deletion
-			if (!empty($_SESSION['authentication']['methods']) && in_array('passkey', $_SESSION['authentication']['methods'])) {
+			if ($settings->get('login', 'passkey_enabled', false) || in_array('passkey', $settings->get('authentication', 'methods', []))) {
 				//validate the token
 				$token = new token;
 				if (!$token->validate($_SERVER['PHP_SELF'])) {
@@ -685,7 +685,7 @@
 			$array['users'][$x]['user_email'] = $user_email;
 			$array['users'][$x]['user_status'] = $user_status;
 			$array['users'][$x]['contact_uuid'] = $contact_uuid;
-			if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
+			if (in_array('totp', $settings->get('authentication', 'methods', []))) {
 				$array['users'][$x]['user_totp_secret'] = $user_totp_secret;
 			}
 			if ($action == 'add') {
@@ -998,7 +998,7 @@
 	echo "	</tr>";
 
 	//user time based one time password secret
-	if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
+	if (in_array('totp', $settings->get('authentication', 'methods', []))) {
 		if (!empty($user_totp_secret) && !empty($username)) {
 			$otpauth = "otpauth://totp/".$username."?secret=".$user_totp_secret."&issuer=".$_SESSION['domain_name'];
 
@@ -1078,7 +1078,7 @@
 	}
 
 	//user passkeys (webauthn)
-	if (!empty($_SESSION['authentication']['methods']) && in_array('passkey', $_SESSION['authentication']['methods'])) {
+	if (in_array('passkey', $settings->get('authentication', 'methods', []))) {
 
 		//get the user passkey credentials
 		$sql = "select user_passkey_uuid, credential_id, display_name, aaguid, insert_date \n";

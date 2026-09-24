@@ -54,7 +54,7 @@
 //user's own authenticator), so the admin can only view, rename and delete existing ones
 if (permission_exists('user_edit') && $action == 'edit'
 	&& !empty($_POST['passkey_delete_uuid']) && is_uuid($_POST['passkey_delete_uuid'])
-	&& !empty($_SESSION['authentication']['methods']) && in_array('passkey', $_SESSION['authentication']['methods'])) {
+	&& in_array('passkey', $settings->get('authentication', 'methods', []))) {
 
 	//validate the token
 	$token = new token;
@@ -103,7 +103,7 @@ if (permission_exists('user_edit') && $action == 'edit'
 	//process passkey rename (admin management: change the name of a registered passkey)
 	if (permission_exists('user_edit') && $action == 'edit'
 		&& !empty($_POST['passkey_rename_uuid']) && is_uuid($_POST['passkey_rename_uuid'])
-		&& !empty($_SESSION['authentication']['methods']) && in_array('passkey', $_SESSION['authentication']['methods'])) {
+		&& in_array('passkey', $settings->get('authentication', 'methods', []))) {
 
 	//validate the token
 		$token = new token;
@@ -295,7 +295,7 @@ if (permission_exists('user_edit') && $action == 'edit'
 			if (permission_exists('message_key')) {
 				$message_key = $_POST["message_key"];
 			}
-			if (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods'])) {
+			if (in_array('totp', $settings->get('authentication', 'methods', []))) {
 				$user_totp_secret = strtoupper($_POST["user_totp_secret"]);
 			}
 			// if (!empty($_REQUEST["id"])) {
@@ -815,7 +815,7 @@ if (permission_exists('user_edit') && $action == 'edit'
 				if (permission_exists('api_key')) {
 					$array['users'][$x]['api_key'] = (!empty($api_key)) ? $api_key : null;
 				}
-				if ((!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods']))) { // || $user_has_totp_secret) {
+				if (in_array('totp', $settings->get('authentication', 'methods', []))) { // || $user_has_totp_secret) {
 					$array['users'][$x]['user_totp_secret'] = $user_totp_secret;
 				}
 				$array['users'][$x]['user_type'] = $user_type;
@@ -1459,7 +1459,7 @@ if (permission_exists('user_edit') && $action == 'edit'
 	}
 
 	//user time based one time password secret
-	if (!empty($user_totp_secret) || (!empty($_SESSION['authentication']['methods']) && in_array('totp', $_SESSION['authentication']['methods']))) {
+	if (!empty($user_totp_secret) || in_array('totp', $settings->get('authentication', 'methods', []))) {
 		if (!empty($user_totp_secret) && !empty($username)) {
 			$otpauth = "otpauth://totp/".$username."?secret=".$user_totp_secret."&issuer=".$_SESSION['domain_name'];
 
@@ -1541,8 +1541,7 @@ if (permission_exists('user_edit') && $action == 'edit'
 	//user passkeys (webauthn) - admin management (view + rename + delete)
 	//registration is not offered here: it must be done by the user in their own
 	//profile using their own authenticator. admins can view, rename and delete.
-	if ($action == 'edit'
-		&& !empty($_SESSION['authentication']['methods']) && in_array('passkey', $_SESSION['authentication']['methods'])) {
+	if ($action == 'edit' && ($settings->get('login', 'passkey_enabled', false) || in_array('passkey', $settings->get('authentication', 'methods', [])))) {
 
 		//get this user's passkey credentials
 		$sql = "select user_passkey_uuid, credential_id, display_name, aaguid, insert_date \n";
