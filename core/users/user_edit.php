@@ -1597,6 +1597,16 @@ if (permission_exists('user_edit') && $action == 'edit'
 				echo "	</div>\n";
 			}
 		}
+		else {
+			//no passkeys registered yet
+			echo "	<div style='margin-bottom: 5px;'>\n";
+			echo "		<span style='display:inline-flex; align-items:center; gap:8px; padding:7px 12px; border:1px dashed #c8c8c8; border-radius:6px; background:#f8f8f8; color:#888; font-size:small; white-space:nowrap;'>\n";
+			echo "			<i class='fa fa-key' aria-hidden='true' style='font-size:14px; color:#b0b0b0;'></i>\n";
+			echo "			".$text['description-user_passkey_none']."\n";
+			echo "		</span>\n";
+			echo "	</div>\n";
+		}
+
 		echo "	<br />".$text['description-user_passkey']."<br />\n";
 
 		//passkey javascript (view + rename + delete)

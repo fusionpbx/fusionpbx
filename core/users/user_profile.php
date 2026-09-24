@@ -1078,7 +1078,7 @@
 	}
 
 	//user passkeys (webauthn)
-	if (in_array('passkey', $settings->get('authentication', 'methods', []))) {
+	if ($settings->get('login', 'passkey_enabled', false) || in_array('passkey', $settings->get('authentication', 'methods', []))) {
 
 		//get the user passkey credentials
 		$sql = "select user_passkey_uuid, credential_id, display_name, aaguid, insert_date \n";
