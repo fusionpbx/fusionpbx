@@ -128,7 +128,10 @@
 			if (empty($_SESSION['authorized']) || !$_SESSION['authorized']) {
 				//log the failed auth attempt to the system to the syslog server
 				openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
-				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] authentication failed for ".$result["username"]);
+
+				//strip newlines/tabs to prevent log injection
+				$failed_username = preg_replace('/[\r\n\t]/', '', (string)($result["username"] ?? ''));
+				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] authentication failed for ".$failed_username);
 				closelog();
 
 				//redirect the user to the login page
@@ -149,12 +152,21 @@
 			if (!isset($_REQUEST["key"]) && !isset($_COOKIE['remember_me'])) {
 				//redirect the user
 				if (isset($_SESSION['redirect_path'])) {
-					$redirect_path = $_SESSION['redirect_path'];
+					$redirect_path = (string)$_SESSION['redirect_path'];
 					unset($_SESSION['redirect_path']);
 
-					// prevent open redirect attacks. The redirect URL shouldn't contain a hostname
-					$parsed_url = parse_url($redirect_path);
-					if ($parsed_url['host']) {
+					//prevent open redirect attacks: only allow a relative path on the same site
+					$parsed_url = @parse_url($redirect_path);
+					$is_safe_redirect = (
+						$redirect_path !== '' &&
+						$redirect_path[0] === '/' &&
+						strpos($redirect_path, '//') === false &&
+						strpos($redirect_path, '\\') === false &&
+						preg_match('/[\x00-\x1f\x7f]/', $redirect_path) === 0 &&
+						!isset($parsed_url['scheme']) &&
+						!isset($parsed_url['host'])
+					);
+					if (!$is_safe_redirect) {
 						die("Was someone trying to hack you?");
 					}
 					header("Location: ".$redirect_path);
