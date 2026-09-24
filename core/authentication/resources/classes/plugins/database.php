@@ -255,7 +255,7 @@ class plugin_database {
 
 			//validate the password
 			$valid_password = false;
-			if (isset($this->key) && strlen($this->key) > 30 && $this->key === $row["api_key"]) {
+			if (isset($this->key) && strlen($this->key) > 30 && hash_equals((string)$row["api_key"], (string)$this->key)) {
 				$valid_password = true;
 			} elseif (substr($row["password"], 0, 1) === '$') {
 				if (isset($this->password) && !empty($this->password)) {
