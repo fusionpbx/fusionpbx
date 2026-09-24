@@ -528,7 +528,16 @@
 			$sql = "delete from v_default_settings ";
 			$sql .= "where default_setting_category = 'domain' ";
 			$sql .= "and default_setting_subcategory = 'setting_value_input_type' ";
-			$database->execute($sql, null);
+			$database->execute($sql);
+			unset($sql);
+
+		//default settings - change from passkey_position to options_position
+			$sql = "update v_default_settings ";
+			$sql .= "set default_setting_subcategory = 'options_position', ";
+			$sql .= "default_setting_description = 'Position of the extra options on the login form. Options: inside, outside.' ";
+			$sql .= "where default_setting_uuid = 'c3d4e5f6-7a8b-4c9d-a0b1-2c3d4e5f6a7b' ";
+			$sql .= "and default_setting_category = 'login' ";
+			$database->execute($sql);
 			unset($sql);
 
 	}
