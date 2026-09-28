@@ -171,7 +171,12 @@
 		unset($sql, $parameters, $row);
 	}
 
-//get the list
+//get the theme categories
+	$sql = "select distinct theme_category from v_themes ";
+	$theme_categories = $database->select($sql, $parameters ?? null, 'all');
+	unset($sql, $parameters);
+
+//get the theme settings
 	$sql = "select ";
 	$sql .= "theme_uuid, ";
 	$sql .= "theme_setting_uuid, ";
@@ -251,11 +256,90 @@
 	echo "	".$text['label-category']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='theme_category' maxlength='255' value='".escape($theme_category)."'>\n";
+	echo "	<div class='searchable_select_wrapper'>\n";
+	echo "		<input class='formfld category_search_input' type='text' name='theme_category' maxlength='255' value='".escape($theme_category)."'>\n";
+	echo "		<div class='search_results'></div>\n";
+	echo "		<select class='category_hidden_select' style='display:none;'>\n";
+	foreach ($theme_categories as $category) {
+		echo "		<option value='".escape($category['theme_category'])."'>".escape($category['theme_category'])."</option>";
+	}
+	echo "		</select>\n";
+	echo "	</div>\n";
 	echo "<br />\n";
 	echo $text['description-category']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	?>
+	<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const wrappers = document.querySelectorAll('.searchable_select_wrapper:has(.category_hidden_select)');
+
+		wrappers.forEach(wrapper => {
+			const input = wrapper.querySelector('.category_search_input');
+			const hidden_select = wrapper.querySelector('.category_hidden_select');
+			const results = wrapper.querySelector('.search_results');
+
+			// Cache options once for performance
+			const options = Array.from(hidden_select.querySelectorAll('option'));
+
+			if (!input || !results) return;
+
+			function render_results() {
+				// Hide other dropdowns before showing the active one
+				document.querySelectorAll('.search_results').forEach(dropdown => { dropdown.style.display = 'none'; });
+				results.style.display = 'block';
+
+				const term = this.value.trim().toLowerCase();
+
+				// Clear previous results
+				results.innerHTML = '';
+
+				options.forEach(option => {
+					const label = option.value.trim().toLowerCase();
+					const descriptions = (option.getAttribute('data-description') || '').split(',').map(u => u.trim()).filter(Boolean);
+					const descriptions_lower = descriptions.map(description => description.toLowerCase());
+
+					// Match if label or description contains the search term
+					const matches_label = label.includes(term);
+					const matches_description = descriptions_lower.some(description => description.includes(term));
+
+					if (matches_label || matches_description) {
+						const item = document.createElement('div');
+						item.className = 'search_result_item';
+
+						const name = document.createElement('div');
+						name.className = 'search_result_name';
+						name.textContent = option.value;
+
+						const description = document.createElement('div');
+						description.className = 'search_result_description';
+						description.textContent = option.getAttribute('data-description') || '';
+
+						item.appendChild(name);
+						item.appendChild(description);
+
+						// Click to populate input & hidden select
+						item.addEventListener('click', () => {
+							input.value = option.value;
+							hidden_select.value = option.value;
+							results.style.display = 'none';
+
+							input.dispatchEvent(new Event('focus', { bubbles: true }));
+							input.dispatchEvent(new Event('input',  { bubbles: true }));
+						});
+
+						results.appendChild(item);
+					}
+				});
+			}
+
+			input.addEventListener('focus',  render_results);
+			input.addEventListener('input',  render_results);
+		});
+	});
+	</script>
+	<?php
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
