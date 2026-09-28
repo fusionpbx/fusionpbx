@@ -42,6 +42,7 @@
 
 --check queue
 	queue_login = settings:get('call_center', 'queue_login', 'text');
+	announce_sound_xml = settings:get('call_center', 'announce_sound_xml', 'boolean') or 'false';
 	if (queue_login ~= nil and queue_login == 'dynamic') then
 		per_queue_login = true;
 	else
@@ -194,7 +195,7 @@
 					if (queue_abandoned_resume_allowed ~= nil) then
 						xml:append([[                                    <param name="abandoned-resume-allowed" value="]] .. xml.sanitize(queue_abandoned_resume_allowed) .. [["/>]]);
 					end
-					if (queue_announce_sound ~= nil) then
+					if (queue_announce_sound ~= nil and announce_sound_xml == 'true') then
 						xml:append([[                                    <param name="announce-sound" value="]] .. xml.sanitize(queue_announce_sound) .. [["/>]]);
 					end
 					if (queue_announce_frequency ~= nil) then

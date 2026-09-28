@@ -220,6 +220,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Custom name for call recording. Options: \${record_ext}, \${sip_from_user}, \${sip_to_user}, \${caller_id_number}, \${uuid}";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "ca1670c7-3f1a-4881-873e-78f6adee00f6";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_center";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "announce_sound_xml";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether announce_sound XML is provided.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "4c939d81-7192-4d9a-b7c4-76695a005d4f";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_center";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "extension_range";
