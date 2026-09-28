@@ -241,7 +241,14 @@
 					agent_wrap_up_time = row.agent_wrap_up_time;
 					agent_reject_delay_time = row.agent_reject_delay_time;
 					agent_busy_delay_time = row.agent_busy_delay_time;
-					agent_record = row.agent_record;
+						agent_record = row.agent_record;
+						-- This configuration request contains agents from many domains. Use
+						-- the agent's domain, rather than the request-level settings object,
+						-- so a test-domain override cannot enable another domain.
+						local agent_settings = Settings.new(dbh, domain_name, domain_uuid);
+						recording_coordinator_enabled = agent_settings:get('call_recordings', 'recording_coordinator_enabled', 'boolean');
+						recording_coordinator_agent = agent_settings:get('call_recordings', 'recording_coordinator_agent', 'text');
+						recording_coordinator_queue = agent_settings:get('call_recordings', 'recording_coordinator_queue', 'text');
 
 				--get and then set the complete agent_contact with the call_timeout and when necessary confirm
 						--confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1";
@@ -249,7 +256,18 @@
 						confirm = "group_confirm_file=ivr/ivr-accept_reject_voicemail.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout="..agent_call_timeout;
 						local record = "";
 						if (agent_record == "true") then
-							record = string.format(",execute_on_pre_bridge='record_session %s/%s/archive/${strftime(%%Y)}/${strftime(%%b)}/${strftime(%%d)}/${uuid}.${record_ext}'", recordings_dir, domain_name)
+							-- The native queue recorder runs before uuid_bridge. When this
+							-- opt-in guard runs, it checks both bridged legs and replaces
+							-- (never accompanies) the unconditional agent record_session.
+							-- It cannot prevent a native queue duplicate that was started
+							-- before this hook, for example for a pre-queue recorder.
+							if ((recording_coordinator_enabled == true or recording_coordinator_enabled == "true")
+								and recording_coordinator_agent == agent_uuid
+								and recording_coordinator_queue and recording_coordinator_queue ~= "") then
+								record = ",execute_on_pre_bridge='lua "..scripts_dir.."/app/call_recordings/resources/scripts/agent_recording_guard.lua ${uuid} "..recording_coordinator_agent.." "..recording_coordinator_queue.."'"
+							else
+								record = string.format(",execute_on_pre_bridge='record_session %s/%s/archive/${strftime(%%Y)}/${strftime(%%b)}/${strftime(%%d)}/${uuid}.${record_ext}'", recordings_dir, domain_name)
+							end
 						end
 						if (string.find(agent_contact, '}') == nil) then
 							--not found

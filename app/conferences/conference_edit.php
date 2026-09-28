@@ -237,6 +237,14 @@
 					$dialplan_xml .= "		<action application=\"set\" data=\"conference_uuid=".xml::sanitize($conference_uuid)."\" inline=\"true\"/>\n";
 					//$dialplan_xml .= "		<action application=\"set\" data=\"conference_name=".xml::sanitize($conference_name)."\" inline=\"true\"/>\n";
 					$dialplan_xml .= "		<action application=\"set\" data=\"conference_extension=".xml::sanitize($conference_extension)."\" inline=\"true\"/>\n";
+					if ($settings->get('call_recordings', 'conference_recording_handoff_enabled', false)
+						&& $settings->get('call_recordings', 'recording_segment_links_enabled', false)
+						&& $settings->get('call_recordings', 'recording_coordinator_conference', '') === $conference_extension) {
+						$conference_handoff_script = rtrim($settings->get('switch', 'scripts', '/usr/share/freeswitch/scripts'), '/').'/app/call_recordings/resources/scripts/conference_recording_handoff.lua';
+						if (substr($conference_handoff_script, 0, 1) === '/') {
+							$dialplan_xml .= "		<action application=\"lua\" data=\"".xml::sanitize($conference_handoff_script)." \${uuid} \${domain_uuid} ".xml::sanitize($conference_extension)."@".$_SESSION['domain_name']." ".xml::sanitize($conference_extension)." ".xml::sanitize($conference_handoff_script)."\"/>\n";
+						}
+					}
 					$dialplan_xml .= "		<action application=\"conference\" data=\"".xml::sanitize($conference_extension)."@".$_SESSION['domain_name']."@".xml::sanitize($conference_profile.$pin_number)."+flags{'".xml::sanitize($conference_flags)."'}\"/>\n";
 					$dialplan_xml .= "	</condition>\n";
 					$dialplan_xml .= "</extension>\n";
