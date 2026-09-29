@@ -61,5 +61,6 @@
 
     <!-- Subscribe to events -->
     <!--<hook event="PHONE_FEATURE_SUBSCRIBE" subclass="" script="app.lua feature_event"/>-->
+    <hook event="CUSTOM" subclass="callcenter::info" script="app/call_center/resources/scripts/announce_break.lua"/>
   </settings>
 </configuration>
