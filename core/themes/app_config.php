@@ -47,6 +47,12 @@
 		$apps[$x]['permissions'][$y]['name'] = "theme_all";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "theme_import";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "theme_export";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "theme_setting_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
@@ -75,6 +81,7 @@
 	//schema details
 		$y=0;
 		$apps[$x]['db'][$y]['table']['name'] = "v_themes";
+		$apps[$x]['db'][$y]['table']['parent'] = "";
 		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
@@ -136,7 +143,7 @@
 
 		$y++;
 		$apps[$x]['db'][$y]['table']['name'] = "v_theme_settings";
-		$apps[$x]['db'][$y]['table']['parent'] = "v_default_settings";
+		$apps[$x]['db'][$y]['table']['parent'] = "v_themes";
 		$z=0;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
