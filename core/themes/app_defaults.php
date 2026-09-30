@@ -2026,7 +2026,7 @@
 	$array['theme_settings'][$y]['theme_setting_uuid'] = 'd5b8c8fa-85de-4ae3-983c-4a1a2ca0797e';
 	$array['theme_settings'][$y]['theme_setting_name'] = 'dashboard_label_text_color';
 	$array['theme_settings'][$y]['theme_setting_type'] = 'text';
-	$array['theme_settings'][$y]['theme_setting_value'] = '#908f8e';
+	$array['theme_settings'][$y]['theme_setting_value'] = '#666666';
 	$array['theme_settings'][$y]['theme_setting_enabled'] = 'true';
 	$array['theme_settings'][$y]['theme_setting_description'] = '';
 	$y++;
@@ -2034,8 +2034,8 @@
 	$array['theme_settings'][$y]['theme_setting_uuid'] = '0e7b5ba6-723a-4345-9dec-8de771dffb2c';
 	$array['theme_settings'][$y]['theme_setting_name'] = 'dashboard_label_text_color_hover';
 	$array['theme_settings'][$y]['theme_setting_type'] = 'text';
-	$array['theme_settings'][$y]['theme_setting_value'] = '#ffffff';
-	$array['theme_settings'][$y]['theme_setting_enabled'] = 'false';
+	$array['theme_settings'][$y]['theme_setting_value'] = '#666666';
+	$array['theme_settings'][$y]['theme_setting_enabled'] = 'true';
 	$array['theme_settings'][$y]['theme_setting_description'] = '';
 	$y++;
 	$array['theme_settings'][$y]['theme_uuid'] = '7ca4a961-2b70-457d-93b8-026d687a9741';
@@ -2122,7 +2122,7 @@
 	$array['theme_settings'][$y]['theme_setting_uuid'] = '9eb03b43-5695-43ab-8b6a-4a68b7c49313';
 	$array['theme_settings'][$y]['theme_setting_name'] = 'dashboard_number_text_color';
 	$array['theme_settings'][$y]['theme_setting_type'] = 'text';
-	$array['theme_settings'][$y]['theme_setting_value'] = '#ffffff';
+	$array['theme_settings'][$y]['theme_setting_value'] = '#555555';
 	$array['theme_settings'][$y]['theme_setting_enabled'] = 'true';
 	$array['theme_settings'][$y]['theme_setting_description'] = '';
 	$y++;
@@ -2130,8 +2130,8 @@
 	$array['theme_settings'][$y]['theme_setting_uuid'] = '5a8a8abd-5fbb-4f28-af48-c5bcc48646a7';
 	$array['theme_settings'][$y]['theme_setting_name'] = 'dashboard_number_text_color_hover';
 	$array['theme_settings'][$y]['theme_setting_type'] = 'text';
-	$array['theme_settings'][$y]['theme_setting_value'] = '#ffffff';
-	$array['theme_settings'][$y]['theme_setting_enabled'] = 'false';
+	$array['theme_settings'][$y]['theme_setting_value'] = '#555555';
+	$array['theme_settings'][$y]['theme_setting_enabled'] = 'true';
 	$array['theme_settings'][$y]['theme_setting_description'] = '';
 	$y++;
 	$array['theme_settings'][$y]['theme_uuid'] = '7ca4a961-2b70-457d-93b8-026d687a9741';
