@@ -154,6 +154,12 @@
 	echo "	<div class='heading'><b>".$text['title-themes']."</b><div class='count'>".$num_rows."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'/core/default_settings/default_setting_profile.php']);
+	if (permission_exists('theme_import')) {
+		echo button::create(['type'=>'button','label'=>$text['button-import'],'icon'=>$settings->get('theme', 'button_icon_import'),'link'=>'theme_import.php']);
+	}
+	if (permission_exists('theme_export')) {
+		echo button::create(['type'=>'button','label'=>$text['button-export'],'icon'=>$settings->get('theme', 'button_icon_export'),'link'=>'theme_download.php']);
+	}
 	if (permission_exists('theme_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'theme_edit.php']);
 	}
