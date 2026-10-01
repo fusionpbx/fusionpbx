@@ -91,7 +91,7 @@
 			$i = 0;
 			if (!empty($global_language) && (empty($row) || (!empty($row['default_setting_uuid']) && !is_uuid($row['default_setting_uuid'])))) {
 				//add user setting to array for insert
-				$array['default_settings'][$i]['default_setting_uuid'] = uuid();
+				$array['default_settings'][$i]['default_setting_uuid'] = '500f7a88-e288-4a80-9f0a-b696f9f33cd6';
 				$array['default_settings'][$i]['default_setting_category'] = 'domain';
 				$array['default_settings'][$i]['default_setting_subcategory'] = 'language';
 				$array['default_settings'][$i]['default_setting_name'] = 'code';
@@ -191,7 +191,7 @@
 			$row = $default_settings['domain']['time_zone'] ?? [];
 			if (!empty($global_time_zone) && (empty($row) || (!empty($row['default_setting_uuid']) && !is_uuid($row['default_setting_uuid'])))) {
 				//add user setting to array for insert
-				$array['default_settings'][$i]['default_setting_uuid'] = uuid();
+				$array['default_settings'][$i]['default_setting_uuid'] = 'c55b28df-0eba-4e8f-a13b-022d5dfd8d22';
 				$array['default_settings'][$i]['default_setting_category'] = 'domain';
 				$array['default_settings'][$i]['default_setting_subcategory'] = 'time_zone';
 				$array['default_settings'][$i]['default_setting_name'] = 'text';
@@ -232,7 +232,7 @@
 			$row = $default_settings['domain']['time_format'] ?? [];
 			if (!empty($global_time_format) && (empty($row) || (!empty($row['default_setting_uuid']) && !is_uuid($row['default_setting_uuid'])))) {
 				//add user setting to array for insert
-				$array['default_settings'][$i]['default_setting_uuid'] = uuid();
+				$array['default_settings'][$i]['default_setting_uuid'] = '113c90a3-5778-4b4a-8f71-44c790601eca';
 				$array['default_settings'][$i]['default_setting_category'] = 'domain';
 				$array['default_settings'][$i]['default_setting_subcategory'] = 'time_format';
 				$array['default_settings'][$i]['default_setting_name'] = 'text';
@@ -273,7 +273,7 @@
 			$row = $default_settings['theme']['menu_style'] ?? [];
 			if (!empty($global_menu_style) && (empty($row) || (!empty($row['default_setting_uuid']) && !is_uuid($row['default_setting_uuid'])))) {
 				//add user setting to array for insert
-				$array['default_settings'][$i]['default_setting_uuid'] = uuid();
+				$array['default_settings'][$i]['default_setting_uuid'] = 'ed3d428b-8507-41ca-8802-2c6a0d3e8138';
 				$array['default_settings'][$i]['default_setting_category'] = 'theme';
 				$array['default_settings'][$i]['default_setting_subcategory'] = 'menu_style';
 				$array['default_settings'][$i]['default_setting_name'] = 'text';
@@ -314,7 +314,7 @@
 			$row = $default_settings['domain']['theme'] ?? [];
 			if (!empty($global_theme) && (empty($row) || (!empty($row['default_setting_uuid']) && !is_uuid($row['default_setting_uuid'])))) {
 				//add user setting to array for insert
-				$array['default_settings'][$i]['default_setting_uuid'] = uuid();
+				$array['default_settings'][$i]['default_setting_uuid'] = 'b1a99e57-8d4a-4bbf-910f-1f5a86d6532a';
 				$array['default_settings'][$i]['default_setting_category'] = 'domain';
 				$array['default_settings'][$i]['default_setting_subcategory'] = 'theme';
 				$array['default_settings'][$i]['default_setting_name'] = 'uuid';
