@@ -53,6 +53,13 @@
 
 //process the http post data by action
 	if (!empty($action) && !empty($fax_files) && is_array($fax_files) && @sizeof($fax_files) != 0) {
+		//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'], 'negative');
+			header('Location: fax_files.php?order_by='.$order_by.'&order='.$order.'&id='.$fax_uuid.'&box='.$box);
+			exit;
+		}
 		switch ($action) {
 			case 'toggle':
 				if (permission_exists('fax_file_edit')) {
@@ -442,7 +449,7 @@
 				chdir($dir_fax);
 
 				//get fax resolution (ppi, W & H)
-				$resp = exec("tiffinfo ".$file_name.".tif | grep 'Resolution:'");
+				$resp = exec('tiffinfo ' . escapeshellarg($file_name . '.tif') . " | grep 'Resolution:'");
 				$resp_array = explode(' ', trim($resp));
 				$ppi_w = (int) $resp_array[1];
 				$ppi_h = (int) $resp_array[2];
@@ -450,7 +457,7 @@
 				$gs_r = $ppi_w.'x'.$ppi_h; //used by ghostscript
 
 				//get page dimensions/size (pixels/inches, W & H)
-				$response = exec("tiffinfo ".$file_name.".tif | grep 'Image Width:'");
+				$response = exec('tiffinfo ' . escapeshellarg($file_name . '.tif') . " | grep 'Image Width:'");
 				if (!empty($response)) {
 					$response_array = explode(' ', trim($response));
 					$pix_w = $response_array[2];
@@ -476,7 +483,11 @@
 					}
 
 					//generate pdf from tif
-					$cmd_tif2pdf = "tiff2pdf -u i -p ".$page_size." -w ".$page_width." -l ".$page_height." -f -o ".$dir_fax.'/'.$file_name.".pdf ".$dir_fax.'/'.$file_name.".tif";
+					$cmd_tif2pdf = 'tiff2pdf -u i -p ' . escapeshellarg($page_size)
+						. ' -w ' . escapeshellarg($page_width)
+						. ' -l ' . escapeshellarg($page_height)
+						. ' -f -o ' . escapeshellarg($dir_fax . '/' . $file_name . '.pdf')
+						. ' ' . escapeshellarg($dir_fax . '/' . $file_name . '.tif');
 					exec($cmd_tif2pdf);
 					//echo $cmd_tif2pdf."<br >\n";
 				}
