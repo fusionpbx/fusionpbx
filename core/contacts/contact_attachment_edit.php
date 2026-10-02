@@ -232,10 +232,10 @@
 	if ($action == 'update') {
 		echo "<input type='hidden' name='attachment_filename' value=\"".escape($attachment_filename)."\">\n";
 		if ($attachment_extension == 'jpg' || $attachment_extension == 'jpeg' || $attachment_extension == 'gif' || $attachment_extension == 'png') {
-			echo "<img src='data:image/".$attachment_extension.";base64,".$attachment_content."' style='border: none; width: auto; max-height: 400px;' oncontextmenu=\"window.open('contact_attachment.php?id=".$contact_attachment_uuid."&action=download'); return false;\">";
+			echo "<img src='data:image/".escape($attachment_extension).";base64,".escape($attachment_content)."' style='border: none; width: auto; max-height: 400px;' oncontextmenu=\"window.open('contact_attachment.php?id=".$contact_attachment_uuid."&action=download'); return false;\">";
 		}
 		else {
-			echo "<a href='contact_attachment.php?id=".$contact_attachment_uuid."&action=download' style='font-size: 120%;'>".$attachment_filename."</a>";
+			echo "<a href='contact_attachment.php?id=".$contact_attachment_uuid."&action=download' style='font-size: 120%;'>".escape($attachment_filename)."</a>";
 		}
 	}
 	else {
@@ -252,7 +252,7 @@
 		echo "	".$text['label-attachment_filename']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<a href='contact_attachment.php?id=".$contact_attachment_uuid."&action=download' style='font-size: 120%;'>".$attachment_filename."</a>";
+		echo "	<a href='contact_attachment.php?id=".$contact_attachment_uuid."&action=download' style='font-size: 120%;'>".escape($attachment_filename)."</a>";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
