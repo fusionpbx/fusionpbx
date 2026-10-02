@@ -362,7 +362,7 @@ if (!function_exists('fax_split_dtmf')) {
 				if ($fax_file_extension != "pdf" && $fax_file_extension != "tif") {
 					chdir($dir_fax_temp);
 					$command = $IS_WINDOWS ? '' : 'export HOME=/tmp && ';
-					$command .= 'libreoffice --headless --convert-to pdf --outdir '.$dir_fax_temp.' '.$dir_fax_temp.'/'.escapeshellarg($fax_name).'.'.escapeshellarg($fax_file_extension);
+					$command .= 'libreoffice --headless --convert-to pdf --outdir ' . escapeshellarg($dir_fax_temp) . ' ' . escapeshellarg($dir_fax_temp . '/' . $fax_name . '.' . $fax_file_extension);
 					exec($command);
 					@unlink($dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
 				}
@@ -372,14 +372,14 @@ if (!function_exists('fax_split_dtmf')) {
 					chdir($dir_fax_temp);
 
 					//convert pdf to tif
-					$cmd = exec('which gs')." -q -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOSAFER -dNOPAUSE -dBATCH -sOutputFile=".escapeshellarg($fax_name).".tif -sDEVICE=tiffg4 -Ilib stocht.ps -c \"{ .75 gt { 1 } { 0 } ifelse} settransfer\" -- ".escapeshellarg($fax_name).".pdf -c quit";
+					$cmd = escapeshellarg(trim((string)exec('which gs')))." -q -r".escapeshellarg($gs_r)." -g".escapeshellarg($gs_g)." -dBATCH -dPDFFitPage -dNOSAFER -dNOPAUSE -dBATCH -sOutputFile=".escapeshellarg($fax_name.".tif")." -sDEVICE=tiffg4 -Ilib stocht.ps -c \"{ .75 gt { 1 } { 0 } ifelse} settransfer\" -- ".escapeshellarg($fax_name.".pdf")." -c quit";
 					// echo($cmd . "<br/>\n");
 					exec($cmd);
 					@unlink($dir_fax_temp.'/'.$fax_name.'.pdf');
 				}
 
 				//get the page count
-				$cmd = exec('which tiffinfo')." ".correct_path($dir_fax_temp.'/'.$fax_name).".tif | grep \"Page Number\" | grep -c \"P\"";
+				$cmd = escapeshellarg(trim((string)exec('which tiffinfo')))." ".escapeshellarg(correct_path($dir_fax_temp.'/'.$fax_name).".tif")." | grep \"Page Number\" | grep -c \"P\"";
 				// echo($cmd . "<br/>\n");
 				$tif_page_count = intval(trim(exec($cmd)));
 				if ($tif_page_count > 0) {
@@ -627,7 +627,7 @@ if (!function_exists('fax_split_dtmf')) {
 			if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf')) {
 				chdir($dir_fax_temp);
 
-				$cmd = gs_cmd("-q -sDEVICE=tiffg32d -r".$gs_r." -g".$gs_g." -dBATCH -dPDFFitPage -dNOSAFER -dNOPAUSE -sOutputFile=".correct_path($fax_instance_uuid)."_cover.tif -- ".correct_path($fax_instance_uuid)."_cover.pdf -c quit");
+				$cmd = gs_cmd("-q -sDEVICE=tiffg32d -r".escapeshellarg($gs_r)." -g".escapeshellarg($gs_g)." -dBATCH -dPDFFitPage -dNOSAFER -dNOPAUSE -sOutputFile=".escapeshellarg(correct_path($fax_instance_uuid)."_cover.tif")." -- ".escapeshellarg(correct_path($fax_instance_uuid)."_cover.pdf")." -c quit");
 				// echo($cmd . "<br/>\n");
 				exec($cmd);
 				if (!empty($tif_files) && is_array($tif_files) && sizeof($tif_files) > 0) {
@@ -642,21 +642,21 @@ if (!function_exists('fax_split_dtmf')) {
 
 		//combine tif files into single multi-page tif
 		if (!empty($tif_files) && is_array($tif_files) && sizeof($tif_files) > 0) {
-			$cmd = exec('which tiffcp')." -c none ";
+			$cmd = escapeshellarg(trim((string)exec('which tiffcp')))." -c none ";
 			foreach ($tif_files as $tif_file) {
-				$cmd .= correct_path($tif_file) . ' ';
+				$cmd .= escapeshellarg(correct_path($tif_file)) . ' ';
 			}
-			$cmd .= correct_path($dir_fax_sent.'/'.$fax_instance_uuid.'.tif');
+			$cmd .= escapeshellarg(correct_path($dir_fax_sent.'/'.$fax_instance_uuid.'.tif'));
 			//echo($cmd . "<br/>\n");
 			exec($cmd);
 
 			//generate pdf from tif
-			$cmd = exec('which tiff2pdf').' -u i -p '.$fax_page_size.
-				' -w '.$page_width.
-				' -l '.$page_height.
+			$cmd = escapeshellarg(trim((string)exec('which tiff2pdf'))).' -u i -p '.escapeshellarg($fax_page_size).
+				' -w '.escapeshellarg($page_width).
+				' -l '.escapeshellarg($page_height).
 				' -f -o '.
-				correct_path($dir_fax_sent.'/'.$fax_instance_uuid.'.pdf').' '.
-				correct_path($dir_fax_sent.'/'.$fax_instance_uuid.'.tif');
+				escapeshellarg(correct_path($dir_fax_sent.'/'.$fax_instance_uuid.'.pdf')).' '.
+				escapeshellarg(correct_path($dir_fax_sent.'/'.$fax_instance_uuid.'.tif'));
 
 			exec($cmd);
 			//echo $cmd."<br />\n";
