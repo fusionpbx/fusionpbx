@@ -1002,7 +1002,7 @@ class voicemail {
 		$sox = system('which sox');
 		if (file_exists($voicemail_message_path . '/' . $voicemail_intro_file) && !empty($sox)) {
 			$voicemail_combined_file = 'intro_msg_' . $message['voicemail_message_uuid'] . '.' . $voicemail_message_file_ext;
-			exec($sox . ' ' . $voicemail_message_path . '/' . $voicemail_intro_file . ' ' . $voicemail_message_path . '/' . $voicemail_message_file . ' ' . $voicemail_message_path . '/' . $voicemail_combined_file);
+			exec(escapeshellarg($sox) . ' ' . escapeshellarg($voicemail_message_path . '/' . $voicemail_intro_file) . ' ' . escapeshellarg($voicemail_message_path . '/' . $voicemail_message_file) . ' ' . escapeshellarg($voicemail_message_path . '/' . $voicemail_combined_file));
 			if (file_exists($voicemail_message_path . '/' . $voicemail_combined_file)) {
 				$message['message_combined_base64'] = base64_encode(file_get_contents($voicemail_message_path . '/' . $voicemail_combined_file));
 			}
@@ -1182,6 +1182,23 @@ class voicemail {
 			$transcribe->audio_path     = $voicemail_message_path;
 			$transcribe->audio_filename = basename($voicemail_message_file);
 			$message_transcription      = $transcribe->transcribe('text');
+
+			if (!empty($message_transcription) && class_exists('transcribe_prompt')) {
+				$sql = "select voicemail_transcription_prompt_enabled, voicemail_transcription_prompt "
+						. "from v_voicemails where voicemail_uuid = :voicemail_uuid ";
+				$parameters['voicemail_uuid'] = $this->voicemail_uuid;
+				$vm_row = $this->database->select($sql, $parameters, 'row');
+				unset($sql, $parameters);
+				if (in_array($vm_row['voicemail_transcription_prompt_enabled'] ?? null, [true, 'true', 't'], true)
+					&& !empty($vm_row['voicemail_transcription_prompt'])
+				) {
+					$prompt_processor = new transcribe_prompt($settings);
+					$prompt_result = $prompt_processor->process($message_transcription, $vm_row['voicemail_transcription_prompt']);
+					if (!empty($prompt_result)) {
+						$message_transcription = $prompt_result;
+					}
+				}
+			}
 
 			//build voicemail message data array
 			if (!empty($message_transcription)) {
