@@ -1002,7 +1002,7 @@ class voicemail {
 		$sox = system('which sox');
 		if (file_exists($voicemail_message_path . '/' . $voicemail_intro_file) && !empty($sox)) {
 			$voicemail_combined_file = 'intro_msg_' . $message['voicemail_message_uuid'] . '.' . $voicemail_message_file_ext;
-			exec($sox . ' ' . $voicemail_message_path . '/' . $voicemail_intro_file . ' ' . $voicemail_message_path . '/' . $voicemail_message_file . ' ' . $voicemail_message_path . '/' . $voicemail_combined_file);
+			exec(escapeshellarg($sox) . ' ' . escapeshellarg($voicemail_message_path . '/' . $voicemail_intro_file) . ' ' . escapeshellarg($voicemail_message_path . '/' . $voicemail_message_file) . ' ' . escapeshellarg($voicemail_message_path . '/' . $voicemail_combined_file));
 			if (file_exists($voicemail_message_path . '/' . $voicemail_combined_file)) {
 				$message['message_combined_base64'] = base64_encode(file_get_contents($voicemail_message_path . '/' . $voicemail_combined_file));
 			}
