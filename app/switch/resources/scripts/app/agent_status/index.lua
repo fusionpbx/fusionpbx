@@ -151,6 +151,15 @@
 		freeswitch.consoleLog("notice", "[user status][login] "..cmd.."\n");
 		result = api:executeString(cmd);
 
+		--persist the agent status so a config reload does not reset it
+		local sql = "UPDATE v_call_center_agents SET agent_status = :status ";
+		sql = sql .. "WHERE call_center_agent_uuid = :agent_uuid ";
+		local params = {status = status, agent_uuid = agent_uuid};
+		if (debug["sql"]) then
+			freeswitch.consoleLog("notice", "[user status] SQL: " .. sql .. "; params:" .. json.encode(params) .. "\n");
+		end
+		dbh:query(sql, params);
+
 		--update the user status
 		if (user_uuid ~= nil and user_uuid ~= '') then
 			local sql = "SELECT user_status FROM v_users ";

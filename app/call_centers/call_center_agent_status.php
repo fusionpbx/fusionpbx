@@ -193,6 +193,18 @@
 									$agent_status = null;
 							}
 
+						//persist the agent status so a config reload does not reset it
+							if ($agent_status != null && !isset($row['queue_name']) && is_uuid($row['agent_uuid'])) {
+								$sql_update = "update v_call_center_agents ";
+								$sql_update .= "set agent_status = :agent_status ";
+								$sql_update .= "where call_center_agent_uuid = :call_center_agent_uuid ";
+								$parameters_update['agent_status'] = ($agent_status == "Do Not Disturb") ? 'Logged Out' : $agent_status;
+								$parameters_update['call_center_agent_uuid'] = $row['agent_uuid'];
+								$database_update = new database;
+								$database_update->execute($sql_update, $parameters_update);
+								unset($sql_update, $parameters_update, $database_update);
+							}
+
 						//set the call center status
 							$command = '';
 							if (!isset($row['queue_name'])) {
