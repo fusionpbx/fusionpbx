@@ -62,7 +62,9 @@
 		switch ($action) {
 			case 'download':
 				header("Content-type: ".$content_type."; charset=utf-8");
-				header("Content-Disposition: attachment; filename=\"".$attachment['attachment_filename']."\"");
+				//sanitize the file name to prevent response header injection (strip CR/LF and control characters)
+				$download_filename = preg_replace('/[\r\n\t\x00-\x1f\x7f]/', '', (string)($attachment['attachment_filename'] ?? ''));
+				header("Content-Disposition: attachment; filename=\"".$download_filename."\"");
 				header("Content-Length: ".strlen(base64_decode($attachment['attachment_content'])));
 				if (!empty($session_id)) {
 					header("Cache-Control: max-age=86400"); // 24h
