@@ -35,9 +35,7 @@ global $settings;
 
 // Check the domain cidr range 
 if (!empty($settings->get('cdr', 'cidr')) && !defined('STDIN')) {
-	$found = false;
-
-	if (check_cidr($settings->get('cdr', 'cidr'), $_SERVER['REMOTE_ADDR'])) {
+	if (!check_cidr($settings->get('cdr', 'cidr'), $_SERVER['REMOTE_ADDR'])) {
 		echo "access denied";
 		exit;
 	}
@@ -52,4 +50,3 @@ ini_set("precision", 6);
 $xml_cdr = new xml_cdr(["database" => $database, "settings" => $settings, "domain_uuid" => $domain_uuid]);
 $xml_cdr->post();
 $xml_cdr->read_files();
-
