@@ -7,6 +7,8 @@
 # Add the following lines to /etc/rc.conf to enable email_queue:
 # email_queue_enable:      Set it to "YES" to enable email_queue.
 #                          Default is "NO".
+# email_queue_user:        User the service runs as. Default is "www".
+# email_queue_group:       Group the service runs as. Default is "www".
 #
 
 . /etc/rc.subr
@@ -17,39 +19,86 @@ load_rc_config $name
 
 # Set defaults
 : ${email_queue_enable="NO"}
-: ${email_queue_pidfile="/var/run/email_queue.pid"}
+: ${email_queue_user:=www}
+: ${email_queue_group:=www}
 
 # Prepare the variables
 start_cmd=${name}_start
 stop_cmd=${name}_stop
 status_cmd=${name}_status
-pidfile=${email_queue_pidfile}
+pidfile="/var/run/fusionpbx/email_queue_service.pid"
 
-# Path to the PHP script
-script="/usr/local/www/fusionpbx/app/email_queue/resources/service/email_queue.php"
-
-# Command to run the script
+# Paths
 command="/usr/local/bin/php"
+script="/usr/local/www/fusionpbx/app/email_queue/resources/service/email_queue.php"
+run_dir="/var/run/fusionpbx"
 
 email_queue_start() {
+    # /var/run is a tmpfs that is wiped on every boot and owned by root, so
+    # make sure the runtime directory exists and is owned by the service
+    # user before the service drops its privileges.
+    mkdir -p "$run_dir"
+    chown ${email_queue_user}:${email_queue_group} "$run_dir"
+    chmod 0777 "$run_dir"
+
     echo "Starting $name..."
     if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
         echo "$name is already running."
+        return 0
+    fi
+
+    # Locate the configuration file (FreeBSD default first)
+    config_file="/usr/local/etc/fusionpbx/config.conf"
+    [ -f "$config_file" ] || config_file="/etc/fusionpbx/config.conf"
+
+    # Wait briefly for the database to accept connections (best effort)
+    if command -v pg_isready >/dev/null 2>&1; then
+        i=0
+        while ! pg_isready -q 2>/dev/null; do
+            i=$((i + 1))
+            [ "$i" -ge 30 ] && break
+            sleep 1
+        done
+    fi
+
+    # Start in daemon mode (-f) so the process detaches and logs to syslog,
+    # dropping to the unprivileged service user. The service writes its own
+    # PID file once it has started.
+    nohup $command $script -f -u ${email_queue_user} -g ${email_queue_group} -c "$config_file" </dev/null >/dev/null 2>&1 &
+
+    # Wait for the service to create its PID file (up to 10 seconds)
+    i=0
+    while [ "$i" -lt 10 ] && [ ! -f "$pidfile" ]; do
+        sleep 1
+        i=$((i + 1))
+    done
+
+    if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
+        echo "$name started with PID $(cat $pidfile)."
     else
-        # Fully detach from parent shell to prevent 'service' from blocking
-        nohup $command $script </dev/null >/dev/null 2>&1 &
-        echo $! > "$pidfile"
-        echo "$name started."
+        echo "WARNING: $name may have failed to start, check the system log."
+        return 1
     fi
 }
 
 email_queue_stop() {
     echo "Stopping $name..."
     if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then
-        kill "$(cat $pidfile)"
+        # SIGTERM triggers the service's graceful shutdown, which removes
+        # its own PID file. Fall back to SIGKILL if it does not exit.
+        kill -TERM "$(cat $pidfile)" 2>/dev/null
+        i=0
+        while [ "$i" -lt 10 ] && kill -0 "$(cat $pidfile 2>/dev/null)" 2>/dev/null; do
+            sleep 1
+            i=$((i + 1))
+        done
+        if kill -0 "$(cat $pidfile 2>/dev/null)" 2>/dev/null; then
+            kill -KILL "$(cat $pidfile)" 2>/dev/null
+        fi
         rm -f "$pidfile"
         echo "$name stopped."
     else
+        rm -f "$pidfile"
         echo "$name is not running."
     fi
 }
@@ -59,6 +108,7 @@ email_queue_status() {
         echo "$name is running with PID $(cat $pidfile)."
     else
         echo "$name is not running."
+        return 1
     fi
 }
 

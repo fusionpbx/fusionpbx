@@ -734,6 +734,9 @@ function update_file_permissions($text, settings $settings) {
 			$directories[] = $log_directory . '/xml_cdr';
 		}
 
+		// The web server user is www-data on Linux but www on BSD systems
+		$web_user = stristr(PHP_OS, 'BSD') ? 'www' : 'www-data';
+
 		// Run chown command for each directory
 		foreach ($directories as $dir) {
 			// Skip empty directories
@@ -745,7 +748,10 @@ function update_file_permissions($text, settings $settings) {
 			}
 
 			// Update the file ownership to use the web server user
-			exec("chown -R www-data:www-data " . escapeshellarg($dir));
+			exec("chown -R $web_user:$web_user " . escapeshellarg($dir), $chown_output, $chown_return);
+			if ($chown_return !== 0) {
+				echo "WARNING: failed to change ownership of $dir (chown exit code $chown_return)\n";
+			}
 		}
 	} else {
 		echo ($text['label-not_running_as_root'] ?? "Not root user - operation skipped")."\n";
