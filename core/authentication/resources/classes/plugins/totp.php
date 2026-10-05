@@ -178,18 +178,19 @@ class plugin_totp {
 			}
 
 			//get the user details
-			$sql = "select user_uuid, username, user_email, contact_uuid, user_totp_secret\n";
-			$sql .= "from v_users\n";
+			$sql = "select u.user_uuid, u.username, u.user_email, u.contact_uuid, u.user_totp_secret, u.domain_uuid, d.domain_name\n";
+			$sql .= "from v_users as u\n";
+			$sql .= "left join v_domains as d on d.domain_uuid = u.domain_uuid\n";
 			$sql .= "where (\n";
-			$sql .= "	username = :username\n";
-			$sql .= "	or user_email = :username\n";
+			$sql .= "	u.username = :username\n";
+			$sql .= "	or u.user_email = :username\n";
 			$sql .= ")\n";
 			if (empty($users_unique) || $users_unique != "global") {
 				//unique username per domain (not globally unique across system - example: email address)
-				$sql .= "and domain_uuid = :domain_uuid ";
+				$sql .= "and u.domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $this->domain_uuid;
 			}
-			$sql .= "and (user_type = 'default' or user_type is null) ";
+			$sql .= "and (u.user_type = 'default' or u.user_type is null) ";
 			$parameters['username'] = $this->username;
 			$row = $this->database->select($sql, $parameters, 'row');
 			if (empty($row) || !is_array($row) || @sizeof($row) == 0) {
@@ -212,6 +213,14 @@ class plugin_totp {
 			$this->user_email = $row['user_email'];
 			$this->contact_uuid = $row['contact_uuid'];
 			$this->user_totp_secret = $row['user_totp_secret'];
+
+			//globally unique usernames can log in from any domain hostname, so use the user's own domain
+			if ($users_unique === "global" && is_uuid($row['domain_uuid']) && !empty($row['domain_name'])) {
+				$this->domain_uuid = $row['domain_uuid'];
+				$this->domain_name = $row['domain_name'];
+				$_SESSION['domain_uuid'] = $row['domain_uuid'];
+				$_SESSION['domain_name'] = $row['domain_name'];
+			}
 
 			//set a few session variables
 			$_SESSION["user_uuid"] = $row['user_uuid'];
@@ -334,15 +343,16 @@ class plugin_totp {
 		if (isset($_POST['authentication_code'])) {
 
 			//get the user details
-			$sql = "select user_uuid, user_email, contact_uuid, user_totp_secret \n";
-			$sql .= "from v_users \n";
+			$sql = "select u.user_uuid, u.user_email, u.contact_uuid, u.user_totp_secret, u.domain_uuid, d.domain_name \n";
+			$sql .= "from v_users as u \n";
+			$sql .= "left join v_domains as d on d.domain_uuid = u.domain_uuid \n";
 			$sql .= "where ( \n";
-			$sql .= "	username = :username \n";
-			$sql .= "	or user_email = :username \n";
+			$sql .= "	u.username = :username \n";
+			$sql .= "	or u.user_email = :username \n";
 			$sql .= ") \n";
 			if ($users_unique != "global") {
 				//unique username per domain (not globally unique across system - example: email address)
-				$sql .= "and domain_uuid = :domain_uuid ";
+				$sql .= "and u.domain_uuid = :domain_uuid ";
 				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 			}
 			$parameters['username'] = $_SESSION["username"];
@@ -352,6 +362,14 @@ class plugin_totp {
 			$this->contact_uuid = $row['contact_uuid'];
 			$this->user_totp_secret = $row['user_totp_secret'];
 			unset($parameters);
+
+			//globally unique usernames can log in from any domain hostname, so use the user's own domain
+			if ($users_unique === "global" && is_uuid($row['domain_uuid'] ?? null) && !empty($row['domain_name'])) {
+				$this->domain_uuid = $row['domain_uuid'];
+				$this->domain_name = $row['domain_name'];
+				$_SESSION['domain_uuid'] = $row['domain_uuid'];
+				$_SESSION['domain_name'] = $row['domain_name'];
+			}
 
 			//create the authenticator object
 			$totp = new authenticator;
