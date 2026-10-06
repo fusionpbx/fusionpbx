@@ -213,6 +213,9 @@ function do_file_permissions($text, settings $settings) {
 		//update the auto_loader cache permissions file
 		$directories[] = sys_get_temp_dir() . '/' . auto_loader::CLASSES_FILE;
 
+		// The web server user is www-data on Linux but www on BSD systems
+		$web_user = stristr(PHP_OS, 'BSD') ? 'www' : 'www-data';
+
 		//execute chown command for each directory
 		foreach ($directories as $dir) {
 			//skip empty directories
@@ -224,10 +227,13 @@ function do_file_permissions($text, settings $settings) {
 			}
 
 			//notify user
-			echo "chown -R www-data:www-data $dir\n";
+			echo "chown -R $web_user:$web_user $dir\n";
 
 			//execute
-			exec("chown -R www-data:www-data " . escapeshellarg($dir));
+			exec("chown -R $web_user:$web_user " . escapeshellarg($dir), $chown_output, $chown_return);
+			if ($chown_return !== 0) {
+				echo "WARNING: failed to change ownership of $dir (chown exit code $chown_return)\n";
+			}
 		}
 	}
 	else {

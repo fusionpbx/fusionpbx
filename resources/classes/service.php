@@ -310,6 +310,14 @@ abstract class service {
 		//parse the cli options and store them statically
 		self::parse_service_command_options();
 
+		// When running as root, prepare the PID directory before privileges
+		// are dropped. On systems such as FreeBSD, /var/run is owned by root
+		// and is not world writable, so the unprivileged service would be
+		// unable to create its PID file afterwards.
+		if (posix_geteuid() === 0) {
+			self::prepare_pid_directory();
+		}
+
 		// If a group name is specified, then run the service under this group
 		if (self::$posix_groupname !== null) {
 			$group_record = posix_getgrnam(self::$posix_groupname);
@@ -668,6 +676,58 @@ abstract class service {
 	}
 
 	/**
+	 * Ensures the PID directory exists and is owned by the user the service
+	 * will drop to when running as root.
+	 *
+	 * On systems such as FreeBSD, /var/run is owned by root and is not world
+	 * writable, so the PID directory must be created and assigned to the
+	 * unprivileged user before the privileges are dropped. This is a no-op
+	 * when the service does not drop privileges.
+	 *
+	 * @return void
+	 */
+	private static function prepare_pid_directory() {
+		$pid_directory = dirname(self::$pid_file);
+		if ($pid_directory === '' || $pid_directory === false) {
+			return;
+		}
+
+		// Create the directory when it does not exist
+		if (!file_exists($pid_directory)) {
+			if (!mkdir($pid_directory, 0777, true)) {
+				self::log("Failed to create PID directory " . $pid_directory, LOG_ERR);
+				return;
+			}
+		}
+
+		// Resolve the user and group the service will drop to
+		$uid = null;
+		$gid = null;
+		if (self::$posix_username !== null) {
+			$user_record = posix_getpwnam(self::$posix_username);
+			if ($user_record !== false) {
+				$uid = $user_record['uid'];
+			}
+		}
+		if (self::$posix_groupname !== null) {
+			$group_record = posix_getgrnam(self::$posix_groupname);
+			if ($group_record !== false) {
+				$gid = $group_record['gid'];
+			}
+		}
+
+		// Give the service user ownership of the PID directory so it can
+		// create and remove its PID file after the privileges are dropped
+		if ($uid !== null && $gid !== null) {
+			if (!chown($pid_directory, $uid) || !chgrp($pid_directory, $gid)) {
+				self::log("Failed to change ownership of PID directory " . $pid_directory, LOG_ERR);
+				return;
+			}
+			chmod($pid_directory, 0777);
+		}
+	}
+
+	/**
 	 * Creates the service directory to store the PID
 	 *
 	 * @return void
@@ -680,6 +740,14 @@ abstract class service {
 			if (!$result) {
 				throw new Exception('Failed to create /var/run/fusionpbx');
 			}
+		}
+
+		// The directory may exist but be owned by another user, for example
+		// after a reboot on FreeBSD where /var/run is a root owned tmpfs and
+		// the service was started without root privileges. Fail with an
+		// actionable message instead of a cryptic PID file write error.
+		if (!is_writable('/var/run/fusionpbx')) {
+			throw new Exception("PID directory /var/run/fusionpbx is not writable by user " . self::$user_name . ". Run: chown " . self::$user_name . ":" . self::$group_name . " /var/run/fusionpbx");
 		}
 	}
 
