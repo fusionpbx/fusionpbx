@@ -136,7 +136,7 @@
 //track total installed services for charts
 	$total_services = count($services);
 	$total_running = count(array_filter($services, function($service) {
-		return !empty($service['service_status']);
+		return !empty($service['status']);
 	}));
 
 //convert to a key
