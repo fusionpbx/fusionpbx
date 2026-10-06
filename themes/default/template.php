@@ -816,11 +816,16 @@
 						original_select.value = '';
 
 						// Prevent form submission
-						const onchange_value = original_select.attributes.onchange.nodeValue;
-						original_select.attributes.onchange.nodeValue = onchange_value.replace('this.form.submit();', '');
+						if (original_select.hasAttribute('onchange')) {
+							const onchange_value = original_select.attributes.onchange.nodeValue;
+							original_select.attributes.onchange.nodeValue = onchange_value.replace('this.form.submit();', '');
 
-						original_select.dispatchEvent(new Event('change'));
-						original_select.attributes.onchange.nodeValue = onchange_value;
+							original_select.dispatchEvent(new Event('change'));
+							original_select.attributes.onchange.nodeValue = onchange_value;
+						}
+						else {
+							original_select.dispatchEvent(new Event('change'));
+						}
 
 						update_visibility();
 						render_items();
