@@ -814,7 +814,13 @@
 
 						input.value = '';
 						original_select.value = '';
+
+						// Prevent form submission
+						const onchange_value = original_select.attributes.onchange.nodeValue;
+						original_select.attributes.onchange.nodeValue = onchange_value.replace('this.form.submit();', '');
+
 						original_select.dispatchEvent(new Event('change'));
+						original_select.attributes.onchange.nodeValue = onchange_value;
 
 						update_visibility();
 						render_items();
