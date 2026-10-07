@@ -5,10 +5,7 @@
 
 	//check permisions
 	require_once "resources/check_auth.php";
-	if (permission_exists('xml_cdr_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('system_view_cpu')) {
 		echo "access denied";
 		exit;
 	}
