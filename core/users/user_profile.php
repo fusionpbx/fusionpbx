@@ -1450,23 +1450,25 @@
 		echo "	</tr>\n";
 	}
 
-	echo "	<tr>\n";
-	echo "	<td class=\"vncell\" valign='top'>\n";
-	echo "		".$text['label-status']."\n";
-	echo "	</td>\n";
-	echo "	<td class=\"vtable\">\n";
-	echo "		<select id='user_status' name='user_status' class='formfld' style=''>\n";
-	echo "			<option value=''></option>\n";
-	echo "			<option value='Available' ".(($user_status == "Available") ? "selected='selected'" : null).">".$text['option-available']."</option>\n";
-	echo "			<option value='Available (On Demand)' ".(($user_status == "Available (On Demand)") ? "selected='selected'" : null).">".$text['option-available_on_demand']."</option>\n";
-	echo "			<option value='Logged Out' ".(($user_status == "Logged Out") ? "selected='selected'" : null).">".$text['option-logged_out']."</option>\n";
-	echo "			<option value='On Break' ".(($user_status == "On Break") ? "selected='selected'" : null).">".$text['option-on_break']."</option>\n";
-	echo "			<option value='Do Not Disturb' ".(($user_status == "Do Not Disturb") ? "selected='selected'" : null).">".$text['option-do_not_disturb']."</option>\n";
-	echo "		</select>\n";
-	echo "		<br />\n";
-	echo "		".$text['description-status']."<br />\n";
-	echo "	</td>\n";
-	echo "	</tr>\n";
+	if (permission_exists("user_status")) {
+		echo "	<tr>\n";
+		echo "	<td class=\"vncell\" valign='top'>\n";
+		echo "		".$text['label-status']."\n";
+		echo "	</td>\n";
+		echo "	<td class=\"vtable\">\n";
+		echo "		<select id='user_status' name='user_status' class='formfld' style=''>\n";
+		echo "			<option value=''></option>\n";
+		echo "			<option value='Available' ".(($user_status == "Available") ? "selected='selected'" : null).">".$text['option-available']."</option>\n";
+		echo "			<option value='Available (On Demand)' ".(($user_status == "Available (On Demand)") ? "selected='selected'" : null).">".$text['option-available_on_demand']."</option>\n";
+		echo "			<option value='Logged Out' ".(($user_status == "Logged Out") ? "selected='selected'" : null).">".$text['option-logged_out']."</option>\n";
+		echo "			<option value='On Break' ".(($user_status == "On Break") ? "selected='selected'" : null).">".$text['option-on_break']."</option>\n";
+		echo "			<option value='Do Not Disturb' ".(($user_status == "Do Not Disturb") ? "selected='selected'" : null).">".$text['option-do_not_disturb']."</option>\n";
+		echo "		</select>\n";
+		echo "		<br />\n";
+		echo "		".$text['description-status']."<br />\n";
+		echo "	</td>\n";
+		echo "	</tr>\n";
+	}
 
 	echo "	<tr>\n";
 	echo "	<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-photo']."</td>\n";
