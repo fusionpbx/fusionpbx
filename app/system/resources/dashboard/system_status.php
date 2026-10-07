@@ -5,10 +5,7 @@
 
 //check permisions
 	require_once "resources/check_auth.php";
-	if (permission_exists('system_view_info')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('system_view_info')) {
 		echo "access denied";
 		exit;
 	}
