@@ -107,7 +107,7 @@
 		echo "<div class='hud_chart' style='width: 275px;'><canvas id='call_forward_chart'></canvas></div>\n";
 
 		echo "<script>\n";
-		echo "	const call_forward_chart = new Chart(\n";
+		echo "	window.call_forward_chart = new Chart(\n";
 		echo "		document.getElementById('call_forward_chart').getContext('2d'),\n";
 		echo "		{\n";
 		echo "			type: 'doughnut',\n";
@@ -186,6 +186,9 @@
 		echo "			}]\n";
 		echo "		}\n";
 		echo "	);\n";
+		echo "	if (window.call_forward_chart.tooltip) {\n";
+		echo "		window.call_forward_chart.tooltip._chart = window.call_forward_chart;\n";
+		echo "	}\n";
 		echo "</script>\n";
 	}
 	if ($widget_chart_type == "number") {
