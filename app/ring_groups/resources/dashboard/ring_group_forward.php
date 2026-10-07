@@ -160,7 +160,7 @@
 		echo "	<div class='hud_chart' style='width: 275px;'><canvas id='ring_group_forward_chart'></canvas></div>\n";
 
 		echo "<script>\n";
-		echo "	const ring_group_forward_chart = new Chart(\n";
+		echo "	window.ring_group_forward_chart = new Chart(\n";
 		echo "		document.getElementById('ring_group_forward_chart').getContext('2d'),\n";
 		echo "		{\n";
 		echo "			type: 'doughnut',\n";
@@ -218,6 +218,9 @@
 		echo "			}]\n";
 		echo "		}\n";
 		echo "	);\n";
+		echo "	if (window.ring_group_forward_chart.tooltip) {\n";
+		echo "		window.ring_group_forward_chart.tooltip._chart = window.ring_group_forward_chart;\n";
+		echo "	}\n";
 		echo "</script>\n";
 	}
 	if ($widget_chart_type == "number") {
