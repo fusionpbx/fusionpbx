@@ -51,7 +51,7 @@
 				<div class='hud_chart' style='width: 175px;'><canvas id='system_disk_usage_chart'></canvas></div>
 
 				<script>
-					const system_disk_usage_chart = new Chart(
+					window.system_disk_usage_chart = new Chart(
 						document.getElementById('system_disk_usage_chart').getContext('2d'),
 						{
 							type: 'doughnut',
@@ -97,6 +97,9 @@
 							}]
 						}
 					);
+					if (window.system_disk_usage_chart.tooltip) {
+						window.system_disk_usage_chart.tooltip._chart = window.system_disk_usage_chart;
+					}
 				</script>
 				<?php
 			}
