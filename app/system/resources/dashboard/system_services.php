@@ -158,7 +158,7 @@ echo "		<span class='hud_title'>".escape($widget_label)."</span>\n";
 if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {
 	echo "	<div class='hud_chart' style='width: 250px;'><canvas id='system_services_chart'></canvas></div>\n";
 	echo "	<script>\n";
-	echo "		const system_services_chart = new Chart (\n";
+	echo "		window.system_services_chart = new Chart (\n";
 	echo "			document.getElementById('system_services_chart').getContext('2d'),\n";
 	echo "			{\n";
 	echo "				type: 'doughnut',\n";
@@ -204,6 +204,9 @@ if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {
 	echo "				}]\n";
 	echo "			}\n";
 	echo "		);\n";
+	echo "		if (window.system_services_chart.tooltip) {\n";
+	echo "			window.system_services_chart.tooltip._chart = window.system_services_chart;\n";
+	echo "		}\n";
 	echo "	</script>\n";
 }
 if ($widget_chart_type == "number") {

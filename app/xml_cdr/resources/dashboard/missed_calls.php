@@ -109,7 +109,7 @@
 		<div class='hud_chart'><canvas id='missed_calls_chart'></canvas></div>
 
 		<script>
-			const missed_calls_chart = new Chart(
+			window.missed_calls_chart = new Chart(
 				document.getElementById('missed_calls_chart').getContext('2d'),
 				{
 					type: 'doughnut',
@@ -145,6 +145,9 @@
 					}]
 				}
 			);
+			if (window.missed_calls_chart.tooltip) {
+				window.missed_calls_chart.tooltip._chart = window.missed_calls_chart;
+			}
 		</script>
 		<?php
 	}

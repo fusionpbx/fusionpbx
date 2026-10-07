@@ -64,7 +64,7 @@
 		<div class='hud_chart'><canvas id='new_messages_chart'></canvas></div>
 
 		<script>
-			const new_messages_chart = new Chart(
+			window.new_messages_chart = new Chart(
 				document.getElementById('new_messages_chart').getContext('2d'),
 				{
 					type: 'doughnut',
@@ -100,6 +100,9 @@
 					}]
 				}
 			);
+			if (window.new_messages_chart.tooltip) {
+				window.new_messages_chart.tooltip._chart = window.new_messages_chart;
+			}
 		</script>
 		<?php
 	}

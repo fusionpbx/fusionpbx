@@ -115,7 +115,7 @@
 				echo "<div class='hud_chart' style='width: 275px;'><canvas id='domain_limits_chart'></canvas></div>\n";
 
 				echo "<script>\n";
-				echo "	const domain_limits_chart = new Chart(\n";
+				echo "	window.domain_limits_chart = new Chart(\n";
 				echo "		document.getElementById('domain_limits_chart').getContext('2d'),\n";
 				echo "		{\n";
 				echo "			type: 'doughnut',\n";
@@ -168,6 +168,9 @@
 				echo "			}]\n";
 				echo "		}\n";
 				echo "	);\n";
+				echo "	if (window.domain_limits_chart.tooltip) {\n";
+				echo "		window.domain_limits_chart.tooltip._chart = window.domain_limits_chart;\n";
+				echo "	}\n";
 				echo "</script>\n";
 			}
 			if ($widget_chart_type == "number") {

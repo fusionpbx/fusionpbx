@@ -332,6 +332,9 @@
 					}]
 				}
 			);
+			if (window.system_cpu_status_chart.tooltip) {
+				window.system_cpu_status_chart.tooltip._chart = window.system_cpu_status_chart;
+			}
 
 			connect_cpu_status_websocket();
 		</script>
