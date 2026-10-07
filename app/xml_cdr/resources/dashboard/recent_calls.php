@@ -107,7 +107,7 @@
 		<div class='hud_chart'><canvas id='recent_calls_chart'></canvas></div>
 
 		<script>
-			const recent_calls_chart = new Chart(
+			window.recent_calls_chart = new Chart(
 				document.getElementById('recent_calls_chart').getContext('2d'),
 				{
 					type: 'doughnut',
@@ -143,6 +143,9 @@
 					}]
 				}
 			);
+			if (window.recent_calls_chart.tooltip) {
+				window.recent_calls_chart.tooltip._chart = window.recent_calls_chart;
+			}
 		</script>
 		<?php
 	}

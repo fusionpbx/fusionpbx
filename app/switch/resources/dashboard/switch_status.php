@@ -92,7 +92,7 @@
 		<div class='hud_chart' style='width: 175px;'><canvas id='switch_status_chart'></canvas></div>
 
 		<script>
-			const switch_status_chart = new Chart(
+			window.switch_status_chart = new Chart(
 				document.getElementById('switch_status_chart').getContext('2d'),
 				{
 					type: 'doughnut',
@@ -128,6 +128,9 @@
 					}]
 				}
 			);
+			if (window.switch_status_chart.tooltip) {
+				window.switch_status_chart.tooltip._chart = window.switch_status_chart;
+			}
 		</script>
 		<?php
 	}
