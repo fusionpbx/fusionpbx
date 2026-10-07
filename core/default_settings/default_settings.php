@@ -27,6 +27,7 @@
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/paging.php";
 
 //check permissions
 	if (!permission_exists('default_setting_view')) {
@@ -59,6 +60,7 @@
 	}
 
 // Set variables from http GET parameters
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 	$search = $_GET['search'] ?? '';
@@ -84,6 +86,9 @@
 
 // Build the query string
 	$url_params = [];
+	if (!empty($page)) {
+		$url_params['page'] = $page;
+	}
 	if (!empty($_GET['order_by'])) {
 		$url_params['order_by'] = $order_by;
 	}
@@ -151,6 +156,12 @@
 	}
 	$num_rows = $database->select($sql, $parameters ?? null, 'column');
 
+//prepare to page the results
+	$rows_per_page = 500;
+	list($paging_controls, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $query_string, $rows_per_page, true);
+	$offset = $rows_per_page * $page;
+
 //get the list
 	$sql = "select default_setting_uuid, default_setting_category, default_setting_subcategory, default_setting_name, ";
 	$sql .= "default_setting_value, default_setting_order, cast(default_setting_enabled as text), default_setting_description ";
@@ -171,7 +182,7 @@
 		$parameters['default_setting_category'] = strtolower($default_setting_category);
 	}
 	$sql .= order_by($order_by, $order, 'default_setting_category, default_setting_subcategory, default_setting_order', 'asc');
-	//$sql .= limit_offset($rows_per_page, $offset ?? '');  //$offset is always null
+	$sql .= limit_offset($rows_per_page, $offset ?? '');
 	$default_settings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
 
@@ -353,9 +364,9 @@
 	echo "		<input type='text' class='txt list-search' name='search' id='search' style='margin-left: 0 !important;' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
 	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'default_settings.php','style'=>($search == '' ? 'display: none;' : null)]);
-	//if (!empty($paging_controls_mini)) {
-	//	echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
-	//}
+	if (!empty($paging_controls_mini)) {
+		echo 	"<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
+	}
 	echo "		</form>\n";
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -633,6 +644,7 @@
 	echo "</table>\n";
 	echo "</div>\n";
 	echo "<br />\n";
+	echo "<div align='center'>".$paging_controls."</div>\n";
 	echo "</div>\n";
 
 	//echo "<div align='center'>".$paging_controls."</div>\n";
