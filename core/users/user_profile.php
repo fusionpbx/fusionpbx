@@ -54,6 +54,9 @@
 			$themes = $database->select($sql, null, 'all');
 			$password = $_POST["password"];
 			$password_confirm = $_POST["password_confirm"];
+			$contact_organization = $_POST['contact_organization'];
+			$contact_url_uuid = $_POST['contact_url_uuid'];
+			$url_address = $_POST['url_address'];
 			$contact_name_given = $_POST['contact_name_given'];
 			$contact_name_family = $_POST['contact_name_family'];
 			$contact_email_uuid = $_POST['contact_email_uuid'];
@@ -312,10 +315,22 @@
 			$array['contacts'][$c]['contact_uuid'] = $contact_uuid;
 			$array['contacts'][$c]['domain_uuid'] = $domain_uuid;
 			$array['contacts'][$c]['contact_type'] = 'user';
+			$array['contacts'][$c]['contact_organization'] = $contact_organization ?? null;
 			$array['contacts'][$c]['contact_name_given'] = $contact_name_given ?? null;
 			$array['contacts'][$c]['contact_name_family'] = $contact_name_family ?? null;
 			$array['contacts'][$c]['contact_nickname'] = $_SESSION['username'];
 			$c++;
+
+		//save url
+			if (!empty($url_address)) {
+				$array['contact_urls'][$y]['contact_url_uuid'] = is_uuid($contact_url_uuid) ? $contact_url_uuid : uuid();
+				$array['contact_urls'][$y]['contact_uuid'] = $contact_uuid;
+				$array['contact_urls'][$y]['domain_uuid'] = $domain_uuid;
+				$array['contact_urls'][$y]['url_label'] = $url_address != '' ? 'Work' : null;
+				$array['contact_urls'][$y]['url_primary'] = $url_address != '' ? '1' : null;
+				$array['contact_urls'][$y]['url_address'] = $url_address ?? null;
+				$y++;
+			}
 
 		//save email
 			$array['contact_emails'][$n]['contact_email_uuid'] = is_uuid($contact_email_uuid) ? $contact_email_uuid : uuid();
@@ -703,6 +718,9 @@
 			$p->add("user_setting_edit", "temp");
 			$p->add('contact_add', 'temp');
 			$p->add('contact_edit', 'temp');
+			$p->add("contact_url_add", "temp");
+			$p->add("contact_url_edit", "temp");
+			$p->add("contact_url_delete", "temp");
 			$p->add('contact_email_add', 'temp');
 			$p->add('contact_email_edit', 'temp');
 			$p->add('contact_phone_add', 'temp');
@@ -723,6 +741,9 @@
 			$p->delete("user_setting_edit", "temp");
 			$p->delete("contact_add", "temp");
 			$p->delete("contact_edit", "temp");
+			$p->delete("contact_url_add", "temp");
+			$p->delete("contact_url_edit", "temp");
+			$p->delete("contact_url_delete", "temp");
 			$p->delete("contact_email_add", "temp");
 			$p->delete("contact_email_edit", "temp");
 			$p->delete("contact_phone_add", "temp");
@@ -795,8 +816,11 @@
 			$sql .= "u.contact_uuid, ";
 			$sql .= "u.user_enabled, ";
 			$sql .= "u.user_status, ";
+			$sql .= "c.contact_organization, ";
 			$sql .= "c.contact_name_given, ";
 			$sql .= "c.contact_name_family, ";
+			$sql .= "cu.contact_url_uuid, ";
+			$sql .= "cu.url_address, ";
 			$sql .= "ce.contact_email_uuid, ";
 			$sql .= "cp.contact_phone_uuid, ";
 			$sql .= "cp.phone_number, ";
@@ -810,6 +834,7 @@
 			$sql .= "from ";
 			$sql .= "v_users as u ";
 			$sql .= "left join v_contacts as c on u.contact_uuid = c.contact_uuid ";
+			$sql .= "left join v_contact_urls as cu on u.contact_uuid = cu.contact_uuid and cu.url_primary = true ";
 			$sql .= "left join v_contact_emails as ce on u.contact_uuid = ce.contact_uuid and ce.email_primary = true ";
 			$sql .= "left join v_contact_phones as cp on u.contact_uuid = cp.contact_uuid and cp.phone_primary = true ";
 			$sql .= "left join v_contact_addresses as ca1 on u.contact_uuid = ca1.contact_uuid and ca1.address_primary = true ";
@@ -832,6 +857,9 @@
 				$user_enabled = $row["user_enabled"];
 				$user_status = $row["user_status"];
 				$contact_uuid = $row["contact_uuid"];
+				$contact_organization = $row["contact_organization"];
+				$contact_url_uuid = $row["contact_url_uuid"];
+				$url_address = $row["url_address"];
 				$contact_name_given = $row["contact_name_given"];
 				$contact_name_family = $row["contact_name_family"];
 				$contact_email_uuid = $row["contact_email_uuid"];
@@ -924,6 +952,7 @@
 	echo "<input type='hidden' name='contact_email_uuid' value='".$contact_email_uuid."'>\n";
 	echo "<input type='hidden' name='contact_phone_uuid' value='".$contact_phone_uuid."'>\n";
 	echo "<input type='hidden' name='contact_address_uuid' value='".$contact_address_uuid."'>\n";
+	echo "<input type='hidden' name='contact_url_uuid' value='".$contact_url_uuid."'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-user_profile']."</b></div>\n";
@@ -1275,12 +1304,22 @@
 	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>";
 
 	echo "	<tr>";
-	echo "		<td width='30%' class='vncell'>".$text['label-first_name']."</td>";
+	echo "		<td width='30%' class='vncell'>".$text['label-company_name']."</td>";
+	echo "		<td width='70%' class='vtable'><input type='text' class='formfld' name='contact_organization' id='contact_organization' value='".escape($contact_organization)."'></td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td width='30%' class='vncell'>".$text['label-website']."</td>";
+	echo "		<td width='70%' class='vtable'><input type='url' class='formfld' name='url_address' id='url_address' value='".escape($url_address)."' placeholder='https://'></td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td width='30%' class='vncellreq'>".$text['label-first_name']."</td>";
 	echo "		<td widht='70%' class='vtable'><input type='text' class='formfld' name='contact_name_given' id='contact_name_given' required='required' value='".escape($contact_name_given)."'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell'>".$text['label-last_name']."</td>";
+	echo "		<td class='vncellreq'>".$text['label-last_name']."</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='contact_name_family' id='contact_name_family' required='required' value='".escape($contact_name_family)."'></td>";
 	echo "	</tr>";
 
@@ -1290,7 +1329,7 @@
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell'>".$text['label-phone']."</td>";
+	echo "		<td class='vncellreq'>".$text['label-phone']."</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='phone_number' id='phone_number' required='required' value='".escape(format_phone($phone_number ?? ''))."'></td>";
 	echo "	</tr>";
 
@@ -1300,12 +1339,12 @@
 	echo "	</tr>\n";
 
 	echo "	<tr>\n";
-	echo "		<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-region']."</td>\n";
+	echo "		<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>".$text['label-region']."</td>\n";
 	echo "		<td class='vtable' align='left'><input class='formfld' type='text' name='address_region' maxlength='255' required='required' value=\"".escape($address_region)."\"></td>\n";
 	echo "	</tr>\n";
 
 	echo "	<tr>\n";
-	echo "		<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-address_country']."</td>\n";
+	echo "		<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>".$text['label-address_country']."</td>\n";
 	echo "		<td class='vtable' align='left'>\n";
 	$countries = get_countries($database);
 	if (is_array($countries) && sizeof($countries) > 0) {
