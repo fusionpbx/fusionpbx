@@ -5,9 +5,7 @@ require_once dirname(__DIR__, 4) . "/resources/require.php";
 
 //check permisions
 require_once "resources/check_auth.php";
-if (permission_exists('system_view_network')) {
-	//access granted
-} else {
+if (!permission_exists('system_view_network')) {
 	return;
 }
 
@@ -152,9 +150,9 @@ echo "</span>\n";
 				}
 			}
 		};
-		
+
 		window.system_network_status_chart = new Chart(ctx, chartConfig);
-		
+
 		if (window.system_network_status_chart.tooltip) {
 			window.system_network_status_chart.tooltip._chart = window.system_network_status_chart;
 		}
