@@ -2077,41 +2077,41 @@ class xml_cdr {
 		if ((!empty($this->start_stamp_begin) && strlen($this->start_stamp_begin) > 0) || !empty($this->start_stamp_end)) {
 			unset($this->quick_select);
 			if (strlen($this->start_stamp_begin) > 0 && !empty($this->start_stamp_end)) {
-				$sql_date_range = " and start_stamp between :start_stamp_begin::timestamptz and :start_stamp_end::timestamptz \n";
+				$sql_date_range = " and c.start_stamp between :start_stamp_begin::timestamptz and :start_stamp_end::timestamptz \n";
 				$parameters['start_stamp_begin'] = $this->start_stamp_begin . ':00.000 ' . $time_zone;
 				$parameters['start_stamp_end'] = $this->start_stamp_end . ':59.999 ' . $time_zone;
 			} else {
 				if (!empty($this->start_stamp_begin)) {
-					$sql_date_range = "and start_stamp >= :start_stamp_begin::timestamptz \n";
+					$sql_date_range = "and c.start_stamp >= :start_stamp_begin::timestamptz \n";
 					$parameters['start_stamp_begin'] = $this->start_stamp_begin . ':00.000 ' . $time_zone;
 				}
 				if (!empty($this->start_stamp_end)) {
-					$sql_date_range .= "and start_stamp <= :start_stamp_end::timestamptz \n";
+					$sql_date_range .= "and c.start_stamp <= :start_stamp_end::timestamptz \n";
 					$parameters['start_stamp_end'] = $this->start_stamp_end . ':59.999 ' . $time_zone;
 				}
 			}
 		} else {
 			switch ($this->quick_select) {
 				case 1:
-					$sql_date_range = "and start_stamp >= '" . date('Y-m-d H:i:s.000', strtotime("-1 week")) . " " . $time_zone . "'::timestamptz \n";
+					$sql_date_range = "and c.start_stamp >= '" . date('Y-m-d H:i:s.000', strtotime("-1 week")) . " " . $time_zone . "'::timestamptz \n";
 					break; //last 7 days
 				case 2:
-					$sql_date_range = "and start_stamp >= '" . date('Y-m-d H:i:s.000', strtotime("-1 hour")) . " " . $time_zone . "'::timestamptz \n";
+					$sql_date_range = "and c.start_stamp >= '" . date('Y-m-d H:i:s.000', strtotime("-1 hour")) . " " . $time_zone . "'::timestamptz \n";
 					break; //last hour
 				case 3:
-					$sql_date_range = "and start_stamp >= '" . date('Y-m-d') . " " . "00:00:00.000 " . $time_zone . "'::timestamptz \n";
+					$sql_date_range = "and c.start_stamp >= '" . date('Y-m-d') . " " . "00:00:00.000 " . $time_zone . "'::timestamptz \n";
 					break; //today
 				case 4:
-					$sql_date_range = "and start_stamp between '" . date('Y-m-d', strtotime("-1 day")) . " " . "00:00:00.000 " . $time_zone . "'::timestamptz and '" . date('Y-m-d', strtotime("-1 day")) . " " . "23:59:59.999 " . $time_zone . "'::timestamptz \n";
+					$sql_date_range = "and c.start_stamp between '" . date('Y-m-d', strtotime("-1 day")) . " " . "00:00:00.000 " . $time_zone . "'::timestamptz and '" . date('Y-m-d', strtotime("-1 day")) . " " . "23:59:59.999 " . $time_zone . "'::timestamptz \n";
 					break; //yesterday
 				case 5:
-					$sql_date_range = "and start_stamp >= '" . date('Y-m-d', strtotime("this week")) . " " . "00:00:00.000 " . $time_zone . "' \n";
+					$sql_date_range = "and c.start_stamp >= '" . date('Y-m-d', strtotime("this week")) . " " . "00:00:00.000 " . $time_zone . "' \n";
 					break; //this week
 				case 6:
-					$sql_date_range = "and start_stamp >= '" . date('Y-m-') . "01 " . "00:00:00.000 " . $time_zone . "'::timestamptz \n";
+					$sql_date_range = "and c.start_stamp >= '" . date('Y-m-') . "01 " . "00:00:00.000 " . $time_zone . "'::timestamptz \n";
 					break; //this month
 				case 7:
-					$sql_date_range = "and start_stamp >= '" . date('Y-') . "01-01 " . "00:00:00.000 " . $time_zone . "'::timestamptz \n";
+					$sql_date_range = "and c.start_stamp >= '" . date('Y-') . "01-01 " . "00:00:00.000 " . $time_zone . "'::timestamptz \n";
 					break; //this year
 			}
 		}
@@ -2267,30 +2267,34 @@ class xml_cdr {
 
 		$sql .= "from v_extensions as e, v_domains as d, \n";
 		$sql .= "( select \n";
-		$sql .= " domain_uuid, \n";
-		$sql .= " extension_uuid, \n";
-		$sql .= " caller_id_number, \n";
-		$sql .= " destination_number, \n";
-		$sql .= " missed_call, \n";
-		$sql .= " answer_stamp, \n";
-		$sql .= " bridge_uuid, \n";
-		$sql .= " direction, \n";
-		$sql .= " start_stamp, \n";
-		$sql .= " hangup_cause, \n";
-		$sql .= " originating_leg_uuid, \n";
-		$sql .= " billsec, \n";
-		$sql .= " cc_side, \n";
-		$sql .= " sip_hangup_disposition, \n";
-		$sql .= " voicemail_message, \n";
-		$sql .= " status \n";
-		$sql .= " from v_xml_cdr \n";
+		$sql .= " c.domain_uuid, \n";
+		$sql .= " COALESCE(xe.extension_uuid, c.extension_uuid) as extension_uuid, \n";
+		// $sql .= " xe.extension_uuid \n"; // option b
+		$sql .= " c.caller_id_number, \n";
+		$sql .= " c.destination_number, \n";
+		$sql .= " c.missed_call, \n";
+		$sql .= " c.answer_stamp, \n";
+		$sql .= " c.bridge_uuid, \n";
+		$sql .= " c.direction, \n";
+		$sql .= " c.start_stamp, \n";
+		$sql .= " c.hangup_cause, \n";
+		$sql .= " c.originating_leg_uuid, \n";
+		$sql .= " c.billsec, \n";
+		$sql .= " c.cc_side, \n";
+		$sql .= " c.sip_hangup_disposition, \n";
+		$sql .= " c.voicemail_message, \n";
+		$sql .= " c.status \n";
+		$sql .= " from v_xml_cdr as c \n";
+		$sql .= " left join v_xml_cdr_extensions as xe on xe.xml_cdr_uuid = c.xml_cdr_uuid \n";
+		// $sql .= " from v_xml_cdr_extensions as xe \n"; // option b
+		// $sql .= " inner join v_xml_cdr as c on c.xml_cdr_uuid = xe.xml_cdr_uuid \n"; // option b
 		if (!(!empty($_GET['show']) && $_GET['show'] === 'all' && permission_exists('xml_cdr_extension_summary_all'))) {
-			$sql .= " where domain_uuid = :domain_uuid \n";
+			$sql .= " where c.domain_uuid = :domain_uuid \n";
 		} else {
 			$sql .= " where true \n";
 		}
-		$sql .= "and leg = 'a' ";
-		$sql .= "and extension_uuid is not null ";
+		$sql .= "and c.leg = 'a' and COALESCE(xe.extension_uuid, c.extension_uuid) is not null ";
+		// $sql .= "and c.leg = 'a' \n"; // option b
 		$sql .= $sql_date_range ?? '';
 		$sql .= ") as c \n";
 

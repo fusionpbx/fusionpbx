@@ -393,7 +393,13 @@
 	}
 	if (!$permission['xml_cdr_domain']) { //only show the user their calls
 		if (isset($assigned_extension_uuids) && is_array($assigned_extension_uuids) && @sizeof($assigned_extension_uuids)) {
-			$sql .= "and (c.extension_uuid = '".implode("' or c.extension_uuid = '", $assigned_extension_uuids)."') \n";
+			$parameter_names = [];
+			foreach ($assigned_extension_uuids as $i => $uuid) {
+				$name = "assigned_extension_uuid_$i";
+				$parameter_names[] = ":$name";
+				$parameters[$name] = $uuid;
+			}
+			$sql .= "and exists (select 1 from v_xml_cdr_extensions as xe where xe.xml_cdr_uuid = c.xml_cdr_uuid and xe.extension_uuid in (".implode(",", $parameter_names).")) \n";
 		}
 		else {
 			$sql .= "and false \n";
@@ -442,7 +448,7 @@
 			$parameter_names[] = ":$name";
 			$parameters[$name] = $uuid;
 		}
-		$sql .= "and e.extension_uuid in (".implode(",",$parameter_names).") \n";
+		$sql .= "and exists (select 1 from v_xml_cdr_extensions as xe where xe.xml_cdr_uuid = c.xml_cdr_uuid and xe.extension_uuid in (".implode(",",$parameter_names).")) \n";
 	}
 	if (!empty($caller_destination)) {
 		$mod_caller_destination = str_replace("*", "%", $caller_destination);

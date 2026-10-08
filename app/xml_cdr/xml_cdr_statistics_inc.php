@@ -178,11 +178,11 @@
 		$parameters['mod_caller_id_name'] = $mod_caller_id_name;
 	}
 	if (!empty($caller_extension_uuid)) {
-		$sql_where_ands[] = "c.extension_uuid = :caller_extension_uuid";
+		$sql_where_ands[] = "exists (select 1 from v_xml_cdr_extensions as xe where xe.xml_cdr_uuid = c.xml_cdr_uuid and xe.extension_uuid = :caller_extension_uuid)";
 		$parameters['caller_extension_uuid'] = $caller_extension_uuid;
 	}
 	if (!empty($extension_uuid)) {
-		$sql_where_ands[] = "c.extension_uuid = :extension_uuid";
+		$sql_where_ands[] = "exists (select 1 from v_xml_cdr_extensions as xe where xe.xml_cdr_uuid = c.xml_cdr_uuid and xe.extension_uuid = :extension_uuid)";
 		$parameters['extension_uuid'] = $extension_uuid;
 	}
 	if (!empty($caller_id_number)) {
