@@ -66,7 +66,7 @@
 				if (!empty($assigned_extensions)) {
 					$x = 0;
 					foreach ($assigned_extensions as $assigned_extension_uuid => $assigned_extension) {
-						$sql_where_array[] = "extension_uuid = :extension_uuid_".$x;
+						$sql_where_array[] = "exists (select 1 from v_xml_cdr_extensions as xe where xe.xml_cdr_uuid = v_xml_cdr.xml_cdr_uuid and xe.extension_uuid = :extension_uuid_". $x . ")";
 						$parameters['extension_uuid_'.$x] = $assigned_extension_uuid;
 						$x++;
 					}
