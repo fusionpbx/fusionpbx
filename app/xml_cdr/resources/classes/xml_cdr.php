@@ -134,6 +134,12 @@ class xml_cdr {
 	private $extension_map_time;
 
 	/**
+	 * In-memory cache of the v_destinations rows used by find_app to avoid
+	 * re-querying the database on every call within a single request
+	 */
+	private $destination_rows;
+
+	/**
 	 * Initializes the object with the setting array.
 	 *
 	 * @param array $setting_array An array containing settings for domain, user, and database connections. Defaults to
@@ -1771,6 +1777,7 @@ class xml_cdr {
 		}
 
 		//build the call flow summary
+		$call_flow_summary = array();
 		$x = 0;
 		$skip_row = false;
 		if (!empty($call_flow_array)) {
@@ -1852,7 +1859,7 @@ class xml_cdr {
 						$app['name']        = '';
 						$app['label']       = 'extensions';
 					} elseif (empty($app['application'])) {
-						$app['application'] = 'diaplans';
+						$app['application'] = 'dialplans';
 						$app['uuid']        = '';
 						$app['status']      = $status;
 						$app['name']        = 'Outbound';
@@ -1991,7 +1998,9 @@ class xml_cdr {
 		unset($x);
 
 		//set the last status to match the call detail record
-		$call_flow_summary[count($call_flow_summary ?? []) - 1]['destination_status'] = $this->status;
+		if (!empty($call_flow_summary)) {
+			$call_flow_summary[count($call_flow_summary) - 1]['destination_status'] = $this->status;
+		}
 
 		//return the call flow summary array
 		return $call_flow_summary;
@@ -2010,13 +2019,17 @@ class xml_cdr {
 	public function find_app($destination_array, $detail_action) {
 
 		//add the destinations to the destination array
-		$sql = "select * from v_destinations ";
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$parameters['domain_uuid'] = $this->domain_uuid;
-		$destinations = $this->database->select($sql, $parameters, 'all');
-		if (!empty($destinations)) {
+		//cache the destination rows so the database is only queried once per request
+		if (!isset($this->destination_rows)) {
+			$sql = "select * from v_destinations ";
+			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$parameters['domain_uuid'] = $this->domain_uuid;
+			$this->destination_rows = $this->database->select($sql, $parameters, 'all');
+			unset($sql, $parameters);
+		}
+		if (!empty($this->destination_rows)) {
 			$i = 0;
-			foreach ($destinations as $row) {
+			foreach ($this->destination_rows as $row) {
 				$destination_array['destinations'][$i]['application'] = 'destinations';
 				$destination_array['destinations'][$i]['destination_uuid'] = $row["destination_uuid"];
 				$destination_array['destinations'][$i]['uuid'] = $row["destination_uuid"];
@@ -2037,7 +2050,7 @@ class xml_cdr {
 				$i++;
 			}
 		}
-		unset($sql, $parameters, $row);
+		unset($row);
 
 		$result = '';
 		if (!empty($destination_array)) {
@@ -2061,7 +2074,7 @@ class xml_cdr {
 						}
 
 						//find all other matching actions
-						if (!empty($value['extension']) && $value['extension'] == $detail_action || preg_match('/^' . preg_quote($value['extension'] ?? '') . '$/', $detail_action)) {
+						if (!empty($value['extension']) && ($value['extension'] === $detail_action || preg_match('/^' . preg_quote($value['extension']) . '$/', $detail_action))) {
 							if (file_exists(dirname(__DIR__, 4) . "/app/" . $application . "/app_languages.php")) {
 								$value['application'] = $application;
 								return $value;
