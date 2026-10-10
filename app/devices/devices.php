@@ -388,6 +388,47 @@
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
+	//add the responsive styles
+	echo "<style>\n";
+	echo "/* small screens: let the list scroll horizontally */\n";
+	echo "@media (max-width: 767.98px) {\n";
+	echo "	div.card {\n";
+	echo "		overflow-x: auto;\n";
+	echo "		-webkit-overflow-scrolling: touch;\n";
+	echo "	}\n";
+	echo "	\n";
+	echo "	/* wrap the action bar buttons and search controls */\n";
+	echo "	div.action_bar {\n";
+	echo "		display: flex;\n";
+	echo "		flex-wrap: wrap;\n";
+	echo "		align-items: center;\n";
+	echo "	}\n";
+	echo "	div.action_bar > div.heading {\n";
+	echo "		float: none;\n";
+	echo "	}\n";
+	echo "	div.action_bar > div.actions {\n";
+	echo "		float: none;\n";
+	echo "		width: 100%;\n";
+	echo "	}\n";
+	echo "	div.action_bar > div.actions > button {\n";
+	echo "		margin: 0 8px 8px 0 !important;\n";
+	echo "	}\n";
+	echo "	div.action_bar > div.actions > form.inline {\n";
+	echo "		display: flex;\n";
+	echo "		flex-wrap: wrap;\n";
+	echo "		width: 100%;\n";
+	echo "	}\n";
+	echo "	div.action_bar > div.actions form.inline > input[type=text].list-search {\n";
+	echo "		flex: 1 1 200px;\n";
+	echo "		width: auto !important;\n";
+	echo "		min-width: 0;\n";
+	echo "	}\n";
+	echo "	div.action_bar > div.actions form.inline > span {\n";
+	echo "		width: 100%;\n";
+	echo "	}\n";
+	echo "}\n";
+	echo "</style>\n";
+
 	echo $text['description-devices']."\n";
 	echo "<br /><br />\n";
 
@@ -410,11 +451,11 @@
 	if ($device_alternate) {
 		echo th_order_by('device_template', $text['label-device_uuid_alternate'], $order_by, $order, null, null, $query_string);
 	}
-	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order, null, null, $query_string);
-	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order, null, null, $query_string);
-	echo "<th>". $text['label-device_profiles']."</th>\n";
+	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order, null, "class='hide-sm-dn'", $query_string);
+	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order, null, "class='hide-sm-dn'", $query_string);
+	echo "<th class='hide-sm-dn'>". $text['label-device_profiles']."</th>\n";
 	echo th_order_by('device_enabled', $text['label-device_enabled'], $order_by, $order, null, "class='center'", $query_string);
-	echo th_order_by('device_provisioned_date', $text['label-device_status'], $order_by, $order, null, null, $query_string);
+	echo th_order_by('device_provisioned_date', $text['label-device_status'], $order_by, $order, null, "class='hide-sm-dn'", $query_string);
 	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order, null, "class='hide-sm-dn'", $query_string);
 	if (permission_exists('device_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -474,9 +515,9 @@
 					echo "	<td>&nbsp;</td>\n";
 				}
 			}
-			echo "	<td>".escape($row['device_vendor'])."&nbsp;</td>\n";
-			echo "	<td>".escape($row['device_template'])."&nbsp;</td>\n";
-			echo "	<td>".escape($device_profile_name)."&nbsp;</td>\n";
+			echo "	<td class='hide-sm-dn'>".escape($row['device_vendor'])."&nbsp;</td>\n";
+			echo "	<td class='hide-sm-dn'>".escape($row['device_template'])."&nbsp;</td>\n";
+			echo "	<td class='hide-sm-dn'>".escape($device_profile_name)."&nbsp;</td>\n";
 			if (permission_exists('device_edit')) {
 				echo "	<td class='no-link center'>";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.(!empty($row['device_enabled']) ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
@@ -486,7 +527,7 @@
 				echo $text['label-'.(!empty($row['device_enabled']) ? 'true' : 'false')];
 			}
 			echo "	</td>\n";
-			echo "	<td class='no-link'><a title='".escape($row['device_provisioned_agent'])."' href='javascript:void(0)'>".escape($row['provisioned_date_formatted'])." ".escape($row['provisioned_time_formatted'])."</a> &nbsp; ".escape($device_provisioned_method)." &nbsp; <a href='".escape($device_provisioned_method)."://".escape($row['device_provisioned_ip'])."' target='_blank'>".escape($row['device_provisioned_ip'])."</a>&nbsp;</td>\n";
+			echo "	<td class='no-link hide-sm-dn'><a title='".escape($row['device_provisioned_agent'])."' href='javascript:void(0)'>".escape($row['provisioned_date_formatted'])." ".escape($row['provisioned_time_formatted'])."</a> &nbsp; ".escape($device_provisioned_method)." &nbsp; <a href='".escape($device_provisioned_method)."://".escape($row['device_provisioned_ip'])."' target='_blank'>".escape($row['device_provisioned_ip'])."</a>&nbsp;</td>\n";
 			echo "	<td class='description overflow hide-sm-dn'>".escape($row['device_description'])."&nbsp;</td>\n";
 			if (permission_exists('device_edit')  && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>";
