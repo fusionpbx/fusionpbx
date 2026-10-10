@@ -285,6 +285,63 @@
 	$document['title'] = $text['title-extensions'];
 	require_once "resources/header.php";
 
+//add the responsive styles
+	echo "<style>\n";
+	echo "/* small screens: wrap the action bar buttons and let the card scroll horizontally */\n";
+	echo "@media (max-width: 767.98px) {\n";
+	echo "	div.action_bar {\n";
+	echo "		display: flex;\n";
+	echo "		flex-wrap: wrap;\n";
+	echo "		align-items: center;\n";
+	echo "	}\n";
+	echo "	div.action_bar > div.heading {\n";
+	echo "		float: none;\n";
+	echo "	}\n";
+	echo "	div.action_bar > div.actions {\n";
+	echo "		float: none;\n";
+	echo "		width: 100%;\n";
+	echo "	}\n";
+	echo "	div.action_bar > div.actions > button {\n";
+	echo "		margin: 0 8px 8px 0 !important;\n";
+	echo "	}\n";
+	echo "	div.card {\n";
+	echo "		overflow-x: auto;\n";
+	echo "		-webkit-overflow-scrolling: touch;\n";
+	echo "	}\n";
+	echo "}\n";
+	echo "/* extra small screens: shrink padding and let the search box expand */\n";
+	echo "@media (max-width: 575.98px) {\n";
+	echo "	div.action_bar {\n";
+	echo "		padding: 8px 10px;\n";
+	echo "		margin: -10px -10px 10px -10px;\n";
+	echo "	}\n";
+	echo "	div.action_bar > div.actions form.inline {\n";
+	echo "		display: flex;\n";
+	echo "		flex-wrap: wrap;\n";
+	echo "		align-items: center;\n";
+	echo "	}\n";
+	echo "	input[type=text].list-search {\n";
+	echo "		flex: 1 1 auto;\n";
+	echo "		width: auto;\n";
+	echo "		min-width: 0;\n";
+	echo "	}\n";
+	echo "	input[type=text].list-search:focus {\n";
+	echo "		width: auto;\n";
+	echo "	}\n";
+	echo "	div.action_bar > div.actions > button {\n";
+	echo "		margin-bottom: 0 !important;\n";
+	echo "	}\n";
+	echo "	div.card {\n";
+	echo "		padding: 0;\n";
+	echo "	}\n";
+	echo "	.list th,\n";
+	echo "	.list td {\n";
+	echo "		padding-left: 8px;\n";
+	echo "		padding-right: 8px;\n";
+	echo "	}\n";
+	echo "}\n";
+	echo "</style>\n";
+
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-extensions']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
@@ -375,7 +432,7 @@
 		echo "<th>&nbsp;</th>\n";
 	}
 	echo th_order_by('extension', $text['label-extension'], $order_by, $order, null, null, $query_string);
-	echo th_order_by('effective_caller_id_name', $text['label-effective_cid_name'], $order_by, $order, null, "class='hide-xs'", $query_string);
+	echo th_order_by('effective_caller_id_name', $text['label-effective_cid_name'], $order_by, $order, null, "class=''", $query_string);
 	if (permission_exists("outbound_caller_id_name")) {
 		echo th_order_by('outbound_caller_id_name', $text['label-outbound_cid_name'], $order_by, $order, null, "class='hide-sm-dn'", $query_string);
 	}
@@ -383,7 +440,7 @@
 		echo th_order_by('outbound_caller_id_number', $text['label-outbound_cid_number'], $order_by, $order, null, "class='hide-md-dn'", $query_string);
 	}
 	if (permission_exists("extension_call_group")) {
-		echo th_order_by('call_group', $text['label-call_group'], $order_by, $order, null, null, $query_string);
+		echo th_order_by('call_group', $text['label-call_group'], $order_by, $order, null, "class='hide-sm-dn'", $query_string);
 	}
 	if (permission_exists("extension_device_address")) {
 		echo th_order_by('device_address', $text['label-device_address'], $order_by, $order, null, "class='hide-md-dn'", $query_string);
@@ -392,9 +449,9 @@
 		echo th_order_by('device_template', $text['label-device_template'], $order_by, $order, null, "class='hide-md-dn'", $query_string);
 	}
 	if (permission_exists("extension_user_context")) {
-		echo th_order_by('user_context', $text['label-user_context'], $order_by, $order);
+		echo th_order_by('user_context', $text['label-user_context'], $order_by, $order, null, "class='hide-md-dn'", $query_string);
 	}
-	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center'", $query_string);
+	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order, null, "class='center no-wrap'", $query_string);
 	echo th_order_by('description', $text['label-description'], $order_by, $order, null, "class='hide-sm-dn'", $query_string);
 	if (permission_exists('extension_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
@@ -461,7 +518,7 @@
 			}
 			echo "	</td>\n";
 
-			echo "	<td class='hide-xs'>".escape($row['effective_caller_id_name'])."&nbsp;</td>\n";
+			echo "	<td class=''>".escape($row['effective_caller_id_name'])."&nbsp;</td>\n";
 			if (permission_exists("outbound_caller_id_name")) {
 				echo "	<td class='hide-sm-dn'>".escape($row['outbound_caller_id_name'])."&nbsp;</td>\n";
 			}
@@ -469,7 +526,7 @@
 				echo "	<td class='hide-md-dn'>".escape($row['outbound_caller_id_number'])."&nbsp;</td>\n";
 			}
 			if (permission_exists("extension_call_group")) {
-				echo "	<td>".escape($row['call_group'])."&nbsp;</td>\n";
+				echo "	<td class='hide-sm-dn'>".escape($row['call_group'])."&nbsp;</td>\n";
 			}
 			if (permission_exists("extension_device_address")) {
 				echo "	<td class='hide-md-dn'><a href='" . PROJECT_PATH . "/app/devices/device_edit.php?id=".urlencode($row['device_uuid'] ?? '')."'>".escape($row['device_address'] ?? '')."</td>\n";
@@ -478,14 +535,14 @@
 				echo "	<td class='hide-md-dn'><a href='" . PROJECT_PATH . "/app/devices/device_edit.php?id=".urlencode($row['device_uuid'] ?? '')."'>".escape($row['device_template'] ?? '')."</td>\n";
 			}
 			if (permission_exists("extension_user_context")) {
-				echo "	<td>".escape($row['user_context'])."</td>\n";
+				echo "	<td class='hide-md-dn'>".escape($row['user_context'])."</td>\n";
 			}
 			if (permission_exists('extension_enabled')) {
-				echo "	<td class='no-link center'>";
+				echo "	<td class='no-link center no-wrap'>";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			}
 			else {
-				echo "	<td class='center'>";
+				echo "	<td class='center no-wrap'>";
 				echo $text['label-'.$row['enabled']];
 			}
 			echo "	</td>\n";
