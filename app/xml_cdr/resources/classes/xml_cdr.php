@@ -124,6 +124,12 @@ class xml_cdr {
 	private $json;
 
 	/**
+	 * In-memory cache of the v_destinations rows used by find_app to avoid
+	 * re-querying the database on every call within a single request
+	 */
+	private $destination_rows;
+
+	/**
 	 * Initializes the object with the setting array.
 	 *
 	 * @param array $setting_array An array containing settings for domain, user, and database connections. Defaults to
@@ -1307,10 +1313,10 @@ class xml_cdr {
 
 		//set the map of the domain names to their domain uuid
 		$domain_map = array();
-		foreach ($domain_rows as $domain_row) {
-			if (!empty($domain_row['domain_name']) && !empty($domain_row['domain_uuid'])) {
-				$domain_map[$domain_row['domain_name']] = $domain_row['domain_uuid'];
-			}
+			foreach ($domain_rows as $domain_row) {
+				if (!empty($domain_row['domain_name']) && !empty($domain_row['domain_uuid'])) {
+					$domain_map[$domain_row['domain_name']] = $domain_row['domain_uuid'];
+				}
 		}
 
 		//resolve the domain names of each leg from the context values
@@ -1369,7 +1375,7 @@ class xml_cdr {
 			foreach (array('extension', 'number_alias') as $field) {
 				if (!empty($extension_row[$field])) {
 					$extension_map[$extension_row['domain_uuid']][$extension_row[$field]] = $extension_row['extension_uuid'];
-				}
+		}
 			}
 		}
 
@@ -1400,7 +1406,7 @@ class xml_cdr {
 			//use the domain of the call when the leg did not resolve a domain from its context
 			if (empty($leg_domain_uuid_array) && !empty($domain_uuid)) {
 				$leg_domain_uuid_array[] = $domain_uuid;
-			}
+		}
 
 			//skip this leg when no domain was found
 			if (empty($leg_domain_uuid_array)) {
@@ -1418,7 +1424,7 @@ class xml_cdr {
 			//the calling extension is part of the call too
 			if (!empty($row['caller_profile']['username'])) {
 				$dialed_user_array[] = urldecode($row['caller_profile']['username']);
-			}
+				}
 
 			//set the array of the unique extensions that participated in this leg
 			$leg_extension_array = array();
@@ -1428,14 +1434,14 @@ class xml_cdr {
 						&& !isset($leg_extension_array[$extension_map[$leg_domain_uuid][$dialed_user]])
 					) {
 						$leg_extension_array[$extension_map[$leg_domain_uuid][$dialed_user]] = $leg_domain_uuid;
-					}
+				}
 				}
 			}
 
 			//skip this leg when no extension was found
 			if (empty($leg_extension_array)) {
-				continue;
-			}
+						continue;
+					}
 
 			//determine the start and end times of the extension participation from the call flow array
 			$start_stamp = null;
@@ -1452,15 +1458,15 @@ class xml_cdr {
 
 			//add each extension that participated in this leg to the array
 			foreach ($leg_extension_array as $extension_uuid => $leg_domain_uuid) {
-				$extension_array[] = array(
-					'xml_cdr_extension_uuid' => uuid(),
-					'domain_uuid'            => $leg_domain_uuid,
-					'xml_cdr_uuid'           => $xml_cdr_uuid,
-					'extension_uuid'         => $extension_uuid,
-					'start_stamp'            => $start_stamp,
-					'end_stamp'              => $end_stamp,
-					'duration'               => $duration,
-				);
+					$extension_array[] = array(
+						'xml_cdr_extension_uuid' => uuid(),
+						'domain_uuid'            => $leg_domain_uuid,
+						'xml_cdr_uuid'           => $xml_cdr_uuid,
+						'extension_uuid'         => $extension_uuid,
+						'start_stamp'            => $start_stamp,
+						'end_stamp'              => $end_stamp,
+						'duration'               => $duration,
+					);
 			}
 		}
 
@@ -1556,6 +1562,7 @@ class xml_cdr {
 		}
 
 		//build the call flow summary
+		$call_flow_summary = array();
 		$x = 0;
 		$skip_row = false;
 		if (!empty($call_flow_array)) {
@@ -1637,7 +1644,7 @@ class xml_cdr {
 						$app['name']        = '';
 						$app['label']       = 'extensions';
 					} elseif (empty($app['application'])) {
-						$app['application'] = 'diaplans';
+						$app['application'] = 'dialplans';
 						$app['uuid']        = '';
 						$app['status']      = $status;
 						$app['name']        = 'Outbound';
@@ -1776,7 +1783,9 @@ class xml_cdr {
 		unset($x);
 
 		//set the last status to match the call detail record
-		$call_flow_summary[count($call_flow_summary ?? []) - 1]['destination_status'] = $this->status;
+		if (!empty($call_flow_summary)) {
+			$call_flow_summary[count($call_flow_summary) - 1]['destination_status'] = $this->status;
+		}
 
 		//return the call flow summary array
 		return $call_flow_summary;
@@ -1795,13 +1804,17 @@ class xml_cdr {
 	public function find_app($destination_array, $detail_action) {
 
 		//add the destinations to the destination array
-		$sql = "select * from v_destinations ";
-		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$parameters['domain_uuid'] = $this->domain_uuid;
-		$destinations = $this->database->select($sql, $parameters, 'all');
-		if (!empty($destinations)) {
+		//cache the destination rows so the database is only queried once per request
+		if (!isset($this->destination_rows)) {
+			$sql = "select * from v_destinations ";
+			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$parameters['domain_uuid'] = $this->domain_uuid;
+			$this->destination_rows = $this->database->select($sql, $parameters, 'all');
+			unset($sql, $parameters);
+		}
+		if (!empty($this->destination_rows)) {
 			$i = 0;
-			foreach ($destinations as $row) {
+			foreach ($this->destination_rows as $row) {
 				$destination_array['destinations'][$i]['application'] = 'destinations';
 				$destination_array['destinations'][$i]['destination_uuid'] = $row["destination_uuid"];
 				$destination_array['destinations'][$i]['uuid'] = $row["destination_uuid"];
@@ -1822,7 +1835,7 @@ class xml_cdr {
 				$i++;
 			}
 		}
-		unset($sql, $parameters, $row);
+		unset($row);
 
 		$result = '';
 		if (!empty($destination_array)) {
@@ -1846,7 +1859,7 @@ class xml_cdr {
 						}
 
 						//find all other matching actions
-						if (!empty($value['extension']) && $value['extension'] == $detail_action || preg_match('/^' . preg_quote($value['extension'] ?? '') . '$/', $detail_action)) {
+						if (!empty($value['extension']) && ($value['extension'] === $detail_action || preg_match('/^' . preg_quote($value['extension']) . '$/', $detail_action))) {
 							if (file_exists(dirname(__DIR__, 4) . "/app/" . $application . "/app_languages.php")) {
 								$value['application'] = $application;
 								return $value;
