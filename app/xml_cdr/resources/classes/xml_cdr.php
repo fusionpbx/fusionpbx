@@ -628,28 +628,6 @@ class xml_cdr {
 				$missed_call = 'true';
 			}
 
-			//read the bridge statement variables
-			if (isset($xml->variables->last_app)) {
-				if (urldecode($xml->variables->last_app) == 'bridge') {
-					//get the variables from inside the { and } brackets
-					preg_match('/^\{([^}]+)\}/', urldecode($xml->variables->last_arg), $matches);
-
-					//create a variables array from the comma delimitted string
-					$bridge_variables = explode(",", $matches[1]);
-
-					//set bridge variables as variables
-					$x = 0;
-					if (!empty($bridge_variables)) {
-						foreach ($bridge_variables as $variable) {
-							$pairs = explode("=", $variable);
-							$name  = $pairs[0];
-							$$name = $pairs[1];
-							$x++;
-						}
-					}
-				}
-			}
-
 			//get the last bridge_uuid from the call to preserve previous behavior
 			foreach ($xml->variables->bridge_uuids as $bridge) {
 				$last_bridge = urldecode($bridge);
@@ -2088,6 +2066,56 @@ class xml_cdr {
 	}
 
 	/**
+	 * Resolve a call recording file path and verify it is inside the recordings directory
+	 *
+	 * The record path and name values are imported from the call detail record data, so they
+	 * must be validated before being used on the file system to prevent access to files
+	 * outside of the recordings directory.
+	 *
+	 * @param string $record_path The directory of the call recording file
+	 * @param string $record_name The name of the call recording file
+	 *
+	 * @return string|false The resolved file path when it is valid, otherwise false.
+	 */
+	private function validate_recording_path($record_path, $record_name) {
+		//skip when the path or the name is empty
+		if (empty($record_path) || empty($record_name)) {
+			return false;
+		}
+
+		//the name must be a simple file name without a path
+		if (strpos($record_name, '/') !== false || strpos($record_name, '\\') !== false) {
+			return false;
+		}
+
+		//get the recordings root directory
+		$recordings_root = $this->settings->get('switch', 'recordings', '');
+		if (empty($recordings_root)) {
+			return false;
+		}
+		$recordings_root = realpath($recordings_root);
+		if ($recordings_root === false) {
+			return false;
+		}
+
+		//resolve the file path, this also resolves any symbolic links
+		$record_file = realpath($record_path . '/' . $record_name);
+		if ($record_file === false) {
+			return false;
+		}
+
+		//return the path when the file is inside the recordings directory
+		if (strpos($record_file, $recordings_root . '/') === 0) {
+			return $record_file;
+		}
+
+		//log a warning when the file is outside of the recordings directory
+		$this->log("Call recording path is outside of the recordings directory: " . $record_file . "\n");
+
+		return false;
+	}
+
+	/**
 	 * Moves a failed xml_cdr file to the failed directory
 	 *
 	 * @param string $failed_file Path to the failed xml_cdr file
@@ -2195,82 +2223,76 @@ class xml_cdr {
 	 * @return void
 	 */
 	public function post() {
-		if (isset($_POST["cdr"])) {
+		if (isset($_POST["cdr"]) && is_string($_POST["cdr"])) {
 
 			//debug method
 			//$this->log($_POST["cdr"]);
 
 			//authentication for xml cdr http post
 			if (!defined('STDIN')) {
-				if ($this->settings->get('cdr', 'http_enabled', false)) {
-					//get the contents of xml_cdr.conf.xml
-					$conf_xml_string = file_get_contents($this->settings->get('switch', 'conf') . '/autoload_configs/xml_cdr.conf.xml');
+				//if http enabled is set to false then deny access
+				if (!$this->settings->get('cdr', 'http_enabled', false)) {
+					openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
+					syslog(LOG_WARNING, '[' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown') . '] XML CDR import default setting http_enabled is not enabled. Line: ' . __line__);
+					closelog();
 
-					//parse the xml to get the call detail record info
-					try {
-						//disable xml entities
-						libxml_disable_entity_loader(true);
+					http_response_code(403);
+					echo "access denied\n";
+					return;
+				}
 
-						//load the string into an xml object
-						$conf_xml = simplexml_load_string($conf_xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
-					} catch (Exception $e) {
-						echo $e->getMessage();
-					}
-					if (isset($conf_xml->settings->param)) {
-						foreach ($conf_xml->settings->param as $row) {
-							if ($row->attributes()->name == "cred") {
-								$auth_array = explode(":", $row->attributes()->value);
-								//echo "username: ".$auth_array[0]."<br />\n";
-								//echo "password: ".$auth_array[1]."<br />\n";
+				//get the credentials from the xml_cdr.conf.xml file
+				$auth_array = array();
+				$conf_file = $this->settings->get('switch', 'conf') . '/autoload_configs/xml_cdr.conf.xml';
+				if (is_readable($conf_file)) {
+					$conf_xml_string = file_get_contents($conf_file);
+					if (is_string($conf_xml_string) && !empty($conf_xml_string)) {
+						try {
+							//disable xml entities
+							if (PHP_VERSION_ID < 80000) {
+								libxml_disable_entity_loader(true);
 							}
-							if ($row->attributes()->name == "url") {
-								//check name is equal to url
+							//load the string into an xml object
+							$conf_xml = simplexml_load_string($conf_xml_string, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NONET);
+							if ($conf_xml !== false && isset($conf_xml->settings->param)) {
+								foreach ($conf_xml->settings->param as $row) {
+									if ($row->attributes()->name == "cred") {
+										$auth_array = explode(":", (string)$row->attributes()->value);
+									}
+								}
 							}
+						} catch (Exception $e) {
+							$this->log($e->getMessage() . "\n");
 						}
 					}
 				}
-			}
 
-			//if http enabled is set to false then deny access
-			if (!defined('STDIN')) {
-				if (!$this->settings->get('cdr', 'http_enabled', false)) {
+				//check for the correct username and password
+				$auth_user = $_SERVER['PHP_AUTH_USER'] ?? '';
+				$auth_pw   = $_SERVER['PHP_AUTH_PW'] ?? '';
+				if (!empty($auth_array) && count($auth_array) >= 2
+					&& hash_equals($auth_array[0], (string)$auth_user)
+					&& hash_equals($auth_array[1], (string)$auth_pw)
+				) {
+					//access granted
+					$this->username = $auth_array[0];
+					$this->password = $auth_array[1];
+				} else {
 					openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
-					syslog(LOG_WARNING, '[' . $_SERVER['REMOTE_ADDR'] . '] XML CDR import default setting http_enabled is not enabled. Line: ' . __line__);
+					syslog(LOG_WARNING, '[' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown') . '] XML CDR import username or password failed. Line: ' . __line__);
 					closelog();
 
+					http_response_code(401);
 					echo "access denied\n";
 					return;
 				}
 			}
 
-			//check for the correct username and password
-			if (!defined('STDIN')) {
-				if ($this->settings->get('cdr', 'http_enabled', false)) {
-					if ($auth_array[0] == $_SERVER["PHP_AUTH_USER"] && $auth_array[1] == $_SERVER["PHP_AUTH_PW"]) {
-						//echo "access granted\n";
-						$this->username = $auth_array[0];
-						$this->password = $auth_array[1];
-					} else {
-						openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
-						syslog(LOG_WARNING, '[' . $_SERVER['REMOTE_ADDR'] . '] XML CDR import username or password failed. Line: ' . __line__);
-						closelog();
-
-						echo "access denied\n";
-						return;
-					}
-				}
-			}
-
-			//loop through all attribues
-			//foreach($xml->settings->param[1]->attributes() as $a => $b) {
-			//		echo $a,'="',$b,"\"\n";
-			//}
-
 			//get the http post variable
 			$xml_string = trim($_POST["cdr"]);
 
 			//get the leg of the call
-			if (substr($_REQUEST['uuid'], 0, 2) == "a_") {
+			if (is_string($_REQUEST['uuid'] ?? null) && substr($_REQUEST['uuid'], 0, 2) == "a_") {
 				$leg = "a";
 			} else {
 				$leg = "b";
@@ -2581,17 +2603,24 @@ class xml_cdr {
 		}
 		$parameters['xml_cdr_uuid'] = $this->recording_uuid;
 		$row = $this->database->select($sql, $parameters, 'row');
-		if (!empty($row) && is_array($row)) {
-			$record_name = $row['record_name'];
-			$record_path = $row['record_path'];
-		}
-		unset ($sql, $parameters, $row);
+		unset ($sql, $parameters);
 
-		//build full path
-		$record_file = $record_path . '/' . $record_name;
+		//skip when the record was not found
+		if (empty($row) || !is_array($row)) {
+			return;
+		}
+		$record_name = $row['record_name'] ?? '';
+		$record_path = $row['record_path'] ?? '';
+		unset($row);
+
+		//build the full path and verify the file is inside the recordings directory
+		$record_file = $this->validate_recording_path($record_path, $record_name);
+		if ($record_file === false) {
+			return;
+		}
 
 		//download the file
-		if ($record_file != '/' && file_exists($record_file)) {
+		if (file_exists($record_file)) {
 			ob_clean();
 			$fd = fopen($record_file, "rb");
 			if ($this->binary) {
@@ -2763,26 +2792,41 @@ class xml_cdr {
 		}
 		$records_deleted = 0;
 
+		//check if the user has permission to access all domains
+		$access_all_domains = permission_exists('xml_cdr_all');
+
 		//loop through records
 		foreach ($records as $x => $record) {
 			if (empty($record['checked']) || $record['checked'] != 'true' || !is_uuid($record['uuid'])) {
 				continue;
 			}
 
-			//get the call recordings
+			//get the record and verify it belongs to a domain the user is allowed to access
 			$sql = "select xml_cdr_uuid, record_name, record_path from v_xml_cdr ";
 			$sql .= "where xml_cdr_uuid = :xml_cdr_uuid ";
-			$sql .= "and record_name is not null";
+			if (!$access_all_domains) {
+				$sql .= "and domain_uuid = :domain_uuid ";
+			}
 			$parameters['xml_cdr_uuid'] = $record['uuid'];
-			$row                        = $this->database->select($sql, $parameters, 'row');
+			if (!$access_all_domains) {
+				$parameters['domain_uuid'] = $this->domain_uuid;
+			}
+			$row = $this->database->select($sql, $parameters, 'row');
 			unset($sql, $parameters);
 
-			//delete the call recording (file)
-			$call_recording_path = realpath($row['record_path']);
-			$call_recording_name = $row['record_name'];
-			if (file_exists($call_recording_path . '/' . $call_recording_name)) {
-				@unlink($call_recording_path . '/' . $call_recording_name);
+			//skip the record when it does not exist or it belongs to another domain
+			if (empty($row)) {
+				continue;
 			}
+
+			//delete the call recording (file)
+			if (!empty($row['record_name']) && !empty($row['record_path'])) {
+				$record_file = $this->validate_recording_path($row['record_path'], $row['record_name']);
+				if ($record_file !== false) {
+					@unlink($record_file);
+				}
+			}
+			unset($row);
 
 			//build the delete array
 			$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
