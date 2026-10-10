@@ -28,6 +28,9 @@
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/functions/device_by.php";
 
+//define global variable(s)
+	global $database;
+
 //logging
 	openlog("FusionPBX", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 
@@ -41,7 +44,7 @@
 	// user:pass@domain_name:port
 	// user:pass@domain_name
 	// domain_name:port
-	$domain_name = $_SERVER['HTTP_HOST'];
+	$domain_name = $_SERVER['HTTP_HOST'] ?? '';
 	if (str_contains($domain_name, '@')) {
 		$domain_name = explode("@", $domain_name, 2)[1];
 	}
@@ -50,7 +53,7 @@
 		$domain_name = $domain_array[0];
 	}
 
-//define PHP variables from the HTTP values
+//get the device address from the request. These are commonly assigned by the web server's rewrite rules and are retained for backwards compatibility.
 	if (isset($_REQUEST['address'])) {
 		$device_address = $_REQUEST['address'];
 	}
@@ -65,7 +68,7 @@
 
 //get the device address for Cisco 79xx in the URL as &name=SEP000000000000
 	if (empty($device_address)) {
-		$name = $_REQUEST['name'];
+		$name = $_REQUEST['name'] ?? '';
 		if (substr($name, 0, 3) == "SEP") {
 			$device_address = strtolower(substr($name, 3, 12));
 			unset($name);
@@ -198,8 +201,8 @@
 //get http_domain_filter from global settings only (can't be used per domain)
 	$domain_filter = (new settings(['database' => $database]))->get('provision', 'http_domain_filter', true);
 
-//get the domain_uuid, domain_name, device_name and device_vendor
-	$sql = "select d.device_uuid, d.domain_uuid, d.device_vendor, n.domain_name ";
+//get the domain_uuid, domain_name, device_user_uuid, device_vendor and device_template
+	$sql = "select d.device_uuid, d.domain_uuid, d.device_user_uuid, d.device_vendor, d.device_template, n.domain_name ";
 	$sql .= "from v_devices as d, v_domains as n ";
 	$sql .= "where device_address = :device_address ";
 	$sql .= "and d.domain_uuid = n.domain_uuid ";
@@ -212,8 +215,10 @@
 	if (is_array($row)) {
 		$device_uuid = $row['device_uuid'];
 		$domain_uuid = $row['domain_uuid'];
+		$user_uuid = $row['device_user_uuid'];
 		$domain_name = $row['domain_name'];
 		$device_vendor = $row['device_vendor'];
+		$device_template = $row['device_template'];
 	} else {
 		$result = 'false';
 	}
@@ -248,7 +253,7 @@
 
 //check if provisioning has been enabled
 	if (!$settings->get('provision', 'enabled', false)) {
-		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is ".__line__." not enabled for ".escape($_REQUEST['mac']));
+		syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but provisioning is ".__line__." not enabled for ".escape($_REQUEST['mac'] ?? ''));
 		http_error('404');
 	}
 
@@ -257,7 +262,7 @@
 
 //check for a valid match
 	if (empty($device_uuid) && !$settings->get('provision', 'auto_insert_enabled', false)) {
-		http_error(404);
+		http_error('404');
 	}
 
 //check the cidr range
@@ -270,7 +275,7 @@
 			}
 		}
 		if (!$found) {
-			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed CIDR check for ".escape($_REQUEST['mac']));
+			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed CIDR check for ".escape($_REQUEST['mac'] ?? ''));
 			http_error('404');
 		}
 	}
@@ -299,17 +304,59 @@
 				return $needed_parts ? false : $data;
 			}
 
+		//function to load the issued digest nonces
+			function provision_digest_nonces_load($nonce_file) {
+				//the store is only ever replaced atomically (rename), so a plain read never sees a partial file
+				if (!file_exists($nonce_file)) {
+					return [];
+				}
+				$stored = json_decode((string)file_get_contents($nonce_file), true);
+				return is_array($stored) ? $stored : [];
+			}
+
+		//function to save the issued digest nonces
+			function provision_digest_nonces_save($nonce_file, array $nonces) {
+				$nonce_dir = dirname($nonce_file);
+				if (!is_dir($nonce_dir)) {
+					mkdir($nonce_dir, 0700, true);
+				}
+				//write to a temp file and rename into place so concurrent workers never see a partial file
+				$tmp_file = $nonce_file . '.' . getmypid() . '.' . bin2hex(random_bytes(4));
+				$fp = fopen($tmp_file, 'w');
+				if (!$fp) {
+					return false;
+				}
+				fwrite($fp, json_encode($nonces));
+				fflush($fp);
+				fclose($fp);
+				chmod($tmp_file, 0600);
+				$renamed = rename($tmp_file, $nonce_file);
+				if (!$renamed) {
+					@unlink($tmp_file);
+				}
+				return $renamed;
+			}
+
 		//function to request digest authentication
 			/**
 			 * Sends an HTTP Digest authentication request with the specified realm.
+			 * The issued nonce is recorded so that replayed responses can be rejected.
 			 *
 			 * @param string $realm The name of the protected resource's realm
+			 * @param string $nonce_file Path of the file storing the issued nonces
+			 * @param int $nonce_ttl Time to live of an issued nonce in seconds
 			 *
 			 * @return void The script exits after sending the authentication request
 			 */
-			function http_digest_request($realm) {
+			function http_digest_request($realm, $nonce_file, $nonce_ttl) {
+				$nonce = bin2hex(random_bytes(16));
+				$nonces = provision_digest_nonces_load($nonce_file);
+				$nonces[$realm . ':' . $nonce] = time() + $nonce_ttl;
+				if (!provision_digest_nonces_save($nonce_file, $nonces)) {
+					syslog(LOG_WARNING, 'provision: unable to save the digest nonce store to ' . $nonce_file);
+				}
 				header('HTTP/1.1 401 Authorization Required');
-				header('WWW-Authenticate: Digest realm="'.$realm.'", qop="auth", nonce="'.uniqid().'", opaque="'.md5($realm).'"');
+				header('WWW-Authenticate: Digest realm="'.$realm.'", qop="auth", nonce="'.$nonce.'", opaque="'.md5($realm).'"');
 				header("Content-Type: text/html");
 				$content = 'Authorization Cancelled';
 				header("Content-Length: ".strval(strlen($content)));
@@ -320,9 +367,24 @@
 		//set the realm
 			$realm = $domain_name;
 
+		//set the nonce store path and the time to live of an issued nonce (seconds)
+			global $config;
+			$cache_dir = !empty($config->get('cache.location')) ? $config->get('cache.location') : sys_get_temp_dir();
+			$nonce_file = rtrim($cache_dir, '/') . '/fusionpbx/provision_nonces.json';
+			$nonce_ttl = 300;
+
+		//load the issued nonces and purge the expired ones
+			$nonces = provision_digest_nonces_load($nonce_file);
+			$now = time();
+			foreach ($nonces as $nonce_key => $nonce_expires) {
+				if ($nonce_expires < $now) {
+					unset($nonces[$nonce_key]);
+				}
+			}
+
 		//request authentication
 			if (empty($_SERVER['PHP_AUTH_DIGEST'])) {
-				http_digest_request($realm);
+				http_digest_request($realm, $nonce_file, $nonce_ttl);
 			}
 
 		//check for valid digest authentication details
@@ -330,12 +392,21 @@
 				if (!($data = http_digest_parse($_SERVER['PHP_AUTH_DIGEST'])) || ($data['username'] != $provision["http_auth_username"])) {
 					header('HTTP/1.1 401 Unauthorized');
 					header("Content-Type: text/html");
-					$content = 'Unauthorized '.$__line__;
+					$content = 'Unauthorized';
 					header("Content-Length: ".strval(strlen($content)));
 					echo $content;
 					exit;
 				}
 			}
+
+		//validate the nonce so a captured response cannot be replayed, then invalidate it for single use
+			$nonce_key = $realm . ':' . ($data['nonce'] ?? '');
+			if (!isset($nonces[$nonce_key]) || $nonces[$nonce_key] < time()) {
+				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision digest replay or invalid nonce attempt for ".($_REQUEST['mac'] ?? ''));
+				http_error(401);
+			}
+			unset($nonces[$nonce_key]);
+			provision_digest_nonces_save($nonce_file, $nonces);
 
 		//generate the valid response
 			$authorized = false;
@@ -355,7 +426,7 @@
 			if (!$authorized) {
 				header('HTTP/1.0 401 Unauthorized');
 				header("Content-Type: text/html");
-				$content = 'Unauthorized '.$__line__;
+				$content = 'Unauthorized';
 				header("Content-Length: ".strval(strlen($content)));
 				echo $content;
 				exit;
@@ -377,7 +448,7 @@
 			$authorized = false;
 			$auth_passwords = $settings->get('provision', 'http_auth_password', []);
 			foreach ($auth_passwords as $password) {
-				if ($_SERVER['PHP_AUTH_PW'] == $password) {
+				if (hash_equals((string)$password, (string)($_SERVER['PHP_AUTH_PW'] ?? ''))) {
 					$authorized = true;
 					break;
 				}
@@ -386,7 +457,7 @@
 
 			if (!$authorized) {
 				//access denied
-				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed http basic authentication for ".$_REQUEST['mac']);
+				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt but failed http basic authentication for ".($_REQUEST['mac'] ?? ''));
 				header('HTTP/1.0 401 Unauthorized');
 				header('WWW-Authenticate: Basic realm="'.$domain_name.'"');
 				unset($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
@@ -401,13 +472,12 @@
 //if the password was defined in the settings then require the password.
 	if (!empty($provision['password'])) {
 		//deny access if the password doesn't match
-		if ($provision['password'] != $_REQUEST['password'] ?? '') {
+		if (!isset($_REQUEST['password']) || !hash_equals((string)$provision['password'], (string)$_REQUEST['password'])) {
 			//log the failed auth attempt to the system, to be available for fail2ban.
 			openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 			syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".($_REQUEST['mac'] ?? ''));
 			closelog();
-			echo "access denied";
-			return;
+			http_error(403);
 		}
 	}
 
@@ -415,7 +485,7 @@
 	ob_start();
 
 //output template to string for header processing
-	$prov = new provision(['settings'=>$settings, 'domain_uuid'=>$domain_uuid, 'domain_name'=>$domain_name, 'user_uuid'=>$_SESSION['user_uuid']]);
+	$prov = new provision(['settings'=>$settings, 'domain_uuid'=>$domain_uuid, 'domain_name'=>$domain_name, 'user_uuid'=>$user_uuid]);
 	$prov->device_address = $device_address;
 	$prov->device_file = $file;
 	$file_contents = $prov->render();
@@ -465,23 +535,29 @@
 
 //send the content
 	$file_size = strlen($file_contents);
-	if (isset($_SERVER['HTTP_RANGE'])) {
-		$ranges = $_SERVER['HTTP_RANGE'];
-		[$unit, $range] = explode('=', $ranges, 2);
-		[$start, $end] = explode('-', $range, 2);
-
-		$start = empty($start) ? 0 : (int)$start;
-		$end = empty($end) ? $file_size - 1 : min((int)$end, $file_size - 1);
-
+	if ($file_size > 0 && preg_match('/^bytes=(\d+)-(\d*)$/', $_SERVER['HTTP_RANGE'] ?? '', $range_matches)) {
+		$start = (int)$range_matches[1];
+		$end = $range_matches[2] !== '' ? min((int)$range_matches[2], $file_size - 1) : $file_size - 1;
 		$length = $end - $start + 1;
 
-		//add additional headers
-		header('HTTP/1.1 206 Partial Content');
-		header("Content-Length: $length");
-		header("Content-Range: bytes $start-$end/$file_size");
+		if ($start < $file_size && $length > 0) {
+			//add additional headers
+			header('HTTP/1.1 206 Partial Content');
+			header("Content-Length: $length");
+			header("Content-Range: bytes $start-$end/$file_size");
 
-		//output the requested range from the content variable
-		echo substr($file_contents, $start, $length);
+			//output the requested range from the content variable
+			echo substr($file_contents, $start, $length);
+		}
+		else {
+			//the requested range is out of bounds, send the entire content
+			header('HTTP/1.1 200 OK');
+			header("Content-Length: $file_size");
+			header('Accept-Ranges: bytes');
+
+			//send the entire content
+			echo $file_contents;
+		}
 	}
 	else {
 		//add additional headers
@@ -498,7 +574,7 @@
 
 //device logs
 	if (file_exists(dirname(__DIR__, 2)."/app/device_logs/app_config.php")){
-		require_once "app/device_logs/resources/device_logs.php";
+		require_once dirname(__DIR__, 2)."/app/device_logs/resources/device_logs.php";
 	}
 
 ?>
