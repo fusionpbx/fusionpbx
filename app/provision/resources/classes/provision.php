@@ -1608,7 +1608,7 @@ class provision {
 	 *
 	 * @return void
 	 */
-	function write() {
+	public function write() {
 		// build the provision array
 		$provision = $this->settings->get('provision', null, []);
 		foreach ($provision as $key => $val) {
@@ -1712,6 +1712,12 @@ class provision {
 						$file_name = str_replace('{$mac}', $address_formatted, $file_name);
 						$file_name = str_replace('{$address}', $address_formatted, $file_name);
 
+						//prevent path traversal in the file name
+						$file_name = basename($file_name);
+						if ($file_name === '' || $file_name === '.' || $file_name === '..') {
+							continue;
+						}
+
 						// render and write configuration to file
 						$provision_dir_array = explode(';', $provision['path']);
 						if (is_array($provision_dir_array)) {
@@ -1725,11 +1731,15 @@ class provision {
 
 									// write the file
 									if (!is_dir($directory)) {
-										mkdir($directory, 0777, true);
+										mkdir($directory, 0750, true);
 									}
-									$fh = fopen($dest_path, 'w') or die("Unable to write to $directory for provisioning. Make sure the path exists and permissons are set correctly.");
-									fwrite($fh, $file_contents);
-									fclose($fh);
+									$fh = @fopen($dest_path, 'w');
+									if (!$fh) {
+										syslog(LOG_WARNING, 'provision: unable to write to ' . $dest_path . '. Make sure the path exists and permissions are set correctly.');
+									} else {
+										fwrite($fh, $file_contents);
+										fclose($fh);
+									}
 								} else {  // device disabled
 									// remove only files with `{$mac}` name
 									if (strpos($template_path, '{$mac}') !== false) {
