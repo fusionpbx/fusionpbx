@@ -94,8 +94,8 @@ class event_guard {
 		// Assign the variables
 		$this->name          = 'event_guard_log';
 		$this->table         = 'event_guard_logs';
-		$this->toggle_field  = '';
-		$this->toggle_values = ['block', 'pending'];
+		$this->toggle_field  = 'log_status';
+		$this->toggle_values = ['blocked', 'pending'];
 		$this->location      = 'event_guard_logs.php';
 	}
 
@@ -138,7 +138,7 @@ class event_guard {
 				$x = 0;
 				foreach ($records as $record) {
 					// Add to the array
-					if ($record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
 						$array[$this->table][$x]['event_guard_log_uuid'] = $record['event_guard_log_uuid'];
 					}
 
@@ -190,7 +190,7 @@ class event_guard {
 					//add to the array
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
 						$array[$this->table][$x]['event_guard_log_uuid'] = $record['event_guard_log_uuid'];
-						$array[$this->table][$x]['log_status']           = 'pending';
+						$array[$this->table][$x]['log_status'] = 'pending';
 					}
 
 					//increment the id
@@ -199,22 +199,45 @@ class event_guard {
 
 				// Delete the checked rows
 				if (is_array($array) && @sizeof($array) != 0) {
-					// Execute delete
-					$this->database->save($array);
+					// Save the array with the temp permissions required
+					$p = permissions::new();
+					$p->add($this->name . '_edit', 'temp');
+					$this->database->save($array, false);
+					$p->delete($this->name . '_edit', 'temp');
 					unset($array);
 
-					// Initialize the settings object
-					$setting = new settings(["category" => 'switch']);
+					// Get the ip addresses of the unblocked records
+					$uuids = [];
+					foreach ($records as $record) {
+						if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['event_guard_log_uuid'])) {
+							$uuids[] = "'" . $record['event_guard_log_uuid'] . "'";
+						}
+					}
+					$sql  = "select ip_address from v_" . $this->table . " ";
+					$sql .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
+					$rows = $this->database->select($sql, null, 'all');
+					unset($sql);
 
-					// Send unblock event
-					$cmd = "sendevent CUSTOM\n";
-					$cmd .= "Event-Name: CUSTOM\n";
-					$cmd .= "Event-Subclass: event_guard:unblock\n";
-					$esl = event_socket::create();
-					$switch_result = event_socket::command($cmd);
+					// Send an unblock event for each ip address
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						$esl = event_socket::create();
+						if ($esl->is_connected()) {
+							foreach ($rows as $row) {
+								if (filter_var($row['ip_address'] ?? '', FILTER_VALIDATE_IP)) {
+									$cmd = "sendevent CUSTOM\n";
+									$cmd .= "Event-Name: CUSTOM\n";
+									$cmd .= "Event-Subclass: event_guard:unblock\n";
+									$cmd .= "Unblock-Address: " . $row['ip_address'] . "\n";
+									$switch_result = $esl->request($cmd);
+								}
+							}
+							unset($cmd, $switch_result);
+						}
+					}
+					unset($rows, $row, $uuids);
 
 					// Set the message
-					message::add($text['message-delete']);
+					message::add($text['message-unblock']);
 				}
 				unset($records);
 			}
@@ -350,7 +373,7 @@ class event_guard {
 							$x++;
 						}
 					}
-					unset($sql, $parameters, $rows, $row);
+					unset($sql, $rows, $row);
 				}
 
 				// Save the changes and set the message

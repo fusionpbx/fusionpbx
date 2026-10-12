@@ -25,6 +25,12 @@ class event_guard_iptables implements event_guard_interface {
 	private $firewall_path;
 
 	/**
+	 * grep_path string
+	 * @var string
+	 */
+	private $grep_path;
+
+	/**
 	 * chains array
 	 * @var array
 	 */
@@ -41,19 +47,34 @@ class event_guard_iptables implements event_guard_interface {
 		$this->database = $settings->database();
 
 		// Set firewall path
-		$this->firewall_path = trim(shell_exec('command -v iptables'));
+		$this->firewall_path = trim((string) shell_exec('command -v iptables'));
 
 		// Set grep path
-		$this->grep_path = trim(shell_exec('command -v grep'));
+		$this->grep_path = trim((string) shell_exec('command -v grep'));
 
 		// Create a chain array
 		$this->chains[] = 'sip-auth-ip';
 		$this->chains[] = 'sip-auth-fail';
 
 		// Add the chains to active iptables
-		foreach ($this->chains as $chain) {
-			shell_exec($this->firewall_path.' --new ' . $chain . ' >/dev/null 2>&1 &');
-			shell_exec($this->firewall_path.' -I INPUT -j '.$chain . ' >/dev/null 2>&1 &');
+		if ($this->firewall_path != '') {
+			foreach ($this->chains as $chain) {
+				// Create the chain if it does not already exist
+				$command = $this->firewall_path . ' -S ' . escapeshellarg($chain) . ' 2>/dev/null';
+				exec($command, $output, $exit_code);
+				if ($exit_code !== 0) {
+					$command = $this->firewall_path . ' -N ' . escapeshellarg($chain) . ' 2>/dev/null';
+					exec($command, $output, $exit_code);
+				}
+
+				// Add the jump from INPUT to the chain if it does not already exist
+				$command = $this->firewall_path . ' -S INPUT 2>/dev/null | ' . $this->grep_path . ' -F -- ' . escapeshellarg('-j ' . $chain);
+				exec($command, $output, $exit_code);
+				if ($exit_code !== 0) {
+					$command = $this->firewall_path . ' -I INPUT -j ' . escapeshellarg($chain) . ' 2>/dev/null';
+					exec($command, $output, $exit_code);
+				}
+			}
 		}
 	}
 
@@ -73,16 +94,21 @@ class event_guard_iptables implements event_guard_interface {
 			return false;
 		}
 
-		// Run the block command for iptables
-		// Example: iptables -I INPUT -s 127.0.0.1 -j DROP
-		$command = $this->firewall_path . ' -I ' . escapeshellarg($filter) . ' -s ' . $ip_address . ' -j DROP';
-		$result = shell_exec($command);
-		if (!empty($result)) {
-			return false;
+		// Check to see if the rule already exists so duplicates are not added
+		$command = $this->firewall_path . ' -C ' . escapeshellarg($filter) . ' -s ' . $ip_address . ' -j DROP 2>/dev/null';
+		exec($command, $output, $exit_code);
+		if ($exit_code === 0) {
+			// Return success, the address is already blocked
+			return true;
 		}
 
-		// Return success
-		return true;
+		// Run the block command for iptables
+		// Example: iptables -I sip-auth-fail -s 127.0.0.1 -j DROP
+		$command = $this->firewall_path . ' -I ' . escapeshellarg($filter) . ' -s ' . $ip_address . ' -j DROP 2>/dev/null';
+		exec($command, $output, $exit_code);
+
+		// Return the result
+		return $exit_code === 0;
 	}
 
 	/**
@@ -104,44 +130,28 @@ class event_guard_iptables implements event_guard_interface {
 			$chains = $this->chains;
 		}
 		else {
-			$chains[] = $filter;
+			$chains = [$filter];
 		}
 
-		//remove the IP address from each chain
+		// Remove the IP address from each chain
 		foreach($chains as $chain) {
-			$i = 0;
-			while (true) {
-				// Remove the blocked IP address
-				$command = $this->firewall_path . ' -D ' . escapeshellarg($chain) . ' -s ' . $ip_address . ' -j DROP';
-				$descriptors = [
-					0 => ['pipe', 'r'],  // stdin
-					1 => ['pipe', 'w'],  // stdout
-					2 => ['pipe', 'w'],  // stderr
-				];
-				$process = proc_open($command, $descriptors, $pipes);
-				if (is_resource($process)) {
-					$stdout = stream_get_contents($pipes[1]);
-					$stderr = stream_get_contents($pipes[2]);
-					$exit_code = proc_close($process);
-
-					if ($exit_code !== 0 && strpos($stderr, "Bad rule") !== false) {
-						echo "exiting the loop\n";
-						break;
-					}
-				}
-
-				//added as a failsafe
-				if ($i > 1000) {
+			// Loop until there are no matching rules remaining
+			for ($i = 0; $i < 1000; $i++) {
+				// Check to see if the rule still exists (the exec() output array must be cleared first)
+				unset($output);
+				$command = $this->firewall_path . ' -C ' . escapeshellarg($chain) . ' -s ' . $ip_address . ' -j DROP 2>/dev/null';
+				exec($command, $output, $exit_code);
+				if ($exit_code !== 0) {
+					// No matching rule remains
 					break;
 				}
 
-				//increment the iterator
-				$i++;
+				// Remove one matching rule
+				unset($output);
+				$command = $this->firewall_path . ' -D ' . escapeshellarg($chain) . ' -s ' . $ip_address . ' -j DROP 2>/dev/null';
+				exec($command, $output, $exit_code);
 			}
 		}
-
-		// Send information to the user
-		echo "Unblock address " . $ip_address . " line " . __LINE__ . " command " . $command . " \n";
 
 		// Return success
 		return true;
@@ -160,15 +170,11 @@ class event_guard_iptables implements event_guard_interface {
 			return false;
 		}
 
-		// Determine whether to return true or false
-		// Check to see if the address is blocked
-		$command = $this->firewall_path.' -L -n --line-numbers | grep '.$ip_address;
-		$result = shell_exec($command);
-		if (!empty($result) && strlen($result) > 3) {
-			return true;
-		}
+		// Check to see if the address is blocked in the chain
+		$command = $this->firewall_path . ' -C ' . escapeshellarg($filter) . ' -s ' . $ip_address . ' -j DROP 2>/dev/null';
+		exec($command, $output, $exit_code);
 
 		// Return the result
-		return false;
+		return $exit_code === 0;
 	}
 }
