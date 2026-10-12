@@ -628,6 +628,7 @@ function update_php_fpm(settings $settings) {
 		$read_write_paths[] = '/var/lib/freeswitch';
 		$read_write_paths[] = $settings->get('cache', 'location', '/var/cache/fusionpbx');
 		$read_write_paths[] = '/usr/share/fusionpbx';
+		$read_write_paths[] = '/etc/fusionpbx'; // the install wizard writes config.conf here (password recovery)
 
 		// Build the line to add to the service file
 		$line_to_insert = "ReadWritePaths=";
