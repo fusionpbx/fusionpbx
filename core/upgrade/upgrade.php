@@ -816,6 +816,8 @@ function upgrade_services($text, settings $settings) {
  * This function iterates over all service files, extracts the service names,
  * and stops each service using systemctl.
  *
+ * Note: this function is not called from anywhere in this repository at the time of writing.
+ *
  * @param array    $text
  * @param settings $settings
  */
@@ -829,8 +831,8 @@ function stop_services($text, settings $settings) {
 	}
 
 	// Get the list of services
-	$core_files = glob(dirname(__DIR__, 4) . "/core/*/resources/service/".$search_file_name.".service");
-	$app_files = glob(dirname(__DIR__, 4) . "/app/*/resources/service/".$search_file_name.".service");
+	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/".$search_file_name.".service");
+	$app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/".$search_file_name.".service");
 	$service_files = array_merge($core_files, $app_files);
 
 	// Stop each of the services
