@@ -816,8 +816,6 @@ function upgrade_services($text, settings $settings) {
  * This function iterates over all service files, extracts the service names,
  * and stops each service using systemctl.
  *
- * Note: this function is not called from anywhere in this repository at the time of writing.
- *
  * @param array    $text
  * @param settings $settings
  */
