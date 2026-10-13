@@ -297,10 +297,10 @@ class database {
 	/**
 	 * Table name.
 	 *
-	 * @access private
+	 * @access public
 	 * @var string sanitized
 	 */
-	private $table;
+	public $table;
 
 	/**
 	 * <p>Stores the result from the most recent query. The type will be based on what was requested.</p>
