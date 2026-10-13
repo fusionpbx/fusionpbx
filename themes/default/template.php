@@ -1606,6 +1606,42 @@
 		}
 		{/literal}
 
+	//handle action bar style on small screens
+		{literal}
+		window.addEventListener('load', function(){
+			action_bar_overflow();
+		}, false);
+		window.addEventListener('resize', function(){
+			action_bar_overflow();
+		}, false);
+		function action_bar_overflow() {
+			if (document.querySelector("#action_bar")) {
+				const action_bar = document.querySelector("#action_bar");
+				const actions = document.querySelector("#action_bar > .actions");
+				const paging_controls_mini = actions.querySelector(":scope > form > span");
+
+				actions.style.cssText = '';
+				if (paging_controls_mini) {
+					paging_controls_mini.style.cssText = '';
+				}
+
+				//overflow detected
+				if (action_bar.offsetHeight > 60) {
+					actions.style.cssText = 'width: 100%; margin: 20px 0 0 0; position: relative; display: flex; row-gap: 5px; flex-wrap: wrap;';
+					if (paging_controls_mini) {
+						paging_controls_mini.style.cssText = 'position: absolute; top: -42px; right: 0;';
+					}
+				}
+				else {
+					actions.style.cssText = '';
+					if (paging_controls_mini) {
+						paging_controls_mini.style.cssText = '';
+					}
+				}
+			}
+		}
+		{/literal}
+
 	//enable button class button
 		{literal}
 		function button_enable(button_id) {
