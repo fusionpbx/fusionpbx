@@ -352,6 +352,7 @@
 							end
 
 						--select this entry press 1
+						    session:flushDigits();
 							dtmf_digits = select_entry();
 
 						--if 1 is pressed then transfer the call
