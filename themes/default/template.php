@@ -1606,7 +1606,7 @@
 		}
 		{/literal}
 
-	//handle action bar style on overflow
+	//handle action bar style on small screens
 		{literal}
 		window.addEventListener('load', function(){
 			action_bar_overflow();
