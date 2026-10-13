@@ -3630,6 +3630,13 @@ else { //default: white
 		overflow-wrap: break-word;
 		}
 
+	@media (max-width: 575.98px) {
+		div.action_bar > div.actions > *,
+		div.action_bar > div.actions > form > * {
+			margin: 0 2px 0 0 !important;
+		}
+	}
+
 	div.action_bar > div.actions > div.unsaved {
 		display: inline-block;
 		margin-right: 30px;
