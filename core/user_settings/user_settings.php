@@ -186,10 +186,10 @@
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$button_icon_add,'id'=>'btn_add','link'=>PROJECT_PATH.'/core/user_settings/user_setting_edit.php?user_uuid='.urlencode($_GET['id'])]);
 	}
 	if (permission_exists('user_setting_edit') && $user_settings) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$button_icon_toggle,'name'=>'btn_toggle','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$button_icon_toggle,'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	}
 	if (permission_exists('user_setting_delete') && $user_settings) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$button_icon_delete,'name'=>'btn_delete','onclick'=>"modal_open('modal-delete','btn_delete');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -243,7 +243,7 @@
 				echo "<tr class='list-header'>\n";
 				if (permission_exists('user_setting_add') || permission_exists('user_setting_edit') || permission_exists('user_setting_delete')) {
 					echo "	<th class='checkbox'>\n";
-					echo "		<input type='checkbox' id='checkbox_all_".$user_setting_category."' name='checkbox_all' onclick=\"list_all_toggle('".$user_setting_category."');\">\n";
+					echo "		<input type='checkbox' id='checkbox_all_".$user_setting_category."' name='checkbox_all' onclick=\"list_all_toggle('".$user_setting_category."'); checkbox_on_change(this);\">\n";
 					echo "	</th>\n";
 				}
 				echo "<th class='pct-35'>".$text['label-subcategory']."</th>";
@@ -262,7 +262,7 @@
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('user_setting_add') || permission_exists('user_setting_edit') || permission_exists('user_setting_delete')) {
 				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='user_settings[$x][checked]' id='checkbox_".$x."' class='checkbox_".$user_setting_category."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$user_setting_category."').checked = false; }\">\n";
+				echo "		<input type='checkbox' name='user_settings[$x][checked]' id='checkbox_".$x."' class='checkbox_".$user_setting_category."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all_".$user_setting_category."').checked = false; }\">\n";
 				echo "		<input type='hidden' name='user_settings[$x][uuid]' value='".escape($row['user_setting_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
