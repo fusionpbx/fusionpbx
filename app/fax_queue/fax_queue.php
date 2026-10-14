@@ -284,7 +284,7 @@
 		}
 	}
 	if ($show !== 'all' && permission_exists('fax_queue_all')) {
-		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'style'=>'margin-left: 15px;','link'=>'?show=all']);
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all']);
 	}
 	echo "			<select class='formfld' name='fax_status' style='margin-left: 15px;'>\n";
 	echo "				<option value='' selected='selected' disabled hidden>".$text['label-fax_status']."...</option>";
