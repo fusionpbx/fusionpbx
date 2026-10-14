@@ -378,13 +378,11 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['label-advanced_settings']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','link'=>'fax_edit.php?id='.$fax_uuid.($query_string ? '&'.$query_string : '')]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','link'=>'fax_edit.php?id='.urlencode($fax_uuid).($query_string ? '&'.$query_string : '')]);
 	echo button::create(['type'=>'button','label'=>$text['button-test'],'icon'=>'tools','id'=>'test_button','collapse'=>'hide-sm-dn','style'=>'margin-left: 15px;','onclick'=>"this.blur(); fax_advanced_test();"]);
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','collapse'=>'hide-xs','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
-	echo "	<div style='clear: both;'>\n";
-	echo "		".$text['description-advanced_settings']."\n";
-	echo "	</div>\n";
+	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
 
 	if ($action == 'update') {
@@ -395,6 +393,9 @@
 			echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','name'=>'action','value'=>'delete','onclick'=>"modal_close();"])]);
 		}
 	}
+
+	echo $text['description-advanced_settings']."\n";
+	echo "<br /><br />\n";
 
 	if (function_exists("imap_open")) {
 
