@@ -192,7 +192,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar_sub'>\n";
-	echo "	<div class='heading'><b id='heading_sub'>".($show != "all" || !permission_exists('domain_setting_all') ? $domain_name : $text['title-domain_settings'])."</b><div class='count'>".number_format($num_rows)."</div></div>\n"; //$text['title-domain_settings']
+	echo "	<div class='heading'><b>".($show != "all" || !permission_exists('domain_setting_all') ? $domain_name : $text['title-domain_settings'])."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'action_bar_sub_button_back','style'=>'','link'=>PROJECT_PATH.'/core/domains/domains.php']);
 	if (permission_exists('default_setting_view') && $num_rows) {
@@ -218,7 +218,7 @@
 	}
 	echo "		</form>\n";
 	if (permission_exists("domain_select") && permission_exists("domain_setting_add") && $num_rows) {
-		echo button::create(['type'=>'button','label'=>$text['button-copy'],'id'=>'btn_copy','icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','onclick'=>'show_domains();']);
+		echo button::create(['type'=>'button','label'=>$text['button-copy'],'id'=>'btn_copy','icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','style'=>'display: none;','onclick'=>'show_domains();']);
 		echo button::create(['type'=>'button','label'=>$text['button-cancel'],'id'=>'btn_copy_cancel','icon'=>$settings->get('theme', 'button_icon_cancel'),'style'=>'display: none;','onclick'=>'hide_domains();']);
 		echo "	<select class='formfld' style='display: none; width: auto;' id='target_domain' onchange=\"document.getElementById('domain_uuid_target').value = this.options[this.selectedIndex].value;\" data-domain-search='true'>\n";
 		echo "		<option value='".$domain_uuid."'>(".$text['label-duplicate'].")</option>\n";
@@ -236,10 +236,10 @@
 		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('copy'); list_form_submit('form_list');"])]);
 	}
 	if (permission_exists('domain_setting_edit') && $num_rows) {
-		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'name'=>'btn_toggle','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$settings->get('theme', 'button_icon_toggle'),'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
 	}
 	if (permission_exists('domain_setting_delete') && $num_rows) {
-		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','onclick'=>"modal_open('modal-delete-settings','btn_delete_settings');"]);
+		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete-settings','btn_delete_settings');"]);
 		echo modal::create(['id'=>'modal-delete-settings','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete_settings','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 	echo "	</div>\n";
@@ -295,7 +295,7 @@
 				echo "<tr class='list-header'>\n";
 				if (permission_exists('domain_setting_add') || permission_exists('domain_setting_edit') || permission_exists('domain_setting_delete')) {
 					echo "	<th class='checkbox'>\n";
-					echo "		<input type='checkbox' id='checkbox_all_".$domain_setting_category."' name='checkbox_all' onclick=\"list_all_toggle('".$domain_setting_category."');\">\n";
+					echo "		<input type='checkbox' id='checkbox_all_".$domain_setting_category."' name='checkbox_all' onclick=\"list_all_toggle('".$domain_setting_category."'); checkbox_on_change(this);\">\n";
 					echo "	</th>\n";
 				}
 				if (!empty($show) && $show == 'all' && permission_exists('domain_setting_all')) {
@@ -320,7 +320,7 @@
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('domain_setting_add') || permission_exists('domain_setting_edit') || permission_exists('domain_setting_delete')) {
 				echo "	<td class='checkbox'>\n";
-				echo "		<input type='checkbox' name='domain_settings[$x][checked]' id='checkbox_".$x."' class='checkbox_".$domain_setting_category."' value='true' onclick=\"if (!this.checked) { document.getElementById('checkbox_all_".$domain_setting_category."').checked = false; }\">\n";
+				echo "		<input type='checkbox' name='domain_settings[$x][checked]' id='checkbox_".$x."' class='checkbox_".$domain_setting_category."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all_".$domain_setting_category."').checked = false; }\">\n";
 				echo "		<input type='hidden' name='domain_settings[$x][uuid]' value='".escape($row['domain_setting_uuid'])."' />\n";
 				echo "	</td>\n";
 			}
