@@ -87,8 +87,11 @@ if (!empty($paging_controls_mini)) {
 }
 echo "		</form>\n";
 echo "	</div>\n";
-echo "	<div style='clear: both;'>".$text['description-destination_map']."</div>\n";
+echo "	<div style='clear: both;'></div>\n";
 echo "</div>\n";
+
+echo $text['description-destination_map']."\n";
+echo "<br /><br />\n";
 
 //loop through the destinations array
 if (!empty($destination_array)) {
