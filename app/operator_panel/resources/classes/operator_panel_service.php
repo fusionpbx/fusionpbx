@@ -532,7 +532,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 				 . "LEFT JOIN v_voicemails AS vm ON vm.domain_uuid = e.domain_uuid "
 				 . "AND vm.voicemail_id = e.extension "
 				 . "WHERE d.domain_name = :domain_name AND e.enabled = 'true' "
-				 . "ORDER BY e.extension::integer NULLS LAST, e.extension ASC";
+				 . "ORDER BY CASE WHEN e.extension ~ '^[0-9]+$' THEN e.extension::bigint END NULLS LAST, e.extension ASC";
 
 			$extensions = $database->select($sql, [':domain_name' => $domain_name], 'all') ?? [];
 			if ($extensions === false) {
