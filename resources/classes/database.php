@@ -1290,8 +1290,8 @@ class database {
 			$sql .= "WHERE table_name = :table_name ";
 			$sql .= "and table_catalog = :table_catalog ";
 			$sql .= 'ORDER BY ordinal_position; ';
-			$parameters['table_name'] = $table_name;
-			$parameters['table_catalog'] = $db_name;
+			$parameters['table_name'] = $this->table;
+			$parameters['table_catalog'] = $this->db_name;
 		}
 		if ($this->type == 'mysql') {
 			$sql = 'DESCRIBE ' . $this->table . ';';
