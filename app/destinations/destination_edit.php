@@ -1273,12 +1273,10 @@
 										$action_data = $action_array[1] ?? null;
 
 										//build the actions array
-										if (isset($action_data) && !empty($action_data)) {
-											if ($destination->valid($action_app.':'.$action_data)) {
-												$actions[$y]['destination_app'] = $action_app;
-												$actions[$y]['destination_data'] = $action_data;
-												$y++;
-											}
+										if ($destination->valid($action_app.':'.$action_data)) {
+											$actions[$y]['destination_app'] = $action_app;
+											$actions[$y]['destination_data'] = $action_data;
+											$y++;
 										}
 
 										//get the $destination_app and destination_data
