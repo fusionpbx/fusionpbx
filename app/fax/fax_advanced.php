@@ -309,7 +309,7 @@
 		padding: 20px;
 	}
 
-	div.heading {
+	div.form_set div.heading {
 		padding: 5px 0 15px 0;
 	}
 
