@@ -191,12 +191,12 @@
 	}
 
 //show the content
-	echo "<div class='action_bar' id='action_bar_sub'>\n";
+	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".($show != "all" || !permission_exists('domain_setting_all') ? $domain_name : $text['title-domain_settings'])."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'action_bar_sub_button_back','style'=>'','link'=>PROJECT_PATH.'/core/domains/domains.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>PROJECT_PATH.'/core/domains/domains.php']);
 	if (permission_exists('default_setting_view') && $num_rows) {
-		echo button::create(['type'=>'button','label'=>$text['select-global'],'icon'=>$settings->get('theme', 'button_icon_all'),'style'=>'','link'=>PROJECT_PATH.'/core/default_settings/default_settings.php']);
+		echo button::create(['type'=>'button','label'=>$text['select-global'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>PROJECT_PATH.'/core/default_settings/default_settings.php']);
 		echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/core/default_settings/default_settings_reload.php?id='.$domain_uuid]);
 	}
 	if (permission_exists('domain_setting_add')) {
@@ -471,23 +471,6 @@
 	echo "<br />\n";
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
-
-//make sub action bar sticky
-	echo "<script>\n";
-
-	echo "	window.addEventListener('scroll', function(){\n";
-	echo "		action_bar_scroll('action_bar_sub', 300, heading_modify, heading_restore);\n";
-	echo "	}, false);\n";
-
-	echo "	function heading_modify() {\n";
-	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'inline-block';\n";
-	echo "	}\n";
-
-	echo "	function heading_restore() {\n";
-	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'none';\n";
-	echo "	}\n";
-
-	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";
