@@ -304,8 +304,10 @@
 	echo "</div>";
 
 	if (!empty($theme_settings) && is_array($theme_settings) && @sizeof($theme_settings) != 0) {
-		echo "<div class='action_bar' id='action_bar'>\n";
+		echo "<div class='action_bar' id='action_bar_sub'>\n";
+		echo "	<div class='heading' id='action_bar_sub_heading' style='display: none;'><b>".$text['title-theme']."</b></div>\n";
 		echo "	<div class='actions'>\n";
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'action_bar_sub_button_back','collapse'=>'hide-xs','style'=>'margin-right: 15px; display: none;','link'=>'themes.php']);
 		if (permission_exists('theme_setting_add') && $action == 'update') {
 			echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','name'=>'btn_add','link'=>'theme_setting_edit.php?theme_uuid='.$theme_uuid]);
 		}
@@ -391,6 +393,25 @@
 
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>";
+
+//make sub action bar sticky
+	echo "<script>\n";
+
+	echo "	window.addEventListener('scroll', function(){\n";
+	echo "		action_bar_scroll('action_bar_sub', 280, heading_modify, heading_restore);\n";
+	echo "	}, false);\n";
+
+	echo "	function heading_modify() {\n";
+	echo "		document.getElementById('action_bar_sub_heading').style.display = 'inline-block';\n";
+	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'inline-block';\n";
+	echo "	}\n";
+
+	echo "	function heading_restore() {\n";
+	echo "		document.getElementById('action_bar_sub_heading').style.display = 'none';\n";
+	echo "		document.getElementById('action_bar_sub_button_back').style.display = 'none';\n";
+	echo "	}\n";
+
+	echo "</script>\n";
 
 //include the footer
 	require_once "resources/footer.php";
