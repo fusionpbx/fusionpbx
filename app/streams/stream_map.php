@@ -218,7 +218,7 @@
 					$text2['title-'.$application] = ucwords(str_replace('_', ' ', $application));
 				}
 
-				echo "<strong>".escape($text2['title-'.$application] ?? $application)."</strong>\n";
+				echo "<b>".escape($text2['title-'.$application] ?? $application)."</b>\n";
 				echo "<div class='card'>\n";
 				echo "<table class='list'>\n";
 				echo "<tr class='list-header'>\n";
