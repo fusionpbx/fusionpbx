@@ -459,10 +459,6 @@
 		$dialplan_production[$dialplan_name]['dialplan_order'] = (int)$row['dialplan_order'] ?? 0;
 		$dialplan_production[$dialplan_name]['dialplan_enabled'] = $row['dialplan_enabled'] ?? 'true';
 
-		if ($dialplan_production[$dialplan_name]['dialplan_name'] == 'page') {
-			echo "";
-		}
-
 		// Iterate through the dialplan details and build the production array
 		$y = 0;
 		foreach($dialplan_details as $sub_row) {
