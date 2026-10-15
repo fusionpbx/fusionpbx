@@ -107,13 +107,12 @@ if (!empty($destination_array)) {
 			$app_name_list = 'call_center_queues.php';
 		}
 
-		//echo "<h3>".$text['title-'.$key]."</h3>\n";
-		echo "<div class=\"category\" id=\"".escape($key)."\">\n";
-		echo "<b><a href='/app/".$key."/".$app_name_list."'>".$text2['title-'.$key]."</a></b><br>\n";
-		echo "<div class=\"card\">\n";
+		echo "<div class='category' id='".escape($key)."'>\n";
+		echo "<a href='/app/".$key."/".$app_name_list."'><b>".$text2['title-'.$key]."</b></a><br>\n";
+		echo "<div class='card'>\n";
 
 		echo "	<table class='list'>\n";
-		echo "	<tr class='list-row' href='".($list_row_url ?? '')."'>\n";
+		echo "	<tr class='list-header' href='".($list_row_url ?? '')."'>\n";
 		echo "		<th>".$text['label-label']."</th>\n";
 		echo "		<th>".$text['label-extension']."</th>\n";
 		echo "		<th>&nbsp;</th>\n";
