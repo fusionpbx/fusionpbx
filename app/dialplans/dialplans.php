@@ -39,6 +39,34 @@
 // Set the domain name from the session, defaulting to an empty string if not set
 	$domain_name = $domain_name ?? $_SESSION['domain_name'] ?? '';
 
+// Variable dialplans: the file template defines the minimum set of variable names
+// that must exist in the database. These are flagged (bold) only when a template
+// variable is missing from the production (database) dialplan. Extra variables in
+// the production are allowed and do not trigger the bold status.
+	$variable_app_uuids = [
+		'd49ee3bd-5085-4619-a2f9-2b62c8c461c5', //global-variables
+		'9f356fe7-8cf8-4c14-8fe2-6daf89304458',  //domain-variables
+	];
+
+// Extract the set/export variable names (the key before the first '=') from a dialplan array.
+	if (!function_exists('dialplan_variable_names')) {
+		function dialplan_variable_names($dialplan) {
+			$names = [];
+			foreach ($dialplan['dialplan_details'] ?? [] as $d) {
+				$type = $d['dialplan_detail_type'] ?? '';
+				$data = $d['dialplan_detail_data'] ?? '';
+				if ($type === 'set' || $type === 'export') {
+					$pos = strpos($data, '=');
+					$name = $pos !== false ? substr($data, 0, $pos) : $data;
+					if ($name !== '') {
+						$names[] = $name;
+					}
+				}
+			}
+			return $names;
+		}
+	}
+
 // Load the dialplan files
 	$dialplan_templates = [];
 
@@ -47,8 +75,17 @@
 	if (!empty($dialplan_files)) {
 		// Parse each dialplan file and store its enabled status
 		foreach ($dialplan_files as $file) {
+			// Replace the v_pin_number variable with an empty value so we can compare the hash without including the actual pin number
+			$file_contents = file_get_contents($file);
+			$file_contents = str_replace('pin_number={v_pin_number}', 'pin_number=', $file_contents);
+			$file_contents = str_replace('barge_pin={v_pin_number}', 'barge_pin=', $file_contents);
+			$file_contents = str_replace('operator=1000', 'operator=', $file_contents);
+
+			// Use pregmatch to replace any occurrence of timezone=[a-zA-Z/]+ with timezone=
+			$file_contents = preg_replace('/timezone=[a-zA-Z\/]+/', 'timezone=', $file_contents);
+
 			// Parse the XML file and extract the dialplan name
-			$xml = simplexml_load_file($file);
+			$xml = simplexml_load_string($file_contents);
 
 			// Get the dialplan name to use as the array key
 			$dialplan_name = (string)$xml->attributes()->name ?? '';
@@ -422,8 +459,41 @@
 		$dialplan_production[$dialplan_name]['dialplan_order'] = (int)$row['dialplan_order'] ?? 0;
 		$dialplan_production[$dialplan_name]['dialplan_enabled'] = $row['dialplan_enabled'] ?? 'true';
 
+		if ($dialplan_production[$dialplan_name]['dialplan_name'] == 'page') {
+			echo "";
+		}
+
+		// Iterate through the dialplan details and build the production array
 		$y = 0;
 		foreach($dialplan_details as $sub_row) {
+			$parts = explode('=', $sub_row['dialplan_detail_data'] ?? '', 2);
+			switch ($parts[0] ?? '') {
+				case 'pin_number':
+					// Replace the pin_number variable with a known value when not already empty
+					if ($parts[1] != '') {
+						$sub_row['dialplan_detail_data'] = 'pin_number=';
+					}
+					break;
+				case 'barge_pin':
+					// Replace the barge_pin variable with a known value when not already empty
+					if ($parts[1] != '') {
+						$sub_row['dialplan_detail_data'] = 'barge_pin=';
+					}
+					break;
+				case 'operator':
+					// Replace the operator variable with a known value when not already empty
+					if ($parts[1] != '') {
+						$sub_row['dialplan_detail_data'] = 'operator=';
+					}
+					break;
+				case 'timezone':
+					// Replace the timezone variable with a known value when not already empty
+					if ($parts[1] != '') {
+						$sub_row['dialplan_detail_data'] = 'timezone=';
+					}
+					break;
+			}
+
 			if ($row['dialplan_uuid'] == $sub_row['dialplan_uuid']) {
 				// $dialplan_production[$dialplan_name]['dialplan_details'][$y]['domain_uuid'] = $sub_row['domain_uuid'];
 				// $dialplan_production[$dialplan_name]['dialplan_details'][$y]['dialplan_uuid'] = $sub_row['dialplan_uuid'];
@@ -700,15 +770,32 @@
 			$dialplan_diff = '';
 			$dialplan_tooltip = '';
 			if (isset($dialplan_templates[$row['dialplan_name']]) && isset($dialplan_production[$row['dialplan_name']])) {
-				$template_hash = serialize($dialplan_templates[$row['dialplan_name']]);
-				$production_hash = serialize($dialplan_production[$row['dialplan_name']]);
-				if ($template_hash == $production_hash) {
-					$dialplan_status = $text['label-default'];
-					$dialplan_tooltip = 'Default';
+				if (in_array($row['app_uuid'], $variable_app_uuids)) {
+					// For variable dialplans, the template is a minimum required set of variable
+					// names. Flag (bold) only when the production is missing one of them.
+					$template_names   = dialplan_variable_names($dialplan_templates[$row['dialplan_name']]);
+					$production_names = dialplan_variable_names($dialplan_production[$row['dialplan_name']]);
+					$missing_names = array_diff($template_names, $production_names);
+					if (empty($missing_names)) {
+						$dialplan_status = $text['label-default'];
+						$dialplan_tooltip = 'Default';
+					}
+					else {
+						$dialplan_status = 'custom';
+						$dialplan_tooltip = $text['label-modified'] . ': ' . implode(', ', $missing_names);
+					}
 				}
 				else {
-					$dialplan_status = 'custom';
-					$dialplan_tooltip = $text['label-modified'];
+					$template_hash = serialize($dialplan_templates[$row['dialplan_name']]);
+					$production_hash = serialize($dialplan_production[$row['dialplan_name']]);
+					if ($template_hash == $production_hash) {
+						$dialplan_status = $text['label-default'];
+						$dialplan_tooltip = 'Default';
+					}
+					else {
+						$dialplan_status = 'custom';
+						$dialplan_tooltip = $text['label-modified'];
+					}
 				}
 				// if (!empty($dialplan_production[$row['dialplan_name']])) {
 				// 	$dialplan_diff = array_diff_deep($dialplan_templates[$row['dialplan_name']], $dialplan_production[$row['dialplan_name']]);
