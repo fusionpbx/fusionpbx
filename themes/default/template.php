@@ -1618,7 +1618,7 @@
 			if (document.querySelector("#action_bar")) {
 				const action_bar = document.querySelector("#action_bar");
 				const actions = document.querySelector("#action_bar > .actions");
-				const paging_controls_mini = actions.querySelector(":scope > form > span");
+				const paging_controls_mini = actions.querySelector(":scope > form#form_search > span:has(span > button)");
 
 				actions.style.cssText = '';
 				if (paging_controls_mini) {
