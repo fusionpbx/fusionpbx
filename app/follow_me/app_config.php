@@ -111,6 +111,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Options: simultaneous, enterprise ";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d4063482-e387-4220-8426-b0cdf67cae98";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "follow_me";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "external_route";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "loopback";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set how follow me calls external numbers. Options: loopback, bridge";
+		$y++;
 
 	//schema details
 		$y=0;

@@ -67,6 +67,9 @@
 	local settings = Settings.new(dbh, domain_name, domain_uuid);
 	local follow_me_strategy = settings:get('follow_me', 'strategy', 'text') or 'enterprise'; --simultaneous, enterprise
 
+--get the bridge type for external numbers (loopback or bridge)
+	local external_route = settings:get('follow_me', 'external_route', 'text') or 'loopback';
+
 --include json library
 	debug["sql"] = false;
 	local json
@@ -306,7 +309,7 @@
 --get the dialplan data and save it to a table
 	if (external == "true") then
 		dialplans = route_to_bridge.preload_dialplan(
-			dbh, domain_uuid, {hostname = hostname, context = context}
+			dbh, domain_uuid, {context = context}
 		)
 	end
 
@@ -452,7 +455,27 @@
 				dial_string = "[sip_invite_domain="..domain_name..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]" .. row.destination_number;
 			else
 				--external number
-					route_bridge = 'loopback/'..destination_number;
+					--set the bridge to use for the external number
+						route_bridge = 'loopback/'..destination_number;
+						route_actions = '';
+						if (external_route == 'bridge') then
+							--route the external number through the outbound routes (route_to_bridge)
+								local fields = {
+									context = context,
+									destination_number = destination_number,
+									caller_id_number = caller_id_number,
+									__api__ = api,
+								}
+								local route = route_to_bridge(dialplans or dbh, domain_uuid, fields)
+								if (route and route.bridge) then
+									--use the bridge from the outbound route
+										route_bridge = route.bridge;
+									--collect the set/export actions from the outbound route
+										for _, action in ipairs(route) do
+											route_actions = route_actions .. action .. ",";
+										end
+								end
+						end
 					if (extension_toll_allow ~= nil) then
 						toll_allow = extension_toll_allow:gsub(",", ":");
 					end
@@ -496,7 +519,7 @@
 				--set the destination dial string
 					-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal extensions, but not external calls. 
 					--destination_delay = destination_delay * 2;
-					dial_string = "[toll_allow=".. toll_allow ..",accountcode="..accountcode..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
+					dial_string = "["..route_actions.."toll_allow=".. toll_allow ..",accountcode="..accountcode..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..","..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay.."]"..route_bridge
 			end
 
 		--add a delimiter between destinations
