@@ -273,6 +273,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set the default value for follow me enabled. Options: true, false";
+		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "d74499b0-ac2d-43a0-8a7c-adb28c23685a";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "ring_group";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "external_route";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "loopback";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set how ring group calls external numbers. Options: loopback, bridge";
 
 	//schema details
 		$y=0;

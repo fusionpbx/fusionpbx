@@ -394,6 +394,9 @@
 	local Settings = require "resources.functions.lazy_settings";
 	local settings = Settings.new(dbh, domain_name, domain_uuid);
 
+--get the bridge type for external numbers (loopback or bridge)
+	external_route = settings:get('ring_group', 'external_route', 'text') or 'loopback';
+
 --get the recordings dir
 	--recordings_dir = settings:get('switch', 'recordings', 'dir');
 
@@ -754,9 +757,11 @@
 					session:execute("set", "ignore_early_media=true");
 
 				--get the dialplan data and save it to a table
-					--dialplans = route_to_bridge.preload_dialplan(
-					--	dbh, domain_uuid, {hostname = hostname, context = context}
-					--)
+				if (external_route == "bridge") then
+					dialplans = route_to_bridge.preload_dialplan(
+						dbh, domain_uuid, {context = context}
+					)
+				end
 			end
 
 		---add follow me destinations
@@ -1159,7 +1164,27 @@
 								-- have to double destination_delay here due a FS bug requiring a 50% delay value for internal externsions, but not external calls.
 								--destination_delay = destination_delay * 2;
 
-								route_bridge = 'loopback/'..destination_number;
+								--set the bridge to use for the external number
+									route_bridge = 'loopback/'..destination_number;
+									route_actions = '';
+									if (external_route == "bridge") then
+										--route the external number through the outbound routes (route_to_bridge)
+										local fields = {
+											context = context,
+											destination_number = destination_number,
+											caller_id_number = caller_id_number,
+											__api__ = api,
+										}
+										local route = route_to_bridge(dialplans or dbh, domain_uuid, fields)
+										if (route and route.bridge) then
+											--use the bridge from the outbound route
+												route_bridge = route.bridge;
+											--collect the set/export actions from the outbound route
+												for _, action in ipairs(route) do
+													route_actions = route_actions .. action .. ",";
+												end
+										end
+									end
 								if (extension_toll_allow ~= nil) then
 									toll_allow = extension_toll_allow:gsub(",", ":");
 								end
@@ -1208,7 +1233,7 @@
 								end
 
 							--set the destination dial string
-								dial_string = "["..diversion_header.."toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay..","..sip_h_caller_destination.."]"..route_bridge
+								dial_string = "["..route_actions..diversion_header.."toll_allow=".. toll_allow ..",".. caller_id ..",sip_invite_domain="..domain_name..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction="..call_direction..","..group_confirm..""..timeout_name.."="..destination_timeout..","..delay_name.."="..destination_delay..","..sip_h_caller_destination.."]"..route_bridge
 						end
 
 					--add a delimiter between destinations
@@ -1310,7 +1335,22 @@
 								elseif (tonumber(destination_number) == nil) then
 									dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",originate_timeout="..destination_timeout..",call_direction=outbound,domain_name="..domain_name..",domain_uuid="..domain_uuid.."]" .. destination_number;
 								else
-									dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",originate_timeout="..destination_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction=outbound]loopback/" .. destination_number;
+									--external number
+									local route_bridge = 'loopback/' .. destination_number;
+									if (external_route == 'bridge') then
+										--route the external number through the outbound routes (route_to_bridge)
+										local fields = {
+											context = context,
+											destination_number = destination_number,
+											caller_id_number = caller_id_number,
+											__api__ = api,
+										}
+										local route = route_to_bridge(dialplans or dbh, domain_uuid, fields)
+										if (route and route.bridge) then
+											route_bridge = route.bridge;
+										end
+									end
+									dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",originate_timeout="..destination_timeout..",domain_name="..domain_name..",domain_uuid="..domain_uuid..",call_direction=outbound]" .. route_bridge;
 								end
 
 							--add the delimiter
