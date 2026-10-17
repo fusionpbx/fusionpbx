@@ -436,6 +436,9 @@ class xml_cdr {
 		if ($xml === false) {
 			//failed to load the XML, move the XML file to the failed directory
 			if (file_exists($this->xml_cdr_dir)) {
+				if (!file_exists($this->xml_cdr_dir . '/failed/xml')) {
+					mkdir($this->xml_cdr_dir . '/failed/xml', 0770, true);
+				}
 				rename($this->xml_cdr_dir . '/' . $this->file, $this->xml_cdr_dir . '/failed/xml/' . $this->file);
 			}
 
@@ -1103,29 +1106,6 @@ class xml_cdr {
 				}
 			}
 
-			//if call recording transcribe is enabled then add the recording to the transcribe queue
-			if ($record_exists && $this->settings->get('call_recordings', 'transcribe_enabled', false)) {
-				//prepare the paramaters
-				$params['domain_uuid'] = $domain_uuid;
-				$params['xml_cdr_uuid'] = $call_uuid;
-				$params['call_direction'] = $call_direction;
-
-				//prepare the transcribe queue array
-				$app_sourcetranscribe_queue = array();
-				$transcribe_queue['transcribe_queue'][$x]['transcribe_queue_uuid'] = $call_uuid;
-				$transcribe_queue['transcribe_queue'][$x]['domain_uuid'] = $domain_uuid;
-				$transcribe_queue['transcribe_queue'][$x]['hostname'] = gethostname();
-				$transcribe_queue['transcribe_queue'][$x]['transcribe_status'] = 'pending';
-				$transcribe_queue['transcribe_queue'][$x]['transcribe_app_class'] = 'call_recordings';
-				$transcribe_queue['transcribe_queue'][$x]['transcribe_app_method'] = 'transcribe_queue';
-				$transcribe_queue['transcribe_queue'][$x]['transcribe_app_params'] = json_encode($params);
-				$transcribe_queue['transcribe_queue'][$x]['transcribe_audio_path'] = $record_path;
-				$transcribe_queue['transcribe_queue'][$x]['transcribe_audio_name'] = $record_name;
-
-				//save the data
-				$this->database->save($transcribe_queue);
-			}
-
 			//save the xml object to json
 			$this->json = json_encode($xml);
 
@@ -1206,6 +1186,75 @@ class xml_cdr {
 
 			//save data to the database
 			$this->save();
+
+			//if call recording transcribe is enabled then add the recording to the transcribe queue
+			if ($record_exists && $this->settings->get('call_recordings', 'transcribe_enabled', false)) {
+
+				//get the minimum recording length in seconds, used to skip recordings that are too short
+				$transcribe_min_length = (float)$this->settings->get('call_recordings', 'transcribe_min_length', 3);
+
+				//get the recording length in seconds, use the call duration as a fallback
+				$transcribe_length = (isset($record_length) && is_numeric($record_length) && (float)$record_length > 0) ? (float)$record_length : (float)($xml->variables->billsec ?? 0);
+
+				//check if the call should be added to the transcribe queue
+				$transcribe_skip = '';
+				//skip calls that were not answered
+				if (!isset($status) || $status != 'answered') {
+					$transcribe_skip = 'call status ' . ($status ?: 'unknown');
+				}
+				//skip recordings that are too short
+				elseif ($transcribe_length < $transcribe_min_length) {
+					$transcribe_skip = 'recording length ' . $transcribe_length . 's is less than the minimum ' . $transcribe_min_length . 's';
+				}
+				else {
+					//check if a transcribe queue entry already exists for this call or this recording to prevent duplicate transcriptions
+					$sql = "select count(transcribe_queue_uuid) ";
+					$sql .= "from v_transcribe_queue ";
+					$sql .= "where transcribe_queue_uuid = :transcribe_queue_uuid ";
+					$sql .= "or (transcribe_audio_path = :transcribe_audio_path and transcribe_audio_name = :transcribe_audio_name) ";
+					$parameters['transcribe_queue_uuid'] = $call_uuid;
+					$parameters['transcribe_audio_path'] = $record_path;
+					$parameters['transcribe_audio_name'] = $record_name;
+					$count = $this->database->select($sql, $parameters, 'column');
+					unset($sql, $parameters);
+					if ($count > 0) {
+						$transcribe_skip = 'recording already in the transcribe queue';
+					}
+				}
+
+				//only add the recording to the transcribe queue after the call detail record was saved to the database
+				if ($transcribe_skip == '' && isset($this->database->message['code']) && $this->database->message['code'] == '200') {
+					//prepare the paramaters
+					$params['domain_uuid'] = $domain_uuid;
+					$params['xml_cdr_uuid'] = $call_uuid;
+					$params['call_direction'] = $call_direction;
+
+					//prepare the transcribe queue array
+					$transcribe_queue['transcribe_queue'][0]['transcribe_queue_uuid'] = $call_uuid;
+					$transcribe_queue['transcribe_queue'][0]['domain_uuid'] = $domain_uuid;
+					$transcribe_queue['transcribe_queue'][0]['hostname'] = gethostname();
+					$transcribe_queue['transcribe_queue'][0]['transcribe_status'] = 'pending';
+					$transcribe_queue['transcribe_queue'][0]['transcribe_app_class'] = 'call_recordings';
+					$transcribe_queue['transcribe_queue'][0]['transcribe_app_method'] = 'transcribe_queue';
+					$transcribe_queue['transcribe_queue'][0]['transcribe_app_params'] = json_encode($params);
+					$transcribe_queue['transcribe_queue'][0]['transcribe_audio_path'] = $record_path;
+					$transcribe_queue['transcribe_queue'][0]['transcribe_audio_name'] = $record_name;
+
+					//add temporary permissions
+					$p = permissions::new();
+					$p->add('transcribe_queue_add', 'temp');
+
+					//save the data
+					$this->database->save($transcribe_queue);
+					unset($transcribe_queue, $params);
+
+					//remove the temporary permissions
+					$p->delete('transcribe_queue_add', 'temp');
+				}
+				else {
+					$this->log("transcribe queue skipped: " . ($transcribe_skip ?: 'call detail record save failed') . ", call uuid: " . $call_uuid . "\n");
+				}
+			}
 
 			//debug
 			//GLOBAL $insert_time,$insert_count;

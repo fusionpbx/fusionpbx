@@ -114,6 +114,16 @@
 		!empty($record_path) && !empty($record_name) &&
 		file_exists($record_path.'/'.$record_name)) {
 
+			//get the minimum recording length in seconds, skip recordings that are too short
+			$transcribe_min_length = (float)$settings->get('call_recordings', 'transcribe_min_length', 3);
+
+			//skip the recording that is too short
+			if (is_numeric($duration) && (float)$duration < $transcribe_min_length) {
+				message::add("The call is less than the minimum " . $transcribe_min_length . " seconds required for transcription.");
+				header('Location: '.$_SERVER['PHP_SELF'].'?id='.$uuid);
+				exit;
+			}
+
 			//prepare the params
 			$params['domain_uuid'] = $domain_uuid;
 			$params['xml_cdr_uuid'] = $uuid;

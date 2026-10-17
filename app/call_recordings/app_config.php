@@ -48,6 +48,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Number of days to retain the maintenance logs in the database.";
 		$y++;
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "bee85457-6def-4fc1-bcad-8d78b61eab68";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_recordings";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "transcribe_min_length";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "3";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Minimum recording length in seconds to allow transcription. Shorter recordings are skipped to avoid transcribing calls that were not answered or ended immediately.";
+		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "e329db05-2967-422a-a71f-d0175b083828";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "call_recordings";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "record_extension";
