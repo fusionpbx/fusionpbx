@@ -304,7 +304,9 @@
 				}
 
 				//audio to text - get the transcription from the audio file
-				if ($transcribe_enabled && empty($recording_message)) {
+				//transcribe on save when the message is empty and the audio file exists
+				if ($transcribe_enabled && isset($transcribe) && empty($recording_message)
+					&& file_exists($recording_path.'/'.$recording_filename)) {
 					$transcribe->audio_path = $recording_path;
 					$transcribe->audio_filename = $recording_filename;
 					$recording_message = $transcribe->transcribe('text');
