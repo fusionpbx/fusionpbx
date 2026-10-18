@@ -1040,8 +1040,7 @@
 		}
 		if (permission_exists("device_files")) {
 			//get the template directory
-				$prov = new provision(['settings' => $settings]);
-				$prov->domain_uuid = $domain_uuid;
+				$prov = new provision(['settings'=>$settings, 'domain_uuid'=>$domain_uuid, 'domain_name'=>$domain_name, 'user_uuid'=>$_SESSION['user_uuid']]);
 				$template_dir = $prov->template_dir;
 				$files = glob($template_dir.'/'.$device_template.'/*');
 			//add file buttons and the file list
