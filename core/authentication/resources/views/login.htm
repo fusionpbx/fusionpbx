@@ -135,7 +135,7 @@
 							{/if}
 							{if isset($login_options) && $login_options_position == 'inside'}
 								{foreach $login_options as $login_option}
-									<a class='{$login_option.class}' style='display: inline-block; margin-top: 10px;' href='{$project_path}{$login_option.url}'>
+									<a class='{$login_option.class}' style='display: inline-block; margin-top: 10px;' data-login-option='true' href='{$project_path}{$login_option.url}'>
 										{$login_option.image}
 									</a><br />
 								{/foreach}
@@ -149,7 +149,7 @@
 				{/if}
 				{if isset($login_options) && $login_options_position != 'inside'}
 					{foreach $login_options as $login_option}
-						<a class='{$login_option.class}' style='display: inline-block; margin-top: 10px;' href='{$project_path}{$login_option.url}'>
+						<a class='{$login_option.class}' style='display: inline-block; margin-top: 10px;' data-login-option='true' href='{$project_path}{$login_option.url}'>
 							{$login_option.image}
 						</a><br />
 					{/foreach}
@@ -158,5 +158,23 @@
 			</div>
 		</div>
 		<script>document.getElementsByName('username')[0].focus();</script>
+		{literal}
+		<script>
+			//pass the remember me checkbox to external login options (e.g. OpenID) so they can issue a remember me token
+			document.querySelectorAll('a[data-login-option]').forEach(function(link) {
+				link.addEventListener('click', function() {
+					var remember_me = document.getElementById('remember_me');
+					var url = new URL(link.href, window.location.href);
+					if (remember_me && remember_me.checked) {
+						url.searchParams.set('remember_me', 'true');
+					}
+					else {
+						url.searchParams.delete('remember_me');
+					}
+					link.href = url.toString();
+				});
+			});
+		</script>
+		{/literal}
 	</body>
 </html>
