@@ -105,7 +105,7 @@ class email_queue_service extends service {
 			if (is_array($email_queue) && @sizeof($email_queue) != 0) {
 				foreach($email_queue as $row) {
 					$command = PHP_BINARY." ".dirname(__DIR__, 4)."/app/email_queue/resources/jobs/email_send.php ";
-					$command .= "'action=send&email_queue_uuid=".$row["email_queue_uuid"]."&hostname=".$this->hostname."'";
+					$command .= escapeshellarg('action=send&email_queue_uuid='.$row["email_queue_uuid"].'&hostname='.$this->hostname);
 					$this->debug($command);
 					if (parent::is_debug_mode()) {
 						// Run process inline to see debug info
