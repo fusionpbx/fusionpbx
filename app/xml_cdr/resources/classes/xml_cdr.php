@@ -432,7 +432,7 @@ class xml_cdr {
 		}
 
 		//load the string into an xml object
-		$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA);
+		$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NONET);
 		if ($xml === false) {
 			//failed to load the XML, move the XML file to the failed directory
 			if (file_exists($this->xml_cdr_dir)) {
