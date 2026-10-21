@@ -300,7 +300,7 @@ class event_socket {
 	 * @return void
 	 */
 	public function close() {
-		//fp is public access so ensure it is a resource before closing it
+		// fp is public access so ensure it is a resource before closing it
 		if (is_resource($this->fp)) {
 			try {
 				// Failing to empty the incoming buffer prevents the socket from closing
@@ -308,11 +308,11 @@ class event_socket {
 				// Close the stream with the '@' to suppress warnings (new PHP versions may emit warnings on fclose)
 				@fclose($this->fp);
 			} catch (Throwable $t) {
-				//silently fail
+				// Silently fail
 			}
 		}
 
-		//force fp to be false
+		// Force fp to be false
 		$this->fp = false;
 	}
 
