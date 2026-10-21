@@ -64,6 +64,14 @@
 			:gsub('\'', '\\\''))
 	end
 
+--nil-safe: convert a value to a string for console logging (returns "nil" for nil)
+	local function log_str(value)
+		if (value == nil) then
+			return "nil"
+		end
+		return tostring(value)
+	end
+
 --set channel variables to lua variables
 	domain_uuid = env:getHeader("domain_uuid");
 	domain_name = env:getHeader("domain_name");
@@ -168,6 +176,9 @@
 --set default values
 	if (not fax_success) then
 		fax_success = "0";
+	end
+	if (not fax_result_code) then
+		fax_result_code = "0";
 	end
 	if (hangup_cause_q850 == "17") then
 		fax_success = "0";
@@ -437,27 +448,21 @@
 	end
 
 --send the selected variables to the console
-	if (fax_success ~= nil) then
-		freeswitch.consoleLog("INFO","fax_success: '" .. fax_success .. "'\n");
-	end
-	freeswitch.consoleLog("INFO","domain_uuid: '" .. domain_uuid .. "'\n");
-	freeswitch.consoleLog("INFO","domain_name: '" .. domain_name .. "'\n");
-	freeswitch.consoleLog("INFO","fax_uuid: '" .. fax_uuid .. "'\n");
-	freeswitch.consoleLog("INFO","fax_extension: '" .. fax_extension .. "'\n");
-	freeswitch.consoleLog("INFO","fax_result_text: '" .. fax_result_text .. "'\n");
-	freeswitch.consoleLog("INFO","fax_file: '" .. fax_file .. "'\n");
-	freeswitch.consoleLog("INFO","uuid: '" .. uuid .. "'\n");
+	freeswitch.consoleLog("INFO","fax_success: '" .. log_str(fax_success) .. "'\n");
+	freeswitch.consoleLog("INFO","domain_uuid: '" .. log_str(domain_uuid) .. "'\n");
+	freeswitch.consoleLog("INFO","domain_name: '" .. log_str(domain_name) .. "'\n");
+	freeswitch.consoleLog("INFO","fax_uuid: '" .. log_str(fax_uuid) .. "'\n");
+	freeswitch.consoleLog("INFO","fax_extension: '" .. log_str(fax_extension) .. "'\n");
+	freeswitch.consoleLog("INFO","fax_result_text: '" .. log_str(fax_result_text) .. "'\n");
+	freeswitch.consoleLog("INFO","fax_file: '" .. log_str(fax_file) .. "'\n");
+	freeswitch.consoleLog("INFO","uuid: '" .. log_str(uuid) .. "'\n");
 	--freeswitch.consoleLog("INFO","fax_ecm_used: '" .. fax_ecm_used .. "'\n");
-	freeswitch.consoleLog("INFO","fax_uri: '" .. fax_uri.. "'\n");
-	if (caller_id_name ~= nil) then
-		freeswitch.consoleLog("INFO","caller_id_name: " .. fax_caller_id_name .. "\n");
-	end
-	if (caller_id_number ~= nil) then
-		freeswitch.consoleLog("INFO","caller_id_number: " .. fax_caller_id_number .. "\n");
-	end
-	freeswitch.consoleLog("INFO","fax_recipient: " .. fax_recipient .. "\n");
-	freeswitch.consoleLog("INFO","fax_destination: " .. sip_to_user .. "\n");
-	freeswitch.consoleLog("INFO","fax_result_code: ".. fax_result_code .."\n");
+	freeswitch.consoleLog("INFO","fax_uri: '" .. log_str(fax_uri).. "'\n");
+	freeswitch.consoleLog("INFO","caller_id_name: " .. log_str(fax_caller_id_name) .. "\n");
+	freeswitch.consoleLog("INFO","caller_id_number: " .. log_str(fax_caller_id_number) .. "\n");
+	freeswitch.consoleLog("INFO","fax_recipient: " .. log_str(fax_recipient) .. "\n");
+	freeswitch.consoleLog("INFO","fax_destination: " .. log_str(sip_to_user) .. "\n");
+	freeswitch.consoleLog("INFO","fax_result_code: ".. log_str(fax_result_code) .."\n");
 	--freeswitch.consoleLog("INFO","mailfrom_address: ".. from_address .."\n");
 	--freeswitch.consoleLog("INFO","mailto_address: ".. email_address .."\n");
-	freeswitch.consoleLog("INFO","hangup_cause_q850: '" .. hangup_cause_q850 .. "'\n");
+	freeswitch.consoleLog("INFO","hangup_cause_q850: '" .. log_str(hangup_cause_q850) .. "'\n");
