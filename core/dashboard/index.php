@@ -83,8 +83,7 @@
 	}
 	$sql .= "order by case when domain_uuid = :domain_uuid then 0 else 1 end ";
 	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-	$result = $database->select($sql, $parameters ?? null, 'all');
-	$dashboard_uuid = $result[0]['dashboard_uuid'] ?? null;
+	$dashboard_uuid = $database->select($sql, $parameters ?? null, 'column');
 	unset($sql, $parameters);
 
 //get the list
