@@ -287,7 +287,7 @@ class event_socket {
 	/**
 	 * Ensures a closed connection on destruction of object
 	 */
-	public function __destructor() {
+	public function __destruct() {
 		$this->close();
 	}
 
@@ -300,7 +300,10 @@ class event_socket {
 		//fp is public access so ensure it is a resource before closing it
 		if (is_resource($this->fp)) {
 			try {
-				fclose($this->fp);
+				// Failing to empty the incoming buffer prevents the socket from closing
+				$this->drain();
+				// Close the stream with the '@' to suppress warnings (new PHP versions may emit warnings on fclose)
+				@fclose($this->fp);
 			} catch (Exception $t) {
 				//report it
 				trigger_error("event_socket failed to close socket", E_USER_WARNING);
@@ -313,6 +316,36 @@ class event_socket {
 		}
 		//force fp to be false
 		$this->fp = false;
+	}
+
+	/**
+	 * Drain the inbound data buffer and discard any pending data
+	 *
+	 * @return void
+	 */
+	public function drain(): void {
+		// if the stream is not a valid resource, there is nothing to drain
+		if (!is_resource($this->fp)) {
+			return;
+		}
+		
+		// the $fp can be passed in the constructor and may be a non-blocking stream, so capture the original blocking state so it is preserved on restore
+		$meta = stream_get_meta_data($this->fp);
+		$blocking = $meta['blocked'] ?? true;
+
+		// set the stream to non-blocking mode to drain the buffer without blocking
+		stream_set_blocking($this->fp, false);
+
+		// read the data until the eof is reached or no more data is available
+		while (!feof($this->fp)) {
+			$discarded_data = fread($this->fp, 1024);
+			if ($discarded_data === false || $discarded_data === '') {
+				break;
+			}
+		}
+
+		// restore the original blocking state of the stream
+		stream_set_blocking($this->fp, $blocking);
 	}
 
 	/**
