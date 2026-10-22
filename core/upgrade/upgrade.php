@@ -24,13 +24,20 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-// Include file
-	require dirname(__DIR__, 2) . "/resources/require.php";
-
 // If the config file doesn't exist and the config.php does exist use it to write a new config file
-	if (isset($config_exists) && !$config_exists && file_exists("/etc/fusionpbx/config.php")) {
+	$config_path = '';
+	if (stristr(PHP_OS, 'BSD')) {
+		$config_path = '/usr/local/etc/fusionpbx';
+	}
+	elseif (stristr(PHP_OS, 'Linux')) {
+		$config_path = '/etc/fusionpbx';
+	}
+	elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		$config_path = getenv('SystemDrive') . DIRECTORY_SEPARATOR . 'ProgramData' . DIRECTORY_SEPARATOR . 'fusionpbx';
+	}
+	if (file_exists($config_path . DIRECTORY_SEPARATOR . 'config.php') && !file_exists($config_path . DIRECTORY_SEPARATOR . 'config.conf')) {
 		// Include the config.php
-		include("/etc/fusionpbx/config.php");
+		include $config_path . DIRECTORY_SEPARATOR . 'config.php';
 
 		// Set the default config file location
 		if (stristr(PHP_OS, 'BSD')) {
@@ -144,10 +151,14 @@
 
 		// Write the config file
 		$file_handle = fopen($config_file,"w");
-		if (!$file_handle){ return; }
+		if (!$file_handle){ echo "Failed to write the config file\n"; exit; }
 		fwrite($file_handle, $conf);
 		fclose($file_handle);
+		echo "Created " . rtrim($config_file, '/\\') . " from " . rtrim($config_path, '/\\') . DIRECTORY_SEPARATOR . "config.php\n";
 	}
+
+// Include file
+	require dirname(__DIR__, 2) . "/resources/require.php";
 
 // Check the permission
 	if (defined('STDIN')) {
