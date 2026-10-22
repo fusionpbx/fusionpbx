@@ -119,7 +119,7 @@ final class config {
 	public function read() {
 
 		//check if include is needed
-		if (substr($this->file, 0, -4) === '.php') {
+		if (substr($this->file, -4) === '.php') {
 			//allow global variables to be set in the old config.php file
 			global $db_type, $db_host, $db_port, $db_name, $db_username, $db_password, $db_path;
 			global $db_sslmode, $db_secure, $db_cert_authority;
@@ -168,8 +168,9 @@ final class config {
 			//remove from the global namespace
 			unset($db_type, $db_host, $db_port, $db_name, $db_username, $db_password, $db_sslmode, $db_secure, $db_cert_authority);
 		} else {
-			//save the loaded and parsed conf file to the object
-			$this->configuration = parse_ini_file($this->file);
+			//save the loaded and parsed conf file to the object (use an empty array if the file fails to parse)
+			$parsed_configuration = parse_ini_file($this->file);
+			$this->configuration = is_array($parsed_configuration) ? $parsed_configuration : [];
 		}
 
 	}
