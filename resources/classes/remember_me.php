@@ -21,6 +21,7 @@ class remember_me {
 	 */
 	private static $cookie_name = 'remember_me';
 	private $expiry_days;
+	private $ip_check;
 
 	/**
 	 * Initializes the object with the setting array.
@@ -36,11 +37,16 @@ class remember_me {
 		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database]);
 
 		// Assign private variables
-		$this->expiry_days = 7;
+		$expiry_days = (int) $this->settings->get('login', 'remember_me_days', 7);
+		$this->expiry_days = ($expiry_days >= 1 && $expiry_days <= 365) ? $expiry_days : 7;
+		$this->ip_check = $this->settings->get('login', 'remember_me_ip_check', false);
 	}
 
 	/**
 	 * Checks if a valid remember me cookie exists and returns user data.
+	 *
+	 * The token is not rotated here. Call rotate_token() with the returned 'remember_old_selector' once the user has
+	 * passed all remaining checks (e.g. CIDR) so a rejected login does not consume the token.
 	 *
 	 * @param bool $contacts_exists Whether the contacts app exists
 	 *
@@ -66,16 +72,24 @@ class remember_me {
 
 		// Verify validator hash
 		if (!password_verify($validator, $user_log['remember_validator'])) {
-			$this->clear_cookie();
+			// The selector matched but the validator did not, the token may have been stolen so revoke it
+			$this->revoke_selector($selector);
+			self::clear_cookie();
 			user_logs::add(['authorized' => false], "Invalid remember me token");
 			return null;
 		}
 
-		// Rotate Token
-		$this->rotate_token($selector);
+		// Fetch user details, the user must still exist and be enabled
+		$result = $this->get_user_details($user_log['user_uuid'], $contacts_exists);
+		if ($result === null) {
+			$this->revoke_selector($selector);
+			self::clear_cookie();
+			return null;
+		}
 
-		// Fetch user details
-		return $this->get_user_details($user_log['user_uuid'], $contacts_exists);
+		// Pass the selector back so the caller can rotate the token once the login is fully authorized
+		$result['remember_old_selector'] = $selector;
+		return $result;
 	}
 
 	/**
@@ -105,7 +119,13 @@ class remember_me {
 	 */
 	public static function clear_cookie(): void {
 		unset($_COOKIE[self::$cookie_name]);
-		setcookie(self::$cookie_name, '', time() - 3600, '/');
+		setcookie(self::$cookie_name, '', [
+			'expires' => time() - 3600,
+			'path' => '/',
+			'secure' => true,
+			'httponly' => true,
+			'samesite' => 'Lax'
+		]);
 	}
 
 	private function parse_cookie(string $cookie_value) {
@@ -125,11 +145,13 @@ class remember_me {
 		$sql = "select user_uuid, remember_validator \n";
 		$sql .= "from v_user_logs \n";
 		$sql .= "where remember_selector = :remember_selector \n";
-		$sql .= " and remote_address = :remote_address \n";
 		$sql .= " and user_agent = :user_agent \n";
-		$sql .= " and timestamp > now() - interval '".$this->expiry_days." days' \n";
+		if ($this->ip_check) {
+			$sql .= " and remote_address = :remote_address \n";
+			$parameters['remote_address'] = $remote_address;
+		}
+		$sql .= " and timestamp > now() - interval '".(int) $this->expiry_days." days' \n";
 		$parameters['remember_selector'] = $remember_selector;
-		$parameters['remote_address'] = $remote_address;
 		$parameters['user_agent'] = $user_agent;
 		$user_log = $this->database->select($sql, $parameters, 'row');
 		unset($sql, $parameters);
@@ -140,33 +162,39 @@ class remember_me {
 		return null;
 	}
 
-	private function rotate_token(string $old_selector): void {
-		$selector = uuid();
-		$validator = generate_password(32);
-		$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
+	/**
+	 * Replaces a used token with a new one.
+	 *
+	 * The old token is revoked and a new cookie is sent. The new selector and hashed validator are returned so the
+	 * caller can store them on a new user log entry. Because the token lifetime is measured from the timestamp of the
+	 * user log entry that holds it, this gives the token a sliding expiry: it stays valid as long as the user returns
+	 * at least once every remember_me_days days.
+	 *
+	 * @param string $old_selector The selector of the token that was used to log in
+	 *
+	 * @return array ['selector' => string, 'hashed_validator' => string]
+	 */
+	public function rotate_token(string $old_selector): array {
+		$this->revoke_selector($old_selector);
+		return $this->issue_token();
+	}
 
-		// Update Cookie
-		setcookie(self::$cookie_name, $selector . ':' . $validator, [
-			'expires' => strtotime("+".$this->expiry_days." days"),
-			'path' => '/',
-			'secure' => true,
-			'httponly' => true,
-			'samesite' => 'Lax'
-		]);
-
-		// Update the tokens in the database
+	/**
+	 * Removes a single token from the user logs so it can no longer be used.
+	 *
+	 * @param string $selector The token selector
+	 */
+	private function revoke_selector(string $selector): void {
 		$sql = "update v_user_logs \n";
-		$sql .= " set remember_selector = :remember_selector, \n";
-		$sql .= " remember_validator = :remember_validator \n";
-		$sql .= "where remember_selector = :old_selector \n";
+		$sql .= " set remember_selector = null, \n";
+		$sql .= " remember_validator = null \n";
+		$sql .= "where remember_selector = :remember_selector \n";
 		$parameters['remember_selector'] = $selector;
-		$parameters['remember_validator'] = $hashed_validator;
-		$parameters['old_selector'] = $old_selector;
 		$this->database->execute($sql, $parameters);
 		unset($sql, $parameters);
 	}
 
-	private function get_user_details(string $user_uuid, bool $contacts_exists) {
+	private function get_user_details(string $user_uuid, bool $contacts_exists): ?array {
 		// Get the user details
 		$sql = "select \n";
 		$sql .= " u.domain_uuid, \n";
@@ -181,6 +209,11 @@ class remember_me {
 		$parameters['user_uuid'] = $user_uuid;
 		$row = $this->database->select($sql, $parameters, 'row');
 		unset($sql, $parameters);
+
+		// The user no longer exists or has been disabled
+		if (!is_array($row) || empty($row['user_uuid'])) {
+			return null;
+		}
 
 		// Get the contact details
 		if ($contacts_exists && !empty($row["contact_uuid"])) {
@@ -230,7 +263,7 @@ class remember_me {
 		// Use the database global
 		global $database;
 
-		if ($_COOKIE[self::$cookie_name]) {
+		if (!empty($_COOKIE[self::$cookie_name])) {
 			$cookie_selector = explode(":", $_COOKIE[self::$cookie_name])[0];
 
 			$sql = "update v_user_logs ";

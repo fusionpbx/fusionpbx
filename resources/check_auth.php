@@ -148,7 +148,8 @@
 			settings::clear_cache();
 
 		//if logged in, redirect to login destination
-			if (!isset($_REQUEST["key"]) && !isset($_COOKIE['remember_me'])) {
+		//a login restored from a remember me token stays on the requested page instead
+			if (!isset($_REQUEST["key"]) && ($result['plugin'] ?? '') !== 'remember_me') {
 				//redirect the user
 				if (isset($_SESSION['redirect_path'])) {
 					$redirect_path = (string)$_SESSION['redirect_path'];

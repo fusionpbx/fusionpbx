@@ -119,8 +119,13 @@ class authentication {
 		// Check for remember me cookie
 		$remember_me = new remember_me(['database' => $this->database, 'settings' => $this->settings]);
 		$result = $remember_me->authenticate($contacts_exists);
-		if (is_array($result)) {
+		$remember_me_login = is_array($result);
+		if ($remember_me_login) {
 			$authorized = true;
+
+			//use the domain and user from the token so user settings (e.g. CIDR) are applied
+			$this->domain_uuid = $result['domain_uuid'];
+			$this->user_uuid = $result['user_uuid'];
 		}
 
 		// Skip authentication plugins if already authorized by remember me
@@ -233,7 +238,7 @@ class authentication {
 				// But, may still be blocked by other methods. Check the other methods in the user settings
 				// for any additional methods that are active on the user and not on the domain (ie. TOTP).
 				$authenticators = array_diff($this->settings->get('authentication', 'methods', []), $_SESSION['authentication']['methods'] ?? []);
-				if (!$passkey_only && !empty($authenticators) && $result['plugin'] !== 'remember_me') {
+				if (!$passkey_only && !empty($authenticators) && !$remember_me_login) {
 					foreach ($authenticators as $name) {
 						// Assume the plugin will not authorize the user until it is processed and returns true
 						$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
@@ -293,9 +298,16 @@ class authentication {
 					unset($_SESSION['authentication']['passkey_only_until']);
 					$_SESSION['authentication']['passkey_only'] = false;
 
+					// Logged in with a remember me token: replace it with a new token. The new token is saved on the
+					// user log entry for this login, which restarts the token lifetime (sliding expiry).
+					if ($remember_me_login) {
+						$token_data = $remember_me->rotate_token($result['remember_old_selector']);
+						$result['remember_selector'] = $token_data['selector'];
+						$result['remember_validator'] = $token_data['hashed_validator'];
+					}
+
 					// Create remember me token
-					// if (($_SESSION['remember_me'] ?? '') === 'true' && $this->settings->get('login', 'remember_me', false) && $result['plugin'] !== 'remember_me') {
-					if (!empty($_SESSION['remember_me']) && $this->settings->get('login', 'remember_me', false) && $result['plugin'] !== 'remember_me') {
+					if (!empty($_SESSION['remember_me']) && $this->settings->get('login', 'remember_me', false) && !$remember_me_login) {
 						$token_data = $remember_me->issue_token();
 
 						// Save token to the user log array
@@ -307,7 +319,11 @@ class authentication {
 				//user failed the cidr check - no longer authorized
 				$authorized = false;
 				$failed_login_message = "CIDR blocked login attempt";
-				$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
+				if ($remember_me_login) {
+					$result['authorized'] = false;
+				} else {
+					$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
+				}
 			}
 		}
 
@@ -315,7 +331,10 @@ class authentication {
 		$_SESSION['authorized'] = $authorized;
 
 		//log the attempt
-		if ($result['plugin'] !== 'remember_me') {
+		if ($remember_me_login) {
+			unset($result['remember_old_selector']);
+			user_logs::add($result, $failed_login_message ?? '');
+		} else {
 			user_logs::add($_SESSION['authentication']['plugin'][$name], $failed_login_message);
 		}
 
