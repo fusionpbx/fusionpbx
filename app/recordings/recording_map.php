@@ -84,7 +84,7 @@
 	}
 	$excluded_applications = implode(',', $excluded_app_array);
 
-//get the music on hold map
+//get the recordings map
 	$sql = "SELECT ";
 	$sql .= " application, ";
 	$sql .= " type, ";
