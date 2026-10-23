@@ -159,16 +159,20 @@
 				unset($sql, $parameters);
 
 			//get the highest menu item order
+				$sql = "select menu_item_order from v_menu_items ";
+				$sql .= "where menu_uuid = :menu_uuid ";
 				if (!is_uuid($menu_item_parent_uuid)) {
-					$sql = "select menu_item_order from v_menu_items ";
-					$sql .= "where menu_uuid = :menu_uuid ";
 					$sql .= "and menu_item_parent_uuid is null ";
-					$sql .= "order by menu_item_order desc ";
-					$sql .= "limit 1 ";
-					$parameters['menu_uuid'] = $menu_uuid;
-					$highest_menu_item_order = $database->select($sql, $parameters, 'column');
-					unset($sql, $parameters);
 				}
+				else {
+					$sql .= "and menu_item_parent_uuid = :menu_item_parent_uuid ";
+					$parameters['menu_item_parent_uuid'] = $menu_item_parent_uuid;
+				}
+				$sql .= "order by menu_item_order desc ";
+				$sql .= "limit 1 ";
+				$parameters['menu_uuid'] = $menu_uuid;
+				$highest_menu_item_order = $database->select($sql, $parameters, 'column');
+				unset($sql, $parameters);
 
 			//add a menu item
 				if ($action == "add" && permission_exists('menu_add')) {
@@ -184,11 +188,11 @@
 					$array['menu_items'][0]['menu_item_uuid'] = $menu_item_uuid;
 					if (!is_uuid($menu_item_parent_uuid)) {
 						$array['menu_items'][0]['menu_item_parent_uuid'] = null;
-						$array['menu_items'][0]['menu_item_order'] = ($highest_menu_item_order + 1);
 					}
 					else {
 						$array['menu_items'][0]['menu_item_parent_uuid'] = $menu_item_parent_uuid;
 					}
+					$array['menu_items'][0]['menu_item_order'] = is_numeric($menu_item_order) ? $menu_item_order : ($highest_menu_item_order + 1);
 					$array['menu_items'][0]['menu_item_add_user'] = $_SESSION["username"];
 					$array['menu_items'][0]['menu_item_add_date'] = 'now()';
 					$database->save($array);
@@ -208,11 +212,11 @@
 					$array['menu_items'][0]['menu_item_uuid'] = $menu_item_uuid;
 					if (!is_uuid($menu_item_parent_uuid)) {
 						$array['menu_items'][0]['menu_item_parent_uuid'] = null;
-						$array['menu_items'][0]['menu_item_order'] = is_numeric($menu_item_order) ? $menu_item_order : ($highest_menu_item_order + 1);
 					}
 					else {
 						$array['menu_items'][0]['menu_item_parent_uuid'] = $menu_item_parent_uuid;
 					}
+					$array['menu_items'][0]['menu_item_order'] = is_numeric($menu_item_order) ? $menu_item_order : ($highest_menu_item_order + 1);
 					$array['menu_items'][0]['menu_item_add_user'] = $_SESSION["username"];
 					$array['menu_items'][0]['menu_item_add_date'] = 'now()';
 					$database->save($array);
