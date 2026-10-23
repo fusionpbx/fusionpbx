@@ -562,12 +562,10 @@
 	//echo "</tr>\n";
 
 	if (!empty($action) && $action == "update") {
-		if (empty($menu_item_parent_uuid)) {
-			echo "	<tr>";
-			echo "		<td class='vncell'>".$text['label-menu_order']."</td>";
-			echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_order' value='".escape($menu_item_order)."'></td>";
-			echo "	</tr>";
-		}
+		echo "	<tr>";
+		echo "		<td class='vncell'>".$text['label-menu_order']."</td>";
+		echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_order' value='".escape($menu_item_order)."'></td>";
+		echo "	</tr>";
 	}
 
 	echo "	<tr>";
