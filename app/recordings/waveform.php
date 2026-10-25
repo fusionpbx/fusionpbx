@@ -42,8 +42,12 @@
 //create the waveform file
 	if (is_uuid($_GET['id']) || !empty($_GET['data'])) {
 
-		//set the path for the directory
-		$path = $settings->get('switch', 'recordings')."/".$_SESSION['domain_name'];
+		//set the path for the directory and make sure it exists
+		$path = realpath($settings->get('switch', 'recordings')."/".$_SESSION['domain_name']);
+		if ($path === false) {
+			http_response_code(404);
+			exit;
+		}
 
 		//get recording details from db
 		if (is_uuid($_GET['id'])) {
@@ -56,26 +60,46 @@
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
 				$recording_filename = $row['recording_filename'];
-				if (!empty($settings->get('recordings', 'storage_type')) && $settings->get('recordings', 'storage_type') == 'base64' && !empty($row['recording_base64'])) {
-					$recording_decoded = base64_decode($row['recording_base64']);
-					file_put_contents($path.'/'.$recording_filename, $recording_decoded);
-				}
 			}
-			unset($sql, $parameters, $row, $recording_decoded);
+			unset($sql, $parameters);
 		}
 		else if ($_GET['data']) {
 			$recording_filename = basename($_GET['data']);
 		}
 
+		//only allow a bare file name, reject traversal, separators and absolute paths
+		$recording_filename = basename($recording_filename ?? '');
+		$recording_filename = str_replace(['..', '/', '\\', ':', "\0"], '', $recording_filename);
+		if ($recording_filename == '') {
+			http_response_code(404);
+			exit;
+		}
+
 		//build full path
-		$slash = substr($recording_filename,0,1) != '/' ? '/' : null;
-		$full_file_path = $path.$slash.$recording_filename;
+		$full_file_path = $path.'/'.$recording_filename;
+
+		//restore the recording from base64 if needed
+		if (isset($row) && is_array($row) && !empty($settings->get('recordings', 'storage_type')) && $settings->get('recordings', 'storage_type') == 'base64' && !empty($row['recording_base64'])) {
+			$recording_decoded = base64_decode($row['recording_base64']);
+			file_put_contents($full_file_path, $recording_decoded);
+			unset($recording_decoded);
+		}
+
+		//make sure the resolved path stays inside the recordings directory, also blocks symlinks
+		$full_file_path = realpath($full_file_path);
+		if ($full_file_path === false
+			|| is_file($full_file_path) === false
+			|| strpos($full_file_path, $path.'/') !== 0) {
+			http_response_code(404);
+			exit;
+		}
 
 		//stream waveform file
 		if (file_exists($full_file_path)) {
 
 			//temporary waveform image filename
-			$temp_filename = 'waveform_'.$_GET['id'].'_'.rand(0000,9999).'.png';
+			$waveform_id = is_uuid($_GET['id']) ? $_GET['id'] : '';
+			$temp_filename = 'waveform_'.($waveform_id !== '' ? $waveform_id.'_' : '').rand(1000,9999).'.png';
 
 			//create temporary waveform image, if doesn't exist
 			if (file_exists($temp_filename)) {
@@ -106,7 +130,7 @@
 				header("Content-Type: application/download");
 				header("Content-Description: File Transfer");
 				header("Content-Type: image/png");
-				header('Content-Disposition: attachment; filename="'.$temp_filename.'"');
+				header('Content-Disposition: attachment; filename="'.addcslashes($temp_filename, "\"\\").'"');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 				header("Content-Length: ".filesize($temp_filename));
