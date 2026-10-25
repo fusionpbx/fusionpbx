@@ -97,8 +97,12 @@
 //download the recording
 	if ($action == "download" && (permission_exists('recording_play') || permission_exists('recording_download'))) {
 		if ($_GET['type'] == "rec") {
-			//set the path for the directory
-				$path = $switch_recordings."/".$domain_name;
+			//set the path for the directory and make sure it exists
+				$path = realpath($switch_recordings."/".$domain_name);
+				if ($path === false) {
+					http_response_code(404);
+					exit;
+				}
 
 			//if from recordings, get recording details from db
 				$recording_uuid = $_GET['id']; //recordings
@@ -112,22 +116,37 @@
 					$row = $database->select($sql, $parameters, 'row');
 					if (is_array($row) && @sizeof($row) != 0) {
 						$recording_filename = $row['recording_filename'];
-						if ($recording_storage_type == 'base64') {
-							$recording_decoded = base64_decode($row['recording_base64']);
-							file_put_contents($path.'/'.$recording_filename, $recording_decoded);
-						}
 					}
-					unset($sql, $parameters, $row, $recording_decoded);
+					unset($sql, $parameters);
 				} elseif ($_GET['filename']) {
 					$recording_filename = basename($_GET['filename']);
 				}
 
-			// build full path
-				if (substr($recording_filename,0,1) == '/'){
-					$full_recording_path = $path.$recording_filename;
+			//only allow a bare file name, reject traversal, separators and absolute paths
+				$recording_filename = basename($recording_filename ?? '');
+				$recording_filename = str_replace(['..', '/', '\\', ':', "\0"], '', $recording_filename);
+				if ($recording_filename == '') {
+					http_response_code(404);
+					exit;
 				}
-				else {
-					$full_recording_path = $path.'/'.$recording_filename;
+
+			//build the full path
+				$full_recording_path = $path.'/'.$recording_filename;
+
+			//restore the recording from base64 if needed
+				if (isset($row) && is_array($row) && $recording_storage_type == 'base64' && strlen($row['recording_base64']) > 0) {
+					$recording_decoded = base64_decode($row['recording_base64']);
+					file_put_contents($full_recording_path, $recording_decoded);
+					unset($recording_decoded);
+				}
+
+			//make sure the resolved path stays inside the recordings directory, also blocks symlinks
+				$full_recording_path = realpath($full_recording_path);
+				if ($full_recording_path === false
+					|| is_file($full_recording_path) === false
+					|| strpos($full_recording_path, $path.'/') !== 0) {
+					http_response_code(404);
+					exit;
 				}
 
 			//send the headers and then the data stream
@@ -148,7 +167,7 @@
 							case "ogg" : header("Content-Type: audio/ogg"); break;
 						}
 					}
-					header('Content-Disposition: attachment; filename="'.$recording_filename.'"');
+					header('Content-Disposition: attachment; filename="'.addcslashes($recording_filename, "\"\\").'"');
 					header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 					header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 					if (!empty($_GET['t'] ) && $_GET['t'] == "bin") {
