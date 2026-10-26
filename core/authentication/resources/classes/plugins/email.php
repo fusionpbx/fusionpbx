@@ -74,7 +74,7 @@ class plugin_email {
 			$token = new token;
 			if (!$token->validate('login')) {
 				message::add($text['message-invalid_token'], 'negative');
-				header('Location: login.php');
+				header('Location: ' . PROJECT_PATH . '/login.php');
 				exit;
 			}
 		}
