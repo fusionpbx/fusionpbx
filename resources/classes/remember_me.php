@@ -40,7 +40,7 @@ class remember_me {
 		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database]);
 
 		// Assign private variables
-		$this->expiry_days = (int)$conf['remember_me.expire_days'] ?? 7;
+		$this->expiry_days = !empty($conf['remember_me.expire_days']) ? (int)$conf['remember_me.expire_days'] : 7;
 	}
 
 	/**
