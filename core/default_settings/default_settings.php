@@ -337,9 +337,32 @@
 	if ($permission['default_setting_delete'] && $default_settings) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
+	echo "	<form id='form_search' class='inline' method='get'>\n";
+	foreach ($url_params as $key => $value) {
+		if (in_array($key, ['order_by', 'order', 'show'])) {
+			echo "	<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
+		}
+	}
+	if (!empty($categories)) {
+		echo "	<select name='default_setting_category' class='formfld searchable_select' style='width: auto; margin-left: 15px;' id='select_category' onchange='this.form.submit();'>\n";
+		echo "		<option value=''>".$text['label-category']."...</option>\n";
+		echo "		<option value=''>".$text['label-all']."</option>\n";
+		foreach ($categories as $category_name => $category) {
+			$selected = (!empty($_GET['default_setting_category']) && $_GET['default_setting_category'] == $category_name) ? " selected='selected'" : null;
+			echo "	<option value='".escape($category_name)."' $selected>".escape($category['formatted']).($category['count'] ? " (".$category['count'].")" : null)."</option>\n";
+			if ($category['formatted'] == $text['label-custom']) { echo "<option disabled='disabled'></option>\n"; }
+		}
+		echo "		<option disabled='disabled'></option>\n";
+		echo "		<option value=''>".$text['label-all']."</option>\n";
+		echo "	</select>";
+	}
+	echo "	<input type='text' class='txt list-search' name='search' id='search' style='margin-left: 0 !important;' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
+	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search']);
+	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'default_settings.php','style'=>($search == '' ? 'display: none;' : null)]);
 	if (!empty($paging_controls_mini)) {
 		echo "	<span style='margin-left: 15px;'>".$paging_controls_mini."</span>\n";
 	}
+	echo "	</form>\n";
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
 	echo "</div>\n";
@@ -353,33 +376,6 @@
 
 	echo $text['description-default_settings']."\n";
 	echo "<br /><br />\n";
-
-	echo "<div class='card'>\n";
-	echo "	<form id='form_search' class='inline' method='get'>\n";
-	foreach ($url_params as $key => $value) {
-		if (in_array($key, ['order_by', 'order', 'show'])) {
-			echo "	<input type='hidden' name='".escape($key)."' value='".escape($value)."'>\n";
-		}
-	}
-	if (!empty($categories)) {
-		echo "	<select name='default_setting_category' class='formfld searchable_select' style='width: auto;' id='select_category' onchange='this.form.submit();'>\n";
-		echo "		<option value=''>".$text['label-category']."...</option>\n";
-		echo "		<option value=''>".$text['label-all']."</option>\n";
-		foreach ($categories as $category_name => $category) {
-			$selected = (!empty($_GET['default_setting_category']) && $_GET['default_setting_category'] == $category_name) ? " selected='selected'" : null;
-			echo "	<option value='".escape($category_name)."' $selected>".escape($category['formatted']).($category['count'] ? " (".$category['count'].")" : null)."</option>\n";
-			if ($category['formatted'] == $text['label-custom']) { echo "<option disabled='disabled'></option>\n"; }
-		}
-		echo "		<option disabled='disabled'></option>\n";
-		echo "		<option value=''>".$text['label-all']."</option>\n";
-		echo "	</select>";
-	}
-	echo "	<input type='text' class='txt list-search' name='search' id='search' style='margin-left: 0 !important;' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
-	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search','collapse'=>'hide-xs']);
-	//echo button::create(['label'=>$text['button-reset'],'icon'=>$settings->get('theme', 'button_icon_reset'),'type'=>'button','id'=>'btn_reset','link'=>'default_settings.php','style'=>($search == '' ? 'display: none;' : null)]);
-
-	echo "	</form>\n";
-	echo "</div>\n";
 
 	echo "<form id='form_list' method='post'>\n";
 	echo "<input type='hidden' id='action' name='action' value=''>\n";
