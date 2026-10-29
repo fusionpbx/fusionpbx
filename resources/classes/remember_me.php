@@ -31,12 +31,16 @@ class remember_me {
 	 * @return void
 	 */
 	public function __construct(array $setting_array = []) {
+		// Load the config file
+		global $config;
+		$conf = $config->configuration() ?? config::load();
+
 		// Set objects
 		$this->database = $setting_array['database'] ?? database::new();
 		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database]);
 
 		// Assign private variables
-		$this->expiry_days = 7;
+		$this->expiry_days = (int)$conf['remember_me.expire_days'] ?? 7;
 	}
 
 	/**
@@ -117,6 +121,10 @@ class remember_me {
 	}
 
 	private function find_user_token(string $remember_selector) {
+		// Load the config file
+		global $config;
+		$conf = $config->configuration() ?? config::load();
+
 		// Set variables
 		$remote_address = $_SERVER['REMOTE_ADDR'] ?? '';
 		$user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
@@ -125,18 +133,33 @@ class remember_me {
 		$sql = "select user_uuid, remember_validator \n";
 		$sql .= "from v_user_logs \n";
 		$sql .= "where remember_selector = :remember_selector \n";
-		$sql .= " and remote_address = :remote_address \n";
-		$sql .= " and user_agent = :user_agent \n";
+		if (!isset($conf['remember_me.ip_check']) || !empty($conf['remember_me.ip_check'])) {
+			$sql .= " and remote_address = :remote_address \n";
+			$parameters['remote_address'] = $remote_address;
+		}
+		if (!isset($conf['remember_me.user_agent_check']) || !empty($conf['remember_me.user_agent_check'])) {
+			$sql .= " and user_agent = :user_agent \n";
+			$parameters['user_agent'] = $user_agent;
+		}
 		$sql .= " and timestamp > now() - interval '".$this->expiry_days." days' \n";
 		$parameters['remember_selector'] = $remember_selector;
-		$parameters['remote_address'] = $remote_address;
-		$parameters['user_agent'] = $user_agent;
 		$user_log = $this->database->select($sql, $parameters, 'row');
 		unset($sql, $parameters);
 
 		if (is_array($user_log)) {
 			return $user_log;
 		}
+
+		// Remove expired token
+		$sql = "update v_user_logs \n";
+		$sql .= "set remember_selector = null, \n";
+		$sql .= " remember_validator = null \n";
+		$sql .= "where remember_selector = :remember_selector \n";
+		$sql .= " and timestamp < now() - interval '".$this->expiry_days." days' \n";
+		$parameters['remember_selector'] = $remember_selector;
+		$this->database->execute($sql, $parameters);
+		unset($sql, $parameters);
+
 		return null;
 	}
 
