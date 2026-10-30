@@ -310,13 +310,13 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$parameters['user_uuid'] = $user_uuid;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && sizeof($row) != 0) {
-			$user_setting_category = $row["user_setting_category"];
-			$user_setting_subcategory = $row["user_setting_subcategory"];
-			$user_setting_name = $row["user_setting_name"];
-			$user_setting_value = $row["user_setting_value"];
-			$user_setting_order = $row["user_setting_order"];
-			$user_setting_enabled = $row["user_setting_enabled"];
-			$user_setting_description = $row["user_setting_description"];
+			$user_setting_category = $row["user_setting_category"] ?? '';
+			$user_setting_subcategory = $row["user_setting_subcategory"] ?? '';
+			$user_setting_name = $row["user_setting_name"] ?? '';
+			$user_setting_value = $row["user_setting_value"] ?? '';
+			$user_setting_order = $row["user_setting_order"] ?? '';
+			$user_setting_enabled = $row["user_setting_enabled"] ?? true;
+			$user_setting_description = $row["user_setting_description"] ?? '';
 		}
 		unset($sql, $parameters, $row);
 	}
