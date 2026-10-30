@@ -250,13 +250,13 @@
 		$parameters['default_setting_uuid'] = $default_setting_uuid;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && sizeof($row) != 0) {
-			$default_setting_category = $row["default_setting_category"];
-			$default_setting_subcategory = $row["default_setting_subcategory"];
-			$default_setting_name = $row["default_setting_name"];
-			$default_setting_value = $row["default_setting_value"];
-			$default_setting_order = $row["default_setting_order"];
-			$default_setting_enabled = $row["default_setting_enabled"];
-			$default_setting_description = $row["default_setting_description"];
+			$default_setting_category = $row["default_setting_category"] ?? '';
+			$default_setting_subcategory = $row["default_setting_subcategory"] ?? '';
+			$default_setting_name = $row["default_setting_name"] ?? '';
+			$default_setting_value = $row["default_setting_value"] ?? '';
+			$default_setting_order = $row["default_setting_order"] ?? '';
+			$default_setting_enabled = $row["default_setting_enabled"] ?? true;
+			$default_setting_description = $row["default_setting_description"] ?? '';
 		}
 		unset($sql, $parameters);
 	}
