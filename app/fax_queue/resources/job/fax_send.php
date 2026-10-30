@@ -235,6 +235,11 @@
 	}
 	unset($parameters);
 
+//exit if the last call for this fax is still sending, the hangup hook will update the status
+	if (is_uuid($origination_uuid) && trim(event_socket::api('uuid_exists '.$origination_uuid)) == 'true') {
+		exit;
+	}
+
 //get the settings object
 	$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
 
