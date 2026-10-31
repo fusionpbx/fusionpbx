@@ -405,11 +405,11 @@ class dialplan {
 
 								//increment the values
 								$order = $order + 5;
-
-								//increase the row number
-								$x++;
 							}
 						}
+
+						//increase the row number, once per dialplan (not per condition)
+						$x++;
 
 						//update the session array
 						$_SESSION['upgrade']['app_defaults']['dialplans'][$domain['domain_name']][]['dialplan_name'] = $dialplan_name ?? null;
