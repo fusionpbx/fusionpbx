@@ -49,19 +49,23 @@
 --check if windows
 	local IS_WINDOWS = (package.config:sub(1,1) == '\\')
 
---define function quote
-	local function quote(s)
-		local q = IS_WINDOWS and '"' or "'"
-		if s:find('%s') or s:find(q, nil, true) then
-			s = q .. s:gsub(q, q..q) .. q
+--safely quote a value for use in a shell command to prevent command injection.
+--the value is ALWAYS quoted so that shell metacharacters ($ ; | & < > ( ) backtick)
+--are never interpreted, regardless of whether the value contains whitespace. this is
+--safe for multi-lingual (UTF-8) values because bytes >= 0x80 are literal inside quotes;
+--the only byte that is special is the quote character itself, which is escaped below.
+	local function shell_quote(s)
+		if (s == nil) then return (IS_WINDOWS and '""' or "''") end
+		s = tostring(s)
+		--strip NUL bytes; they are never valid in these values and could truncate the command
+		s = s:gsub('\0', '')
+		if (IS_WINDOWS) then
+			local escaped = s:gsub('"', '""')
+			return '"' .. escaped .. '"'
+		else
+			local escaped = s:gsub("'", "'\\''")
+			return "'" .. escaped .. "'"
 		end
-		return s
-	end
-
---escape shell arguments to prevent command injection
-	local function shell_esc(x)
-		return (x:gsub('\\', '\\\\')
-			:gsub('\'', '\\\''))
 	end
 
 --nil-safe: convert a value to a string for console logging (returns "nil" for nil)
