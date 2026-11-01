@@ -53,20 +53,23 @@
 --check if windows
 	local IS_WINDOWS = (package.config:sub(1,1) == '\\')
 
---define function quote
-	local function quote(s)
-		local q = IS_WINDOWS and '"' or "'"
-		if s:find('%s') or s:find(q, nil, true) then
-			s = q .. s:gsub(q, q..q) .. q
+--safely quote a value for use in a shell command to prevent command injection.
+--the value is ALWAYS quoted so that shell metacharacters ($ ; | & < > ( ) backtick)
+--are never interpreted, regardless of whether the value contains whitespace. this is
+--safe for multi-lingual (UTF-8) values because bytes >= 0x80 are literal inside quotes;
+--the only byte that is special is the quote character itself, which is escaped below.
+	local function shell_quote(s)
+		if (s == nil) then return (IS_WINDOWS and '""' or "''") end
+		s = tostring(s)
+		--strip NUL bytes; they are never valid in these values and could truncate the command
+		s = s:gsub('\0', '')
+		if (IS_WINDOWS) then
+			local escaped = s:gsub('"', '""')
+			return '"' .. escaped .. '"'
+		else
+			local escaped = s:gsub("'", "'\\''")
+			return "'" .. escaped .. "'"
 		end
-		return s
-	end
-
---escape shell arguments to prevent command injection
-	local function shell_esc(x)
-		if (x == nil) then return '' end
-		return (x:gsub('\\', '\\\\')
-			:gsub('\'', '\\\''))
 	end
 
 --create the api object
@@ -402,15 +405,15 @@
 	end
 
 --fax to email
-	cmd = quote(shell_esc(php_dir).."/"..shell_esc(php_bin)).." "..quote(shell_esc(document_root).."/app/fax/fax_to_email.php").." ";
-	cmd = cmd .. "email="..quote(shell_esc(fax_email)).." ";
-	cmd = cmd .. "extension="..quote(shell_esc(fax_extension)).." ";
-	cmd = cmd .. "name="..quote(shell_esc(fax_file)).." ";
-	cmd = cmd .. "messages=" .. quote("Result: "..shell_esc(fax_result_text)..", Sender: "..shell_esc(fax_remote_station_id)..", Pages:"..shell_esc(fax_document_total_pages)).." ";
-	cmd = cmd .. "domain="..quote(shell_esc(domain_name)).." ";
-	cmd = cmd .. "caller_id_name=" .. quote(shell_esc(caller_id_name) or '') .. " ";
-	cmd = cmd .. "caller_id_number=" .. quote(shell_esc(caller_id_number) or '') .. " ";
-	cmd = cmd .. "fax_file_uuid=" .. quote(shell_esc(uuid)) .. " ";
+	cmd = shell_quote(php_dir.."/"..php_bin).." "..shell_quote(document_root.."/app/fax/fax_to_email.php").." ";
+	cmd = cmd .. "email="..shell_quote(fax_email).." ";
+	cmd = cmd .. "extension="..shell_quote(fax_extension).." ";
+	cmd = cmd .. "name="..shell_quote(fax_file).." ";
+	cmd = cmd .. "messages=" .. shell_quote("Result: "..fax_result_text..", Sender: "..fax_remote_station_id..", Pages:"..fax_document_total_pages).." ";
+	cmd = cmd .. "domain="..shell_quote(domain_name).." ";
+	cmd = cmd .. "caller_id_name=" .. shell_quote(caller_id_name) .. " ";
+	cmd = cmd .. "caller_id_number=" .. shell_quote(caller_id_number) .. " ";
+	cmd = cmd .. "fax_file_uuid=" .. shell_quote(uuid) .. " ";
 	if #fax_forward_number > 0 then
 		cmd = cmd .. "fax_relay=true ";
 	else
