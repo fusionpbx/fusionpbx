@@ -246,7 +246,7 @@ function send_email(id, uuid)
 				intro = voicemail_dir.."/"..id.."/intro_"..uuid.."."..vm_message_ext;
 				combined = voicemail_dir.."/"..id.."/intro_msg_"..uuid.."."..vm_message_ext;
 				if (file_exists(intro) and file_exists(file)) then
-					os.execute("sox "..intro.." "..shell_esc(file).." "..shell_esc(combined));
+					os.execute("sox "..shell_esc(intro).." "..shell_esc(file).." "..shell_esc(combined));
 				end
 
 			--prepare the subject
