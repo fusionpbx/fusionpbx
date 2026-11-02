@@ -81,13 +81,13 @@
 				}
 				break;
 			case 'toggle':
-				//if (permission_exists('event_guard_log_edit')) {
-				//	$obj = new event_guard;
-				//	$obj->toggle($event_guard_logs);
-				//}
-				//break;
+				if (permission_exists('event_guard_log_edit')) {
+					$obj = new event_guard;
+					$obj->toggle($event_guard_logs);
+				}
+				break;
 			case 'delete':
-				if (permission_exists('event_guard_log_delete')) {
+				if (permission_exists('event_guard_log_unblock')) {
 					$obj = new event_guard;
 					$obj->unblock($event_guard_logs);
 				}
@@ -226,7 +226,7 @@
 	if (permission_exists('event_guard_log_edit') && $event_guard_logs) {
 		echo modal::create(['id'=>'modal-toggle','type'=>'toggle','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_toggle','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('toggle'); list_form_submit('form_list');"])]);
 	}
-	if (permission_exists('event_guard_log_delete') && $event_guard_logs) {
+	if (permission_exists('event_guard_log_unblock') && $event_guard_logs) {
 		echo modal::create(['id'=>'modal-delete','type'=>'delete','actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_delete','style'=>'float: right; margin-left: 15px;','collapse'=>'never','onclick'=>"modal_close(); list_action_set('delete'); list_form_submit('form_list');"])]);
 	}
 
@@ -264,9 +264,6 @@
 			$list_row_url = '';
 			if (permission_exists('event_guard_log_edit')) {
 				$list_row_url = "event_guard_log_edit.php?id=".urlencode($row['event_guard_log_uuid']).($query_string ? '&'.$query_string : '');
-				if (!empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
-					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
-				}
 			}
 			echo "<tr class='list-row'>\n";
 			if (permission_exists('event_guard_log_add') || permission_exists('event_guard_log_edit') || permission_exists('event_guard_log_delete')) {
@@ -285,15 +282,22 @@
 			echo "	</td>\n";
 			echo "	<td><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['log_date_formatted'])."</a></td>\n";
 			echo "	<td class='hide-md-dn'><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['log_time_formatted'])."</a></td>\n";
-			switch($row['filter']) {
-				case 'sip-auth-ip': $filter = $text['option-ip']; break;
-				case 'sip-auth-fail': $filter = $text['option-authentication']; break;
+			$filter_label = $row['filter'] ?? '';
+			switch ($filter_label) {
+				case 'sip-auth-ip': $filter_label = $text['option-ip']; break;
+				case 'sip-auth-fail': $filter_label = $text['option-authentication']; break;
 			}
-			echo "	<td style='text-align: center;'><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($filter)."</a></td>\n";
-			echo "	<td><a href=\"https://search.arin.net/rdap/?query=".escape($row['ip_address'])."\" target=\"_blank\">".escape($row['ip_address'])."</a></td>\n";
-			echo "	<td style='max-width: 275px;'>".escape($row['extension'])."</td>\n";
-			echo "	<td style='max-width: 300px;' class='hide-md-dn'>".escape($row['user_agent'])."</td>\n";
-			echo "	<td>".escape($text['label-'.$row['log_status']])."</td>\n";
+			echo "	<td style='text-align: center;'><a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($filter_label)."</a></td>\n";
+			if (filter_var($row['ip_address'] ?? '', FILTER_VALIDATE_IP)) {
+				echo "	<td><a href=\"https://search.arin.net/rdap/?query=".escape($row['ip_address'])."\" target=\"_blank\">".escape($row['ip_address'])."</a></td>\n";
+			}
+			else {
+				echo "	<td>".escape($row['ip_address'] ?? '')."</td>\n";
+			}
+			echo "	<td style='max-width: 275px;'>".escape($row['extension'] ?? '')."</td>\n";
+			echo "	<td style='max-width: 300px;' class='hide-md-dn'>".escape($row['user_agent'] ?? '')."</td>\n";
+			$status_label = $text['label-' . ($row['log_status'] ?? '')] ?? ($row['log_status'] ?? '');
+			echo "	<td>".escape($status_label)."</td>\n";
 			if (permission_exists('event_guard_log_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);

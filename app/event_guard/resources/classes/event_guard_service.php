@@ -61,14 +61,15 @@ class event_guard_service extends service {
 		$php_os = strtolower(PHP_OS);
 
 		// Set the firewall name
+		$firewall_name = '';
 		if ($php_os == 'freebsd') {
 			$firewall_name = $this->settings->get('system','firewall_name', 'pf');
 		}
 		if ($php_os == 'linux') {
 			$firewall_name = $this->settings->get('system','firewall_name', 'iptables');
 		}
-		if (empty($firewall_name)) {
-			throw new Exception("No firewall name specified in settings");
+		if (empty($firewall_name) || !in_array($firewall_name, ['pf', 'nftables', 'iptables'])) {
+			throw new Exception("Invalid firewall name specified in settings");
 		}
 
 		// Get the settings using global defaults
@@ -154,28 +155,37 @@ class event_guard_service extends service {
 			$this->debug('Event array '. print_r($json_array, true));
 
 			// Registration failed - block IP address unless they are registered
-			if (is_array($json_array) && $json_array['Event-Subclass'] == 'sofia::register_failure') {
+			if (is_array($json_array) && ($json_array['Event-Subclass'] ?? '') == 'sofia::register_failure') {
+				$ip_address = $json_array['network-ip'] ?? '';
+
 				// Debug info
-				$this->debug("sofia::register_failure network-ip ".$json_array['network-ip'].", to-host ".$json_array['to-host']);
+				$this->debug("sofia::register_failure network-ip " . $ip_address . ", to-host " . ($json_array['to-host'] ?? ''));
 
 				// Not registered so block the address
-				$is_valid_ip = filter_var($json_array['network-ip'], FILTER_VALIDATE_IP);
-				if ($is_valid_ip && !$this->allow_access($json_array['network-ip'])) {
-					$this->block_add($json_array['network-ip'], 'sip-auth-fail', $json_array);
+				$is_valid_ip = filter_var($ip_address, FILTER_VALIDATE_IP);
+				if ($is_valid_ip && !$this->allow_access($ip_address)) {
+					$this->block_add($ip_address, 'sip-auth-fail', $json_array);
 					continue;
 				}
 			}
 
 			// Sendevent CUSTOM event_guard:unblock
-			if (is_array($json_array) && $json_array['Event-Subclass'] == 'event_guard:unblock') {
+			if (is_array($json_array) && ($json_array['Event-Subclass'] ?? '') == 'event_guard:unblock') {
+				// Get the ip address from the event, when provided
+				$unblock_ip_address = $json_array['Unblock-Address'] ?? '';
+
 				// Check the database for pending requests
 				$sql = "select event_guard_log_uuid, log_date, filter, ip_address, extension, user_agent ";
 				$sql .= "from v_event_guard_logs ";
 				$sql .= "where log_status = 'pending' ";
 				$sql .= "and hostname = :hostname ";
-				//$this->debug($sql." ".$this->hostname);
+				if (filter_var($unblock_ip_address, FILTER_VALIDATE_IP)) {
+					$sql .= "and ip_address = :ip_address ";
+					$parameters['ip_address'] = $unblock_ip_address;
+				}
 				$parameters['hostname'] = $this->hostname;
 				$event_guard_logs = $this->database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
 				if (is_array($event_guard_logs)) {
 					$x = 0;
 					foreach($event_guard_logs as $row) {
@@ -183,7 +193,7 @@ class event_guard_service extends service {
 						$this->block_delete($row['ip_address'], 'all');
 
 						// Debug info
-						$this->info("unblocked: [ip_address: ".$row['ip_address'].", filter: all, to-user: ".$row['extension'].", to-host: ".$row['hostname'].", line: ".__line__);
+						$this->info("unblocked: [ip_address: " . $row['ip_address'] . ", filter: all, to-user: " . $row['extension'] . ", to-host: " . $row['hostname'] . ", line " . __LINE__ . "]");
 
 						// Log the blocked IP address to the database
 						$array['event_guard_logs'][$x]['event_guard_log_uuid'] = $row['event_guard_log_uuid'];
@@ -202,17 +212,19 @@ class event_guard_service extends service {
 			}
 
 			// Registration to the IP address
-			if (is_array($json_array) && $json_array['Event-Subclass'] == 'sofia::pre_register') {
-				if (isset($json_array['to-host'])) {
+			if (is_array($json_array) && ($json_array['Event-Subclass'] ?? '') == 'sofia::pre_register') {
+				$to_host = $json_array['to-host'] ?? '';
+				$ip_address = $json_array['network-ip'] ?? '';
+				if (!empty($to_host)) {
 					// Debug info
-					$this->debug("sofia::pre_register network-ip ".$json_array['network-ip'].", to-host ".$json_array['to-host']);
+					$this->debug("sofia::pre_register network-ip " . $ip_address . ", to-host " . $to_host);
 
 					// Validate the to-host IP address
-					$is_valid_ip = filter_var($json_array['to-host'], FILTER_VALIDATE_IP);
+					$is_valid_ip = filter_var($to_host, FILTER_VALIDATE_IP);
 
 					// If not registered block the address
-					if ($is_valid_ip && !$this->allow_access($json_array['network-ip'])) {
-						$this->block_add($json_array['network-ip'], 'sip-auth-ip', $json_array);
+					if ($is_valid_ip && !$this->allow_access($ip_address)) {
+						$this->block_add($ip_address, 'sip-auth-ip', $json_array);
 						continue;
 					}
 				}
@@ -267,11 +279,25 @@ class event_guard_service extends service {
 			return false;
 		}
 
+		// Skip the address if it is already blocked so duplicates are not added
+		if ($this->block_exists($ip_address, $filter)) {
+			// Send debug information to the console
+			$this->debug("already blocked: [ip_address: " . $ip_address . ", filter: " . $filter . ", line " . __LINE__ . "]");
+
+			// Return success
+			return true;
+		}
+
 		// Block the IP address
 		$result = $this->firewall->block_add($ip_address, $filter);
 		if ($result) {
+			// Prepare the extension
+			$to_user = $event['to-user'] ?? '';
+			$to_host = $event['to-host'] ?? '';
+			$extension = !empty($to_host) ? $to_user . '@' . $to_host : $to_user;
+
 			// Log the blocked IP address to the log
-			$this->warning("blocked: [ip_address: ".$ip_address.", filter: ".$filter.", to-user: ".$event['to-user'].", to-host: ".$event['to-host'].", line: ".__line__."]");
+			$this->warning("blocked: [ip_address: " . $ip_address . ", filter: " . $filter . ", to-user: " . $to_user . ", to-host: " . $to_host . ", line " . __LINE__ . "]");
 
 			// Log the blocked IP address to the database
 			$array = [];
@@ -280,8 +306,8 @@ class event_guard_service extends service {
 			$array['event_guard_logs'][0]['log_date'] = 'now()';
 			$array['event_guard_logs'][0]['filter'] = $filter;
 			$array['event_guard_logs'][0]['ip_address'] = $ip_address;
-			$array['event_guard_logs'][0]['extension'] = $event['to-user'].'@'.$event['to-host'];
-			$array['event_guard_logs'][0]['user_agent'] = $event['user-agent'];
+			$array['event_guard_logs'][0]['extension'] = $extension;
+			$array['event_guard_logs'][0]['user_agent'] = $event['user-agent'] ?? '';
 			$array['event_guard_logs'][0]['log_status'] = 'blocked';
 			$p = permissions::new();
 			$p->add('event_guard_log_add', 'temp');
@@ -303,7 +329,7 @@ class event_guard_service extends service {
 		$result = $this->firewall->block_delete($ip_address, $filter);
 
 		// Send debug information to the console
-		$this->warning("unblocked: [ip_address: ".$ip_address.", filter: ".$filter.", line: ".__line__."]");
+		$this->warning("unblocked: [ip_address: " . $ip_address . ", filter: " . $filter . ", line " . __LINE__ . "]");
 
 		// Return the result
 		return $result;
@@ -319,7 +345,7 @@ class event_guard_service extends service {
 		$result = $this->firewall->block_exists($ip_address, $filter);
 
 		// Send debug information to the console
-		$this->debug("Address Exists " . $ip_address . ", line " . __line__);
+		$this->debug("Address Exists " . $ip_address . ", line " . __LINE__);
 
 		// Return the result
 		return $result;
@@ -366,18 +392,16 @@ class event_guard_service extends service {
 		}
 
 		// Allow access for addresses that have been unblocked
-		/*
-		if (event_guard_log_allowed($ip_address)) {
+		if ($this->allow_event_guard_log($ip_address)) {
 			// Save address to the cache as allowed
-			$cache->set("switch:allowed:".$ip_address, 'true');
+			$cache->set("switch:allowed:" . $ip_address, 'true');
 
 			// Debug info
-			$this->debug("address: ".$ip_address." allowed by: unblocked");
+			$this->debug("address: " . $ip_address . " allowed by: unblocked");
 
 			// Return boolean true
 			return true;
 		}
-		*/
 
 		// Allow access if the cidr address is allowed
 		if ($this->allow_access_control($ip_address)) {
@@ -405,6 +429,41 @@ class event_guard_service extends service {
 
 		// Return
 		return false;
+	}
+
+	/**
+	 * Determines if the ip address has been unblocked in the event guard logs.
+	 *
+	 * @param string $ip_address The IP address to check for an unblock.
+	 *
+	 * @return bool True if the IP address has been unblocked, false otherwise.
+	 */
+	private function allow_event_guard_log($ip_address) {
+		// Invalid IP address
+		if (!filter_var($ip_address, FILTER_VALIDATE_IP)) {
+			return false;
+		}
+
+		// Check to see if the address has been unblocked
+		$sql = "select count(event_guard_log_uuid) ";
+		$sql .= "from v_event_guard_logs ";
+		$sql .= "where ip_address = :ip_address ";
+		$sql .= "and log_status = 'unblocked' ";
+		$parameters['ip_address'] = $ip_address;
+		$unblock_count = $this->database->select($sql, $parameters, 'column');
+
+		// Debug info
+		$this->debug("address " . $ip_address . " unblocked count " . $unblock_count);
+
+		// Default authorized to false
+		$allowed = false;
+
+		// Return
+		if (!empty($unblock_count) && $unblock_count > 0) {
+			$allowed = true;
+		}
+
+		return $allowed;
 	}
 
 	/**
@@ -470,8 +529,9 @@ class event_guard_service extends service {
 		$sql .= "from v_user_logs ";
 		$sql .= "where remote_address = :remote_address ";
 		$sql .= "and result = 'success' ";
-		$sql .= "and timestamp > NOW() - INTERVAL '8 days' ";
+		$sql .= "and timestamp > :timestamp ";
 		$parameters['remote_address'] = $ip_address;
+		$parameters['timestamp'] = date('Y-m-d H:i:s', time() - (8 * 24 * 60 * 60));
 		$user_log_count = $this->database->select($sql, $parameters, 'column');
 
 		// Debug info
@@ -504,12 +564,12 @@ class event_guard_service extends service {
 
 		// Check if the IP address is registered
 		$registered = false;
-		$command = "fs_cli -x 'show registrations as json' ";
+		$command = "fs_cli -x 'show registrations as json' 2>/dev/null";
 		$result = shell_exec($command);
-		$array = json_decode($result, true);
-		if (is_array($array['rows'])) {
+		$array = json_decode((string) $result, true);
+		if (is_array($array) && is_array($array['rows'])) {
 			foreach ($array['rows'] as $row) {
-				if ($row['network_ip'] == $ip_address) {
+				if (is_array($row) && ($row['network_ip'] ?? '') == $ip_address) {
 					$registered = true;
 				}
 			}
