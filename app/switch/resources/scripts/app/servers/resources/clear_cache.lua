@@ -2,7 +2,7 @@
 	require "resources.functions.config";
 	require "resources.functions.shell_esc"
 
---load the libraries 
+--load the libraries
 	local Database = require "resources.functions.database";
 	local Settings = require "resources.functions.lazy_settings"
 	dbh = Database.new('system');
@@ -24,16 +24,15 @@
 		cmd = trim(cmd);
 		freeswitch.consoleLog("NOTICE","api_command: "..cmd .. " cache\n");
 	end
-	
+
 	if (cmd == "flush") then
 		os.execute("rm " .. shell_esc(cache_dir) .. "/*");
 	end
-	
+
 	if (cmd == "delete") then
 		if (file ~= nil) then
 			file = trim(file);
-			freeswitch.consoleLog("NOTICE","api_command: delete ".. shell_esc(cache_dir .. "/" .. file) .. "\n");
+			freeswitch.consoleLog("NOTICE","api_command: delete ".. cache_dir .. "/" .. file .. "\n");
 			os.remove(cache_dir.."/"..file);
 		end
-	
 	end
