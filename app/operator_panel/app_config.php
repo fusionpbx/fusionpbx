@@ -206,6 +206,14 @@
 	$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 	$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable periodic registration-state reconciliation polling via action request. Disable to rely only on registration_change events.";
 	$y++;
+	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "0d3b16b0-5cd6-4d0e-8b58-967972362ef8";
+	$apps[$x]['default_settings'][$y]['default_setting_category'] = "operator_panel";
+	$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "show_unregistered";
+	$apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+	$apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+	$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+	$apps[$x]['default_settings'][$y]['default_setting_description'] = "Set whether unregistered extensions are displayed or not.";
+	$y++;
 	$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "f3be5aa5-2b7e-4e8c-a00a-ae9e001ec646";
 	$apps[$x]['default_settings'][$y]['default_setting_category'] = "operator_panel";
 	$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "debug_show_permissions_mode";

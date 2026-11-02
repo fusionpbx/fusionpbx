@@ -19,6 +19,7 @@
  *   user_uuid            — PHP-injected session user UUID
  *   token                — PHP-injected WS auth token {name, hash}
  *   user_statuses        — PHP-injected array of allowed status strings
+ *   show_unregistered    — PHP-injected boolean: show grey unregistered extensions
  */
 
 'use strict';
@@ -3690,7 +3691,9 @@ function render_extensions_tab() {
 	const my_container = document.getElementById('my_extensions_container');
 	if (!container) return;
 
-	const all    = Array.from(extensions_map.values());
+	// When "Show Unregistered" is disabled, hide unregistered extensions
+	// entirely (a live call on one can still appear in the Calls tab).
+	const all    = Array.from(extensions_map.values()).filter(e => show_unregistered || e.registered === true);
 	const own    = all.filter(e => user_own_extensions.includes(e.extension));
 	const others = all.filter(e => !user_own_extensions.includes(e.extension));
 
