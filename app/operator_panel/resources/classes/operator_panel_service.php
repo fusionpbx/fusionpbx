@@ -1106,6 +1106,51 @@ class operator_panel_service extends base_websocket_system_service implements we
 		$conference_name = html_entity_decode(urldecode($payload['conference_name'] ?? ''));
 		$member_id = $payload['member_id'] ?? '';
 		$direction = $payload['direction'] ?? '';
+		$parked_uuid = $payload['parked_uuid'] ?? '';
+		$operator_uuid = $payload['operator_uuid'] ?? '';
+		$source_ext = $payload['source_extension'] ?? '';
+		$destination_extension = $payload['destination_extension'] ?? '';
+		$source = $payload['source'] ?? '';
+		$agent_name = $payload['agent_name'] ?? '';
+
+		//
+		// All client supplied values above are interpolated into FreeSWITCH
+		// event socket commands below. A crafted client could otherwise
+		// inject extra originate variables or commands using the
+		// structural characters of those command strings ( { } & ; ( ) @ /
+		// quotes and whitespace, including newlines which the line based
+		// event socket treats as a new command ). Each value is checked
+		// against an allowlist of only the characters it legitimately
+		// needs. Bail out if any value is invalid.
+		//
+		$valid =
+			// unique id values: valid uuid (36 char dashed or 32 char hex)
+			($uuid === '' || is_uuid($uuid))
+			&& ($parked_uuid === '' || is_uuid($parked_uuid))
+			&& ($operator_uuid === '' || is_uuid($operator_uuid))
+			// realm / context: a domain name or dialplan context
+			&& ($domain_name === '' || preg_match('/^[0-9A-Za-z._-]+$/', $domain_name))
+			&& preg_match('/^[0-9A-Za-z._-@]+$/', $context)
+			// extension / number alias - digits, letters and * # + . _ -
+			&& ($destination === '' || preg_match('/^[0-9A-Za-z*#+._-]+$/', $destination))
+			&& ($destination_extension === '' || preg_match('/^[0-9A-Za-z*#+._-]+$/', $destination_extension))
+			&& ($source_ext === '' || preg_match('/^[0-9A-Za-z*#+._-]+$/', $source_ext))
+			&& ($source === '' || preg_match('/^[0-9A-Za-z*#+._-]+$/', $source))
+			// conference name: name@domain
+			&& ($conference_name === '' || preg_match('/^[0-9A-Za-z._@-]+$/', $conference_name))
+			// conference member id
+			&& ($member_id === '' || preg_match('/^[0-9A-Za-z._-]+$/', $member_id))
+			// volume / energy direction
+			&& ($direction === '' || $direction === 'up' || $direction === 'down')
+			// agent name
+			&& ($agent_name === '' || preg_match('/^[0-9A-Za-z@._-]+$/', $agent_name));
+		// Note: payload['status'] is intentionally not checked here. The
+		// user_status and agent_status actions verify it with a strict
+		// in_array() against a fixed list of labels, which is safe.
+		if (!$valid) {
+			$this->warning("Action rejected because of an invalid payload");
+			return ['success' => false, 'message' => 'Invalid action payload'];
+		}
 
 		// Debug action execution attempt with all relevant parameters
 		$this->debug("Executing action: $action, uuid: $uuid, destination: $destination, context: $context, conference_name: $conference_name, member_id: $member_id, direction: $direction");
