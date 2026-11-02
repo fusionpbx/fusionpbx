@@ -108,7 +108,7 @@
 		'gain_up'     => $settings->get('theme', 'operator_panel_conference_icon_gain_up', 'fas fa-sort-amount-up'),
 		'kick'        => $settings->get('theme', 'operator_panel_conference_icon_kick', 'fas fa-ban'),
 	];
-	$status_show_icon = $settings->get('theme', 'operator_panel_status_show_icon', 'true') === 'true';
+	$status_show_icon = $settings->get('theme', 'operator_panel_status_show_icon', true);
 
 // Optional user status list for the presence dropdown
 	$user_statuses = ['Available', 'Available (On Demand)', 'On Break', 'Do Not Disturb', 'Logged Out'];
@@ -121,10 +121,13 @@
 
 // Show/hide the "My Extensions" filter button.
 // Default is hidden when unset so the user's own extensions remain shown.
-	$my_extensions_button_visible = $settings->get('operator_panel', 'my_extensions_button_visible', 'false') === 'true';
+	$my_extensions_button_visible = $settings->get('operator_panel', 'my_extensions_button_visible', false);
 
 // Optional polling reconciliation of registration state (can be disabled).
-	$registrations_reconcile_enabled = $settings->get('operator_panel', 'registrations_reconcile_enabled', 'false') === 'true';
+	$registrations_reconcile_enabled = $settings->get('operator_panel', 'registrations_reconcile_enabled', false);
+
+// Show/hide unregistered extensions in the Extensions tab.
+	$show_unregistered = $settings->get('operator_panel', 'show_unregistered', false);
 
 // Default auto-park destination for drag/drop parking.
 	$park_destination = (string)$settings->get('operator_panel', 'park_destination', '*5900');
@@ -209,6 +212,9 @@
 
 	// Optional registrations-state reconciliation polling
 	const registrations_reconcile_enabled = <?= json_encode($registrations_reconcile_enabled) ?>;
+
+	// Show/hide unregistered extensions in the Extensions tab
+	const show_unregistered = <?= json_encode($show_unregistered) ?>;
 
 	// Default auto-park destination for drag/drop parking
 	const park_destination = <?= json_encode($park_destination) ?>;
