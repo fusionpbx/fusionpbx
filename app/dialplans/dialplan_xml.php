@@ -55,7 +55,7 @@
 	$dialplan_xml = $_REQUEST['dialplan_xml'] ?? '';
 
 //process the HTTP POST
-	if (!empty($_POST) && !empty($dialplan_uuid) && !empty($_REQUEST['app_uuid']) && !empty($_REQUEST['app_uuid'])) {
+	if (!empty($_POST) && !empty($dialplan_uuid)) {
 
 		//validate the token
 			$token = new token;
