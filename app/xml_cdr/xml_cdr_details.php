@@ -184,7 +184,7 @@
 			//summarize the transcript
 			if ($settings->get('language_model', 'enabled') && $settings->get('call_recordings', 'summary_enabled')) {
 				//get the transcribed text
-				$transcribe_text = transcribe::conversation_format($transcript_message, 'text');
+				$transcribe_text = transcribe::conversation_format($transcript_message ?? '', 'text');
 
 				//get the summary language model prompt
 				$default_prompt = "Summarize this conversation with Key Points, Action Items if any, and Sentiment. Use names when they are provided. Keep the summary professional. Return text without markdown.";
@@ -361,7 +361,7 @@
 			}
 		}
 		if ($format == 'xml') {
-			$array = json_decode(json_encode((array)simplexml_load_string($xml_string)),true);
+			$array = json_decode(json_encode((array)simplexml_load_string($xml_string, "SimpleXMLElement", LIBXML_NONET)), true);
 		}
 	}
 	catch (Exception $e) {
@@ -632,6 +632,7 @@
 	if ($summary_style == 'horizontal') {
 		echo "<div class='card'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<tr>\n";
 		echo "<th></th>\n";
 		echo "<th>".$text['label-direction']."</th>\n";
 		//echo "<th>Language</th>\n";
@@ -723,13 +724,13 @@
 	$i = 1;
 	foreach ($call_flow_summary as $row) {
 		echo "	<tr>\n";
-		echo "		<td style='width: 0; padding-right: 0;' valign='top' class='".$row_style[$c]."'><span class='fa-solid ".$row["application_icon"]."' style='opacity: 0.8;'></span></td>";
-		echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["application_url"]."\">".escape($row["application_label"])."</a></td>\n";
+		echo "		<td style='width: 0; padding-right: 0;' valign='top' class='".$row_style[$c]."'><span class='fa-solid ".escape($row["application_icon"])."' style='opacity: 0.8;'></span></td>";
+		echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".escape($row["application_url"])."\">".escape($row["application_label"])."</a></td>\n";
 		if ($call_direction == 'local' || $call_direction == 'outbound') {
-			echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["source_url"]."\">".escape($row["source_number"])."</a></td>\n";
+			echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".escape($row["source_url"])."\">".escape($row["source_number"])."</a></td>\n";
 		}
-		echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["destination_url"]."\">".escape($row["destination_number"])."</a></td>\n";
-		echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".$row["destination_url"]."\">".escape($row["destination_label"])."</a></td>\n";
+		echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".escape($row["destination_url"])."\">".escape($row["destination_number"])."</a></td>\n";
+		echo "		<td valign='top' class='".$row_style[$c]."'><a href=\"".escape($row["destination_url"])."\">".escape($row["destination_label"])."</a></td>\n";
 		echo "		<td valign='top' class='".$row_style[$c]."'>".escape($row["start_stamp"])."</td>\n";
 		echo "		<td valign='top' class='".$row_style[$c]."'>".escape($row["end_stamp"])."</td>\n";
 		echo "		<td valign='top' class='".$row_style[$c]."'>".escape($row["duration_formatted"])."</td>\n";
@@ -749,6 +750,7 @@
 //call recording
 	if (permission_exists('xml_cdr_recording') && !empty($record_path) && $duration > 1) {
 		//recording properties
+		$record_type = '';
 		if (!empty($record_name) && permission_exists('xml_cdr_recording') && (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download'))) {
 			$record_extension = pathinfo($record_name, PATHINFO_EXTENSION);
 			switch ($record_extension) {
