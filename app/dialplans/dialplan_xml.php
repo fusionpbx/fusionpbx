@@ -83,7 +83,7 @@
 	$query_string = http_build_query($url_params);
 
 //process the HTTP POST
-	if (!empty($_POST) && !empty($dialplan_uuid) && !empty($_REQUEST['app_uuid']) && !empty($_REQUEST['app_uuid'])) {
+	if (!empty($_POST) && !empty($dialplan_uuid)) {
 
 		//validate the token
 			$token = new token;
