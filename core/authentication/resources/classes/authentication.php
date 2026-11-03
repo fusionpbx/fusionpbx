@@ -124,6 +124,12 @@ class authentication {
 			$authorized = true;
 			$name = 'remember_me';
 
+			// Set the domain_uuid
+			$this->domain_uuid = $result["domain_uuid"];
+
+			// Set the user_uuid
+			$this->user_uuid = $result["user_uuid"];
+
 			// Save the result to the authentication plugin
 			$_SESSION['authentication']['plugin'][$name] = $result;
 		}

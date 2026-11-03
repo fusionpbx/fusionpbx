@@ -123,6 +123,7 @@
 		//validate the username and password
 			$auth = new authentication(['settings' => $settings]);
 			$result = $auth->validate();
+			$remember_me_login = ($result['plugin'] ?? '') === 'remember_me';
 
 		//if not authorized
 			if (empty($_SESSION['authorized']) || !$_SESSION['authorized']) {
@@ -148,7 +149,7 @@
 			settings::clear_cache();
 
 		//if logged in, redirect to login destination
-			if (!isset($_REQUEST["key"]) && !isset($_COOKIE['remember_me'])) {
+			if (!isset($_REQUEST["key"]) && !$remember_me_login) {
 				//redirect the user
 				if (isset($_SESSION['redirect_path'])) {
 					$redirect_path = (string)$_SESSION['redirect_path'];

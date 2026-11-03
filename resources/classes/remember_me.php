@@ -70,7 +70,7 @@ class remember_me {
 
 		// Verify validator hash
 		if (!password_verify($validator, $user_log['remember_validator'])) {
-			$this->clear_cookie();
+			self::clear_cookie();
 			user_logs::add(['authorized' => false], "Invalid remember me token");
 			return null;
 		}
