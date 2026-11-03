@@ -85,7 +85,7 @@
 								--remote command for the local shell so that the value is never
 								--interpreted by either shell
 								local remote_argument = tostring(api_command_argument):gsub("'", "'\\''");
-								local remote_command = "fs_cli -x 'memcache " .. remote_argument .. '"';
+								local remote_command = "fs_cli -x 'memcache " .. remote_argument .. "'";
 								cmd = "ssh " .. shell_esc(row.username) .. "@" .. shell_esc(row.hostname) .. " " .. shell_esc(remote_command);
 								freeswitch.consoleLog("INFO", "[notice] command: ".. cmd .. "\n");
 								os.execute(cmd);
