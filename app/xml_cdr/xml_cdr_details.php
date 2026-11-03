@@ -537,8 +537,8 @@
 	}
 	$summary_array['caller_destination'] = escape($caller_destination);
 	$summary_array['destination'] = escape($destination_number);
-	$summary_array['start'] = escape($start_stamp);
-	$summary_array['end'] = escape($end_stamp);
+	$summary_array['start'] = escape($start_time);
+	$summary_array['end'] = escape($end_time);
 	$summary_array['duration'] = escape(gmdate("G:i:s", (int)$duration));
 	if (permission_exists('xml_cdr_call_disposition')) {
 		$summary_array['call_disposition'] = escape($call_disposition);
