@@ -722,6 +722,9 @@ function update_file_permissions($text, settings $settings) {
 		// Adjust the project root
 		$directories[] = $project_root;
 
+		// Adjust the /etc/fusionpbx so the install wizard can write config.conf (password recovery)
+		$directories[] = '/etc/fusionpbx';
+
 		// Adjust the /etc/freeswitch
 		$directories[] = $settings->get('switch', 'conf', null);
 		$directories[] = $settings->get('switch', 'call_center', null); //normally in conf but can be different
