@@ -75,11 +75,12 @@ class remember_me {
 			return null;
 		}
 
-		// Rotate Token
-		$this->rotate_token($selector);
-
 		// Fetch user details
-		return $this->get_user_details($user_log['user_uuid'], $contacts_exists);
+		$result = $this->get_user_details($user_log['user_uuid'], $contacts_exists);
+
+		// Pass the selector back so the caller can rotate the token once the login is fully authorized
+		$result['remember_old_selector'] = $selector;
+		return $result;
 	}
 
 	/**
@@ -101,7 +102,7 @@ class remember_me {
 			'samesite' => 'Lax'
 		]);
 
-		return ['selector' => $selector, 'hashed_validator' => $hashed_validator];
+		return [$selector, $hashed_validator];
 	}
 
 	/**
@@ -163,19 +164,8 @@ class remember_me {
 		return null;
 	}
 
-	private function rotate_token(string $old_selector): void {
-		$selector = uuid();
-		$validator = generate_password(32);
-		$hashed_validator = password_hash($validator, PASSWORD_DEFAULT);
-
-		// Update Cookie
-		setcookie(self::$cookie_name, $selector . ':' . $validator, [
-			'expires' => strtotime("+".$this->expiry_days." days"),
-			'path' => '/',
-			'secure' => true,
-			'httponly' => true,
-			'samesite' => 'Lax'
-		]);
+	public function rotate_token(string $old_selector) {
+		[$selector, $hashed_validator] = $this->issue_token();
 
 		// Update the tokens in the database
 		$sql = "update v_user_logs \n";

@@ -119,8 +119,13 @@ class authentication {
 		// Check for remember me cookie
 		$remember_me = new remember_me(['database' => $this->database, 'settings' => $this->settings]);
 		$result = $remember_me->authenticate($contacts_exists);
-		if (is_array($result)) {
+		$remember_me_login = is_array($result);
+		if ($remember_me_login) {
 			$authorized = true;
+			$name = 'remember_me';
+
+			// Save the result to the authentication plugin
+			$_SESSION['authentication']['plugin'][$name] = $result;
 		}
 
 		// Skip authentication plugins if already authorized by remember me
@@ -233,7 +238,7 @@ class authentication {
 				// But, may still be blocked by other methods. Check the other methods in the user settings
 				// for any additional methods that are active on the user and not on the domain (ie. TOTP).
 				$authenticators = array_diff($this->settings->get('authentication', 'methods', []), $_SESSION['authentication']['methods'] ?? []);
-				if (!$passkey_only && !empty($authenticators) && $result['plugin'] !== 'remember_me') {
+				if (!$passkey_only && !empty($authenticators) && !$remember_me_login) {
 					foreach ($authenticators as $name) {
 						// Assume the plugin will not authorize the user until it is processed and returns true
 						$_SESSION['authentication']['plugin'][$name]['authorized'] = false;
@@ -293,14 +298,19 @@ class authentication {
 					unset($_SESSION['authentication']['passkey_only_until']);
 					$_SESSION['authentication']['passkey_only'] = false;
 
-					// Create remember me token
-					// if (($_SESSION['remember_me'] ?? '') === 'true' && $this->settings->get('login', 'remember_me', false) && $result['plugin'] !== 'remember_me') {
-					if (!empty($_SESSION['remember_me']) && $this->settings->get('login', 'remember_me', false) && $result['plugin'] !== 'remember_me') {
-						$token_data = $remember_me->issue_token();
+					// Rotate token after successful remember me login and cidr check
+					if ($remember_me_login) {
+						$remember_me->rotate_token($result['remember_old_selector']);
+						unset($result['remember_old_selector']);
+					}
+
+					// Create initial remember me token
+					if (!empty($_SESSION['remember_me']) && $this->settings->get('login', 'remember_me', false) && !$remember_me_login) {
+						[$remember_selector, $remember_validator] = $remember_me->issue_token();
 
 						// Save token to the user log array
-						$_SESSION['authentication']['plugin'][$name]['remember_selector'] = $token_data['selector'];
-						$_SESSION['authentication']['plugin'][$name]['remember_validator'] = $token_data['hashed_validator'];
+						$_SESSION['authentication']['plugin'][$name]['remember_selector'] = $remember_selector;
+						$_SESSION['authentication']['plugin'][$name]['remember_validator'] = $remember_validator;
 					}
 				}
 			} else {
@@ -315,7 +325,7 @@ class authentication {
 		$_SESSION['authorized'] = $authorized;
 
 		//log the attempt
-		if ($result['plugin'] !== 'remember_me') {
+		if (!($remember_me_login && $authorized)) {
 			user_logs::add($_SESSION['authentication']['plugin'][$name], $failed_login_message);
 		}
 
