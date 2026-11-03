@@ -147,6 +147,57 @@ class switch_files {
 	}
 
 	/**
+	 * Copy one application Lua script without refreshing the complete scripts
+	 * tree. This is intended for controlled rollouts where copy_scripts() would
+	 * include unrelated application changes.
+	 *
+	 * @param string $relative_path Path below the FusionPBX application root.
+	 * @return void
+	 */
+	public function copy_script($relative_path) {
+
+		//Limit this narrow deployment helper to the two source trees handled by
+		//copy_scripts(): core switch scripts and application scripts.
+		if (!is_string($relative_path) || strpos($relative_path, '..') !== false) {
+			throw new Exception('Invalid application script path.');
+		}
+		if (preg_match('#^app/switch/resources/scripts/([a-zA-Z0-9_./-]+\\.lua)$#', $relative_path, $matches)) {
+			$destination_relative_path = $matches[1];
+		} elseif (preg_match('#^app/[a-z0-9_]+/resources/scripts/([a-zA-Z0-9_./-]+\\.lua)$#', $relative_path, $matches)) {
+			//copy_scripts() copies the contents of each app resources/scripts
+			//directory into the switch scripts root.
+			$destination_relative_path = $matches[1];
+		} else {
+			throw new Exception('Invalid application script path.');
+		}
+
+		$source_file = dirname(__DIR__, 4) . '/' . $relative_path;
+		if (!is_file($source_file) || !is_readable($source_file)) {
+			throw new Exception("Application script not found: '$relative_path'.");
+		}
+
+		if (file_exists($this->config->get('switch.scripts.dir'))) {
+			$destination_directory = $this->config->get('switch.scripts.dir');
+		} elseif (file_exists('/usr/share/freeswitch/scripts/')) {
+			$destination_directory = '/usr/share/freeswitch/scripts';
+		} elseif (file_exists('/usr/local/freeswitch/scripts')) {
+			$destination_directory = '/usr/local/freeswitch/scripts';
+		} else {
+			throw new Exception('Switch scripts directory not found.');
+		}
+
+		$destination_file = $destination_directory . '/' . $destination_relative_path;
+		$destination_parent = dirname($destination_file);
+		if (!is_dir($destination_parent) && !mkdir($destination_parent, 0775, true)) {
+			throw new Exception("Cannot create switch scripts directory: '$destination_parent'.");
+		}
+		if (!is_writable($destination_parent) || !copy($source_file, $destination_file)) {
+			throw new Exception("Cannot copy application script: '$relative_path'.");
+		}
+		chmod($destination_file, 0644);
+	}
+
+	/**
 	 * Copy the switch languages to the switch directory
 	 *
 	 * @return void
