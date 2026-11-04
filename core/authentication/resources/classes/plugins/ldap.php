@@ -147,7 +147,8 @@ class plugin_ldap {
 
 		//check all user_dn in the array
 		foreach ($ldap_user_dn as $user_dn) {
-			$bind_dn = $settings->get('ldap', 'user_attribute', '')."=".$this->username.",".$user_dn;
+			//escape the username and base DN to prevent LDAP injection (e.g. backslash-escaped DN components)
+			$bind_dn = $settings->get('ldap', 'user_attribute', '')."=".ldap_escape($this->username, '', LDAP_ESCAPE_DN).",".ldap_escape($user_dn, '', LDAP_ESCAPE_DN);
 			$bind_pw = $this->password;
 			//Note: As of 4/16, the call below will fail randomly. PHP debug reports ldap_bind
 			//called below with all arguments '*uninitialized*'. However, the debugger
