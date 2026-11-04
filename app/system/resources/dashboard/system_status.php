@@ -10,6 +10,14 @@
 		exit;
 	}
 
+//define the global variables
+	global $config, $database;
+
+//get the database settings from the config.conf file
+	$db_type = $config->get('database.0.type', '');
+	$db_path = $config->get('database.0.path', '');
+	$db_filename = $config->get('database.0.name', '');
+
 //convert to a key
 	$widget_key = str_replace(' ', '_', strtolower($widget_name));
 
@@ -354,10 +362,14 @@
 					break;
 				default:
 					unset($sql_current, $sql_max);
-					if (!empty($db_path) && !empty($dbfilename)) {
-						$tmp = shell_exec("lsof " . realpath($db_path) . '/' . $dbfilename);
-						$tmp = explode("\n", $tmp);
-						$connections = sizeof($tmp) - 1;
+					//sqlite: count the connections to the db file
+					if (!empty($db_path) && !empty($db_filename)) {
+						$db_file = realpath($db_path) . '/' . $db_filename;
+						if (file_exists($db_file)) {
+							$tmp = shell_exec('lsof ' . escapeshellarg($db_file));
+							$tmp = explode("\n", $tmp);
+							$connections = sizeof($tmp) - 1;
+						}
 					}
 			}
 
