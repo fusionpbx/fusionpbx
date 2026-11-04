@@ -26,6 +26,20 @@ define('MAX_PATH_LENGTH', 255);
 define('ALLOWED_METHODS', ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']);
 
 /**
+ * Provisioning and REST API requests must not start a PHP session
+ *
+ * The API interface pages are excluded because they authenticate with the session via
+ * resources/check_auth.php. Note: nginx routes /api/ requests directly to
+ * app/api/index.php (bypassing this front controller), where the same
+ * no-session handling is applied for the numeric REST routes.
+ */
+$_request_path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '';
+if (preg_match('#^/?(?:app/)?provision(/|$)#i', $_request_path)
+	|| (preg_match('#^/?(?:app/)?api(/|$)#i', $_request_path) && !preg_match('/\.php$#i', $_request_path))) {
+	$no_session = true;
+}
+
+/**
  * Initialize FusionPBX core
  * Loads: autoloader, database, session, settings, security headers
  */
@@ -118,9 +132,7 @@ class router {
 
 		// Return the provision route with the query string
 		$original_path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '/';
-		if (($_SERVER['SCRIPT_NAME'] ?? '') === '/public/index.php'
-			&& stripos($original_path, '/provision') === 0
-			&& array_intersect(array_keys($query), ['mac', 'address', 'file', 'ext']) !== []) {
+		if (preg_match('#^/?(?:app/)?provision(/|$)#i', $original_path)) {
 			$target_file = PROJECT_ROOT . '/app/provision/index.php';
 			if (file_exists($target_file)) {
 				return [
