@@ -30,6 +30,7 @@
 	require_once "resources/check_auth.php";
 	require_once "resources/functions/object_to_array.php";
 	require_once "resources/functions/parse_message.php";
+	require_once "resources/classes/imap.php";
 
 //check permissions
 	if (!permission_exists('fax_inbox_view')) {

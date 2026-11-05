@@ -27,6 +27,7 @@
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/classes/imap.php";
 
 //check permissions
 	if (!(permission_exists('fax_extension_add') || permission_exists('fax_extension_edit') || permission_exists('fax_extension_delete'))) {
