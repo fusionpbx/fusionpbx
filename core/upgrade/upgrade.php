@@ -599,6 +599,11 @@
  */
 function update_php_fpm(settings $settings) {
 
+	// Only run this from the command line
+	if (!is_cli()) {
+		return;
+	}
+
 	// Update the php-fpm.service file
 	if (PHP_OS === 'Linux') {
 		// Get the PHP version
@@ -609,9 +614,14 @@ function update_php_fpm(settings $settings) {
 
 		// Check if the service file exists
 		if (!file_exists($service_file)) {
-			if (is_cli()) {
-				echo "The service file does not exist\n";
+			// Fallback in case the CLI PHP version differs from the installed PHP-FPM version
+			$fpm_service_files = glob("/usr/lib/systemd/system/php*-fpm.service");
+			if (!empty($fpm_service_files)) {
+				$service_file = $fpm_service_files[0];
 			}
+		}
+		if (!file_exists($service_file)) {
+			echo "The service file does not exist\n";
 			return;
 		}
 
@@ -672,6 +682,8 @@ function update_php_fpm(settings $settings) {
 			$insert_index = -1;
 			for ($i = 0; $i < count($lines); $i++) {
 				if (trim($lines[$i]) === '[Install]') {
+					// Default to the [Install] line in case no empty line is found before it
+					$insert_index = $i;
 					// Find empty line before [Install]
 					for ($j = $i - 1; $j >= 0; $j--) {
 						if (trim($lines[$j]) === '') {
@@ -684,18 +696,27 @@ function update_php_fpm(settings $settings) {
 			}
 
 			// Add the new ReadWritePaths into the $new_contents string
-			array_splice($lines, $insert_index, 0, trim($line_to_insert));
+			if ($insert_index >= 0) {
+				array_splice($lines, $insert_index, 0, trim($line_to_insert));
+			}
+			else {
+				// No [Install] section found, add the line at the end of the file
+				$lines[] = trim($line_to_insert);
+			}
 			$new_contents = implode("\n", $lines) . "\n";
 		}
 
 		// Update the service file, daemon-reload, and restart service
 		if (!empty($new_contents)) {
+			// Get the service name from the service file
+			$service_name = preg_replace('/\.service$/', '', basename($service_file));
+
 			// Write the changes to the service file
 			file_put_contents($service_file, $new_contents);
 
 			// Prepared systemd to use the update
 			system('systemctl daemon-reload');
-			system('systemctl restart ' . escapeshellarg('php' . $php_version . '-fpm'));
+			system('systemctl restart ' . escapeshellarg($service_name));
 		}
 
 	}
