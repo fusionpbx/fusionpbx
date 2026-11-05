@@ -110,6 +110,26 @@ class event_socket {
 			return false;
 		}
 
+		// Add filter when the request includes 'filter EVENT_NAME', or 'filter CUSTOM subclass'
+		// matched by Reply-Text (skipping interleaved async events) and the wait is
+		// bounded instead of blocking until an event of any kind arrives
+		if (preg_match('/^filter ([A-Z][A-Z_]*) ?(\S*)\s*$/', $cmd, $m)) {
+			if ($m[1] === 'CUSTOM' && $m[2] !== '') {
+				[$field, $value] = ['Event-Subclass', $m[2]];
+			} elseif ($m[1] !== 'CUSTOM' && $m[2] === '') {
+				[$field, $value] = ['Event-Name', $m[1]];
+			} else {
+				$field = null;
+			}
+			if ($field !== null) {
+				if ($this->add_filter($field, $value)) {
+					return ['Content-Type' => 'command/reply', 'Reply-Text' => "+OK filter added. [{$field}]=[$value]"];
+				}
+				// No confirmation from event socket within the timeout
+				return false;
+			}
+		}
+
 		$cmd_array = explode("\n", $cmd);
 		foreach ($cmd_array as $value) {
 			fputs($this->fp, $value . "\n");
@@ -188,6 +208,239 @@ class event_socket {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Read an event from the socket giving up after a hard timeout
+	 * <p>Unlike read_event(), which polls indefinitely until a complete event
+	 * has been received, this method returns false when the total timeout
+	 * expires or the connection is lost. Bytes already received are kept in
+	 * the internal buffer, so a later read_event() or read_event_bounded()
+	 * call continues where this one left off. The stream is set to
+	 * non-blocking for the duration of the read (like drain()) so the wait
+	 * can never run past the deadline, and its original blocking state is
+	 * restored afterwards.</p>
+	 *
+	 * @param int $timeout Total timeout in microseconds, Default 10000
+	 *
+	 * @return array|false Event headers (plus the body under the '$' key when
+	 *                     present) or false on timeout or when not connected
+	 * @depends buffer::class
+	 */
+	public function read_event_bounded($timeout = 10000) {
+		if (!$this->connected()) {
+			return false;
+		}
+
+		// Work non-blocking so the wait can never run past the deadline,
+		// then restore the original blocking state
+		$meta = stream_get_meta_data($this->fp);
+		$blocking = $meta['blocked'] ?? true;
+		if ($blocking && !stream_set_blocking($this->fp, false)) {
+			return false;
+		}
+
+		try {
+			$b = $this->buffer;
+			$content = [];
+			$deadline = microtime(true) + ($timeout / 1000000);
+
+			while (true) {
+				$line = $b->read_line();
+				if ($line !== false) {
+					if ($line === '') {
+						break;
+					}
+					[$key, $value] = explode(':', $line, 2);
+					$content[trim($key)] = trim($value);
+					// keep pulling lines already available in the buffer
+					continue;
+				}
+
+				if (feof($this->fp)) {
+					break;
+				}
+
+				// give up when the total timeout expires
+				if (microtime(true) >= $deadline) {
+					return false;
+				}
+
+				$read = [$this->fp];
+				$write = [];
+				$except = [];
+				$remaining = (int) max(0, ($deadline - microtime(true)) * 1000000);
+				if (stream_select($read, $write, $except, 0, $remaining) > 0) {
+					$chunk = fread($this->fp, 8192);
+					if ($chunk !== false && $chunk !== '') {
+						$b->append($chunk);
+					}
+				} else {
+					// stream_select timed out before any data arrived
+					return false;
+				}
+			}
+
+			if (array_key_exists('Content-Length', $content)) {
+				$str = $b->read_n($content['Content-Length']);
+				while ($str === false) {
+					if (microtime(true) >= $deadline || feof($this->fp)) {
+						break;
+					}
+
+					$read = [$this->fp];
+					$write = [];
+					$except = [];
+					$remaining = (int) max(0, ($deadline - microtime(true)) * 1000000);
+					if (stream_select($read, $write, $except, 0, $remaining) > 0) {
+						$chunk = fread($this->fp, 8192);
+						if ($chunk !== false && $chunk !== '') {
+							$b->append($chunk);
+						}
+					}
+					$str = $b->read_n($content['Content-Length']);
+				}
+				if ($str !== false) {
+					$content['$'] = $str;
+				}
+			}
+
+			return $content;
+		} finally {
+			if ($blocking) {
+				stream_set_blocking($this->fp, true);
+			}
+		}
+	}
+
+	/**
+	 * Send a single-line command and wait for a specific reply text
+	 * <p>FreeSWITCH answers client commands with a 'command/reply' event
+	 * that carries the result in its Reply-Text header (e.g.
+	 * '+OK filter added. [Event-Name]=[CHANNEL_CREATE]'). Asynchronous
+	 * events may be interleaved on the same socket, so events are read and
+	 * skipped until the expected reply arrives or the total timeout
+	 * expires. Unlike a plain read_event() loop, a missing reply or a
+	 * '-ERR' reply never causes an infinite wait.</p>
+	 *
+	 * @param string $cmd Command to send without line endings
+	 * @param string $expected Exact Reply-Text value that confirms success
+	 * @param int $timeout Timeout in microseconds, Default 3000000
+	 *
+	 * @return bool True when the expected reply was received, false on timeout or disconnect
+	 * @depends read_event_bounded()
+	 */
+	private function send_and_wait(string $cmd, string $expected, int $timeout = 3000000): bool {
+		if (!$this->connected()) {
+			return false;
+		}
+
+		fputs($this->fp, $cmd . "\n");
+		fputs($this->fp, "\n"); //second line feed to end the headers
+
+		$deadline = microtime(true) + ($timeout / 1000000);
+
+		while (microtime(true) < $deadline) {
+			$remaining = (int) max(1000, ($deadline - microtime(true)) * 1000000);
+			$event = $this->read_event_bounded($remaining);
+			if ($event === false) {
+				//timeout or connection lost
+				return false;
+			}
+			if (($event['Reply-Text'] ?? '') === $expected) {
+				return true;
+			}
+			//asynchronous events and unrelated replies are skipped
+		}
+
+		return false;
+	}
+
+	/**
+	 * Add a filter to the socket connection
+	 * <p>Sends the ESL 'filter' command so FreeSWITCH only delivers events
+	 * that match the given header field and value, for example:</p>
+	 * <code>
+	 * $socket->add_filter('Event-Name', 'CHANNEL_CREATE');
+	 * $socket->add_filter('Event-Subclass', 'valet_parking::info');
+	 * </code>
+	 * <p>Multiple filters are OR conditions on the FreeSWITCH side: an event
+	 * is delivered when it matches any registered filter.</p>
+	 *
+	 * @param string $field Event header to filter on (e.g. 'Event-Name', 'Event-Subclass', 'API-Command')
+	 * @param string $value Value the header must match; a leading '/' enables regex matching
+	 * @param int $timeout Timeout in microseconds to wait for the reply, Default 3000000
+	 *
+	 * @return bool True when FreeSWITCH confirmed the filter was added, false otherwise
+	 * @depends send_and_wait()
+	 */
+	public function add_filter(string $field, string $value, int $timeout = 3000000): bool {
+		if ($field === '' || $value === '') {
+			return false;
+		}
+		return $this->send_and_wait("filter {$field} {$value}", "+OK filter added. [{$field}]=[".$value."]", $timeout);
+	}
+
+	/**
+	 * Register multiple event filters on the socket connection
+	 * <p>Accepts the same structure used by the service event lists
+	 * (e.g. active_calls_service::SWITCH_EVENTS): a list of Field => Value
+	 * pairs, for example:</p>
+	 * <code>
+	 * [
+	 *     ['Event-Name' => 'CHANNEL_CREATE'],
+	 *     ['Event-Subclass' => 'valet_parking::info'],
+	 * ]
+	 * </code>
+	 *
+	 * @param array $filters List of event filter pairs to register
+	 * @param int $timeout Timeout in microseconds to wait for each reply, Default 3000000
+	 *
+	 * @return array List of "Field=Value" pairs that failed to register, empty when all succeeded
+	 * @depends add_filter()
+	 */
+	public function register_filters(array $filters, int $timeout = 3000000): array {
+		$failed = [];
+
+		foreach ($filters as $pair) {
+			if (!is_array($pair)) {
+				continue;
+			}
+			foreach ($pair as $field => $value) {
+				if (!$this->add_filter((string) $field, (string) $value, $timeout)) {
+					$failed[] = "{$field}={$value}";
+				}
+			}
+		}
+
+		return $failed;
+	}
+
+	/**
+	 * Clear event filters from the socket connection
+	 * <p>FreeSWITCH supports 'filter delete all' to remove every filter,
+	 * 'filter delete Field' to remove all filters of a given header and
+	 * 'filter delete Field Value' to remove a specific filter.</p>
+	 *
+	 * @param null|string $field Header name to clear; null clears all filters
+	 * @param null|string $value Specific filter value to clear, only used when $field is provided
+	 * @param int $timeout Timeout in microseconds to wait for the reply, Default 3000000
+	 *
+	 * @return bool True when FreeSWITCH confirmed the deletion, false on timeout or disconnect
+	 * @depends send_and_wait()
+	 */
+	public function clear_filters(?string $field = null, ?string $value = null, int $timeout = 3000000): bool {
+		if ($field !== null && $value === null) {
+			$cmd = "filter delete {$field}";
+			$expected = "+OK filter deleted. [{$field}][]";
+		} elseif ($field !== null) {
+			$cmd = "filter delete {$field} {$value}";
+			$expected = "+OK filter deleted. [{$field}][{$value}]";
+		} else {
+			$cmd = 'filter delete all';
+			$expected = '+OK filter deleted. [all][]';
+		}
+		return $this->send_and_wait($cmd, $expected, $timeout);
 	}
 
 	/**
