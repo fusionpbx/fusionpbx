@@ -144,6 +144,34 @@
 						break;
 					case 'delete':
 						if (permission_exists('fifo_delete')) {
+							//remove the checked members from mod_fifo
+							if ($event_socket->is_connected() && !empty($array['fifo'])) {
+								$uuids = [];
+								foreach ($array['fifo'] as $fifo) {
+									foreach ($fifo['fifo_members'] as $member) {
+										if (is_uuid($member['fifo_member_uuid'])) {
+											$uuids[] = "'".$member['fifo_member_uuid']."'";
+										}
+									}
+								}
+								if (!empty($uuids)) {
+									$sql = "select f.fifo_extension, m.member_contact ";
+									$sql .= "from v_fifo_members as m ";
+									$sql .= "inner join v_fifo as f on f.fifo_uuid = m.fifo_uuid ";
+									$sql .= "where f.domain_uuid = :domain_uuid ";
+									$sql .= "and m.fifo_member_uuid in (".implode(', ', $uuids).") ";
+									$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+									$rows = $database->select($sql, $parameters, 'all');
+									if (is_array($rows)) {
+										foreach ($rows as $row) {
+											$event_socket->command('api fifo_member del '.$row['fifo_extension'].'@'.$_SESSION['domain_name'].' {fifo_member_wait=nowait}'.$row['member_contact']);
+										}
+									}
+									unset($sql, $parameters, $rows, $row);
+								}
+								unset($uuids);
+							}
+
 							$database->delete($array);
 						}
 						break;
@@ -256,6 +284,36 @@
 						$y++;
 					}
 				}
+			}
+
+		//remove the stale members from mod_fifo when the members or the queue extension changed
+			if ($event_socket->is_connected() && is_array($fifo_members)) {
+				//get the saved queue extension and member contacts
+				$sql = "select f.fifo_extension, m.member_contact ";
+				$sql .= "from v_fifo_members as m ";
+				$sql .= "inner join v_fifo as f on f.fifo_uuid = m.fifo_uuid ";
+				$sql .= "where m.fifo_uuid = :fifo_uuid ";
+				$sql .= "and f.domain_uuid = :domain_uuid ";
+				$parameters['fifo_uuid'] = $fifo_uuid;
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$old_members = $database->select($sql, $parameters, 'all');
+				unset($sql, $parameters);
+
+				//get the submitted member contacts
+				$new_contacts = [];
+				foreach ($fifo_members as $row) {
+					$new_contacts[] = $row['member_contact'];
+				}
+
+				//remove the members that were removed or belong to the old extension
+				if (is_array($old_members)) {
+					foreach ($old_members as $row) {
+						if ($row['fifo_extension'] !== $fifo_extension || !in_array($row['member_contact'], $new_contacts, true)) {
+							$event_socket->command('api fifo_member del '.$row['fifo_extension'].'@'.$_SESSION['domain_name'].' {fifo_member_wait=nowait}'.$row['member_contact']);
+						}
+					}
+				}
+				unset($old_members, $new_contacts);
 			}
 
 		//send commands for agent login or agent logout
