@@ -287,8 +287,11 @@ class event_socket {
 	/**
 	 * Ensures a closed connection on destruction of object
 	 */
-	public function __destructor() {
-		$this->close();
+	public function __destruct() {
+		// Only close the resources that we created in this class
+		if ($this->auto_create) {
+			$this->close();
+		}
 	}
 
 	/**
@@ -297,22 +300,75 @@ class event_socket {
 	 * @return void
 	 */
 	public function close() {
-		//fp is public access so ensure it is a resource before closing it
+		// fp is public access so ensure it is a resource before closing it
 		if (is_resource($this->fp)) {
 			try {
-				fclose($this->fp);
-			} catch (Exception $t) {
-				//report it
-				trigger_error("event_socket failed to close socket", E_USER_WARNING);
-			}
-		} else {
-			//log an error if fp was set to something other than a resource
-			if ($this->fp !== false) {
-				trigger_error("event_socket not a resource", E_USER_ERROR);
+				// Failing to empty the incoming buffer prevents the socket from closing
+				$this->drain();
+				// Close the stream with the '@' to suppress warnings (new PHP versions may emit warnings on fclose)
+				@fclose($this->fp);
+			} catch (Throwable $t) {
+				// Silently fail
 			}
 		}
-		//force fp to be false
+
+		// Force fp to be false
 		$this->fp = false;
+	}
+
+	/**
+	 * Drain the inbound data buffer and discard any pending data
+	 * 
+	 * The drain method ensures that any pending data in the socket buffer is read and discarded, preventing
+	 * blocking issues when closing the socket. Some streams may be non-blocking already, in which case this
+	 * method will not alter their state. This method is typically used internally before closing the socket
+	 * to ensure no data is left unread. Draining the buffer should not be used for normal data processing,
+	 * as it discards all incoming data. Drain should not be used with unix domain sockets as it may
+	 * interfere with normal socket operations.
+	 *
+	 * @return void
+	 * @throws Throwable if an error occurs while restoring the stream's blocking state
+	 */
+	public function drain(): void {
+		// If the stream is not a valid resource, there is nothing to drain
+		if (!is_resource($this->fp)) {
+			return;
+		}
+		
+		// The $fp can be passed in the constructor and may be a non-blocking stream, so capture the original blocking state so it is preserved on restore
+		$meta = stream_get_meta_data($this->fp);
+		$blocking = $meta['blocked'] ?? true;
+
+		// Set the stream to non-blocking when necessary to drain the buffer without blocking
+		if ($blocking && !stream_set_blocking($this->fp, false)) {
+			// failed to set the stream to non-blocking mode, cannot drain
+			return;
+		}
+
+		// Limit the maximum number of bytes to read from the stream while draining so we don't get stuck in an infinite loop
+		$max_read_bytes = 1 * 1024 * 1024; // 1 MB
+
+		try {
+			// Read the data until the eof is reached or no more data is available
+			while (!feof($this->fp)) {
+				$bytes = fread($this->fp, 8196);
+				if ($bytes === false || $bytes === '') {
+					break;
+				}
+
+				// Decrement the remaining allowed read bytes and check if the limit has been reached
+				$max_read_bytes -= strlen($bytes);
+
+				// Stop draining if the maximum allowed read bytes have been reached
+				if ($max_read_bytes <= 0) {
+					break;
+				}
+			}
+		} finally {
+			// Restore the original blocking state of the stream
+			stream_set_blocking($this->fp, $blocking);
+		}
+
 	}
 
 	/**
