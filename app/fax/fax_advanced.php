@@ -27,6 +27,7 @@
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
+	require_once "resources/classes/imap.php";
 
 //check permissions
 	if (!permission_exists('fax_extension_advanced')) {
@@ -540,7 +541,7 @@
 		echo "		<div class=''>\n";
 		echo "			&nbsp;\n";
 		echo "		</div>\n";
-	
+
 		echo "		<div style='clear: both;'>\n";
 		echo "			<span style='font-weight: bold;'>".$text['label-email_email-to-fax']."</span><br><br>";
 		echo "		</div>\n";
