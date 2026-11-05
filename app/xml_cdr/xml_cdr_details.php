@@ -227,7 +227,10 @@
 			$array['xml_cdr_transcripts'][0]['domain_uuid'] = $params['domain_uuid'];
 			$array['xml_cdr_transcripts'][0]['xml_cdr_uuid'] = $params['xml_cdr_uuid'];
 			//$array['xml_cdr_transcripts'][0]['transcript_json'] = $params['transcribe_message'];
-			$array['xml_cdr_transcripts'][0]['transcript_summary'] = $params['transcript_summary'] ?? '';
+			//only update the summary when it was generated so a missing language model does not clear it
+			if (isset($params['transcript_summary'])) {
+				$array['xml_cdr_transcripts'][0]['transcript_summary'] = $params['transcript_summary'];
+			}
 
 			//add temporary permissions
 			$p = permissions::new();
@@ -326,7 +329,7 @@
 
 //format the call recording transcript text
 	$transcription_array = json_decode($transcript_json ?? '', true) ?? [];
-	$call_transcript = conversational_html($transcription_array['segments'] ?? []);
+	$call_transcript = transcribe::render_conversation($transcription_array['segments'] ?? []);
 
 //format the call recording transcript summary
 	require_once "resources/classes/parsedown.php";
@@ -361,6 +364,9 @@
 		}
 	}
 
+//initialize the call detail array
+	$array = [];
+
 //parse the xml to get the call detail record info
 	try {
 		if ($format == 'json') {
@@ -375,7 +381,7 @@
 		}
 	}
 	catch (Exception $e) {
-		echo $e->getMessage();
+		error_log($e->getMessage());
 	}
 
 //get the variables
@@ -548,38 +554,6 @@
 	}
 	if (permission_exists('xml_cdr_hangup_cause')) {
 		$summary_array['hangup_cause'] = escape($hangup_cause);
-	}
-
-//convert the transcription into a conversation
-	function conversational_html($transcription) {
-		//set the text array to global
-		global $text;
-
-		// if the transcription is empty return an empty string
-		if (empty($transcription)) {
-			return '';
-		}
-
-		// use html to format the conversation
-		$html = '';
-		$previous_speaker = '';
-		$i = 0;
-		foreach ($transcription as $segment) {
-			if ($previous_speaker != $segment['speaker']) {
-				if ($i > 0) { $html .= "</div>\n"; }
-				$speaker_class = $segment['speaker'] === '0' ? 'message-bubble-em' : 'message-bubble-me';
-				$html .= "<div class='message-bubble {$speaker_class}'>";
-				$html .= "<div ><strong>" . $text['label-speaker'] . " " . escape($segment['speaker']) . "</strong></div>\n";
-			}
-			//$html .= "	<span class='time'>".round($segment['start'])."</span>";
-			$html .= "".escape(trim($segment['text']))." ";
-			if ($previous_speaker != $segment['speaker']) {
-				$previous_speaker = $segment['speaker'];
-			}
-			$i++;
-		}
-		$html .= "</div>\n";
-		return $html;
 	}
 
 //get the header
@@ -875,7 +849,7 @@
 				foreach ($array["call-stats"]['audio'] as $audio_direction => $stat) {
 					echo "<table width='95%' border='0' cellpadding='0' cellspacing='0'>\n";
 					echo "<tr>\n";
-					echo "	<td><b>".$text['label-call-stats'].": ".$audio_direction."</b>&nbsp;</td>\n";
+					echo "	<td><b>".$text['label-call-stats'].": ".escape($audio_direction)."</b>&nbsp;</td>\n";
 					echo "	<td>&nbsp;</td>\n";
 					echo "</tr>\n";
 					echo "</table>\n";
@@ -893,14 +867,14 @@
 							echo "		<table border='0' cellpadding='0' cellspacing='0'>\n";
 							foreach ($value as $vk => $arrays) {
 								echo "		<tr>\n";
-								echo "			<td valign='top' width='15%' class='".$row_style[$c]."'>".$vk."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+								echo "			<td valign='top' width='15%' class='".$row_style[$c]."'>".escape($vk)."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
 								echo "			<td valign='top'>\n";
 									echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
 									if (!empty($arrays) && is_array($arrays)) {
 										foreach ($arrays as $k => $v) {
 											echo "			<tr>\n";
-											echo "				<td valign='top' class='".$row_style[$c]."'>".$k."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
-											echo "				<td valign='top' class='".$row_style[$c]."'>".$v."</td>\n";
+											echo "				<td valign='top' class='".$row_style[$c]."'>".escape($k)."&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+											echo "				<td valign='top' class='".$row_style[$c]."'>".escape($v)."</td>\n";
 											echo "			</tr>\n";
 										}
 									}
@@ -948,7 +922,7 @@
 		echo "</tr>\n";
 		if (is_array($array["channel_data"])) {
 			foreach($array["channel_data"] as $key => $value) {
-				if (!empty($value)) {
+				if (!empty($value) && is_string($value)) {
 					$value = urldecode($value);
 					echo "<tr >\n";
 					echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".escape($key)."&nbsp;</td>\n";
