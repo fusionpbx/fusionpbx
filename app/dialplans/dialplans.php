@@ -708,15 +708,15 @@
 			$dialplan_tooltip = '';
 
 			// Count pin numbers with 8 digits as not modified
-			foreach($dialplan_production[$row['dialplan_name']]['dialplan_details'] as $x => $sub_row) {
+			foreach($dialplan_production[$row['dialplan_name']]['dialplan_details'] as $y => $sub_row) {
 				$parts = explode('=', $sub_row['dialplan_detail_data'] ?? '', 2);
 				if (!empty($parts[0]) && !empty($parts[1]) && strlen((string)$parts[1]) == 8) {
 					// Replace pin number with variable
 					if ($parts[0] == 'pin_number') {
-						$dialplan_production[$row['dialplan_name']]['dialplan_details'][$x]['dialplan_detail_data'] = 'pin_number={v_pin_number}';
+						$dialplan_production[$row['dialplan_name']]['dialplan_details'][$y]['dialplan_detail_data'] = 'pin_number={v_pin_number}';
 					}
 					else if ($parts[0] == 'barge_pin') {
-						$dialplan_production[$row['dialplan_name']]['dialplan_details'][$x]['dialplan_detail_data'] = 'barge_pin={v_pin_number}';
+						$dialplan_production[$row['dialplan_name']]['dialplan_details'][$y]['dialplan_detail_data'] = 'barge_pin={v_pin_number}';
 					}
 				}
 			}
