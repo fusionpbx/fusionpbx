@@ -27,6 +27,8 @@
 --	originate {recording_call_uuid=...,recording_call_filename=...}user/101@domain &lua('app.lua recording_call')
 --	The caller records after the tone, then can listen (1), save (2), re-record (3) or delete (7).
 --	Hanging up after recording saves the recording.
+--	With recording_call_type=greeting it records a voicemail greeting instead, using
+--	recording_call_voicemail_id and recording_call_greeting_id, and makes it the active greeting.
 
 --include config.lua
 	require "resources.functions.config";
@@ -54,6 +56,9 @@
 	local recording_uuid = session:getVariable("recording_call_uuid") or '';
 	local recording_filename = session:getVariable("recording_call_filename") or '';
 	local recording_name = session:getVariable("recording_call_name") or '';
+	local recording_type = session:getVariable("recording_call_type") or 'recording';
+	local voicemail_id = session:getVariable("recording_call_voicemail_id") or '';
+	local greeting_id = session:getVariable("recording_call_greeting_id") or '';
 	local call_uuid = session:get_uuid();
 
 --validate the variables
@@ -63,7 +68,11 @@
 		or not (recording_filename:find("^[%w_%-%.]+%.wav$") or recording_filename:find("^[%w_%-%.]+%.mp3$"))
 		or recording_filename:find("%.%.")
 		or not domain_name:find("^[%w_%-%.]+$")
-		or domain_name:find("%.%.")) then
+		or domain_name:find("%.%.")
+		or not (recording_type == 'recording' or recording_type == 'greeting')
+		or (recording_type == 'greeting' and (not voicemail_id:find("^[%w_%-]+$")
+			or not greeting_id:find("^[1-9]$")
+			or recording_filename ~= "greeting_" .. greeting_id .. ".wav"))) then
 		freeswitch.consoleLog("err", "[recording_call] invalid variables\n");
 		session:hangup("NORMAL_CLEARING");
 		return;
@@ -79,14 +88,24 @@
 --get the settings
 	local Settings = require "resources.functions.lazy_settings";
 	local settings = Settings.new(db, domain_name, domain_uuid, user_uuid);
-	local storage_type = settings:get('recordings', 'storage_type', 'text') or '';
-	local max_length = tonumber(settings:get('recordings', 'recording_max_length', 'numeric')) or 300;
-	local silence_threshold = tonumber(settings:get('recordings', 'recording_silence_threshold', 'numeric')) or 200;
-	local silence_seconds = tonumber(settings:get('recordings', 'recording_silence_seconds', 'numeric')) or 3;
-	local base_dir = settings:get('switch', 'recordings', 'dir') or recordings_dir;
+	local storage_type, max_length, silence_threshold, silence_seconds, base_dir, domain_dir;
+	if (recording_type == 'greeting') then
+		storage_type = settings:get('voicemail', 'storage_type', 'text') or '';
+		max_length = tonumber(settings:get('voicemail', 'greeting_max_length', 'numeric')) or 90;
+		silence_threshold = tonumber(settings:get('voicemail', 'greeting_silence_threshold', 'numeric')) or 200;
+		silence_seconds = tonumber(settings:get('voicemail', 'greeting_silence_seconds', 'numeric')) or 3;
+		base_dir = settings:get('switch', 'voicemail', 'dir') or voicemail_dir;
+		domain_dir = base_dir .. "/default/" .. domain_name .. "/" .. voicemail_id;
+	else
+		storage_type = settings:get('recordings', 'storage_type', 'text') or '';
+		max_length = tonumber(settings:get('recordings', 'recording_max_length', 'numeric')) or 300;
+		silence_threshold = tonumber(settings:get('recordings', 'recording_silence_threshold', 'numeric')) or 200;
+		silence_seconds = tonumber(settings:get('recordings', 'recording_silence_seconds', 'numeric')) or 3;
+		base_dir = settings:get('switch', 'recordings', 'dir') or recordings_dir;
+		domain_dir = base_dir .. "/" .. domain_name;
+	end
 
 --set the paths, record to a temporary directory on the same file system, outside the domain directory
-	local domain_dir = base_dir .. "/" .. domain_name;
 	local temp_dir = base_dir .. "/.recording_call";
 	local temp_file = temp_dir .. "/" .. call_uuid .. "." .. recording_filename:match("%.(%w+)$");
 	local real_file = domain_dir .. "/" .. recording_filename;
@@ -118,9 +137,44 @@
 				dbh_save = Database.new('system', 'base64');
 			end
 
-		--update the existing recording or add a new one
+		--save the voicemail greeting, replace a greeting with the same id and make it the active greeting
 			local has_user = user_uuid ~= nil and user_uuid:find(uuid_pattern) ~= nil;
 			local has_base64 = recording_base64 ~= nil;
+			if (recording_type == 'greeting') then
+				local sql = "delete from v_voicemail_greetings ";
+				sql = sql .. "where domain_uuid = :domain_uuid and voicemail_id = :voicemail_id and greeting_id = :greeting_id ";
+				db:query(sql, {domain_uuid = domain_uuid, voicemail_id = voicemail_id, greeting_id = greeting_id});
+				local params = {
+					voicemail_greeting_uuid = recording_uuid;
+					domain_uuid = domain_uuid;
+					voicemail_id = voicemail_id;
+					greeting_id = greeting_id;
+					greeting_name = recording_name;
+					greeting_filename = recording_filename;
+				};
+				if (has_user) then params.user_uuid = user_uuid; end
+				if (has_base64) then params.greeting_base64 = recording_base64; end
+				sql = "insert into v_voicemail_greetings ";
+				sql = sql .. "(voicemail_greeting_uuid, domain_uuid, voicemail_id, greeting_id, greeting_name, greeting_filename, greeting_description, ";
+				if (has_base64) then sql = sql .. "greeting_base64, "; end
+				if (has_user) then sql = sql .. "insert_user, "; end
+				sql = sql .. "insert_date) ";
+				sql = sql .. "values (:voicemail_greeting_uuid, :domain_uuid, :voicemail_id, :greeting_id, :greeting_name, :greeting_filename, '', ";
+				if (has_base64) then sql = sql .. ":greeting_base64, "; end
+				if (has_user) then sql = sql .. ":user_uuid, "; end
+				sql = sql .. "now()) ";
+				dbh_save:query(sql, params);
+				if (dbh_save ~= db) then
+					dbh_save:release();
+				end
+				sql = "update v_voicemails set greeting_id = :greeting_id ";
+				sql = sql .. "where domain_uuid = :domain_uuid and voicemail_id = :voicemail_id ";
+				db:query(sql, {domain_uuid = domain_uuid, voicemail_id = voicemail_id, greeting_id = greeting_id});
+				freeswitch.consoleLog("notice", "[recording_call] saved greeting " .. real_file .. "\n");
+				return true;
+			end
+
+		--update the existing recording or add a new one
 			local sql = "select count(*) as count from v_recordings ";
 			sql = sql .. "where domain_uuid = :domain_uuid and recording_uuid = :recording_uuid ";
 			local params = {domain_uuid = domain_uuid, recording_uuid = recording_uuid};

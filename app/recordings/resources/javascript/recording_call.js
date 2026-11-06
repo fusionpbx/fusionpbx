@@ -35,8 +35,10 @@ function recording_call_status(message, done) {
 	document.getElementById('recording_call_form').style.display = done ? 'block' : 'none';
 }
 
-function recording_call_open(target, recording_uuid, full_path) {
+function recording_call_open(target, recording_uuid, full_path, type, voicemail_id) {
 	recording_call.target = target;
+	recording_call.type = type || 'recording';
+	recording_call.voicemail_id = voicemail_id || '';
 	recording_call.full_path = full_path ? true : false;
 	recording_call.recording_uuid = recording_uuid;
 	recording_call.call_uuid = '';
@@ -61,7 +63,9 @@ function recording_call_start() {
 		action: 'call',
 		extension_uuid: document.getElementById('recording_call_extension').value,
 		recording_name: document.getElementById('recording_call_name').value,
-		recording_uuid: recording_call.recording_uuid
+		recording_uuid: recording_call.recording_uuid,
+		type: recording_call.type,
+		voicemail_id: recording_call.voicemail_id
 	}).then(function(result) {
 		if (result.error) {
 			recording_call_status(result.error, true);

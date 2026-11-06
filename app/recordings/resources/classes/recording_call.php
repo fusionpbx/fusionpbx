@@ -36,6 +36,7 @@
  *   echo recording_call::button('ivr_menu_greet_long');        //new recording, update the select box
  *   echo recording_call::button();                              //new recording, reload the page when saved
  *   echo recording_call::button('', $recording_uuid);           //re-record an existing recording
+ *   echo recording_call::button('', '', ['type' => 'greeting', 'voicemail_id' => $voicemail_id]); //new voicemail greeting
  */
 class recording_call {
 
@@ -55,10 +56,56 @@ class recording_call {
 	/**
 	 * Check if the user is allowed to record by phone
 	 *
+	 * @param string $type recording or greeting
+	 *
 	 * @return bool
 	 */
-	public static function allowed(): bool {
+	public static function allowed(string $type = 'recording'): bool {
+		if ($type == 'greeting') {
+			return permission_exists('voicemail_greeting_call');
+		}
 		return permission_exists('recording_call') && (permission_exists('recording_add') || permission_exists('recording_edit'));
+	}
+
+	/**
+	 * Get the extensions the user is allowed to call. Voicemail greetings recorded by a user
+	 * without the voicemail_view permission can only call the extensions assigned to the user.
+	 *
+	 * @param string $type recording or greeting
+	 *
+	 * @return array extension_uuid, extension, number_alias, effective_caller_id_name, description
+	 */
+	public static function extensions(string $type = 'recording'): array {
+		$database = database::new();
+		$sql = "select e.extension_uuid, e.extension, e.number_alias, e.effective_caller_id_name, e.description ";
+		$sql .= "from v_extensions as e ";
+		$sql .= "where e.domain_uuid = :domain_uuid ";
+		$sql .= "and e.enabled = 'true' ";
+		if ($type == 'greeting' && !permission_exists('voicemail_view')) {
+			$sql .= "and e.extension_uuid in (select u.extension_uuid from v_extension_users as u where u.domain_uuid = :domain_uuid and u.user_uuid = :user_uuid) ";
+			$parameters['user_uuid'] = $_SESSION['user_uuid'] ?? '';
+		}
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$extensions = $database->select($sql, $parameters, 'all');
+		unset($sql, $parameters);
+		if (empty($extensions) || !is_array($extensions)) {
+			return [];
+		}
+		usort($extensions, function ($a, $b) { return strnatcmp($a['extension'], $b['extension']); });
+		return $extensions;
+	}
+
+	/**
+	 * Clean a recording or greeting name, characters that are not safe in a channel variable are removed
+	 *
+	 * @param string $name
+	 *
+	 * @return string
+	 */
+	public static function name(string $name): string {
+		$name = str_replace(['"', "'", '`', '{', '}', '[', ']', ',', '\\', '^'], '', trim($name));
+		$name = preg_replace('/\s+/', ' ', $name);
+		return mb_substr($name, 0, 255);
 	}
 
 	/**
@@ -77,18 +124,24 @@ class recording_call {
 	 * @param string $target         ID of the select box to add the new recording to, empty reloads the page
 	 * @param string $recording_uuid UUID of an existing recording to re-record
 	 * @param array  $options        Additional options: label (true shows the Call label, default is the icon only),
-	 *                               full_path (select values use the full path), style, id
+	 *                               full_path (select values use the full path), style, id,
+	 *                               type (recording or greeting), voicemail_id (required for a greeting)
 	 *
 	 * @return string HTML for the button and the dialog
 	 */
 	public static function button(string $target = '', string $recording_uuid = '', array $options = []): string {
-		if (!self::allowed()) {
+		$type = ($options['type'] ?? '') == 'greeting' ? 'greeting' : 'recording';
+		if (!self::allowed($type)) {
 			return '';
 		}
 
 		//only allow safe characters
 		$target = preg_replace('/[^a-zA-Z0-9_\-]/', '', $target);
 		$recording_uuid = is_uuid($recording_uuid) ? $recording_uuid : '';
+		$voicemail_id = preg_replace('/[^a-zA-Z0-9_\-]/', '', (string)($options['voicemail_id'] ?? ''));
+		if ($type == 'greeting' && empty($voicemail_id)) {
+			return '';
+		}
 
 		//get the text
 		$text = self::text();
@@ -101,35 +154,30 @@ class recording_call {
 			'icon' => 'phone',
 			'id' => $options['id'] ?? null,
 			'style' => $options['style'] ?? null,
-			'onclick' => "recording_call_open('".$target."', '".$recording_uuid."', ".(!empty($options['full_path']) ? 'true' : 'false').");",
+			'onclick' => "recording_call_open('".$target."', '".$recording_uuid."', ".(!empty($options['full_path']) ? 'true' : 'false').", '".$type."', '".$voicemail_id."');",
 		]);
 
-		return $button.self::modal($text);
+		return $button.self::modal($text, $type, $voicemail_id);
 	}
 
 	/**
 	 * Create the dialog and the javascript, only once per page
 	 *
-	 * @param array $text
+	 * @param array  $text
+	 * @param string $type         recording or greeting, sets the extensions that can be called
+	 * @param string $voicemail_id the extension of this voicemail is selected by default
 	 *
 	 * @return string
 	 */
-	private static function modal(array $text): string {
+	private static function modal(array $text, string $type, string $voicemail_id): string {
 		if (self::$modal_added) {
 			return '';
 		}
 		self::$modal_added = true;
 
-		//get the extensions for the domain, the user's own extensions are listed first
+		//get the extensions the user is allowed to call, the user's own extensions are listed first
 		$database = database::new();
-		$sql = "select extension_uuid, extension, number_alias, effective_caller_id_name, description ";
-		$sql .= "from v_extensions ";
-		$sql .= "where domain_uuid = :domain_uuid ";
-		$sql .= "and enabled = 'true' ";
-		$sql .= "order by extension asc ";
-		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-		$extensions = $database->select($sql, $parameters, 'all');
-		unset($sql, $parameters);
+		$extensions = self::extensions($type);
 
 		//get the settings
 		$settings = new settings(['database' => $database, 'domain_uuid' => $_SESSION['domain_uuid'], 'user_uuid' => $_SESSION['user_uuid'] ?? null]);
@@ -143,15 +191,12 @@ class recording_call {
 			}
 		}
 		$mine = $others = [];
-		if (!empty($extensions) && is_array($extensions)) {
-			usort($extensions, function ($a, $b) { return strnatcmp($a['extension'], $b['extension']); });
-			foreach ($extensions as $row) {
-				if (in_array($row['extension_uuid'], $user_extensions)) {
-					$mine[] = $row;
-				}
-				else {
-					$others[] = $row;
-				}
+		foreach ($extensions as $row) {
+			if (in_array($row['extension_uuid'], $user_extensions)) {
+				$mine[] = $row;
+			}
+			else {
+				$others[] = $row;
 			}
 		}
 
@@ -169,7 +214,8 @@ class recording_call {
 			else if (!empty($row['description'])) {
 				$label .= ' - '.$row['description'];
 			}
-			$extension_options .= "<option value='".escape($row['extension_uuid'])."'>".escape($label)."</option>\n";
+			$selected = !empty($voicemail_id) && ($row['extension'] == $voicemail_id || $row['number_alias'] == $voicemail_id) ? " selected='selected'" : '';
+			$extension_options .= "<option value='".escape($row['extension_uuid'])."'".$selected.">".escape($label)."</option>\n";
 		}
 
 		//build the dialog body, inputs have no name so they are never submitted with the page form
@@ -218,7 +264,7 @@ class recording_call {
 		$html .= "		token_name: ".json_encode($token['name']).",\n";
 		$html .= "		token_hash: ".json_encode($token['hash']).",\n";
 		$html .= "		text: ".json_encode($js_text).",\n";
-		$html .= "		target: '', recording_uuid: '', full_path: false, call_uuid: '', timer: null, saved: false\n";
+		$html .= "		target: '', recording_uuid: '', full_path: false, type: 'recording', voicemail_id: '', call_uuid: '', timer: null, saved: false\n";
 		$html .= "	};\n";
 		$html .= "</script>\n";
 		$html .= "<script src='".PROJECT_PATH."/app/recordings/resources/javascript/recording_call.js'></script>\n";

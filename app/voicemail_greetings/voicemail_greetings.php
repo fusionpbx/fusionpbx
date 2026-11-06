@@ -397,6 +397,10 @@
 		echo "	</form>\n";
 		$margin_left = true;
 	}
+	if (permission_exists('voicemail_greeting_call') && class_exists('recording_call') && is_array($greetings) && @sizeof($greetings) < 9) {
+		echo recording_call::button('', '', ['type' => 'greeting', 'voicemail_id' => $voicemail_id, 'label' => true, 'style' => 'margin-left: 15px;']);
+		$margin_left = true;
+	}
 	if (permission_exists('voicemail_greeting_delete') && $greetings) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; '.(!$margin_left ? 'margin-left: 15px;' : null),'onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		$margin_left = true;

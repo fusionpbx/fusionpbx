@@ -41,7 +41,7 @@
 	}
 
 //check permissions
-	if (!recording_call::allowed()) {
+	if (!recording_call::allowed('recording') && !recording_call::allowed('greeting')) {
 		recording_call_response(['error' => $text['message-recording_call_denied']], 403);
 	}
 
@@ -66,6 +66,7 @@
 	$database = database::new();
 	$settings = new settings(['domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
 	$recordings_dir = $settings->get('switch', 'recordings').'/'.$domain_name;
+	$type = ($_POST['type'] ?? '') == 'greeting' ? 'greeting' : 'recording';
 
 //check that the event socket is available
 	$esl = event_socket::create();
@@ -76,26 +77,89 @@
 //start the call
 	if ($action == 'call') {
 
-		//get the extension, it must be enabled and belong to this domain
-			$extension_uuid = $_POST['extension_uuid'] ?? '';
-			if (!is_uuid($extension_uuid)) {
-				recording_call_response(['error' => $text['message-recording_call_invalid_extension']], 400);
+		//check the permission for the type
+			if (!recording_call::allowed($type)) {
+				recording_call_response(['error' => $text['message-recording_call_denied']], 403);
 			}
-			$sql = "select extension, number_alias from v_extensions ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$sql .= "and extension_uuid = :extension_uuid ";
-			$sql .= "and enabled = 'true' ";
-			$parameters['domain_uuid'] = $domain_uuid;
-			$parameters['extension_uuid'] = $extension_uuid;
-			$extension = $database->select($sql, $parameters, 'row');
-			unset($sql, $parameters);
+
+		//get the extension, it must be one of the extensions this user is allowed to call
+			$extension_uuid = $_POST['extension_uuid'] ?? '';
+			$extension = null;
+			$extensions = recording_call::extensions($type);
+			foreach ($extensions as $row) {
+				if (is_uuid($extension_uuid) && $row['extension_uuid'] === $extension_uuid) {
+					$extension = $row;
+					break;
+				}
+			}
 			if (empty($extension) || !preg_match('/^[a-zA-Z0-9_\-\.\+\*#]+$/', $extension['extension'])) {
 				recording_call_response(['error' => $text['message-recording_call_invalid_extension']], 400);
 			}
 
-		//re-record an existing recording, or add a new recording
+		//record a voicemail greeting, or re-record an existing recording, or add a new recording
 			$recording_uuid = $_POST['recording_uuid'] ?? '';
-			if (!empty($recording_uuid)) {
+			$voicemail_id = '';
+			$greeting_id = '';
+			if ($type == 'greeting') {
+				//get the voicemail, users without voicemail_view can only use the voicemail of their own extensions
+					$voicemail_id = $_POST['voicemail_id'] ?? '';
+					if (!preg_match('/^[a-zA-Z0-9_\-]+$/', $voicemail_id)) {
+						recording_call_response(['error' => $text['message-recording_call_denied']], 400);
+					}
+					if (!permission_exists('voicemail_view')) {
+						$assigned = false;
+						foreach ($extensions as $row) {
+							if ($row['extension'] == $voicemail_id || (is_numeric($row['number_alias']) && $row['number_alias'] == $voicemail_id)) {
+								$assigned = true;
+								break;
+							}
+						}
+						if (!$assigned) {
+							recording_call_response(['error' => $text['message-recording_call_denied']], 403);
+						}
+					}
+					$sql = "select count(*) from v_voicemails ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and voicemail_id = :voicemail_id ";
+					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['voicemail_id'] = $voicemail_id;
+					$voicemail_exists = $database->select($sql, $parameters, 'column') > 0;
+					unset($sql, $parameters);
+					if (!$voicemail_exists) {
+						recording_call_response(['error' => $text['message-recording_call_denied']], 400);
+					}
+
+				//find the next available greeting id, a voicemail can have up to 9 greetings
+					$text_greetings = $language->get(null, 'app/voicemail_greetings');
+					$greeting_dir = $settings->get('switch', 'voicemail').'/default/'.$domain_name.'/'.$voicemail_id;
+					$sql = "select greeting_id from v_voicemail_greetings ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and voicemail_id = :voicemail_id ";
+					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['voicemail_id'] = $voicemail_id;
+					$rows = $database->select($sql, $parameters, 'all');
+					unset($sql, $parameters);
+					$used = !empty($rows) && is_array($rows) ? array_map('intval', array_column($rows, 'greeting_id')) : [];
+					for ($i = 1; $i <= 9; $i++) {
+						if (!in_array($i, $used) && !file_exists($greeting_dir.'/greeting_'.$i.'.wav') && !file_exists($greeting_dir.'/greeting_'.$i.'.mp3') && !file_exists($greeting_dir.'/greeting_'.$i.'.ogg')) {
+							$greeting_id = $i;
+							break;
+						}
+					}
+					if (empty($greeting_id)) {
+						recording_call_response(['error' => $text_greetings['message-maximum_voicemail_greetings'].' 9'], 400);
+					}
+
+				//set the greeting name and file name
+					$recording_name = recording_call::name($_POST['recording_name'] ?? '');
+					if (empty($recording_name)) {
+						$recording_name = $text_greetings['label-greeting'].' '.$greeting_id;
+					}
+					$recording_filename = 'greeting_'.$greeting_id.'.wav';
+					$recording_path = $greeting_dir.'/'.$recording_filename;
+					$recording_uuid = uuid();
+			}
+			else if (!empty($recording_uuid)) {
 				if (!is_uuid($recording_uuid) || !permission_exists('recording_edit')) {
 					recording_call_response(['error' => $text['message-recording_call_denied']], 403);
 				}
@@ -118,10 +182,7 @@
 				}
 
 				//set the recording name
-					$recording_name = trim($_POST['recording_name'] ?? '');
-					$recording_name = str_replace(['"', "'", '`', '{', '}', '[', ']', ',', '\\', '^'], '', $recording_name);
-					$recording_name = preg_replace('/\s+/', ' ', $recording_name);
-					$recording_name = mb_substr($recording_name, 0, 255);
+					$recording_name = recording_call::name($_POST['recording_name'] ?? '');
 					if (empty($recording_name)) {
 						$recording_name = 'Recording '.date('Y-m-d His');
 					}
@@ -145,6 +206,9 @@
 
 				$recording_uuid = uuid();
 			}
+			if ($type == 'recording') {
+				$recording_path = $recordings_dir.'/'.$recording_filename;
+			}
 
 		//set the caller id shown on the phone
 			$caller_id_name = $text['label-recording_call_caller_id'];
@@ -163,6 +227,11 @@
 			$variables[] = "recording_call_user_uuid=".$user_uuid;
 			$variables[] = "recording_call_filename=".$recording_filename;
 			$variables[] = "recording_call_name='".$recording_name."'";
+			$variables[] = "recording_call_type=".$type;
+			if ($type == 'greeting') {
+				$variables[] = "recording_call_voicemail_id=".$voicemail_id;
+				$variables[] = "recording_call_greeting_id=".$greeting_id;
+			}
 			$command = "bgapi originate {".implode(',', $variables)."}user/".$extension['extension']."@".$domain_name." &lua('app.lua recording_call')";
 			$response = event_socket::command($command);
 			$reply = is_array($response) ? ($response['Reply-Text'] ?? '') : (string)$response;
@@ -176,6 +245,8 @@
 				'recording_uuid' => $recording_uuid,
 				'recording_name' => $recording_name,
 				'recording_filename' => $recording_filename,
+				'recording_path' => $recording_path,
+				'type' => $type,
 			];
 
 			recording_call_response(['call_uuid' => $call_uuid, 'recording_uuid' => $recording_uuid]);
@@ -210,11 +281,18 @@
 
 		//the call has ended, check if the recording was saved
 			unset($_SESSION['recording_call'][$call_uuid]);
-			$recording_path = $recordings_dir.'/'.$call['recording_filename'];
+			$recording_path = $call['recording_path'];
 			clearstatcache(true, $recording_path);
-			$sql = "select count(*) from v_recordings ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$sql .= "and recording_uuid = :recording_uuid ";
+			if ($call['type'] == 'greeting') {
+				$sql = "select count(*) from v_voicemail_greetings ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and voicemail_greeting_uuid = :recording_uuid ";
+			}
+			else {
+				$sql = "select count(*) from v_recordings ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and recording_uuid = :recording_uuid ";
+			}
 			$sql .= "and coalesce(update_date, insert_date) >= to_timestamp(:time) ";
 			$parameters['domain_uuid'] = $domain_uuid;
 			$parameters['recording_uuid'] = $call['recording_uuid'];
