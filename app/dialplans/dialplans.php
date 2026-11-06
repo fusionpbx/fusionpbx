@@ -57,14 +57,21 @@
 			if (empty($dialplan_name)) {
 				continue;
 			}
+	
+			// Get the app uuid
+			$app_uuid = (string)$xml->attributes()->app_uuid ?? '';
 
 			// If the dialplan name already exists, skip this file to avoid overwriting
-			if (isset($dialplan_templates[$dialplan_name])) {
+			// Don't skip if the dialplan app_uuid matches with the app being used
+			if (isset($dialplan_templates[$dialplan_name]) &&
+				!(empty($_GET['app_uuid']) && $app_uuid == '5c491a3e-f587-44df-970a-cd4352aa6f64') &&
+				!(!empty($_GET['app_uuid']) && $_GET['app_uuid'] == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' && $app_uuid == 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4') &&
+				!(!empty($_GET['app_uuid']) && $_GET['app_uuid'] == '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' && $app_uuid == '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3')
+				) {
 				continue;
 			}
 
 			// Get the values
-			$app_uuid = (string)$xml->attributes()->app_uuid ?? '';
 			$dialplan_context = (string)$xml->attributes()->context ?? 'public';
 			$dialplan_continue = (string)trim($xml->attributes()->continue ?? '');
 			$dialplan_global = (string)$xml->attributes()->global ?? 'false';
