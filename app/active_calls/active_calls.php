@@ -749,6 +749,14 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 		}
 	}
 
+	// Escape a string for safe insertion into HTML (prevents XSS from caller-supplied values)
+	function escape_html(value) {
+		//return value;
+		return String(value ?? '').replace(/[&<>"']/g, c => ({
+			'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+		}[c]));
+	}
+
 	function new_call(call) {
 		//console.log(call);
 		const tbody = document.getElementById("calls_active_body");
@@ -790,20 +798,20 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 				echo '<td id="direction_${uuid}" class="hide-small"><span id="arrow_${uuid}"></span></td>'.PHP_EOL;
 			}
 			if (permission_exists('call_active_profile')) {
-				echo '<td id="profile_${uuid}" class="hide-small">${profile}</td>'.PHP_EOL;
+				echo '<td id="profile_${uuid}" class="hide-small">${escape_html(profile)}</td>'.PHP_EOL;
 			}
 			echo '<td id="duration_${uuid}"></td>'.PHP_EOL;
 			if (permission_exists('call_active_all')) {
-				echo '<td id="caller_context_${uuid}" style="display: none;">${call.caller_context}</td>'.PHP_EOL;
+				echo '<td id="caller_context_${uuid}" style="display: none;">${escape_html(call.caller_context)}</td>'.PHP_EOL;
 			}
-			echo '<td id="caller_id_name_${uuid}" class="hide-small">${call.caller_caller_id_name}</td>'.PHP_EOL;
-			echo '<td id="caller_id_number_${uuid}">${call.caller_caller_id_number}</td>'.PHP_EOL;
-			echo '<td id="destination_${uuid}">${call.caller_destination_number}</td>'.PHP_EOL;
+			echo '<td id="caller_id_name_${uuid}" class="hide-small">${escape_html(call.caller_caller_id_name)}</td>'.PHP_EOL;
+			echo '<td id="caller_id_number_${uuid}">${escape_html(call.caller_caller_id_number)}</td>'.PHP_EOL;
+			echo '<td id="destination_${uuid}">${escape_html(call.caller_destination_number)}</td>'.PHP_EOL;
 			if (permission_exists('call_active_application')) {
-				echo '<td id="application_${uuid}" class="hide-small hide-medium">${call.caller_destination_number}</td>'.PHP_EOL;
+				echo '<td id="application_${uuid}" class="hide-small hide-medium">${escape_html(call.caller_destination_number)}</td>'.PHP_EOL;
 			}
 			if (permission_exists('call_active_codec')) {
-				echo '<td id="codec_${uuid}" class="hide-small hide-medium">${codec}</td>'.PHP_EOL;
+				echo '<td id="codec_${uuid}" class="hide-small hide-medium">${escape_html(codec)}</td>'.PHP_EOL;
 			}
 			if (permission_exists('call_active_secure')) {
 				echo '<td id="secure_${uuid}" class="hide-small hide-medium">&nbsp;</td>'.PHP_EOL;
