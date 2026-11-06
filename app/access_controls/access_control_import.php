@@ -144,7 +144,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: access_control_edit.php?id='.$_GET['id']);
+				header('Location: access_control_edit.php?id='.urlencode($_GET['id']));
 				exit;
 			}
 
@@ -162,7 +162,7 @@
 			echo "<div class='action_bar' id='action_bar'>\n";
 			echo "	<div class='heading'><b>".$text['label-import']."</b></div>\n";
 			echo "	<div class='actions'>\n";
-			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'access_control_node_edit.php?id='.$_GET['id']]);
+			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'access_control_node_edit.php?id='.urlencode($_GET['id'])]);
 			echo button::create(['type'=>'submit','label'=>$text['button-import'],'icon'=>$settings->get('theme', 'button_icon_import'),'id'=>'btn_save']);
 			echo "	</div>\n";
 			echo "	<div style='clear: both;'></div>\n";
@@ -245,7 +245,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: access_control_edit.php?id='.$_GET['id']);
+				header('Location: access_control_edit.php?id='.urlencode($_GET['id']));
 				exit;
 			}
 
@@ -279,6 +279,10 @@
 									$field_array = explode(".",$value);
 									$table_name = $field_array[0];
 									$field_name = $field_array[1];
+									//only allow importing into the access_control_nodes table and its known fields
+									if ($table_name != 'access_control_nodes' || !in_array($field_name, array('node_type', 'node_cidr', 'node_description'))) {
+										continue;
+									}
 									//echo "value: $value<br />\n";
 									//echo "table_name: $table_name<br />\n";
 									//echo "field_name: $field_name<br />\n";
@@ -357,7 +361,7 @@
 					}
 
 				//send the redirect header
-					header("Location: access_control_edit.php?id=".$_GET['id']);
+					header("Location: access_control_edit.php?id=".urlencode($_GET['id']));
 					return;
 			}
 	}
@@ -376,7 +380,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['label-import']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'access_control_edit.php?id='.$_GET['id']]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'access_control_edit.php?id='.urlencode($_GET['id'])]);
 	echo button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>$settings->get('theme', 'button_icon_upload'),'id'=>'btn_save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
