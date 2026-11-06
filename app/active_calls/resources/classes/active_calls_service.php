@@ -504,6 +504,13 @@ class active_calls_service extends service implements websocket_service_interfac
 			return;
 		}
 
+		// Respond with command rejected if the UUID is not a valid UUID
+		if (!is_uuid($uuid)) {
+			$this->warning("Hangup request rejected because of an invalid unique_id");
+			websocket_client::send($this->ws_client->socket(), websocket_message::request_is_bad($request_id, SERVICE_NAME, 'hangup'));
+			return;
+		}
+
 		$host = self::$switch_host ?? parent::$config->get('switch.event_socket.host', '127.0.0.1');
 		$port = self::$switch_port ?? parent::$config->get('switch.event_socket.port', 8021);
 		$password = self::$switch_password ?? parent::$config->get('switch.event_socket.password', 'ClueCon');

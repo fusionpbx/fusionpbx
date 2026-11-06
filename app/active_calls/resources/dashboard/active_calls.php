@@ -508,6 +508,13 @@ if (!empty($_SESSION['user']['extension'])) {
 		}
 	}
 
+	// Escape a string for safe insertion into HTML (prevents XSS from caller-supplied values)
+	function escape_html(value) {
+		return String(value ?? '').replace(/[&<>"']/g, c => ({
+			'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+		}[c]);
+	}
+
 	function new_call(call) {
 		//console.log(call);
 		const tbody = document.getElementById("active_calls_body");
@@ -527,9 +534,9 @@ if (!empty($_SESSION['user']['extension'])) {
 
 			// start string block
 			row.innerHTML = `<?php
-echo '<td id="caller_id_number_${uuid}">${call.caller_caller_id_number}</td>' . PHP_EOL;
-echo '<td id="destination_${uuid}">${call.caller_destination_number}</td>' . PHP_EOL;
-echo '<td id="answer_state_${uuid}">${call.answer_state}</td>' . PHP_EOL;
+echo '<td id="caller_id_number_${uuid}">${escape_html(call.caller_caller_id_number)}</td>' . PHP_EOL;
+echo '<td id="destination_${uuid}">${escape_html(call.caller_destination_number)}</td>' . PHP_EOL;
+echo '<td id="answer_state_${uuid}">${escape_html(call.answer_state)}</td>' . PHP_EOL;
 echo '<td id="duration_${uuid}"></td>'.PHP_EOL;
 ?>`;
 //end string block
