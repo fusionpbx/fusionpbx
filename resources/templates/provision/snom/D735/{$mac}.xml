@@ -65,7 +65,7 @@
     <admin_mode_password perm="RW">{$snom_admin_mode_password}</admin_mode_password>
     <admin_mode_password_confirm perm="RW">{$snom_admin_mode_password}</admin_mode_password_confirm>
     {else}
-    <admin_mode perm="RW">off</admin_mode>
+    <admin_mode perm="RW">{if isset($snom_admin_mode)}{$snom_admin_mode}{else}off{/if}</admin_mode>
     <admin_mode_password>0000</admin_mode_password>
     <admin_mode_password_confirm>0000</admin_mode_password_confirm>
     {/if}
