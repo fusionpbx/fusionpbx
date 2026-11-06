@@ -279,6 +279,10 @@
 									$field_array = explode(".",$value);
 									$table_name = $field_array[0];
 									$field_name = $field_array[1];
+									//only allow importing into the access_control_nodes table and its known fields
+									if ($table_name != 'access_control_nodes' || !in_array($field_name, array('node_type', 'node_cidr', 'node_description'))) {
+										continue;
+									}
 									//echo "value: $value<br />\n";
 									//echo "table_name: $table_name<br />\n";
 									//echo "field_name: $field_name<br />\n";
