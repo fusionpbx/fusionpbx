@@ -38,6 +38,14 @@
 	$language = new text;
 	$text = $language->get();
 
+//validate the token
+	$token = new token;
+	if (!$token->validate('/app/email_queue/email_queue.php')) {
+		message::add($text['message-invalid_token'],'negative');
+		header('Location: email_queue.php');
+		exit;
+	}
+
 //prepare the email
 	$email_recipient = !empty($_POST['to']) && valid_email($_POST['to']) ? strtolower($_POST['to']) : null;
 
@@ -105,14 +113,14 @@
 	}
 
 //show the content
-	echo "<input type='button' class='btn' style='float: right;' value='".$text['button-close']."' onclick=\"$('#test_result_layer').fadeOut(200);\">\n";
-	echo "<b>".$text['header-email_test']."</b>\n";
+	echo "<input type='button' class='btn' style='float: right;' value='".escape($text['button-close'])."' onclick=\"$('#test_result_layer').fadeOut(200);\">\n";
+	echo "<b>".escape($text['header-email_test'])."</b>\n";
 	echo "<br><br>\n";
 
-	echo $text['description-email_test']."\n";
+	echo escape($text['description-email_test'])."\n";
 	echo "<br><br><br>\n";
 
-	echo "<b>".$text['header-settings']."</b>\n";
+	echo "<b>".escape($text['header-settings'])."</b>\n";
 	echo "<br><br>\n";
 	ksort($_SESSION['email']);
 	echo "<table>\n";
@@ -123,12 +131,12 @@
 			if ($type == 'uuid') { $uuid = $value; continue; }
 			if ($name == 'smtp_password') { $value = str_repeat('*', strlen($value)); }
 			if (permission_exists('default_setting_edit')) {
-				echo "<td style='padding-right: 30px;'><a href='../../core/default_settings/default_setting_edit.php?id=".$uuid."' target='_blank'>".$name."</a></td>\n";
-				echo "<td style='padding-right: 30px;'>".$value."</td>\n";
+				echo "<td style='padding-right: 30px;'><a href='../../core/default_settings/default_setting_edit.php?id=".escape($uuid)."' target='_blank'>".escape($name)."</a></td>\n";
+				echo "<td style='padding-right: 30px;'>".escape($value)."</td>\n";
 			}
 			else {
-				echo "<td style='padding-right: 30px;'>".$name."</td>\n";
-				echo "<td style='padding-right: 30px;'>".$value."</td>\n";
+				echo "<td style='padding-right: 30px;'>".escape($name)."</td>\n";
+				echo "<td style='padding-right: 30px;'>".escape($value)."</td>\n";
 			}
 			echo "<tr>\n";
 		}
@@ -136,24 +144,24 @@
 	echo "</table>\n";
 	echo "<br><br>\n";
 
-	echo "<b>".$text['header-connection']."</b>\n";
+	echo "<b>".escape($text['header-connection'])."</b>\n";
 	echo "<br><br>\n";
 
-	echo "<div style='width: 100%; max-height: 250px; overflow: auto; border: 1px solid ".($settings->get('theme', 'table_row_border_color') ?? '#c5d1e5')."; padding: 12px 15px; background-color: ".($settings->get('theme', 'table_row_background_color_light') ?? '#fff')."; font-family: monospace; font-size: 85%;'>\n";
+	echo "<div style='width: 100%; max-height: 250px; overflow: auto; border: 1px solid ".escape($settings->get('theme', 'table_row_border_color') ?? '#c5d1e5')."; padding: 12px 15px; background-color: ".escape($settings->get('theme', 'table_row_background_color_light') ?? '#fff')."; font-family: monospace; font-size: 85%;'>\n";
 
 	if (!empty($email_response) && is_array($email_response) && @sizeof($email_response) != 0) {
-		echo implode("<br>\n<hr style='margin: 3px 0;'>\n", $email_response);
+		echo implode("<br>\n<hr style='margin: 3px 0;'>\n", array_map('escape', $email_response));
 	}
 	echo "</div>\n";
 	echo "<br><br>\n";
 
-	echo "<b>".$text['header-result']."</b>\n";
+	echo "<b>".escape($text['header-result'])."</b>\n";
 	echo "<br><br>\n";
-	echo $sent ? "Message Sent Successfully<br>Receipient: <a href='mailto:".$email_recipient."'>".$email_recipient."</a>" : "Message Failed";
+	echo $sent ? "Message Sent Successfully<br>Receipient: <a href='mailto:".escape($email_recipient)."'>".escape($email_recipient)."</a>" : "Message Failed";
 
 	echo "<br><br>\n";
 	echo "<center>\n";
-	echo "	<input type='button' class='btn' style='margin-top: 15px;' value='".$text['button-close']."' onclick=\"$('#test_result_layer').fadeOut(200);\">\n";
+	echo "	<input type='button' class='btn' style='margin-top: 15px;' value='".escape($text['button-close'])."' onclick=\"$('#test_result_layer').fadeOut(200);\">\n";
 	echo "</center>\n";
 
 ?>
