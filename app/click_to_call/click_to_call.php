@@ -82,11 +82,32 @@
 			$src = str_replace(array('(',')',' '), '', $src);
 			$dest = (strpbrk($dest, '@') != FALSE) ? str_replace(array('(',')',' '), '', $dest) : str_replace(array('.','(',')','-',' '), '', $dest); //don't strip periods or dashes in sip-uri calls, only phone numbers
 
+		//validate the source to prevent command injection
+			if (!preg_match('/^[0-9A-Za-z*#+._@-]+$/', $src)) {
+				echo "<div align='center'><strong>Invalid source number.</strong></div>";
+				require_once "resources/footer.php";
+				exit;
+			}
+
+		//reject caller id names containing a single quote (they are embedded in a single-quoted FreeSWITCH command)
+			if (strpbrk($src_cid_name, "'") !== FALSE || strpbrk($dest_cid_name, "'") !== FALSE) {
+				echo "<div align='center'><strong>Invalid caller id name.</strong></div>";
+				require_once "resources/footer.php";
+				exit;
+			}
+
 		//adjust variable values
 			$sip_auto_answer = ($auto_answer == "true") ? ",sip_auto_answer=true" : null;
 
 		//mozilla thunderbird TBDialout workaround (seems it can only handle the first %NUM%)
 			$dest = ($dest == "%NUM%") ? $src_cid_number : $dest;
+
+		//validate the destination to prevent command injection
+			if (!preg_match('/^[0-9A-Za-z*#+._@-]+$/', $dest)) {
+				echo "<div align='center'><strong>Invalid destination number.</strong></div>";
+				require_once "resources/footer.php";
+				exit;
+			}
 
 		//translate ringback
 			switch ($ringback) {
@@ -136,6 +157,8 @@
 					else {
 						$record_name = $origination_uuid.'.'.$record_extension;
 					}
+					//prevent path traversal in the record file name
+					$record_name = str_replace(array('/','\\','..'), '', $record_name);
 				}
 
 				//determine call direction
