@@ -246,14 +246,6 @@
 		//add or update the database
 			if (empty($_POST["persistformvar"])) {
 
-				//used for debugging
-					if (!empty($_POST["debug"]) && $_POST["debug"] == "true") {
-						unset($_POST["debug"]);
-						echo "<pre>\n";
-						print_r($_POST);
-						echo "</pre>\n";
-						exit;
-					}
 
 				//add a uuid to ivr_menu_uuid if it is empty
 					if ($action == 'add') {
