@@ -233,7 +233,7 @@
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'limit';
-				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "hash \${domain_name} inbound ".$limit." !USER_BUSY";
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "hash \${domain_name} inbound ".xml::sanitize($limit)." !USER_BUSY";
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 			}
@@ -246,7 +246,7 @@
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "effective_caller_id_number=".$caller_id_outbound_prefix."\${caller_id_number}";
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "effective_caller_id_number=".xml::sanitize($caller_id_outbound_prefix)."\${caller_id_number}";
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 			}
