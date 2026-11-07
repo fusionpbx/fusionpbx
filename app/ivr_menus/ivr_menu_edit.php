@@ -306,14 +306,6 @@
 		//add or update the database
 			if (empty($_POST["persistformvar"])) {
 
-				//used for debugging
-					if (!empty($_POST["debug"]) && $_POST["debug"] == "true") {
-						unset($_POST["debug"]);
-						echo "<pre>\n";
-						print_r($_POST);
-						echo "</pre>\n";
-						exit;
-					}
 
 				//add a uuid to ivr_menu_uuid if it is empty
 					if ($action == 'add') {
@@ -497,7 +489,7 @@
 							$recording_path = $settings->get('switch', 'recordings').'/'.$domain_name;
 
 							//create the file name
-							$recording_filename = empty($_POST[$type]['recording_filename'] ?? '') ? preg_replace('#[^a-zA-Z0-9_\-]#', '_', $recording_name) : $_POST[$type]['recording_filename'];
+							$recording_filename = empty($_POST[$type]['recording_filename'] ?? '') ? preg_replace('#[^a-zA-Z0-9_\-]#', '_', $recording_name) : preg_replace('#[^a-zA-Z0-9_\-]#', '_', $_POST[$type]['recording_filename']);
 							if (!str_ends_with($recording_filename, ".$recording_extension")) {
 								$recording_filename .= ".$recording_extension";
 							}
