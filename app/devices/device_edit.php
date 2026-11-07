@@ -143,6 +143,23 @@
 			$device_uuid = $_POST["device_uuid"] ?? null;
 			//$device_provisioned_ip = $_POST["device_provisioned_ip"];
 			$domain_uuid = $_POST["domain_uuid"];
+
+		//set the domain_uuid for users that do not have the permission
+			if (!permission_exists('device_domain')) {
+				if ($action == 'add') {
+					//use the current domain
+					$domain_uuid = $_SESSION['domain_uuid'];
+				}
+				else {
+					//keep the current domain_uuid
+					$sql = "select domain_uuid from v_devices ";
+					$sql .= "where device_uuid = :device_uuid ";
+					$parameters['device_uuid'] = $device_uuid;
+					$domain_uuid = $database->select($sql, $parameters, 'column');
+					unset($sql, $parameters);
+				}
+			}
+
 			$device_label = $_POST["device_label"];
 			$device_user_uuid = $_POST["device_user_uuid"];
 			$device_username = $_POST["device_username"];
