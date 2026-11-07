@@ -283,9 +283,9 @@ class conference_centers {
 				$conference_session_uuid = $_GET['id'];
 				$sql                     = "select recording from v_conference_sessions ";
 				$sql                     .= "where conference_session_uuid = :conference_session_uuid ";
-				//$sql .= "and domain_uuid = :domain_uuid ";
+				$sql .= "and domain_uuid = :domain_uuid ";
 				$parameters['conference_session_uuid'] = $conference_session_uuid;
-				//$parameters['domain_uuid'] = $domain_uuid;
+				$parameters['domain_uuid'] = $this->domain_uuid;
 				$conference_sessions = $this->database->select($sql, $parameters, 'all');
 				if (is_array($conference_sessions)) {
 					foreach ($conference_sessions as $row) {
@@ -310,6 +310,13 @@ class conference_centers {
 				if (file_exists($record_path . '/' . $record_name . '.mp3')) {
 					$record_name = $record_name . '.mp3';
 				}
+			}
+
+			//validate the resolved path stays within the recordings directory
+			$full_record_path = realpath($record_path . '/' . $record_name);
+			if ($full_record_path === false || strpos($full_record_path, $default_path . '/') !== 0) {
+				http_response_code(404);
+				exit;
 			}
 
 			//download the file
