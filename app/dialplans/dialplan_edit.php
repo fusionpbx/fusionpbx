@@ -230,6 +230,21 @@
 				exit;
 			}
 
+		//verify the user is authorized to update this dialplan
+			if ($action == 'update' && is_uuid($dialplan_uuid) && !permission_exists('dialplan_all') && !permission_exists('dialplan_domain')) {
+				$sql = "select count(*) from v_dialplans ";
+				$sql .= "where dialplan_uuid = :dialplan_uuid ";
+				$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+				$parameters['dialplan_uuid'] = $dialplan_uuid;
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				if ($database->select($sql, $parameters, 'column') == 0) {
+					message::add($text['message-failed'],'negative');
+					header('Location: dialplans.php'.($query_string ? '?'.$query_string : ''));
+					exit;
+				}
+				unset($sql, $parameters);
+			}
+
 		//check for all required data
 			$msg = '';
 			if (empty($dialplan_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
@@ -404,6 +419,10 @@
 		$sql .= "dialplan_description ";
 		$sql .= "from v_dialplans ";
 		$sql .= "where dialplan_uuid = :dialplan_uuid ";
+		if (!permission_exists('dialplan_all') && !permission_exists('dialplan_domain')) {
+			$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		}
 		$parameters['dialplan_uuid'] = $dialplan_uuid;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
@@ -427,6 +446,10 @@
 	$sql .= "dialplan_detail_break, dialplan_detail_inline, dialplan_detail_group, dialplan_detail_order, dialplan_detail_enabled ";
 	$sql .= "from v_dialplan_details ";
 	$sql .= "where dialplan_uuid = :dialplan_uuid ";
+	if (!permission_exists('dialplan_all') && !permission_exists('dialplan_domain')) {
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
 	$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
 	$parameters['dialplan_uuid'] = $dialplan_uuid;
 	$result = $database->select($sql, $parameters, 'all');
