@@ -85,7 +85,7 @@
 
 		//logged out stop the refresh
 		if (/login\.php$/.test(url.pathname)) {
-			url.searchParams.set('path', '<?php echo $_SERVER['REQUEST_URI']; ?>');
+			url.searchParams.set('path', '<?php echo escape($_SERVER['REQUEST_URI'] ?? ''); ?>');
 			window.location.href = url.href;
 			return;
 		}
@@ -109,7 +109,7 @@
 
 		//filter agent list based on status
 		document.querySelectorAll('tr[data-agent-status]').forEach(table_row => {
-			const filter = '<?php echo isset($_GET['agent_status']) ? $_GET['agent_status'] : null; ?>';
+			const filter = '<?php echo escape($_GET['agent_status'] ?? ''); ?>';
 
 			if (filter === 'available' && !table_row.getAttribute('data-agent-status').includes('Available')) {
 				table_row.style.display = 'none';
@@ -130,7 +130,7 @@
 	}
 
 	var requestTime = function() {
-		var url = 'call_center_active_inc.php?queue_name=<?php echo escape($queue_name); ?>&name=<?php echo urlencode($name); ?>&agent_status=<?php echo escape($_GET['agent_status']); ?>';
+		var url = 'call_center_active_inc.php?queue_name=<?php echo escape($queue_name); ?>&name=<?php echo urlencode($name); ?>&agent_status=<?php echo escape($_GET['agent_status'] ?? ''); ?>';
 		new loadXmlHttp(url, 'ajax_response');
 		<?php
 
@@ -183,7 +183,7 @@
 	echo "	<div class='actions'>\n";
 	echo "		<form id='frm' name='frm' method='GET'>\n";
 	echo "			<input type='hidden' name='queue_name' value='".escape($queue_name)."'>\n";
-	echo "			<input type='hidden' name='name' value='".escape($_GET['name'])."'>\n";
+	echo "			<input type='hidden' name='name' value='".escape($_GET['name'] ?? '')."'>\n";
 	echo "			<select class='formfld' name='agent_status' id='agent_status' onchange=\"document.getElementById('frm').submit();\">\n";
 	echo "				<option value='' selected disabled hidden>".$text['label-status']."...</option>";
 	echo "				<option value=''></option>\n";

@@ -42,7 +42,7 @@
 		$command = trim($_GET["command"]);
 		$uuid = trim($_GET["uuid"]);
 		$extension = trim($_GET["extension"]);
-		$caller_id_name = trim($_GET["extension"]);
+		$caller_id_name = trim($_GET["caller_id_name"] ?? '');
 		$caller_id_number = trim($_GET["extension"]);
 	}
 
@@ -58,7 +58,12 @@
 
 //validate the caller_id_name
 	if (isset($caller_id_name) && strlen($caller_id_name)) {
-		$caller_id_name = substr($caller_id_name, 0, 10);
+		//ensure valid utf-8 before applying the unicode-aware regex
+		if (preg_match('//u', $caller_id_name) !== 1) {
+			$caller_id_name = mb_convert_encoding($caller_id_name, 'UTF-8', 'UTF-8');
+		}
+		$caller_id_name = preg_replace('#[^\p{L}\p{N}\-.\#*@ ]#u', '', $caller_id_name);
+		$caller_id_name = mb_substr($caller_id_name, 0, 10, 'UTF-8');
 	}
 
 //validate the caller_id_number
