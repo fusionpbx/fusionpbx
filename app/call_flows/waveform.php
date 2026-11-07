@@ -45,8 +45,7 @@
 		//determine path of audio file by type
 		if ($_GET['type'] == 'recordings') {
 
-			$slash = substr($_GET['data'],0,1) != '/' ? '/' : null;
-			$full_file_path = $settings->get('switch', 'recordings')."/".$_SESSION['domain_name'].$slash.str_replace($settings->get('switch', 'recordings')."/".$_SESSION['domain_name'], '', $_GET['data']);
+			$full_file_path = $settings->get('switch', 'recordings')."/".$_SESSION['domain_name'].'/'.basename($_GET['data']);
 
 		}
 		else if ($_GET['type'] == 'sounds') {
@@ -80,7 +79,7 @@
 		if (file_exists($full_file_path)) {
 
 			//temporary waveform image filename
-			$temp_filename = 'waveform_'.$_GET['id'].'_'.rand(0000,9999).'.png';
+			$temp_filename = 'waveform_'.preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET['id']).'_'.rand(0000,9999).'.png';
 
 			//create temporary waveform image, if doesn't exist
 			if (file_exists($temp_filename)) {
