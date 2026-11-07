@@ -195,9 +195,9 @@
 			echo "<br /><br />\n";
 
 			echo "<input name='action' type='hidden' value='import'>\n";
-			echo "<input name='from_row' type='hidden' value='$from_row'>\n";
-			echo "<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
-			echo "<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
+			echo "<input name='from_row' type='hidden' value='".escape($from_row)."'>\n";
+			echo "<input name='data_delimiter' type='hidden' value='".escape($delimiter)."'>\n";
+			echo "<input name='data_enclosure' type='hidden' value='".escape($enclosure)."'>\n";
 			echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 			echo "</form>\n";
