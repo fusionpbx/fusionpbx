@@ -40,7 +40,7 @@
 	}
 
 //create the waveform file
-	if ($_GET['id'] && !empty($_GET['data']) && !empty($_GET['type'])) {
+	if (is_uuid($_GET['id'] ?? '') && !empty($_GET['data']) && !empty($_GET['type'])) {
 
 		//determine path of audio file by type
 		if ($_GET['type'] == 'recordings') {
@@ -74,6 +74,17 @@
 			//build full path to sound file
 			$full_file_path = $path.$filename_parts[1];
 
+		}
+
+		//validate the file path is within the expected directory
+		$base_path = realpath($_GET['type'] == 'recordings' ? $settings->get('switch', 'recordings') : $settings->get('switch', 'sounds'));
+		$full_file_path = realpath($full_file_path);
+		if ($base_path === false
+			|| $full_file_path === false
+			|| is_file($full_file_path) === false
+			|| strpos($full_file_path, $base_path.'/') !== 0) {
+			http_response_code(404);
+			exit;
 		}
 
 		//stream waveform file
