@@ -39,6 +39,7 @@
 	$search = '';
 	$paging_controls = '';
 	$id = '';
+	$extension_uuid = '';
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
@@ -90,7 +91,7 @@
 		}
 
 		//redirect the user
-		header('Location: extension_settings.php?id='.urlencode($extension_uuid).'&'.($search != '' ? '?search='.urlencode($search) : ''));
+		header('Location: extension_settings.php?id='.urlencode($extension_uuid).'&'.($search != '' ? 'search='.urlencode($search) : ''));
 		exit;
 	}
 

@@ -98,7 +98,7 @@
 						}
 						break;
 					case 'toggle':
-						if (permission_exists('extension_setting_update')) {
+						if (permission_exists('extension_setting_edit')) {
 							$database->toggle($array);
 						}
 						break;
