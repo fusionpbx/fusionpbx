@@ -734,7 +734,7 @@
 			echo "		<option value='".$row['domain_uuid']."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 		}
 		else {
-			echo "		<option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+			echo "		<option value='".$row['domain_uuid']."'>".escape($row['domain_name'])."</option>\n";
 		}
 	}
 	echo "	</select>\n";
@@ -795,7 +795,7 @@
 	echo "	".$text['label-fifo_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<textarea class='formfld' name='fifo_description' style='width: 185px; height: 80px;'>".($fifo_description ?? '')."</textarea>\n";
+	echo "	<textarea class='formfld' name='fifo_description' style='width: 185px; height: 80px;'>".escape($fifo_description ?? '')."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-fifo_description']."\n";
 	echo "</td>\n";
