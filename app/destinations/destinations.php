@@ -138,7 +138,7 @@
 												$language_key = strtolower($key ?? '');
 												$language_key = str_replace(' ', '_', $language_key);
 												$language_key = str_replace('&lowbar;', '_', $language_key);
-												$actions[] = trim($text3['title-'.$group].' &#x203A; '.$key);
+												$actions[] = trim($text3['title-'.$group].' &#x203A; '.escape($key));
 											}
 										}
 									}

@@ -581,7 +581,7 @@
 						foreach($value as $k => $row) {
 							$selected = ($row['destination'] == $destination_value) ? "selected='selected'" : '';
 							$uuid = isset($row[$this->singular($key).'_uuid']) ? $row[$this->singular($key).'_uuid'] : ($row['uuid'] ?? '');
-							$response .= "		<option id='{$uuid}' value='".$row['destination']."' $selected>".$row['label']."</option>\n";
+							$response .= "		<option id='".escape($uuid)."' value='".escape($row['destination'])."' $selected>".escape($row['label'])."</option>\n";
 						}
 					}
 				}
