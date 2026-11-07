@@ -62,6 +62,19 @@ if (count($_GET) > 0) {
 			$uuid_pattern = '/[^-A-Fa-f0-9]/';
 			$num_pattern = '/[^-A-Za-z0-9()*#]/';
 
+			//require the permission for the requested command
+			$cmd_permissions = [
+				'originate' => 'operator_panel_originate',
+				'uuid_record' => 'operator_panel_record',
+				'uuid_transfer' => 'operator_panel_manage',
+				'uuid_eavesdrop' => 'operator_panel_eavesdrop',
+				'uuid_kill' => 'operator_panel_hangup',
+			];
+			if (!isset($cmd_permissions[$switch_cmd]) || !permission_exists($cmd_permissions[$switch_cmd])) {
+				echo 'access denied';
+				return;
+			}
+
 			if ($switch_cmd == 'originate') {
 				$source = preg_replace($num_pattern,'',$_GET['source']);
 				$destination = preg_replace($num_pattern,'',$_GET['destination']);
