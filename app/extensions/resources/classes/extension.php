@@ -272,12 +272,12 @@ class extension {
 			}
 
 			//write the xml files
-			$sql                       = "select * from v_extensions as e, v_voicemails as v ";
-			$sql                       .= "where e.domain_uuid = :domain_uuid ";
-			$sql                       .= "and coalesce(nullif(e.number_alias,''),e.extension) = cast(v.voicemail_id as varchar) ";
-			$sql                       .= "order by e.call_group asc ";
+			$sql = "select * from v_extensions as e, v_voicemails as v ";
+			$sql .= "where e.domain_uuid = :domain_uuid ";
+			$sql .= "and coalesce(nullif(e.number_alias,''),e.extension) = cast(v.voicemail_id as varchar) ";
+			$sql .= "order by e.call_group asc ";
 			$parameters['domain_uuid'] = $domain_uuid;
-			$rows                      = $this->database->select($sql, $parameters, 'all');
+			$rows = $this->database->select($sql, $parameters, 'all');
 			unset($sql, $parameters);
 
 			$extension_xml_condensed = false;
@@ -326,22 +326,22 @@ class extension {
 						$xml  = "<include>\n";
 						$cidr = '';
 						if (!empty($row['cidr'])) {
-							$cidr = " cidr=\"" . $row['cidr'] . "\"";
+							$cidr = " cidr=\"" . xml::sanitize($row['cidr']) . "\"";
 						}
 						$number_alias = '';
 						if (!empty($row['number_alias'])) {
-							$number_alias = " number-alias=\"" . $row['number_alias'] . "\"";
+							$number_alias = " number-alias=\"" . xml::sanitize($row['number_alias']) . "\"";
 						}
-						$xml .= "  <user id=\"" . $row['extension'] . "\"" . $cidr . "" . $number_alias . ">\n";
+						$xml .= "  <user id=\"" . xml::sanitize($row['extension']) . "\"" . $cidr . "" . $number_alias . ">\n";
 						$xml .= "    <params>\n";
 						//$xml .= "      <param name=\"a1-hash\" value=\"" . $a1_hash . "\"/>\n";
-						$xml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
-						$xml .= "      <param name=\"reverse-auth-user\" value=\"" . $row['extension'] . "\"/>\n";
-						$xml .= "      <param name=\"reverse-auth-pass\" value=\"" . $row['password'] . "\"/>\n";
+						$xml .= "      <param name=\"password\" value=\"" . xml::sanitize($row['password']) . "\"/>\n";
+						$xml .= "      <param name=\"reverse-auth-user\" value=\"" . xml::sanitize($row['extension']) . "\"/>\n";
+						$xml .= "      <param name=\"reverse-auth-pass\" value=\"" . xml::sanitize($row['password']) . "\"/>\n";
 
 						//voicemail settings
 						//$xml .= "      <param name=\"vm-a1-hash\" value=\"" . $vm_a1_hash. "\"/>\n";
-						$xml .= "      <param name=\"vm-password\" value=\"" . $voicemail_password . "\"/>\n";
+						$xml .= "      <param name=\"vm-password\" value=\"" . xml::sanitize($voicemail_password) . "\"/>\n";
 						switch ($row['voicemail_enabled']) {
 							case "true":
 								$xml .= "      <param name=\"vm-enabled\" value=\"true\"/>\n";
@@ -371,83 +371,83 @@ class extension {
 								default:
 									$xml .= "      <param name=\"vm-keep-local-after-email\" value=\"true\"/>\n";
 							}
-							$xml .= "      <param name=\"vm-mailto\" value=\"" . $row['voicemail_mail_to'] . "\"/>\n";
+							$xml .= "      <param name=\"vm-mailto\" value=\"" . xml::sanitize($row['voicemail_mail_to']) . "\"/>\n";
 						}
 
 						if (!empty($row['mwi_account'])) {
-							$xml .= "      <param name=\"MWI-Account\" value=\"" . $row['mwi_account'] . "\"/>\n";
+							$xml .= "      <param name=\"MWI-Account\" value=\"" . xml::sanitize($row['mwi_account']) . "\"/>\n";
 						}
 						if (!empty($row['auth_acl'])) {
-							$xml .= "      <param name=\"auth-acl\" value=\"" . $row['auth_acl'] . "\"/>\n";
+							$xml .= "      <param name=\"auth-acl\" value=\"" . xml::sanitize($row['auth_acl']) . "\"/>\n";
 						}
 						if (!empty($row['directory_exten_visible'])) {
-							$xml .= "      <param name=\"directory-exten-visible\" value=\"" . $row['directory_exten_visible'] . "\"/>\n";
+							$xml .= "      <param name=\"directory-exten-visible\" value=\"" . xml::sanitize($row['directory_exten_visible']) . "\"/>\n";
 						}
-						$xml .= "      <param name=\"dial-string\" value=\"" . $dial_string . "\"/>\n";
+						$xml .= "      <param name=\"dial-string\" value=\"" . htmlspecialchars($dial_string, ENT_XML1) . "\"/>\n";
 						$xml .= "    </params>\n";
 						$xml .= "    <variables>\n";
-						$xml .= "      <variable name=\"domain_name\" value=\"" . $this->domain_name . "\"/>\n";
-						$xml .= "      <variable name=\"domain_uuid\" value=\"" . $this->domain_uuid . "\"/>\n";
-						$xml .= "      <variable name=\"extension_uuid\" value=\"" . $extension_uuid . "\"/>\n";
+						$xml .= "      <variable name=\"domain_name\" value=\"" . xml::sanitize($this->domain_name) . "\"/>\n";
+						$xml .= "      <variable name=\"domain_uuid\" value=\"" . xml::sanitize($this->domain_uuid) . "\"/>\n";
+						$xml .= "      <variable name=\"extension_uuid\" value=\"" . xml::sanitize($extension_uuid) . "\"/>\n";
 						if (!empty($row['call_group'])) {
-							$xml .= "      <variable name=\"call_group\" value=\"" . $row['call_group'] . "\"/>\n";
+							$xml .= "      <variable name=\"call_group\" value=\"" . xml::sanitize($row['call_group']) . "\"/>\n";
 						}
 						if (!empty($row['user_record'])) {
-							$xml .= "      <variable name=\"user_record\" value=\"" . $row['user_record'] . "\"/>\n";
+							$xml .= "      <variable name=\"user_record\" value=\"" . xml::sanitize($row['user_record']) . "\"/>\n";
 						}
 						if (!empty($row['hold_music'])) {
-							$xml .= "      <variable name=\"hold_music\" value=\"" . $row['hold_music'] . "\"/>\n";
+							$xml .= "      <variable name=\"hold_music\" value=\"" . xml::sanitize($row['hold_music']) . "\"/>\n";
 						}
-						$xml .= "      <variable name=\"toll_allow\" value=\"" . $row['toll_allow'] . "\"/>\n";
+						$xml .= "      <variable name=\"toll_allow\" value=\"" . xml::sanitize($row['toll_allow']) . "\"/>\n";
 						if (!empty($row['call_timeout'])) {
-							$xml .= "      <variable name=\"call_timeout\" value=\"" . $row['call_timeout'] . "\"/>\n";
+							$xml .= "      <variable name=\"call_timeout\" value=\"" . xml::sanitize($row['call_timeout']) . "\"/>\n";
 						}
 						if (!empty($switch_account_code)) {
-							$xml .= "      <variable name=\"accountcode\" value=\"" . $switch_account_code . "\"/>\n";
+							$xml .= "      <variable name=\"accountcode\" value=\"" . xml::sanitize($switch_account_code) . "\"/>\n";
 						} else {
-							$xml .= "      <variable name=\"accountcode\" value=\"" . $row['accountcode'] . "\"/>\n";
+							$xml .= "      <variable name=\"accountcode\" value=\"" . xml::sanitize($row['accountcode']) . "\"/>\n";
 						}
-						$xml .= "      <variable name=\"user_context\" value=\"" . $row['user_context'] . "\"/>\n";
+						$xml .= "      <variable name=\"user_context\" value=\"" . xml::sanitize($row['user_context']) . "\"/>\n";
 						if (!empty($row['effective_caller_id_name'])) {
-							$xml .= "      <variable name=\"effective_caller_id_name\" value=\"" . $row['effective_caller_id_name'] . "\"/>\n";
+							$xml .= "      <variable name=\"effective_caller_id_name\" value=\"" . xml::sanitize($row['effective_caller_id_name']) . "\"/>\n";
 						}
 						if (!empty($row['effective_caller_id_number'])) {
-							$xml .= "      <variable name=\"effective_caller_id_number\" value=\"" . $row['effective_caller_id_number'] . "\"/>\n";
+							$xml .= "      <variable name=\"effective_caller_id_number\" value=\"" . xml::sanitize($row['effective_caller_id_number']) . "\"/>\n";
 						}
 						if (!empty($row['outbound_caller_id_name'])) {
-							$xml .= "      <variable name=\"outbound_caller_id_name\" value=\"" . $row['outbound_caller_id_name'] . "\"/>\n";
+							$xml .= "      <variable name=\"outbound_caller_id_name\" value=\"" . xml::sanitize($row['outbound_caller_id_name']) . "\"/>\n";
 						}
 						if (!empty($row['outbound_caller_id_number'])) {
-							$xml .= "      <variable name=\"outbound_caller_id_number\" value=\"" . $row['outbound_caller_id_number'] . "\"/>\n";
+							$xml .= "      <variable name=\"outbound_caller_id_number\" value=\"" . xml::sanitize($row['outbound_caller_id_number']) . "\"/>\n";
 						}
 						if (!empty($row['emergency_caller_id_name'])) {
-							$xml .= "      <variable name=\"emergency_caller_id_name\" value=\"" . $row['emergency_caller_id_name'] . "\"/>\n";
+							$xml .= "      <variable name=\"emergency_caller_id_name\" value=\"" . xml::sanitize($row['emergency_caller_id_name']) . "\"/>\n";
 						}
 						if (!empty($row['emergency_caller_id_number'])) {
-							$xml .= "      <variable name=\"emergency_caller_id_number\" value=\"" . $row['emergency_caller_id_number'] . "\"/>\n";
+							$xml .= "      <variable name=\"emergency_caller_id_number\" value=\"" . xml::sanitize($row['emergency_caller_id_number']) . "\"/>\n";
 						}
 						if (!empty($row['directory_full_name'])) {
-							$xml .= "      <variable name=\"directory_full_name\" value=\"" . $row['directory_full_name'] . "\"/>\n";
+							$xml .= "      <variable name=\"directory_full_name\" value=\"" . xml::sanitize($row['directory_full_name']) . "\"/>\n";
 						}
 						if (!empty($row['directory_visible'])) {
-							$xml .= "      <variable name=\"directory-visible\" value=\"" . $row['directory_visible'] . "\"/>\n";
+							$xml .= "      <variable name=\"directory-visible\" value=\"" . xml::sanitize($row['directory_visible']) . "\"/>\n";
 						}
 						if (!empty($row['limit_max'])) {
-							$xml .= "      <variable name=\"limit_max\" value=\"" . $row['limit_max'] . "\"/>\n";
+							$xml .= "      <variable name=\"limit_max\" value=\"" . xml::sanitize($row['limit_max']) . "\"/>\n";
 						} else {
 							$xml .= "      <variable name=\"limit_max\" value=\"5\"/>\n";
 						}
 						if (!empty($row['limit_destination'])) {
-							$xml .= "      <variable name=\"limit_destination\" value=\"" . $row['limit_destination'] . "\"/>\n";
+							$xml .= "      <variable name=\"limit_destination\" value=\"" . xml::sanitize($row['limit_destination']) . "\"/>\n";
 						}
 						if (!empty($row['sip_force_contact'])) {
-							$xml .= "      <variable name=\"sip-force-contact\" value=\"" . $row['sip_force_contact'] . "\"/>\n";
+							$xml .= "      <variable name=\"sip-force-contact\" value=\"" . xml::sanitize($row['sip_force_contact']) . "\"/>\n";
 						}
 						if (!empty($row['sip_force_expires'])) {
-							$xml .= "      <variable name=\"sip-force-expires\" value=\"" . $row['sip_force_expires'] . "\"/>\n";
+							$xml .= "      <variable name=\"sip-force-expires\" value=\"" . xml::sanitize($row['sip_force_expires']) . "\"/>\n";
 						}
 						if (!empty($row['nibble_account'])) {
-							$xml .= "      <variable name=\"nibble_account\" value=\"" . $row['nibble_account'] . "\"/>\n";
+							$xml .= "      <variable name=\"nibble_account\" value=\"" . xml::sanitize($row['nibble_account']) . "\"/>\n";
 						}
 						switch ($row['sip_bypass_media']) {
 							case "bypass-media":
@@ -461,35 +461,35 @@ class extension {
 								break;
 						}
 						if (!empty($row['absolute_codec_string'])) {
-							$xml .= "      <variable name=\"absolute_codec_string\" value=\"" . $row['absolute_codec_string'] . "\"/>\n";
+							$xml .= "      <variable name=\"absolute_codec_string\" value=\"" . xml::sanitize($row['absolute_codec_string']) . "\"/>\n";
 						}
 						if (!empty($row['forward_all_enabled'])) {
-							$xml .= "      <variable name=\"forward_all_enabled\" value=\"" . $row['forward_all_enabled'] . "\"/>\n";
+							$xml .= "      <variable name=\"forward_all_enabled\" value=\"" . xml::sanitize($row['forward_all_enabled']) . "\"/>\n";
 						}
 						if (!empty($row['forward_all_destination'])) {
-							$xml .= "      <variable name=\"forward_all_destination\" value=\"" . $row['forward_all_destination'] . "\"/>\n";
+							$xml .= "      <variable name=\"forward_all_destination\" value=\"" . xml::sanitize($row['forward_all_destination']) . "\"/>\n";
 						}
 						if (!empty($row['forward_busy_enabled'])) {
-							$xml .= "      <variable name=\"forward_busy_enabled\" value=\"" . $row['forward_busy_enabled'] . "\"/>\n";
+							$xml .= "      <variable name=\"forward_busy_enabled\" value=\"" . xml::sanitize($row['forward_busy_enabled']) . "\"/>\n";
 						}
 						if (!empty($row['forward_busy_destination'])) {
-							$xml .= "      <variable name=\"forward_busy_destination\" value=\"" . $row['forward_busy_destination'] . "\"/>\n";
+							$xml .= "      <variable name=\"forward_busy_destination\" value=\"" . xml::sanitize($row['forward_busy_destination']) . "\"/>\n";
 						}
 						if (!empty($row['forward_no_answer_enabled'])) {
-							$xml .= "      <variable name=\"forward_no_answer_enabled\" value=\"" . $row['forward_no_answer_enabled'] . "\"/>\n";
+							$xml .= "      <variable name=\"forward_no_answer_enabled\" value=\"" . xml::sanitize($row['forward_no_answer_enabled']) . "\"/>\n";
 						}
 						if (!empty($row['forward_no_answer_destination'])) {
-							$xml .= "      <variable name=\"forward_no_answer_destination\" value=\"" . $row['forward_no_answer_destination'] . "\"/>\n";
+							$xml .= "      <variable name=\"forward_no_answer_destination\" value=\"" . xml::sanitize($row['forward_no_answer_destination']) . "\"/>\n";
 						}
 						if (!empty($row['forward_user_not_registered_enabled'])) {
-							$xml .= "      <variable name=\"forward_user_not_registered_enabled\" value=\"" . $row['forward_user_not_registered_enabled'] . "\"/>\n";
+							$xml .= "      <variable name=\"forward_user_not_registered_enabled\" value=\"" . xml::sanitize($row['forward_user_not_registered_enabled']) . "\"/>\n";
 						}
 						if (!empty($row['forward_user_not_registered_destination'])) {
-							$xml .= "      <variable name=\"forward_user_not_registered_destination\" value=\"" . $row['forward_user_not_registered_destination'] . "\"/>\n";
+							$xml .= "      <variable name=\"forward_user_not_registered_destination\" value=\"" . xml::sanitize($row['forward_user_not_registered_destination']) . "\"/>\n";
 						}
 
 						if (!empty($row['do_not_disturb'])) {
-							$xml .= "      <variable name=\"do_not_disturb\" value=\"" . $row['do_not_disturb'] . "\"/>\n";
+							$xml .= "      <variable name=\"do_not_disturb\" value=\"" . xml::sanitize($row['do_not_disturb']) . "\"/>\n";
 						}
 						$xml .= "    </variables>\n";
 						$xml .= "  </user>\n";
@@ -543,39 +543,39 @@ class extension {
 			}
 			$xml .= "		<params>\n";
 			//$xml .= "			<param name=\"dial-string\" value=\"{sip_invite_domain=\${domain_name},presence_id=\${dialed_user}@\${dialed_domain}}\${sofia_contact(\${dialed_user}@\${dialed_domain})}\"/>\n";
-			$xml                 .= "		</params>\n";
-			$xml                 .= "\n";
-			$xml                 .= "		<variables>\n";
-			$xml                 .= "			<variable name=\"record_stereo\" value=\"true\"/>\n";
-			$xml                 .= "			<variable name=\"default_gateway\" value=\"\$\${default_provider}\"/>\n";
-			$xml                 .= "			<variable name=\"default_areacode\" value=\"\$\${default_areacode}\"/>\n";
-			$xml                 .= "			<variable name=\"transfer_fallback_extension\" value=\"operator\"/>\n";
-			$xml                 .= "			<variable name=\"export_vars\" value=\"domain_name\"/>\n";
-			$xml                 .= "		</variables>\n";
-			$xml                 .= "\n";
-			$xml                 .= "		<groups>\n";
-			$xml                 .= "			<group name=\"" . $user_context . "\">\n";
-			$xml                 .= "			<users>\n";
-			$xml                 .= "				<X-PRE-PROCESS cmd=\"include\" data=\"" . $user_context . "/*.xml\"/>\n";
-			$xml                 .= "			</users>\n";
-			$xml                 .= "			</group>\n";
-			$xml                 .= "\n";
+			$xml .= "		</params>\n";
+			$xml .= "\n";
+			$xml .= "		<variables>\n";
+			$xml .= "			<variable name=\"record_stereo\" value=\"true\"/>\n";
+			$xml .= "			<variable name=\"default_gateway\" value=\"\$\${default_provider}\"/>\n";
+			$xml .= "			<variable name=\"default_areacode\" value=\"\$\${default_areacode}\"/>\n";
+			$xml .= "			<variable name=\"transfer_fallback_extension\" value=\"operator\"/>\n";
+			$xml .= "			<variable name=\"export_vars\" value=\"domain_name\"/>\n";
+			$xml .= "		</variables>\n";
+			$xml .= "\n";
+			$xml .= "		<groups>\n";
+			$xml .= "			<group name=\"" . $user_context . "\">\n";
+			$xml .= "			<users>\n";
+			$xml .= "				<X-PRE-PROCESS cmd=\"include\" data=\"" . $user_context . "/*.xml\"/>\n";
+			$xml .= "			</users>\n";
+			$xml .= "			</group>\n";
+			$xml .= "\n";
 			$previous_call_group = "";
 			foreach ($call_group_array as $key => $value) {
 				$call_group     = trim($key);
 				$extension_list = trim($value);
 				if (!empty($call_group)) {
 					if ($previous_call_group != $call_group) {
-						$xml             .= "			<group name=\"$call_group\">\n";
-						$xml             .= "				<users>\n";
-						$xml             .= "					<!--\n";
-						$xml             .= "					type=\"pointer\" is a pointer so you can have the\n";
-						$xml             .= "					same user in multiple groups.  It basically means\n";
-						$xml             .= "					to keep searching for the user in the directory.\n";
-						$xml             .= "					-->\n";
+						$xml .= "			<group name=\"" . xml::sanitize($call_group) . ">\n";
+						$xml .= "				<users>\n";
+						$xml .= "					<!--\n";
+						$xml .= "					type=\"pointer\" is a pointer so you can have the\n";
+						$xml .= "					same user in multiple groups.  It basically means\n";
+						$xml .= "					to keep searching for the user in the directory.\n";
+						$xml .= "					-->\n";
 						$extension_array = explode(",", $extension_list);
 						foreach ($extension_array as $tmp_extension) {
-							$xml .= "					<user id=\"$tmp_extension\" type=\"pointer\"/>\n";
+							$xml .= "					<user id=\"" . xml::sanitize($tmp_extension) . "\" type=\"pointer\"/>\n";
 						}
 						$xml .= "				</users>\n";
 						$xml .= "			</group>\n";
