@@ -65,10 +65,25 @@
 		}
 	}
 
+//validate the session file is within the expected temp directory
+	if (!empty($_SESSION['file'])) {
+		$temp_dir = realpath($settings->get('server', 'temp'));
+		$file_real = realpath($_SESSION['file']);
+		if ($temp_dir === false || $file_real === false || strpos($file_real, $temp_dir . DIRECTORY_SEPARATOR) !== 0) {
+			unset($_SESSION['file']);
+		}
+	}
+
 //get the schema
 	if (!empty($delimiter)) {
 		//get the first line
-			$line = fgets(fopen($_SESSION['file'], 'r'));
+			$fh = @fopen($_SESSION['file'], 'r');
+			if ($fh) {
+				$line = fgets($fh);
+				fclose($fh);
+			} else {
+				$line = '';
+			}
 			$line_fields = explode($delimiter, $line);
 
 		//get the schema
