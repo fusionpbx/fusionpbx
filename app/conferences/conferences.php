@@ -307,7 +307,7 @@
 				}
 				echo "	<td>".escape($domain)."</td>\n";
 			}
-			echo "	<td><a href='".$list_row_url."'>".str_replace('-', ' ', $row['conference_name'])."</a>&nbsp;</td>\n";
+			echo "	<td><a href='".$list_row_url."'>".escape(str_replace('-', ' ', $row['conference_name']))."</a>&nbsp;</td>\n";
 			echo "	<td>".escape($row['conference_extension'])."&nbsp;</td>\n";
 			echo "	<td>".escape($row['conference_profile'])."&nbsp;</td>\n";
 			echo "	<td class='center'>".escape($row['conference_order'])."&nbsp;</td>\n";
