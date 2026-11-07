@@ -409,7 +409,7 @@
 	echo "	".$text['label-email_body']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<textarea class='formfld' name='email_body' id='email_body' style='display: none;'>".$email_body."</textarea>\n";
+	echo "	<textarea class='formfld' name='email_body' id='email_body' style='display: none;'>".escape($email_body)."</textarea>\n";
 	echo "	<div id='editor'></div>\n";
 	echo "	<table cellpadding='0' cellspacing='0' border='0' style='float: right; padding-top: 5px;'>\n";
 	echo "		<tr>\n";
@@ -540,7 +540,7 @@
 		echo "	".$text['label-email_response']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' style='position: relative;' align='left'>\n";
-		echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_response'>".$email_response."</textarea>\n";
+		echo "	<textarea class='formfld' style='width: 450px; height: 100px;' name='email_response'>".escape($email_response)."</textarea>\n";
 		echo "<br />\n";
 		echo ($text['description-email_response'] ?? '')."\n";
 		echo "</td>\n";

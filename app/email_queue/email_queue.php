@@ -249,6 +249,7 @@
 	echo button::create(['label'=>$text['button-test'],'icon'=>'tools','type'=>'button','id'=>'test_button','onclick'=>"$(this).fadeOut(400, function(){ $('span#form_test').fadeIn(400); $('#to').trigger('focus'); });"]);
 	echo "		<span id='form_test' style='display: none;'>\n";
 	echo "			<input type='text' class='txt' style='width: 150px;' name='to' id='to' placeholder='recipient@domain.com'>";
+	echo "			<input type='hidden' name='".escape($token['name'])."' value='".escape($token['hash'])."' >\n";
 	echo button::create(['label'=>$text['button-send'],'icon'=>'envelope','type'=>'submit','id'=>'send_button']);
 	echo "		</span>\n";
 	echo "		</form>";
@@ -362,7 +363,7 @@
 			echo "	<td class='hide-md-dn'>".escape($row['hostname'])."</td>\n";
 			echo "	<td class='shrink hide-md-dn'>".escape($row['email_from'])."</td>\n";
 			echo "	<td class='overflow' style='width: 20%; max-width: 200px;'>".escape($row['email_to'])."</td>\n";
-			echo "	<td class='overflow' style='width: 30%; max-width: 200px;'>".iconv_mime_decode($row['email_subject'] ?? '')."</td>\n";
+			echo "	<td class='overflow' style='width: 30%; max-width: 200px;'>".escape(iconv_mime_decode($row['email_subject'] ?? ''))."</td>\n";
 			echo "	<td>".ucwords($text['label-'.$row['email_status']])."</td>\n";
 			echo "	<td>".escape($row['email_retry_count'])."</td>\n";
 			//echo "	<td>".escape($row['email_action_before'])."</td>\n";
