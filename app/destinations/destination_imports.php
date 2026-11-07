@@ -67,7 +67,7 @@
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
 	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('destination_upload')) {
-		if ($_POST['type'] == 'csv') {
+		if ($_POST['type'] == 'csv' && strtolower(pathinfo($_FILES['ulfile']['name'], PATHINFO_EXTENSION)) == 'csv') {
 			$upload_name = basename($_FILES['ulfile']['name']);
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $settings->get('server', 'temp').'/'.$upload_name);
 			$save_msg = "Uploaded file to ".$settings->get('server', 'temp')."/". htmlentities($upload_name);
@@ -210,8 +210,8 @@
 									//get the destination_number
 									if ($key === 'destination_number') { $destination_number = $result[$key]; }
 									if ($key === 'destination_description') { $destination_description = $result[$key]; }
-									if ($key === 'destination_app') { $destination_app = $result[$key]; echo "destination_app $destination_app\n"; }
-									if ($key === 'destination_data') { $destination_data = $result[$key]; echo "destination_data $destination_data\n"; }
+									if ($key === 'destination_app') { $destination_app = $result[$key]; }
+									if ($key === 'destination_data') { $destination_data = $result[$key]; }
 								}
 
 							//add the actions
