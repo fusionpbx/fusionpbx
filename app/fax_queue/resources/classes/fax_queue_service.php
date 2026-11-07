@@ -127,6 +127,10 @@ class fax_queue_service extends service {
 			// Process the results from the fax_queue
 			if (is_array($fax_queue) && @sizeof($fax_queue) != 0) {
 				foreach($fax_queue as $row) {
+					// validate the fax_queue_uuid to prevent shell injection
+					if (!is_uuid($row["fax_queue_uuid"])) {
+						continue;
+					}
 					$command = PHP_BINARY." ".dirname(__DIR__, 4)."/app/fax_queue/resources/job/fax_send.php ";
 					$command .= "'action=send&fax_queue_uuid=".$row["fax_queue_uuid"]."&hostname=".$this->hostname."'";
 					$this->debug($command);
@@ -136,7 +140,7 @@ class fax_queue_service extends service {
 					}
 					else {
 						// Starts process rapidly doesn't wait for previous process to finish (used for production)
-						$handle = popen($command." > /dev/null &", 'r'); 
+						$handle = popen($command." > /dev/null &", 'r');
 						$this->debug("$handle " . gettype($handle));
 						$result = fread($handle, 2096);
 						pclose($handle);
