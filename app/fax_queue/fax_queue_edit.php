@@ -199,9 +199,9 @@
 		$sql .= " fax_response ";
 		$sql .= "from v_fax_queue ";
 		$sql .= "where fax_queue_uuid = :fax_queue_uuid ";
-		//$sql .= "and domain_uuid = :domain_uuid ";
-		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$parameters['fax_queue_uuid'] = $fax_queue_uuid;
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
 			$fax_uuid = $row["fax_uuid"];

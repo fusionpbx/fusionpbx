@@ -154,6 +154,10 @@
 //process the messages
 	if (is_array($fax_queue) && @sizeof($fax_queue) != 0) {
 		foreach($fax_queue as $row) {
+		// validate the fax_queue_uuid to prevent shell injection
+		if (!is_uuid($row["fax_queue_uuid"])) {
+			continue;
+		}
 			$command = PHP_BINARY." ".dirname(__DIR__, 4)."/app/fax_queue/resources/job/fax_send.php ";
 			$command .= "'action=send&fax_queue_uuid=".$row["fax_queue_uuid"]."&hostname=".$hostname."&debug=true'";
 			if (isset($debug)) {
