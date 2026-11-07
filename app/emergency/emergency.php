@@ -74,7 +74,7 @@ if (!empty($_GET["search"])) {
 }
 
 //add the show variable
-if (!empty($_GET["show"])) {
+if (!empty($_GET["show"]) && permission_exists('emergency_logs_view_all')) {
 	$show = $_GET["show"];
 }
 
