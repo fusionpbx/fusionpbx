@@ -453,7 +453,7 @@
 			$dial_string .= "origination_uuid="    . $origination_uuid . ",";
 			$dial_string .= "fax_uuid="            . $fax_uuid . ",";
 			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid . ",";
-			$dial_string .= "mailto_address='"     . $fax_email_address . "',";
+			$dial_string .= "mailto_address='"     . escape_quote($fax_email_address) . "',";
 			$dial_string .= "mailfrom_address='"   . $email_from . "',";
 			$dial_string .= "fax_retry_attempts="  . $fax_retry_count . ",";
 			$dial_string .= "fax_retry_limit="     . $retry_limit . ",";
@@ -467,7 +467,7 @@
 		//connect to event socket and send the command
 			if ($fax_status != 'failed' && file_exists($fax_file)) {
 				//send the fax and try another route if the fax fails
-				$fax_command  = "originate {" . $dial_string . ",fax_uri=".$fax_uri."}" . $fax_uri." &txfax('".$fax_file."')";
+				$fax_command  = "originate {" . $dial_string . ",fax_uri=".$fax_uri."}" . $fax_uri." &txfax('".escape_quote($fax_file)."')";
 				$fax_response = event_socket::api($fax_command);
 				$response = str_replace("\n", "", $fax_response);
 				$response = trim(str_replace("+OK", "", $response));

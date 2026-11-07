@@ -92,6 +92,14 @@
 //process the http post data by action
 	if (!empty($action) && !empty($fax_queue) && !empty($fax_queue)) {
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: fax_queue.php'.($query_string ? '?'.$query_string : ''));
+				exit;
+			}
+
 		switch ($action) {
 			case 'copy':
 				if ($permission['fax_queue_add']) {
