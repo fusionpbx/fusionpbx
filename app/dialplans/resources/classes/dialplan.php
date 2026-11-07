@@ -1126,16 +1126,26 @@ class dialplan {
 				foreach ($records as $x => $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
-						//build delete array
-						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array['dialplan_details'][$x]['dialplan_uuid']       = $record['uuid'];
-
 						//get the dialplan context
-						$sql                         = "select dialplan_context from v_dialplans ";
-						$sql                         .= "where dialplan_uuid = :dialplan_uuid ";
+						$sql = "select dialplan_context from v_dialplans ";
+						$sql .= "where dialplan_uuid = :dialplan_uuid ";
+						if (!permission_exists('dialplan_all')) {
+							$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+							$parameters['domain_uuid'] = $this->domain_uuid;
+						}
 						$parameters['dialplan_uuid'] = $record['uuid'];
-						$dialplan_contexts[]         = $this->database->select($sql, $parameters ?? null, 'column');
+						$dialplan_context = $this->database->select($sql, $parameters ?? null, 'column');
 						unset($sql, $parameters);
+
+						//only delete records the user is authorized for
+						if (is_array($dialplan_context) && @sizeof($dialplan_context) != 0) {
+
+							//build delete array
+							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+							$array['dialplan_details'][$x]['dialplan_uuid'] = $record['uuid'];
+							$dialplan_contexts[] = $dialplan_context;
+
+						}
 
 					}
 				}
@@ -1392,8 +1402,12 @@ class dialplan {
 				if (!empty($uuids)) {
 
 					//primary table
-					$sql  = "select * from v_" . $this->table . " ";
-					$sql  .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					if (!permission_exists('dialplan_all')) {
+						$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+						$parameters['domain_uuid'] = $this->domain_uuid;
+					}
 					$rows = $this->database->select($sql, $parameters ?? null, 'all');
 					if (!empty($rows)) {
 						$y = 0;
