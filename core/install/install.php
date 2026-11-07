@@ -172,7 +172,7 @@
 			sleep(1);
 
 			//add the database schema
-			$output = shell_exec('cd '.dirname(__DIR__, 2).' && php /var/www/fusionpbx/core/upgrade/upgrade_schema.php');
+			$output = shell_exec('cd '.dirname(__DIR__, 2).' && php '.dirname(__DIR__, 2).'/core/upgrade/upgrade_schema.php');
 
 			//connect to the database
 			$database = new database;
@@ -222,7 +222,7 @@
 			$_SESSION['domain_name'] = $domain_name;
 
 			//app defaults
-			$output = shell_exec('cd '.dirname(__DIR__, 2).' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
+			$output = shell_exec('cd '.dirname(__DIR__, 2).' && php '.dirname(__DIR__, 2).'/core/upgrade/upgrade_domains.php');
 
 			//prepare the user settings
 			$admin_username = $_SESSION['install']['admin_username'];
@@ -310,10 +310,11 @@
 			// }
 
 			#app defaults
-			$output = shell_exec('cd '.dirname(__DIR__, 2).' && php /var/www/fusionpbx/core/upgrade/upgrade_domains.php');
+			$output = shell_exec('cd '.dirname(__DIR__, 2).' && php '.dirname(__DIR__, 2).'/core/upgrade/upgrade_domains.php');
 
 			//install completed - prompt the user to login
 			header("Location: /logout.php");
+	exit;
 		}
 	}
 
