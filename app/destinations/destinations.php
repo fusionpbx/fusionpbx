@@ -111,7 +111,7 @@
 											if (file_exists(dirname(__DIR__, 2)."/app/".$group."/app_languages.php")) {
 												$language3 = new text;
 												$text3 = $language3->get($settings->get('domain', 'language', 'en-us'), 'app/'.$group);
-												$actions[] = trim($text3['title-'.$group].' &#x203A; '.$key);
+												$actions[] = trim($text3['title-'.$group].' &#x203A; '.escape($key));
 											}
 										}
 									}
