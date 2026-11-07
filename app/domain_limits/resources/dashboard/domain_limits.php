@@ -121,8 +121,8 @@
 				echo "			type: 'doughnut',\n";
 				echo "			data: {\n";
 				echo "				labels: [\n";
-				echo "					'".$hud_stat_title.": ".$hud_stat_used."',\n";
-				echo "					'".$text['label-remaining'].": ".$hud_stat_remaining."',\n";
+				echo "					'".escape($hud_stat_title).": ".$hud_stat_used."',\n";
+				echo "					'".escape($text['label-remaining']).": ".$hud_stat_remaining."',\n";
 				echo "					],\n";
 				echo "				datasets: [{\n";
 				echo "					data: [\n";
@@ -226,7 +226,7 @@
 					}
 					$tr_link = "href='".PROJECT_PATH.$url."'";
 					echo "<tr ".$tr_link." style='cursor: pointer;'>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".$text['label-'.$category]."</a></td>\n";
+					echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".escape($text['label-'.$category])."</a></td>\n";
 					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$used."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$limit."</td>\n";
 					echo "</tr>\n";
