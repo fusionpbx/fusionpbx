@@ -97,6 +97,10 @@
 			if (is_uuid($dialplan_uuid)) {
 				$sql = "select * from v_dialplans ";
 				$sql .= "where dialplan_uuid = :dialplan_uuid ";
+				if (!permission_exists('dialplan_all') && !permission_exists('dialplan_domain')) {
+					$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$parameters['domain_uuid'] = $domain_uuid;
+				}
 				$parameters['dialplan_uuid'] = $dialplan_uuid;
 				$row = $database->select($sql, $parameters, 'row');
 				if (is_array($row) && @sizeof($row) != 0) {
