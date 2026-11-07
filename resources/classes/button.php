@@ -149,15 +149,46 @@ class button {
 	}
 
 	/**
-	 * Escapes a URL by removing leading/trailing whitespace and encoding special characters.
+	 * Escapes a URL for safe use in an href attribute.
+	 *
+	 * In addition to HTML-encoding the value, this blocks URLs that could be
+	 * used to execute script or navigate the user to an external origin:
+	 *   - active/unsafe URI schemes (javascript:, vbscript:, data:, file:, ...)
+	 *   - protocol-relative URLs (//example.com)
+	 * Only relative same-origin paths and http(s) URLs are permitted.
+	 *
+	 * The scheme is resolved the same way a browser does: leading whitespace is
+	 * skipped and embedded tab/line-feed/carriage-return characters are ignored,
+	 * so obfuscated schemes such as "  javascript:" or "java\tscript:" are still
+	 * detected and blocked.
 	 *
 	 * @param string $url The URL to escape.
 	 *
-	 * @return string The escaped URL.
+	 * @return string The escaped URL, or an empty string if the URL is not safe.
 	 */
 	private static function escape_href(string $url): string {
-		// clear whitespace
+		// clear leading and trailing whitespace
 		$url = trim($url);
+		if ($url === '') {
+			return '';
+		}
+
+		// normalized copy used only for the safety checks below: browsers ignore
+		// control characters when resolving the scheme, and schemes are case-insensitive
+		$normalized = strtolower(preg_replace('/[\x00-\x20\x7F]/', '', $url));
+
+		// if the URL defines a URI scheme, only http and https are permitted;
+		// block javascript:, vbscript:, data:, file:, blob:, ftp:, etc.
+		if (preg_match('/^[a-z][a-z0-9+.\-]*:/', $normalized, $matches)) {
+			if (!in_array(substr($matches[0], 0, -1), ['http', 'https'], true)) {
+				return '';
+			}
+		}
+
+		// block protocol-relative URLs that would navigate to an external origin
+		if (strncmp($normalized, '//', 2) === 0) {
+			return '';
+		}
 
 		return htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
 	}

@@ -53,7 +53,14 @@
 	$order = $_GET["order"] ?? '';
 
 //set the back button url
-	$_SESSION['back'][$_SERVER['PHP_SELF']] = !empty($_GET['back']) ? urldecode($_GET['back']) : $_SESSION['back'][$_SERVER['PHP_SELF']] ?? '';
+	//only accept a relative, same-origin path for the untrusted 'back' parameter
+	//to prevent reflected XSS (e.g. back=javascript:...) and open redirect
+	$back_url = !empty($_GET['back']) ? urldecode($_GET['back']) : '';
+	if ($back_url === '' || !is_safe_relative_url($back_url)) {
+		//ignore the untrusted value; keep the previously stored path
+		$back_url = $_SESSION['back'][$_SERVER['PHP_SELF']] ?? '';
+	}
+	$_SESSION['back'][$_SERVER['PHP_SELF']] = $back_url;
 
 //define order by default
 	if ($order_by == '') {

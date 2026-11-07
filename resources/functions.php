@@ -289,6 +289,47 @@ if (!function_exists('is_uuid')) {
 	}
 }
 
+if (!function_exists('is_safe_relative_url')) {
+	/**
+	 * Checks whether a value is a safe, relative, same-origin path that is
+	 * suitable for use as a navigation link (e.g. a "back" button target).
+	 *
+	 * A safe value must be an absolute path within the current origin: it must
+	 * start with "/", must not be a protocol-relative URL (//host), must not
+	 * contain a URI scheme (javascript:, data:, vbscript:, http://, ...), and
+	 * must not contain backslashes or control characters that could be used to
+	 * obfuscate the scheme.
+	 *
+	 * @param string $url The value to validate.
+	 *
+	 * @return bool True if the value is a safe relative path, false otherwise.
+	 */
+	function is_safe_relative_url(string $url): bool {
+		$url = trim($url);
+		// must be an absolute path within the same origin
+		if ($url === '' || $url[0] !== '/') {
+			return false;
+		}
+		// reject control characters (e.g. tab/newline used to obfuscate a scheme)
+		if (preg_match('/[\x00-\x20\x7F]/', $url)) {
+			return false;
+		}
+		// reject protocol-relative URLs that point to an external origin
+		if (strncmp(strtolower($url), '//', 2) === 0) {
+			return false;
+		}
+		// reject anything with a URI scheme (e.g. javascript:, data:, http://)
+		if (preg_match('/^[a-z][a-z0-9+.\-]*:/i', $url)) {
+			return false;
+		}
+		// reject backslashes (some browsers treat them as path separators)
+		if (strpos($url, '\\') !== false) {
+			return false;
+		}
+		return true;
+	}
+}
+
 if (!function_exists('is_xml')) {
 	/**
 	 * Checks if the given string is a well-formed XML.

@@ -94,7 +94,14 @@
 	$transcribe_engine = $settings->get('transcribe', 'engine', '');
 
 //set the back button url
-	$_SESSION['back'][$_SERVER['PHP_SELF']] = !empty($_GET['back']) ? urldecode($_GET['back']) : ($_SESSION['back'][$_SERVER['PHP_SELF']] ?? PROJECT_PATH.'/app/voicemails/voicemails.php');
+	//only accept a relative, same-origin path for the untrusted 'back' parameter
+	//to prevent reflected XSS (e.g. back=javascript:...) and open redirect
+	$back_url = !empty($_GET['back']) ? urldecode($_GET['back']) : '';
+	if ($back_url === '' || !is_safe_relative_url($back_url)) {
+		//ignore the untrusted value; keep the previously stored path or the default
+		$back_url = $_SESSION['back'][$_SERVER['PHP_SELF']] ?? PROJECT_PATH.'/app/voicemails/voicemails.php';
+	}
+	$_SESSION['back'][$_SERVER['PHP_SELF']] = $back_url;
 
 //set the voicemail_uuid
 	if (!empty($_REQUEST['id']) && is_uuid($_REQUEST['id'])) {
@@ -497,7 +504,10 @@
 
 //autoplay message
 	if (!empty($_REQUEST["action"]) && $_REQUEST["action"] == "autoplay" && !empty($_REQUEST["uuid"]) && is_uuid($_REQUEST["uuid"])) {
-		echo "<script>recording_play('".$_REQUEST["uuid"]."','".$_REQUEST['vm']."|".$_REQUEST['id']."','message');</script>";
+		$autoplay_vm_id = ($_REQUEST['vm'] ?? '') . '|' . ($_REQUEST['id'] ?? '');
+		$autoplay_uuid = json_encode($_REQUEST["uuid"], JSON_HEX_TAG);
+		$autoplay_vm_id = json_encode($autoplay_vm_id, JSON_HEX_TAG);
+		echo "<script>recording_play(" . $autoplay_uuid . "," . $autoplay_vm_id . ",'message');</script>";
 	}
 
 //unbold new message rows when clicked/played/downloaded
