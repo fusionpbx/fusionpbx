@@ -156,6 +156,15 @@
 
 //use the http post array to change the status
 	if (!empty($_POST['agents'])) {
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header("Location: call_center_agent_status.php");
+				exit;
+			}
+
 		foreach($_POST['agents'] as $row) {
 			if (!empty($row['agent_status'])) {
 				//agent set status

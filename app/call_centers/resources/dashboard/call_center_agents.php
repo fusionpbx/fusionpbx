@@ -54,6 +54,14 @@
 //get the http post values and set them as php variables
 	if (!empty($_POST['agents'])) {
 
+		//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: '.PROJECT_PATH.'/core/dashboard/');
+			exit;
+		}
+
 		//get the agent id
 		if (is_uuid($_POST['agents'][0]['id'])) {
 			$agent_uuid = $_POST['agents'][0]['id'];

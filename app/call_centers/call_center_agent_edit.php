@@ -140,6 +140,15 @@
 
 		//freeswitch expands the contact string, so we need to sanitize it.
 			$agent_contact = str_replace('$', '', $agent_contact);
+			$agent_contact = str_replace("'", "", $agent_contact);
+			$agent_type = str_replace("'", "", $agent_type);
+			$agent_status = str_replace("'", "", $agent_status);
+			$agent_call_timeout = preg_replace('#[^0-9]#', '', $agent_call_timeout);
+			$agent_reject_delay_time = preg_replace('#[^0-9]#', '', $agent_reject_delay_time);
+			$agent_busy_delay_time = preg_replace('#[^0-9]#', '', $agent_busy_delay_time);
+			$agent_no_answer_delay_time = preg_replace('#[^0-9]#', '', $agent_no_answer_delay_time);
+			$agent_max_no_answer = preg_replace('#[^0-9]#', '', $agent_max_no_answer);
+			$agent_wrap_up_time = preg_replace('#[^0-9]#', '', $agent_wrap_up_time);
 
 		//prepare the array
 			$array['call_center_agents'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
