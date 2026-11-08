@@ -178,6 +178,7 @@
 		$modifier = str_replace('  ', ' ', $modifier);
 		$modifier = str_replace(' ', '_', $modifier);
 		$modifier = strtolower(trim($modifier));
+		$modifier = preg_replace('/[^a-z0-9_]/', '', $modifier);
 		echo "\n";
 		echo "<tr class='list-header'>\n";
 		if (permission_exists('module_edit') || permission_exists('module_delete')) {
@@ -205,7 +206,7 @@
 			if ($previous_category != $row["module_category"]) {
 				echo "<tr>\n";
 				echo "<td colspan='7' class='no-link'>\n";
-				echo ($previous_category != '' ? '<br />' : null)."<b>".$row["module_category"]."</b>";
+				echo ($previous_category != '' ? '<br />' : null)."<b>".escape($row["module_category"])."</b>";
 				echo "</td>\n";
 				echo "</tr>\n";
 				write_header($row["module_category"]);
@@ -221,6 +222,7 @@
 				$modifier = str_replace('/', '', $modifier);
 				$modifier = str_replace('  ', ' ', $modifier);
 				$modifier = str_replace(' ', '_', $modifier);
+				$modifier = preg_replace('/[^a-z0-9_]/', '', $modifier);
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='modules[$x][checked]' id='checkbox_".$x."' class='checkbox_".$modifier."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all_".$modifier."').checked = false; }\">\n";
 				echo "		<input type='hidden' name='modules[$x][uuid]' value='".escape($row['module_uuid'])."' />\n";
