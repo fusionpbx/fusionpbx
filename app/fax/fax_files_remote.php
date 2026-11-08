@@ -115,6 +115,7 @@
 			$message = parse_message($connection, $email_id, FT_UID);
 			$attachment = $message['attachments'][0];
 			if ($attachment) {
+				$attachment_name = preg_replace('/[\/\\\r\n"]/', '', $attachment['name']);
 				$file_type = pathinfo($attachment['name'], PATHINFO_EXTENSION);
 				switch ($file_type) {
 					case "pdf" : header("Content-Type: application/pdf"); break;
@@ -125,10 +126,10 @@
 				header("Content-Length: ".$attachment['size']);
 				$browser = $_SERVER["HTTP_USER_AGENT"];
 				if (preg_match("/MSIE 5.5/", $browser) || preg_match("/MSIE 6.0/", $browser)) {
-					header("Content-Disposition: filename=\"".$attachment['name']."\"");
+					header("Content-Disposition: filename=\"".$attachment_name."\"");
 				}
 				else {
-					header("Content-Disposition: attachment; filename=\"".$attachment['name']."\"");
+					header("Content-Disposition: attachment; filename=\"".$attachment_name."\"");
 				}
 				header("Content-Transfer-Encoding: binary");
 				echo $attachment['data'];
@@ -151,7 +152,7 @@
 				if (imap_expunge($connection)) {
 					//clean up local inbox copy
 					$fax_dir = $settings->get('switch', 'storage').'/fax/'.$_SESSION['domain_name'];
-					@unlink($fax_dir.'/'.$fax_extension.'/inbox/'.$attachment['name']);
+					@unlink($fax_dir.'/'.$fax_extension.'/inbox/'.preg_replace('/[\/\\]/', '', $attachment['name']));
 					//redirect user
 					message::add($text['message-delete']);
 					header("Location: ?id=".$fax_uuid);
@@ -218,8 +219,8 @@
 			$metadata = object_to_array(imap_fetch_overview($connection, $email_id, FT_UID));
 			$message = parse_message($connection, $email_id, FT_UID);
 			$attachment = $message['attachments'][0];
-			$file_name = $attachment['name'];
-			$caller_id_name = substr($file_name, 0, strpos($file_name, '-'));
+			$file_name = escape($attachment['name']);
+			$caller_id_name = escape(substr($file_name, 0, strpos($file_name, '-')));
 			$caller_id_number = (is_numeric($caller_id_name)) ? format_phone((int) $caller_id_name) : null;
 			echo "	<tr ".(($metadata[0]['seen'] == 0) ? "style='font-weight: bold;'" : null).">\n";
 			echo "		<td valign='top' class='".$row_style[$c]."'>".$caller_id_name."</td>\n";
