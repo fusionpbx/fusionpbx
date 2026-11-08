@@ -271,7 +271,7 @@
 				echo "	".escape($row['paging_group_name']);
 			}
 			echo "	</td>\n";
-			echo "	<td>".$row['paging_group_extension']."&nbsp;</td>\n";
+			echo "	<td>".escape($row['paging_group_extension'])."&nbsp;</td>\n";
 			echo "	<td class='center'>".$text['label-'.$row['paging_group_delay']]."&nbsp;</td>\n";
 			//echo "	<td class='center'>".$text['label-'.$row['paging_group_type']]."&nbsp;</td>\n";
 			echo "	<td class='center'>".$text['label-'.$row['paging_group_hangup_all']]."&nbsp;</td>\n";
