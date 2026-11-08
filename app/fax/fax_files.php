@@ -136,7 +136,7 @@
 
 		//sanitize the values that are used in the file name and path
 		$fax_extension = preg_replace('/[^0-9]/', '', $_GET['ext']);
-		$fax_filename = preg_replace('/[\/\\\&\%\#]/', '', $_GET['filename']);
+		$fax_filename = preg_replace('/[\/\\\&\%\#\r\n]/', '', $_GET['filename']);
 
 		//check if the file is in the inbox or sent directory
 		if ($_GET['type'] == "fax_inbox") {
@@ -145,7 +145,7 @@
 			}
 		}
 		else if ($_GET['type'] == "fax_sent") {
-			if (file_exists($fax_dir.'/'.$fax_extension.'/sent/'.$_GET['filename'])) {
+			if (file_exists($fax_dir.'/'.$fax_extension.'/sent/'.$fax_filename)) {
 				$download_filename = $fax_dir.'/'.$fax_extension.'/sent/'.$fax_filename;
 			}
 		}

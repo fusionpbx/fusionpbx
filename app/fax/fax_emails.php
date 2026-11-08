@@ -245,14 +245,15 @@ if (!empty($result) && @sizeof($result) != 0) {
 
 							//store attachment in local fax temp folder
 							$uuid_filename = uuid();
-							$local_filepath = $fax_dir.'/'.$fax_extension.'/temp/'.$uuid_filename."-".$attachment['name'];
+							$safe_attachment_name = preg_replace('/[\/\\]/', '', $attachment['name']);
+							$local_filepath = $fax_dir.'/'.$fax_extension.'/temp/'.$uuid_filename."-".$safe_attachment_name;
 							file_put_contents($local_filepath, $attachment['data']);
 
 							//load files array with attachments
 							$emailed_files['error'][] = 0;
 							$emailed_files['size'][] = $attachment['size'];
-							$emailed_files['tmp_name'][] = $uuid_filename."-".$attachment['name'];
-							$emailed_files['name'][] = $uuid_filename."-".$attachment['name'];
+							$emailed_files['tmp_name'][] = $uuid_filename."-".$safe_attachment_name;
+							$emailed_files['name'][] = $uuid_filename."-".$safe_attachment_name;
 						}
 					}
 
