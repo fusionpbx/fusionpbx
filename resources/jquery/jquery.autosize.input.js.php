@@ -5,6 +5,6 @@ header('Content-type: text/javascript; charset: UTF-8');
 header('Cache-Control: must-revalidate');
 header('Expires: '.gmdate('D, d M Y H:i:s',time()+3600).' GMT');
 
-include_once 'jquery.autosize.input.js';
+include_once __DIR__ . '/jquery.autosize.input.js';
 
 ?>
