@@ -67,7 +67,7 @@
 		if (file_exists($stream_full_path)) {
 
 			//temporary waveform image filename
-			$temp_filename = 'waveform_'.$_GET['id'].'_'.rand(0000,9999).'.png';
+			$temp_filename = sys_get_temp_dir().'/waveform_'.$_GET['id'].'_'.rand(0000,9999).'.png';
 
 			//create temporary waveform image, if doesn't exist
 			if (file_exists($temp_filename)) {

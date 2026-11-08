@@ -38,8 +38,12 @@
 //connect to the database
 	$database = database::new();
 
+//set the domain_uuid
+	$domain_uuid = $_SESSION['domain_uuid'];
+	$user_uuid = $_SESSION['user_uuid'];
+
 //add the settings object
-	$settings = new settings(["domain_uuid" => $_SESSION['domain_uuid'], "user_uuid" => $_SESSION['user_uuid']]);
+	$settings = new settings(["domain_uuid" => $domain_uuid, "user_uuid" => $user_uuid]);
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', 'false');
@@ -194,7 +198,7 @@
 			if ($row['application'] == 'destinations' && permission_exists('destination_edit')) {
 				$list_row_url = "/app/destinations/destination_edit.php?id=".urlencode($row['uuid']);
 			}
-			if ($row['domain_uuid'] != $_SESSION['domain_uuid'] && permission_exists('domain_select')) {
+			if ($row['domain_uuid'] != $domain_uuid && permission_exists('domain_select')) {
 				$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 			}
 
