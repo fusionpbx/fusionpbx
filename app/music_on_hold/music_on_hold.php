@@ -159,6 +159,7 @@
 
 //upload music on hold file
 	if (!empty($_POST['action']) && $_POST['action'] == 'upload'
+		&& permission_exists('music_on_hold_add')
 		&& !empty($_FILES)
 		&& is_uploaded_file($_FILES['file']['tmp_name'])
 		) {
