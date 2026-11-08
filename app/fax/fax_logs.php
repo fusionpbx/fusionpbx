@@ -242,7 +242,7 @@
 			echo "	<td>".$row['fax_success']."&nbsp;</td>\n";
 			echo "	<td>".$row['fax_result_code']."&nbsp;</td>\n";
 			echo "	<td>".$row['fax_result_text']."&nbsp;</td>\n";
-			echo "	<td>".basename($row['fax_file'])."&nbsp;</td>\n";
+			echo "	<td>".escape(basename($row['fax_file']))."&nbsp;</td>\n";
 			echo "	<td>".$row['fax_ecm_used']."&nbsp;</td>\n";
 			echo "	<td>".$row['fax_local_station_id']."&nbsp;</td>\n";
 			//echo "	<td>".$row['fax_document_transferred_pages']."&nbsp;</td>\n";
@@ -254,7 +254,7 @@
 			echo "	<td>".$row['fax_retry_attempts']."&nbsp;</td>\n";
 			//echo "	<td>".$row['fax_retry_limit']."&nbsp;</td>\n";
 			//echo "	<td>".$row['fax_retry_sleep']."&nbsp;</td>\n";
-			echo "	<td>".basename($row['fax_uri'])."&nbsp;</td>\n";
+			echo "	<td>".escape(basename($row['fax_uri']))."&nbsp;</td>\n";
 			//echo "	<td>".$row['fax_epoch']."&nbsp;</td>\n";
 			if ($settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>\n";
