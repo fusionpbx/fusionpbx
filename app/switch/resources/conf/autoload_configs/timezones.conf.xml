@@ -109,7 +109,7 @@
 		<zone name="America/Denver" value="MST7MDT,M3.2.0,M11.1.0" />
 		<zone name="America/Detroit" value="EST5EDT,M3.2.0,M11.1.0" />
 		<zone name="America/Dominica" value="AST4" />
-		<zone name="America/Edmonton" value="MST7MDT,M3.2.0,M11.1.0" />
+		<zone name="America/Edmonton" value="CST6" />
 		<zone name="America/Eirunepe" value="STD5" />
 		<zone name="America/El_Salvador" value="CST6" />
 		<zone name="America/Ensenada" value="PST8PDT,M3.2.0,M11.1.0" />
@@ -137,7 +137,7 @@
 		<zone name="America/Indiana/Vincennes" value="EST5EDT,M3.2.0,M11.1.0" />
 		<zone name="America/Indiana/Winamac" value="EST5EDT,M3.2.0,M11.1.0" />
 		<zone name="America/Indianapolis" value="EST5EDT,M3.2.0,M11.1.0" />
-		<zone name="America/Inuvik" value="MST7MDT,M3.2.0,M11.1.0" />
+		<zone name="America/Inuvik" value="CST6" />
 		<zone name="America/Iqaluit" value="EST5EDT,M3.2.0,M11.1.0" />
 		<zone name="America/Jamaica" value="EST5" />
 		<zone name="America/Jujuy" value="STD3" />
@@ -189,7 +189,7 @@
 		<zone name="America/Porto_Velho" value="STD4" />
 		<zone name="America/Puerto_Rico" value="AST4" />
 		<zone name="America/Punta_Arenas" value="STD3" />
-		<zone name="America/Rainy_River" value="CST6CDT,M3.2.0,M11.1.0" />
+		<zone name="America/Rainy_River" value="EST5" />
 		<zone name="America/Rankin_Inlet" value="CST6CDT,M3.2.0,M11.1.0" />
 		<zone name="America/Recife" value="STD3" />
 		<zone name="America/Regina" value="CST6" />
@@ -217,12 +217,12 @@
 		<zone name="America/Tijuana" value="PST8PDT,M3.2.0,M11.1.0" />
 		<zone name="America/Toronto" value="EST5EDT,M3.2.0,M11.1.0" />
 		<zone name="America/Tortola" value="AST4" />
-		<zone name="America/Vancouver" value="PST8PDT,M3.2.0,M11.1.0" />
+		<zone name="America/Vancouver" value="MST7" />
 		<zone name="America/Virgin" value="AST4" />
 		<zone name="America/Whitehorse" value="MST7" />
-		<zone name="America/Winnipeg" value="CST6CDT,M3.2.0,M11.1.0" />
+		<zone name="America/Winnipeg" value="EST5" />
 		<zone name="America/Yakutat" value="AKST9AKDT,M3.2.0,M11.1.0" />
-		<zone name="America/Yellowknife" value="MST7MDT,M3.2.0,M11.1.0" />
+		<zone name="America/Yellowknife" value="CST6" />
 
 		<zone name="Antarctica/Casey" value="STD-11" />
 		<zone name="Antarctica/Davis" value="STD-7" />
@@ -386,11 +386,11 @@
 		<zone name="CST6CDT" value="CST6CDT,M3.2.0,M11.1.0" />
 
 		<zone name="Canada/Atlantic" value="AST4ADT,M3.2.0,M11.1.0" />
-		<zone name="Canada/Central" value="CST6CDT,M3.2.0,M11.1.0" />
+		<zone name="Canada/Central" value="EST5" />
 		<zone name="Canada/Eastern" value="EST5EDT,M3.2.0,M11.1.0" />
-		<zone name="Canada/Mountain" value="MST7MDT,M3.2.0,M11.1.0" />
+		<zone name="Canada/Mountain" value="CST6" />
 		<zone name="Canada/Newfoundland" value="NST3:30NDT,M3.2.0,M11.1.0" />
-		<zone name="Canada/Pacific" value="PST8PDT,M3.2.0,M11.1.0" />
+		<zone name="Canada/Pacific" value="MST7" />
 		<zone name="Canada/Saskatchewan" value="CST6" />
 		<zone name="Canada/Yukon" value="MST7" />
 
