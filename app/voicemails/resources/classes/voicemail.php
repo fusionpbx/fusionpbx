@@ -339,7 +339,13 @@ class voicemail {
 		if (empty($this->order_by)) {
 			$sql .= "order by v.voicemail_id, m.created_epoch desc ";
 		} else {
-			$sql .= "order by v.voicemail_id, m." . $this->order_by . " " . $this->order . " ";
+			$order_by_column = preg_replace('#[^a-zA-Z0-9-_.]#', '', $this->order_by);
+			$order_direction    = !empty($this->order) && strtolower($this->order) == 'desc' ? 'desc' : 'asc';
+			if (!empty($order_by_column)) {
+				$sql .= "order by v.voicemail_id, m." . $order_by_column . " " . $order_direction . " ";
+			} else {
+				$sql .= "order by v.voicemail_id, m.created_epoch desc ";
+			}
 		}
 		//if paging offset defined, apply it along with rows per page
 		if (isset($this->offset)) {
