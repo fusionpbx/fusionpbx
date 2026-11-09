@@ -595,7 +595,9 @@
 					$recording_path = $settings->get('switch', 'recordings').'/'.$domain_name;
 
 					//create the file name
-					$recording_filename = empty($_POST[$type]['recording_filename'] ?? '') ? preg_replace('#[^a-zA-Z0-9_\-]#', '_', $recording_name) : $_POST[$type]['recording_filename'];
+					$post_recording = $_POST[$type]['recording_filename'] ?? '';
+					$source_recording = (is_string($post_recording) && !empty($post_recording)) ? $post_recording : (string)$recording_name;
+					$recording_filename = preg_replace('/[^a-zA-Z0-9_-]/', '_', $source_recording);
 					if (!str_ends_with($recording_filename, ".$recording_extension")) {
 						$recording_filename .= ".$recording_extension";
 					}
