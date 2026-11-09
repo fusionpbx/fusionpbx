@@ -510,7 +510,7 @@
 			if (!empty($field['group_name'])) {
 				echo "<tr>\n";
 				echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
-				echo $field['group_name'].((!empty($field['group_domain_uuid'])) ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
+				echo escape($field['group_name']).((!empty($field['group_domain_uuid'])) ? "@" . escape($_SESSION['domains'][$field['group_domain_uuid']]['domain_name']) : null);
 				echo "	</td>\n";
 				if (permission_exists('menu_item_group_delete')) {
 					echo "	<td class='list_control_icons' style='width: 25px;'>";
@@ -531,7 +531,7 @@
 		foreach($groups as $row) {
 			if ($row['group_level'] <= $_SESSION['user']['group_level']) {
 				if (!is_array($assigned_groups) || !in_array($row["group_uuid"], $assigned_groups)) {
-					echo "	<option value='".$row['group_uuid']."|".$row['group_name']."'>".$row['group_name'].((!empty($row['domain_uuid'])) ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
+					echo "	<option value='".escape($row['group_uuid'])."|".escape($row['group_name'])."'>".escape($row['group_name']).((!empty($row['domain_uuid'])) ? "@" . escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']) : null)."</option>\n";
 				}
 			}
 		}

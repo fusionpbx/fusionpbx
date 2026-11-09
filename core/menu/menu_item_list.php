@@ -145,7 +145,7 @@
 				$group_list = '';
 				if (!empty($sub_result) && sizeof($sub_result) != 0) {
 					foreach ($sub_result as $sub_row) {
-						$group_array[] = $sub_row["group_name"].((!empty($sub_row['group_domain_uuid'])) ? "@".$_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name'] : null);
+						$group_array[] = escape($sub_row["group_name"]).((!empty($sub_row['group_domain_uuid'])) ? "@" . escape($_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name']) : null);
 					}
 					$group_list = !empty($group_array) ? implode(', ', $group_array) : '';
 				}
@@ -154,21 +154,21 @@
 				//display the main body of the list
 				switch ($menu_item_category) {
 					case "internal":
-						$menu_item_link = "<a href='".PROJECT_PATH.$menu_item_link."'>$menu_item_link</a>";
+						$menu_item_link = "<a href='".escape(PROJECT_PATH.$menu_item_link)."'>".escape($menu_item_link)."</a>";
 						break;
 					case "external":
 						if (substr($menu_item_link,0,1) == "/") {
 							$menu_item_link = PROJECT_PATH.$menu_item_link;
 						}
-						$menu_item_link = "<a href='".$menu_item_link."' target='_blank'>".$menu_item_link."</a>";
+						$menu_item_link = "<a href='".escape($menu_item_link)."' target='_blank'>".escape($menu_item_link)."</a>";
 						break;
 					case "email":
-						$menu_item_link = "<a href='mailto:".$menu_item_link."'>".$menu_item_link."</a>";
+						$menu_item_link = "<a href='mailto:".escape($menu_item_link)."'>".escape($menu_item_link)."</a>";
 						break;
 				}
 
 				//format icon
-				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".$menu_item_icon."' style='margin-left: 7px; margin-top: 2px; ".(!empty($menu_item_icon_color) ? "color: ".$menu_item_icon_color.";" : "opacity: 0.4;")."'></i>" : null;
+				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".escape($menu_item_icon)."' style='margin-left: 7px; margin-top: 2px; ".(!empty($menu_item_icon_color) ? "color: ".escape($menu_item_icon_color).";" : "opacity: 0.4;")."'></i>" : null;
 
 				//display the content of the list
 				if (permission_exists('menu_item_edit')) {
@@ -191,7 +191,7 @@
 				echo "</td>\n";
 				echo "<td class='no-wrap overflow no-link hide-sm-dn'>".$menu_item_link."&nbsp;</td>\n";
 				echo "<td class='no-wrap overflow hide-xs'>".$group_list."&nbsp;</td>";
-				echo "<td class='center'>".$menu_item_category."&nbsp;</td>";
+				echo "<td class='center'>".escape($menu_item_category)."&nbsp;</td>";
 				//if (permission_exists('menu_item_edit')) {
 				//	echo "	<td class='no-link center'>\n";
 				//	echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.($menu_item_protected == 'true' ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
@@ -354,7 +354,7 @@
 
 				if (!empty($sub_result) && sizeof($sub_result) != 0) {
 					foreach ($sub_result as $sub_row) {
-						$group_list[] = $sub_row["group_name"].((!empty($sub_row['group_domain_uuid'])) ? "@".$_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name'] : null);
+						$group_list[] = escape($sub_row["group_name"]).((!empty($sub_row['group_domain_uuid'])) ? "@" . escape($_SESSION['domains'][$sub_row['group_domain_uuid']]['domain_name']) : null);
 					}
 					$group_list = implode(', ', $group_list);
 				}
@@ -363,21 +363,21 @@
 			//add the type link based on the type of the menu
 				switch ($menu_item_category) {
 					case "internal":
-						$menu_item_link = "<a href='".PROJECT_PATH.$menu_item_link."'>".$menu_item_link."</a>";
+						$menu_item_link = "<a href='".escape(PROJECT_PATH.$menu_item_link)."'>".escape($menu_item_link)."</a>";
 						break;
 					case "external":
 						if (substr($menu_item_link, 0,1) == "/") {
 							$menu_item_link = PROJECT_PATH.$menu_item_link;
 						}
-						$menu_item_link = "<a href='".$menu_item_link."' target='_blank'>".$menu_item_link."</a>";
+						$menu_item_link = "<a href='".escape($menu_item_link)."' target='_blank'>".escape($menu_item_link)."</a>";
 						break;
 					case "email":
-						$menu_item_link = "<a href='mailto:".$menu_item_link."'>".$menu_item_link."</a>";
+						$menu_item_link = "<a href='mailto:".escape($menu_item_link)."'>".escape($menu_item_link)."</a>";
 						break;
 				}
 
 			//format icon
-				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".$menu_item_icon."' style='margin-left: 7px; margin-top: 2px; ".(!empty($menu_item_icon_color) ? "color: ".$menu_item_icon_color.";" : "opacity: 0.4;")."'></i>" : null;
+				$menu_item_icon = !empty($menu_item_icon) ? "<i class='".escape($menu_item_icon)."' style='margin-left: 7px; margin-top: 2px; ".(!empty($menu_item_icon_color) ? "color: ".escape($menu_item_icon_color).";" : "opacity: 0.4;")."'></i>" : null;
 
 			//display the content of the list
 				if (permission_exists('menu_item_edit')) {
@@ -400,7 +400,7 @@
 				echo "</td>\n";
 				echo "<td class='no-wrap overflow no-link hide-sm-dn'>".$menu_item_link."&nbsp;</td>\n";
 				echo "<td class='no-wrap overflow hide-xs'>".($group_list ?? '')."&nbsp;</td>\n";
-				echo "<td class='center'>".$menu_item_category."&nbsp;</td>\n";
+				echo "<td class='center'>".escape($menu_item_category)."&nbsp;</td>\n";
 				//if (permission_exists('menu_item_edit')) {
 				//	echo "<td class='no-link center'>\n";
 				//	echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.($menu_item_protected == 'true' ? 'true' : 'false')],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
