@@ -189,9 +189,24 @@
 //upload the recording
 	if ($action == "upload" && permission_exists('recording_upload') && is_uploaded_file($_FILES['file']['tmp_name'])) {
 
+		//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header("Location: recordings.php".($query_string ? '?'.$query_string : ''));
+			exit;
+		}
+
 		//get the file name and extension
 			$file_name = pathinfo($_FILES['file']['name'], PATHINFO_FILENAME);
 			$file_ext = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
+
+		//only allow audio file extensions
+			if (!in_array($file_ext, ['wav', 'mp3', 'ogg'])) {
+				message::add($text['message-unsupported_file_type'],'negative');
+				header("Location: recordings.php".($query_string ? '?'.$query_string : ''));
+				exit;
+			}
 
 		//remove special characters
 			$file_name = str_replace(['_', ' '], "-", $file_name);
