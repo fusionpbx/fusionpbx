@@ -263,10 +263,24 @@
 									//get the table and field name
 									$field_array = explode(".",$value);
 									$table_name = $field_array[0];
-									$field_name = $field_array[1];
+									$field_name = $field_array[1] ?? '';
 									// echo "value: $value<br />\n";
 									// echo "table_name: $table_name<br />\n";
 									// echo "field_name: $field_name<br />\n";
+
+									//validate the table and field name against the schema
+									$valid_field = false;
+									if (is_array($schema)) {
+										foreach ($schema as $schema_row) {
+											if ($schema_row['table'] == $table_name && in_array($field_name, $schema_row['fields'])) {
+												$valid_field = true;
+												break;
+											}
+										}
+									}
+									if (!$valid_field) {
+										continue;
+									}
 
 									//count the field names
 									if (isset($field_count[$table_name][$field_name])) {
