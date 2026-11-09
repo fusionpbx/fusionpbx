@@ -393,7 +393,7 @@ function outbound_route_to_bridge($domain_uuid, $destination_number, array $chan
 	$sql .= "and dd.dialplan_detail_type not in ('set', 'unset', 'export', 'limit', '\${user_exists}') ";
 	$sql .= "and d.dialplan_enabled = true ";
 	$sql .= "and (dd.dialplan_detail_enabled = true or dd.dialplan_detail_enabled is null) ";
-	$sql .= "order by d.domain_uuid, d.dialplan_uuid, d.dialplan_order, dd.dialplan_detail_order ";
+	$sql .= "order by d.domain_uuid, d.dialplan_order, d.dialplan_uuid, dd.dialplan_detail_order ";
 	$parameters['hostname'] = $hostname;
 	$result = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
