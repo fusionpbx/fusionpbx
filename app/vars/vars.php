@@ -191,37 +191,7 @@
 
 	echo "<div class='card'>\n";
 	echo "<table class='list'>\n";
-	/**
-	 * Writes the header for a list of variables.
-	 *
-	 * @param string $modifier The modifier to be used in the header, with slashes and extra spaces removed.
-	 *
-	 * @return void
-	 */
-	function write_header($modifier) {
-		global $text, $order_by, $order, $vars, $list_row_edit_button;
-		$modifier = str_replace('/', '', $modifier);
-		$modifier = str_replace('  ', ' ', $modifier);
-		$modifier = str_replace(' ', '_', $modifier);
-		$modifier = str_replace(':', '', $modifier);
-		$modifier = strtolower(trim($modifier));
-		echo "\n";
-		echo "<tr class='list-header'>\n";
-		if (permission_exists('var_edit') || permission_exists('var_delete')) {
-			echo "	<th class='checkbox'>\n";
-			echo "		<input type='checkbox' id='checkbox_all_".$modifier."' name='checkbox_all' onclick=\"list_all_toggle('".$modifier."'); checkbox_on_change(this);\" ".(!empty($vars) ?: "style='visibility: hidden;'").">\n";
-			echo "	</th>\n";
-		}
-		echo th_order_by('var_name', $text['label-name'], $order_by, $order, null, "class='pct-30'");
-		echo th_order_by('var_value', $text['label-value'], $order_by, $order, null, "class='pct-40'");
-		echo th_order_by('var_hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-sm-dn'");
-		echo th_order_by('var_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
-		echo "<th class='hide-sm-dn'>".$text['label-description']."</th>\n";
-		if (permission_exists('var_edit') && $list_row_edit_button) {
-			echo "<td class='action-button'>&nbsp;</td>\n";
-		}
-		echo "</tr>\n";
-	}
+
 	if (!empty($vars)) {
 		$previous_category = '';
 		foreach ($vars as $x => $row) {
@@ -229,10 +199,27 @@
 			if ($previous_category != $row["var_category"]) {
 				echo "<tr>\n";
 				echo "<td colspan='7' class='no-link'>\n";
-				echo ($previous_category != '' ? '<br />' : null)."<b>".$row["var_category"]."</b>";
+				echo ($previous_category != '' ? '<br />' : null)."<b>".escape($row["var_category"])."</b>";
 				echo "</td>\n";
 				echo "</tr>\n";
-				write_header($row["var_category"]);
+				//md5 keeps the id safe for any language and matches how categories are grouped
+				$modifier = md5($row["var_category"]);
+				echo "\n";
+				echo "<tr class='list-header'>\n";
+				if (permission_exists('var_edit') || permission_exists('var_delete')) {
+					echo "	<th class='checkbox'>\n";
+					echo "		<input type='checkbox' id='checkbox_all_".$modifier."' name='checkbox_all' onclick=\"list_all_toggle('".$modifier."'); checkbox_on_change(this);\" ".(!empty($vars) ?: "style='visibility: hidden;'").">\n";
+					echo "	</th>\n";
+				}
+				echo th_order_by('var_name', $text['label-name'], $order_by, $order, null, "class='pct-30'");
+				echo th_order_by('var_value', $text['label-value'], $order_by, $order, null, "class='pct-40'");
+				echo th_order_by('var_hostname', $text['label-hostname'], $order_by, $order, null, "class='hide-sm-dn'");
+				echo th_order_by('var_enabled', $text['label-enabled'], $order_by, $order, null, "class='center'");
+				echo "<th class='hide-sm-dn'>".$text['label-description']."</th>\n";
+				if (permission_exists('var_edit') && $list_row_edit_button) {
+					echo "<td class='action-button'>&nbsp;</td>\n";
+				}
+				echo "</tr>\n";
 			}
 
 			$list_row_url = '';
@@ -241,11 +228,7 @@
 			}
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('var_add') || permission_exists('var_edit') || permission_exists('var_delete')) {
-				$modifier = strtolower(trim($row["var_category"]));
-				$modifier = str_replace('/', '', $modifier);
-				$modifier = str_replace('  ', ' ', $modifier);
-				$modifier = str_replace(' ', '_', $modifier);
-				$modifier = str_replace(':', '', $modifier);
+				$modifier = md5($row["var_category"]);
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='vars[$x][checked]' id='checkbox_".$x."' class='checkbox_".$modifier."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all_".$modifier."').checked = false; }\">\n";
 				echo "		<input type='hidden' name='vars[$x][uuid]' value='".escape($row['var_uuid'])."' />\n";
@@ -259,8 +242,8 @@
 				echo escape($row['var_name']);
 			}
 			echo "	</td>\n";
-			echo "	<td class='overflow'>".$row['var_value']."</td>\n";
-			echo "	<td class='hide-sm-dn'>".$row['var_hostname']."&nbsp;</td>\n";
+			echo "	<td class='overflow'>".escape($row['var_value'])."</td>\n";
+			echo "	<td class='hide-sm-dn'>".escape($row['var_hostname'])."&nbsp;</td>\n";
 			if (permission_exists('var_edit')) {
 				echo "	<td class='no-link center'>\n";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['var_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
