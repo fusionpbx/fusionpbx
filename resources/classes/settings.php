@@ -131,7 +131,7 @@ class settings implements clear_cache {
 			//get the domain settings
 			$this->domain_settings();
 
-			//set the user settings only when the domain_uuid was set
+			//set the user settings
 			if (!empty($this->user_uuid)) {
 				$this->user_settings();
 			}
@@ -282,10 +282,8 @@ class settings implements clear_cache {
 			$result = apcu_fetch($key);
 		} else {
 			$sql = "select * from v_user_settings ";
-			$sql .= "where domain_uuid = :domain_uuid ";
-			$sql .= "and user_uuid = :user_uuid ";
+			$sql .= "where user_uuid = :user_uuid ";
 			$sql .= " order by user_setting_order asc ";
-			$parameters['domain_uuid'] = $this->domain_uuid;
 			$parameters['user_uuid'] = $this->user_uuid;
 			$result = $this->database->select($sql, $parameters, 'all');
 			//if the apcu extension is loaded store the result
