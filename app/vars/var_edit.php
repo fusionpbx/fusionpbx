@@ -324,7 +324,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea class='formfld' name='var_description' rows='17'>".$var_description."</textarea>\n";
+	echo "	<textarea class='formfld' name='var_description' rows='17'>".escape_textarea($var_description)."</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
