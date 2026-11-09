@@ -133,6 +133,14 @@
 		//get recording uuid to edit
 		$recording_uuid = $_POST["recording_uuid"] ?? '';
 
+		//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: recordings.php');
+			exit;
+		}
+
 		//delete the recording
 		if (permission_exists('recording_delete')) {
 			if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($recording_uuid)) {
@@ -148,14 +156,6 @@
 				header('Location: recordings.php');
 				exit;
 			}
-		}
-
-		//validate the token
-		$token = new token;
-		if (!$token->validate($_SERVER['PHP_SELF'])) {
-			message::add($text['message-invalid_token'],'negative');
-			header('Location: recordings.php');
-			exit;
 		}
 
 		//check for all required data
