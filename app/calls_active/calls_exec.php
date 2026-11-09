@@ -91,12 +91,19 @@
 	}
 	else if ($_REQUEST['action'] == 'eavesdrop' && permission_exists('call_active_eavesdrop')) {
 
-		$uuid_pattern = '/[^-A-Fa-f0-9]/';
-		$number_pattern = '/[^-A-Za-z0-9()*#]/';
+		//set the allowed regex number pattern
+		$number_pattern = '/^[0-9A-Za-z*#+._-]+$/';
 
-		$channnel_uuid = preg_replace($uuid_pattern,'',$_GET['chan_uuid']);
-		$extension = preg_replace($number_pattern,'',$_GET['ext']);
-		$destination = preg_replace($number_pattern,'',$_GET['destination']);
+		//get the values from HTTP
+		$channnel_uuid = $_GET['chan_uuid'] ?? '';
+		$extension = $_GET['ext'] ?? '';
+		$destination = $_GET['destination'] ?? '';
+
+		//deny access if the variables are not valid
+		if (!is_uuid($channnel_uuid) || !preg_match($number_pattern, $extension) || !preg_match($number_pattern, $destination)) {
+			echo "access denied";
+			exit;
+		}
 
 		$api_cmd = 'bgapi originate {origination_caller_id_name='.$text['label-eavesdrop'].',origination_caller_id_number='.$extension.'}user/'.$destination.'@'.$_SESSION['domain_name'].' &eavesdrop('.$channnel_uuid.')';
 
