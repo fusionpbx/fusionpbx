@@ -7,7 +7,7 @@
  * @copyright 2012 The Authors
  */
 
-if (!defined('PASSWORD_DEFAULT')) {
+if (!defined('PASSWORD_DEFAULT') && PHP_VERSION_ID < 50500) {
 
 	define('PASSWORD_BCRYPT', 1);
 	define('PASSWORD_DEFAULT', PASSWORD_BCRYPT);
