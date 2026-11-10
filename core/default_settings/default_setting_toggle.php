@@ -42,6 +42,14 @@
 	$search = $_REQUEST['search'] ?? '';
 	$default_setting_uuids = $_REQUEST["id"];
 
+//validate the token
+	$token = new token;
+	if (!$token->validate($_SERVER['PHP_SELF'])) {
+		message::add($text['message-invalid_token'],'negative');
+		header("Location: default_settings.php".($search != '' ? '?search='.$search : null));
+		exit;
+	}
+
 //toggle the setting
 	$toggled = 0;
 	if (is_array($default_setting_uuids) && sizeof($default_setting_uuids) > 0) {

@@ -548,7 +548,7 @@
 			echo "	<input type='text' class='formfld' ".(($default_setting_value == '' || $option_found) ? "style='display: none;'" : null)." id='txt_default_setting_value' name='default_setting_value' value=\"".escape($default_setting_value)."\">\n";
 		}
 		else {
-			echo "	<input type='text' class='formfld' id='default_setting_value' name='default_setting_value' value=\"".$default_setting_value."\">\n";
+			echo "	<input type='text' class='formfld' id='default_setting_value' name='default_setting_value' value=\"".escape($default_setting_value)."\">\n";
 		}
 	}
 	elseif ($category == "fax" && $subcategory == "page_size" && $name == "text" ) {
@@ -586,13 +586,13 @@
 	elseif ($category == "message" && $subcategory == "display_last" && $name == "text") {
 		$array = explode(' ',$default_setting_value);
 		if (!is_numeric($array[0])) { $array[1] = $array[0]; $array[0] = ''; }
-		echo "	<input type='text' class='formfld' id='default_setting_value_1' value=\"".$array[0]."\" onchange=\"$('#default_setting_value').val($('#default_setting_value_1').val() + ' ' + $('#default_setting_value_2 option:selected').val());\">\n";
+		echo "	<input type='text' class='formfld' id='default_setting_value_1' value=\"".escape($array[0])."\" onchange=\"$('#default_setting_value').val($('#default_setting_value_1').val() + ' ' + $('#default_setting_value_2 option:selected').val());\">\n";
 		echo "	<select class='formfld' id='default_setting_value_2' onchange=\"$('#default_setting_value').val($('#default_setting_value_1').val() + ' ' + $('#default_setting_value_2 option:selected').val());\">\n";
 		echo "		<option value='hours' ".($array[1] == "hours" ? "selected='selected'" : null).">".$text['label-hours']."</option>\n";
 		echo "		<option value='days' ".($array[1] == "days" ? "selected='selected'" : null).">".$text['label-days']."</option>\n";
 		echo "		<option value='messages' ".($array[1] == "messages" ? "selected='selected'" : null).">".$text['label-messages']."</option>\n";
 		echo "	</select>\n";
-		echo "	<input type='hidden' id='default_setting_value' name='default_setting_value' value=\"".$default_setting_value."\">\n";
+		echo "	<input type='hidden' id='default_setting_value' name='default_setting_value' value=\"".escape($default_setting_value)."\">\n";
 		unset($array);
 	}
 	elseif ($category == "theme" && $subcategory == "domain_visible" && $name == "text" ) {
@@ -625,7 +625,7 @@
 		echo "    </select>\n";
 	}
 	elseif ($category == "theme" && $subcategory == "custom_css_code" && $name == "text" ) {
-		echo "	<textarea class='formfld' style='min-width: 100%; height: 300px; font-family: courier, monospace; overflow: auto; resize: vertical' id='default_setting_value' name='default_setting_value' wrap='off'>".escape($default_setting_value)."</textarea>\n";
+		echo "	<textarea class='formfld' style='min-width: 100%; height: 300px; font-family: courier, monospace; overflow: auto; resize: vertical' id='default_setting_value' name='default_setting_value' wrap='off'>".escape_textarea($default_setting_value)."</textarea>\n";
 	}
 	elseif ($category == "theme" && $subcategory == "button_icons" && $name == "text" ) {
 		echo "    <select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
@@ -721,7 +721,7 @@
 		echo "	</select>\n";
 	}
 	elseif (is_json($default_setting_value)) {
-		echo "	<textarea class='formfld' style='width: 100%; height: 80px; font-family: courier, monospace; overflow: auto;' id='default_setting_value' name='default_setting_value' wrap='off'>".escape($default_setting_value)."</textarea>\n";
+		echo "	<textarea class='formfld' style='width: 100%; height: 80px; font-family: courier, monospace; overflow: auto;' id='default_setting_value' name='default_setting_value' wrap='off'>".escape_textarea($default_setting_value)."</textarea>\n";
 	}
 	elseif ($name == "boolean") {
 		echo "	<select class='formfld' id='default_setting_value' name='default_setting_value'>\n";
@@ -737,7 +737,7 @@
 	}
 	else {
 		if (!empty($_SESSION['domain']['setting_value_input_type']) && $settings->get('domain', 'setting_value_input_type') == 'textarea') {
-			echo "	<textarea class='formfld' style='width: 185px; height: 80px;' id='default_setting_value' name='default_setting_value'>".($default_setting_value ?? '')."</textarea>\n";
+			echo "	<textarea class='formfld' style='width: 185px; height: 80px;' id='default_setting_value' name='default_setting_value'>".escape_textarea($default_setting_value ?? '')."</textarea>\n";
 		}
 		else {
 			echo "	<input class='formfld' type='text' id='default_setting_value' name='default_setting_value' value=\"".escape($default_setting_value ?? '')."\">\n";
@@ -809,7 +809,7 @@
 	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea class='formfld' style='width: 185px; height: 80px;' name='default_setting_description'>".escape($default_setting_description)."</textarea>\n";
+	echo "	<textarea class='formfld' style='width: 185px; height: 80px;' name='default_setting_description'>".escape_textarea($default_setting_description)."</textarea>\n";
 	echo "	<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
