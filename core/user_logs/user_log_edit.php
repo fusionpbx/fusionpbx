@@ -15,14 +15,27 @@
 	$text = $language->get();
 
 //get the uuid
-	$user_log_uuid = $_GET['id'];
+	$user_log_uuid = !empty($_GET['id']) && is_uuid($_GET['id']) ? $_GET['id'] : '';
+
+//verify the record belongs to the current domain unless allowed to see all domains
+	if (!empty($user_log_uuid) && !permission_exists('user_log_all')) {
+		$sql = "select user_log_uuid from v_user_logs ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and user_log_uuid = :user_log_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['user_log_uuid'] = $user_log_uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $row);
+	}
 
 //pre-populate the form
-	if (!empty($_GET) && is_array($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
+	if (!empty($user_log_uuid) && !empty($_GET) && is_array($_GET) && (empty($_POST["persistformvar"]) || $_POST["persistformvar"] != "true")) {
 		$sql = "select * from v_user_logs ";
 		$sql .= "where user_log_uuid = :user_log_uuid ";
-		//$sql .= "and domain_uuid = :domain_uuid ";
-		//$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 		$parameters['user_log_uuid'] = $user_log_uuid;
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
@@ -89,7 +102,7 @@
 			echo "		<option value='".$row['domain_uuid']."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 		}
 		else {
-			echo "		<option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+			echo "		<option value='".$row['domain_uuid']."'>".escape($row['domain_name'])."</option>\n";
 		}
 	}
 	echo "	</select>\n";
