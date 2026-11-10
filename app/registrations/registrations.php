@@ -92,7 +92,7 @@
 	$num_rows = 0;
 	if (is_array($registrations)) {
 		foreach ($registrations as $row) {
-			$matches = preg_grep("/".($search ?? '')."/i", $row);
+			$matches = preg_grep("/".preg_quote($search ?? '', '/')."/i", $row);
 			if ($matches != false) {
 				$num_rows++;
 			}
@@ -186,7 +186,7 @@
 	if (is_array($registrations) && @sizeof($registrations) != 0) {
 		$x = 0;
 		foreach ($registrations as $row) {
-			$matches = preg_grep('/'.($search ?? '').'/i', $row);
+			$matches = preg_grep('/'.preg_quote($search ?? '', '/').'/i', $row);
 			if ($matches != false) {
 
 				//prepare the user variable
