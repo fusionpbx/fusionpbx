@@ -31,7 +31,6 @@ class events {
 			$database = database::new();
 			$database->connect();
 			$this->db = $database->db;
-			return $this->db = $database->db;
 
 		//load the plugins
 			$this->load_plugins();
@@ -85,6 +84,7 @@ class events {
 		if (! key_exists($method, $this->methods)) {
 			throw new Exception ("Call to undefined method: " . $method);
 		}
+		$obj = null;
 		array_unshift($args, $this);
 		try {
 			$obj = call_user_func_array(array($this->plugins[$this->methods[$method]], $method), $args);
