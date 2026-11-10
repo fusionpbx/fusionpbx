@@ -67,6 +67,14 @@
 	}
 	$query_string = http_build_query($param);
 
+//validate the token
+	$token = new token;
+	if (!$token->validate($_SERVER['PHP_SELF'])) {
+		message::add($text['message-invalid_token'],'negative');
+		header('Location: default_settings.php'.($query_string ? '?'.$query_string : ''));
+		exit;
+	}
+
 //toggle the setting
 	$toggled = 0;
 	if (is_array($default_setting_uuids) && sizeof($default_setting_uuids) > 0) {
