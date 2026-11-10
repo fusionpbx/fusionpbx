@@ -34,6 +34,9 @@
 		exit;
 	}
 
+//set the domain_uuid from the session
+	$domain_uuid = $_SESSION['domain_uuid'];
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -100,6 +103,18 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 			if ($action == "update" && permission_exists('pin_number_edit')) {
 				//begin array
 					$array['pin_numbers'][0]['pin_number_uuid'] = $pin_number_uuid;
+				//verify the record belongs to the domain
+					$sql = "select pin_number_uuid from v_pin_numbers where domain_uuid = :domain_uuid and pin_number_uuid = :pin_number_uuid";
+					$parameters['domain_uuid'] = $domain_uuid;
+					$parameters['pin_number_uuid'] = $pin_number_uuid;
+					$database->execute($sql, $parameters, true);
+					$row = $database->fetchAssoc();
+					if (empty($row)) {
+						message::add($text['message-access_denied'] ?? 'Access denied', 'error');
+						$database->dispose();
+						return;
+					}
+					$database->dispose();
 				//set message
 					message::add($text['message-update']);
 			}
@@ -128,6 +143,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$sql = "select * from v_pin_numbers ";
 		$sql .= "where domain_uuid = :domain_uuid ";
 		$sql .= "and pin_number_uuid = :pin_number_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['domain_uuid'] = $domain_uuid;
 		$parameters['pin_number_uuid'] = $pin_number_uuid;
 		$row = $database->select($sql, $parameters, 'row');
