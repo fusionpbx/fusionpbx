@@ -34,12 +34,6 @@
 		return;
 	}
 
-//requires a superadmin to view members of the superadmin group
-	if (!if_group("superadmin") && $_GET["group_name"] == "superadmin") {
-		echo "access denied";
-		return;
-	}
-
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -53,6 +47,38 @@
 	$group_name = '';
 	$domain_uuid = '';
 	$list_row_url = '';
+
+//get the group uuid, lookup domain uuid (if any) and name
+	$sql = "select domain_uuid, group_name from v_groups ";
+	$sql .= "where group_uuid = :group_uuid ";
+	$parameters['group_uuid'] = $group_uuid;
+	$row = $database->select($sql, $parameters, 'row');
+	if (is_array($row) && sizeof($row) != 0) {
+		$domain_uuid = $row["domain_uuid"];
+		$group_name = $row["group_name"];
+	}
+	unset($sql, $parameters, $row);
+
+//requires a superadmin to view or remove members of the superadmin group
+	if (!if_group("superadmin") && $group_name == "superadmin") {
+		echo "access denied";
+		return;
+	}
+
+//verify the group belongs to the current domain or is global
+	if (is_uuid($group_uuid) && !permission_exists('group_all')) {
+		$sql = "select group_uuid from v_groups ";
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and group_uuid = :group_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['group_uuid'] = $group_uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			return;
+		}
+		unset($sql, $parameters, $row);
+	}
 
 //process the http post data by action
 	if (!empty($action) && !empty($group_members)) {
@@ -69,17 +95,6 @@
 		header('Location: group_members.php?group_uuid='.urlencode($group_uuid));
 		exit;
 	}
-
-//get the group uuid, lookup domain uuid (if any) and name
-	$sql = "select domain_uuid, group_name from v_groups ";
-	$sql .= "where group_uuid = :group_uuid ";
-	$parameters['group_uuid'] = $group_uuid;
-	$row = $database->select($sql, $parameters, 'row');
-	if (is_array($row) && sizeof($row) != 0) {
-		$domain_uuid = $row["domain_uuid"];
-		$group_name = $row["group_name"];
-	}
-	unset($sql, $parameters, $row);
 
 //get the the users array
 	if (permission_exists('group_member_add')) {
@@ -136,7 +151,7 @@
 
 //show the content
 	echo "<div class='action_bar' id='action_bar'>\n";
-	echo "	<div class='heading'><b>".$text['header-group_members']."</b><div class='count'>".$group_name.": ".number_format($num_rows)."</div></div>\n";
+	echo "	<div class='heading'><b>".$text['header-group_members']."</b><div class='count'>".escape($group_name).": ".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'groups.php']);
 	if (permission_exists('group_permission_view')) {
@@ -200,9 +215,9 @@
 				echo "	</td>\n";
 			}
 			if (permission_exists('user_all')) {
-				echo "<td class='no-wrap' onclick=\"if (document.getElementById('checkbox_".$x."').checked) { document.getElementById('checkbox_".$x."').checked = false; document.getElementById('checkbox_all').checked = false; } else { document.getElementById('checkbox_".$x."').checked = true; }\">".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."</td>\n";
+				echo "<td class='no-wrap' onclick=\"if (document.getElementById('checkbox_".$x."').checked) { document.getElementById('checkbox_".$x."').checked = false; document.getElementById('checkbox_all').checked = false; } else { document.getElementById('checkbox_".$x."').checked = true; }\">".escape($_SESSION['domains'][$row["domain_uuid"]]['domain_name'])."</td>\n";
 			}
-			echo "<td class='no-wrap' onclick=\"if (document.getElementById('checkbox_".$x."').checked) { document.getElementById('checkbox_".$x."').checked = false; document.getElementById('checkbox_all').checked = false; } else { document.getElementById('checkbox_".$x."').checked = true; }\">".$row["username"]."</td>\n";
+			echo "<td class='no-wrap' onclick=\"if (document.getElementById('checkbox_".$x."').checked) { document.getElementById('checkbox_".$x."').checked = false; document.getElementById('checkbox_all').checked = false; } else { document.getElementById('checkbox_".$x."').checked = true; }\">".escape($row["username"])."</td>\n";
 			echo "</tr>\n";
 			$x++;
 		}

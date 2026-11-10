@@ -34,12 +34,6 @@
 		return;
 	}
 
-//requires a superadmin to add a user to the superadmin group
-	if (!if_group("superadmin") && $_GET["group_name"] == "superadmin") {
-		echo "access denied";
-		return;
-	}
-
 //get the http values and set them as variables
 	$domain_uuid = $_POST["domain_uuid"];
 	$group_uuid = $_POST["group_uuid"];
@@ -52,6 +46,21 @@
 		message::add($text['message-invalid_token'],'negative');
 		header('Location: groups.php');
 		exit;
+	}
+
+//get the group name from the database, don't trust the submitted group name
+	if (is_uuid($group_uuid)) {
+		$sql = "select group_name from v_groups ";
+		$sql .= "where group_uuid = :group_uuid ";
+		$parameters['group_uuid'] = $group_uuid;
+		$group_name = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
+	}
+
+//requires a superadmin to add a user to the superadmin group
+	if (!if_group("superadmin") && $group_name == "superadmin") {
+		echo "access denied";
+		return;
 	}
 
 //add the user to the group

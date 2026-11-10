@@ -64,6 +64,21 @@
 		$group_description = $_POST["group_description"] ?? '';
 	}
 
+//verify the group belongs to the current domain or is global
+	if (!empty($group_uuid) && is_uuid($group_uuid) && !permission_exists('group_all')) {
+		$sql = "select group_uuid from v_groups ";
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and group_uuid = :group_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['group_uuid'] = $group_uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $row);
+	}
+
 //process the user data and save it to the database
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
