@@ -104,6 +104,8 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		//if (empty($user_setting_value)) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
 		if (empty($user_setting_order)) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
 		if (empty($user_setting_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+		//validate the time zone against the list of supported identifiers before it is written to the dialplan
+		if ($user_setting_category == "domain" && $user_setting_subcategory == "time_zone" && $user_setting_name == "name" && !empty($user_setting_value) && !in_array($user_setting_value, DateTimeZone::listIdentifiers(), true)) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
 		//if (empty($user_setting_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (!empty($msg) && empty($_POST["persistformvar"])) {
 			require_once "resources/header.php";
@@ -185,6 +187,22 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 			//update the user setting
 				if ($action == "update" && permission_exists('user_setting_edit')) {
+					//verify the record belongs to the user and domain
+						$sql = "select user_setting_uuid from v_user_settings ";
+						$sql .= "where user_uuid = :user_uuid ";
+						$sql .= "and user_setting_uuid = :user_setting_uuid ";
+						if (!permission_exists('user_all')) {
+							$sql .= "and domain_uuid = :domain_uuid ";
+							$parameters['domain_uuid'] = $domain_uuid;
+						}
+						$parameters['user_uuid'] = $user_uuid;
+						$parameters['user_setting_uuid'] = $user_setting_uuid;
+						$row = $database->select($sql, $parameters, 'row');
+						if (empty($row)) {
+							echo "access denied";
+							exit;
+						}
+						unset($sql, $parameters, $row);
 					$array['user_settings'][0]['user_setting_uuid'] = $user_setting_uuid;
 				}
 
@@ -528,7 +546,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "	<input class='formfld password' type='password' id='user_setting_value' name='user_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".escape($user_setting_value)."\">\n";
 	}
 	else if ((substr_count($user_setting_subcategory, "_color") > 0 || str_starts_with($user_setting_value ?? '', "rgb") || str_starts_with($user_setting_value ?? '', "#")) && ($user_setting_name == "text" || $user_setting_name == 'array')) {
-		echo "	<input type='text' class='formfld colorpicker' id='user_setting_value' name='user_setting_value' value=\"".$user_setting_value."\">\n";
+		echo "	<input type='text' class='formfld colorpicker' id='user_setting_value' name='user_setting_value' value=\"".escape($user_setting_value)."\">\n";
 	}
 	else if ($user_setting_category == "theme" && substr_count($user_setting_subcategory, "_font") > 0 && $user_setting_name == "text") {
 		$user_setting_value = str_replace('"', "'", $user_setting_value);
@@ -659,7 +677,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "	</select>\n";
 	}
 	elseif (is_json($user_setting_value)) {
-		echo "	<textarea class='formfld' style='width: 100%; height: 80px; font-family: courier, monospace; overflow: auto;' id='user_setting_value' name='user_setting_value' wrap='off'>".$user_setting_value."</textarea>\n";
+		echo "	<textarea class='formfld' style='width: 100%; height: 80px; font-family: courier, monospace; overflow: auto;' id='user_setting_value' name='user_setting_value' wrap='off'>".escape_textarea($user_setting_value)."</textarea>\n";
 	}
 	elseif ($user_setting_name == "boolean") {
 		echo "	<select class='formfld' id='user_setting_value' name='user_setting_value'>\n";
@@ -675,7 +693,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	}
 	else {
 		if (strlen($user_setting_value) > 25) {
-			echo "	<textarea class='formfld' style='width: 185px; height: auto; max-height: 300px;' id='user_setting_value' name='user_setting_value'>".($user_setting_value ?? '')."</textarea>\n";
+			echo "	<textarea class='formfld' style='width: 185px; height: auto; max-height: 300px;' id='user_setting_value' name='user_setting_value'>".escape_textarea($user_setting_value ?? '')."</textarea>\n";
 
 			echo "	<script>\n";
 			echo "	document.addEventListener('DOMContentLoaded', () => {\n";
