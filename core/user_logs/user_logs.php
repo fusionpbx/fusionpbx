@@ -96,16 +96,44 @@
 
 		//prepare the array
 		if (!empty($user_logs)) {
+			$x = 0;
 			foreach ($user_logs as $row) {
+				//validate the uuid
+				if (empty($row['user_log_uuid']) || !is_uuid($row['user_log_uuid'])) {
+					continue;
+				}
+
 				$array['user_logs'][$x]['checked'] = $row['checked'];
 				$array['user_logs'][$x]['user_log_uuid'] = $row['user_log_uuid'];
+
+				//increment the id
 				$x++;
 			}
 		}
 
 		//send the array to the database class
 		if (!empty($action) && $action == 'delete' && permission_exists('user_log_delete')) {
-			$database->delete($array);
+
+			//verify the records belong to the current domain unless allowed to delete all domains
+			if (!empty($array['user_logs']) && !permission_exists('user_log_all')) {
+				foreach ($array['user_logs'] as $i => $row) {
+					$sql = "select user_log_uuid from v_user_logs ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and user_log_uuid = :user_log_uuid ";
+					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+					$parameters['user_log_uuid'] = $row['user_log_uuid'];
+					$row = $database->select($sql, $parameters, 'row');
+					if (empty($row)) {
+						unset($array['user_logs'][$i]);
+					}
+					unset($sql, $parameters, $row);
+				}
+			}
+
+			//delete the checked rows
+			if (!empty($array['user_logs'])) {
+				$database->delete($array);
+			}
 		}
 
 		//redirect the user
