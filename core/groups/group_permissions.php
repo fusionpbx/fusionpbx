@@ -46,6 +46,21 @@
 		$parameters['group_uuid'] = $group_uuid;
 		$group_name = $database->select($sql, $parameters, 'column');
 		unset($sql, $parameters);
+
+		//verify the group belongs to the current domain or is global
+		if (!permission_exists('group_all')) {
+			$sql = "select group_uuid from v_groups ";
+			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$sql .= "and group_uuid = :group_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['group_uuid'] = $group_uuid;
+			$row = $database->select($sql, $parameters, 'row');
+			if (empty($row)) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
 	}
 
 //add multi-lingual support
