@@ -211,6 +211,19 @@
 
 			//update the phrase
 				if ($action == "update" && permission_exists('phrase_edit')) {
+					//verify the record belongs to the domain
+						$sql = "select phrase_uuid from v_phrases ";
+						$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+						$sql .= "and phrase_uuid = :phrase_uuid ";
+						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						$parameters['phrase_uuid'] = $phrase_uuid;
+						$row = $database->select($sql, $parameters, 'row');
+						if (empty($row)) {
+							message::add($text['message-access_denied'] ?? 'Access denied', 'negative');
+							header('Location: phrases.php'.($query_string ? '?'.$query_string : ''));
+							exit;
+						}
+						unset($sql, $parameters, $row);
 					//build data array
 						$array['phrases'][0]['domain_uuid'] = $domain_uuid;
 						$array['phrases'][0]['phrase_uuid'] = $phrase_uuid;
@@ -382,10 +395,10 @@
 			echo "opt_group.label = \"".$text['label-recordings']."\";\n";
 			foreach ($recordings as $row) {
 				if (!empty($settings->get('recordings', 'storage_type')) && $settings->get('recordings', 'storage_type') == 'base64') {
-					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"\${lua streamfile.lua ".$row["recording_filename"]."}\"));\n";
+					echo "opt_group.appendChild(new Option(" . json_encode((string) $row["recording_name"], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ", " . json_encode('${lua streamfile.lua ' . $row["recording_filename"] . '}', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . "));\n";
 				}
 				else {
-					echo "opt_group.appendChild(new Option(\"".$row["recording_name"]."\", \"".$settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/'.$row["recording_filename"]."\"));\n";
+					echo "opt_group.appendChild(new Option(" . json_encode((string) $row["recording_name"], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ", " . json_encode($settings->get('switch', 'recordings') . '/' . $_SESSION['domain_name'] . '/' . $row["recording_filename"], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . "));\n";
 				}
 			}
 			echo "obj_action.appendChild(opt_group);\n";
@@ -399,7 +412,7 @@
 			echo "opt_group.label = \"".$text['label-sounds']."\";\n";
 			foreach ($sound_files as $value) {
 				if (!empty($value)) {
-					echo "opt_group.appendChild(new Option(\"".$value."\", \"".$value."\"));\n";
+					echo "opt_group.appendChild(new Option(" . json_encode((string) $value, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ", " . json_encode((string) $value, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . "));\n";
 				}
 			}
 			echo "obj_action.appendChild(opt_group);\n";
@@ -569,10 +582,10 @@
 				$phrase_detail_function = $field['phrase_detail_function'];
 				$phrase_detail_data = $field['phrase_detail_data'];
 			}
-			echo "<tr class='draggable' data-detail-uuid='".$field['phrase_detail_uuid']."'>\n";
+			echo "<tr class='draggable' data-detail-uuid='".escape($field['phrase_detail_uuid'])."'>\n";
 			echo "	<td class='vtable'>".escape($phrase_detail_function)."&nbsp;</td>\n";
 			echo "	<td class='vtable'>".escape($phrase_detail_data)."&nbsp;</td>\n";
-			echo "	<td class='vtable' style='text-align: center;'>".$field['phrase_detail_order']."&nbsp;</td>\n";
+			echo "	<td class='vtable' style='text-align: center;'>".escape($field['phrase_detail_order'])."&nbsp;</td>\n";
 			echo "	<td class='vtable' style='text-align: center; padding-bottom: 3px;'>";
 			if (is_uuid($field['phrase_detail_uuid'])) {
 				echo "		<input type='checkbox' name='phrase_details_delete[".$x."][checked]' value='true' class='chk_delete checkbox_details' onclick=\"edit_delete_action('details');\">\n";
