@@ -476,28 +476,46 @@ class QRRSBlock
       return false;
     }
     
-    $this->RS_BLOCK_TABLE = unserialize($serialized);
+    //never instantiate objects from the cached block data
+    $this->RS_BLOCK_TABLE = unserialize($serialized, array('allowed_classes' => false));
     
-    if(!$this->RS_BLOCK_TABLE)
+    if(!$this->RS_BLOCK_TABLE || !is_array($this->RS_BLOCK_TABLE))
     {
       return false;
     }
-    
+
+    //the cached block data must be arrays of integers only
+    foreach($this->RS_BLOCK_TABLE as $block)
+    {
+      if(!is_array($block) || count($block) % 3 != 0)
+      {
+        return false;
+      }
+
+      foreach($block as $value)
+      {
+        if(!is_int($value))
+        {
+          return false;
+        }
+      }
+    }
+
     return true;
   }
-  
+
   /**
    * Try to save the block file
    */
   private function saveBlockFile()
   {
     $file = $this->getBlockFileAbsolute();
-    
+
     if(file_exists($file))
     {
       unlink($file);
     }
-    
+
     file_put_contents($file, serialize($this->RS_BLOCK_TABLE));
   }
 }
