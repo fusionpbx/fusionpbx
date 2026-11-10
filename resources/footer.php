@@ -172,6 +172,9 @@
 		}
 		$document_title = (!empty($document['title']) ? $document['title'].' - ' : null).($document_title ?? '');
 		$view->assign('document_title', $document_title);
+	//document language
+		$document_language = !empty($_SESSION['domain']['language']['code']) ? $_SESSION['domain']['language']['code'] : 'en-us';
+		$view->assign('document_language', $document_language);
 	//domain selector control
 		$domain_selector_enabled = permission_exists('domain_select') && $domain_count > 1 ? true : false;
 		$view->assign('domain_selector_enabled', $domain_selector_enabled);
