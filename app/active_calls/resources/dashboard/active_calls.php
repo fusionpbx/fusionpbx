@@ -512,7 +512,7 @@ if (!empty($_SESSION['user']['extension'])) {
 	function escape_html(value) {
 		return String(value ?? '').replace(/[&<>"']/g, c => ({
 			'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-		}[c]);
+		}[c]));
 	}
 
 	function new_call(call) {
