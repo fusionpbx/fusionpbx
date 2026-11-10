@@ -523,12 +523,12 @@
 				$parameters['menu_uuid'] = $row['default_setting_value'];
 				$sub_result = $database->select($sql, $parameters ?? null, 'all');
 				foreach ($sub_result as $sub_row) {
-					echo $sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
+					echo escape($sub_row["menu_language"])." - ".escape($sub_row["menu_name"])."\n";
 				}
 				unset($sql, $sub_result, $sub_row);
 			}
 			else if ($category == "domain" && $subcategory == "template" && $name == "name" ) {
-				echo "		".ucwords($row['default_setting_value']);
+				echo "		".escape(ucwords($row['default_setting_value']));
 			}
 			else if ($category == "domain" && $subcategory == "time_format" && $name == "text" ) {
 				switch ($row['default_setting_value']) {
@@ -576,7 +576,7 @@
 				}
 			}
 			else if ((substr_count($subcategory, "_color") > 0 || str_starts_with($row['default_setting_value'] ?? '', "rgb") || str_starts_with($row['default_setting_value'] ?? '', "#")) && ($name == "text" || $name == 'array')) {
-				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['default_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['default_setting_value'], -0.18)).'; padding: -1px;'));
+				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['default_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.escape(color_adjust($row['default_setting_value'], -0.18)).'; padding: -1px;'));
 				echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".escape($row['default_setting_value'])."</span>\n";
 			}
 			else if ($category == 'users' && $subcategory == 'username_format' && $name == 'text') {
