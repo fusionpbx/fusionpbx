@@ -115,11 +115,30 @@ class email_templates {
 			//delete multiple records
 			if (is_array($records) && @sizeof($records) != 0) {
 
-				//build the delete array
-				foreach ($records as $x => $record) {
+				//filter out unchecked records, build where clause for below
+				foreach ($records as $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+						$uuids[] = "'" . $record['uuid'] . "'";
 					}
+				}
+
+				//get the records that belong to the current domain or are global
+				if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid from v_" . $this->table . " ";
+					if (permission_exists($this->permission_prefix . 'all')) {
+						$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					} else {
+						$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+						$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+						$parameters['domain_uuid'] = $this->domain_uuid;
+					}
+					$rows = $this->database->select($sql, $parameters ?? null, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $x => $row) {
+							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $row['uuid'];
+						}
+					}
+					unset($sql, $parameters, $rows, $row);
 				}
 
 				//delete the checked rows
