@@ -187,7 +187,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_ldap_password";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "super-secret";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Ldap bind user password.";
 		$y++;
@@ -956,7 +956,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_tr069_enable";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "0";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Enable tr-069 provisioning for grandstream devices 0-disable, 1-enable. Disable to remove cloud provisioning";
 		$y++;
@@ -968,13 +968,13 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "enables the periodic enform enable interval 0-disable, 1-enable";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1e47d882-0c0d-4cf3-8fa2-a51c8c5cd879";  
-		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";  
-		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_acs_url";  
-		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";  
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://acs.gdms.cloud";  
-		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";  
-		$apps[$x]['default_settings'][$y]['default_setting_description'] = "URL for grandstream GDMS ACS URL";  
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "1e47d882-0c0d-4cf3-8fa2-a51c8c5cd879";
+		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_acs_url";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "https://acs.gdms.cloud";
+		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
+		$apps[$x]['default_settings'][$y]['default_setting_description'] = "URL for grandstream GDMS ACS URL";
 		$y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "13d088f2-5d1b-47bf-a9b5-e7fdc24faeec";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
@@ -1004,7 +1004,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_firmware_upgrade_protocol";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
-		$apps[$x]['default_settings'][$y]['default_setting_value'] = "1";
+		$apps[$x]['default_settings'][$y]['default_setting_value'] = "2";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Firmware Upgrade Via. 0 - TFTP,  1 - HTTP, 2 - HTTPS, 3 - FTP, 4 - FTPS. Default is 1.";
 		$y++;
