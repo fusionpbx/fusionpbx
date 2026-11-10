@@ -358,7 +358,7 @@
 
 					if (is_array($conditions)) {
 						foreach ($conditions as $cond_num => $cond_var) {
-							if ($cond_var != '') {
+							if ($cond_var != '' && in_array($cond_var, ['date-time', 'year', 'mon', 'yday', 'mday', 'wday', 'week', 'mweek', 'hour', 'time-of-day', 'minute-of-day'])) {
 								$cond_start = $_REQUEST['value'][$group_id][$cond_num]['start'];
 								$cond_stop = $_REQUEST['value'][$group_id][$cond_num]['stop'];
 
