@@ -66,6 +66,24 @@
 		$template_description = $_POST["template_description"];
 	}
 
+//verify the email template belongs to the current domain or is global
+	if (!empty($_POST["email_template_uuid"]) && is_uuid($_POST["email_template_uuid"])) {
+		$email_template_uuid = $_POST["email_template_uuid"];
+	}
+	if (!empty($email_template_uuid) && is_uuid($email_template_uuid) && !permission_exists('email_template_all')) {
+		$sql = "select email_template_uuid from v_email_templates ";
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and email_template_uuid = :email_template_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['email_template_uuid'] = $email_template_uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $row);
+	}
+
 //process the user data and save it to the database
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
@@ -108,6 +126,11 @@
 		//add the email_template_uuid
 			if (empty($_POST["email_template_uuid"]) || !is_uuid($_POST["email_template_uuid"])) {
 				$email_template_uuid = uuid();
+			}
+
+		//restrict the domain unless allowed to manage all domains
+			if (!permission_exists('email_template_all') && !empty($domain_uuid) && $domain_uuid != $_SESSION['domain_uuid']) {
+				$domain_uuid = $_SESSION['domain_uuid'];
 			}
 
 		//prepare the array
@@ -306,7 +329,7 @@
 	echo "	".$text['label-template_body']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<textarea class='formfld' name='template_body' id='template_body' style='display: none;'>".$template_body."</textarea>\n";
+	echo "	<textarea class='formfld' name='template_body' id='template_body' style='display: none;'>".escape_textarea($template_body)."</textarea>\n";
 	echo "	<div id='editor'></div>\n";
 	echo "	<table cellpadding='0' cellspacing='0' border='0' style='float: right; padding-top: 5px;'>\n";
 	echo "		<tr>\n";

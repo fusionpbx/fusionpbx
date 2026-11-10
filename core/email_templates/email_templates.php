@@ -253,7 +253,7 @@
 	echo 			"<option value='all'>".$text['label-all']."</option>\n";
 	if (!empty($template_languages)) {
 		foreach ($template_languages as $language) {
-			echo "<option value='".$language."' ".($template_language == $language ? "selected='selected'" : null).">".escape($language)."</option>\n";
+			echo "<option value='".escape($language)."' ".($template_language == $language ? "selected='selected'" : null).">".escape($language)."</option>\n";
 		}
 	}
 	echo 		"</select>\n";
@@ -263,7 +263,7 @@
 	echo 			"<option value=''></option>\n";
 	if (!empty($template_categories)) {
 		foreach ($template_categories as $template_category_value => $template_category_label) {
-			echo "<option value='".$template_category_value."' ".($category == $template_category_value ? "selected='selected'" : null).">".escape($template_category_label)."</option>\n";
+			echo "<option value='".escape($template_category_value)."' ".($category == $template_category_value ? "selected='selected'" : null).">".escape($template_category_label)."</option>\n";
 		}
 	}
 	echo 		"</select>\n";
