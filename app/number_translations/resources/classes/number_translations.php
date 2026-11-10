@@ -106,6 +106,11 @@ class number_translations {
 	public function import() {
 		//get the xml from the number templates
 		if (!empty($this->xml)) {
+			//disable xml entities
+			if (PHP_VERSION_ID < 80000) {
+				libxml_disable_entity_loader(true);
+			}
+
 			//convert the xml string to an xml object
 			$xml = simplexml_load_string($this->xml);
 			//convert to json
