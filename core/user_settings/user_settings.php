@@ -125,6 +125,10 @@
 //prepare to page the results
 	$sql = "select count(*) from v_user_settings ";
 	$sql .= "where user_uuid = :user_uuid ";
+	if (!permission_exists('user_all')) {
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
 	$sql .= "and not ( ";
 	$sql .= "(user_setting_category = 'domain' and user_setting_subcategory = 'language') ";
 	$sql .= "or (user_setting_category = 'domain' and user_setting_subcategory = 'time_zone') ";
@@ -151,6 +155,10 @@
 	$sql = "select user_setting_uuid, user_uuid, user_setting_category, user_setting_subcategory, user_setting_name, user_setting_value, cast(user_setting_enabled as text), user_setting_description ";
 	$sql .= "from v_user_settings ";
 	$sql .= "where user_uuid = :user_uuid ";
+	if (!permission_exists('user_all')) {
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $domain_uuid;
+	}
 	$sql .= "and not ( ";
 	$sql .= " (user_setting_category = 'domain' and user_setting_subcategory = 'language') ";
 	$sql .= " or (user_setting_category = 'domain' and user_setting_subcategory = 'time_zone') ";
@@ -215,6 +223,8 @@
 		$x = 0;
 		foreach ($user_settings as $row) {
 			$user_setting_category = strtolower($row['user_setting_category']);
+			//remove any characters that are not allowed in an id, class or javascript string
+			$user_setting_category = preg_replace('#[^a-z0-9_]#', '', $user_setting_category);
 
 			$label_user_setting_category = $row['user_setting_category'];
 			switch (strtolower($label_user_setting_category)) {
@@ -293,7 +303,7 @@
 				unset($sql, $parameters, $sub_result, $sub_row);
 			}
 			else if ($category == "domain" && $subcategory == "template" && $name == "name" ) {
-				echo "		".ucwords($row['user_setting_value']);
+				echo "		".escape(ucwords($row['user_setting_value']));
 			}
 			else if ($category == "domain" && $subcategory == "time_format" && $name == "text" ) {
 				switch ($row['user_setting_value']) {
@@ -335,7 +345,7 @@
 				}
 			}
 			else if ((substr_count($subcategory, "_color") > 0 || str_starts_with($row['user_setting_value'] ?? '', "rgb") || str_starts_with($row['user_setting_value'] ?? '', "#")) && ($name == "text" || $name == 'array')) {
-				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['user_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['user_setting_value'], -0.18)).'; padding: -1px;'));
+				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['user_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.escape(color_adjust($row['user_setting_value'], -0.18)).'; padding: -1px;'));
 				echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".escape($row['user_setting_value'])."</span>\n";
 			}
 			else if ($category == 'users' && $subcategory == 'username_format' && $name == 'text') {
