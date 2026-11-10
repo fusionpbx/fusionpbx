@@ -51,6 +51,11 @@
 				//import existing data
 				$xml = file_get_contents($settings->get('switch','conf')."/autoload_configs/translate.conf.xml");
 
+				//disable xml entities
+				if (PHP_VERSION_ID < 80000) {
+					libxml_disable_entity_loader(true);
+				}
+
 				//convert the xml string to an xml object
 				$xml = simplexml_load_string($xml);
 
