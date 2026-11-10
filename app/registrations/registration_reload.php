@@ -79,7 +79,7 @@
 		var url = new URL(this.xmlHttp.responseURL);
 		if (/login\.php$/.test(url.pathname)) {
 			// You are logged out. Stop refresh!
-			url.searchParams.set('path', '<?php echo $_SERVER['REQUEST_URI']; ?>');
+			url.searchParams.set('path', '<?php echo escape($_SERVER['REQUEST_URI'] ?? ''); ?>');
 			window.location.href = url.href;
 			return;
 		}
@@ -94,7 +94,7 @@
 		new loadXmlHttp(url, 'ajax_response');
 		<?php
 		if (empty($_SESSION["ajax_refresh_rate"])) { $_SESSION["ajax_refresh_rate"] = "1800"; }
-		echo "setInterval(function(){new loadXmlHttp(url, 'ajax_reponse');}, ".escape($_SESSION["ajax_refresh_rate"]).");";
+		echo "setInterval(function(){new loadXmlHttp(url, 'ajax_reponse');}, ".(int)$_SESSION["ajax_refresh_rate"].");";
 		?>
 	}
 

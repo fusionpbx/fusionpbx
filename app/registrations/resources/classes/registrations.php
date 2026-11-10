@@ -154,6 +154,11 @@ class registrations {
 			while ($event_socket->is_connected() && $i < $count) {
 				$field = $sip_profiles[$i++];
 
+				//skip profiles with a name that cannot be safely passed to the event socket
+				if (!preg_match('/^[a-zA-Z0-9_-]+$/u', $field['sip_profile_name'])) {
+					continue;
+				}
+
 				//get sofia status profile information including registrations
 				$cmd = "api sofia xmlstatus profile '" . $field['sip_profile_name'] . "' reg";
 				$xml_response = trim($event_socket->request($cmd));
@@ -263,7 +268,7 @@ class registrations {
 						//remove unrelated domains
 						if (!permission_exists('registration_all') || $this->show != 'all') {
 							if ($registrations[$id]['sip-auth-realm'] == $this->domain_name) {
-							} elseif ($user_array[1] == $this->domain_name) {
+							} elseif (($user_array[1] ?? '') == $this->domain_name) {
 							} else {
 								unset($registrations[$id]);
 							}
@@ -364,6 +369,19 @@ class registrations {
 			if (is_array($records) && @sizeof($records) != 0) {
 				foreach ($records as $record) {
 					if ($record['checked'] == 'true' && !empty($record['user']) && !empty($record['profile'])) {
+						//remove registrations from unrelated domains
+						if (!permission_exists($this->permission_prefix . 'all') && !if_group('superadmin')) {
+							$user_array = explode('@', $record['user']);
+							if (isset($user_array[1])) {
+								//the user defines a domain, it must be the current domain
+								if ($user_array[1] != $this->domain_name) {
+									continue;
+								}
+							} elseif (($record['domain'] ?? '') != $this->domain_name) {
+								continue;
+							}
+						}
+
 						$registrations[] = $record;
 					}
 				}
@@ -386,10 +404,16 @@ class registrations {
 					if (is_array($registrations)) {
 						foreach ($registrations as $registration) {
 
+							//clear the command arguments so a previous registration's values are not reused
+							$command = null;
+							$profile = null;
+							$host = null;
+							$vendor = null;
+
 							//validate the submitted profile
 							if (!empty($registration['profile']) && is_array($sip_profiles) && @sizeof($sip_profiles) != 0) {
 								foreach ($sip_profiles as $field) {
-									if ($field['name'] == $registration['profile']) {
+									if ($field['name'] == $registration['profile'] && preg_match('/^[a-zA-Z0-9_-]+$/u', $field['name'])) {
 										$profile = $registration['profile'];
 										break;
 									}
