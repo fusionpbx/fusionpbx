@@ -42,9 +42,24 @@
 	$language = new text;
 	$text = $language->get();
 
+//validate the token
+	$token = new token;
+	if (!$token->validate($_SERVER['PHP_SELF']) && !$token->validate(dirname($_SERVER['PHP_SELF']) . '/sip_profile_edit.php')) {
+		message::add($text['message-invalid_token'],'negative');
+		header('Location: sip_profiles.php');
+		exit;
+	}
+
 //set the http get/post variable(s) to a php variable
 	$sip_profile_uuid = $_REQUEST["id"];
 	$sip_profile_name = $_REQUEST["name"];
+
+//validate the sip profile name, it is used as a file name and in the sofia xml config
+	if (!empty($sip_profile_name) && (!is_string($sip_profile_name) || !preg_match('/^[a-zA-Z0-9_-]+$/u', $sip_profile_name))) {
+		message::add($text['message-sip_profile_name_invalid'] ?? 'Invalid SIP Profile Name', 'negative');
+		header('Location: sip_profiles.php');
+		exit;
+	}
 
 //get existing sip profile names to prevent duplicates
 	$sql = "select sip_profile_name from v_sip_profiles";

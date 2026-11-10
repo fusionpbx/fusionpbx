@@ -126,6 +126,13 @@
 				return;
 			}
 
+		//validate the sip profile name, it is used as a file name and in the sofia xml config
+			if (!empty($sip_profile_name) && (!is_string($sip_profile_name) || !preg_match('/^[a-zA-Z0-9_-]+$/u', $sip_profile_name))) {
+				message::add($text['message-sip_profile_name_invalid'] ?? 'Invalid SIP Profile Name', 'negative');
+				header('Location: sip_profiles.php');
+				exit;
+			}
+
 		//check for duplicate profile name
 			$sql = "select sip_profile_name from v_sip_profiles ".($action == 'update' ? "where sip_profile_name <> :sip_profile_name" : null);
 			if ($action == 'update') {
@@ -343,13 +350,13 @@
 		}
 		if (is_array($sip_profile_names) && @sizeof($sip_profile_names) != 0) {
 			//all profile names
-			$js_sip_profile_names['all'] = "const sip_profile_names_all = ['".implode("','", $sip_profile_names)."'];";
+			$js_sip_profile_names['all'] = "const sip_profile_names_all = ".json_encode(array_values($sip_profile_names), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).";";
 			//other profile names
 			foreach ($sip_profile_names as $n => $name) {
 				if ($sip_profile_name == $name) { unset($sip_profile_names[$n]); }
 			}
 			if (is_array($sip_profile_names) && @sizeof($sip_profile_names) != 0) {
-				$js_sip_profile_names['other'] = "const sip_profile_names_other = ['".implode("','", $sip_profile_names)."'];";
+				$js_sip_profile_names['other'] = "const sip_profile_names_other = ".json_encode(array_values($sip_profile_names), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).";";
 			}
 		}
 	}
@@ -436,7 +443,7 @@
 					'id'=>'btn_copy',
 					'style'=>'float: right; margin-left: 15px;',
 					'collapse'=>'never',
-					'onclick'=>"modal_close(); if (document.getElementById('new_profile_name').value != '' && !sip_profile_names_all.includes(document.getElementById('new_profile_name').value)) { window.location='sip_profile_copy.php?id=".urlencode($sip_profile_uuid)."&name=' + document.getElementById('new_profile_name').value; } else { display_message('".$text['message-sip_profile_unique']."', 'negative', 5000); }",
+					'onclick'=>"modal_close(); if (document.getElementById('new_profile_name').value != '' && !sip_profile_names_all.includes(document.getElementById('new_profile_name').value)) { window.location='sip_profile_copy.php?id=".urlencode($sip_profile_uuid)."&".$token['name']."=".$token['hash']."&name=' + document.getElementById('new_profile_name').value; } else { display_message('".$text['message-sip_profile_unique']."', 'negative', 5000); }",
 					]),
 				'onclose'=>"document.getElementById('new_profile_name').value = '';",
 				]);
