@@ -178,6 +178,11 @@ class sip_profiles {
 					//delete the xml sip profile and directory
 					$switch_conf_dir = $this->settings->get('switch', 'conf');
 					foreach ($sip_profiles as $sip_profile_uuid => $sip_profile) {
+						//skip profiles with a name that cannot be safely used as a file name
+						if ($sip_profile['name'] === '' || $sip_profile['name'] === '.' || $sip_profile['name'] === '..' || basename($sip_profile['name']) !== $sip_profile['name']) {
+							continue;
+						}
+
 						@unlink($switch_conf_dir . "/sip_profiles/" . $sip_profile['name'] . ".xml");
 						@unlink($switch_conf_dir . "/sip_profiles/" . $sip_profile['name']);
 					}
