@@ -1553,7 +1553,7 @@ class database {
 						} else {
 							$sql .= 'and ';
 						}
-						$sql .= $field_name . ' in ( ';
+						$sql .= self::sanitize($field_name) . ' in ( ';
 						$i = 0;
 						foreach ($keys[$table_name][$field_name] as $field_value) {
 							$field_name = self::sanitize($field_name);
@@ -1618,7 +1618,7 @@ class database {
 									$sql = 'delete from ' . self::TABLE_PREFIX . $child_table . ' ';
 									$sql .= 'where ' . $relation['field'] . ' = :' . $relation['field'];
 									$parameters[$relation['field']] = $row[$relation['field']];
-									//											$this->execute($sql, $parameters);
+									//$this->execute($sql, $parameters);
 								}
 								unset($parameters);
 							}
@@ -1661,6 +1661,7 @@ class database {
 							} else {
 								$sql .= 'and ';
 							}
+							$field_name = self::sanitize($field_name);
 							$sql .= $field_name . ' = :' . $field_name . ' ';
 							$parameters[$field_name] = $field_value;
 							$i++;
@@ -2019,12 +2020,16 @@ class database {
 		$params = [];
 		if (isset($this->uuid)) {
 			// get the specific uuid
-			$sql .= 'WHERE ' . self::singular($this->name) . "_uuid = '" . $this->uuid . "' ";
+			$sql .= 'WHERE ' . self::singular($this->name) . "_uuid = :find_uuid ";
+			$params['find_uuid'] = $this->uuid;
 		} else {
 			// where
 			$i = 0;
 			if (isset($array['where'])) {
 				foreach ($array['where'] as $row) {
+					// sanitize the name
+					$row['name'] = self::sanitize($row['name']);
+
 					if (isset($row['operator'])) {
 						// validate the operator
 						switch ($row['operator']) {
@@ -2218,7 +2223,7 @@ class database {
 						} else {
 							$sql .= 'and ';
 						}
-						$sql .= $field_name . ' in ( ';
+						$sql .= self::sanitize($field_name) . ' in ( ';
 						$i = 0;
 						foreach ($keys[$table_name][$field_name] as $field_value) {
 							$field_name = self::sanitize($field_name);
