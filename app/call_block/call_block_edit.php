@@ -218,8 +218,13 @@
 						if (!empty($domain_uuid) && is_uuid($domain_uuid)) {
 							$sql = "select c.call_block_country_code, c.call_block_number, d.domain_name ";
 							$sql .= "from v_call_block as c ";
-							$sql .= "join v_domains as d on c.domain_uuid = d.domain_uuid ";
-							$sql .= "where c.domain_uuid = :domain_uuid ";
+							$sql .= "left join v_domains as d on c.domain_uuid = d.domain_uuid ";
+							$sql .= "where ( ";
+							$sql .= "	c.domain_uuid = :domain_uuid ";
+							if (permission_exists('call_block_domain')) {
+								$sql .= "	or c.domain_uuid is null ";
+							}
+							$sql .= ") ";
 							$sql .= "and c.call_block_uuid = :call_block_uuid ";
 							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 						}
@@ -240,6 +245,12 @@
 							$cache->delete("app:call_block:".$domain_name.":".$call_block_country_code.$call_block_number);
 						}
 						unset($sql, $parameters);
+
+						if (empty($result)) {
+							message::add('Invalid UUID', 'negative');
+							header("Location: call_block.php");
+							return;
+						}
 
 						$array['call_block'][0]['call_block_uuid'] = $call_block_uuid;
 						$array['call_block'][0]['domain_uuid'] = $domain_uuid;
@@ -746,9 +757,9 @@
 							else {
 								echo "	<td ".$list_row_onclick_toggle.">&nbsp;</td>";
 							}
-							echo "	<td ".$list_row_onclick_toggle.">".$row['caller_id_name']." </td>\n";
-							echo "	<td ".$list_row_onclick_toggle.">".format_phone($row['caller_id_number'])."</td>\n";
-							echo "	<td ".$list_row_onclick_toggle.">".format_phone($row['caller_destination'])."</td>\n";
+							echo "	<td ".$list_row_onclick_toggle.">".escape($row['caller_id_name'])." </td>\n";
+							echo "	<td ".$list_row_onclick_toggle.">".escape(format_phone($row['caller_id_number']))."</td>\n";
+							echo "	<td ".$list_row_onclick_toggle.">".escape(format_phone($row['caller_destination']))."</td>\n";
 							echo "	<td class='no-wrap' ".$list_row_onclick_toggle."><span class='hide-sm-dn'>".$row['start_date_formatted']." ".$row['start_time_formatted']."</span></td>\n";
 							$seconds = ($row['hangup_cause'] == "ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];  //if they cancelled, show the ring time, not the bill time.
 							echo "	<td class='right hide-sm-dn' ".$list_row_onclick_toggle.">".gmdate("G:i:s", $seconds)."</td>\n";
