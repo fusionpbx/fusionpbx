@@ -107,11 +107,12 @@
 		if (!empty($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
 			$sql .= "and (";
 			$x = 0;
-			foreach ($_SESSION['user']['extension'] as $row) {
+			foreach ($_SESSION['user']['extension'] as $index => $row) {
 				if ($x > 0) {
 					$sql .= "or ";
 				}
-				$sql .= "extension = '" . $row['user'] . "' ";
+				$sql .= "extension = :extension_" . $index . " ";
+				$parameters['extension_' . $index] = $row['user'];
 				$x++;
 			}
 			$sql .= ")";
@@ -170,11 +171,12 @@
 		if (!empty($_SESSION['user']['extension']) && count($_SESSION['user']['extension']) > 0) {
 			$sql .= "and (";
 			$x = 0;
-			foreach ($_SESSION['user']['extension'] as $row) {
+			foreach ($_SESSION['user']['extension'] as $index => $row) {
 				if ($x > 0) {
 					$sql .= "or ";
 				}
-				$sql .= "extension = '" . $row['user'] . "' ";
+				$sql .= "extension = :extension_" . $index . " ";
+				$parameters['extension_' . $index] = $row['user'];
 				$x++;
 			}
 			$sql .= ")";
