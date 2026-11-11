@@ -507,8 +507,8 @@
 				$list_row_url .= "&a=download";
 				$list_row_url .= "&type=fax_".urlencode($_REQUEST['box']);
 				$list_row_url .= "&t=bin";
-				$list_row_url .= "&order_by=".urlencode($_REQUEST['order_by']);
-				$list_row_url .= "&order=".urlencode($_REQUEST['order']);
+				$list_row_url .= "&order_by=".urlencode($_REQUEST['order_by'] ?? '');
+				$list_row_url .= "&order=".urlencode($_REQUEST['order'] ?? '');
 				$list_row_url .= "&box=".urlencode($_REQUEST['box']);
 				$list_row_url .= "&ext=".urlencode($fax_extension);
 				$list_row_url .= "&".$token['name']."=".$token['hash'];
