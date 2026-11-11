@@ -246,9 +246,15 @@
 				//build the follow me array
 					$array['follow_me'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 					$array['follow_me'][0]['follow_me_uuid'] = $follow_me_uuid;
-					$array['follow_me'][0]['cid_name_prefix'] = $cid_name_prefix;
-					$array['follow_me'][0]['cid_number_prefix'] = $cid_number_prefix;
-					$array['follow_me'][0]['follow_me_ignore_busy'] = $follow_me_ignore_busy ? 'true' : 'false';
+					if (permission_exists('follow_me_cid_name_prefix')) {
+						$array['follow_me'][0]['cid_name_prefix'] = $cid_name_prefix;
+					}
+					if (permission_exists('follow_me_cid_number_prefix')) {
+						$array['follow_me'][0]['cid_number_prefix'] = $cid_number_prefix;
+					}
+					if (permission_exists('follow_me_ignore_busy')) {
+						$array['follow_me'][0]['follow_me_ignore_busy'] = $follow_me_ignore_busy ? 'true' : 'false';
+					}
 					$array['follow_me'][0]['follow_me_enabled'] = ($destination_found && $follow_me_enabled) ? 'true' : 'false';
 
 					$d = 0;
@@ -264,7 +270,9 @@
 							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_destination_uuid'] = $field['uuid'];
 							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_destination'] = $field['destination'];
 							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_delay'] = $field['delay'];
-							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_prompt'] = $field['prompt'];
+							if (permission_exists('follow_me_prompt')) {
+								$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_prompt'] = $field['prompt'];
+							}
 							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_timeout'] = $field['timeout'];
 							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_order'] = $d;
 							$destination_found = true;
@@ -289,8 +297,12 @@
 
 		//delete empty destination records
 			if (!empty($follow_me_delete_uuids)) {
+				$d = 0;
 				foreach ($follow_me_delete_uuids as $follow_me_delete_uuid) {
-					$array['follow_me_destinations'][]['follow_me_destination_uuid'] = $follow_me_delete_uuid;
+					$array['follow_me_destinations'][$d]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['follow_me_destinations'][$d]['follow_me_uuid'] = $follow_me_uuid;
+					$array['follow_me_destinations'][$d]['follow_me_destination_uuid'] = $follow_me_delete_uuid;
+					$d++;
 				}
 				$database->delete($array);
 				unset($array);
