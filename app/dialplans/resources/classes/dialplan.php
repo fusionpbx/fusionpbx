@@ -1138,7 +1138,7 @@ class dialplan {
 						unset($sql, $parameters);
 
 						//only delete records the user is authorized for
-						if (is_array($dialplan_context) && @sizeof($dialplan_context) != 0) {
+						if (!empty($dialplan_context)) {
 
 							//build delete array
 							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
