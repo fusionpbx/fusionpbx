@@ -1130,7 +1130,7 @@ class operator_panel_service extends base_websocket_system_service implements we
 			&& ($operator_uuid === '' || is_uuid($operator_uuid))
 			// realm / context: a domain name or dialplan context
 			&& ($domain_name === '' || preg_match('/^[0-9A-Za-z._-]+$/', $domain_name))
-			&& preg_match('/^[0-9A-Za-z._-@]+$/', $context)
+			&& preg_match('/^[0-9A-Za-z._@-]+$/', $context)
 			// extension / number alias - digits, letters and * # + . _ -
 			&& ($destination === '' || preg_match('/^[0-9A-Za-z*#+._-]+$/', $destination))
 			&& ($destination_extension === '' || preg_match('/^[0-9A-Za-z*#+._-]+$/', $destination_extension))
