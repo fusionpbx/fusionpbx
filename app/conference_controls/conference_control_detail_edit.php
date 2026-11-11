@@ -92,6 +92,10 @@
 
 		//get the uuid
 			if ($action == "update") {
+				if (!permission_exists('conference_control_detail_edit')) {
+					echo "access denied";
+					exit;
+				}
 				$conference_control_detail_uuid = $_POST["conference_control_detail_uuid"];
 			}
 
@@ -201,7 +205,7 @@
 	echo "	".$text['label-control_digits']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='control_digits' maxlength='255' value='".escape($control_digits)."'>\n";
+	echo "	<input class='formfld' type='text' name='control_digits' maxlength='255' value='".escape($control_digits)."'>\n";
 	echo "<br />\n";
 	echo $text['description-control_digits']."\n";
 	echo "</td>\n";
