@@ -63,6 +63,10 @@
 
 		//get the uuid from the POST
 			if ($action == "update") {
+				if (!permission_exists('conference_control_edit')) {
+					echo "access denied";
+					exit;
+				}
 				$conference_control_uuid = $_POST["conference_control_uuid"];
 			}
 
