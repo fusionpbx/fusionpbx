@@ -49,6 +49,10 @@
 		}
 		$sql .= "from view_call_recordings ";
 		$sql .= "where call_recording_uuid = :call_recording_uuid ";
+		if (!permission_exists('call_recording_all')) {
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		}
 		$parameters['call_recording_uuid'] = $_GET['id'];
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && @sizeof($row) != 0) {
