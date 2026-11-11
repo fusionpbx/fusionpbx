@@ -397,8 +397,10 @@
 				$channel_variables["toll_allow"] = $fax_toll_allow;
 			}
 
-		//get the outbound route array
-			$route_array = outbound_route_to_bridge($domain_uuid, $fax_prefix . $fax_number, $channel_variables);
+		//get the outbound route array, unless the fax is staying local
+			if (!$local_destination) {
+				$route_array = outbound_route_to_bridge($domain_uuid, $fax_prefix . $fax_number, $channel_variables);
+			}
 
 		//prepare the fax_uri
 			if (empty($route_array)) {
