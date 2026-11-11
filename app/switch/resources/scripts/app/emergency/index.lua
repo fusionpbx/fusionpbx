@@ -173,6 +173,9 @@ elseif (tonumber(destination_number) == 922) then
 	event = '922 Emergency Address Validation Service';
 elseif (tonumber(destination_number) == 911) then
 	event = '911 Emergency Call';
+else
+	--any other number the dialplan routes here, for example 999, 112, etc...
+	event = tostring(destination_number or '') .. ' Emergency Call';
 end
 
 --connect to the database
