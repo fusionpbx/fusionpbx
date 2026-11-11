@@ -40,7 +40,7 @@
 
 //set variables
 	$fifo_name = trim($_REQUEST["c"]);
-	$fifo_name = preg_replace('[^a-zA-Z0-9\-_@.\/]', '', $fifo_name);
+	$fifo_name = preg_replace('#[^a-zA-Z0-9\_\@\-./]#', '', $fifo_name);
 
 //if not the user is not a member of the superadmin then restrict to viewing their own domain
 	if (!if_group("superadmin")) {
@@ -53,7 +53,6 @@
 //prepare and send the api command over event socket
 
 	$switch_cmd = 'fifo list_verbose '.$fifo_name.'';
-	
 	$esl = event_socket::create();
 	if (!$esl->is_connected()) {
 		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
