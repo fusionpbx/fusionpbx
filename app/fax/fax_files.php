@@ -263,7 +263,7 @@
 //get the list
 	$sql = "select domain_uuid, fax_file_uuid, fax_uuid, fax_mode, \n";
 	$sql .= "fax_destination, fax_file_type, fax_file_path, fax_caller_id_name, \n";
-	$sql .= "fax_caller_id_number, fax_recipient, fax_epoch, fax_base64, fax_date, \n";
+	$sql .= "fax_caller_id_number, fax_recipient, fax_epoch, fax_date, \n";
 	$sql .= "to_char(timezone(:time_zone, fax_date), 'DD Mon YYYY') as fax_date_formatted, \n";
 	$sql .= "to_char(timezone(:time_zone, fax_date), '".$time_format."') as fax_time_formatted, \n";
 	$sql .= "to_char(timezone(:time_zone, read_date), 'YYYY-MM-DD') as read_date_formatted \n";
@@ -417,20 +417,32 @@
 			}
 			$file_ext = $row['fax_file_type'];
 
-			//decode the base64
-			if (!empty($row['fax_base64'])) {
-				if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
-					if (!file_exists($dir_fax_inbox.'/'.$file)) {
-						file_put_contents($dir_fax_inbox.'/'.$file, base64_decode($row['fax_base64']));
-					}
-				}
-				if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
-					if (!file_exists($dir_fax_sent.'/'.$file)) {
-						//decode the base64
-						file_put_contents($dir_fax_sent.'/'.$file, base64_decode($row['fax_base64']));
-					}
+			//restore the file from the database only when it is missing from disk
+			//the base64 is fetched per row because selecting it for every row on the page exhausted memory
+			$dir_restore = '';
+			if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
+				if (!file_exists($dir_fax_inbox.'/'.$file)) {
+					$dir_restore = $dir_fax_inbox;
 				}
 			}
+			if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
+				if (!file_exists($dir_fax_sent.'/'.$file)) {
+					$dir_restore = $dir_fax_sent;
+				}
+			}
+			if (!empty($dir_restore) && !empty($row['fax_file_uuid'])) {
+				$sql_fax_base64 = "select fax_base64 from v_fax_files ";
+				$sql_fax_base64 .= "where fax_file_uuid = :fax_file_uuid ";
+				$sql_fax_base64 .= "and domain_uuid = :domain_uuid";
+				$parameters_fax_base64['fax_file_uuid'] = $row['fax_file_uuid'];
+				$parameters_fax_base64['domain_uuid'] = $row['domain_uuid'];
+				$fax_base64 = $database->select($sql_fax_base64, $parameters_fax_base64, 'column');
+				unset($sql_fax_base64, $parameters_fax_base64);
+				if (!empty($fax_base64)) {
+					file_put_contents($dir_restore.'/'.$file, base64_decode($fax_base64));
+				}
+			}
+			unset($fax_base64, $dir_restore);
 
 			//convert the tif to pdf
 			unset($dir_fax);
