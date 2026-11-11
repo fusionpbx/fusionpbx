@@ -147,11 +147,15 @@ class call_recordings {
 					//add to the array
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 						//get the information to delete
-						$sql                               = "select call_recording_name, call_recording_path ";
-						$sql                               .= "from view_call_recordings ";
-						$sql                               .= "where call_recording_uuid = :call_recording_uuid ";
+						$sql = "select call_recording_name, call_recording_path ";
+						$sql .= "from view_call_recordings ";
+						$sql .= "where call_recording_uuid = :call_recording_uuid ";
+						if (!permission_exists('call_recording_all')) {
+							$sql .= "and domain_uuid = :domain_uuid ";
+							$parameters['domain_uuid'] = $this->domain_uuid;
+						}
 						$parameters['call_recording_uuid'] = $record['uuid'];
-						$field                             = $this->database->select($sql, $parameters, 'row');
+						$field = $this->database->select($sql, $parameters, 'row');
 						if (is_array($field) && @sizeof($field) != 0) {
 							//delete the file on the file system
 							if (file_exists($field['call_recording_path'] . '/' . $field['call_recording_name'])) {
@@ -159,9 +163,9 @@ class call_recordings {
 							}
 
 							//build call recording delete array
-							$array['xml_cdr'][$x]['xml_cdr_uuid']  = $record['uuid'];
-							$array['xml_cdr'][$x]['record_path']   = null;
-							$array['xml_cdr'][$x]['record_name']   = null;
+							$array['xml_cdr'][$x]['xml_cdr_uuid'] = $record['uuid'];
+							$array['xml_cdr'][$x]['record_path'] = null;
+							$array['xml_cdr'][$x]['record_name'] = null;
 							$array['xml_cdr'][$x]['record_length'] = null;
 
 							//increment the id
@@ -464,6 +468,10 @@ class call_recordings {
 						$sql .= "from view_call_recordings ";
 						$sql .= "where call_recording_uuid = :call_recording_uuid ";
 						$sql .= "and call_recording_transcription is null ";
+						if (!permission_exists('call_recording_all')) {
+							$sql .= "and domain_uuid = :domain_uuid ";
+							$parameters['domain_uuid'] = $this->domain_uuid;
+						}
 						$parameters['call_recording_uuid'] = $record['uuid'];
 						$field = $this->database->select($sql, $parameters, 'row');
 						if (
@@ -723,6 +731,10 @@ class call_recordings {
 						$parameters['cr_uuid_' . $cr_uuid_index] = $cr_uuid_value;
 					}
 					$sql .= "where call_recording_uuid in (" . implode(',', $cr_uuid_placeholders) . ") ";
+					if (!permission_exists('call_recording_all')) {
+						$sql .= "and domain_uuid = :domain_uuid ";
+						$parameters['domain_uuid'] = $this->domain_uuid;
+					}
 					$parameters['time_zone'] = $time_zone;
 					$rows = $this->database->select($sql, $parameters, 'all');
 					if (!empty($rows) && is_array($rows) && @sizeof($rows) != 0) {
