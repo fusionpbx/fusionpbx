@@ -93,12 +93,22 @@
 
 //undo the transaction
 	if ($action == 'undo' && ($transaction_type == 'delete' || $transaction_type == 'update')) {
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: database_transactions.php');
+				exit;
+			}
+
 		//get the array
 			$array = json_decode($transaction_old, true);
 
 		//save to the data
-			$database->save($array);
-			//$message = $database->message;
+			if (is_array($array) && !empty($array)) {
+				$database->save($array);
+				//$message = $database->message;
+			}
 
 		//redirect the user
 			$_SESSION["message"] = $text['message-update'];
@@ -115,6 +125,10 @@
 		}
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //include the header
 	$document['title'] = $text['title-database_transaction'];
 	require_once "resources/header.php";
@@ -125,7 +139,7 @@
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'database_transactions.php?'.(!empty($search) ? "&search=".urlencode($search) : null).(is_numeric($page) ? "&page=".urlencode($page) : null)]);
 	if ($transaction_type == 'delete' || $transaction_type == 'update') {
-		echo button::create(['type'=>'button','label'=>$text['button-undo'],'icon'=>'undo-alt','id'=>'btn_save','style'=>'margin-left: 15px;','link'=>'database_transaction_edit.php?id='.urlencode($database_transaction_uuid).'&action=undo'.(!empty($search) ? "&search=".urlencode($search) : null).(is_numeric($page) ? "&page=".urlencode($page) : null)]);
+		echo button::create(['type'=>'button','label'=>$text['button-undo'],'icon'=>'undo-alt','id'=>'btn_save','style'=>'margin-left: 15px;','link'=>'database_transaction_edit.php?id='.urlencode($database_transaction_uuid).'&action=undo'.'&'.$token['name'].'='.$token['hash'].(!empty($search) ? "&search=".urlencode($search) : null).(is_numeric($page) ? "&page=".urlencode($page) : null)]);
 	}
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
@@ -308,7 +322,7 @@
 						}
 					//set the table header
 						if (!empty($_SESSION['previous_name']) && $_SESSION['previous_name'] !== $_SESSION['name'] || !empty($_SESSION['previous_row']) && $_SESSION['previous_row'] !== $_SESSION['row']) {
-							echo str_replace("<th>name</th>","<th>".$_SESSION['name']."</th>",$_SESSION['table_header']);
+							echo str_replace("<th>name</th>","<th>".escape($_SESSION['name'])."</th>",$_SESSION['table_header']);
 							//echo $_SESSION['table_header'];
 						}
 						$_SESSION['previous_name'] = $_SESSION['name'];
