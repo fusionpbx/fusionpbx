@@ -46,6 +46,13 @@
 		exit;
 	}
 
+//validate the token
+	$token = new token;
+	if (!$token->validate($_SERVER['PHP_SELF'])) {
+		echo "access denied";
+		exit;
+	}
+
 //get the http values and set them as php variables
 	if (count($_GET) > 0) {
 		$cmd = trim($_GET["cmd"]);
@@ -139,6 +146,7 @@
 
 //validate the numeric id
 	if (!is_numeric($id)) {
+		$id = null;
 		$direction = null;
 	}
 
