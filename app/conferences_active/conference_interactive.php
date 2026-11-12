@@ -35,6 +35,10 @@
 		exit;
 	}
 
+//create token
+	$object = new token;
+	$token = $object->create(dirname($_SERVER['PHP_SELF']) . '/conference_exec.php');
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -83,7 +87,7 @@ loadXmlHttp.prototype.stateChanged=function () {
 	var url = new URL(this.xmlHttp.responseURL);
 	if (/login\.php$/.test(url.pathname)) {
 		// You are logged out. Stop refresh!
-		url.searchParams.set('path', '<?php echo $_SERVER['REQUEST_URI']; ?>');
+		url.searchParams.set('path', '<?php echo escape($_SERVER['REQUEST_URI'] ?? ''); ?>');
 		window.location.href = url.href;
 		return;
 	}
@@ -119,6 +123,7 @@ else if (window.attachEvent) {
 }
 
 function send_cmd(url) {
+	url += (url.indexOf('?') != -1 ? '&' : '?') + '<?php echo $token['name']; ?>=<?php echo $token['hash']; ?>';
 	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
 		xmlhttp=new XMLHttpRequest();
 	}
