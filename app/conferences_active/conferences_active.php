@@ -78,7 +78,7 @@ loadXmlHttp.prototype.stateChanged=function () {
 	var url = new URL(this.xmlHttp.responseURL);
 	if (/login\.php$/.test(url.pathname)) {
 		// You are logged out. Stop refresh!
-		url.searchParams.set('path', '<?php echo $_SERVER['REQUEST_URI']; ?>');
+		url.searchParams.set('path', '<?php echo escape($_SERVER['REQUEST_URI'] ?? ''); ?>');
 		window.location.href = url.href;
 		return;
 	}
