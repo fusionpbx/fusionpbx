@@ -634,15 +634,15 @@ class menu {
 					$menu_html = "<ul class='menu_main'>\n";
 					$menu_html .= "<li>\n";
 					if (empty($this->username)) {
-						$menu_html .= "<a $menu_tags style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>" . $menu_item_title . "</h2></a>\n";
+						$menu_html .= "<a $menu_tags style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>" . escape($menu_item_title) . "</h2></a>\n";
 					} else {
 						if ($menu_item_link == "/login.php" || $menu_item_link == "/users/signup.php") {
 							//hide login and sign-up when the user is logged in
 						} else {
 							if (empty($menu_item_link)) {
-								$menu_html .= "<h2 align='center' style=''>" . $menu_item_title . "</h2>\n";
+								$menu_html .= "<h2 align='center' style=''>" . escape($menu_item_title) . "</h2>\n";
 							} else {
-								$menu_html .= "<a " . $menu_tags . " style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>" . $menu_item_title . "</h2></a>\n";
+								$menu_html .= "<a " . $menu_tags . " style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>" . escape($menu_item_title) . "</h2></a>\n";
 							}
 						}
 					}
@@ -881,11 +881,11 @@ class menu {
 				}
 
 				if (strlen($str_child_menu) > 1) {
-					$submenu_html .= "<a " . $menu_tags . ">" . $menu_item_title . "</a>";
+					$submenu_html .= "<a " . $menu_tags . ">" . escape($menu_item_title) . "</a>";
 					$submenu_html .= $str_child_menu;
 					unset($str_child_menu);
 				} else {
-					$submenu_html .= "<a " . $menu_tags . ">" . $menu_item_title . "</a>";
+					$submenu_html .= "<a " . $menu_tags . ">" . escape($menu_item_title) . "</a>";
 				}
 				$submenu_html .= "</li>\n";
 			}
@@ -1255,9 +1255,9 @@ class menu {
 					} else {
 						$menu_main_icon = null;
 					}
-					$menu_main_item = "<span class='d-sm-none d-md-none d-lg-inline' style='margin-left: 5px;'>" . $menu_parent['menu_language_title'] . "</span>\n";
+					$menu_main_item = "<span class='d-sm-none d-md-none d-lg-inline' style='margin-left: 5px;'>" . escape($menu_parent['menu_language_title']) . "</span>\n";
 				} else {
-					$menu_main_item = $menu_parent['menu_language_title'];
+					$menu_main_item = escape($menu_parent['menu_language_title']);
 				}
 				$html .= "				<li class='" . $mod_li . "'>\n";
 				$html .= "					<a class='nav-link' " . $mod_a_1 . " href='" . $mod_a_2 . "' " . $mod_a_3 . ">\n";
@@ -1324,8 +1324,8 @@ class menu {
 				$user_graphic = "<span style=\"display: inline-block; vertical-align: middle; width: 15px; height: 15px; border-radius: 50%; margin-top: -2px; background-image: url('" . PROJECT_PATH . "/core/contacts/contact_attachment.php?id=" . $_SESSION['user']['contact_image'] . "&action=download&sid=" . session_id() . "'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
 			}
 			$html .= "		<li class='nav-item' style='anchor-name: --user-menu;'>\n";
-			$html .= "			<a class='nav-link header_user d-block d-sm-none' href='show:usermenu' title=\"" . $this->username . "\" style='border-top: 1px solid " . ($this->settings->get('theme', 'menu_sub_background_color') ?? 'rgba(0,0,0,0.90)') . "' data-toggle='collapse' data-target='#main_navbar' onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">" . ($user_graphic ?? null) . "<span style='margin-left: 7px;'>" . escape($this->username) . "</span></a>";
-			$html .= "			<a class='nav-link header_user d-none d-sm-block' href='show:usermenu' title=\"" . $this->username . "\" onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">" . ($user_graphic ?? null) . "<span class='d-none d-md-inline' style='margin-left: 7px;'>" . escape($this->username) . "</span></a>";
+			$html .= "			<a class='nav-link header_user d-block d-sm-none' href='show:usermenu' title=\"" . escape($this->username) . "\" style='border-top: 1px solid " . ($this->settings->get('theme', 'menu_sub_background_color') ?? 'rgba(0,0,0,0.90)') . "' data-toggle='collapse' data-target='#main_navbar' onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">" . ($user_graphic ?? null) . "<span style='margin-left: 7px;'>" . escape($this->username) . "</span></a>";
+			$html .= "			<a class='nav-link header_user d-none d-sm-block' href='show:usermenu' title=\"" . escape($this->username) . "\" onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">" . ($user_graphic ?? null) . "<span class='d-none d-md-inline' style='margin-left: 7px;'>" . escape($this->username) . "</span></a>";
 			$html .= "		</li>\n";
 		}
 
@@ -1448,14 +1448,14 @@ class menu {
 		if (!empty($menu_array)) {
 			foreach ($menu_array as $menu_item_main) {
 				$menu_target = ($menu_item_main['menu_item_category'] == 'external') ? '_blank' : '';
-				$html .= "	<a class='menu_side_item_main' " . (!empty($menu_item_main['menu_item_link']) ? "href='" . $menu_item_main['menu_item_link'] . "' target='" . $menu_target . "'" : "onclick=\"menu_side_expand(); menu_side_item_toggle('" . $menu_item_main['menu_item_uuid'] . "');\"") . " title=\"" . $menu_item_main['menu_language_title'] . "\">";
+				$html .= "	<a class='menu_side_item_main' " . (!empty($menu_item_main['menu_item_link']) ? "href='" . $menu_item_main['menu_item_link'] . "' target='" . $menu_target . "'" : "onclick=\"menu_side_expand(); menu_side_item_toggle('" . $menu_item_main['menu_item_uuid'] . "');\"") . " title=\"" . escape($menu_item_main['menu_language_title']) . "\">";
 				if (is_array($menu_item_main['menu_items']) && sizeof($menu_item_main['menu_items']) != 0 && $this->settings->get('theme', 'menu_side_item_main_sub_icons', true) === true) {
 					$html .= "	<div class='menu_side_item_main_sub_icons' style='float: right; margin-right: -1px; " . ($menu_side_state != 'expanded' ? "display: none;" : null) . "'><i id='sub_arrow_" . $menu_item_main['menu_item_uuid'] . "' class='sub_arrows " . $this->settings->get('theme', 'menu_side_item_main_sub_icon_expand', 'fa-solid fa-chevron-down') . " fa-xs'></i></div>\n";
 				}
 				if (!empty($menu_item_main['menu_item_icon']) && substr($menu_item_main['menu_item_icon'], 0, 3) == 'fa-') { // font awesome icon
 					$html .= "<i class='menu_side_item_icon " . $menu_item_main['menu_item_icon'] . " fa-fw' style='z-index: 99800; margin-right: 8px; " . (!empty($menu_item_main['menu_item_icon_color']) ? "color: " . $menu_item_main['menu_item_icon_color'] . " !important;" : null) . "'></i>";
 				}
-				$html .= "<span class='menu_side_item_title' style='" . ($menu_side_state != 'expanded' ? "display: none;" : null) . "'>" . $menu_item_main['menu_language_title'] . "</span>";
+				$html .= "<span class='menu_side_item_title' style='" . ($menu_side_state != 'expanded' ? "display: none;" : null) . "'>" . escape($menu_item_main['menu_language_title']) . "</span>";
 				$html .= "</a>\n";
 				//sub menu items
 				if (is_array($menu_item_main['menu_items']) && sizeof($menu_item_main['menu_items']) != 0) {
@@ -1470,7 +1470,7 @@ class menu {
 							}
 						}
 						$html .= "		<a class='menu_side_item_sub' " . ($menu_item_sub['menu_item_category'] == 'external' ? "target='_blank'" : null) . " href='" . $menu_item_sub['menu_item_link'] . "'>";
-						$html .= "<span class='menu_side_item_title' style='" . ($menu_side_state != 'expanded' ? "display: none;" : null) . "'>" . $menu_item_sub['menu_language_title'] . "</span>";
+						$html .= "<span class='menu_side_item_title' style='" . ($menu_side_state != 'expanded' ? "display: none;" : null) . "'>" . escape($menu_item_sub['menu_language_title']) . "</span>";
 						$html .= $menu_sub_icon . "</a>\n";
 					}
 					$html .= "	</div>\n";
@@ -1513,7 +1513,7 @@ class menu {
 			$user_graphic = "		<span style=\"display: inline-block; vertical-align: middle; width: " . $user_graphic_size . "px; height: " . $user_graphic_size . "px; border-radius: 50%; margin-right: 7px; margin-top: " . ($user_graphic_size > 18 ? '-' . (ceil(($user_graphic_size - 18) / 2) - 4) : '-4') . "px; background-image: url('" . PROJECT_PATH . "/core/contacts/contact_attachment.php?id=" . $_SESSION['user']['contact_image'] . "&action=download&sid=" . session_id() . "'); background-repeat: no-repeat; background-size: cover; background-position: center;\"></span>";
 		}
 		$html .= "		<span style='anchor-name: --user-menu; display: inline-block; padding-right: 20px; font-size: 90%;'>\n";
-		$html .= "			<a href='show:usermenu' title=\"" . $this->username . "\" onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">" . ($user_graphic ?? null) . "<span class='d-none d-sm-inline'>" . escape($this->username) . "</span></a>";
+		$html .= "			<a href='show:usermenu' title=\"" . escape($this->username) . "\" onclick=\"event.preventDefault(); $('#body_header_user_menu').toggleFadeSlide();\">" . ($user_graphic ?? null) . "<span class='d-none d-sm-inline'>" . escape($this->username) . "</span></a>";
 		$html .= "		</span>\n";
 		//domain name/selector (sm+)
 		if (!empty($this->username) && permission_exists('domain_select') && count($_SESSION['domains']) > 1 && $this->settings->get('theme', 'domain_visible') == 'true') {
