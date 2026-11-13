@@ -172,7 +172,7 @@ class system_dashboard_service extends base_websocket_system_service {
 	public function on_network_interface_select($message = null): void {
 		if ($message !== null && $message instanceof websocket_message) {
 			$payload = $message->payload();
-			if (!empty($payload['network_interface'])) {
+			if (!empty($payload['network_interface']) && preg_match('/^[a-zA-Z][a-zA-Z0-9._-]{0,31}$/', (string) $payload['network_interface'])) {
 				$this->network_interface = $payload['network_interface'];
 			}
 		}
@@ -263,8 +263,8 @@ class system_dashboard_service extends base_websocket_system_service {
 		// Get the subscriber permissions
 		$permissions = $subscriber->get_permissions();
 
-		// Create a filter for broadcaster => permission
-		$permission_filter = new permission_filter([self::get_service_name() => 'system_view_cpu', self::get_service_name() => 'system_view_network']);
+		// Create a filter for payload key => permission
+		$permission_filter = new permission_filter([self::CPU_STATUS_TOPIC => 'system_view_cpu', self::NETWORK_STATUS_TOPIC => 'system_view_network']);
 
 		// Match them to create a filter
 		foreach (self::PERMISSIONS as $permission) {

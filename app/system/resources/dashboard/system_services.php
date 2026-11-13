@@ -223,13 +223,13 @@ if ($widget_details_state != 'disabled') {
 	$row_style[true] = "row_style1";
 	$c = true;
 	foreach ($services as $info) {
-		$label = $info['name'];
+		$label = escape($info['name']);
 		$status = $info['status']
 			? "<span style='background-color: #28a745; color: white; padding: 2px 8px; border-radius: 10px;'>Yes</span>"
 			: "<span style='background-color: #dc3545; color: white; padding: 2px 8px; border-radius: 10px;'>No</span>";
 		$etime = isset($info['etime']) ? format_etime($info['etime']) : '-';
 		$pid = $info['pid'] ?? '';
-		$tooltip_attr = $pid ? "title='PID: $pid'" : '';
+		$tooltip_attr = $pid ? "title='PID: " . escape($pid) . "'" : '';
 
 		echo "			<tr>\n";
 		echo "	<td class='{$row_style[$c]}' hud_text $tooltip_attr>$label</td>\n";
