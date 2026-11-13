@@ -155,6 +155,12 @@ class cache {
 			return false;
 		}
 
+		//change the delimiter
+		$key = str_replace(":", ".", $key);
+
+		//sanitize the key to prevent path traversal
+		$key = $this->sanitize_key($key);
+
 		//cache method memcache
 		if ($this->method === "memcache") {
 			//connect to event socket
@@ -179,12 +185,6 @@ class cache {
 
 		//cache method file
 		if ($this->method === "file") {
-			//change the delimiter
-			$key = str_replace(":", ".", $key);
-
-			//sanitize the key to prevent path traversal
-			$key = $this->sanitize_key($key);
-
 			//connect to event socket
 			$esl = event_socket::create();
 			if ($esl === false) {
