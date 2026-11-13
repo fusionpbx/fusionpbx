@@ -91,6 +91,14 @@
 //process the http post
 	if (!empty($_POST) && @sizeof($_POST) > 0) {
 
+		//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: '.PROJECT_PATH.'/core/upgrade/index.php');
+			exit;
+		}
+
 		//get the action options: source, schema, app_defaults, menu_defaults, permissions
 		$action = $_POST['action'] ?? null;
 
@@ -217,6 +225,11 @@
 
 //process the http get (source preview)
 	if (!empty($_GET['preview'])) {
+		//check the permission
+		if (!permission_exists('upgrade_source')) {
+			echo "access denied";
+			exit;
+		}
 		if (!empty($updateable_repos)) {
 			foreach ($updateable_repos as $app_path => $app) {
 				$repo_info = git_repo_info($app_path);
@@ -225,10 +238,10 @@
 			}
 		}
 		if ($_GET['preview'] == 'core') {
-			$command = 'cd '.$_SERVER['PROJECT_ROOT'].' && git fetch && git diff --name-only @ @{u}';
+			$command = 'cd '.escapeshellarg($_SERVER['PROJECT_ROOT']).' && git fetch && git diff --name-only @ @{u}';
 		}
 		else if (array_key_exists($_GET['preview'], $source_code)) {
-			$command = 'cd '.$source_code[$_GET['preview']].' && git fetch && git diff --name-only @ @{u}';
+			$command = 'cd '.escapeshellarg($source_code[$_GET['preview']]).' && git fetch && git diff --name-only @ @{u}';
 		}
 		if (!empty($command)) {
 			$response = explode(PHP_EOL, shell_exec($command));
@@ -251,6 +264,9 @@
 				echo "<br><br><br>\n";
 				echo "<div class='file_paths'>\n";
 				if (!empty($response) && is_array($response)) {
+					foreach ($response as $l => $line) {
+						$response[$l] = htmlspecialchars($line, ENT_QUOTES, 'UTF-8');
+					}
 					echo implode("<br>\n<hr style='margin: 3px 0;'>\n", $response);
 				}
 				echo "</div>\n";
@@ -287,8 +303,13 @@
 	echo "	</table>\n";
 	echo "</div>\n";
 
+//create token
+	$object = new token;
+	$token = $object->create($_SERVER['PHP_SELF']);
+
 //show the content
 	echo "<form name='frm' id='frm' method='post'>\n";
+	echo "	<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['header-upgrade']."</b></div>\n";
@@ -340,7 +361,7 @@
 			echo "	<span style='font-weight: 600;'>".software::version()."</span>\n";
 		}
 		if ($branch_return_value == 0 && $commit_return_value == 0) {
-			echo "	<a href='https://github.com/fusionpbx/fusionpbx/compare/".$git_current_commit."...".$git_current_branch."' target='_blank' title='".$git_current_commit."' onclick=\"event.stopPropagation();\"><i>".$git_current_branch."</i></a>";
+			echo "	<a href='https://github.com/fusionpbx/fusionpbx/compare/".escape($git_current_commit)."...".escape($git_current_branch)."' target='_blank' title='".escape($git_current_commit)."' onclick=\"event.stopPropagation();\"><i>".escape($git_current_branch)."</i></a>";
 			echo "&nbsp;&nbsp;<button type='button' class='btn btn-link btn-xs' onclick=\"event.stopPropagation(); source_preview('core','".$settings->get('theme', 'title', 'FusionPBX')."');\">".$text['button-preview']."</button>\n";
 		}
 		echo "	</td>\n";
@@ -357,7 +378,7 @@
 				echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
 				echo "		".$app['name']."\n";
 				echo "	</td>\n";
-				echo "	<td width='70%' class='vtable' style='height: 50px; cursor: ".($pull_method == 'http' ? "pointer;'" : "help;' title=\"".$text['message-upgrade_manually'].": ".$repo_info['url']."\"").">\n";
+				echo "	<td width='70%' class='vtable' style='height: 50px; cursor: ".($pull_method == 'http' ? "pointer;'" : "help;' title=\"".$text['message-upgrade_manually'].": ".escape($repo_info['url'])."\"").">\n";
 				echo "		<div style='display: flex; align-items: center; margin-bottom: 3px;'>\n";
 				if ($pull_method == 'http') {
 					echo "		<input type='checkbox' name='action[optional_apps][]' class='do_optional_app' id='do_".$app['app']."' value='".$app['app']."' onclick=\"event.stopPropagation(); if (this.checked == false) { document.getElementById('view_source_code_options').checked = false; }\">\n";
@@ -367,7 +388,7 @@
 				}
 				echo "			<span style='margin-left: 6px;'>".$app['description']."</span><br />\n";
 				echo "		</div>\n";
-				echo "		<span style='font-weight: 600;'>".$app['version']."</span><i><a href='".str_replace(['git@','.com:'],['https://','.com/'], $repo_info['url'])."/compare/".$repo_info['commit']."...".$repo_info['branch']." 'target='_blank' title='".$repo_info['commit']."'><span style='margin-left: 6px;'>".$repo_info['branch']."</span></i></a>\n";
+				echo "		<span style='font-weight: 600;'>".$app['version']."</span><i><a href='".escape(str_replace(['git@','.com:'],['https://','.com/'], $repo_info['url']))."/compare/".escape($repo_info['commit'])."...".escape($repo_info['branch'])." 'target='_blank' title='".escape($repo_info['commit'])."'><span style='margin-left: 6px;'>".escape($repo_info['branch'])."</span></i></a>\n";
 				echo "		<span style='margin-left: 6px;'><button type='button' class='btn btn-link btn-xs' onclick=\"event.stopPropagation(); source_preview('".$app['app']."','".$app['name']."');\">".$text['button-preview']."</button></span>\n";
 				echo "	</td>\n";
 				echo "</tr>\n";

@@ -147,6 +147,9 @@
 		if (!$file_handle){ return; }
 		fwrite($file_handle, $conf);
 		fclose($file_handle);
+
+		//restrict the config file permissions (contains database credentials)
+		@chmod($config_file, 0640);
 	}
 
 // Check the permission
