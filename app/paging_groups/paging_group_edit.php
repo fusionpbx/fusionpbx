@@ -105,6 +105,21 @@
 		if (!empty($_REQUEST["paging_group_uuid"])) {
 			$paging_group_uuid = $_REQUEST["paging_group_uuid"];
 		}
+
+		//verify the paging group belongs to the current domain unless allowed to access all domains
+		if (!permission_exists('paging_group_all')) {
+			$sql = "select paging_group_uuid from v_paging_groups ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and paging_group_uuid = :paging_group_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['paging_group_uuid'] = $paging_group_uuid;
+			$row = $database->select($sql, $parameters, 'row');
+			if (empty($row)) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
 	}
 	else {
 		$action = "add";
@@ -583,7 +598,7 @@
 			echo "						<div class='search_results'></div>\n";
 			echo "						<select class='extension_hidden_select' style='display:none;'>\n";
 			foreach ($extension_users as $ext_data) {
-				echo "						<option value='".escape($ext_data['extension'])."' data-users='".$ext_data['name']."'>".escape($ext_data['extension'])."</option>";
+				echo "						<option value='".escape($ext_data['extension'])."' data-users='".escape($ext_data['name'])."'>".escape($ext_data['extension'])."</option>";
 			}
 			echo "						</select>\n";
 			echo "					</div>\n";
@@ -764,7 +779,7 @@
 		$mime_type = 'audio/wav';
 	}
 	if (permission_exists('recording_play') || permission_exists('recording_download')) {
-		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".$playable."' type='".$mime_type."'></audio>";
+		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".escape($playable)."' type='".$mime_type."'></audio>";
 		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($paging_group_announcement_sound) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('paging_group_announcement_sound').value, 'sounds');"]);
 	}
 	echo "<br />\n";
@@ -813,7 +828,7 @@
 		}
 	}
 	if (permission_exists('recording_play') || permission_exists('recording_download')) {
-		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".$playable."' type='".$mime_type."'></audio>";
+		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".escape($playable)."' type='".$mime_type."'></audio>";
 		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('paging_group_announcement_recording_uuid').options[document.getElementById('paging_group_announcement_recording_uuid').selectedIndex].getAttribute('data-filename'), 'recordings');"]);
 	}
 	echo "<br />\n";

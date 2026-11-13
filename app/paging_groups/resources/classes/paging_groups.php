@@ -101,11 +101,34 @@ if (!class_exists('paging_groups')) {
 							foreach ($records as $record) {
 								//add to the array
 								if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
-									$array[$this->table][$x]['paging_group_uuid'] = $record['uuid'];
+									$uuids[] = $record['uuid'];
 								}
+							}
 
-								//increment the id
-								$x++;
+						//verify the records belong to the current domain unless allowed to delete all domains
+							if (!empty($uuids) && !permission_exists('paging_group_all')) {
+								$sql = "select paging_group_uuid from v_".$this->table." ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and paging_group_uuid in (";
+								foreach ($uuids as $x => $uuid) {
+									$sql .= ($x > 0 ? ", " : "") . ":uuid_" . $x . " ";
+									$parameters['uuid_' . $x] = $uuid;
+								}
+								$sql .= ") ";
+								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$rows = $this->database->select($sql, $parameters, 'all');
+								unset($sql, $parameters);
+								$uuids = is_array($rows) ? array_column($rows, 'paging_group_uuid') : [];
+							}
+
+						//add the validated records to the delete array
+							if (!empty($uuids) && is_array($uuids)) {
+								foreach ($uuids as $uuid) {
+									$array[$this->table][$x]['paging_group_uuid'] = $uuid;
+
+									//increment the id
+									$x++;
+								}
 							}
 
 						//delete the checked rows
@@ -153,6 +176,23 @@ if (!class_exists('paging_groups')) {
 						if (!empty($record['checked']) && $record['checked'] == 'true' && !empty($record['uuid']) && is_uuid($record['uuid'])) {
 							$uuids[] = $record['uuid'];
 						}
+					}
+
+					//verify the destinations belong to the current domain unless allowed to delete all domains
+					if (!empty($uuids) && !permission_exists('paging_group_all')) {
+						$sql = "select d.paging_group_destination_uuid from v_" . $this->name . "_destinations as d ";
+						$sql .= "inner join v_" . $this->table . " as g on g." . $this->name . "_uuid = d." . $this->name . "_uuid ";
+						$sql .= "where g.domain_uuid = :domain_uuid ";
+						$sql .= "and d.paging_group_destination_uuid in (";
+						foreach ($uuids as $x => $uuid) {
+							$sql .= ($x > 0 ? ", " : "") . ":uuid_" . $x . " ";
+							$parameters['uuid_' . $x] = $uuid;
+						}
+						$sql .= ") ";
+						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						$rows = $this->database->select($sql, $parameters, 'all');
+						unset($sql, $parameters);
+						$uuids = is_array($rows) ? array_column($rows, 'paging_group_destination_uuid') : [];
 					}
 
 					//build the delete array
@@ -206,7 +246,9 @@ if (!class_exists('paging_groups')) {
 							}
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select ".$this->name."_uuid as uuid, ".$this->toggle_field." as toggle from v_".$this->table." ";
-								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and ".$this->name."_uuid in (".implode(', ', $uuids).") ";
+								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									foreach ($rows as $row) {
@@ -272,8 +314,10 @@ if (!class_exists('paging_groups')) {
 						//create the array from existing data
 							if (is_array($uuids) && @sizeof($uuids) != 0) {
 								$sql = "select * from v_".$this->table." ";
-								$sql .= "where ".$this->name."_uuid in (".implode(', ', $uuids).") ";
-								$rows = $this->database->select($sql, null, 'all');
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and ".$this->name."_uuid in (".implode(', ', $uuids).") ";
+								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$rows = $this->database->select($sql, $parameters, 'all');
 								if (is_array($rows) && @sizeof($rows) != 0) {
 									$x = 0;
 									$y = 0;
@@ -290,12 +334,15 @@ if (!class_exists('paging_groups')) {
 
 										//copy destinations
 										$sql = "select * from v_".$this->name."_destinations ";
-										$sql .= "where ".$this->name."_uuid = ".$uuids[$x]." ";
-										$destinations = $this->database->select($sql, null, 'all');
+										$sql .= "where ".$this->name."_uuid = :paging_group_uuid ";
+										$destination_parameters['paging_group_uuid'] = $row[$this->name.'_uuid'];
+										$destinations = $this->database->select($sql, $destination_parameters, 'all');
+										unset($destination_parameters);
 										foreach ($destinations as $destination) {
 											$array[$this->name.'_destinations'][$y] = $destination;
 											$array[$this->name.'_destinations'][$y][$this->name.'_uuid'] = $uuid;
 											$array[$this->name.'_destinations'][$y][$this->name.'_destination_uuid'] = uuid();
+											$array[$this->name.'_destinations'][$y]['domain_uuid'] = $row['domain_uuid'];
 											$y++;
 										}
 
