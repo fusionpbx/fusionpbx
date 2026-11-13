@@ -1085,7 +1085,7 @@
 	$_GET['type'] = "text";
 	$qr_vcard = true;
 	include "contacts_vcard.php";
-	echo "<input type='hidden' id='qr_vcard' value=\"".$qr_vcard."\">";
+	echo "<input type='hidden' id='qr_vcard' value=\"".htmlspecialchars($qr_vcard, ENT_QUOTES, 'UTF-8')."\">";
 	echo "<style>";
 	echo "	#qr_code_container {";
 	echo "		z-index: 999999; ";
