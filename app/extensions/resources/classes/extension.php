@@ -383,7 +383,7 @@ class extension {
 						if (!empty($row['directory_exten_visible'])) {
 							$xml .= "      <param name=\"directory-exten-visible\" value=\"" . xml::sanitize($row['directory_exten_visible']) . "\"/>\n";
 						}
-						$xml .= "      <param name=\"dial-string\" value=\"" . htmlspecialchars($dial_string, ENT_XML1) . "\"/>\n";
+						$xml .= "      <param name=\"dial-string\" value=\"" . xml::escape($dial_string) . "\"/>\n";
 						$xml .= "    </params>\n";
 						$xml .= "    <variables>\n";
 						$xml .= "      <variable name=\"domain_name\" value=\"" . xml::sanitize($this->domain_name) . "\"/>\n";
