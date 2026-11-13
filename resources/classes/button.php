@@ -140,12 +140,15 @@ class button {
 	/**
 	 * Quotes a value by surrounding it with single or double quotes based on whether it contains single quotes.
 	 *
+	 * The quote character used to open the attribute is escaped in the value so a
+	 * value containing both quote characters cannot break out of the attribute.
+	 *
 	 * @param string $value The value to be quoted.
 	 *
 	 * @return string The quoted value.
 	 */
 	private static function quote($value) {
-		return substr_count($value, "'") ? '"' . $value . '"' : "'" . $value . "'";
+		return substr_count($value, "'") ? '"' . str_replace('"', '&quot;', $value) . '"' : "'" . $value . "'";
 	}
 
 	/**
