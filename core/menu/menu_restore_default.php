@@ -40,6 +40,16 @@
 	$language = new text;
 	$text = $language->get();
 
+//validate the token when invoked from the browser (command line callers are exempt)
+	if (!defined('STDIN') && empty($included)) {
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header("Location: ".PROJECT_PATH."/core/menu/menu.php");
+			return;
+		}
+	}
+
 //get the http value and set as a php variable
 	if (!empty($_REQUEST["menu_uuid"])) {
 		$menu_uuid = $_REQUEST["menu_uuid"];

@@ -141,6 +141,10 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
+//create tokens for the reload and restore scripts (each validates against its own path)
+	$token_reload = $object->create(dirname($_SERVER['PHP_SELF']) . '/menu_reload.php');
+	$token_restore = $object->create(dirname($_SERVER['PHP_SELF']) . '/menu_restore_default.php');
+
 //show the header
 	$document['title'] = $text['title-menu'];
 	require_once "resources/header.php";
@@ -152,7 +156,7 @@
 	echo "	<div class='heading'><b>".$text['header-menu']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','link'=>'menu.php']);
-	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'collapse'=>'hide-xs','style'=>'margin-left: 15px;','link'=>'menu_reload.php?menu_uuid='.urlencode($menu_uuid ?? '').'&menu_language='.urlencode($menu_language ?? '')]);
+	echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'collapse'=>'hide-xs','style'=>'margin-left: 15px;','link'=>'menu_reload.php?menu_uuid='.urlencode($menu_uuid ?? '').'&menu_language='.urlencode($menu_language ?? '').'&'.$token_reload['name'].'='.$token_reload['hash']]);
 	if (permission_exists('menu_restore') && $action == "update") {
 		echo button::create(['type'=>'button','label'=>$text['button-restore_default'],'icon'=>'undo-alt','collapse'=>'hide-xs','onclick'=>"modal_open('modal-restore','btn_restore');"]);
 	}
@@ -162,7 +166,7 @@
 	echo "</div>\n";
 
 	if (permission_exists('menu_restore') && $action == "update") {
-		echo modal::create(['id'=>'modal-restore','type'=>'confirmation','message'=>$text['confirm-restore'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_restore','style'=>'float: right; margin-left: 15px;','collapse'=>'never','link'=>'menu_restore_default.php?menu_uuid='.urlencode($menu_uuid).'&menu_language='.urlencode($menu_language),'onclick'=>'modal_close();'])]);
+		echo modal::create(['id'=>'modal-restore','type'=>'confirmation','message'=>$text['confirm-restore'],'actions'=>button::create(['type'=>'button','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_restore','style'=>'float: right; margin-left: 15px;','collapse'=>'never','link'=>'menu_restore_default.php?menu_uuid='.urlencode($menu_uuid).'&menu_language='.urlencode($menu_language).'&'.$token_restore['name'].'='.$token_restore['hash'],'onclick'=>'modal_close();'])]);
 	}
 
 	echo $text['description-menu']."\n";
