@@ -60,7 +60,7 @@
 	}
 
 //download the name recording
-	if (permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download')) {
+	if (is_numeric($_GET['id']) && (permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download'))) {
 
 		if (file_exists($recording_dir.'/recorded_name.wav')) {
 
