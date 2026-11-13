@@ -42,6 +42,14 @@ $text = $language->get();
 $search = $_REQUEST['search'] ?? '';
 $domain_uuid = $_GET['id'] ?? null;
 
+//validate the token
+$token = new token;
+if (!$token->validate($_SERVER['PHP_SELF'])) {
+	message::add($text['message-invalid_token'],'negative');
+	header('Location: default_settings.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
+	exit;
+}
+
 //reload autoloader
 $autoload->update();
 
