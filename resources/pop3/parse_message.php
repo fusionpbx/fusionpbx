@@ -6,6 +6,11 @@
  *
  */
 
+//only allow command line
+if (!defined('STDIN')) {
+	exit;
+}
+
 ?><html>
 <head>
 <title>Parsing a message with Manuel Lemos' PHP POP3 and MIME Parser classes</title>
