@@ -100,6 +100,19 @@ class gateways {
 	}
 
 	/**
+	 * Determines whether a profile name can be safely used as a file path segment
+	 * and as an argument of the sofia event socket command.
+	 *
+	 * @param string $profile The gateway profile name.
+	 *
+	 * @return bool True when the profile name is safe to use, false otherwise.
+	 */
+	private function is_safe_profile($profile): bool {
+		return is_string($profile) && $profile !== '' && $profile !== '.' && $profile !== '..'
+			&& basename($profile) === $profile && (bool) preg_match('/^[a-zA-Z0-9_-]+$/u', $profile);
+	}
+
+	/**
 	 * Starts the checked gateways.
 	 *
 	 * This method checks for permission to edit and validates the token. It then
@@ -165,7 +178,7 @@ class gateways {
 							if ($gateway['enabled'] == 'true') {
 								//start gateways
 								foreach ($gateways as $gateway_uuid => $gateway) {
-									if ($gateway['enabled'] == 'true') {
+									if ($gateway['enabled'] == 'true' && $this->is_safe_profile($gateway['profile'])) {
 										$cmd                                 = 'sofia profile ' . $gateway['profile'] . ' startgw ' . $gateway_uuid;
 										$responses[$gateway_uuid]['gateway'] = $gateway['name'];
 										$responses[$gateway_uuid]['message'] = trim(event_socket::api($cmd));
@@ -256,7 +269,7 @@ class gateways {
 					if ($esl->is_connected()) {
 						//stop gateways
 						foreach ($gateways as $gateway_uuid => $gateway) {
-							if ($gateway['enabled'] == 'true') {
+							if ($gateway['enabled'] == 'true' && $this->is_safe_profile($gateway['profile'])) {
 								$cmd                                 = 'sofia profile ' . $gateway['profile'] . ' killgw ' . $gateway_uuid;
 								$responses[$gateway_uuid]['gateway'] = $gateway['name'];
 								$responses[$gateway_uuid]['message'] = trim(event_socket::api($cmd));
@@ -341,8 +354,11 @@ class gateways {
 					//remove gateway from session variable
 					unset($_SESSION['gateways'][$gateway_uuid]);
 
+					//skip file and event socket operations when the profile cannot be safely used as a path or command argument
+					$profile_safe = $this->is_safe_profile($gateway['profile']);
+
 					//remove the xml file (if any)
-					if (!empty($this->settings->get('switch', 'sip_profiles'))) {
+					if ($profile_safe && !empty($this->settings->get('switch', 'sip_profiles'))) {
 						$gateway_xml_file = $this->settings->get('switch', 'sip_profiles') . "/" . $gateway['profile'] . "/v_" . $gateway_uuid . ".xml";
 						if (file_exists($gateway_xml_file)) {
 							unlink($gateway_xml_file);
@@ -350,7 +366,7 @@ class gateways {
 					}
 
 					//send the api command to stop the gateway
-					if ($esl->is_connected()) {
+					if ($profile_safe && $esl->is_connected()) {
 						$cmd      = 'sofia profile ' . $gateway['profile'] . ' killgw ' . $gateway_uuid;
 						$response = event_socket::api($cmd);
 						unset($cmd);
@@ -388,6 +404,7 @@ class gateways {
 
 						//send the api command to rescan each profile
 						foreach ($profiles as $profile) {
+							if (!$this->is_safe_profile($profile)) { continue; }
 							$response = event_socket::api("sofia profile $profile rescan");
 						}
 					}
@@ -481,7 +498,7 @@ class gateways {
 							unset($_SESSION['gateways'][$gateway_uuid]);
 
 							//remove the xml file (if any)
-							if (!empty($this->settings->get('switch', 'sip_profiles'))) {
+							if ($this->is_safe_profile($gateway['profile']) && !empty($this->settings->get('switch', 'sip_profiles'))) {
 								$gateway_xml_file = $this->settings->get('switch', 'sip_profiles') . "/" . $gateway['profile'] . "/v_" . $gateway_uuid . ".xml";
 								if (file_exists($gateway_xml_file)) {
 									unlink($gateway_xml_file);
@@ -510,6 +527,7 @@ class gateways {
 
 						//send the api command to rescan each profile
 						foreach ($profiles as $profile) {
+							if (!$this->is_safe_profile($profile)) { continue; }
 							event_socket::api("sofia profile $profile rescan");
 						}
 					}
