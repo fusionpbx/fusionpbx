@@ -174,7 +174,7 @@
 				if (permission_exists('menu_item_edit')) {
 					$list_row_url = 'menu_item_edit.php?id='.urlencode($menu_uuid)."&menu_item_uuid=".urlencode($menu_item_uuid)."&menu_item_parent_uuid=".urlencode($row2['menu_item_parent_uuid']);
 				}
-				echo "<tr class='list-row' href='".$list_row_url."'>\n";
+				echo "<tr class='list-row draggable' href='".$list_row_url."' data-child-uuid='".escape($menu_item_uuid)."'>\n";
 				if (permission_exists('menu_item_edit') || permission_exists('menu_item_delete')) {
 					echo "	<td class='checkbox'>\n";
 					echo "		<input type='checkbox' name='menu_items[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
@@ -202,6 +202,11 @@
 				//}
 				//echo "	</td>\n";
 				echo "<td class='center no-wrap'>&nbsp;</td>";
+				if (is_uuid($menu_item_uuid)) {
+					echo "	<td class='vtable' style='text-align: center;'>\n";
+					echo "		<span class='drag_handle' style='color: #00000055; cursor: grab;'><i class='fa-solid fa-grip-lines' style='width: 15px;'></i></span>\n";
+					echo "	</td>\n";
+				}
 
 				//echo "<td align='center'>";
 				//if (permission_exists('menu_edit')) {
@@ -320,6 +325,7 @@
 	if (permission_exists('menu_item_edit') && $list_row_edit_button) {
 		echo "	<td class='action-button'>&nbsp;</td>\n";
 	}
+	echo "	<td class='no-wrap'>&nbsp;</td>\n";
 	echo "</tr>\n";
 
 	if (!empty($result) && @sizeof($result) != 0) {
@@ -383,7 +389,9 @@
 				if (permission_exists('menu_item_edit')) {
 					$list_row_url = 'menu_item_edit.php?id='.urlencode($menu_uuid)."&menu_item_uuid=".urlencode($menu_item_uuid)."&menu_uuid=".urlencode($menu_uuid);
 				}
-				echo "<tr class='list-row' href='".$list_row_url."'>\n";
+				echo "<tbody class='sortable_list'>\n";
+
+				echo "<tr class='list-row draggable' href='".$list_row_url."' data-parent-uuid='".escape($menu_item_uuid)."'>\n";
 				if (permission_exists('menu_item_edit') || permission_exists('menu_item_delete')) {
 					echo "<td class='checkbox'>\n";
 					echo "	<input type='checkbox' name='menu_items[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";
@@ -411,6 +419,11 @@
 				//}
 				//echo "</td>\n";
 				echo "<td class='center'>".$row['menu_item_order']."&nbsp;</td>\n";
+				if (is_uuid($menu_item_uuid)) {
+					echo "	<td class='vtable' style='text-align: center;'>\n";
+					echo "		<span class='drag_handle' style='color: #00000055; cursor: grab;'><i class='fa-solid fa-grip-lines' style='width: 15px;'></i></span>\n";
+					echo "	</td>\n";
+				}
 
 				//echo "<td align='center' nowrap>";
 				//if (permission_exists('menu_edit')) {
@@ -443,6 +456,7 @@
 				if (is_uuid($menu_item_uuid)) {
 					build_db_child_menu_list($database, $menu_item_level, $menu_item_uuid);
 				}
+				echo "</tbody>\n";
 
 		}
 		unset($result);
@@ -452,6 +466,68 @@
 	echo "</table>\n";
 	echo "</div>\n";
 	echo "<br><br>";
+
+	//include sortablejs
+	echo "<script src='/resources/sortablejs/sortable.min.js'></script>";
+
+	//menu item drag and drop
+	?>
+	<style>
+
+	.selected td:has(.drag_handle) {
+		background-color: #00000015;
+	}
+
+	</style>
+	<script>
+
+	const sortable_lists = document.querySelectorAll('.sortable_list');
+
+	sortable_lists.forEach(function(list) {
+		Sortable.create(list, {
+			group: 'shared',
+			animation: 150,
+			draggable: '.draggable',
+			handle: '.drag_handle',
+			onSort: update_menu_item_order,
+			multiDrag: true,
+			selectedClass: 'selected',
+		});
+	});
+
+	function update_menu_item_order() {
+		const menu_item_list = [];
+		let parent_order = 5;
+		let uuid = '';
+
+		sortable_lists.forEach(function(list) {
+			let menu_items = list.querySelectorAll('.draggable');
+			let order = 1;
+
+			//add the menu items to the list
+			menu_items.forEach(function(menu_item) {
+				let parent_uuid = menu_item.getAttribute('data-parent-uuid') || '';
+				let child_uuid = menu_item.getAttribute('data-child-uuid') || '';
+
+				if (parent_uuid) {
+					uuid = parent_uuid;
+					menu_item_list.push(`${uuid}||${parent_order}`);
+					parent_order += 5;
+					order = 1;
+				}
+				else {
+					menu_item_list.push(`${child_uuid}|${uuid}|${order}`);
+					order += 1;
+				}
+			});
+
+		});
+
+		document.getElementById('menu_item_order').value = menu_item_list;
+	}
+
+	</script>
+	<?php
 
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 	echo "</form>\n";
