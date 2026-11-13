@@ -34,6 +34,18 @@
 		exit;
 	}
 
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
+
+//validate the token
+	$token = new token;
+	if (!$token->validate($_SERVER['PHP_SELF'])) {
+		message::add($text['message-invalid_token'],'negative');
+		header('Location: call_center_queues.php');
+		exit;
+	}
+
 //get the variables
 	$cmd = $_GET['cmd'];
 	$call_center_queue_uuid = $_GET["id"];

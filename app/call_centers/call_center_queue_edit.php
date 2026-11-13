@@ -762,6 +762,9 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
+//create a token for the command script (it validates against its own path)
+	$token_cmd = $object->create(dirname($_SERVER['PHP_SELF']) . '/cmd.php');
+
 //show the header
 	if ($action == "add") {
 		$document['title'] = $text['title-call_center_queue_add'];
@@ -876,7 +879,7 @@
 		}
 		//echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$settings->get('theme', 'button_icon_stop'),'link'=>'cmd.php?cmd=unload&id='.urlencode($call_center_queue_uuid)]);
 		//echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$settings->get('theme', 'button_icon_start'),'link'=>'cmd.php?cmd=load&id='.urlencode($call_center_queue_uuid)]);
-		echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$settings->get('theme','button_icon_reload', ''),'link'=>'cmd.php?cmd=reload&id='.urlencode($call_center_queue_uuid)]);
+		echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$settings->get('theme','button_icon_reload', ''),'link'=>'cmd.php?cmd=reload&id='.urlencode($call_center_queue_uuid).'&'.$token_cmd['name'].'='.$token_cmd['hash']]);
 		echo button::create(['type'=>'button','label'=>$text['button-view'],'icon'=>$settings->get('theme','button_icon_view', ''),'style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/app/call_center_active/call_center_active.php?queue_name='.urlencode($call_center_queue_uuid)]);
 	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme','button_icon_save', ''),'id'=>'btn_save']);
