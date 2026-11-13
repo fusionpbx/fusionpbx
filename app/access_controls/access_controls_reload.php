@@ -34,8 +34,20 @@
 		exit;
 	}
 
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
+
 //set the variables
 	$search = $_REQUEST['search'] ?? '';
+
+//validate the token
+	$token = new token;
+	if (!$token->validate($_SERVER['PHP_SELF'])) {
+		message::add($text['message-invalid_token'],'negative');
+		header('Location: access_controls.php'.(!empty($search) ? '?search='.urlencode($search) : ''));
+		exit;
+	}
 
 //run the command
 	$result = rtrim(event_socket::api('reloadacl'));
