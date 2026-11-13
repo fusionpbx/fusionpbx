@@ -160,6 +160,9 @@
 	$object = new token;
 	$token = $object->create('/core/domain_settings/domain_settings.php');
 
+//create a token for the default settings reload script (it validates against its own path)
+	$token_reload = $object->create(PROJECT_PATH . '/core/default_settings/default_settings_reload.php');
+
 //include the header
 	$document['title'] = $text['title-domain_settings'];
 	require_once "resources/header.php";
@@ -197,7 +200,7 @@
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'action_bar_sub_button_back','style'=>'','link'=>PROJECT_PATH.'/core/domains/domains.php']);
 	if (permission_exists('default_setting_view') && $num_rows) {
 		echo button::create(['type'=>'button','label'=>$text['select-global'],'icon'=>$settings->get('theme', 'button_icon_all'),'style'=>'','link'=>PROJECT_PATH.'/core/default_settings/default_settings.php']);
-		echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/core/default_settings/default_settings_reload.php?id='.$domain_uuid]);
+		echo button::create(['type'=>'button','label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'style'=>'margin-right: 15px;','link'=>PROJECT_PATH.'/core/default_settings/default_settings_reload.php?id='.urlencode($domain_uuid).'&'.$token_reload['name'].'='.$token_reload['hash']]);
 	}
 	if (permission_exists('domain_setting_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>PROJECT_PATH."/core/domain_settings/domain_setting_edit.php?domain_uuid=".urlencode($domain_uuid)]);
