@@ -43,8 +43,16 @@ exit;
 	$text = $language->get();
 
 
-$_SESSION['contact_auth']['source'] = ($_SESSION['contact_auth']['source'] == '') ? $_REQUEST['source'] : $_SESSION['contact_auth']['source'];
-$_SESSION['contact_auth']['target'] = ($_SESSION['contact_auth']['target'] == '') ? $_REQUEST['target'] : $_SESSION['contact_auth']['target'];
+//only allow known sources and a relative script name for the redirect target
+$source_allowed = array('google');
+$_SESSION['contact_auth']['source'] = ($_SESSION['contact_auth']['source'] == '') ? ($_REQUEST['source'] ?? '') : $_SESSION['contact_auth']['source'];
+$_SESSION['contact_auth']['target'] = ($_SESSION['contact_auth']['target'] == '') ? basename($_REQUEST['target'] ?? '') : $_SESSION['contact_auth']['target'];
+if (!in_array($_SESSION['contact_auth']['source'], $source_allowed, true) || !preg_match('/^[a-zA-Z0-9_\-]+\.php$/', (string) $_SESSION['contact_auth']['target'])) {
+	message::add($text['message-access_denied'], 'negative');
+	unset($_SESSION['contact_auth']);
+	header("Location: contacts.php");
+	exit;
+}
 
 
 //google api authentication

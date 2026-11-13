@@ -114,7 +114,7 @@
 					}
 					echo "	</td>\n";
 					echo "	<td class='center'>".$text['label-'.escape($row['contact_setting_enabled'])]."&nbsp;</td>\n";
-					echo "	<td class='description overflow hide-md-dn'>".$row['contact_setting_description']."&nbsp;</td>\n";
+					echo "	<td class='description overflow hide-md-dn'>".escape($row['contact_setting_description'])."&nbsp;</td>\n";
 					if (permission_exists('contact_setting_edit') && $list_row_edit_button) {
 						echo "	<td class='action-button'>\n";
 						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);

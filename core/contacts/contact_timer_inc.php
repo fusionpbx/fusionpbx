@@ -34,9 +34,15 @@
 	}
 
 //get contact and time uuids
-	$domain_uuid = $_REQUEST['domain_uuid'];
-	$contact_uuid = $_REQUEST['contact_uuid'] ?? '';
-	$contact_time_uuid = $_REQUEST['contact_time_uuid'];
+	$domain_uuid = !empty($_REQUEST['domain_uuid']) && is_uuid($_REQUEST['domain_uuid']) ? $_REQUEST['domain_uuid'] : ($_SESSION['domain_uuid'] ?? '');
+	$contact_uuid = !empty($_REQUEST['contact_uuid']) && is_uuid($_REQUEST['contact_uuid']) ? $_REQUEST['contact_uuid'] : '';
+	$contact_time_uuid = !empty($_REQUEST['contact_time_uuid']) && is_uuid($_REQUEST['contact_time_uuid']) ? $_REQUEST['contact_time_uuid'] : '';
+
+//restrict access to the current domain
+	if (!empty($domain_uuid) && $domain_uuid != ($_SESSION['domain_uuid'] ?? '')) {
+		echo "access denied";
+		exit;
+	}
 
 //get time quantity
 	$sql = "select ";
