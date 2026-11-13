@@ -1003,6 +1003,11 @@ if (!function_exists('save_sip_profile_xml')) {
 					$sip_profile_name = $row['sip_profile_name'];
 					$sip_profile_enabled = $row['sip_profile_enabled'];
 
+					//skip profiles with a name that cannot be safely used as a file name
+					if ($sip_profile_name === '' || $sip_profile_name === '.' || $sip_profile_name === '..' || basename($sip_profile_name) !== $sip_profile_name) {
+						continue;
+					}
+
 					if (!$sip_profile_enabled) {
 						$fout = fopen($profile_dir.'/'.$sip_profile_name.".xml","w");
 						if ($fout) {
@@ -1028,7 +1033,7 @@ if (!function_exists('save_sip_profile_xml')) {
 						if (!empty($result_2)) {
 							$sip_profile_settings = '';
 							foreach ($result_2 as $row_2) {
-								$sip_profile_settings .= "		<param name=\"".$row_2["sip_profile_setting_name"]."\" value=\"".$row_2["sip_profile_setting_value"]."\"/>\n";
+								$sip_profile_settings .= "		<param name=\"".xml::escape($row_2["sip_profile_setting_name"])."\" value=\"".xml::escape($row_2["sip_profile_setting_value"])."\"/>\n";
 							}
 						}
 						unset($sql, $parameters, $result_2, $row_2);
