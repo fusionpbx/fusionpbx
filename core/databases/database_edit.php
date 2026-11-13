@@ -78,6 +78,14 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 		$database_uuid = $_POST["database_uuid"];
 	}
 
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: databases.php');
+			exit;
+		}
+
 	//delete the database
 		if (permission_exists('database_delete')) {
 			if (!empty($_POST['action']) && $_POST['action'] == 'delete' && is_uuid($database_uuid)) {
@@ -90,14 +98,6 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 					header('Location: databases.php');
 					exit;
 			}
-		}
-
-	//validate the token
-		$token = new token;
-		if (!$token->validate($_SERVER['PHP_SELF'])) {
-			message::add($text['message-invalid_token'],'negative');
-			header('Location: databases.php');
-			exit;
 		}
 
 	//check for all required data
@@ -137,7 +137,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 			$array['databases'][0]['database_path'] = $database_path;
 			$array['databases'][0]['database_description'] = $database_description;
 
-		if ($action == "add") {
+		if ($action == "add" && permission_exists('database_add')) {
 			//add new uuid
 				$array['databases'][0]['database_uuid'] = uuid();
 
@@ -153,7 +153,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 				exit;
 		}
 
-		if ($action == "update") {
+		if ($action == "update" && permission_exists('database_edit')) {
 			//add uuid to update
 				$array['databases'][0]['database_uuid'] = $database_uuid;
 
