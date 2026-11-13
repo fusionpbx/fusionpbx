@@ -56,6 +56,14 @@
 	}
 	$query_string = http_build_query($param);
 
+//validate the token
+	$token = new token;
+	if (!$token->validate($_SERVER['PHP_SELF'])) {
+		message::add($text['message-invalid_token'],'negative');
+		header('Location: access_controls.php'.($query_string ? '?'.$query_string : ''));
+		exit;
+	}
+
 //run the command
 	$result = rtrim(event_socket::api('reloadacl'));
 
