@@ -290,7 +290,7 @@
 			if (!empty($row['stream_location'])) {
 				$location_parts = explode('://',$row['stream_location']);
 				$http_protocol = ($location_parts[0] == "shout") ? 'http' : 'https';
-				echo "<audio src='".$http_protocol."://".($location_parts[1] ?? '')."' controls='controls' />\n";
+				echo "<audio src='".escape($http_protocol."://".($location_parts[1] ?? ''))."' controls='controls' />\n";
 			}
 			echo "	</td>\n";
 			if (permission_exists('stream_edit')) {
