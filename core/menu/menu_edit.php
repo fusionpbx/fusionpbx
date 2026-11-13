@@ -105,6 +105,19 @@
 			} //if ($action == "add")
 
 			if ($action == "update") {
+				//update menu item order if drag and drop was used
+					if (!empty($_POST['menu_item_order'])) {
+						$menu_item_order = explode(",", $_POST["menu_item_order"]);
+
+						foreach ($menu_item_order as $y => $item) {
+							list($uuid, $parent_uuid, $order) = explode("|", $item);
+							$array['menu_items'][$y]['menu_uuid'] = $menu_uuid;
+							$array['menu_items'][$y]['menu_item_uuid'] = $uuid;
+							$array['menu_items'][$y]['menu_item_parent_uuid'] = $parent_uuid;
+							$array['menu_items'][$y]['menu_item_order'] = $order;
+						}
+					}
+
 				//update the menu
 					$array['menus'][0]['menu_uuid'] = $menu_uuid;
 					$array['menus'][0]['menu_name'] = $menu_name;
@@ -216,6 +229,9 @@
 		echo "<input type='hidden' name='menu_uuid' value='".escape($menu_uuid)."'>\n";
 	}
 	echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
+
+	//menu item drag and drop
+	echo "<input type='hidden' id='menu_item_order' name='menu_item_order' value='' />\n";
 
 	echo "</form>";
 
