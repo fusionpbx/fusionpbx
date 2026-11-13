@@ -977,11 +977,11 @@
 					}
 				//extension
 					if ($permission['xml_cdr_extension']) {
-						$content .= "	<td class='middle hide-sm-dn no-wrap'>".$row['extension']." ".escape($row['extension_name'])."</td>\n";
+						$content .= "	<td class='middle hide-sm-dn no-wrap'>".escape($row['extension'])." ".escape($row['extension_name'])."</td>\n";
 					}
 				//domain name
 					if ($permission['xml_cdr_all'] && $_REQUEST['show'] == "all") {
-						$content .= "	<td class='middle'>".$row['domain_name']."</td>\n";
+						$content .= "	<td class='middle'>".escape($row['domain_name'])."</td>\n";
 					}
 				//caller id name
 					if ($permission['xml_cdr_caller_id_name']) {
@@ -1046,7 +1046,7 @@
 				//account code
 					if ($permission['xml_cdr_account_code']) {
 						$content .= "	<td class='middle hide-md-dn no-wrap '>";
-						$content .= 		$row['accountcode'];
+						$content .= 		escape($row['accountcode']);
 						$content .= "	</td>\n";
 					}
 				//custom cdr fields
@@ -1068,7 +1068,7 @@
 					}
 				//codec
 					if ($permission['xml_cdr_codecs']) {
-						$content .= "	<td class='middle right hide-lg-dn no-wrap'>".($row['read_codec'] ?? '').' / '.($row['write_codec'] ?? '')."</td>\n";
+						$content .= "	<td class='middle right hide-lg-dn no-wrap'>".escape($row['read_codec'] ?? '').' / '.escape($row['write_codec'] ?? '')."</td>\n";
 					}
 				//wait - total time caller waited
 					if ($permission['xml_cdr_wait']) {

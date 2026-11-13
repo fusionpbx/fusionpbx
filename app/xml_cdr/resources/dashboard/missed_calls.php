@@ -207,11 +207,11 @@
 				if ($theme_cdr_images_exist) {
 					$call_result = $row['status'];
 					if (isset($row['direction'])) {
-						echo "	<img src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+						echo "	<img src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_".escape($row['direction'])."_".escape($call_result).".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
 					}
 				}
 				echo "</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(($row['caller_id_name'] != '') ? "title=\"".$row['caller_id_name']."\"" : null).">".((is_numeric($row['caller_id_number'])) ? format_phone($row['caller_id_number']) : $row['caller_id_number'])."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(($row['caller_id_name'] != '') ? "title=\"".escape($row['caller_id_name'])."\"" : null).">".((is_numeric($row['caller_id_number'])) ? escape(format_phone($row['caller_id_number'])) : escape($row['caller_id_number']))."</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'>".$start_date_time."</td>\n";
 				echo "</tr>\n";
 				$c = ($c) ? 0 : 1;
