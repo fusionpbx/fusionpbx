@@ -103,6 +103,13 @@ class install {
 			system('mkdir -p ' . $config_path);
 		}
 
+		//remove line breaks from the submitted values to prevent injection of additional config settings
+		$this->database_host = str_replace(array("\r", "\n"), '', (string) $this->database_host);
+		$this->database_port = str_replace(array("\r", "\n"), '', (string) $this->database_port);
+		$this->database_name = str_replace(array("\r", "\n"), '', (string) $this->database_name);
+		$this->database_username = str_replace(array("\r", "\n"), '', (string) $this->database_username);
+		$this->database_password = str_replace(array("\r", "\n"), '', (string) $this->database_password);
+
 		//build the config file
 		$conf = "\n";
 		$conf .= "#database system settings\n";
