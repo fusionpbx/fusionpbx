@@ -28,9 +28,21 @@
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
+
 //check permissions
 	if (!permission_exists("sip_status_command")) {
 		echo "access denied";
+		exit;
+	}
+
+//validate the token
+	$token = new token;
+	if (!$token->validate($_SERVER['PHP_SELF'])) {
+		message::add($text['message-invalid_token'],'negative');
+		header('Location: sip_status.php');
 		exit;
 	}
 
@@ -40,11 +52,31 @@
 	$gateway = $_GET['gateway'] ?? null;
 
 //validate the sip profile name
-	$sql = "select sip_profile_name from v_sip_profiles ";
-	$sql .= "where sip_profile_name = :profile_name ";
-	$parameters['profile_name'] = $profile;
-	$profile_name = $database->select($sql, $parameters, 'column');
-	unset($sql, $parameters);
+	$profile_name = null;
+	if (!empty($profile)) {
+		$sql = "select sip_profile_name from v_sip_profiles ";
+		$sql .= "where sip_profile_name = :profile_name ";
+		$parameters['profile_name'] = $profile;
+		$profile_name = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
+		if (empty($profile_name) || !is_string($profile_name)) {
+			message::add($text['message-profile_not_found'] ?? 'SIP Profile Not Found','negative');
+			header('Location: sip_status.php');
+			exit;
+		}
+		if (!preg_match('/^[a-zA-Z0-9_-]+$/u', $profile_name)) {
+			message::add($text['message-invalid_profile'] ?? 'Invalid SIP Profile Name','negative');
+			header('Location: sip_status.php');
+			exit;
+		}
+	}
+
+//require a valid sip profile for the sofia profile commands
+	if (empty($profile_name) && in_array($action, ['killgw', 'start', 'stop', 'restart', 'flush_inbound_reg', 'rescan'], true)) {
+		message::add($text['message-profile_not_found'] ?? 'SIP Profile Not Found','negative');
+		header('Location: sip_status.php');
+		exit;
+	}
 
 //get the port from sip profile name
 	$sql = "select sip_profile_setting_value from v_sip_profile_settings ";
@@ -67,8 +99,20 @@
 	unset($sql, $parameters);
 
 //validate the gateway
+	$gateway_name = null;
 	if (!empty($_GET['gateway']) && is_uuid($_GET['gateway'])) {
-		$gateway_name = $_GET['gateway'];
+		$sql = "select gateway_uuid from v_gateways ";
+		$sql .= "where gateway_uuid = :gateway_uuid ";
+		if (!permission_exists('gateway_all')) {
+			$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		}
+		$parameters['gateway_uuid'] = $_GET['gateway'];
+		$gateway_exists = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
+		if (!empty($gateway_exists)) {
+			$gateway_name = $_GET['gateway'];
+		}
 	}
 
 //build the commands
