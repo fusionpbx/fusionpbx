@@ -250,7 +250,7 @@ class ringbacks {
 						$name = $row['domain_name'] . '/';
 					}
 					$name   .= $row['music_on_hold_name'];
-					$select .= "		<option value='local_stream://" . $name . "' " . (($selected == "local_stream://" . $name) ? 'selected="selected"' : null) . ">" . $row['music_on_hold_name'] . "</option>\n";
+					$select .= "		<option value='local_stream://" . escape($name) . "' " . (($selected == "local_stream://" . $name) ? 'selected="selected"' : null) . ">" . escape($row['music_on_hold_name']) . "</option>\n";
 				}
 				$previous_name = $row['music_on_hold_name'];
 			}
@@ -261,7 +261,7 @@ class ringbacks {
 		if (!empty($this->recordings_list)) {
 			$select .= "	<optgroup label='" . $text['label-recordings'] . "'>";
 			foreach ($this->recordings_list as $recording_value => $recording_name) {
-				$select .= "		<option value='" . $recording_value . "' " . (($selected == $recording_value) ? 'selected="selected"' : null) . ">" . $recording_name . "</option>\n";
+				$select .= "		<option value='" . escape($recording_value) . "' " . (($selected == $recording_value) ? 'selected="selected"' : null) . ">" . escape($recording_name) . "</option>\n";
 			}
 			$select .= "	</optgroup>\n";
 		}
@@ -270,7 +270,7 @@ class ringbacks {
 		if (!empty($this->streams)) {
 			$select .= "	<optgroup label='" . $text['label-streams'] . "'>";
 			foreach ($this->streams as $row) {
-				$select .= "		<option value='" . $row['stream_location'] . "' " . (($selected == $row['stream_location']) ? 'selected="selected"' : null) . ">" . $row['stream_name'] . "</option>\n";
+				$select .= "		<option value='" . escape($row['stream_location']) . "' " . (($selected == $row['stream_location']) ? 'selected="selected"' : null) . ">" . escape($row['stream_name']) . "</option>\n";
 			}
 			$select .= "	</optgroup>\n";
 		}
