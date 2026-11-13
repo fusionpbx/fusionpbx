@@ -30,7 +30,7 @@
 	require_once "resources/check_auth.php";
 
 //check permissions
-	if (!(permission_exists('user_view') || !permission_exists('user_add') || permission_exists('user_edit'))) {
+	if (!permission_exists('user_view') && !permission_exists('user_add') && !permission_exists('user_edit')) {
 		echo "access denied";
 		exit;
 	}
@@ -1018,7 +1018,7 @@
 				if (!empty($field['group_name'])) {
 					echo "<tr>\n";
 					echo "	<td class='vtable' style='white-space: nowrap; padding-right: 30px;' nowrap='nowrap'>";
-					echo escape($field['group_name']).((!empty($field['group_domain_uuid'])) ? "@".$_SESSION['domains'][$field['group_domain_uuid']]['domain_name'] : null);
+					echo escape($field['group_name']).((!empty($field['group_domain_uuid'])) ? "@".escape($_SESSION['domains'][$field['group_domain_uuid']]['domain_name']) : null);
 					echo "	</td>\n";
 					if (permission_exists('user_group_delete')) {
 						echo "	<td class='list_control_icons' style='width: 25px;'>\n";
@@ -1053,7 +1053,7 @@
 				if ($field['group_level'] <= $_SESSION['user']['group_level']) {
 					if (!isset($assigned_groups) || (isset($assigned_groups) && !in_array($field["group_uuid"], $assigned_groups))) {
 						if (isset($group_uuid_name) && $group_uuid_name == $field['group_uuid']."|".$field['group_name']) { $selected = "selected='selected'"; } else { $selected = ''; }
-						echo "	<option value='".$field['group_uuid']."|".$field['group_name']."' $selected>".$field['group_name'].((!empty($field['domain_uuid'])) ? "@".$_SESSION['domains'][$field['domain_uuid']]['domain_name'] : null)."</option>\n";
+						echo "	<option value='".escape($field['group_uuid'])."|".escape($field['group_name'])."' $selected>".escape($field['group_name']).((!empty($field['domain_uuid'])) ? "@".escape($_SESSION['domains'][$field['domain_uuid']]['domain_name']) : null)."</option>\n";
 					}
 				}
 			}
