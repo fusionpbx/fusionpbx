@@ -100,15 +100,39 @@
 			$domain_name = $row['domain_name'];
 			unset($sql, $parameters);
 		}
+
+		//verify the ring group belongs to the current domain unless allowed to access all domains
+		if (is_uuid($ring_group_uuid) && !permission_exists('ring_group_all')) {
+			$sql = "select ring_group_uuid from v_ring_groups ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and ring_group_uuid = :ring_group_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['ring_group_uuid'] = $ring_group_uuid;
+			$row = $database->select($sql, $parameters, 'row');
+			if (empty($row)) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
 	}
 	else {
 		$action = "add";
 	}
 
 //delete the user from the ring group
-	if ((!empty($_GET["a"])) == "delete"
+	if (!empty($_GET["a"]) && $_GET["a"] == "delete"
+		&& is_uuid($ring_group_uuid)
 		&& is_uuid($_REQUEST["user_uuid"])
 		&& permission_exists("ring_group_edit")) {
+			//validate the token
+				$token = new token;
+				if (!$token->validate($_SERVER['PHP_SELF'])) {
+					message::add($text['message-invalid_token'],'negative');
+					header('Location: ring_groups.php');
+					exit;
+				}
+
 			//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
 
@@ -244,7 +268,15 @@
 	}
 
 //assign the user to the ring group
-	if (!empty($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && $_GET["a"] != "delete" && permission_exists("ring_group_edit")) {
+	if (!empty($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && ($_GET["a"] ?? '') != "delete" && permission_exists("ring_group_edit")) {
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: ring_group_edit.php?id='.urlencode($_REQUEST["id"]));
+				exit;
+			}
+
 		//set the variables
 		$user_uuid = $_REQUEST["user_uuid"];
 
@@ -874,7 +906,7 @@
 			case 'mp3' : $mime_type = 'audio/mpeg'; break;
 			case 'ogg' : $mime_type = 'audio/ogg'; break;
 		}
-		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
+		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".escape($playable ?? '')."' type='".escape($mime_type ?? '')."'></audio>";
 		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'))"]);
 		unset($playable, $mime_type);
 	}
@@ -1129,7 +1161,7 @@
 			echo "			<tr>\n";
 			echo "				<td class='vtable'>".escape($field['username'])."</td>\n";
 			echo "				<td>\n";
-			echo "					<a href='ring_group_edit.php?id=".urlencode($ring_group_uuid)."&user_uuid=".urlencode($field['user_uuid'])."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
+			echo "					<a href='ring_group_edit.php?id=".urlencode($ring_group_uuid)."&user_uuid=".urlencode($field['user_uuid'])."&a=delete&".$token['name']."=".$token['hash']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>\n";
 			echo "				</td>\n";
 			echo "			</tr>\n";
 		}
@@ -1275,7 +1307,7 @@
 		echo "	".$text['label-ring_group_forward_toll_allow']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ring_group_forward_toll_allow' maxlength='255' value=".escape($ring_group_forward_toll_allow).">\n";
+		echo "	<input class='formfld' type='text' name='ring_group_forward_toll_allow' maxlength='255' value=\"".escape($ring_group_forward_toll_allow)."\">\n";
 		echo "<br />\n";
 		echo $text['description-ring_group_forward_toll_allow']."\n";
 		echo "</td>\n";
