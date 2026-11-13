@@ -8,13 +8,34 @@ class xml {
 	/**
 	 * Sanitizes a string by removing any PHP-style placeholders and encoding special characters.
 	 *
+	 * FreeSWITCH / template variables (${var} and $${var}) are intentionally removed here. When the
+	 * value is allowed to keep its variable syntax, such as SIP profile settings holding
+	 * $${external_rtp_ip}, use escape() instead so the variable is not destroyed.
+	 *
 	 * @param string $string The input string to be sanitized.
 	 *
 	 * @return string The sanitized string with special characters encoded.
 	 */
 	static function sanitize($string) {
-		$string = preg_replace('/\$\{[^}]+\}/', '', $string);
-		return htmlspecialchars($string, ENT_XML1);
+		$string = (string) preg_replace('/\$\{[^}]+\}/', '', (string) $string);
+		return self::escape($string);
+	}
+
+	/**
+	 * Encodes a string for safe use inside an XML element or a quoted XML attribute value.
+	 *
+	 * Unlike sanitize() this leaves FreeSWITCH variable syntax ($${var}, ${var}) untouched, which is
+	 * required when writing user managed values into the FreeSWITCH configuration. Quotes are always
+	 * encoded, without ENT_QUOTES htmlspecialchars() leaves double quotes untouched which allows an
+	 * attacker to break out of the attribute and inject additional attributes or elements. Invalid
+	 * UTF-8 is substituted rather than returning an empty string that would blank the whole value.
+	 *
+	 * @param string $string The input string to be encoded.
+	 *
+	 * @return string The encoded string, safe to place between XML quotes.
+	 */
+	static function escape($string) {
+		return htmlspecialchars((string) $string, ENT_QUOTES | ENT_XML1 | ENT_SUBSTITUTE);
 	}
 
 	/**
