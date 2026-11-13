@@ -47,6 +47,7 @@
 
 			$slash = substr($_GET['data'],0,1) != '/' ? '/' : null;
 			$full_file_path = $settings->get('switch', 'recordings')."/".$_SESSION['domain_name'].$slash.str_replace($settings->get('switch', 'recordings')."/".$_SESSION['domain_name'], '', $_GET['data']);
+			$base_path = realpath($settings->get('switch', 'recordings')."/".$_SESSION['domain_name']);
 
 		}
 		else if ($_GET['type'] == 'sounds') {
@@ -73,14 +74,26 @@
 
 			//build full path to sound file
 			$full_file_path = $path.$filename_parts[1];
+			$base_path = realpath($settings->get('switch', 'sounds'));
 
+		}
+
+		//make sure the resolved path stays inside the base directory, also blocks path traversal and symlinks
+		$full_file_path = realpath($full_file_path);
+		if ($full_file_path === false
+			|| is_file($full_file_path) === false
+			|| empty($base_path)
+			|| strpos($full_file_path, $base_path.'/') !== 0) {
+			http_response_code(404);
+			exit;
 		}
 
 		//stream waveform file
 		if (file_exists($full_file_path)) {
 
 			//temporary waveform image filename
-			$temp_filename = 'waveform_'.$_GET['id'].'_'.rand(0000,9999).'.png';
+			$waveform_id = preg_replace('#[^A-Za-z0-9]#', '', $_GET['id']);
+			$temp_filename = 'waveform_'.$waveform_id.'_'.rand(0000,9999).'.png';
 
 			//create temporary waveform image, if doesn't exist
 			if (file_exists($temp_filename)) {

@@ -74,12 +74,36 @@
 		foreach ($_POST['ring_groups'] as $row) {
 			//build array
 				if (is_uuid($row['ring_group_uuid'])) {
+					//verify the ring group is in the current domain and assigned to the user when not allowed all domains
+					if (permission_exists('ring_group_domain') || permission_exists('ring_group_all')) {
+						$sql = "select ring_group_uuid from v_ring_groups ";
+						$sql .= "where domain_uuid = :domain_uuid ";
+						$sql .= "and ring_group_uuid = :ring_group_uuid ";
+						$parameters['domain_uuid'] = $domain_uuid;
+					}
+					else {
+						$sql = "select r.ring_group_uuid from v_ring_groups as r, v_ring_group_users as u ";
+						$sql .= "where r.domain_uuid = :domain_uuid ";
+						$sql .= "and r.ring_group_uuid = u.ring_group_uuid ";
+						$sql .= "and u.user_uuid = :user_uuid ";
+						$sql .= "and r.ring_group_uuid = :ring_group_uuid ";
+						$parameters['domain_uuid'] = $_SESSION['user']['domain_uuid'];
+						$parameters['user_uuid'] = $_SESSION['user']['user_uuid'];
+					}
+					$parameters['ring_group_uuid'] = $row['ring_group_uuid'];
+					$row_owned = $database->select($sql, $parameters, 'row');
+					if (empty($row_owned)) {
+						continue;
+					}
+					unset($sql, $parameters, $row_owned);
+
 					$array['ring_groups'][$x]['ring_group_uuid'] = $row['ring_group_uuid'];
 					$array['ring_groups'][$x]['ring_group_forward_enabled'] = $row['ring_group_forward_enabled'] == 'true' && $row['ring_group_forward_destination'] != '' ? 'true' : 'false';
 					$array['ring_groups'][$x]['ring_group_forward_destination'] = $row['ring_group_forward_destination'];
+
+					//increment counter
+						$x++;
 				}
-			//increment counter
-				$x++;
 		}
 
 		if (is_array($array) && sizeof($array) != 0) {
