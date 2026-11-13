@@ -49,8 +49,14 @@
 
 //get the http get values and set them as php variables
 	$voicemail_id = $_REQUEST["id"] ?? '';
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET["order_by"] ?? '');
+	$order = ($_GET["order"] ?? '') === 'desc' ? 'desc' : 'asc';
+
+//the voicemail id is used to build file system paths, only allow a numeric value
+	if ($voicemail_id !== '' && !is_numeric($voicemail_id)) {
+		echo "access denied";
+		return;
+	}
 
 //set the back button url
 	//only accept a relative, same-origin path for the untrusted 'back' parameter
