@@ -48,6 +48,11 @@
 		$voicemail_greeting_uuid = $data[1];
 		unset($data);
 
+		//validate the voicemail id and greeting uuid before using them to build file system paths
+		if (!is_numeric($voicemail_id) || !is_uuid($voicemail_greeting_uuid)) {
+			exit;
+		}
+
 		//get currently selected greeting
 		$sql = "select greeting_id from v_voicemails ";
 		$sql .= "where domain_uuid = :domain_uuid ";
@@ -85,7 +90,8 @@
 		if (file_exists($full_file_path)) {
 
 			//temporary waveform image filename
-			$temp_filename = 'waveform_'.$_GET['id'].'_'.rand(0000,9999).'.png';
+			$waveform_id = preg_replace('#[^A-Za-z0-9]#', '', $_GET['id']);
+			$temp_filename = 'waveform_'.$waveform_id.'_'.rand(0000,9999).'.png';
 
 			//create temporary waveform image, if doesn't exist
 			if (file_exists($greeting_dir.'/'.$temp_filename)) {
