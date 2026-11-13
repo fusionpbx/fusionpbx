@@ -1032,7 +1032,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		foreach ($groups as $row) {
 			if ((!empty($field['group_level']) && $field['group_level'] <= $_SESSION['user']['group_level']) || empty($field['group_level'])) {
 				if (empty($assigned_groups) || !in_array($row["group_uuid"], $assigned_groups)) {
-					echo "	<option value='".$row['group_uuid']."'>".$row['group_name'].(!empty($row['domain_uuid']) ? "@".$_SESSION['domains'][$row['domain_uuid']]['domain_name'] : null)."</option>\n";
+					echo "	<option value='".escape($row['group_uuid'])."'>".escape($row['group_name']).(!empty($row['domain_uuid']) ? "@".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name']) : null)."</option>\n";
 				}
 			}
 		}
