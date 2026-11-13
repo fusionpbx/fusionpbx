@@ -43,6 +43,11 @@
 	require_once "resources/classes/template.php";
 	require_once "core/install/resources/classes/install.php";
 
+//security headers (this page does not include resources/require.php)
+	header("Content-Security-Policy: frame-ancestors 'self';");
+	header("X-Content-Type-Options: nosniff");
+	header("Referrer-Policy: strict-origin-when-cross-origin");
+
 //start the session before text object stores values in session
 	ini_set("session.cookie_httponly", 'true');
 	ini_set("session.cookie_secure", 'false');
@@ -64,7 +69,7 @@
 	$menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
 
 //error reporting
-	ini_set('display_errors', '1');
+	ini_set('display_errors', '0');
 	error_reporting (E_ALL ^ E_NOTICE); // Report warnings
 	//error_reporting (E_ALL); // Report everything
 	//error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
@@ -325,7 +330,7 @@
 
 //get the domain
 	$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-	$domain_name = $domain_array[0];
+	$domain_name = htmlspecialchars($domain_array[0], ENT_QUOTES, 'UTF-8'); //escape the client supplied host before output
 
 //initialize a template object
 	$view = new template();
