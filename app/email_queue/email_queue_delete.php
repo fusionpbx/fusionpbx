@@ -38,6 +38,14 @@
 	$language = new text;
 	$text = $language->get();
 
+//validate the token
+	$token = new token;
+	if (!$token->validate(dirname($_SERVER['PHP_SELF']) . '/email_queue.php')) {
+		message::add($text['message-invalid_token'],'negative');
+		header('Location: email_queues.php');
+		exit;
+	}
+
 //delete the message
 	message::add($text['message-delete']);
 
