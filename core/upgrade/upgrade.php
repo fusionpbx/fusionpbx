@@ -154,6 +154,9 @@
 		if (!$file_handle){ echo "Failed to write the config file\n"; exit; }
 		fwrite($file_handle, $conf);
 		fclose($file_handle);
+
+		//restrict the config file permissions (contains database credentials)
+		@chmod($config_file, 0640);
 		echo "Created " . rtrim($config_file, '/\\') . " from " . rtrim($config_path, '/\\') . DIRECTORY_SEPARATOR . "config.php\n";
 	}
 
