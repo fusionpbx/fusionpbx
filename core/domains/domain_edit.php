@@ -44,7 +44,8 @@
 	$domain_description = '';
 
 //action add or update
-	if (!permission_exists('domain_add') || (file_exists(dirname(__DIR__, 2)."/app/domains/") && !permission_exists('domain_all'))) {
+	$domain_all_access = permission_exists('domain_add') && (!file_exists(dirname(__DIR__, 2)."/app/domains/") || permission_exists('domain_all'));
+	if (!$domain_all_access) {
 		//admin editing own domain/settings
 		$domain_uuid = $_SESSION['domain_uuid'];
 		$action = "update";
@@ -95,8 +96,16 @@
 //process the data
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: domains.php'.($query_string ? '?'.$query_string : ''));
+				exit;
+			}
+
 		//get the domain_uuid
-			if ($action == "update" && !empty($_POST["domain_uuid"]) && is_uuid($_POST["domain_uuid"])) {
+			if ($action == "update" && $domain_all_access && !empty($_POST["domain_uuid"]) && is_uuid($_POST["domain_uuid"])) {
 				$domain_uuid = $_POST["domain_uuid"];
 			}
 
@@ -119,18 +128,15 @@
 				exit;
 			}
 
-		//validate the token
-			$token = new token;
-			if (!$token->validate($_SERVER['PHP_SELF'])) {
-				message::add($text['message-invalid_token'],'negative');
-				header('Location: domains.php'.($query_string ? '?'.$query_string : ''));
-				exit;
-			}
-
 		//check for all required data
 			$msg = '';
 			if (empty($domain_name)) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
 			//if (empty($domain_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
+
+		//check the domain name, it is used in file and directory paths
+			if (!empty($domain_name) && !preg_match('/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/', $domain_name)) {
+				$msg .= $text['message-domain_name_invalid']."<br>\n";
+			}
 
 		//check for a duplicate domain name
 			if ($action == 'add') {
