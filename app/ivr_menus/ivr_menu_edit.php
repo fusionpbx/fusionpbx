@@ -1095,6 +1095,9 @@
 		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));"]);
 		unset($playable, $mime_type);
 	}
+	if (class_exists('recording_call')) {
+		echo recording_call::button($instance_id);
+	}
 	echo "<br />\n";
 	if ($speech_enabled && !empty($speech_engine)) {
 		echo "<div class='".$instance_label."_tts'>\n";
@@ -1264,6 +1267,9 @@
 		echo "<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
 		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));"]);
 		unset($playable, $mime_type);
+	}
+	if (class_exists('recording_call')) {
+		echo recording_call::button($instance_id);
 	}
 	echo "<br />\n";
 	if ($speech_enabled && !empty($speech_engine)) {
@@ -1636,6 +1642,9 @@
 		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));"]);
 		unset($playable, $mime_type);
 	}
+	if (class_exists('recording_call')) {
+		echo recording_call::button($instance_id);
+	}
 	echo "		<br />\n";
 	echo $text['description-'.$instance_label]."\n";
 	echo "	</td>\n";
@@ -1708,6 +1717,9 @@
 		echo "		<audio id='recording_audio_".$instance_id."' style='display: none;' preload='none' ontimeupdate=\"update_progress('".$instance_id."')\" onended=\"recording_reset('".$instance_id."');\" src='".($playable ?? '')."' type='".($mime_type ?? '')."'></audio>";
 		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'icon'=>$settings->get('theme', 'button_icon_play'),'id'=>'recording_button_'.$instance_id,'style'=>'display: '.(!empty($mime_type) ? 'inline' : 'none'),'onclick'=>"recording_play('".$instance_id."', document.getElementById('".$instance_id."').value, document.getElementById('".$instance_id."').options[document.getElementById('".$instance_id."').selectedIndex].parentNode.getAttribute('data-type'));"]);
 		unset($playable, $mime_type);
+	}
+	if (class_exists('recording_call')) {
+		echo recording_call::button($instance_id);
 	}
 	echo "		<br />\n";
 	echo "		".$text['description-'.$instance_label]."\n";

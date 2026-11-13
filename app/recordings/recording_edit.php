@@ -396,6 +396,9 @@
 		echo "<audio id='recording_audio_".escape($recording_uuid)."' style='display: none;' preload='none' onended=\"recording_reset('".escape($recording_uuid)."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?action=download&type=rec&id=".urlencode($recording_uuid)."&v=".$recording_hash."\" type='".$recording_type."'></audio>";
 		echo button::create(['type'=>'button','title'=>$text['label-play'].' / '.$text['label-pause'],'label'=>$text['label-preview'],'icon'=>$settings->get('theme','button_icon_play'),'id'=>'recording_button_'.escape($recording_uuid),'onclick'=>"recording_play('".escape($recording_uuid)."','','','".$text['label-preview']."'); this.blur();"]);
 	}
+	if (permission_exists('recording_edit') && !empty($recording_uuid) && is_uuid($recording_uuid)) {
+		echo recording_call::button('', $recording_uuid, ['label' => true, 'style' => 'margin-left: 15px;']);
+	}
 	echo button::create(['type'=>'submit','label'=>$text['button-save'],'icon'=>$settings->get('theme', 'button_icon_save'),'id'=>'btn_save','style'=>'margin-left: 15px;']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
