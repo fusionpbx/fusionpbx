@@ -38,6 +38,14 @@
 	$language = new text;
 	$text = $language->get();
 
+//validate the token
+	$token = new token;
+	if (!$token->validate($_SERVER['PHP_SELF'])) {
+		message::add($text['message-invalid_token'],'negative');
+		header('Location: '.PROJECT_PATH.'/core/menu/menu.php');
+		exit;
+	}
+
 //get the http value and set as a php variable
 	$menu_uuid = $_REQUEST["menu_uuid"];
 

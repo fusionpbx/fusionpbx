@@ -37,6 +37,14 @@
 	$language = new text;
 	$text = $language->get();
 
+//validate the token
+	$token = new token;
+	if (!$token->validate(dirname($_SERVER['PHP_SELF']) . '/menu_item_list.php')) {
+		message::add($text['message-invalid_token'],'negative');
+		header('Location: menu.php');
+		return;
+	}
+
 //move down more than one level at a time
 //update v_menu_items set menu_order = (menu_order+1) where menu_order > 2 or menu_order = 2
 
