@@ -177,10 +177,14 @@ if (!empty($_GET)) {
 		if ($_GET['type'] == "text") {
 			$vcard->build();
 			$content = $vcard->card;
-			if ($qr_vcard) {
+			if (!empty($qr_vcard)) {
 				$qr_vcard = $content;
 			}
 			else {
+				//output as a vCard, never as HTML: contact values are user supplied and would
+				//otherwise be rendered as markup when this page is requested directly (CWE-79)
+				header('Content-Type: text/vcard; charset=utf-8');
+				header('Content-Disposition: inline; filename="contact.vcf"');
 				echo $content;
 			}
 		}
@@ -191,8 +195,9 @@ if (!empty($_GET)) {
 			$content = $vcard->card;
 
 			if (isset($_GET['debug'])) {
+				//escape the contact data: it is user supplied and rendered as HTML here
 				echo "<pre>";
-				print_r($vcard->data);
+				print_r(array_map([vcard::class, 'escape_text'], $vcard->data));
 				echo "</pre>";
 				exit;
 			}

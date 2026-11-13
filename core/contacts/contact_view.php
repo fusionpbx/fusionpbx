@@ -139,7 +139,7 @@
 		$contact_name .= $contact_name_suffix ? escape($contact_name_suffix).' ' : null;
 	}
 	else {
-		$contact_name = $contact_organization;
+		$contact_name = escape($contact_organization);
 	}
 
 //show the header
@@ -159,7 +159,7 @@
 		$qr_size = '0';
 	}
 	elseif (!empty($settings->get('theme', 'qr_brand_type')) && !empty($settings->get('theme', 'qr_brand_text')) && $settings->get('theme', 'qr_brand_type') == 'text') {
-		$qr_option = 'label: "'.$settings->get('theme', 'qr_brand_text').'"';
+		$qr_option = 'label: '.json_encode((string) $settings->get('theme', 'qr_brand_text'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
 		$qr_mode = '2';
 		$qr_size = '0.05';
 	}
@@ -179,6 +179,8 @@
 	$_GET['type'] = "text";
 	$qr_vcard = true;
 	include "contacts_vcard.php";
+	//encode the vCard before embedding it in the attribute: contact fields are stored raw and
+	//a double quote would otherwise break out of the value attribute (CWE-79)
 	echo "<input type='hidden' id='qr_vcard' value=\"".htmlspecialchars($qr_vcard, ENT_QUOTES, 'UTF-8')."\">";
 	echo "<style>";
 	echo "	#qr_code_container {";
@@ -313,10 +315,10 @@
 	}
 
 	if ($contact_title || $contact_organization) {
-		echo ($contact_title ? '<i>'.$contact_title.'</i>' : null).($contact_title && $contact_organization ? ', ' : null).($contact_organization ? '<strong>'.$contact_organization.'</strong>' : null)."\n";
+		echo ($contact_title ? '<i>'.escape($contact_title).'</i>' : null).($contact_title && $contact_organization ? ', ' : null).($contact_organization ? '<strong>'.escape($contact_organization).'</strong>' : null)."\n";
 	}
 	else {
-		echo $contact_note."\n";
+		echo escape($contact_note)."\n";
 	}
 	echo "<br /><br />\n";
 
@@ -398,7 +400,7 @@
 			if ($contact_time_zone) {
 				echo "<div class='box contact-details-label'>".$text['label-contact_time_zone']."</div>\n";
 				echo "<div class='box'>";
-				echo $contact_time_zone."<br>\n";
+				echo escape($contact_time_zone)."<br>\n";
 				echo "</div>\n";
 			}
 		//users (viewing contact)

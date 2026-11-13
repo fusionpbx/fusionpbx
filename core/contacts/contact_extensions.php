@@ -86,11 +86,11 @@
 						echo 	"<a href='".PROJECT_PATH."/app/extensions/extension_edit.php?id=".urlencode($row['extension_uuid'])."'>".escape($row['extension'])."</a>";
 					}
 					else {
-						echo $row['extension'];
+						echo escape($row['extension']);
 					}
 					echo "	</td>\n";
 					echo "	<td class='center'>".$text['label-'.escape($row['enabled'])]."&nbsp;</td>\n";
-					echo "	<td class='description overflow hide-md-dn'>".$row['description']."&nbsp;</td>\n";
+					echo "	<td class='description overflow hide-md-dn'>".escape($row['description'])."&nbsp;</td>\n";
 					if (permission_exists('extension_edit') && $list_row_edit_button) {
 						echo "	<td class='action-button'>\n";
 						echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);

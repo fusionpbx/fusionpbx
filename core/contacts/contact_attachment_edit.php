@@ -53,6 +53,36 @@
 		exit;
 	}
 
+//verify the contact belongs to the domain
+	if (!permission_exists('contact_all')) {
+		$sql = "select contact_uuid from v_contacts ";
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and contact_uuid = :contact_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['contact_uuid'] = $contact_uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $row);
+	}
+
+//verify the attachment belongs to the domain
+	if ($action == 'update') {
+		$sql = "select contact_attachment_uuid from v_contact_attachments ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and contact_attachment_uuid = :contact_attachment_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['contact_attachment_uuid'] = $contact_attachment_uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $row);
+	}
+
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 
