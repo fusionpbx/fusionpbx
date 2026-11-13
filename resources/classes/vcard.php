@@ -78,6 +78,66 @@ class vcard {
 	*/
 
 	/**
+	 * Escapes a single TEXT value for use in a vCard property (RFC 6350 section 3.3.11).
+	 *
+	 * Backslashes, semicolons and commas are escaped with a preceding backslash and any
+	 * carriage return / line feed is encoded as the literal "\n" sequence. This keeps
+	 * user supplied data inside its own property value: it cannot terminate the value,
+	 * start a new component of a structured value, or inject additional vCard lines.
+	 *
+	 * @access public
+	 * @param mixed $value The raw value (null is treated as an empty string).
+	 * @return string The escaped value, safe to embed in a vCard line.
+	 */
+	public static function escape_text($value): string {
+		$value = (string) ($value ?? '');
+		if ($value === '') {
+			return '';
+		}
+
+		//remove null bytes and control characters other than tab, carriage return and line feed.
+		//byte oriented (no /u): these classes only match ASCII bytes, which never occur inside a
+		//valid UTF-8 multibyte sequence, so invalid UTF-8 input cannot make this return null.
+		$value = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $value) ?? '';
+
+		//normalize line endings so a lone CR cannot be mistaken for a line break
+		$value = str_replace(["\r\n", "\r"], "\n", $value);
+
+		//escape the backslash first, then the structural delimiters
+		$value = str_replace('\\', '\\\\', $value);
+		$value = str_replace(';', '\\;', $value);
+		$value = str_replace(',', '\\,', $value);
+
+		//encode line breaks as the escaped "\n" sequence (no raw CR/LF left in the line)
+		$value = str_replace("\n", '\\n', $value);
+
+		return $value;
+	}
+
+	/**
+	 * Sanitizes a value that is not of the TEXT type (URI, phone number, date, ...).
+	 *
+	 * These values are not comma/semicolon escaped by the specification, but they must
+	 * never contain line breaks or control characters because those would allow vCard
+	 * property injection.
+	 *
+	 * @access public
+	 * @param mixed $value The raw value (null is treated as an empty string).
+	 * @return string The sanitized value, safe to embed in a vCard line.
+	 */
+	public static function sanitize_line($value): string {
+		$value = (string) ($value ?? '');
+		if ($value === '') {
+			return '';
+		}
+
+		//remove null bytes, control characters and any line break (byte oriented; see escape_text)
+		$value = preg_replace('/[\x00-\x1F\x7F]/', '', $value) ?? '';
+
+		return $value;
+	}
+
+	/**
 	 * Downloads the vCard data as a file.
 	 *
 	 * @access public
@@ -116,6 +176,10 @@ class vcard {
 	/**
 	 * Builds the vCard.
 	 *
+	 * All contact values are escaped before being concatenated into the card so that
+	 * stored data cannot break out of its property (vCard injection) and, downstream,
+	 * cannot inject markup when the card is embedded in a page.
+	 *
 	 * @access public
 	 * @return string The built vCard as a string.
 	 */
@@ -144,36 +208,42 @@ class vcard {
 			$this->revision_date = date('Y-m-d H:i:s');
 		}
 
+		//the time zone is echoed as a property value; only accept the offset or identifier forms
+		$timezone = self::sanitize_line($this->data['timezone']);
+		if (!preg_match('/^[+-]\d{4}$/', $timezone) && !preg_match('#^[A-Za-z][A-Za-z0-9_+/-]*$#', $timezone)) {
+			$timezone = date("O");
+		}
+
 		$this->card = "BEGIN:VCARD\r\n";
 		$this->card .= "VERSION:3.0\r\n";
 		//$this->card .= "CLASS:".$this->class."\r\n";
 		//$this->card .= "PRODID:-//class_vcard from TroyWolf.com//NONSGML Version 1//EN\r\n";
 //		$this->card .= "REV:".$this->revision_date."\r\n";
-		$this->card .= "FN:" . $this->data['display_name'] . "\r\n";
+		$this->card .= "FN:" . self::escape_text($this->data['display_name']) . "\r\n";
 		$this->card .= "N:";
-		$this->card .= $this->data['last_name'] . ";";
-		$this->card .= $this->data['first_name'];
+		$this->card .= self::escape_text($this->data['last_name']) . ";";
+		$this->card .= self::escape_text($this->data['first_name']);
 		if (!empty($this->data['additional_name'])) {
-			$this->card .= ";" . $this->data['additional_name'];
+			$this->card .= ";" . self::escape_text($this->data['additional_name']);
 		}
 		if (!empty($this->data['name_prefix'])) {
-			$this->card .= ";" . $this->data['name_prefix'];
+			$this->card .= ";" . self::escape_text($this->data['name_prefix']);
 		}
 		if (!empty($this->data['name_suffix'])) {
-			$this->card .= ";" . $this->data['name_suffix'];
+			$this->card .= ";" . self::escape_text($this->data['name_suffix']);
 		}
 		$this->card .= "\r\n";
 		if ($this->data['nickname']) {
-			$this->card .= "NICKNAME:" . $this->data['contact_nickname'] . "\r\n";
+			$this->card .= "NICKNAME:" . self::escape_text($this->data['contact_nickname'] ?? $this->data['nickname']) . "\r\n";
 		}
 		if ($this->data['title']) {
-			$this->card .= "TITLE:" . $this->data['title'] . "\r\n";
+			$this->card .= "TITLE:" . self::escape_text($this->data['contact_title'] ?? $this->data['title']) . "\r\n";
 		}
 		if ($this->data['company']) {
-			$this->card .= "ORG:" . $this->data['company'];
+			$this->card .= "ORG:" . self::escape_text($this->data['company']);
 		}
 		if ($this->data['department']) {
-			$this->card .= ";" . $this->data['department'];
+			$this->card .= ";" . self::escape_text($this->data['department']);
 		}
 		$this->card .= "\r\n";
 
@@ -188,67 +258,67 @@ class vcard {
 				|| !empty($this->data[$vcard_address_type_value . '_country'])) {
 				$this->card .= "ADR;TYPE=" . $vcard_address_type_value . ":";
 				if (!empty($this->data[$vcard_address_type_value . '_po_box'])) {
-					$this->card .= $this->data[$vcard_address_type_value . '_po_box'] . ";";
+					$this->card .= self::escape_text($this->data[$vcard_address_type_value . '_po_box']) . ";";
 				}
 				if (!empty($this->data[$vcard_address_type_value . '_extended_address'])) {
-					$this->card .= $this->data[$vcard_address_type_value . '_extended_address'] . ";";
+					$this->card .= self::escape_text($this->data[$vcard_address_type_value . '_extended_address']) . ";";
 				}
 				if (!empty($this->data[$vcard_address_type_value . '_address'])) {
-					$this->card .= $this->data[$vcard_address_type_value . '_address'] . ";";
+					$this->card .= self::escape_text($this->data[$vcard_address_type_value . '_address']) . ";";
 				}
 				if (!empty($this->data[$vcard_address_type_value . '_city'])) {
-					$this->card .= $this->data[$vcard_address_type_value . '_city'] . ";";
+					$this->card .= self::escape_text($this->data[$vcard_address_type_value . '_city']) . ";";
 				}
 				if (!empty($this->data[$vcard_address_type_value . '_state'])) {
-					$this->card .= $this->data[$vcard_address_type_value . '_state'] . ";";
+					$this->card .= self::escape_text($this->data[$vcard_address_type_value . '_state']) . ";";
 				}
 				if (!empty($this->data[$vcard_address_type_value . '_postal_code'])) {
-					$this->card .= $this->data[$vcard_address_type_value . '_postal_code'] . ";";
+					$this->card .= self::escape_text($this->data[$vcard_address_type_value . '_postal_code']) . ";";
 				}
 				if (!empty($this->data[$vcard_address_type_value . '_country'])) {
-					$this->card .= $this->data[$vcard_address_type_value . '_country'] . "";
+					$this->card .= self::escape_text($this->data[$vcard_address_type_value . '_country']) . "";
 				}
 				$this->card .= "\r\n";
 			}
 		}
 
 		if ($this->data['email1']) {
-			$this->card .= "EMAIL;PREF=1:" . $this->data['email1'] . "\r\n";
+			$this->card .= "EMAIL;PREF=1:" . self::sanitize_line($this->data['email1']) . "\r\n";
 		}
 		if ($this->data['email2']) {
-			$this->card .= "EMAIL;PREF=2:" . $this->data['email2'] . "\r\n";
+			$this->card .= "EMAIL;PREF=2:" . self::sanitize_line($this->data['email2']) . "\r\n";
 		}
 		if ($this->data['voice_tel']) {
-			$this->card .= "TEL;TYPE=voice:" . $this->data['voice_tel'] . "\r\n";
+			$this->card .= "TEL;TYPE=voice:" . self::sanitize_line($this->data['voice_tel']) . "\r\n";
 		}
 		if ($this->data['work_tel']) {
-			$this->card .= "TEL;TYPE=work:" . $this->data['work_tel'] . "\r\n";
+			$this->card .= "TEL;TYPE=work:" . self::sanitize_line($this->data['work_tel']) . "\r\n";
 		}
 		if ($this->data['home_tel']) {
-			$this->card .= "TEL;TYPE=home:" . $this->data['home_tel'] . "\r\n";
+			$this->card .= "TEL;TYPE=home:" . self::sanitize_line($this->data['home_tel']) . "\r\n";
 		}
 		if ($this->data['cell_tel']) {
-			$this->card .= "TEL;TYPE=cell:" . $this->data['cell_tel'] . "\r\n";
+			$this->card .= "TEL;TYPE=cell:" . self::sanitize_line($this->data['cell_tel']) . "\r\n";
 		}
 		if ($this->data['fax_tel']) {
-			$this->card .= "TEL;TYPE=fax:" . $this->data['fax_tel'] . "\r\n";
+			$this->card .= "TEL;TYPE=fax:" . self::sanitize_line($this->data['fax_tel']) . "\r\n";
 		}
 		if ($this->data['pager_tel']) {
-			$this->card .= "TEL;TYPE=pager:" . $this->data['pager_tel'] . "\r\n";
+			$this->card .= "TEL;TYPE=pager:" . self::sanitize_line($this->data['pager_tel']) . "\r\n";
 		}
 		if ($this->data['url']) {
-			$this->card .= "URL:" . $this->data['url'] . "\r\n";
+			$this->card .= "URL:" . self::sanitize_line($this->data['url']) . "\r\n";
 		}
 		if ($this->data['birthday']) {
-			$this->card .= "BDAY:" . $this->data['birthday'] . "\r\n";
+			$this->card .= "BDAY:" . self::sanitize_line($this->data['birthday']) . "\r\n";
 		}
 		if ($this->data['role']) {
-			$this->card .= "ROLE:" . $this->data['role'] . "\r\n";
+			$this->card .= "ROLE:" . self::escape_text($this->data['contact_role'] ?? $this->data['role']) . "\r\n";
 		}
 		if ($this->data['note']) {
-			$this->card .= "NOTE:" . $this->data['note'] . "\r\n";
+			$this->card .= "NOTE:" . self::escape_text($this->data['contact_note'] ?? $this->data['note']) . "\r\n";
 		}
-		$this->card .= "TZ:" . $this->data['timezone'] . "\r\n";
+		$this->card .= "TZ:" . $timezone . "\r\n";
 		$this->card .= "END:VCARD";
 	}
 }
