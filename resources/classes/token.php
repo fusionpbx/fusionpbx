@@ -37,6 +37,13 @@ class token {
 	//public $code;
 
 	/**
+	 * Maximum number of unvalidated tokens kept per key. This bounds session growth
+	 * caused by tokens that are created but never validated (for example, a page that
+	 * is refreshed repeatedly without using its action links).
+	 */
+	const MAX_TOKENS_PER_KEY = 20;
+
+	/**
 	 * Class constructor
 	 */
 	public function __construct() {
@@ -54,7 +61,7 @@ class token {
 		$this->clear_validated();
 
 		//allow only specific characters
-		$key = preg_replace('[^a-zA-Z0-9\-_@.\/]', '', $key);
+		$key = preg_replace('/[^a-zA-Z0-9\-_@.\/]/', '', $key);
 
 		//create a token for the key submitted
 		$token = [
@@ -65,6 +72,11 @@ class token {
 
 		//save in the token session array
 		$_SESSION['tokens'][$key][] = $token;
+
+		//bound the number of unvalidated tokens stored for this key
+		if (is_array($_SESSION['tokens'][$key]) && sizeof($_SESSION['tokens'][$key]) > self::MAX_TOKENS_PER_KEY) {
+			$_SESSION['tokens'][$key] = array_slice($_SESSION['tokens'][$key], -self::MAX_TOKENS_PER_KEY, null, true);
+		}
 
 		//send the hash
 		return $token;
@@ -79,13 +91,103 @@ class token {
 			foreach ($_SESSION['tokens'] as $key => $tokens) {
 				if (is_array($tokens) && @sizeof($tokens) != 0) {
 					foreach ($tokens as $t => $token) {
-						if ($token['validated']) {
+						if (!empty($token['validated'])) {
 							unset($_SESSION['tokens'][$key][$t]);
 						}
 					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * Checks that the request originated from this site.
+	 *
+	 * A token proves the user was shown a form by this application; it does not prove
+	 * which site the browser was on when the request was sent. Checking Origin (and,
+	 * for older browsers, Referer) closes that gap and stops a cross-site page from
+	 * replaying a token it could not have read, or triggering a state changing GET by
+	 * top level navigation.
+	 *
+	 * Requests with no Origin and no Referer header are allowed through because many
+	 * privacy configurations strip both headers; the token check still applies. This
+	 * method only rejects requests that positively claim to be from another origin.
+	 *
+	 * @return bool True when the request is same origin or cannot be identified.
+	 */
+	public static function same_origin(): bool {
+		//get the expected host, falling back to the server name
+		$host = strtolower((string)($_SERVER['HTTP_HOST'] ?? ''));
+		if ($host === '') {
+			$host = strtolower((string)($_SERVER['SERVER_NAME'] ?? ''));
+		}
+		if ($host === '') {
+			//nothing to compare against, do not block the request
+			return true;
+		}
+
+		//the host without its port, used for the host comparison
+		$host_name = preg_replace('/:\d+$/', '', $host);
+
+		//the server port is only compared when both sides declare one. A reverse proxy
+		//commonly makes these disagree, so an omitted port is treated as unspecified
+		//rather than as a mismatch.
+		$server_port = (string)($_SERVER['SERVER_PORT'] ?? '');
+		if ($server_port === '80' || $server_port === '443') {
+			$server_port = '';
+		}
+
+		//compare one origin style URL against the expected host, returns null when the
+		//value cannot be parsed so the caller can fall through to the next header
+		$matches_origin = function (string $url) use ($host_name, $server_port): ?bool {
+			if (!preg_match('/^[a-z][a-z0-9+.\-]*:\/\/([^\/:?#]+)(?::([0-9]+))?(?:[\/?#]|$)/', $url, $parts)) {
+				return null;
+			}
+			if (strtolower($parts[1]) !== $host_name) {
+				return false;
+			}
+			$origin_port = $parts[2] ?? '';
+			if ($origin_port !== '' && $server_port !== '' && $origin_port !== $server_port) {
+				return false;
+			}
+			return true;
+		};
+
+		//check the Origin header first, it is sent by all modern browsers on state
+		//changing requests and cannot be forged by script
+		$origin = strtolower(trim((string)($_SERVER['HTTP_ORIGIN'] ?? '')));
+		if ($origin !== '' && $origin !== 'null') {
+			$result = $matches_origin($origin);
+			//an origin that cannot be parsed is treated as foreign
+			return $result === null ? false : $result;
+		}
+
+		//fall back to the Referer header for requests that do not send Origin
+		$referer = strtolower(trim((string)($_SERVER['HTTP_REFERER'] ?? '')));
+		if ($referer !== '') {
+			$result = $matches_origin($referer);
+			if ($result !== null) {
+				return $result;
+			}
+		}
+
+		//no usable Origin or Referer header was provided
+		return true;
+	}
+
+	/**
+	 * Validate a token for a state changing endpoint.
+	 *
+	 * Preferred name to use on new endpoints. It is equivalent to validate(), which
+	 * already performs the same origin check, and exists so call sites read clearly.
+	 *
+	 * @var string $key   The key used when the token was created.
+	 * @var string $value An optional explicit token value.
+	 *
+	 * @return bool True when the request is same origin and the token is valid.
+	 */
+	public function validate_request($key, $value = '') {
+		return $this->validate($key, $value);
 	}
 
 	/**
@@ -96,8 +198,13 @@ class token {
 	 */
 	public function validate($key, $value = '') {
 
+		//reject requests that were initiated from another site (defense in depth against CSRF)
+		if (!self::same_origin()) {
+			return false;
+		}
+
 		//allow only specific characters
-		$key = preg_replace('[^a-zA-Z0-9\-\_@.\/]', '', $key);
+		$key = preg_replace('/[^a-zA-Z0-9\-\_@.\/]/', '', $key);
 
 		//get the token name
 		if (!empty($_SESSION['tokens']) && is_array($_SESSION['tokens'][$key]) && @sizeof($_SESSION['tokens'][$key]) != 0) {
@@ -111,7 +218,7 @@ class token {
 		}
 
 		//limit the value to specific characters
-		$value = preg_replace('[^a-zA-Z0-9]', '', $value);
+		$value = preg_replace('/[^a-zA-Z0-9]/', '', (string)$value);
 
 		//compare the hashed tokens
 		if (!empty($_SESSION['tokens']) && is_array($_SESSION['tokens'][$key]) && @sizeof($_SESSION['tokens'][$key]) != 0) {
@@ -147,5 +254,15 @@ echo "			<input type='hidden' name='".$token['name']."' value='".$token['hash'].
 	}
 
 //note: can use $_SERVER['PHP_SELF'] instead of actual file path
+
+//------------------------
+
+//validate the token and require that the request came from this site
+	$token = new token;
+	if (!$token->validate_request('/app/bridges/bridge_edit.php')) {
+		$_SESSION["message"] = $text['message-invalid_token'];
+		header('Location: bridges.php');
+		exit;
+	}
 
 */
