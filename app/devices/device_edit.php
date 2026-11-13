@@ -776,6 +776,9 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
+//create a token for the command script (it validates against its own path)
+	$token_cmd = $object->create(dirname($_SERVER['PHP_SELF']) . '/cmd.php');
+
 //show the header
 	$document['title'] = $text['title-device'];
 	require_once "resources/header.php";
@@ -1168,7 +1171,7 @@
 			unset($button_margin);
 		}
 		else if (!empty($user_id) && !empty($server_address)) {
-			echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','style'=>($button_margin ?? ''),'link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&user=".urlencode($user_id ?? '')."&domain=".urlencode($server_address ?? '')."&agent=".urlencode($device_vendor)]);
+			echo button::create(['type'=>'button','label'=>$text['button-provision'],'icon'=>'fax','style'=>($button_margin ?? ''),'link'=>PROJECT_PATH."/app/devices/cmd.php?cmd=check_sync&user=".urlencode($user_id ?? '')."&domain=".urlencode($server_address ?? '')."&agent=".urlencode($device_vendor).'&'.$token_cmd['name'].'='.$token_cmd['hash']]);
 			unset($button_margin);
 		}
 		if (permission_exists("device_files")) {
