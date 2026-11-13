@@ -53,6 +53,24 @@
 		if (!empty($_POST["gateway_uuid"]) && is_uuid($_POST["gateway_uuid"])) {
 			$gateway_uuid = $_POST["gateway_uuid"];
 		}
+
+		//verify the gateway belongs to the current domain unless allowed to access all domains
+		if (!permission_exists('gateway_all')) {
+			$gateway_id = !empty($gateway_uuid) ? $gateway_uuid : ($_REQUEST["id"] ?? '');
+			if (is_uuid($gateway_id)) {
+				$sql = "select gateway_uuid from v_gateways ";
+				$sql .= "where (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
+				$sql .= "and gateway_uuid = :gateway_uuid ";
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$parameters['gateway_uuid'] = $gateway_id;
+				$row = $database->select($sql, $parameters, 'row');
+				if (empty($row)) {
+					echo "access denied";
+					exit;
+				}
+				unset($sql, $parameters, $row);
+			}
+		}
 	}
 	else {
 		$action = "add";
@@ -157,6 +175,13 @@
 				echo "</div>\n";
 				require_once "resources/footer.php";
 				return;
+			}
+
+		//validate the profile, it is used as a directory name and in the sofia xml config
+			if (!empty($profile) && (!is_string($profile) || !preg_match('/^[a-zA-Z0-9_-]+$/u', $profile))) {
+				message::add($text['message-sip_profile_name_invalid'] ?? 'Invalid SIP Profile Name', 'negative');
+				header('Location: gateways.php?'.(!empty($order_by) ? '&order_by='.$order_by.'&order='.$order : null).(isset($page) && is_numeric($page) ? '&page='.$page : null).(!empty($search) ? '&search='.urlencode($search) : null));
+				exit;
 			}
 
 		//add or update the database
@@ -378,7 +403,7 @@
 	echo "</div>\n";
 
 	if ($action == "update" && permission_exists('gateway_add')) {
-		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','link'=>'gateway_copy.php?id='.urlencode($gateway_uuid),'onclick'=>"modal_close();"])]);
+		echo modal::create(['id'=>'modal-copy','type'=>'copy','actions'=>button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>'check','id'=>'btn_copy','style'=>'float: right; margin-left: 15px;','collapse'=>'never','link'=>'gateway_copy.php?id='.urlencode($gateway_uuid).'&'.$token['name'].'='.$token['hash'],'onclick'=>"modal_close();"])]);
 	}
 
 	echo $text['description-gateway-edit']."\n";
@@ -842,7 +867,7 @@
 	foreach ($sip_profiles as $row) {
 		$sip_profile_name = $row["sip_profile_name"];
 		if ($profile == $sip_profile_name) {
-			echo "	<option value='$sip_profile_name' selected='selected'>".escape($sip_profile_name)."</option>\n";
+			echo "	<option value='".escape($sip_profile_name)."' selected='selected'>".escape($sip_profile_name)."</option>\n";
 		}
 		else {
 			echo "	<option value='".escape($sip_profile_name)."'>".escape($sip_profile_name)."</option>\n";

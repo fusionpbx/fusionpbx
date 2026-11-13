@@ -39,6 +39,14 @@
 	$language = new text;
 	$text = $language->get();
 
+//validate the token
+	$token = new token;
+	if (!$token->validate($_SERVER['PHP_SELF']) && !$token->validate(dirname($_SERVER['PHP_SELF']) . '/gateway_edit.php')) {
+		message::add($text['message-invalid_token'],'negative');
+		header('Location: gateways.php');
+		exit;
+	}
+
 //get order and order by, page
 	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', ($_REQUEST["order_by"] ?? ''));
 	$order = $_REQUEST["order"] ?? 'asc';
@@ -52,9 +60,14 @@
 		//get the data
 			$sql = "select * from v_gateways ";
 			$sql .= "where gateway_uuid = :gateway_uuid ";
+			if (!permission_exists('gateway_all')) {
+				$sql .= "and (domain_uuid = :domain_uuid ".(permission_exists('gateway_domain') ? " or domain_uuid is null " : null).") ";
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			}
 			$parameters['gateway_uuid'] = $gateway_uuid;
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
+				$found = true;
 				$domain_uuid = $row["domain_uuid"];
 				$gateway = $row["gateway"];
 				$username = $row["username"];
@@ -93,6 +106,12 @@
 				$description = $row["description"]." (".$text['label-copy'].")";
 			}
 			unset($sql, $parameters, $row);
+
+		//stop when the gateway was not found in the current domain, prevents an empty gateway from being created
+			if (empty($found)) {
+				header('Location: gateways.php');
+				exit;
+			}
 
 		//set defaults
 			if (empty($expire_seconds)) {
