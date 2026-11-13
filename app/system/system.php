@@ -46,10 +46,16 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 //load editor preferences/defaults
 	if (permission_exists("system_view_support")) {
 		$setting_size = !empty($settings->get('editor', 'font_size')) ? $settings->get('editor', 'font_size') : '12px';
+		if (!preg_match('/^(\d+(\.\d+)?|auto)(px|pt|em|%)$/', (string) $setting_size)) {
+			$setting_size = '12px';
+		}
 		$setting_theme = !empty($settings->get('editor', 'theme')) ? $settings->get('editor', 'theme') : 'cobalt';
-		$setting_invisibles = $settings->get('editor', 'invisibles', 'false');
-		$setting_indenting = $settings->get('editor', 'indent_guides', 'false');
-		$setting_numbering = $settings->get('editor', 'line_numbers', 'true');
+		if (!preg_match('/^[a-zA-Z0-9_]+$/', (string) $setting_theme)) {
+			$setting_theme = 'cobalt';
+		}
+		$setting_invisibles = filter_var($settings->get('editor', 'invisibles', 'false'), FILTER_VALIDATE_BOOLEAN) ? 'true' : 'false';
+		$setting_indenting = filter_var($settings->get('editor', 'indent_guides', 'false'), FILTER_VALIDATE_BOOLEAN) ? 'true' : 'false';
+		$setting_numbering = filter_var($settings->get('editor', 'line_numbers', 'true'), FILTER_VALIDATE_BOOLEAN) ? 'true' : 'false';
 	}
 
 //additional includes
@@ -153,10 +159,10 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 				echo "		".$text['label-git_info']."\n";
 				echo "	</td>\n";
 				echo "	<td class=\"row_style1\">\n";
-				echo "		".$text['label-git_branch'].": ".$system_information['git']['branch']."<br>\n";
-				echo "		".$text['label-git_commit'].": <a href='{$system_information['git']['origin']}/commit/{$system_information['git']['commit']}'>".$system_information['git']['commit']."</a><br>\n";
-				echo "		".$text['label-git_origin'].": ".$system_information['git']['origin']."<br>\n";
-				echo "		".$text['label-git_status'].": ".$system_information['git']['status'].($system_information['git']['age'])->format(' %R%a days ago')."<br>\n";
+				echo "		".$text['label-git_branch'].": ".escape($system_information['git']['branch'])."<br>\n";
+				echo "		".$text['label-git_commit'].": <a href='".escape($system_information['git']['origin'])."/commit/".escape($system_information['git']['commit'])."'>".escape($system_information['git']['commit'])."</a><br>\n";
+				echo "		".$text['label-git_origin'].": ".escape($system_information['git']['origin'])."<br>\n";
+				echo "		".$text['label-git_status'].": ".escape($system_information['git']['status']).($system_information['git']['age'])->format(' %R%a days ago')."<br>\n";
 				echo "	</td>\n";
 				echo "</tr>\n";
 			}
@@ -167,7 +173,7 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 		echo "		".$text['label-path']."\n";
 		echo "	</td>\n";
 		echo "	<td class=\"row_style1\">\n";
-		echo "		".$_SERVER['PROJECT_ROOT']."\n";
+		echo "		".escape($_SERVER['PROJECT_ROOT'])."\n";
 		echo "	</td>\n";
 		echo "</tr>\n";
 
@@ -176,14 +182,14 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 			echo "		".$text['label-switch']." ".$text['label-version']."\n";
 			echo "	</td>\n";
-			echo "	<td class=\"row_style1\">{$system_information['switch']['version']} ({$system_information['switch']['bits']})</td>\n";
+			echo "	<td class=\"row_style1\">" . escape($system_information['switch']['version']) . " (" . escape($system_information['switch']['bits']) . ")</td>\n";
 			echo "</tr>\n";
 			if ($system_information['switch']['git']['info'] !== 'connection failed') {
 				echo "<tr>\n";
 				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 				echo "		".$text['label-switch']." ".$text['label-git_info']."\n";
 				echo "	</td>\n";
-				echo "	<td class=\"row_style1\">{$system_information['switch']['git']['info']}</td>\n";
+				echo "	<td class=\"row_style1\">" . escape($system_information['switch']['git']['info']) . "</td>\n";
 				echo "</tr>\n";
 			}
 		}
@@ -211,7 +217,7 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 			echo "		".$text['label-os']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$system_information['os']['name']." \n";
+			echo "		".escape($system_information['os']['name'])." \n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
@@ -221,7 +227,7 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 			echo "		".$text['label-version']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$system_information['os']['version']." \n";
+			echo "		".escape($system_information['os']['version'])." \n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
@@ -231,7 +237,7 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 			echo "		".$text['label-kernel']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$system_information['os']['kernel']." \n";
+			echo "		".escape($system_information['os']['kernel'])." \n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
@@ -242,7 +248,7 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 			echo "		".$text['label-uptime']."\n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$system_information['os']['uptime']." \n";
+			echo "		".escape($system_information['os']['uptime'])." \n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
@@ -252,7 +258,7 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 			echo "		".$text['label-hostname']."\n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$system_information['os']['hostname']." \n";
+			echo "		".escape($system_information['os']['hostname'])." \n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
@@ -282,7 +288,7 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
 			echo "	<pre>\n";
-			echo "{$system_information['os']['mem']}<br>";
+			echo escape($system_information['os']['mem']) . "<br>";
 			echo "</pre>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -305,7 +311,7 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
 			echo "	<pre>\n";
-			echo "{$system_information['os']['cpu']}<br>";
+			echo escape($system_information['os']['cpu']) . "<br>";
 			echo "</pre>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -328,7 +334,7 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
 			echo "<pre>\n";
-			echo "{$system_information['os']['disk']['size']}<br>";
+			echo escape($system_information['os']['disk']['size']) . "<br>";
 			echo "</pre>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -395,7 +401,7 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 			echo "		".$text['label-name']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$system_information['database']['name']."<br>\n";
+			echo "		".escape($system_information['database']['name'])."<br>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 
@@ -404,7 +410,7 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 			echo "		".$text['label-version']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$system_information['database']['version']."<br>\n";
+			echo "		".escape($system_information['database']['version'])."<br>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 
@@ -413,7 +419,7 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 			echo "		".$text['label-database_connections']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
-			echo "		".$system_information['database']['connections']."<br>\n";
+			echo "		".escape($system_information['database']['connections'])."<br>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 
@@ -425,7 +431,7 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 			echo "		<table border='0' cellpadding='3' cellspacing='0'>\n";
 			echo "			<tr><td>". $text['label-name'] ."</td><td>&nbsp;</td><td style='text-align: left;'>". $text['label-size'] ."</td></tr>\n";
 			foreach ($system_information['database']['sizes'] as $datname => $size) {
-				echo "			<tr><td>".$datname ."</td><td>&nbsp;</td><td style='text-align: left;'>". $size ."</td></tr>\n";
+				echo "			<tr><td>".escape($datname) ."</td><td>&nbsp;</td><td style='text-align: left;'>". escape($size) ."</td></tr>\n";
 			}
 			echo "		</table>\n";
 			echo "	</td>\n";
@@ -448,8 +454,8 @@ Con	Portions created by the Initial Developer are Copyright (C) 2008-2025
 				if (is_array($system_information['memcache']) && sizeof($system_information['memcache']) > 0) {
 					foreach($system_information['memcache'] as $memcache_field => $memcache_value) {
 						echo "<tr>\n";
-						echo "	<td width='20%' class='vncell' style='text-align: left;'>".$memcache_field."</td>\n";
-						echo "	<td class='row_style1'>".$memcache_value."</td>\n";
+						echo "	<td width='20%' class='vncell' style='text-align: left;'>".escape($memcache_field)."</td>\n";
+						echo "	<td class='row_style1'>".escape($memcache_value)."</td>\n";
 						echo "</tr>\n";
 					}
 				}

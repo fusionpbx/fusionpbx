@@ -39,7 +39,7 @@ system_status_start() {
     # user before the service drops its privileges.
     mkdir -p "$run_dir"
     chown ${system_status_user}:${system_status_group} "$run_dir"
-    chmod 0777 "$run_dir"
+    chmod 0750 "$run_dir"
 
     echo "Starting $name..."
     if [ -f "$pidfile" ] && kill -0 "$(cat $pidfile)" 2>/dev/null; then

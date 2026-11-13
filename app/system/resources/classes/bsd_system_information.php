@@ -291,6 +291,11 @@ class bsd_system_information extends system_information {
 	public function get_network_speed(string $interface = 'em0'): array {
 		static $last = [];
 
+		// Only allow valid interface names because the name is passed to the shell
+		if (!preg_match('/^[a-zA-Z][a-zA-Z0-9._-]{0,31}$/', $interface)) {
+			return ['rx_bps' => 0, 'tx_bps' => 0];
+		}
+
 		// Validate interface exists by running netstat
 		$output = shell_exec("netstat -bI {$interface} 2>/dev/null");
 		if (!$output) {
