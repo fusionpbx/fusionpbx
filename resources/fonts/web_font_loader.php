@@ -2,7 +2,7 @@
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 
-$font_loader_version = ($_GET['v'] != '') ? $_GET['v'] : 1;
+$font_loader_version = (is_string($_GET['v'] ?? null) && preg_match('/^[0-9.]+$/', $_GET['v'])) ? $_GET['v'] : '1';
 
 header("Content-type: text/javascript; charset: UTF-8");
 
@@ -58,7 +58,7 @@ header("Content-type: text/javascript; charset: UTF-8");
 					?>
 					WebFontConfig = {
 						google: {
-							families: ['<?php echo implode("','", $fonts); ?>']
+							families: <?php echo json_encode(array_values($fonts), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT); ?>
 						}
 					};
 					(function(d) {
@@ -72,7 +72,7 @@ header("Content-type: text/javascript; charset: UTF-8");
 					?>
 					WebFont.load({
 						google: {
-							families: ['<?php echo implode("','", $fonts); ?>']
+							families: <?php echo json_encode(array_values($fonts), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT); ?>
 						}
 					});
 					<?php
