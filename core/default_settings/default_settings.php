@@ -108,6 +108,15 @@
 
 //process the http post data by action
 	if (!empty($action) && !empty($default_settings)) {
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: default_settings.php'.($query_string ? '?'.$query_string : ''));
+				exit;
+			}
+
 		switch ($action) {
 			case 'copy':
 				if ($permission['default_setting_add']) {
@@ -285,6 +294,9 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
+//create a token for the reload script (it validates against its own path)
+	$token_reload = $object->create(dirname($_SERVER['PHP_SELF']) . '/default_settings_reload.php');
+
 //include the header
 	$document['title'] = $text['title-default_settings'];
 	require_once "resources/header.php";
@@ -317,10 +329,7 @@
 	echo "	<div class='heading'><b>".$text['title-default_settings']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['label-domain'],'icon'=>$settings->get('theme', 'button_icon_domain'),'style'=>'','link'=>PROJECT_PATH.'/core/domain_settings/domain_settings.php?id='.$domain_uuid]);
-	echo button::create(['label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'type'=>'button','id'=>'button_reload','link'=>'default_settings_reload.php'.($query_string ? '?'.$query_string : ''),'style'=>'margin-right: 15px;']);
-	if ($permission['default_setting_add']) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'default_setting_edit.php']);
-	}
+	echo button::create(['label'=>$text['button-reload'],'icon'=>$settings->get('theme', 'button_icon_reload'),'type'=>'button','id'=>'button_reload','link'=>'default_settings_reload.php'.(($query_string ? $query_string.'&' : null).$token_reload['name'].'='.$token_reload['hash']),'style'=>'margin-right: 15px;']);
 	if ($permission['default_setting_add'] && !empty($default_settings)) {
 		if ($permission['domain_select'] && $permission['domain_setting_add']) {
 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','onclick'=>'show_domains();']);
