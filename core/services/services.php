@@ -51,6 +51,14 @@
 // process the http post data by action
 	if (!empty($action) && !empty($services) && is_array($services) && @sizeof($services) != 0) {
 
+		// validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: services.php'.($search != '' ? '?search='.urlencode($search) : null));
+				exit;
+			}
+
 		// send the array to the database class
 		switch ($action) {
 			case 'reload':
