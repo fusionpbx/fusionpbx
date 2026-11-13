@@ -132,6 +132,10 @@
 	$registration = new registrations;
 	$registration->show = 'all';
 
+//create token
+	$object = new token;
+	$token = $object->create(dirname($_SERVER['PHP_SELF']) . '/cmd.php');
+
 //include the header
 	$document['title'] = $text['title-sip_status'];
 	require_once "resources/header.php";
@@ -141,11 +145,11 @@
 	echo "	<div class='heading'><b>".$text['title-sip_status']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('sip_status_flush_cache')) {
-		echo button::create(['type'=>'button','label'=>$text['button-flush_cache'],'icon'=>'eraser','collapse'=>'hide-xs','link'=>'cmd.php?action=cache-flush']);
+		echo button::create(['type'=>'button','label'=>$text['button-flush_cache'],'icon'=>'eraser','collapse'=>'hide-xs','link'=>'cmd.php?action=cache-flush&'.$token['name'].'='.$token['hash']]);
 	}
 	if (permission_exists('sip_status_command')) {
-		echo button::create(['type'=>'button','label'=>$text['button-reload_acl'],'icon'=>'shield-alt','collapse'=>'hide-xs','link'=>'cmd.php?action=reloadacl']);
-		echo button::create(['type'=>'button','label'=>$text['button-reload_xml'],'icon'=>'code','collapse'=>'hide-xs','link'=>'cmd.php?action=reloadxml']);
+		echo button::create(['type'=>'button','label'=>$text['button-reload_acl'],'icon'=>'shield-alt','collapse'=>'hide-xs','link'=>'cmd.php?action=reloadacl&'.$token['name'].'='.$token['hash']]);
+		echo button::create(['type'=>'button','label'=>$text['button-reload_xml'],'icon'=>'code','collapse'=>'hide-xs','link'=>'cmd.php?action=reloadxml&'.$token['name'].'='.$token['hash']]);
 	}
 	echo button::create(['type'=>'button','label'=>$text['button-refresh'],'icon'=>$settings->get('theme', 'button_icon_refresh'),'collapse'=>'hide-xs','style'=>'margin-left: 15px;','link'=>'sip_status.php']);
 	echo "	</div>\n";
@@ -197,7 +201,7 @@
 		//gateways
 			if (!empty($xml_gateways) && $xml_gateways->gateway) {
 				foreach ($xml_gateways->gateway as $row) {
-					unset($gateway_name, $gateway_domain_name, $list_row_url);
+					unset($gateway_uuid, $gateway_name, $gateway_domain_name, $list_row_url);
 
 					if (is_array($gateways) && @sizeof($gateways) != 0) {
 						foreach($gateways as $field) {
@@ -217,7 +221,7 @@
 						echo "<a class='hide-md-up' href='".$list_row_url."'>".escape($gateway_name)."@...</a>";
 					}
 					else if (empty($gateway_domain_name)) {
-						echo !empty($gateway_name) ? escape($gateway_name) : $row->name;
+						echo !empty($gateway_name) ? escape($gateway_name) : escape($row->name);
 					}
 					else {
 						echo escape($gateway_name."@".$gateway_domain_name);
@@ -227,7 +231,7 @@
 					echo "	<td class='hide-sm-dn'>".escape($row->to)."</td>\n";
 					echo "	<td class='no-wrap'>".escape($row->state)."</td>\n";
 					echo "	<td class='center no-link'>";
-					echo button::create(['type'=>'button','class'=>'link','label'=>$text['button-stop'],'link'=>"cmd.php?profile=".urlencode($row->profile)."&gateway=".urlencode((!empty($gateway_uuid) ? $gateway_uuid : $row->name))."&action=killgw"]);
+					echo button::create(['type'=>'button','class'=>'link','label'=>$text['button-stop'],'link'=>"cmd.php?profile=".urlencode($row->profile)."&gateway=".urlencode((!empty($gateway_uuid) ? $gateway_uuid : $row->name))."&action=killgw&".$token['name'].'='.$token['hash']]);
 					echo "	</td>\n";
 					echo "</tr>\n";
 				}
@@ -270,22 +274,22 @@
 				$xml = new SimpleXMLElement($xml_response);
 			}
 			catch(Exception $e) {
-				echo $e->getMessage();
+				echo escape($e->getMessage());
 			}
 
 			echo "<div class='action_bar sub'>\n";
 			echo "	<div class='heading'><b><a href='javascript:void(0);' onclick=\"$('#".escape($sip_profile_name)."').slideToggle();\">".$text['title-sofia-status-profile']." ".urlencode($sip_profile_name)."</a></b></div>\n";
 			echo "	<div class='actions'>\n";
-			echo button::create(['type'=>'button','label'=>$text['button-flush_registrations'],'icon'=>'eraser','collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=flush_inbound_reg']);
+			echo button::create(['type'=>'button','label'=>$text['button-flush_registrations'],'icon'=>'eraser','collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=flush_inbound_reg&'.$token['name'].'='.$token['hash']]);
 			echo button::create(['type'=>'button','label'=>$text['button-registrations'].' ('.$registration->count($sip_profile_name).')','icon'=>'phone-alt','collapse'=>'hide-xs','link'=>PROJECT_PATH.'/app/registrations/registrations.php?profile='.urlencode($sip_profile_name)]);
 			if ($profile_state == 'stopped') {
-				echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$settings->get('theme', 'button_icon_start'),'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=start']);
+				echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$settings->get('theme', 'button_icon_start'),'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=start&'.$token['name'].'='.$token['hash']]);
 			}
 			if ($profile_state == 'running') {
-				echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$settings->get('theme', 'button_icon_stop'),'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=stop']);
+				echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$settings->get('theme', 'button_icon_stop'),'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=stop&'.$token['name'].'='.$token['hash']]);
 			}
-			echo button::create(['type'=>'button','label'=>$text['button-restart'],'icon'=>$settings->get('theme', 'button_icon_reload'),'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=restart']);
-			echo button::create(['type'=>'button','label'=>$text['button-rescan'],'icon'=>$settings->get('theme', 'button_icon_search'),'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=rescan']);
+			echo button::create(['type'=>'button','label'=>$text['button-restart'],'icon'=>$settings->get('theme', 'button_icon_reload'),'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=restart&'.$token['name'].'='.$token['hash']]);
+			echo button::create(['type'=>'button','label'=>$text['button-rescan'],'icon'=>$settings->get('theme', 'button_icon_search'),'collapse'=>'hide-xs','link'=>'cmd.php?profile='.urlencode($sip_profile_name).'&action=rescan&'.$token['name'].'='.$token['hash']]);
 			echo "	</div>\n";
 			echo "	<div style='clear: both;'></div>\n";
 			echo "</div>\n";
@@ -316,7 +320,7 @@
 				echo "	<tr><td class='vncell'>hold-music</td><td class='vtable'>&nbsp;".escape($row->{'hold-music'})."&nbsp;</td></tr>\n";
 				echo "	<tr><td class='vncell'>outbound-proxy</td><td class='vtable'>&nbsp;".escape($row->{'outbound-proxy'})."&nbsp;</td></tr>\n";
 				echo "	<tr><td class='vncell'>inbound-codecs</td><td class='vtable'>&nbsp;".escape($row->{'inbound-codecs'})."&nbsp;</td></tr>\n";
-				echo "	<tr><td class='vncell'>outbound-codecs</td><td class='vtable'>&nbsp;".$row->{'outbound-codecs'}."&nbsp;</td></tr>\n";
+				echo "	<tr><td class='vncell'>outbound-codecs</td><td class='vtable'>&nbsp;".escape($row->{'outbound-codecs'})."&nbsp;</td></tr>\n";
 				echo "	<tr><td class='vncell'>tel-event</td><td class='vtable'>&nbsp;".escape($row->{'tel-event'})."&nbsp;</td></tr>\n";
 				echo "	<tr><td class='vncell'>dtmf-mode</td><td class='vtable'>&nbsp;".escape($row->{'dtmf-mode'})."&nbsp;</td></tr>\n";
 				echo "	<tr><td class='vncell'>cng</td><td class='vtable'>&nbsp;".escape($row->cng)."&nbsp;</td></tr>\n";
