@@ -42,18 +42,19 @@
 		// select caller_id_number, destination_number from v_xml_cdr where domain_uuid = ''
 		// and (caller_id_number = '1001' or destination_number = '1001' or destination_number = '*991001')
 
-		$sql_where = "c.domain_uuid = '".$_SESSION["domain_uuid"]."' and ( ";
+		$sql_where = "c.domain_uuid = :sql_domain_uuid and ( ";
+		$parameters['sql_domain_uuid'] = $_SESSION["domain_uuid"];
 		if (count($_SESSION['user']['extension']) > 0) {
 			$x = 0;
 			foreach($_SESSION['user']['extension'] as $row) {
 				if ($x==0) {
-					if ($row['user'] > 0) { $sql_where .= "c.caller_id_number = '".$row['user']."' \n"; } //source
+					if ($row['user'] > 0) { $sql_where .= "c.caller_id_number = :assigned_caller_id_number_".$x." \n"; $parameters['assigned_caller_id_number_'.$x] = $row['user']; } //source
 				}
 				else {
-					if ($row['user'] > 0) { $sql_where .= "or c.caller_id_number = '".$row['user']."' \n"; } //source
+					if ($row['user'] > 0) { $sql_where .= "or c.caller_id_number = :assigned_caller_id_number_".$x." \n"; $parameters['assigned_caller_id_number_'.$x] = $row['user']; } //source
 				}
-				if ($row['user'] > 0) { $sql_where .= "or c.destination_number = '".$row['user']."' \n"; } //destination
-				if ($row['user'] > 0) { $sql_where .= "or c.destination_number = '*99".$row['user']."' \n"; } //destination
+				if ($row['user'] > 0) { $sql_where .= "or c.destination_number = :assigned_destination_number_".$x." \n"; $parameters['assigned_destination_number_'.$x] = $row['user']; } //destination
+				if ($row['user'] > 0) { $sql_where .= "or c.destination_number = :assigned_star_99_destination_number_".$x." \n"; $parameters['assigned_star_99_destination_number_'.$x] = '*99'.$row['user']; } //destination
 				$x++;
 			}
 		}
@@ -64,7 +65,8 @@
 		if (isset($_GET['showall']) && $_GET['showall'] === 'true' && permission_exists('xml_cdr_all')) {
 			$sql_where = '';
 		} else {
-			$sql_where = "c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql_where = "c.domain_uuid = :sql_domain_uuid ";
+			$parameters['sql_domain_uuid'] = $_SESSION['domain_uuid'];
 		}
 	}
 	if (isset($sql_where) && $sql_where != '') {

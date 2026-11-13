@@ -29,7 +29,7 @@
 	require_once "resources/check_auth.php";
 
 //check permisions
-	if (permission_exists('xml_cdr_view')) {
+	if (permission_exists('xml_cdr_recording_play') || permission_exists('xml_cdr_recording_download')) {
 		//access granted
 	}
 	else {

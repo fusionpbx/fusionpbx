@@ -762,9 +762,9 @@
 		echo "<div class='card'>\n";
 		//progress bar
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-			echo "<tr class='list-row' id='recording_progress_bar_".$xml_cdr_uuid."' onclick=\"recording_seek(event,'".escape($xml_cdr_uuid)."')\">\n";
+			echo "<tr class='list-row' id='recording_progress_bar_".escape($xml_cdr_uuid)."' onclick=\"recording_seek(event,'".escape($xml_cdr_uuid)."')\">\n";
 				echo "<td id='playback_progress_bar_background_".escape($xml_cdr_uuid)."' class='playback_progress_bar_background' style='padding: 0; background-size: 100% 100% !important;'>\n";
-					echo "<span class='playback_progress_bar' id='recording_progress_".$xml_cdr_uuid."'></span>\n";
+					echo "<span class='playback_progress_bar' id='recording_progress_".escape($xml_cdr_uuid)."'></span>\n";
 				echo "</td>\n";
 			echo "</tr>\n";
 		echo "</table>\n";

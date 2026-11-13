@@ -230,11 +230,11 @@
 					if ($theme_cdr_images_exist) {
 						$call_result = $row['status'];
 						if (isset($row['direction'])) {
-							echo "<img src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_".$row['direction']."_".$call_result.".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
+							echo "<img src='".PROJECT_PATH."/themes/".$settings->get('domain', 'template', 'default')."/images/icon_cdr_".escape($row['direction'])."_".escape($call_result).".png' width='16' style='border: none;' title='".$text['label-'.$row['direction']].": ".$text['label-'.$call_result]."'>\n";
 						}
 					}
 					echo "</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(!empty($cdr_name) ? "title=\"".$cdr_name."\"" : null).">".($cdr_number ?? '')."</a></td>\n";
+					echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'><a href='javascript:void(0);' ".(!empty($cdr_name) ? "title=\"".escape($cdr_name)."\"" : null).">".escape($cdr_number ?? '')."</a></td>\n";
 					echo "<td valign='top' class='".$row_style[$c]." hud_text' nowrap='nowrap'>".$start_date_time."</td>\n";
 				echo "</tr>\n";
 
