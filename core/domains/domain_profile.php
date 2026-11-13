@@ -87,6 +87,13 @@
 				exit;
 			}
 
+		//check the time zone is not empty and in the array
+			if (!empty($domain_time_zone) && !in_array($domain_time_zone, DateTimeZone::listIdentifiers(), true)) {
+				message::add($text['message-time_zone_invalid'],'negative');
+				header('Location: domain_profile.php');
+				exit;
+			}
+
 		//check to see if domain language is set
 			$row = $domain_settings['domain']['language'] ?? [];
 			$i = 0;
