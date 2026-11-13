@@ -52,6 +52,21 @@
 		$contact_uuid = $_GET["contact_uuid"];
 	}
 
+	//verify the contact belongs to the domain
+	if (!empty($contact_uuid) && !permission_exists('contact_all')) {
+		$sql = "select contact_uuid from v_contacts ";
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and contact_uuid = :contact_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['contact_uuid'] = $contact_uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $row);
+	}
+
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$time_start = $_POST["time_start"];
@@ -73,6 +88,21 @@
 				message::add($text['message-invalid_token'],'negative');
 				header('Location: contacts.php');
 				exit;
+			}
+
+		//verify the record belongs to the domain
+			if ($action == "update" && !empty($contact_time_uuid)) {
+				$sql = "select contact_time_uuid from v_contact_times ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and contact_time_uuid = :contact_time_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters["contact_time_uuid"] = $contact_time_uuid;
+				$row = $database->select($sql, $parameters, 'row');
+				if (empty($row)) {
+					echo "access denied";
+					exit;
+				}
+				unset($sql, $parameters, $row);
 			}
 
 		//check for all required data
@@ -199,7 +229,7 @@
 	echo "	".$text['label-time_start']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld datetimesecpicker' data-toggle='datetimepicker' data-target='#time_start' type='text' name='time_start' id='time_start' style='min-width: 135px; width: 135px;' value='".$time_start."' onblur=\"$(this).datetimepicker('hide');\">\n";
+	echo "	<input class='formfld datetimesecpicker' data-toggle='datetimepicker' data-target='#time_start' type='text' name='time_start' id='time_start' style='min-width: 135px; width: 135px;' value='".escape($time_start)."' onblur=\"$(this).datetimepicker('hide');\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -208,7 +238,7 @@
 	echo "	".$text['label-time_stop']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' style='position: relative;' align='left'>\n";
-	echo "	<input class='formfld datetimesecpicker' data-toggle='datetimepicker' data-target='#time_stop' type='text' name='time_stop' id='time_stop' style='min-width: 135px; width: 135px;' value='".$time_stop."' onblur=\"$(this).datetimepicker('hide');\">\n";
+	echo "	<input class='formfld datetimesecpicker' data-toggle='datetimepicker' data-target='#time_stop' type='text' name='time_stop' id='time_stop' style='min-width: 135px; width: 135px;' value='".escape($time_stop)."' onblur=\"$(this).datetimepicker('hide');\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -217,7 +247,7 @@
 	echo "	".$text['label-time_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <textarea class='formfld' type='text' name='time_description' id='time_description' style='width: 400px; height: 100px;'>".$time_description."</textarea>\n";
+	echo "  <textarea class='formfld' type='text' name='time_description' id='time_description' style='width: 400px; height: 100px;'>".escape($time_description)."</textarea>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

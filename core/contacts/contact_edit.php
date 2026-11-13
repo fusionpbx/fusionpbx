@@ -90,6 +90,21 @@
 		$action = "add";
 	}
 
+//verify the contact belongs to the domain
+	if ($action == "update" && !permission_exists('contact_all')) {
+		$sql = "select contact_uuid from v_contacts ";
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and contact_uuid = :contact_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['contact_uuid'] = $contact_uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $row);
+	}
+
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$contact_organization = $_POST["contact_organization"];
@@ -1065,7 +1080,7 @@
 		$qr_size = '0';
 	}
 	elseif (!empty($settings->get('theme', 'qr_brand_image')) && $settings->get('theme', 'qr_brand_type') == 'text') {
-		$qr_option = 'label: "'.$settings->get('theme', 'qr_brand_text').'"';
+		$qr_option = 'label: '.json_encode((string) $settings->get('theme', 'qr_brand_text'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT);
 		$qr_mode = '2';
 		$qr_size = '0.05';
 	}
@@ -1085,6 +1100,8 @@
 	$_GET['type'] = "text";
 	$qr_vcard = true;
 	include "contacts_vcard.php";
+	//encode the vCard before embedding it in the attribute: contact fields are stored raw and
+	//a double quote would otherwise break out of the value attribute (CWE-79)
 	echo "<input type='hidden' id='qr_vcard' value=\"".htmlspecialchars($qr_vcard, ENT_QUOTES, 'UTF-8')."\">";
 	echo "<style>";
 	echo "	#qr_code_container {";
@@ -1571,7 +1588,7 @@ echo "		<div class='label'>\n";
 echo "			".$text['label-contact_note']."\n";
 echo "		</div>\n";
 echo "		<div class='field no-wrap'>\n";
-echo "			<textarea class='formfld' style='width: 100%; height: 100%;' name='contact_note'>".$contact_note."</textarea>\n";
+echo "			<textarea class='formfld' style='width: 100%; height: 100%;' name='contact_note'>".escape($contact_note)."</textarea>\n";
 echo "		</div>\n";
 
 echo "		<div class='label empty_row' style='grid-row: 8 / span 99;'>\n";

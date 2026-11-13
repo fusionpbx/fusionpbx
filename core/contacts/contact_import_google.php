@@ -42,6 +42,15 @@
 
 //handle import
 if ($_POST['a'] == 'import') {
+
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: contact_import.php');
+			exit;
+		}
+
 	if (sizeof($_POST['group_id']) > 0) {
 		//get contact ids for those in the submitted groups
 		if (sizeof($_SESSION['contact_auth']['google']) > 0) {
@@ -292,7 +301,7 @@ echo "			<input type='button' class='btn' id='btn_signout' onclick=\"document.lo
 echo "		</td>";
 echo "	</tr>";
 echo "	<tr>";
-echo "		<td style='text-align: right; white-space: nowrap; padding-top: 8px;'><span style='font-weight: bold; color: #000;'>".$_SESSION['contact_auth']['name']."</a> (<a href='https://www.google.com/contacts/#contacts' target='_blank'>".$_SESSION['contact_auth']['email']."</a>)"."</td>";
+echo "		<td style='text-align: right; white-space: nowrap; padding-top: 8px;'><span style='font-weight: bold; color: #000;'>".escape($_SESSION['contact_auth']['name'])."</a> (<a href='https://www.google.com/contacts/#contacts' target='_blank'>".escape($_SESSION['contact_auth']['email'])."</a>)"."</td>";
 echo "	</tr>";
 echo "</table>";
 echo "<b>".$text['header-contacts_import_google']."</b>";
@@ -303,8 +312,13 @@ echo "<br><br><br>";
 $row_style["0"] = "row_style0";
 $row_style["1"] = "row_style1";
 
+//create token
+$object = new token;
+$token = $object->create($_SERVER['PHP_SELF']);
+
 echo "<form name='frm_import' id='frm_import' method='post'>\n";
 echo "<input type='hidden' name='a' value='import'>\n";
+echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 echo "<div class='card'>\n";
 echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -434,8 +448,8 @@ $c = 0;
 foreach ($groups as $group['id'] => $group) {
 	if ($group['count'] > 0) {
 		echo "<tr>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='group_id[]' id='group_id_".$group['id']."' value='".$group['id']."'></td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' onclick=\"document.getElementById('group_id_".$group['id']."').checked = (document.getElementById('group_id_".$group['id']."').checked) ? false : true;\">".$group['name']." (".$group['count'].")</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='group_id[]' id='group_id_".escape($group['id'])."' value='".escape($group['id'])."'></td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."' onclick=\"document.getElementById('group_id_".escape($group['id'])."').checked = (document.getElementById('group_id_".escape($group['id'])."').checked) ? false : true;\">".escape($group['name'])." (".$group['count'].")</td>\n";
 		echo "</tr>\n";
 		$c=($c)?0:1;
 	}
@@ -466,23 +480,23 @@ $c = 0;
 foreach ($contacts as $contact['id'] => $contact) {
 	$contact_ids[] = $contact['id'];
 	echo "<tr>\n";
-	echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='contact_id[]' id='contact_id_".$contact['id']."' value='".$contact['id']."'></td>\n";
-	echo "	<td valign='top' class='".$row_style[$c]."' onclick=\"document.getElementById('contact_id_".$contact['id']."').checked = (document.getElementById('contact_id_".$contact['id']."').checked) ? false : true;\">";
+	echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='contact_id[]' id='contact_id_".escape($contact['id'])."' value='".escape($contact['id'])."'></td>\n";
+	echo "	<td valign='top' class='".$row_style[$c]."' onclick=\"document.getElementById('contact_id_".escape($contact['id'])."').checked = (document.getElementById('contact_id_".escape($contact['id'])."').checked) ? false : true;\">";
 	$contact_name[] = $contact['name_prefix'];
 	$contact_name[] = $contact['name_given'];
 	$contact_name[] = $contact['name_middle'];
 	$contact_name[] = $contact['name_family'];
 	$contact_name[] = $contact['name_suffix'];
-	echo "		".implode(' ', $contact_name)."&nbsp;";
+	echo "		".escape(implode(' ', $contact_name))."&nbsp;";
 	unset($contact_name);
 	echo "	</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."' style='max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>";
-	echo "		".(($contact['title']) ? $contact['title']."<br>" : null).$contact['organization']."&nbsp;";
+	echo "		".(($contact['title']) ? escape($contact['title'])."<br>" : null).escape($contact['organization'])."&nbsp;";
 	echo "	</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."' style='width: 15%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>";
 	if (sizeof($contact['emails']) > 0) {
  		foreach ($contact['emails'] as $contact_email) {
- 			$contact_emails[] = "<span style='font-size: 80%;'>".$contact_email['label'].":</span> <a href='mailto: ".$contact_email['address']."'>".$contact_email['address']."</a>";
+ 			$contact_emails[] = "<span style='font-size: 80%;'>".escape($contact_email['label']).":</span> <a href='mailto: ".urlencode($contact_email['address'])."'>".escape($contact_email['address'])."</a>";
  		}
 		echo implode('<br>', $contact_emails);
 		unset($contact_emails);
@@ -491,11 +505,11 @@ foreach ($contacts as $contact['id'] => $contact) {
 	echo "	<td valign='top' class='".$row_style[$c]."' style='width: 15%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>";
 	if (sizeof($contact['numbers']) > 0) {
 		foreach ($contact['numbers'] as $contact_number) {
-			$contact_number_part = "<span style='font-size: 80%;'>".$contact_number['label'].":</span> ";
+			$contact_number_part = "<span style='font-size: 80%;'>".escape($contact_number['label']).":</span> ";
 			if (substr_count(strtoupper($contact_number['label']), 'FAX') == 0) {
 				$contact_number_part .= "<a href='javascript:void(0);' onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($contact_number['number'])."&src_cid_number=".urlencode($contact_number['number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($contact_number['number'])."&rec=false&ringback=us-ring&auto_answer=true');\">";
 			}
-			$contact_number_part .= format_phone($contact_number['number']);
+			$contact_number_part .= escape(format_phone($contact_number['number']));
 			if (substr_count(strtoupper($contact_number['label']), 'FAX') == 0) {
 				$contact_number_part .= "</a>";
 			}
@@ -509,7 +523,7 @@ foreach ($contacts as $contact['id'] => $contact) {
 	echo "	<td valign='top' class='".$row_style[$c]."' style='width: 15%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>";
 	if (sizeof($contact['urls']) > 0) {
 		foreach ($contact['urls'] as $contact_url) {
-			$contact_urls[] = "<span style='font-size: 80%;'>".$contact_url['label'].":</span> <a href='".$contact_url['url']."' target='_blank'>".str_replace("http://", "", str_replace("https://", "", $contact_url['url']))."</a>";
+			$contact_urls[] = "<span style='font-size: 80%;'>".escape($contact_url['label']).":</span> <a href='".escape($contact_url['url'])."' target='_blank'>".str_replace("http://", "", str_replace("https://", "", escape($contact_url['url'])))."</a>";
 		}
 		echo implode('<br>', $contact_urls);
 		unset($contact_urls);
@@ -525,7 +539,7 @@ foreach ($contacts as $contact['id'] => $contact) {
 			if ($contact_address['region'] != '') { $contact_address_parts[] = $contact_address['region']; }
 			if ($contact_address['postal_code'] != '') { $contact_address_parts[] = $contact_address['postal_code']; }
 			if ($contact_address['country'] != '') { $contact_address_parts[] = $contact_address['country']; }
-			$contact_addresses[] = "<span style='font-size: 80%;'>".$contact_address['label'].":</span> ".implode(', ', $contact_address_parts);
+			$contact_addresses[] = "<span style='font-size: 80%;'>".escape($contact_address['label']).":</span> ".escape(implode(', ', $contact_address_parts));
 			unset($contact_address_parts);
 		}
 		echo implode('<br>', $contact_addresses);
@@ -536,7 +550,7 @@ foreach ($contacts as $contact['id'] => $contact) {
 	foreach ($contact['groups'] as $contact_group['id'] => $contact_group['name']) {
 		$contact_groups[] = $contact_group['name'];
 	}
-	echo "		".implode('<br>', $contact_groups);
+	echo "		".implode('<br>', array_map('escape', $contact_groups));
 	unset($contact_groups);
 	echo "	</td>\n";
 	echo "</tr>\n";
@@ -556,7 +570,7 @@ if (sizeof($contact_ids) > 0) {
 	echo "<script>\n";
 	echo "	function check(what) {\n";
 	foreach ($contact_ids as $contact_id) {
-		echo "	document.getElementById('contact_id_".$contact_id."').checked = (what == 'all') ? true : false;\n";
+		echo "	document.getElementById('contact_id_".escape($contact_id)."').checked = (what == 'all') ? true : false;\n";
 	}
 	echo "	}\n";
 	echo "</script>\n";

@@ -75,7 +75,7 @@
 				echo "<div class='box'>";
 				echo button::create(['type'=>'button','class'=>'link','label'=>escape($row['extension']),'title'=>$text['label-click_to_call'],'onclick'=>"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['extension'])."&src_cid_number=".urlencode($row['extension'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['extension'])."&rec=false&ringback=us-ring&auto_answer=true');"]);
 				echo "</div>\n";
-				echo "<div class='box'>".$row['description']."</div>\n";
+				echo "<div class='box'>".escape($row['description'])."</div>\n";
 				$x++;
 			}
 			echo "</div>\n";

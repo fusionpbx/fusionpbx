@@ -42,8 +42,14 @@
 	$text = $language->get();
 
 //get contact uuid
-	$domain_uuid = $_REQUEST['domain_uuid'];
-	$contact_uuid = $_REQUEST['contact_uuid'];
+	$domain_uuid = !empty($_REQUEST['domain_uuid']) && is_uuid($_REQUEST['domain_uuid']) ? $_REQUEST['domain_uuid'] : ($_SESSION['domain_uuid'] ?? '');
+	$contact_uuid = !empty($_REQUEST['contact_uuid']) && is_uuid($_REQUEST['contact_uuid']) ? $_REQUEST['contact_uuid'] : '';
+
+//restrict access to the current domain
+	if (!empty($domain_uuid) && $domain_uuid != ($_SESSION['domain_uuid'] ?? '')) {
+		echo "access denied";
+		exit;
+	}
 
 //set the time zone
 	date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
@@ -152,7 +158,7 @@
 ?>
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
 <head>
-	<title><?php echo $text['label-time_timer']; ?>: <?php echo $contact; ?></title>
+	<title><?php echo $text['label-time_timer']; ?>: <?php echo escape($contact); ?></title>
 	<style>
 		body {
 			color: #5f5f5f;

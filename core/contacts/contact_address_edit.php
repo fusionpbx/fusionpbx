@@ -67,6 +67,21 @@
 		$contact_uuid = $_GET["contact_uuid"];
 	}
 
+	//verify the contact belongs to the domain
+	if (!empty($contact_uuid) && !permission_exists('contact_all')) {
+		$sql = "select contact_uuid from v_contacts ";
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and contact_uuid = :contact_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['contact_uuid'] = $contact_uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $row);
+	}
+
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$address_type = $_POST["address_type"];
@@ -102,6 +117,21 @@
 				message::add($text['message-invalid_token'],'negative');
 				header('Location: contacts.php');
 				exit;
+			}
+
+		//verify the record belongs to the domain
+			if ($action == "update" && !empty($contact_address_uuid)) {
+				$sql = "select contact_address_uuid from v_contact_addresses ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and contact_address_uuid = :contact_address_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters["contact_address_uuid"] = $contact_address_uuid;
+				$row = $database->select($sql, $parameters, 'row');
+				if (empty($row)) {
+					echo "access denied";
+					exit;
+				}
+				unset($sql, $parameters, $row);
 			}
 
 		//check for all required data
@@ -338,7 +368,7 @@
 	echo "	".$text['label-address_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea class='formfld' name='address_street' style='margin-bottom: 3px;'>".$address_street."</textarea><br>\n";
+	echo "	<textarea class='formfld' name='address_street' style='margin-bottom: 3px;'>".escape($address_street)."</textarea><br>\n";
 	echo "	<input class='formfld' type='text' name='address_extended' maxlength='255' value=\"".escape($address_extended)."\">\n";
 	echo "<br />\n";
 	echo $text['description-address_address']."\n";

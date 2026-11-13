@@ -59,6 +59,21 @@
 		$contact_uuid = $_GET["contact_uuid"];
 	}
 
+	//verify the contact belongs to the domain
+	if (!empty($contact_uuid) && !permission_exists('contact_all')) {
+		$sql = "select contact_uuid from v_contacts ";
+		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+		$sql .= "and contact_uuid = :contact_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['contact_uuid'] = $contact_uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $row);
+	}
+
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$url_label = $_POST["url_label"];
@@ -85,6 +100,21 @@
 				message::add($text['message-invalid_token'],'negative');
 				header('Location: contacts.php');
 				exit;
+			}
+
+		//verify the record belongs to the domain
+			if ($action == "update" && !empty($contact_url_uuid)) {
+				$sql = "select contact_url_uuid from v_contact_urls ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and contact_url_uuid = :contact_url_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters["contact_url_uuid"] = $contact_url_uuid;
+				$row = $database->select($sql, $parameters, 'row');
+				if (empty($row)) {
+					echo "access denied";
+					exit;
+				}
+				unset($sql, $parameters, $row);
 			}
 
 		//check for all required data
