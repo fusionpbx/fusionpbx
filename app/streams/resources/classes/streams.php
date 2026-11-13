@@ -140,10 +140,35 @@ class streams {
 			//delete multiple records
 			if (is_array($records) && @sizeof($records) != 0) {
 
-				//build the delete array
+				//build the list of checked uuids
 				foreach ($records as $x => $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
-						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+						$uuids[] = $record['uuid'];
+					}
+				}
+
+				//verify the records belong to the current domain unless allowed to access all domains
+				if (!empty($uuids) && !permission_exists('stream_all')) {
+					$sql = "select " . $this->uuid_prefix . "uuid from v_" . $this->table . " ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (";
+					foreach ($uuids as $x => $uuid) {
+						$sql .= ($x > 0 ? ", " : "") . ":uuid_" . $x . " ";
+						$parameters['uuid_' . $x] = $uuid;
+					}
+					$sql .= ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows = $this->database->select($sql, $parameters, 'all');
+					unset($sql, $parameters);
+					$uuids = is_array($rows) ? array_column($rows, $this->uuid_prefix . 'uuid') : [];
+				}
+
+				//add the verified records to the delete array
+				if (!empty($uuids) && is_array($uuids)) {
+					$x = 0;
+					foreach ($uuids as $uuid) {
+						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
+						$x++;
 					}
 				}
 
@@ -196,11 +221,15 @@ class streams {
 					}
 				}
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					if (permission_exists('stream_all')) {
+						$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					} else {
+						$sql .= "where domain_uuid = :domain_uuid ";
+					}
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$states[$row['uuid']] = $row['toggle'];
@@ -270,11 +299,15 @@ class streams {
 
 				//create insert array from existing data
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select * from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					if (permission_exists('stream_all')) {
+						$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					} else {
+						$sql .= "where domain_uuid = :domain_uuid ";
+					}
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $x => $row) {
 

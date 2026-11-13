@@ -61,6 +61,23 @@
 		$stream_description = $_POST["stream_description"];
 	}
 
+//verify the stream belongs to the current domain unless allowed to access all domains
+	if (!permission_exists('stream_all')) {
+		foreach (array_unique(array_filter([$_REQUEST["id"] ?? '', $_POST["stream_uuid"] ?? ''], 'is_uuid')) as $check_uuid) {
+			$sql = "select stream_uuid from v_streams ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and stream_uuid = :stream_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['stream_uuid'] = $check_uuid;
+			$row = $database->select($sql, $parameters, 'row');
+			if (empty($row)) {
+				echo "access denied";
+				exit;
+			}
+		}
+		unset($sql, $parameters, $row);
+	}
+
 //process the user data and save it to the database
 	if (count($_POST) > 0 && empty($_POST["persistformvar"])) {
 
