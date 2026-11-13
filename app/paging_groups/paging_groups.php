@@ -116,7 +116,13 @@
 //get the count
 	$sql = "select count(paging_group_uuid) ";
 	$sql .= "from v_paging_groups ";
-	$sql .= "where true ";
+	if (permission_exists('paging_group_all') && $show == 'all') {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
 	if (!empty($search)) {
 		$sql .= "and ( ";
 		$sql .= "	lower(paging_group_name) like :search ";
@@ -139,6 +145,7 @@
 //get the list
 	$sql = "select ";
 	$sql .= "paging_group_uuid, ";
+	$sql .= "domain_uuid, ";
 	$sql .= "paging_group_name, ";
 	$sql .= "paging_group_extension, ";
 	$sql .= "dialplan_uuid, ";
@@ -153,7 +160,13 @@
 	$sql .= "cast(paging_group_enabled as text), ";
 	$sql .= "paging_group_description ";
 	$sql .= "from v_paging_groups ";
-	$sql .= "where true ";
+	if (permission_exists('paging_group_all') && $show == 'all') {
+		$sql .= "where true ";
+	}
+	else {
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	}
 	if (!empty($search)) {
 		$sql .= "and ( ";
 		$sql .= "	lower(paging_group_name) like :search ";
