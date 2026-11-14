@@ -390,18 +390,26 @@ class authentication {
 			return;
 		}
 
-		//
-		// All data validated continue to create session
-		//
-
-		// Set project root directory
+		// Set the project root directory
 		$project_root = dirname(__DIR__, 4);
+
+		// Prove the domain exists in the domains table and use the stored name
+		// rather than the value supplied by the caller. Bail out when the domain
+		// cannot be found so no session is ever created for an unknown domain.
+		$domain_name = domains::find_name_by_uuid($result["domain_uuid"], $database);
+		if ($domain_name === false) {
+			return;
+		}
+
+		//
+		// All data validated continue to create the session
+		//
 
 		// Set the session variables
 		$_SESSION["domain_uuid"] = $result["domain_uuid"];
-		$_SESSION["domain_name"] = $result["domain_name"];
+		$_SESSION["domain_name"] = $domain_name;
 		$_SESSION["user_uuid"] = $result["user_uuid"];
-		$_SESSION["context"] = $result['domain_name'];
+		$_SESSION["context"] = $domain_name;
 
 		// Build the session server array to validate the session
 		global $conf;
@@ -417,7 +425,7 @@ class authentication {
 
 		// User session array
 		$_SESSION["user"]["domain_uuid"] = $result["domain_uuid"];
-		$_SESSION["user"]["domain_name"] = $result["domain_name"];
+		$_SESSION["user"]["domain_name"] = $domain_name;
 		$_SESSION["user"]["user_uuid"] = $result["user_uuid"];
 		$_SESSION["user"]["username"] = $result["username"];
 		$_SESSION["user"]["contact_uuid"] = $result["contact_uuid"] ?? null; //contact_uuid is optional

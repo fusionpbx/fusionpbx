@@ -896,4 +896,91 @@ class domains {
 		return $domains;
 	}
 
+	/**
+	 * Proves a domain name exists in v_domains and returns the stored value.
+	 *
+	 * Client supplied values such as HTTP_HOST or request parameters must never
+	 * become the session domain name without proof that the domain is real. The
+	 * canonical value held by the database is returned so callers store what was
+	 * proven rather than what was supplied, which also keeps path separators and
+	 * other characters out of any file path later built from the session value.
+	 *
+	 * @param mixed $candidate The domain name to prove.
+	 * @param mixed $db        Optional database instance, defaults to the global.
+	 *
+	 * @return string|false The canonical domain name, or false when it does not exist.
+	 */
+	public static function find_name($candidate, $db = null) {
+
+		//reject empty values and anything longer than the column allows
+		if (!is_string($candidate) || $candidate === '' || strlen($candidate) > 255) {
+			return false;
+		}
+
+		//a host name never contains a path separator or control character
+		if (strpbrk($candidate, "/\\\0\t\r\n") !== false) {
+			return false;
+		}
+
+		//use the global database when none was provided
+		if (!is_object($db)) {
+			global $database;
+			$db = $database ?? null;
+		}
+		if (!is_object($db) || !method_exists($db, 'select')) {
+			return false;
+		}
+
+		//prove the domain exists and return the stored value
+		$sql = "select domain_name from v_domains \n";
+		$sql .= "where domain_name = :domain_name \n";
+		$row = $db->select($sql, ['domain_name' => $candidate], 'row');
+		if (is_array($row) && isset($row['domain_name']) && is_string($row['domain_name'])) {
+			return $row['domain_name'];
+		}
+
+		//not found
+		return false;
+	}
+
+	/**
+	 * Returns the domain name proven to exist in v_domains for a given uuid.
+	 *
+	 * Looking the name up by uuid keeps the session domain name consistent with
+	 * the session domain uuid and resolves host aliases such as www prefixed
+	 * hosts or an IP address against the domain the user was actually granted.
+	 *
+	 * @param mixed $domain_uuid The domain uuid to look up.
+	 * @param mixed $db          Optional database instance, defaults to the global.
+	 *
+	 * @return string|false The canonical domain name, or false when it does not exist.
+	 */
+	public static function find_name_by_uuid($domain_uuid, $db = null) {
+
+		//the identifier must be a uuid before it can be looked up
+		if (!is_uuid($domain_uuid)) {
+			return false;
+		}
+
+		//use the global database when none was provided
+		if (!is_object($db)) {
+			global $database;
+			$db = $database ?? null;
+		}
+		if (!is_object($db) || !method_exists($db, 'select')) {
+			return false;
+		}
+
+		//prove the domain exists and return the stored value
+		$sql = "select domain_name from v_domains \n";
+		$sql .= "where domain_uuid = :domain_uuid \n";
+		$row = $db->select($sql, ['domain_uuid' => $domain_uuid], 'row');
+		if (is_array($row) && isset($row['domain_name']) && is_string($row['domain_name'])) {
+			return $row['domain_name'];
+		}
+
+		//not found
+		return false;
+	}
+
 }
