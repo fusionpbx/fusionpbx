@@ -73,6 +73,10 @@ if ($valet_info !== false) {
 
 	//unset($valet);
 	foreach($valet_matches as $row) {
+		//require a valid uuid before using it in a switch command
+		if (!is_uuid($row[1])) {
+			continue;
+		}
 		if (!isset($valet['uuid']['caller_id_name'])) {
 			$valet[$row[1]]['caller_id_name'] = event_socket::api('uuid_getvar '.$row[1].' caller_id_name');
 		}
@@ -158,7 +162,7 @@ echo "					</td>\n";
 if (permission_exists('operator_panel_eavesdrop')) {
 	echo "				<td valign='top' nowrap='nowrap'>\n";
 	if (sizeof($_SESSION['user']['extensions']) > 1) {
-		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $_SESSION['user']['extension'][0]['destination'] : escape($_REQUEST['eavesdrop_dest']))."\">\n";
+		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? escape($_SESSION['user']['extension'][0]['destination']) : escape($_REQUEST['eavesdrop_dest']))."\">\n";
 		echo "				<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 0px 5px; cursor: help;' title='".$text['description-eavesdrop_destination']."' align='absmiddle'>\n";
 		echo "				<select class='formfld' style='margin-right: 5px;' align='absmiddle' onchange=\"document.getElementById('eavesdrop_dest').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();'>\n";
 		if (is_array($_SESSION['user']['extensions'])) {
@@ -477,7 +481,7 @@ if (is_array($activity)) {
 					$block .= 		"<img src='resources/images/recording.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: help;' title=\"".$text['label-recording']."\" ".$onhover_pause_refresh.">\n";
 				}
 				else {
-					$block .= 		"<img src='resources/images/record.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title=\"".$text['label-record']."\" onclick=\"record_call('".$call_identifier_record."');\" ".$onhover_pause_refresh.">\n";
+					$block .= 		"<img src='resources/images/record.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title=\"".$text['label-record']."\" onclick=\"record_call('".escape($call_identifier_record)."');\" ".$onhover_pause_refresh.">\n";
 				}
 			}
 			//eavesdrop

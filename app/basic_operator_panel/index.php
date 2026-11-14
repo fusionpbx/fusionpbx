@@ -35,12 +35,24 @@
 		exit;
 	}
 
+//create tokens for the state changing endpoints (each validates against its own path)
+	$object = new token;
+	$token_exec = $object->create(dirname($_SERVER['PHP_SELF']) . '/exec.php');
+	$token_status = $object->create($_SERVER['PHP_SELF']);
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
 
 //set user status
 	if (isset($_REQUEST['status']) && $_REQUEST['status'] != '') {
+
+		//validate the token (the status changes the user record)
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				echo "access denied";
+				exit;
+			}
 
 		//validate the user status
 			$user_status = $_REQUEST['status'];
@@ -244,7 +256,7 @@ unset($refresh_default);
 		if (/login\.php$/.test(url.pathname)) {
 			// You are logged out. Stop refresh!
 			refresh_stop();
-			url.searchParams.set('path', '<?php echo $_SERVER['REQUEST_URI']; ?>');
+			url.searchParams.set('path', '<?php echo escape($_SERVER['REQUEST_URI'] ?? ''); ?>');
 			window.location.href = url.href;
 			return;
 		}
@@ -413,6 +425,13 @@ unset($refresh_default);
 
 //used by call control and ajax refresh functions
 	function send_cmd(url) {
+		//add the token for the endpoint being called (prevents cross site requests)
+		if (url.indexOf('exec.php') == 0) {
+			url += '&<?php echo $token_exec['name']; ?>=<?php echo $token_exec['hash']; ?>';
+		}
+		else if (url.indexOf('index.php') == 0) {
+			url += '&<?php echo $token_status['name']; ?>=<?php echo $token_status['hash']; ?>';
+		}
 		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
 			xmlhttp=new XMLHttpRequest();
 		}
