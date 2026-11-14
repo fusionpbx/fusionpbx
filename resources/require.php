@@ -115,7 +115,7 @@
 		}
 
 		//get the domain_uuid from the database
-		$sql = "select domain_uuid from v_domains \n";
+		$sql = "select domain_uuid, domain_name from v_domains \n";
 		$sql .= "where domain_name = :domain_name \n";
 		$parameters['domain_name'] = $domain_name;
 		$row = $database->select($sql, $parameters, 'row');
@@ -124,7 +124,8 @@
 			$domain_uuid = $row['domain_uuid'];
 			if (session_status() === PHP_SESSION_ACTIVE) {
 				$_SESSION['domain_uuid'] = $domain_uuid;
-				$_SESSION['domain_name'] = $domain_name;
+				//store the domain name proven to exist in v_domains rather than the host supplied by the client
+				$_SESSION['domain_name'] = $row['domain_name'];
 			}
 		}
 		unset($parameters, $row);
@@ -153,10 +154,8 @@
 				include_once "app/domains/domains.php";
 			}
 
-		//update the domain session variables
+		//get the requested domain uuid
 			$domain_uuid = $_GET["domain_uuid"];
-			$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
-			$_SESSION['domain_uuid'] = $domain_uuid;
 
 		//get the domain details
 			$sql = "select * from v_domains ";
@@ -169,7 +168,14 @@
 			}
 			unset($sql, $domains);
 
-		//update the domain session variables
+		//validate the domain change - the domain must exist in v_domains
+			if (empty($_SESSION['domains'][$domain_uuid]['domain_name'])) {
+				die("invalid domain");
+			}
+
+		//update the domain session variables from the domain proven to exist
+			$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
+			$_SESSION['domain_uuid'] = $domain_uuid;
 			$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
 			$_SESSION["context"] = $_SESSION["domain_name"];
 
