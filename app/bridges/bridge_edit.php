@@ -91,6 +91,24 @@
 		$bridge_description = $_POST["bridge_description"] ?? null;
 	}
 
+//verify the bridge belongs to the current domain unless allowed to access all domains
+	if (!permission_exists('bridge_all')) {
+		$bridge_id = !empty($bridge_uuid) ? $bridge_uuid : ($_REQUEST["id"] ?? '');
+		if (is_uuid($bridge_id)) {
+			$sql = "select bridge_uuid from v_bridges ";
+			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$sql .= "and bridge_uuid = :bridge_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['bridge_uuid'] = $bridge_id;
+			$row = $database->select($sql, $parameters, 'row');
+			if (empty($row)) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
+	}
+
 //process the user data and save it to the database
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
@@ -414,7 +432,7 @@
 	echo "\n";
 	if (!empty($bridge_action)) {
 		echo "	window.onload = function() {\n";
-		echo "		action_control('".$bridge_action."');\n";
+		echo "		action_control(".json_encode((string) $bridge_action, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).");\n";
 		echo "	};\n";
 	}
 	echo "</script>\n";
@@ -478,7 +496,7 @@
 		$i = 0;
 		foreach($bridge_variables as $row) {
 			if ($i > 0) { echo "<br >\n"; }
-			echo "	<input class='formfld' type='text' name='bridge_variables[".$row['name']."]' placeholder='".$row['label']."' maxlength='255' value='".escape($row['value'])."'>\n";
+			echo "	<input class='formfld' type='text' name='bridge_variables[".escape($row['name'])."]' placeholder='".escape($row['label'])."' maxlength='255' value='".escape($row['value'])."'>\n";
 			$i++;
 		}
 		echo "<br />\n";
@@ -496,7 +514,7 @@
 	echo "		<option value=''></option>\n";
 	foreach ($sip_profiles as $row) {
 		if (!empty($bridge_profile) && $bridge_profile == $row["sip_profile_name"]) {
-			echo "	<option value='".$row['sip_profile_name']."' selected='selected'>".escape($row["sip_profile_name"])."</option>\n";
+			echo "	<option value='".escape($row['sip_profile_name'])."' selected='selected'>".escape($row["sip_profile_name"])."</option>\n";
 		}
 		else {
 			echo "	<option value='".escape($row["sip_profile_name"])."'>".escape($row["sip_profile_name"])."</option>\n";
@@ -531,7 +549,7 @@
 					}
 					if (empty($domain_name)) { $domain_name = $text['label-global']; }
 					echo "</optgroup>";
-					echo "<optgroup label='&nbsp; &nbsp;".$domain_name."'>\n";
+					echo "<optgroup label='&nbsp; &nbsp;".escape($domain_name)."'>\n";
 				}
 				if (!empty($bridge_gateways) && is_array($bridge_gateways) && $row['gateway_uuid'] == $bridge_gateways[$x]) {
 					echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n"; //." db:".$row['gateway_uuid']." bg:".$bridge_gateways[$x]
