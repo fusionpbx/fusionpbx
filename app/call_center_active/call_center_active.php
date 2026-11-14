@@ -38,6 +38,10 @@
 	$language = new text;
 	$text = $language->get();
 
+//create a token for the state changing endpoint (each validates against its own path)
+	$object = new token;
+	$token_exec = $object->create('/app/call_center_active/call_center_exec.php');
+
 //get the queue_name and set it as a variable
 	$queue_name = $_GET['queue_name'];
 	$name = $_GET['name'] ?? null;
@@ -161,6 +165,8 @@
 	}
 
 	function send_command(url) {
+		//add the token for the endpoint being called (prevents cross site requests)
+		url += '&<?php echo $token_exec['name']; ?>=<?php echo $token_exec['hash']; ?>';
 		if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
 			xmlhttp=new XMLHttpRequest();
 		}
