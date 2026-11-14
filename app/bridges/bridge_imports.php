@@ -59,6 +59,16 @@
 	$delimiter = $_POST["data_delimiter"] ?? '';
 	$enclosure = $_POST["data_enclosure"] ?? '';
 
+//validate the token before processing the post data
+	if (!empty($_POST) && (isset($_POST['data']) || !empty($_FILES['ulfile']['tmp_name']))) {
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: bridge_imports.php');
+			exit;
+		}
+	}
+
 //save the data to the csv file
 	if (isset($_POST['data'])) {
 		$file = $settings->get('server', 'temp')."/bridges-".$_SESSION['domain_name'].".csv";
@@ -68,7 +78,7 @@
 
 //copy the csv file
 	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('bridge_import')) {
-		if ($_POST['type'] == 'csv') {
+		if ($_POST['type'] == 'csv' && strtolower(pathinfo($_FILES['ulfile']['name'], PATHINFO_EXTENSION)) == 'csv') {
 			$upload_name = basename($_FILES['ulfile']['name']);
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $settings->get('server', 'temp').'/'.$upload_name);
 			$save_msg = "Uploaded file to ".$settings->get('server', 'temp')."/". htmlentities($upload_name);
@@ -233,12 +243,22 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: extension_imports.php');
+				header('Location: bridge_imports.php');
 				exit;
 			}
 
 		//user selected fields
 			$fields = $_POST['fields'];
+
+		//build the list of allowed table and field pairs from the schema
+			$allowed_fields = [];
+			foreach ($schema ?? [] as $row) {
+				if (!empty($row['fields'])) {
+					foreach ($row['fields'] as $field_name) {
+						$allowed_fields[] = $row['table'].'.'.$field_name;
+					}
+				}
+			}
 
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
@@ -269,6 +289,11 @@
 									//echo "value: $value<br />\n";
 									//echo "table_name: $table_name<br />\n";
 									//echo "field_name: $field_name<br />\n";
+
+									//skip fields that are not part of the schema
+									if (!in_array($value, $allowed_fields)) {
+										continue;
+									}
 
 									//get the parent table name
 									$parent = get_parent($schema, $table_name);
