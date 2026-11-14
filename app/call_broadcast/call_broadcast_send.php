@@ -109,6 +109,13 @@
 			echo "access denied";
 			exit;
 		}
+
+		// Validate the token, this endpoint places calls so it changes state
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			echo "access denied";
+			exit;
+		}
 	}
 
 //set the max execution time to 1 hour (only for web)
@@ -162,7 +169,7 @@
 	}
 
 //validate call_broadcast_uuid
-	if (empty($call_broadcast_uuid)) {
+	if (empty($call_broadcast_uuid) || !is_uuid($call_broadcast_uuid)) {
 		if ($is_cli) {
 			echo "Error: Call broadcast UUID is required. Use --uuid=<uuid>\n";
 			exit(1);
@@ -246,6 +253,18 @@
 //remove unsafe characters from the name
 	$broadcast_name = str_replace(" ", "", $broadcast_name);
 	$broadcast_name = str_replace("'", "", $broadcast_name);
+
+//remove characters that would break out of the quoted channel variables or end the
+//event socket command line early (a line feed is sent as an additional command)
+	$broadcast_caller_id_name = preg_replace("/['\\\r\n]/", '', (string) ($broadcast_caller_id_name ?? ''));
+	$broadcast_accountcode = preg_replace("/['\\\r\n]/", '', (string) ($broadcast_accountcode ?? ''));
+	$broadcast_toll_allow = preg_replace("/['\\\r\n]/", '', (string) ($broadcast_toll_allow ?? ''));
+
+//the caller id number is not quoted so limit it to dial string characters
+	$broadcast_caller_id_number = preg_replace('/[^0-9*#+]/', '', (string) ($broadcast_caller_id_number ?? ''));
+
+//a line break in the destination would be sent to the event socket as an additional command
+	$broadcast_destination_data = preg_replace("/[\r\n]/", '', (string) ($broadcast_destination_data ?? ''));
 
 //create the event socket connection
 	$fp = event_socket::create();
@@ -371,7 +390,7 @@
 					echo "</tr>\n";
 					echo "<tr>\n";
 					echo "<td class='row_style1' align='center'>\n";
-					echo "	<strong>".$text['label-call-broadcast']." ".$broadcast_name." ".$text['label-has-been']."</strong>\n";
+					echo "	<strong>".$text['label-call-broadcast']." ".escape($broadcast_name)." ".$text['label-has-been']."</strong>\n";
 
 					if (permission_exists('call_active_view')) {
 						echo "	<br /><br />\n";
