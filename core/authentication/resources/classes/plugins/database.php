@@ -189,9 +189,9 @@ class plugin_database {
 			exit;
 		}
 
-		//validate the token
+		//validate the token (not for API key logins, they come without the login form)
 		$token = new token;
-		if (!$token->validate('login')) {
+		if (empty($_REQUEST["key"]) && !$token->validate('login')) {
 			message::add($text['message-invalid_token'],'negative');
 			header('Location: ' . PROJECT_PATH . '/login.php');
 			exit;
