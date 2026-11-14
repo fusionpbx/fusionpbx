@@ -39,6 +39,14 @@ else {
 	$language = new text;
 	$text = $language->get();
 
+//validate the token, this endpoint changes state (it deletes scheduled calls)
+	$token = new token;
+	if (!$token->validate($_SERVER['PHP_SELF'])) {
+		message::add($text['message-invalid_token'],'negative');
+		header('Location: call_broadcast.php');
+		exit;
+	}
+
 // Set variables from GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
@@ -66,9 +74,24 @@ else {
 	$query_string = http_build_query($param);
 
 //get the html values and set them as variables
-	$uuid = trim($_GET["id"]);
+	$uuid = trim($_GET["id"] ?? "");
 
 	if (is_uuid($uuid)) {
+		//verify the call broadcast belongs to the current domain unless allowed to access all domains
+			if (!permission_exists('call_broadcast_all')) {
+				$sql = "select call_broadcast_uuid from v_call_broadcasts ";
+				$sql .= "where call_broadcast_uuid = :call_broadcast_uuid ";
+				$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+				$parameters['call_broadcast_uuid'] = $uuid;
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$row = $database->select($sql, $parameters, 'row');
+				if (empty($row)) {
+					echo "access denied";
+					exit;
+				}
+				unset($sql, $parameters, $row);
+			}
+
 		//show the result
 			if (count($_GET) > 0) {
 				$fp = event_socket::create();

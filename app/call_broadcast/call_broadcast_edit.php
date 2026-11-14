@@ -74,6 +74,31 @@
 		$action = "add";
 	}
 
+//verify the call broadcast belongs to the current domain unless allowed to access all domains
+	if (!permission_exists('call_broadcast_all')) {
+		$checked_uuids = [];
+		if (is_uuid($_REQUEST["id"] ?? '')) {
+			$checked_uuids[] = $_REQUEST["id"];
+		}
+		if (is_uuid($_POST["call_broadcast_uuid"] ?? '')) {
+			$checked_uuids[] = $_POST["call_broadcast_uuid"];
+		}
+		foreach ($checked_uuids as $checked_uuid) {
+			$sql = "select call_broadcast_uuid from v_call_broadcasts ";
+			$sql .= "where call_broadcast_uuid = :call_broadcast_uuid ";
+			$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$parameters['call_broadcast_uuid'] = $checked_uuid;
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$row = $database->select($sql, $parameters, 'row');
+			if (empty($row)) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
+		unset($checked_uuids);
+	}
+
 //set the defaults
 	$broadcast_name = '';
 	$broadcast_start_time = '';
@@ -314,6 +339,10 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
+//create a token for the state changing start/stop links (they validate against their own path)
+	$token_send = $object->create(dirname($_SERVER['PHP_SELF']) . '/call_broadcast_send.php');
+	$token_stop = $object->create(dirname($_SERVER['PHP_SELF']) . '/call_broadcast_stop.php');
+
 //begin header
 	$document['title'] = $text['title-call_broadcast'];
 	require_once "resources/header.php";
@@ -326,8 +355,8 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'call_broadcast.php'.($query_string ? '?'.$query_string : '')]);
 	if ($action == "update") {
-		echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$settings->get('theme', 'button_icon_start'),'style'=>'margin-left: 15px;','link'=>'call_broadcast_send.php?id='.urlencode($call_broadcast_uuid).($query_string ? '&'.$query_string : '')]);
-		echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$settings->get('theme', 'button_icon_stop'),'link'=>'call_broadcast_stop.php?id='.urlencode($call_broadcast_uuid).($query_string ? '&'.$query_string : '')]);
+		echo button::create(['type'=>'button','label'=>$text['button-start'],'icon'=>$settings->get('theme', 'button_icon_start'),'style'=>'margin-left: 15px;','link'=>'call_broadcast_send.php?id='.urlencode($call_broadcast_uuid).($query_string ? '&'.$query_string : '').'&'.$token_send['name'].'='.$token_send['hash']]);
+		echo button::create(['type'=>'button','label'=>$text['button-stop'],'icon'=>$settings->get('theme', 'button_icon_stop'),'link'=>'call_broadcast_stop.php?id='.urlencode($call_broadcast_uuid).($query_string ? '&'.$query_string : '').'&'.$token_stop['name'].'='.$token_stop['hash']]);
 		if (permission_exists('call_broadcast_delete')) {
 			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'name'=>'btn_delete','style'=>'margin-left: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
@@ -509,7 +538,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 
-		echo "	<textarea class='formfld' style='width: 300px; height: 200px;' type='text' name='broadcast_phone_numbers' placeholder=\"".$text['label-list_example']."\">".str_replace('\n', "\n", $broadcast_phone_numbers ?? '')."</textarea>";
+		echo "	<textarea class='formfld' style='width: 300px; height: 200px;' type='text' name='broadcast_phone_numbers' placeholder=\"".$text['label-list_example']."\">".escape_textarea(str_replace('\n', "\n", $broadcast_phone_numbers ?? ''))."</textarea>";
 		echo "<br><br>";
 		echo " <input type='file' name='ulfile' accept='.csv,.txt' style=\"display:inline-block;\"><a href='sample.csv' download><i class='fas fa-cloud-download-alt' style='margin-right: 5px;'></i>".$text['label-sample_file']."</a>";
 		echo "<br /><br />";
@@ -546,7 +575,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "	".$text['label-broadcast_toll_allow']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='broadcast_toll_allow' maxlength='255' value=".escape($broadcast_toll_allow).">\n";
+		echo "	<input class='formfld' type='text' name='broadcast_toll_allow' maxlength='255' value=\"".escape($broadcast_toll_allow)."\">\n";
 		echo "<br />\n";
 		echo $text['description-broadcast_toll_allow']."\n";
 		echo "</td>\n";
