@@ -96,7 +96,8 @@
 			if ($row['directory_full_name'] != '') { $values[] = $row['directory_full_name']; }
 			if ($row['effective_caller_id_name'] != '') { $values[] = $row['effective_caller_id_name']; }
 
-			$suggestions[] = "{ \"label\": \"".(implode(', ', $values)." @ ".$row['extension'])."\", \"value\": \"".$row['extension']."\" }";
+			$label = implode(', ', $values)." @ ".$row['extension'];
+			$suggestions[] = [ "label" => $label, "value" => $row['extension'] ];
 			unset($values);
 		}
 		unset($sql, $result, $row_count);
@@ -166,7 +167,8 @@
 
 			if ($row['contact_nickname'] != '') { $values[] = $row['contact_nickname']; }
 
-			$suggestions[] = "{ \"label\": \"".(implode(', ', $values)." - ".format_phone($row['phone_number']).(($row['phone_label'] != '') ? " (".$row['phone_label'].")" : null))."\", \"value\": \"".$row['phone_number']."\" }";
+			$label = implode(', ', $values)." - ".format_phone($row['phone_number']).(($row['phone_label'] != '') ? " (".$row['phone_label'].")" : null);
+			$suggestions[] = [ "label" => $label, "value" => $row['phone_number'] ];
 			unset($values, $names);
 		}
 		unset($sql, $result, $row_count);
@@ -174,12 +176,10 @@
 
 //output suggestions, if any
 	if (!empty($suggestions) && is_array($suggestions) && @sizeof($suggestions) > 0) {
-		$resp = "[\n";
-		$resp .= implode(",\n", $suggestions)."\n";
-		$resp .= "]";
+		header('Content-Type: application/json');
 
 		if (isset($_GET['debug'])) { echo "<pre>"; }
-		echo $resp;
+		echo json_encode($suggestions);
 		if (isset($_GET['debug'])) { echo "</pre>"; }
 	}
 

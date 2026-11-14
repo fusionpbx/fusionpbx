@@ -53,6 +53,15 @@ if (count($_GET) > 0) {
 		$data = trim($_GET["data"] ?? '');
 		$direction = trim($_GET["direction"] ?? '');
 
+	//validate the token (these commands change state on the switch)
+		if (!empty($switch_cmd)) {
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				echo 'access denied';
+				return;
+			}
+		}
+
 	//setup the event socket connection
 		$esl = event_socket::create();
 
@@ -75,6 +84,29 @@ if (count($_GET) > 0) {
 				return;
 			}
 
+			//limit the commands to channels of the current domain, superadmin is exempt
+				$domain_name = $_SESSION['domain_name'] ?? '';
+				$channel_in_domain = function (string $uuid) use ($domain_name): bool {
+					if (if_group('superadmin')) {
+						return true;
+					}
+					if ($uuid === '' || !is_uuid($uuid)) {
+						return false;
+					}
+
+					//get the domain of the channel from the switch
+						$channel_domain = trim((string) event_socket::api('uuid_getvar ' . $uuid . ' domain_name'));
+						if ($channel_domain === '' || $channel_domain === '_undef_' || stripos($channel_domain, '-ERR') !== false) {
+							//fall back to the presence id which is user@domain
+								$presence_id = str_replace('%40', '@', trim((string) event_socket::api('uuid_getvar ' . $uuid . ' presence_id')));
+								$presence = explode('@', $presence_id);
+								$channel_domain = $presence[1] ?? '';
+						}
+
+					//compare the domain, a channel without a known domain is not allowed
+						return $channel_domain !== '' && $channel_domain === $domain_name;
+				};
+
 			if ($switch_cmd == 'originate') {
 				$source = preg_replace($num_pattern,'',$_GET['source']);
 				$destination = preg_replace($num_pattern,'',$_GET['destination']);
@@ -82,15 +114,27 @@ if (count($_GET) > 0) {
 			}
 			else if ($switch_cmd == 'uuid_record') {
 				$uuid = preg_replace($uuid_pattern,'',$_GET['uuid']);
+				if (!$channel_in_domain($uuid)) {
+					echo 'access denied';
+					return;
+				}
 				$api_cmd = 'uuid_record ' . $uuid . ' start ' . $settings->get('switch', 'recordings') . '/' . $_SESSION['domain_name'] . '/archive/' . date('Y/M/d') . '/' . $uuid . '.wav';
 			}
 			else if ($switch_cmd == 'uuid_transfer') {
 				$uuid = preg_replace($uuid_pattern,'',$_GET['uuid']);
+				if (!$channel_in_domain($uuid)) {
+					echo 'access denied';
+					return;
+				}
 				$destination = preg_replace($num_pattern,'',$_GET['destination']);
 				$api_cmd = 'uuid_transfer ' . $uuid . ' ' . $destination . ' XML ' . trim($_SESSION['user_context']);
 			}
 			else if ($switch_cmd == 'uuid_eavesdrop') {
 				$chan_uuid = preg_replace($uuid_pattern,'',$_GET['chan_uuid']);
+				if (!$channel_in_domain($chan_uuid)) {
+					echo 'access denied';
+					return;
+				}
 				$ext = preg_replace($num_pattern,'',$_GET['ext']);
 				$destination = preg_replace($num_pattern,'',$_GET['destination']);
 
@@ -101,6 +145,10 @@ if (count($_GET) > 0) {
 			}
 			else if ($switch_cmd == 'uuid_kill') {
 				$call_id = preg_replace($uuid_pattern,'',$_GET['call_id']);
+				if (!$channel_in_domain($call_id)) {
+					echo 'access denied';
+					return;
+				}
 				$api_cmd = 'uuid_kill ' . $call_id;
 			}
 			else {
