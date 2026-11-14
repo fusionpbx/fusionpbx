@@ -191,8 +191,14 @@
 							}
 						}
 						else if(filter_var($cidr_array[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-							//valid IPv6 address
-							$node_cidr = $row["node_cidr"];
+							//valid IPv6 address and cidr notation
+							if (isset($cidr_array[1]) && ctype_digit($cidr_array[1]) && (int) $cidr_array[1] <= 128) {
+								$node_cidr = $cidr_array[0].'/'.$cidr_array[1];
+							}
+							else {
+								//valid IPv6 address add the missing cidr notation
+								$node_cidr = $cidr_array[0].'/128';
+							}
 						}
 						else {
 							//domains hostname to lookup

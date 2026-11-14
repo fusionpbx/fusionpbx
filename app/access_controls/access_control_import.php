@@ -38,6 +38,13 @@
 	$language = new text;
 	$text = $language->get();
 
+//validate the access control uuid
+	$access_control_uuid = $_GET['id'] ?? '';
+	if (!is_uuid($access_control_uuid)) {
+		header('Location: access_controls.php');
+		exit;
+	}
+
 //built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduce the functionality but requires PHP 5.1.0 or higher
 	if (!function_exists('str_getcsv')) {
 		/**
@@ -69,9 +76,19 @@
 	$delimiter = $_POST["data_delimiter"] ?? '';
 	$enclosure = $_POST["data_enclosure"] ?? '';
 
+//validate the token on posted data
+	if (count($_POST) > 0) {
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: access_control_edit.php?id='.urlencode($access_control_uuid));
+			exit;
+		}
+	}
+
 //save the data to the csv file
 	if (isset($_POST['data'])) {
-		$file = $settings->get('server', 'temp')."/access_control_nodes-".$_SESSION['domain_name'].".csv";
+		$file = $settings->get('server', 'temp', '/tmp')."/access_control_nodes-".$_SESSION['domain_name'].".".bin2hex(random_bytes(8)).".csv";
 		if (file_put_contents($file, $_POST['data'])) {
 			$_SESSION['file'] = $file;
 		}
@@ -81,7 +98,7 @@
 	//$_POST['submit'] == "Upload" &&
 	if (!empty($_FILES['ulfile']['tmp_name']) &&  is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('access_control_node_add')) {
 		if (!empty($_POST['type']) &&$_POST['type'] == 'csv') {
-			$file = $settings->get('server', 'temp').'/'.basename($_FILES['ulfile']['name']);
+			$file = $settings->get('server', 'temp').'/access_control_nodes-'.bin2hex(random_bytes(8)).'.csv';
 			if (move_uploaded_file($_FILES['ulfile']['tmp_name'], $file)) {
 				$_SESSION['file'] = $file;
 			}
@@ -89,7 +106,7 @@
 	}
 
 //get the schema
-	if (!empty($delimiter)) {
+	if (!empty($delimiter) && !empty($_SESSION['file']) && file_exists($_SESSION['file'])) {
 		//get the first line
 			$line = fgets(fopen($_SESSION['file'], 'r'));
 			$line_fields = explode($delimiter, $line);
@@ -138,13 +155,13 @@
 	}
 
 //match the column names to the field names
-	if (!empty($delimiter) && file_exists($_SESSION['file']) && $action != 'import') {
+	if (!empty($delimiter) && !empty($_SESSION['file']) && file_exists($_SESSION['file']) && $action != 'import') {
 
 		//validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: access_control_edit.php?id='.urlencode($_GET['id']));
+				header('Location: access_control_edit.php?id='.urlencode($access_control_uuid));
 				exit;
 			}
 
@@ -162,7 +179,7 @@
 			echo "<div class='action_bar' id='action_bar'>\n";
 			echo "	<div class='heading'><b>".$text['label-import']."</b></div>\n";
 			echo "	<div class='actions'>\n";
-			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'access_control_node_edit.php?id='.urlencode($_GET['id'])]);
+			echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'access_control_node_edit.php?id='.urlencode($access_control_uuid)]);
 			echo button::create(['type'=>'submit','label'=>$text['button-import'],'icon'=>$settings->get('theme', 'button_icon_import'),'id'=>'btn_save']);
 			echo "	</div>\n";
 			echo "	<div style='clear: both;'></div>\n";
@@ -208,9 +225,9 @@
 			echo "<br /><br />\n";
 
 			echo "<input name='action' type='hidden' value='import'>\n";
-			echo "<input name='from_row' type='hidden' value='$from_row'>\n";
-			echo "<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
-			echo "<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
+			echo "<input name='from_row' type='hidden' value='".escape($from_row)."'>\n";
+			echo "<input name='data_delimiter' type='hidden' value='".escape($delimiter)."'>\n";
+			echo "<input name='data_enclosure' type='hidden' value='".escape($enclosure)."'>\n";
 			echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 			echo "</form>\n";
@@ -245,7 +262,7 @@
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
 				message::add($text['message-invalid_token'],'negative');
-				header('Location: access_control_edit.php?id='.urlencode($_GET['id']));
+				header('Location: access_control_edit.php?id='.urlencode($access_control_uuid));
 				exit;
 			}
 
@@ -279,9 +296,15 @@
 									$field_array = explode(".",$value);
 									$table_name = $field_array[0];
 									$field_name = $field_array[1];
+
 									//only allow importing into the access_control_nodes table and its known fields
 									if ($table_name != 'access_control_nodes' || !in_array($field_name, array('node_type', 'node_cidr', 'node_description'))) {
 										continue;
+									}
+
+									//enforce valid data, an unknown type defaults to deny so it cannot widen access
+									if ($field_name == 'node_type' && isset($result[$key]) && $result[$key] != '' && $result[$key] != 'allow' && $result[$key] != 'deny') {
+										$result[$key] = 'deny';
 									}
 									//echo "value: $value<br />\n";
 									//echo "table_name: $table_name<br />\n";
@@ -312,11 +335,18 @@
 												}
 												else {
 													//valid IPv4 address add the missing cidr notation
-													$result[$key] = $cidr_array[1].'/32';
+													$result[$key] = $cidr_array[0].'/32';
 												}
 											}
 											elseif(filter_var($cidr_array[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-												//valid IPv6 address
+												//valid IPv6 address and cidr notation
+												if (isset($cidr_array[1]) && ctype_digit($cidr_array[1]) && (int) $cidr_array[1] <= 128) {
+													$result[$key] = $cidr_array[0].'/'.$cidr_array[1];
+												}
+												else {
+													//valid IPv6 address add the missing cidr notation
+													$result[$key] = $cidr_array[0].'/128';
+												}
 											}
 										}
 									}
@@ -324,7 +354,7 @@
 									//build the data array
 									if (!empty($table_name)) {
 										$array[$table_name][$row_id]['access_control_node_uuid'] = uuid();
-										$array[$table_name][$row_id]['access_control_uuid'] = $_GET['id'];
+										$array[$table_name][$row_id]['access_control_uuid'] = $access_control_uuid;
 										$array[$table_name][$row_id][$field_name] = $result[$key];
 									}
 									if (is_array($array[$parent][$row_id])) { $y++; }
@@ -360,8 +390,16 @@
 						unset($array);
 					}
 
+				//remove the temporary csv file once it has been consumed
+					$temp_dir = realpath($settings->get('server', 'temp'));
+					$temp_file = !empty($_SESSION['file']) ? realpath($_SESSION['file']) : false;
+					if ($temp_dir !== false && $temp_file !== false && str_starts_with($temp_file, $temp_dir . DIRECTORY_SEPARATOR)) {
+						@unlink($temp_file);
+					}
+					unset($_SESSION['file']);
+
 				//send the redirect header
-					header("Location: access_control_edit.php?id=".urlencode($_GET['id']));
+					header("Location: access_control_edit.php?id=".urlencode($access_control_uuid));
 					return;
 			}
 	}
@@ -380,7 +418,7 @@
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['label-import']."</b></div>\n";
 	echo "	<div class='actions'>\n";
-	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'access_control_edit.php?id='.urlencode($_GET['id'])]);
+	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'access_control_edit.php?id='.urlencode($access_control_uuid)]);
 	echo button::create(['type'=>'submit','label'=>$text['button-continue'],'icon'=>$settings->get('theme', 'button_icon_upload'),'id'=>'btn_save']);
 	echo "	</div>\n";
 	echo "	<div style='clear: both;'></div>\n";
