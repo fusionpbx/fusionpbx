@@ -37,13 +37,20 @@
 		exit;
 	}
 
+//validate the token (these commands change state on the switch)
+	$token = new token;
+	if (!$token->validate('/app/call_center_active/call_center_exec.php')) {
+		echo "access denied";
+		exit;
+	}
+
 //http get variables set to php variables
 	if (count($_GET) > 0) {
-		$command = trim($_GET["command"]);
-		$uuid = trim($_GET["uuid"]);
-		$extension = trim($_GET["extension"]);
+		$command = trim($_GET["command"] ?? '');
+		$uuid = trim($_GET["uuid"] ?? '');
+		$extension = trim($_GET["extension"] ?? '');
 		$caller_id_name = trim($_GET["caller_id_name"] ?? '');
-		$caller_id_number = trim($_GET["extension"]);
+		$caller_id_number = trim($_GET["extension"] ?? '');
 	}
 
 //validate the extension
@@ -71,15 +78,58 @@
 		$caller_id_number = null;
 	}
 
+//limit the commands to channels of the current domain, superadmin is exempt
+	$domain_name = $_SESSION['domain_name'] ?? '';
+	$channel_in_domain = function (?string $uuid) use ($domain_name): bool {
+		if (if_group('superadmin')) {
+			return true;
+		}
+		if ($uuid === '' || !is_uuid($uuid)) {
+			return false;
+		}
+
+		//get the domain of the channel from the switch
+			$channel_domain = trim((string) event_socket::api('uuid_getvar ' . $uuid . ' domain_name'));
+			if ($channel_domain === '' || $channel_domain === '_undef_' || stripos($channel_domain, '-ERR') !== false) {
+				//fall back to the presence id which is user@domain
+					$presence_id = str_replace('%40', '@', trim((string) event_socket::api('uuid_getvar ' . $uuid . ' presence_id')));
+					$presence = explode('@', $presence_id);
+					$channel_domain = $presence[1] ?? '';
+			}
+
+		//fall back to the call center queue which is queue_extension@domain
+			if ($channel_domain === '') {
+				$cc_queue = trim((string) event_socket::api('uuid_getvar ' . $uuid . ' cc_queue'));
+				if (substr($cc_queue, -strlen('@' . $domain_name)) === '@' . $domain_name) {
+					$channel_domain = $domain_name;
+				}
+			}
+
+		//compare the domain, a channel without a known domain is not allowed
+			return $channel_domain !== '' && $channel_domain === $domain_name;
+	};
+
 //validate the command
 	switch ($command) {
 		case "eavesdrop":
+			if (!$channel_in_domain($uuid)) {
+				echo "access denied";
+				exit;
+			}
 			$switch_command = "originate {origination_caller_id_name=eavesdrop,origination_caller_id_number=".$extension."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." &eavesdrop(".$uuid.")";
 			break;
 		case "uuid_transfer":
+			if (!$channel_in_domain($uuid)) {
+				echo "access denied";
+				exit;
+			}
 			$switch_command = "uuid_transfer ".$uuid." -bleg ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
 			break;
 		case "uuid_pickup":
+				if (!$channel_in_domain($uuid)) {
+					echo "access denied";
+					exit;
+				}
 				$switch_command = "uuid_transfer ".$uuid." ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
 				break;
 		case "bridge":

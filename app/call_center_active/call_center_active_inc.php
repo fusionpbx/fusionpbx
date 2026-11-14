@@ -146,7 +146,7 @@
 
 			//get the agents from the database
 				if (empty($_SESSION['agents']) || !is_array($_SESSION['agents'])) {
-					$sql = "select * from v_call_center_agents ";
+					$sql = "select call_center_agent_uuid, agent_name from v_call_center_agents ";
 					$sql .= "where domain_uuid = :domain_uuid ";
 					$sql .= "order by agent_name asc ";
 					$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -238,10 +238,10 @@
 										$list_row_url = "../call_centers/call_center_agent_edit.php?id=".$agent_uuid;
 									}
 
-									echo "<tr class='list-row' href='".$list_row_url."' data-agent-status='".escape($status)."'>\n";
+									echo "<tr class='list-row' href='".escape($list_row_url)."' data-agent-status='".escape($status)."'>\n";
 									echo "<td>";
 									if (permission_exists('call_center_agent_edit')) {
-										echo "<a href='".$list_row_url."'>".escape($agent_name)."</a>";
+										echo "<a href='".escape($list_row_url)."'>".escape($agent_name)."</a>";
 									}
 									else {
 										echo escape($agent_name);
