@@ -53,13 +53,13 @@
 //set the variables
 	if (!empty($_GET["id"]) && is_uuid($_GET["id"])) {
 		$database_transaction_uuid = $_GET["id"];
-		$search = $_GET['search'] ?? '';
+		$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
 		$page = $_GET['page'] ?? 0;
 		$action = $_GET['action'] ?? '';
 	}
 
 //pre-populate the form
-	if (!empty($_GET["id"]) && empty($_POST["persistformvar"])) {
+	if (!empty($database_transaction_uuid) && empty($_POST["persistformvar"])) {
 
 		$sql = "select ";
 		$sql .= "t.database_transaction_uuid, d.domain_name, u.username, t.user_uuid, t.app_name, t.app_uuid, ";
@@ -93,6 +93,12 @@
 
 //undo the transaction
 	if ($action == 'undo' && ($transaction_type == 'delete' || $transaction_type == 'update')) {
+		//check permissions
+			if (!permission_exists('database_transaction_edit')) {
+				echo "access denied";
+				exit;
+			}
+
 		//validate the token
 			$token = new token;
 			if (!$token->validate($_SERVER['PHP_SELF'])) {
@@ -430,7 +436,7 @@
 
 //show the update
 	if ($transaction_type == "update") {
-		if (count($before) > 0 && count($after) > 0) {
+		if (!empty($before) && !empty($after)) {
 
 			//create the table header
 				$array = array_difference($before, $after, 1);
