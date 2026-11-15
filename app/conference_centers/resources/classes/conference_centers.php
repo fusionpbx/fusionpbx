@@ -281,8 +281,8 @@ class conference_centers {
 			//get call recording from database
 			if (is_uuid($_GET['id'])) {
 				$conference_session_uuid = $_GET['id'];
-				$sql                     = "select recording from v_conference_sessions ";
-				$sql                     .= "where conference_session_uuid = :conference_session_uuid ";
+				$sql = "select recording, conference_center_bridge_uuid from v_conference_sessions ";
+				$sql .= "where conference_session_uuid = :conference_session_uuid ";
 				$sql .= "and domain_uuid = :domain_uuid ";
 				$parameters['conference_session_uuid'] = $conference_session_uuid;
 				$parameters['domain_uuid'] = $this->domain_uuid;
@@ -290,6 +290,10 @@ class conference_centers {
 				if (is_array($conference_sessions)) {
 					foreach ($conference_sessions as $row) {
 						$recording = $row['recording'];
+						//fall back to the bridge uuid when the recording path was not stored
+						if (empty($recording)) {
+							$recording = $row['conference_center_bridge_uuid'] ?? '';
+						}
 						break;
 					}
 				}
@@ -297,7 +301,13 @@ class conference_centers {
 			}
 
 			//set the path for the directory
-			$default_path = $this->settings->get('switch', 'call_recordings') . "/" . $this->domain_name;
+			$default_path = realpath($this->settings->get('switch', 'recordings') . "/" . $this->domain_name);
+
+			//skip when the recording was not found
+			if ($default_path === false || empty($recording)) {
+				http_response_code(404);
+				exit;
+			}
 
 			//get the file path and name
 			$record_path = dirname($recording);
@@ -314,19 +324,19 @@ class conference_centers {
 
 			//validate the resolved path stays within the recordings directory
 			$full_record_path = realpath($record_path . '/' . $record_name);
-			if ($full_record_path === false || strpos($full_record_path, $default_path . '/') !== 0) {
+			if ($full_record_path === false || is_file($full_record_path) === false || strpos($full_record_path, $default_path . '/') !== 0) {
 				http_response_code(404);
 				exit;
 			}
 
 			//download the file
-			if (file_exists($record_path . '/' . $record_name)) {
+			if (file_exists($full_record_path)) {
 				//content-range
 				//if (isset($_SERVER['HTTP_RANGE']))  {
 				//	range_download($full_recording_path);
 				//}
 				ob_clean();
-				$fd = fopen($record_path . '/' . $record_name, "rb");
+				$fd = fopen($full_record_path, "rb");
 				if ($_GET['t'] == "bin") {
 					header("Content-Type: application/force-download");
 					header("Content-Type: application/octet-stream");
@@ -341,7 +351,7 @@ class conference_centers {
 						header("Content-Type: audio/mpeg");
 					}
 				}
-				header('Content-Disposition: attachment; filename="' . $record_name . '"');
+				header('Content-Disposition: attachment; filename="' . addcslashes($record_name, "\"\\") . '"');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 				// header("Content-Length: ".filesize($full_recording_path));

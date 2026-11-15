@@ -47,6 +47,13 @@ class call_center_notify {
 	 */
 	public function send_call_center_notify() {
 
+		//remove characters that would break out of the event headers, a line feed is sent to
+		//the event socket as an additional header or command
+		$this->domain_name = preg_replace("/[\r\n]/", '', (string) ($this->domain_name ?? ''));
+		$this->agent_name = preg_replace("/[\r\n]/", '', (string) ($this->agent_name ?? ''));
+		$this->agent_uuid = preg_replace("/[\r\n]/", '', (string) ($this->agent_uuid ?? ''));
+		$this->answer_state = preg_replace("/[\r\n]/", '', (string) ($this->answer_state ?? ''));
+
 		$esl = event_socket::create();
 		if ($esl->is_connected()) {
 			//send the event

@@ -77,6 +77,29 @@
 		$action = "add";
 	}
 
+//verify the conference room belongs to the current domain
+	$checked_uuids = [];
+	if (is_uuid($_REQUEST["id"] ?? '')) {
+		$checked_uuids[] = $_REQUEST["id"];
+	}
+	if (is_uuid($_REQUEST["conference_room_uuid"] ?? '')) {
+		$checked_uuids[] = $_REQUEST["conference_room_uuid"];
+	}
+	foreach ($checked_uuids as $checked_uuid) {
+		$sql = "select conference_room_uuid from v_conference_rooms ";
+		$sql .= "where conference_room_uuid = :conference_room_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['conference_room_uuid'] = $checked_uuid;
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $row);
+	}
+	unset($checked_uuids);
+
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$conference_center_uuid = $_POST["conference_center_uuid"];
@@ -214,6 +237,14 @@
 //delete the user
 	if (!empty($_GET["a"]) && $_GET["a"] == "delete" && permission_exists('conference_room_delete')) {
 		if (is_uuid($_REQUEST["conference_room_user_uuid"])) {
+			//validate the token
+				$token = new token;
+				if (!$token->validate($_SERVER['PHP_SELF'])) {
+					message::add($text['message-invalid_token'],'negative');
+					header('Location: conference_rooms.php'.($query_string ? '?'.$query_string : ''));
+					exit;
+				}
+
 			//set the variables
 				$conference_room_user_uuid = $_REQUEST["conference_room_user_uuid"];
 				$conference_room_uuid = $_REQUEST["conference_room_uuid"];
@@ -652,7 +683,7 @@
 				echo "				<td class='vtable'>".escape($row['username'])."</td>\n";
 				echo "				<td style='width: 25px;' align='right'>\n";
 				if (permission_exists('conference_room_delete')) {
-					echo "					<a href='conference_room_edit.php?conference_room_user_uuid=".urlencode($row['conference_room_user_uuid'])."&conference_room_uuid=".urlencode($conference_room_uuid)."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+					echo "					<a href='conference_room_edit.php?conference_room_user_uuid=".urlencode($row['conference_room_user_uuid'])."&conference_room_uuid=".urlencode($conference_room_uuid)."&a=delete&".$token['name']."=".$token['hash']."' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
 				}
 				echo "				</td>\n";
 				echo "			</tr>\n";
