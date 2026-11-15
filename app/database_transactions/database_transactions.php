@@ -52,10 +52,10 @@
 	$button_icon_view = !empty($settings->get('theme', 'button_icon_view')) ? $settings->get('theme', 'button_icon_view') : '';
 
 //add the user filter and search term
-	if (!empty($_GET["user_uuid"])) {
+	if (!empty($_GET["user_uuid"]) && is_uuid($_GET["user_uuid"])) {
 		$user_uuid = $_GET['user_uuid'];
 	}
-	if (!empty($_GET["search"])) {
+	if (!empty($_GET["search"]) && is_string($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
 	}
 
@@ -89,7 +89,7 @@
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "search=".$search;
-	$page = empty($_GET['page']) ? $page = 0 : $page = $_GET['page'];
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
