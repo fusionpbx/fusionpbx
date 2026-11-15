@@ -67,7 +67,7 @@
 //get the http post data
 	if (!empty($_POST['conference_profile_params'])) {
 		$action = $_POST['action'];
-		$conference_profile_uuid = $_POST['conference_profile_uuid'];
+		$conference_profile_uuid = !empty($_POST['conference_profile_uuid']) && is_uuid($_POST['conference_profile_uuid']) ? $_POST['conference_profile_uuid'] : '';
 		$conference_profile_params = $_POST['conference_profile_params'];
 	}
 
