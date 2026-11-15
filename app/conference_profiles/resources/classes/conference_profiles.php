@@ -230,8 +230,8 @@ class conference_profiles {
 				}
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
 					$sql  = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql  .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
-					$rows = $this->database->select($sql, $parameters ?? null, 'all');
+					$sql  .= "where " . $this->name . "_uuid in (" . implode(', ', array_fill(0, count($uuids), '?')) . ") ";
+					$rows = $this->database->select($sql, array_map(function ($uuid) { return trim($uuid, "'"); }, $uuids), 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$states[$row['uuid']] = $row['toggle'];
@@ -305,8 +305,8 @@ class conference_profiles {
 				}
 				if (!empty($uuids) && is_array($uuids) && @sizeof($uuids) != 0) {
 					$sql  = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql  .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
-					$rows = $this->database->select($sql, $parameters ?? null, 'all');
+					$sql  .= "where " . $this->name . "_uuid in (" . implode(', ', array_fill(0, count($uuids), '?')) . ") ";
+					$rows = $this->database->select($sql, array_map(function ($uuid) { return trim($uuid, "'"); }, $uuids), 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$states[$row['uuid']] = $row['toggle'];
@@ -388,8 +388,8 @@ class conference_profiles {
 
 					//primary table
 					$sql  = "select * from v_" . $this->table . " ";
-					$sql  .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
-					$rows = $this->database->select($sql, $parameters ?? null, 'all');
+					$sql  .= "where " . $this->name . "_uuid in (" . implode(', ', array_fill(0, count($uuids), '?')) . ") ";
+					$rows = $this->database->select($sql, array_map(function ($uuid) { return trim($uuid, "'"); }, $uuids), 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$y = 0;
 						foreach ($rows as $x => $row) {

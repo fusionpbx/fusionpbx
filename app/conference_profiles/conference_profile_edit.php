@@ -87,6 +87,10 @@
 
 		//get the uuid
 			if ($action == "update") {
+				if (!permission_exists('conference_profile_edit')) {
+					echo "access denied";
+					exit;
+				}
 				$conference_profile_uuid = $_POST["conference_profile_uuid"];
 			}
 
