@@ -64,6 +64,26 @@
 //send the call
 	if (is_array($_GET) && isset($_GET['src']) && isset($_GET['dest'])) {
 
+		//check permissions to place the call, the view permission alone does not allow originating calls
+			if (!permission_exists('click_to_call_originate')) {
+				echo "access denied";
+				exit;
+			}
+
+		//reject requests initiated from another site, this endpoint places calls and changes switch state
+			if (!token::same_origin()) {
+				echo "access denied";
+				exit;
+			}
+
+		//reject array parameters, they cannot be used in a switch command
+			foreach (array('src','src_cid_name','src_cid_number','dest','dest_cid_name','dest_cid_number','auto_answer','rec','ringback') as $key) {
+				if (isset($_GET[$key]) && !is_string($_GET[$key])) {
+					echo "access denied";
+					exit;
+				}
+			}
+
 		//retrieve submitted variables
 			$src = $_GET['src'] ?? '';
 			$src_cid_name = $_GET['src_cid_name'] ?? '';
@@ -81,17 +101,26 @@
 		//clean up variable values
 			$src = str_replace(array('(',')',' '), '', $src);
 			$dest = (strpbrk($dest, '@') != FALSE) ? str_replace(array('(',')',' '), '', $dest) : str_replace(array('.','(',')','-',' '), '', $dest); //don't strip periods or dashes in sip-uri calls, only phone numbers
+			$src_cid_number = str_replace(array('(',')',' '), '', $src_cid_number);
+			$dest_cid_number = str_replace(array('(',')',' '), '', $dest_cid_number);
 
-		//validate the source to prevent command injection
-			if (!preg_match('/^[0-9A-Za-z*#+._@-]+$/', $src)) {
+		//validate the source to prevent command injection (the D modifier rejects a trailing line feed)
+			if (!preg_match('/^[0-9A-Za-z*#+._@-]+$/D', $src)) {
 				echo "<div align='center'><strong>Invalid source number.</strong></div>";
 				require_once "resources/footer.php";
 				exit;
 			}
 
-		//reject caller id names containing a single quote (they are embedded in a single-quoted FreeSWITCH command)
-			if (strpbrk($src_cid_name, "'") !== FALSE || strpbrk($dest_cid_name, "'") !== FALSE) {
+		//reject caller id names containing a single quote, backslash or line feed (they are embedded in a single-quoted FreeSWITCH command and a line feed is sent as an additional command)
+			if (strpbrk($src_cid_name, "'\\\r\n") !== FALSE || strpbrk($dest_cid_name, "'\\\r\n") !== FALSE) {
 				echo "<div align='center'><strong>Invalid caller id name.</strong></div>";
+				require_once "resources/footer.php";
+				exit;
+			}
+
+		//validate the caller id numbers to prevent command injection (they are not quoted in the FreeSWITCH command)
+			if (!preg_match('/^[0-9A-Za-z*#+._@-]*$/D', $src_cid_number) || !preg_match('/^[0-9A-Za-z*#+._@-]*$/D', $dest_cid_number)) {
+				echo "<div align='center'><strong>Invalid caller id number.</strong></div>";
 				require_once "resources/footer.php";
 				exit;
 			}
@@ -102,8 +131,8 @@
 		//mozilla thunderbird TBDialout workaround (seems it can only handle the first %NUM%)
 			$dest = ($dest == "%NUM%") ? $src_cid_number : $dest;
 
-		//validate the destination to prevent command injection
-			if (!preg_match('/^[0-9A-Za-z*#+._@-]+$/', $dest)) {
+		//validate the destination to prevent command injection (the D modifier rejects a trailing line feed)
+			if (!preg_match('/^[0-9A-Za-z*#+._@-]+$/D', $dest)) {
 				echo "<div align='center'><strong>Invalid destination number.</strong></div>";
 				require_once "resources/footer.php";
 				exit;
@@ -159,6 +188,8 @@
 					}
 					//prevent path traversal in the record file name
 					$record_name = str_replace(array('/','\\','..'), '', $record_name);
+					//remove quotes and line feeds that would break out of the quoted command or end the command line
+					$record_name = preg_replace("/['\\\r\n]/", '', $record_name);
 				}
 
 				//determine call direction
@@ -215,6 +246,9 @@
 							$dest_cid_number = $row["outbound_caller_id_number"];
 							break; //limit to 1 row
 						}
+						//remove characters that would break out of the quoted command or end the command line
+						$dest_cid_name = preg_replace("/['\\\r\n]/", '', (string) ($dest_cid_name ?? ''));
+						$dest_cid_number = preg_replace('/[^0-9A-Za-z*#+._@-]/', '', (string) ($dest_cid_number ?? ''));
 					}
 					if (permission_exists('click_to_call_call')) {
 						if (strpbrk($dest, '@') != FALSE) { //sip-uri
@@ -245,11 +279,11 @@
 					if ($rec == "true") {
 						//use the server's time zone to ensure it matches the time zone used by freeswitch
 							date_default_timezone_set(date_default_timezone_get());
-						//create the api record command and send it over event socket
+						//create the api record command and send it over event socket (only when the record command was created, otherwise the originate command would be sent a second time)
 							if (is_uuid($origination_uuid) && file_exists($record_path)) {
 								$switch_cmd = "uuid_record $origination_uuid start $record_path/$record_name";
+								$result2 = trim(event_socket::api($switch_cmd));
 							}
-							$result2 = trim(event_socket::api($switch_cmd));
 					}
 				}
 				echo "<div align='center'><br />".escape($result)."<br /><br /></div>\n";
