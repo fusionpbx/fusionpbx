@@ -73,6 +73,31 @@
 		$action = "add";
 	}
 
+//verify the conference center belongs to the current domain unless allowed to access all domains
+	if (!permission_exists('conference_center_all')) {
+		$checked_uuids = [];
+		if (is_uuid($_REQUEST["id"] ?? '')) {
+			$checked_uuids[] = $_REQUEST["id"];
+		}
+		if (is_uuid($_POST["conference_center_uuid"] ?? '')) {
+			$checked_uuids[] = $_POST["conference_center_uuid"];
+		}
+		foreach ($checked_uuids as $checked_uuid) {
+			$sql = "select conference_center_uuid from v_conference_centers ";
+			$sql .= "where conference_center_uuid = :conference_center_uuid ";
+			$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$parameters['conference_center_uuid'] = $checked_uuid;
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$row = $database->select($sql, $parameters, 'row');
+			if (empty($row)) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
+		unset($checked_uuids);
+	}
+
 //set the defaults
 	$conference_center_name = '';
 	$conference_center_extension = '';
@@ -122,6 +147,14 @@
 			//if (empty($conference_center_order)) { $msg .= "Please provide: Order<br>\n"; }
 			//if (empty($conference_center_description)) { $msg .= "Please provide: Description<br>\n"; }
 			if (empty($conference_center_enabled)) { $msg .= "Please provide: Enabled<br>\n"; }
+
+		//validate the extension and pin length - both are interpolated into the dialplan condition regex
+			if (!empty($conference_center_extension) && !ctype_digit((string)$conference_center_extension)) {
+				$msg .= "Please provide: Extension (numbers only)<br>\n";
+			}
+			if (!empty($conference_center_pin_length) && (!ctype_digit((string)$conference_center_pin_length) || $conference_center_pin_length > 10)) {
+				$msg .= "Please provide: PIN Length (a number between 0 and 10)<br>\n";
+			}
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
