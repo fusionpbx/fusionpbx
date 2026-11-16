@@ -49,6 +49,27 @@
 		$action = 'add';
 	}
 
+//set the domain_uuid of the user being edited, require it to be in the current domain unless the user_all permission exists
+	$user_domain_uuid = $_SESSION['domain_uuid'] ?? null;
+	if (!empty($action) && $action == 'edit') {
+		$sql = "select domain_uuid from v_users ";
+		$sql .= "where user_uuid = :user_uuid ";
+		if (!permission_exists('user_all')) {
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		}
+		$parameters['user_uuid'] = $user_uuid;
+		$user_domain_uuid = $database->select($sql, $parameters, 'column');
+		unset($sql, $parameters);
+
+		//refuse to edit a user that is outside of the current domain
+		if (empty($user_domain_uuid) || !is_uuid($user_domain_uuid)) {
+			message::add($text['message-invalid_user'], 'negative', 7500);
+			header("Location: user_edit.php?id=".$_SESSION['user_uuid']);
+			exit;
+		}
+	}
+
 //process passkey deletion (admin management: view + rename + delete)
 //passkey registration cannot be done on a user's behalf (webauthn requires the
 //user's own authenticator), so the admin can only view, rename and delete existing ones
@@ -268,7 +289,13 @@ if (permission_exists('user_edit') && $action == 'edit'
 				$user_uuid = $_REQUEST["id"];
 				$username_old = $_POST["username_old"];
 			}
-			$domain_uuid = $_POST["domain_uuid"];
+			//use the posted domain_uuid only when the user_domain permission exists, otherwise keep the user's current domain
+			if (permission_exists('user_domain') && !empty($_POST["domain_uuid"]) && is_uuid($_POST["domain_uuid"])) {
+				$domain_uuid = $_POST["domain_uuid"];
+			}
+			else {
+				$domain_uuid = $user_domain_uuid;
+			}
 			$username = $_POST["username"];
 			$password = $_POST["password"];
 			$password_confirm = $_POST["password_confirm"];
