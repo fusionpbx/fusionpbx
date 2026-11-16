@@ -257,7 +257,7 @@ if (!empty($_SESSION['user']['extension'])) {
 
 	const colors = {
 		RINGING: 'blue',
-		CONNECTED: '<?php echo $settings->get('theme', 'heading_count_background_color', '#28a745'); ?>',
+		CONNECTED: <?php echo json_encode((string) ($settings->get('theme', 'heading_count_background_color', '#28a745')), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,
 		HANGUP: 'red',
 		INACTIVE: 'black'
 	}
