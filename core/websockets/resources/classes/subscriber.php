@@ -199,6 +199,14 @@ class subscriber {
 	private $user;
 
 	/**
+	 * The user_uuid of the logged in user that authenticated this subscriber.
+	 * Used by services to route a response to one specific user's connections.
+	 *
+	 * @var string
+	 */
+	private $user_uuid = '';
+
+	/**
 	 * Creates a subscriber object.
 	 *
 	 * @param resource|stream $socket        Connected socket
@@ -237,6 +245,7 @@ class subscriber {
 		$this->service                 = false;
 		$this->service_name            = '';
 		$this->user                    = [];
+		$this->user_uuid               = '';
 
 		// Save the websocket frame wrapper used to communicate to this subscriber
 		$this->callback = $frame_wrapper;
@@ -252,6 +261,15 @@ class subscriber {
 	 */
 	public function get_user_array(): array {
 		return $this->user;
+	}
+
+	/**
+	 * Returns the user_uuid of the logged in user that authenticated this subscriber.
+	 *
+	 * @return string Empty when the token was issued outside a web session.
+	 */
+	public function get_user_uuid(): string {
+		return (string) $this->user_uuid;
 	}
 
 	/**
@@ -594,6 +612,9 @@ class subscriber {
 				// Add the user information when available
 				$this->user = $array['user'] ?? [];
 
+				// Store the user_uuid used to route per-user responses from services
+				$this->user_uuid = (string) ($array['user_uuid'] ?? ($this->user['user_uuid'] ?? ''));
+
 				// Add subscriptions for services
 				$services = $array['services'] ?? [];
 				foreach ($services as $service) {
@@ -921,6 +942,11 @@ class subscriber {
 		// Store the currently logged in user when available
 		//
 		$array['user'] = $_SESSION['user'] ?? [];
+
+		//
+		// Store the user_uuid so services can route a response to this user's connections only
+		//
+		$array['user_uuid'] = $_SESSION['user']['user_uuid'] ?? '';
 
 		//
 		// Store additional options

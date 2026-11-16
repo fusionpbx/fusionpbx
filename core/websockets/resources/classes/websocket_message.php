@@ -56,6 +56,7 @@ class websocket_message extends base_message {
 	protected $domain_name;
 	protected $permissions;
 	protected $topic;
+	protected $user_uuid;
 
 	public function __construct($associative_properties_array = []) {
 		// Initialize empty default values
@@ -70,6 +71,7 @@ class websocket_message extends base_message {
 		$this->domain_name   = '';
 		$this->permissions   = [];
 		$this->topic         = '';
+		$this->user_uuid     = '';
 		//
 		// Send to parent (base_message) constructor
 		//
@@ -211,6 +213,23 @@ class websocket_message extends base_message {
 			return $this;
 		}
 		return $this->topic;
+	}
+
+	/**
+	 * Gets or sets the user UUID of the subscriber that sent this request.
+	 * The web socket server attaches it to client requests so a service can
+	 * route a response back to only that user's connections.
+	 *
+	 * @param string $user_uuid
+	 *
+	 * @return $this|string
+	 */
+	public function user_uuid($user_uuid = null) {
+		if (func_num_args() > 0) {
+			$this->user_uuid = (string) $user_uuid;
+			return $this;
+		}
+		return (string) $this->user_uuid;
 	}
 
 	/**

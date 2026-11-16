@@ -305,6 +305,18 @@ class websocket_service extends service {
 			// Filter subscribers to only the ones subscribed to the service name
 			$send_to = $this->filter_subscribers($subscribers, $message, $service_name);
 
+			// When the service targets one user, limit delivery to that user's connections.
+			// The user uuid comes from the authenticated token attached by this server so a
+			// service cannot impersonate another user and a client cannot forge it.
+			$target_user_uuid = (string) $message->user_uuid();
+			if ($target_user_uuid !== '') {
+				$send_to = array_values(array_filter($send_to, function ($subscriber) use ($target_user_uuid) {
+					return $subscriber->get_user_uuid() === $target_user_uuid;
+				}));
+				// Do not leak the routing key to the browser
+				$message->user_uuid('');
+			}
+
 			// Send the message to the filtered subscribers
 			foreach ($send_to as $subscriber) {
 				try {
@@ -334,6 +346,8 @@ class websocket_service extends service {
 				$subscriber = $this->subscribers[$object_id];
 				// Remove the resource_id from the message
 				$message->resource_id('');
+				// Remove the routing key used to target this user's connections
+				$message->user_uuid('');
 				// TODO: Fix removal of request_id
 				//$message->request_id('');
 				// Return the requested results back to the subscriber
@@ -526,6 +540,10 @@ class websocket_service extends service {
 
 				// attach the client id so we can track the request
 				$message->resource_id = $subscriber->id;
+
+				// attach the user uuid from the authenticated token (never trusted from the client)
+				// so a service can respond to only this user's connections
+				$message->user_uuid($subscriber->get_user_uuid());
 
 				// send the modified web socket message to the service
 				$service->send((string)$message);
