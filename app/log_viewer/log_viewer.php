@@ -60,18 +60,17 @@
 	}
 
 //set default default log file
+	$log_file = $settings->get('switch', 'log').'/freeswitch.log';
 	if (isset($_POST['log_file'])) {
 		$approved_files = glob($settings->get('switch', 'log').'/freeswitch.log*');
 		if (is_array($approved_files)) {
 			foreach($approved_files as $approved_file) {
-				if ($approved_file == $settings->get('switch', 'log').'/'.$_POST['log_file']) {
+				//only allow regular files within the log directory, reject directories and symbolic links pointing outside of it
+				if ($approved_file == $settings->get('switch', 'log').'/'.$_POST['log_file'] && is_file($approved_file) && str_starts_with(realpath($approved_file), realpath((string)$settings->get('switch', 'log')).'/')) {
 					$log_file = $approved_file;
 				}
 			}
 		}
-	}
-	else {
-		$log_file = $settings->get('switch', 'log').'/freeswitch.log';
 	}
 
 //download the log
@@ -81,7 +80,8 @@
 			$approved_files = glob($settings->get('switch', 'log').'/freeswitch.log*');
 			if (is_array($approved_files)) {
 				foreach($approved_files as $approved_file) {
-					if ($approved_file == $settings->get('switch', 'log').'/'.$_GET['n']) {
+					//only allow regular files within the log directory, reject directories and symbolic links pointing outside of it
+					if ($approved_file == $settings->get('switch', 'log').'/'.$_GET['n'] && is_file($approved_file) && str_starts_with(realpath($approved_file), realpath((string)$settings->get('switch', 'log')).'/')) {
 						$filename = $approved_file;
 					}
 				}
@@ -89,10 +89,13 @@
 			if (isset($filename) && file_exists($filename)) {
 				@session_cache_limiter('public');
 				$fd = fopen($filename, "rb");
-				header("Content-Type: binary/octet-stream");
-				header("Content-Length: " . filesize($filename));
-				header('Content-Disposition: attachment; filename="'.basename($filename).'"');
-				fpassthru($fd);
+				if ($fd !== false) {
+					header("Content-Type: binary/octet-stream");
+					header("Content-Length: " . filesize($filename));
+					header('Content-Disposition: attachment; filename="'.basename($filename).'"');
+					fpassthru($fd);
+					fclose($fd);
+				}
 				exit;
 			}
 		}
@@ -122,7 +125,7 @@
 	if (is_array($files)) {
 		foreach($files as $file_name) {
 			$selected = ($file_name == $log_file) ? "selected='selected'" : "";
-			echo "			<option value='".basename($file_name)."'".$selected.">".basename($file_name)."</option>";
+			echo "			<option value='".escape(basename($file_name))."'".$selected.">".escape(basename($file_name))."</option>";
 		}
 	}
 	echo "			</select>\n";
@@ -224,7 +227,7 @@
 		else {
 			$user_file_size = $_POST['size'] * 1024;
 		}
-		if (!empty($_REQUEST['filter'])) {
+		if (!empty($_REQUEST['filter']) && is_string($_REQUEST['filter'])) {
 			$filter = $_REQUEST['filter'];
 		}
 
@@ -270,7 +273,9 @@
 			else {
 				//open the file
 				$byte_count='0';
-				fseek($file, 0);
+				if (!empty($file)) {
+					fseek($file, 0);
+				}
 				echo "<br>".$text['label-open_file']."<br>";
 			}
 		}
@@ -319,7 +324,7 @@
 
 		// output according to ordinal selected
 		if ($_POST['sort'] == 'desc') {
-			$array_output = array_reverse($array_output);
+			$array_output = array_reverse($array_output ?? []);
 			$adj_index = 0;
 		}
 		else {
