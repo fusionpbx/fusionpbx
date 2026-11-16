@@ -165,46 +165,50 @@ function save_gateway_xml() {
 							if (empty($profile)) {
 								$profile = "external";
 							}
+						//skip gateways with a profile that cannot be safely used as a directory name
+							if ($profile === '.' || $profile === '..' || basename($profile) !== $profile) {
+								continue;
+							}
 						//open the xml file
 							$fout = fopen($settings->get('switch', 'sip_profiles')."/".$profile."/v_".strtolower($row['gateway_uuid']).".xml","w");
 						//build the xml
 							$xml .= "<include>\n";
 							$xml .= "    <gateway name=\"" . strtolower($row['gateway_uuid']) . "\">\n";
 							if (!empty($row['username'])) {
-								$xml .= "      <param name=\"username\" value=\"" . $row['username'] . "\"/>\n";
+								$xml .= "      <param name=\"username\" value=\"" . xml::escape($row['username']) . "\"/>\n";
 							}
 							if (!empty($row['distinct_to'])) {
-								$xml .= "      <param name=\"distinct-to\" value=\"" . $row['distinct_to'] . "\"/>\n";
+								$xml .= "      <param name=\"distinct-to\" value=\"" . xml::escape($row['distinct_to']) . "\"/>\n";
 							}
 							if (!empty($row['auth_username'])) {
-								$xml .= "      <param name=\"auth-username\" value=\"" . $row['auth_username'] . "\"/>\n";
+								$xml .= "      <param name=\"auth-username\" value=\"" . xml::escape($row['auth_username']) . "\"/>\n";
 							}
 							if (!empty($row['password'])) {
-								$xml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
+								$xml .= "      <param name=\"password\" value=\"" . xml::escape($row['password']) . "\"/>\n";
 							}
 							if (!empty($row['realm'])) {
-								$xml .= "      <param name=\"realm\" value=\"" . $row['realm'] . "\"/>\n";
+								$xml .= "      <param name=\"realm\" value=\"" . xml::escape($row['realm']) . "\"/>\n";
 							}
 							if (!empty($row['from_user'])) {
-								$xml .= "      <param name=\"from-user\" value=\"" . $row['from_user'] . "\"/>\n";
+								$xml .= "      <param name=\"from-user\" value=\"" . xml::escape($row['from_user']) . "\"/>\n";
 							}
 							if (!empty($row['from_domain'])) {
-								$xml .= "      <param name=\"from-domain\" value=\"" . $row['from_domain'] . "\"/>\n";
+								$xml .= "      <param name=\"from-domain\" value=\"" . xml::escape($row['from_domain']) . "\"/>\n";
 							}
 							if (!empty($row['proxy'])) {
-								$xml .= "      <param name=\"proxy\" value=\"" . $row['proxy'] . "\"/>\n";
+								$xml .= "      <param name=\"proxy\" value=\"" . xml::escape($row['proxy']) . "\"/>\n";
 							}
 							if (!empty($row['register_proxy'])) {
-								$xml .= "      <param name=\"register-proxy\" value=\"" . $row['register_proxy'] . "\"/>\n";
+								$xml .= "      <param name=\"register-proxy\" value=\"" . xml::escape($row['register_proxy']) . "\"/>\n";
 							}
 							if (!empty($row['outbound_proxy'])) {
-								$xml .= "      <param name=\"outbound-proxy\" value=\"" . $row['outbound_proxy'] . "\"/>\n";
+								$xml .= "      <param name=\"outbound-proxy\" value=\"" . xml::escape($row['outbound_proxy']) . "\"/>\n";
 							}
 							if (!empty($row['expire_seconds'])) {
-								$xml .= "      <param name=\"expire-seconds\" value=\"" . $row['expire_seconds'] . "\"/>\n";
+								$xml .= "      <param name=\"expire-seconds\" value=\"" . xml::escape($row['expire_seconds']) . "\"/>\n";
 							}
 							if (!empty($row['register'])) {
-								$xml .= "      <param name=\"register\" value=\"" . $row['register'] . "\"/>\n";
+								$xml .= "      <param name=\"register\" value=\"" . xml::escape($row['register']) . "\"/>\n";
 							}
 
 							if (!empty($row['register_transport'])) {
@@ -219,37 +223,37 @@ function save_gateway_xml() {
 									$xml .= "      <param name=\"register-transport\" value=\"tls\"/>\n";
 									break;
 								default:
-									$xml .= "      <param name=\"register-transport\" value=\"" . $row['register_transport'] . "\"/>\n";
+									$xml .= "      <param name=\"register-transport\" value=\"" . xml::escape($row['register_transport']) . "\"/>\n";
 								}
 							}
 
 							if (!empty($row['contact_params'])) {
-								$xml .= "      <param name=\"contact-params\" value=\"" . $row['contact_params'] . "\"/>\n";
+								$xml .= "      <param name=\"contact-params\" value=\"" . xml::escape($row['contact_params']) . "\"/>\n";
 							}
 
 							if (!empty($row['retry_seconds'])) {
-								$xml .= "      <param name=\"retry-seconds\" value=\"" . $row['retry_seconds'] . "\"/>\n";
+								$xml .= "      <param name=\"retry-seconds\" value=\"" . xml::escape($row['retry_seconds']) . "\"/>\n";
 							}
 							if (!empty($row['extension'])) {
-								$xml .= "      <param name=\"extension\" value=\"" . $row['extension'] . "\"/>\n";
+								$xml .= "      <param name=\"extension\" value=\"" . xml::escape($row['extension']) . "\"/>\n";
 							}
 							if (!empty($row['ping'])) {
-								$xml .= "      <param name=\"ping\" value=\"" . $row['ping'] . "\"/>\n";
+								$xml .= "      <param name=\"ping\" value=\"" . xml::escape($row['ping']) . "\"/>\n";
 							}
 							if (!empty($row['context'])) {
-								$xml .= "      <param name=\"context\" value=\"" . $row['context'] . "\"/>\n";
+								$xml .= "      <param name=\"context\" value=\"" . xml::escape($row['context']) . "\"/>\n";
 							}
 							if (!empty($row['caller_id_in_from'])) {
-								$xml .= "      <param name=\"caller-id-in-from\" value=\"" . $row['caller_id_in_from'] . "\"/>\n";
+								$xml .= "      <param name=\"caller-id-in-from\" value=\"" . xml::escape($row['caller_id_in_from']) . "\"/>\n";
 							}
 							if (!empty($row['supress_cng'])) {
-								$xml .= "      <param name=\"supress-cng\" value=\"" . $row['supress_cng'] . "\"/>\n";
+								$xml .= "      <param name=\"supress-cng\" value=\"" . xml::escape($row['supress_cng']) . "\"/>\n";
 							}
 							if (!empty($row['sip_cid_type'])) {
-								$xml .= "      <param name=\"sip_cid_type\" value=\"" . $row['sip_cid_type'] . "\"/>\n";
+								$xml .= "      <param name=\"sip_cid_type\" value=\"" . xml::escape($row['sip_cid_type']) . "\"/>\n";
 							}
 							if (!empty($row['extension_in_contact'])) {
-								$xml .= "      <param name=\"extension-in-contact\" value=\"" . $row['extension_in_contact'] . "\"/>\n";
+								$xml .= "      <param name=\"extension-in-contact\" value=\"" . xml::escape($row['extension_in_contact']) . "\"/>\n";
 							}
 
 							$xml .= "    </gateway>\n";
