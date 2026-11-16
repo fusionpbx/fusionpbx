@@ -224,6 +224,9 @@ class operator_panel_service extends base_websocket_system_service implements we
 	/** @var string Cached domain scope for agent-stats broadcast */
 	protected $agent_stats_domain_name = '';
 
+	/** @var string Domain UUID of the subscriber behind the request being handled */
+	protected $request_domain_uuid = '';
+
 	/** @var string Debug permissions mode: 'off', 'bytes', or 'full' */
 	protected $debug_show_permissions_mode;
 
@@ -926,7 +929,13 @@ class operator_panel_service extends base_websocket_system_service implements we
 
 		// Filter message according to subscriber permissions
 		$is_supervisor = !empty($permissions['operator_panel_manage']);
-		$agent_name    = $this->get_agent_name_for_permission($permissions, $domain_name);
+		// The user uuid is attached by the web socket server from the authenticated
+		// token; the permissions entry is kept as a fallback for older tokens.
+		$agent_user_uuid = (string) $message->user_uuid();
+		if ($agent_user_uuid === '') {
+			$agent_user_uuid = (string) ($permissions['_user_uuid'] ?? '');
+		}
+		$agent_name    = $this->get_agent_name_for_permission($agent_user_uuid, (string) $message->domain_uuid());
 		$filter        = new operator_panel_agent_filter($is_supervisor, $agent_name);
 		$filtered      = $filter->filter($agents);
 
@@ -985,6 +994,10 @@ class operator_panel_service extends base_websocket_system_service implements we
 			$this->send_action_response($message, false, 'Permission denied');
 			return;
 		}
+
+		// Remember which domain the request came from so actions that write to the
+		// database can be scoped to it instead of trusting a client supplied id.
+		$this->request_domain_uuid = (string) $message->domain_uuid();
 
 		$result = $this->execute_action($action, $payload);
 		$status_message = isset($result['message']) ? (string)$result['message'] : '';
@@ -1553,23 +1566,47 @@ class operator_panel_service extends base_websocket_system_service implements we
 					return ['success' => true, 'message' => 'Call originated', 'fs_response' => $fs_response];
 
 				case 'user_status':
+					//
+					// The update is scoped to the domain of the authenticated subscriber
+					// rather than trusting the request alone, so an operator of one
+					// domain cannot change the presence of a user in another domain.
+					//
 					$status       = $payload['status']    ?? '';
 					$user_uuid    = $payload['user_uuid'] ?? '';
 					$allowed = ['Available', 'Available (On Demand)', 'On Break', 'Do Not Disturb', 'Logged Out'];
 					if (!in_array($status, $allowed, true)) {
 						return ['success' => false, 'message' => 'Invalid status value'];
 					}
-					if (empty($user_uuid)) {
+					if (empty($user_uuid) || !is_uuid($user_uuid)) {
 						return ['success' => false, 'message' => 'user_uuid required'];
 					}
+					if ($this->request_domain_uuid === '') {
+						return ['success' => false, 'message' => 'Unable to determine the requesting domain'];
+					}
+					// Confirm the user belongs to the subscriber domain before writing
 					$database = database::new(['config' => parent::$config]);
+					$user_row = $database->select(
+						"SELECT user_uuid FROM v_users WHERE user_uuid = :user_uuid AND domain_uuid = :domain_uuid",
+						[':user_uuid' => $user_uuid, ':domain_uuid' => $this->request_domain_uuid],
+						'row'
+					);
+					if (empty($user_row['user_uuid'])) {
+						$this->warning('User status request rejected: user not in the subscriber domain');
+						return ['success' => false, 'message' => 'User not found'];
+					}
 					$database->execute(
-						"UPDATE v_users SET user_status = :status WHERE user_uuid = :user_uuid",
-						[':status' => $status, ':user_uuid' => $user_uuid]
+						"UPDATE v_users SET user_status = :status WHERE user_uuid = :user_uuid AND domain_uuid = :domain_uuid",
+						[':status' => $status, ':user_uuid' => $user_uuid, ':domain_uuid' => $this->request_domain_uuid]
 					);
 					return ['success' => true, 'message' => 'Status updated'];
 
 				case 'agent_status':
+					//
+					// The agent name comes from the client so it is resolved against the
+					// domain of the authenticated subscriber before being used. Without
+					// that boundary an operator of one domain could log out or change the
+					// status of an agent belonging to another domain.
+					//
 					$agent_name  = $payload['agent_name'] ?? '';
 					$status      = $payload['status']     ?? '';
 					$allowed_cc  = ['Available', 'Available (On Demand)', 'On Break', 'Do Not Disturb', 'Logged Out'];
@@ -1580,12 +1617,21 @@ class operator_panel_service extends base_websocket_system_service implements we
 					if (!preg_match('/^[a-zA-Z0-9@._\-]+$/', $agent_name)) {
 						return ['success' => false, 'message' => 'Invalid agent name'];
 					}
-					event_socket::api("callcenter_config agent set status $agent_name '$status'");
+					if ($this->request_domain_uuid === '') {
+						return ['success' => false, 'message' => 'Unable to determine the requesting domain'];
+					}
+					$agent = $this->lookup_agent_by_name($agent_name, $this->request_domain_uuid);
+					if (empty($agent)) {
+						$this->warning('Agent status request rejected: agent not in the subscriber domain');
+						return ['success' => false, 'message' => 'Agent not found'];
+					}
+					// Use the resolved uuid so the switch cannot be pointed at another agent
+					event_socket::api("callcenter_config agent set status " . $agent['agent_uuid'] . " '$status'");
 					// Also update the database record for persistence
 					$database = database::new(['config' => parent::$config]);
 					$database->execute(
-						"UPDATE v_call_center_agents SET agent_status = :status WHERE agent_name = :agent_name",
-						[':status' => $status, ':agent_name' => $agent_name]
+						"UPDATE v_call_center_agents SET agent_status = :status WHERE agent_uuid = :agent_uuid AND domain_uuid = :domain_uuid",
+						[':status' => $status, ':agent_uuid' => $agent['agent_uuid'], ':domain_uuid' => $this->request_domain_uuid]
 					);
 					return ['success' => true, 'message' => 'Agent status updated'];
 
@@ -2422,34 +2468,89 @@ class operator_panel_service extends base_websocket_system_service implements we
 	}
 
 	/**
+	 * Resolve the call center agent linked to a user.
+	 *
+	 * @param string $user_uuid   User to look up.
+	 * @param string $domain_uuid Domain to scope the lookup (empty returns []).
+	 *
+	 * @return array ['agent_uuid' => string, 'agent_name' => string] or an empty array.
+	 */
+	private function lookup_agent_by_user(string $user_uuid, string $domain_uuid): array {
+		if ($user_uuid === '' || $domain_uuid === '') {
+			return [];
+		}
+
+		try {
+			$database = database::new(['config' => parent::$config]);
+			$row = $database->select(
+				"SELECT agent_uuid, agent_name FROM v_call_center_agents "
+				. "WHERE user_uuid = :user_uuid AND domain_uuid = :domain_uuid",
+				[':user_uuid' => $user_uuid, ':domain_uuid' => $domain_uuid],
+				'row'
+			);
+			if (empty($row['agent_uuid'])) {
+				return [];
+			}
+			return [
+				'agent_uuid' => (string) $row['agent_uuid'],
+				'agent_name' => (string) ($row['agent_name'] ?? ''),
+			];
+		} catch (\Exception $e) {
+			$this->debug('DB error in lookup_agent_by_user: ' . $e->getMessage());
+			return [];
+		}
+	}
+
+	/**
+	 * Resolve a call center agent by name within a domain.
+	 *
+	 * @param string $agent_name  Agent to look up.
+	 * @param string $domain_uuid Domain that must own the agent.
+	 *
+	 * @return array ['agent_uuid' => string, 'agent_name' => string] or an empty array.
+	 */
+	private function lookup_agent_by_name(string $agent_name, string $domain_uuid): array {
+		if ($agent_name === '' || $domain_uuid === '') {
+			return [];
+		}
+
+		try {
+			$database = database::new(['config' => parent::$config]);
+			$row = $database->select(
+				"SELECT agent_uuid, agent_name FROM v_call_center_agents "
+				. "WHERE agent_name = :agent_name AND domain_uuid = :domain_uuid",
+				[':agent_name' => $agent_name, ':domain_uuid' => $domain_uuid],
+				'row'
+			);
+			if (empty($row['agent_uuid'])) {
+				return [];
+			}
+			return [
+				'agent_uuid' => (string) $row['agent_uuid'],
+				'agent_name' => (string) ($row['agent_name'] ?? ''),
+			];
+		} catch (\Exception $e) {
+			$this->debug('DB error in lookup_agent_by_name: ' . $e->getMessage());
+			return [];
+		}
+	}
+
+	/**
 	 * Look up the call-center agent name for the connected user.
 	 *
 	 * Compares the domain permissions context against v_call_center_agents.
 	 * Returns empty string when the user is not a registered agent.
 	 *
-	 * @param array  $permissions  Subscriber permission map.
-	 * @param string $domain_name  Domain to scope the lookup.
+	 * @param string $user_uuid   User the subscriber is authenticated as.
+	 * @param string $domain_uuid Domain of the subscriber to scope the lookup.
 	 *
 	 * @return string
 	 */
-	private function get_agent_name_for_permission(array $permissions, string $domain_name): string {
-		// user_uuid should be in the permission metadata attached to the subscriber
-		$user_uuid = $permissions['_user_uuid'] ?? '';
-		if (empty($user_uuid) || empty($domain_name)) return '';
+	private function get_agent_name_for_permission(string $user_uuid, string $domain_uuid): string {
+		if (empty($user_uuid) || empty($domain_uuid)) return '';
 
-		try {
-			$database = database::new(['config' => parent::$config]);
-			$row = $database->select(
-				"SELECT a.agent_name FROM v_call_center_agents AS a "
-				. "LEFT JOIN v_domains AS d ON a.domain_uuid = d.domain_uuid "
-				. "WHERE a.user_uuid = :user_uuid AND d.domain_name = :domain_name",
-				[':user_uuid' => $user_uuid, ':domain_name' => $domain_name],
-				'row'
-			);
-			return $row['agent_name'] ?? '';
-		} catch (\Exception $e) {
-			$this->debug('DB error in get_agent_name_for_permission: ' . $e->getMessage());
-			return '';
-		}
+		$agent = $this->lookup_agent_by_user($user_uuid, $domain_uuid);
+
+		return $agent['agent_name'] ?? '';
 	}
 }
