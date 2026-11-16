@@ -181,15 +181,17 @@ class active_conferences_service extends base_websocket_system_service implement
 	 * @return filter|null
 	 */
 	public static function create_filter_chain_for(subscriber $subscriber): ?filter {
-		// Domain filtering for conferences
-		if ($subscriber->has_permission('conference_active_view')) {
-			return filter_chain::and_link([
-				new caller_context_filter([$subscriber->get_domain_name()]),
-			]);
-		}
-
-		// No special filtering for conferences, they are domain-specific by design
-		return filter_chain::or_link(self::event_keys);
+		// Conferences are domain specific so limit the events to the subscriber's
+		// domain. This is done for every subscriber because the payload filter is
+		// the only thing that keeps one domain's conference data (member caller
+		// ID, member lists) from being sent to another domain's users.
+		// Note: self::event_keys cannot be passed to filter_chain::or_link() here.
+		// That method requires filter objects so passing strings threw a TypeError
+		// which was not caught by the websocket server and took the whole service
+		// down for every connected client.
+		return filter_chain::and_link([
+			new caller_context_filter([$subscriber->get_domain_name()]),
+		]);
 	}
 
 	/**
@@ -559,6 +561,21 @@ class active_conferences_service extends base_websocket_system_service implement
 			return;
 		}
 
+		//
+		// The conference name is supplied by the client so it must be limited to
+		// the subscriber's own domain. Without this a user of one domain could
+		// mute, kick or lock a conference belonging to another domain. The domain
+		// name attached to the message by the websocket server is used because it
+		// comes from the authenticated session rather than the client payload.
+		//
+		$conference_domain = substr($conference_name, strrpos($conference_name, '@') + 1);
+		$subscriber_domain_name = (string) ($message->domain_name() ?? '');
+		if (strcasecmp($conference_domain, $subscriber_domain_name) !== 0) {
+			$this->warning("Action rejected because the conference is not in the subscriber domain: $conference_name");
+			$this->send_action_response($message, false, 'Permission denied');
+			return;
+		}
+
 		// Execute the action
 		$result = $this->execute_conference_action($action, $conference_name, $member_id, $uuid, $direction);
 
@@ -802,12 +819,31 @@ class active_conferences_service extends base_websocket_system_service implement
 	protected function request_in_progress(websocket_message $message): void {
 		$this->debug('Conferences in progress requested by websocket client');
 
+		// Check permission before returning conference data
+		if (!$message->has_permission('conference_active_view') && !$message->has_permission('conference_interactive_view')) {
+			$this->warning("Permission denied for the in_progress request");
+			$this->send_action_response($message, false, 'Permission denied');
+			return;
+		}
+
 		// Get required parameters from the message payload
 		$payload = $message->payload();
-		$domain_name = $payload['domain_name'] ?? '';
 		$uuid = $payload['uuid'] ?? '';
 
+		// Use the domain name attached to the message by the websocket server
+		// instead of the one sent by the client. The client value is not trusted,
+		// it is interpolated into a switch command and would allow a client to
+		// read another domain's conferences or inject extra command arguments.
+		$domain_name = $message->domain_name() ?? '';
+
 		$this->debug("in_progress request - domain_name: $domain_name, uuid: $uuid");
+
+		// The uuid is interpolated into the switch command so it must be a uuid
+		if (!empty($uuid) && !is_uuid($uuid)) {
+			$this->warning("in_progress request rejected because of an invalid uuid");
+			$this->send_action_response($message, false, 'Invalid action payload');
+			return;
+		}
 
 		// Get the list of active conferences
 		// Note: get_conference_command returns "api conference ... json_list"
@@ -821,6 +857,19 @@ class active_conferences_service extends base_websocket_system_service implement
 		// Use a dedicated event socket for API command so we don't get any the wrong events
 		$json_str = trim(event_socket::api($command));
 		$conferences = json_decode($json_str, true);
+
+		// The switch returns every domain's conferences so limit the list to the
+		// subscriber's domain. Without this a client that requests the conference
+		// list without a uuid would receive the conference names, member lists and
+		// member caller ID of other domains.
+		if (is_array($conferences)) {
+			$conferences = array_values(array_filter($conferences, function ($conference) use ($domain_name) {
+				$name = (string) ($conference['conference_name'] ?? '');
+				$at = strrpos($name, '@');
+				// Keep only conferences that belong to the subscriber's domain
+				return $at !== false && strcasecmp(substr($name, $at + 1), $domain_name) === 0;
+			}));
+		}
 
 		// Enrich conferences with display names from database
 		if (is_array($conferences)) {
