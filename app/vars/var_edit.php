@@ -96,6 +96,13 @@
 			//if (empty($var_command)) { $msg .= $text['message-required'].$text['label-command']."<br>\n"; }
 			//if (empty($var_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 			if (empty($var_order)) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+			//validate the name and command, they are written into the FreeSWITCH configuration file
+				if (!empty($var_name) && !preg_match('/^[a-zA-Z0-9_.\-]+$/D', $var_name)) {
+					$msg .= ($text['message-name_invalid'] ?? 'Invalid Name')."<br>\n";
+				}
+				if (!empty($var_command) && !in_array($var_command, ['set', 'unset', 'exec-set'], true)) {
+					$msg .= ($text['message-command_invalid'] ?? 'Invalid Command')."<br>\n";
+				}
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";

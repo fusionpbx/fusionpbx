@@ -310,12 +310,19 @@ function save_var_xml() {
 	if (!empty($variables)) {
 		foreach ($variables as $row) {
 			if ($row['var_category'] != 'Provision') {
-				if ($prev_var_category != $row['var_category']) {
-					$xml .= "\n<!-- ".$row['var_category']." -->\n";
-				}
 				if (empty($row['var_command'])) { $row['var_command'] = 'set'; }
 				if ($row['var_category'] == 'Exec-Set') { $row['var_command'] = 'exec-set'; }
-				$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".$row['var_name']."=".$row['var_value']."\" />\n";
+
+				//skip variables with a command or name that cannot be safely written into the configuration
+					if (!in_array($row['var_command'], ['set', 'unset', 'exec-set'], true) || !preg_match('/^[a-zA-Z0-9_.\-]+$/D', (string) $row['var_name'])) {
+						continue;
+					}
+
+				if ($prev_var_category != $row['var_category']) {
+					$xml .= "\n<!-- ".xml::escape($row['var_category'])." -->\n";
+				}
+				//escape the value, FreeSWITCH variable syntax such as $${hold_music} is preserved
+				$xml .= "<X-PRE-PROCESS cmd=\"".$row['var_command']."\" data=\"".xml::escape($row['var_name'])."=".xml::escape((string) $row['var_value'])."\" />\n";
 			}
 			$prev_var_category = $row['var_category'];
 		}
