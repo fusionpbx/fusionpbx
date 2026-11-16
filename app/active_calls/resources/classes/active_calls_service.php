@@ -474,7 +474,11 @@ class active_calls_service extends service implements websocket_service_interfac
 		foreach ($calls as $event) {
 			// Remove keys that are not permitted by filter
 			$event->apply_filter($filter);
-			$response['payload'] = $event;
+			// The payload must be an array so the subscriber filter chain (domain and
+			// extension filters) applied by the web socket server can inspect it. When
+			// an object is used the filters are skipped and calls belonging to other
+			// domains or extensions would be sent to the subscriber.
+			$response['payload'] = $event->to_array();
 			$response['topic'] = $event->name;
 			$websocket_response = new websocket_message($response);
 			websocket_client::send($this->ws_client->socket(), $websocket_response);

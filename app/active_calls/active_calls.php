@@ -225,7 +225,7 @@ if (permission_exists('call_active_eavesdrop')) {
 	]);
 }
 
-echo "  <input id='current_context' type='hidden' name='current_context' value='" . $_SESSION['domain_name'] . "'>\n";
+echo "  <input id='current_context' type='hidden' name='current_context' value='" . escape($_SESSION['domain_name'] ?? '') . "'>\n";
 
 echo "	<input id='token' type='hidden' name='" . $token['name'] . "' value='" . $token['hash'] . "'>\n";
 
@@ -247,7 +247,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	const calls_map = new Map();
 
 	var showAll = false;
-	const websockets_domain_name = '<?= $_SESSION['domain_name'] ?>';
+	const websockets_domain_name = <?= json_encode((string) ($_SESSION['domain_name'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
 
 	// push PHP values into JS
 	const authToken = {
@@ -262,15 +262,15 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 	if (!empty($_SESSION['user']['extension'])) {
 		echo "const extension = {\n";
 		foreach ($_SESSION['user']['extension'] as $user) {
-			echo "		extension_uuid: '" . $user['extension_uuid'] . "',\n";
-			echo "		extension: '" . $user['user'] . "',\n";
+			echo "		extension_uuid: " . json_encode((string) ($user['extension_uuid'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ",\n";
+			echo "		extension: " . json_encode((string) ($user['user'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ",\n";
 			if (!empty($user['number_alias'])) {
 				$user_contact = $user['number_alias'];
 			}
 			else {
 				$user_contact = $user['user'];
 			}
-			echo "		extension_destination: '$user_contact',\n";
+			echo "		extension_destination: " . json_encode((string) $user_contact, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ",\n";
 			$user['extensions'][$user['extension_uuid']] = $user_contact;
 		}
 		echo "	last_entry_so_no_comma: '-100'";
@@ -450,7 +450,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 				if (showAll) {
 					tbody.rows[i].style.display = 'table-row';
 				} else {
-					if (caller_context.textContent !== '<?= $_SESSION['domain_name'] ?>') {
+					if (caller_context.textContent !== <?= json_encode((string) ($_SESSION['domain_name'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>) {
 						tbody.rows[i].style.display = 'none';
 					}
 				}
@@ -496,7 +496,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 				update_call(call);
 				replace_arrow_color(uuid, colors.RINGING);
 				//enforce a local arrow for eavesdrop
-				if (call.caller_caller_id_name === '<?= $text['label-eavesdrop'] ?>') {
+				if (call.caller_caller_id_name === <?= json_encode((string) ($text['label-eavesdrop'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>) {
 					replace_arrow_icon(uuid, 'local');
 					row.dataset.forced_direction = 'local';
 				}
@@ -572,7 +572,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			}
 
 			//detect public calls coming to this domain when not showing all calls
-			if (!showAll && call.variable_domain_uuid === '<?= $_SESSION['domain_uuid'] ?>' && call.answer_state === 'ringing') {
+			if (!showAll && call.variable_domain_uuid === <?= json_encode((string) ($_SESSION['domain_uuid'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?> && call.answer_state === 'ringing') {
 				//console.log('public call', uuid, call);
 				row.style.display = 'table-row';
 				//if direction is not set then set it as inbound
@@ -867,7 +867,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 
 <?php /* add eavesdrop button */ if (permission_exists('call_active_eavesdrop') && !empty($user['extensions'])): ?>
 				// Don't add an eavesdrop button for an eavesdrop call
-				if (call.caller_caller_id_name !== '<?= $text['label-eavesdrop'] ?>') {
+				if (call.caller_caller_id_name !== <?= json_encode((string) ($text['label-eavesdrop'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>) {
 					const eavesdrop = document.getElementById('btn_eavesdrop').cloneNode(true);
 					const span_eavesdrop = document.getElementById(`span_eavesdrop_${call.unique_id}`);
 					eavesdrop.id = `btn_eavesdrop_${call.unique_id}`;
@@ -878,7 +878,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 						//console.log('eavesdrop:', call);
 						client.request('active.calls', 'eavesdrop', {
 							unique_id: call.unique_id, //$channnel_uuid
-							origination_caller_id_name: '<?= $text['label-eavesdrop'] ?>', //origination_caller_id_name=
+							origination_caller_id_name: <?= json_encode((string) ($text['label-eavesdrop'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>, //origination_caller_id_name=
 							origination_caller_contact: extension.extension_destination, //extension_destination
 							caller_caller_id_number: call.caller_caller_id_number, //origination_caller_id_number=
 							caller_destination_number: call.caller_destination_number	//$destination
@@ -933,7 +933,7 @@ echo "<script src='resources/javascript/arrows.js?v=$version'></script>\n";
 			<?php if (permission_exists('call_active_all')): ?>
 				update_call_element(`caller_context_${uuid}`, caller_context);
 				//check if the context changes to this domain
-				if (caller_context === '<?= $_SESSION['domain_name'] ?>') {
+				if (caller_context === <?= json_encode((string) ($_SESSION['domain_name'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>) {
 					row.style.display = 'table-row';
 				}
 			<?php endif; ?>

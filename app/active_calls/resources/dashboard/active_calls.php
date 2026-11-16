@@ -57,7 +57,7 @@ echo "<div class='hud_box'>\n";
 
 //create a token
 $token = (new token())->create($_SERVER['PHP_SELF']);
-echo "  <input id='current_context' type='hidden' name='current_context' value='" . $_SESSION['domain_name'] . "'>\n";
+echo "  <input id='current_context' type='hidden' name='current_context' value='" . escape($_SESSION['domain_name'] ?? '') . "'>\n";
 echo "	<input id='token' type='hidden' name='" . $token['name'] . "' value='" . $token['hash'] . "'>\n";
 
 //subscribe to service
@@ -116,8 +116,8 @@ echo "<script src='/app/active_calls/resources/javascript/arrows.js?v=$version'>
 	const callsMap = new Map();
 
 	var showAll = false;
-	const websockets_domain_name = '<?= $_SESSION['domain_name'] ?>';
-    const active_calls_widget_chart_type = '<?= $widget_chart_type ?>';
+	const websockets_domain_name = <?= json_encode((string) ($_SESSION['domain_name'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+    const active_calls_widget_chart_type = <?= json_encode((string) ($widget_chart_type ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
 
 	// push PHP values into JS
 	const authToken = {
@@ -238,16 +238,16 @@ $user['extensions'] = [];
 if (!empty($_SESSION['user']['extension'])) {
 	echo "const extension = {\n";
 	foreach ($_SESSION['user']['extension'] as $user) {
-		echo "		domain_name: '" . $user['domain_name'] . "',\n";
-		echo "		extension_uuid: '" . $user['extension_uuid'] . "',\n";
-		echo "		extension: '" . $user['user'] . "',\n";
+		echo "		domain_name: " . json_encode((string) ($user['domain_name'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ",\n";
+		echo "		extension_uuid: " . json_encode((string) ($user['extension_uuid'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ",\n";
+		echo "		extension: " . json_encode((string) ($user['user'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ",\n";
 		if (!empty($user['number_alias'])) {
 			$user_contact = $user['number_alias'];
 		}
 		else {
 			$user_contact = $user['user'];
 		}
-		echo "		extension_destination: '$user_contact',\n";
+		echo "		extension_destination: " . json_encode((string) $user_contact, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ",\n";
 		$user['extensions'][$user['extension_uuid']] = $user_contact;
 	}
 	echo "	last_entry_so_no_comma: '-100'";
@@ -383,7 +383,7 @@ if (!empty($_SESSION['user']['extension'])) {
 				update_call(call);
 				replace_arrow_color(uuid, colors.RINGING);
 				//enforce a local arrow for eavesdrop
-				if (call.caller_caller_id_name === '<?= $text['label-eavesdrop'] ?>') {
+				if (call.caller_caller_id_name === <?= json_encode((string) ($text['label-eavesdrop'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>) {
 					replace_arrow_icon(uuid, 'local');
 					row.dataset.forced_direction = 'local';
 				}
