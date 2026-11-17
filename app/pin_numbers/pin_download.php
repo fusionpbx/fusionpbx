@@ -52,6 +52,22 @@
 
 //define the functions
 	/**
+	 * Escapes a field for CSV. A leading = + - @ or tab is interpreted as a formula by
+	 * spreadsheet applications so it is neutralized before being written to the file.
+	 *
+	 * @param mixed $value The value to escape.
+	 *
+	 * @return string The escaped value.
+	 */
+	function csv_escape($value): string {
+		$value = (string) $value;
+		if ($value !== '' && strpbrk($value[0], "=+-@\t\r") !== false) {
+			$value = "'" . $value;
+		}
+		return $value;
+	}
+
+	/**
 	 * Converts a multi-dimensional PHP array into a CSV string.
 	 *
 	 * @param array &$array The input data to be converted. It is expected to have at least one row and one column.
@@ -66,7 +82,8 @@
 		$df = fopen("php://output", 'w');
 		fputcsv($df, array_keys(reset($array)));
 		foreach ($array as $row) {
-			fputcsv($df, $row);
+			//the exported values are user supplied so escape each field before writing it
+			fputcsv($df, array_map('csv_escape', $row));
 		}
 		fclose($df);
 		return ob_get_clean();
