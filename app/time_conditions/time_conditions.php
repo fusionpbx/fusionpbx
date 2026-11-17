@@ -44,7 +44,7 @@
 	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 	$sort = $order_by == 'dialplan_number' ? 'natural' : null;
-	$search = $_GET['search'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
 	$show = $_GET['show'] ?? '';
 
 // Build the query string
@@ -68,7 +68,7 @@
 
 //get the http post data
 	if (!empty($_POST['time_conditions']) && is_array($_POST['time_conditions'])) {
-		$action = $_POST['action'];
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
 		$time_conditions = $_POST['time_conditions'];
 	}
 
@@ -251,7 +251,7 @@
 				echo "	".escape($row['dialplan_name']);
 			}
 			echo "	</td>\n";
-			echo "	<td>".($row['dialplan_number'] != '' ? $row['dialplan_number'] : "&nbsp;")."</td>\n";
+			echo "	<td>".($row['dialplan_number'] != '' ? escape($row['dialplan_number']) : "&nbsp;")."</td>\n";
 			if (permission_exists('time_condition_context')) {
 				echo "	<td>".escape($row['dialplan_context'])."</td>\n";
 			}
@@ -265,7 +265,7 @@
 				echo $text['label-'.($row['dialplan_enabled'] ? 'true' : 'false')];
 			}
 			echo "	</td>\n";
-			echo "	<td class='description overflow hide-sm-dn'>".$row['dialplan_description']."&nbsp;</td>\n";
+			echo "	<td class='description overflow hide-sm-dn'>".escape($row['dialplan_description'])."&nbsp;</td>\n";
 			if (permission_exists('time_condition_edit') && $settings->get('theme', 'list_row_edit_button', false)) {
 				echo "	<td class='action-button'>\n";
 				echo button::create(['type'=>'button','title'=>$text['button-edit'],'icon'=>$settings->get('theme', 'button_icon_edit'),'link'=>$list_row_url]);

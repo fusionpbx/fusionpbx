@@ -148,16 +148,25 @@ class time_conditions {
 				foreach ($records as $x => $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 
-						//build delete array
-						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
-						$array['dialplan_details'][$x]['dialplan_uuid']       = $record['uuid'];
-
-						//get the dialplan context
-						$sql                         = "select dialplan_context from v_dialplans ";
-						$sql                         .= "where dialplan_uuid = :dialplan_uuid ";
+						//get the dialplan context, require the record to be a time condition in the current domain
+						$sql = "select dialplan_uuid, dialplan_context from v_dialplans ";
+						$sql .= "where dialplan_uuid = :dialplan_uuid ";
+						$sql .= "and app_uuid = :app_uuid ";
+						$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 						$parameters['dialplan_uuid'] = $record['uuid'];
-						$dialplan_contexts[]         = $this->database->select($sql, $parameters, 'column');
+						$parameters['app_uuid'] = self::app_uuid;
+						$parameters['domain_uuid'] = $this->domain_uuid;
+						$row = $this->database->select($sql, $parameters, 'row');
 						unset($sql, $parameters);
+
+						//build the delete array for records found in the current domain only
+						if (is_array($row) && @sizeof($row) != 0) {
+							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
+							$array['dialplan_details'][$x]['dialplan_uuid']       = $record['uuid'];
+							if (!empty($row['dialplan_context'])) {
+								$dialplan_contexts[] = $row['dialplan_context'];
+							}
+						}
 
 					}
 				}
@@ -235,15 +244,20 @@ class time_conditions {
 					}
 				}
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, dialplan_context from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select t." . $this->uuid_prefix . "uuid as uuid, t." . $this->toggle_field . " as toggle, d.dialplan_context ";
+					$sql .= "from v_" . $this->table . " t ";
+					$sql .= "left join v_dialplans d on d.dialplan_uuid = t." . $this->uuid_prefix . "uuid and d.app_uuid = :app_uuid ";
+					$sql .= "where (t.domain_uuid = :domain_uuid or t.domain_uuid is null) ";
+					$sql .= "and t." . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$parameters['app_uuid'] = self::app_uuid;
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$states[$row['uuid']] = $row['toggle'];
-							$dialplan_contexts[]  = $row['dialplan_context'];
+							if (!empty($row['dialplan_context'])) {
+								$dialplan_contexts[] = $row['dialplan_context'];
+							}
 						}
 					}
 					unset($sql, $parameters, $rows, $row);
@@ -333,9 +347,11 @@ class time_conditions {
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
 
 					//primary table
-					$sql  = "select * from v_" . $this->table . " ";
-					$sql  .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
-					$rows = $this->database->select($sql, $parameters ?? null, 'all');
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$y = 0;
 						foreach ($rows as $x => $row) {

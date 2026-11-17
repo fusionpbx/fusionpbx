@@ -92,6 +92,12 @@
 		$action = "add";
 	}
 
+// Check the permission for the action being taken
+	if (($action == 'add' && !permission_exists('time_condition_add')) || ($action == 'update' && !permission_exists('time_condition_edit'))) {
+		echo "access denied";
+		exit;
+	}
+
 // Get the post variables
 	if (count($_POST) > 0) {
 		$domain_uuid = $_POST["domain_uuid"];
@@ -107,7 +113,8 @@
 		if (permission_exists('time_condition_context')) {
 			$dialplan_context = $_POST["dialplan_context"];
 		}
-		$dialplan_enabled = $_POST["dialplan_enabled"];
+		//the enabled field is a boolean, allow only the values offered by the form
+		$dialplan_enabled = in_array($_POST["dialplan_enabled"] ?? '', ['true', 'false'], true) ? $_POST["dialplan_enabled"] : 'true';
 		$dialplan_description = $_POST["dialplan_description"];
 
 		if (!permission_exists('time_condition_domain')) {
@@ -144,8 +151,37 @@
 				return;
 			}
 
+		// Verify the dialplan being changed exists in the current domain and belongs to this app
+			if ($action == "update") {
+				$sql = "select dialplan_uuid from v_dialplans ";
+				$sql .= "where dialplan_uuid = :dialplan_uuid ";
+				$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
+				$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+				$parameters['dialplan_uuid'] = $dialplan_uuid;
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$row = $database->select($sql, $parameters, 'row');
+				if (empty($row)) {
+					message::add($text['message-access_denied'] ?? 'Access denied', 'negative');
+					header('Location: time_conditions.php'.($query_string ? '?'.$query_string : ''));
+					exit;
+				}
+				unset($sql, $parameters, $row);
+			}
+
 		// Remove the invalid characters from the dialplan name
 			$dialplan_name = str_replace('/', '', $dialplan_name);
+			//the name is written to the dialplan XML as an attribute value, remove the characters that break out of it
+			//the variable syntax is removed too, FreeSWITCH expands ${...} when it loads the dialplan
+			$dialplan_name = str_replace(array('<', '>', '"', "'", '&', '${'), '', $dialplan_name);
+
+		// Remove the invalid characters from the extension number
+			//the extension is written to the dialplan XML as an attribute value, remove the characters that break out of it
+			$dialplan_number = str_replace(array('<', '>', '"', "'", '&', '${'), '', $dialplan_number);
+
+		// Validate the time zone, it is written to the dialplan XML as an action value
+			if (!empty($dialplan_time_zone) && !in_array($dialplan_time_zone, DateTimeZone::listIdentifiers(), true)) {
+				$dialplan_time_zone = null;
+			}
 
 		// Set the context for users that do not have the permission
 			if (permission_exists('time_condition_context')) {
@@ -294,14 +330,35 @@
 				}
 			}
 
+		// Remove groups with an invalid group id, the group id is written to the page as an element id and used in JavaScript
+			if (is_array($_REQUEST['variable'])) {
+				foreach ($_REQUEST['variable'] as $group_id => $conditions) {
+					if (!is_numeric($group_id)) {
+						unset($_REQUEST['variable'][$group_id]);
+						unset($_REQUEST['value'][$group_id]);
+						unset($_REQUEST['dialplan_action'][$group_id]);
+					}
+				}
+			}
+
 		// Remove invalid conditions and values by checking start value
 			if (is_array($_REQUEST['value'])) {
 				foreach ($_REQUEST['value'] as $group_id => $values) {
+					if (!is_array($values)) {
+						unset($_REQUEST['variable'][$group_id]);
+						unset($_REQUEST['value'][$group_id]);
+						continue;
+					}
 					foreach ($values as $value_id => $value_range) {
-						if ($value_range['start'] == '') {
+						if (!is_array($value_range) || ($value_range['start'] ?? '') == '') {
 							unset($_REQUEST['variable'][$group_id][$value_id]);
 							unset($_REQUEST['value'][$group_id][$value_id]);
+							continue;
 						}
+						//the condition values are written to the dialplan XML as attribute values, remove the characters that break out of it
+						//the variable syntax is removed too, FreeSWITCH expands ${...} when it loads the dialplan
+						$_REQUEST['value'][$group_id][$value_id]['start'] = str_replace(array('<', '>', '"', "'", '&', '${'), '', (string) $value_range['start']);
+						$_REQUEST['value'][$group_id][$value_id]['stop'] = str_replace(array('<', '>', '"', "'", '&', '${'), '', (string) ($value_range['stop'] ?? ''));
 					}
 				}
 			}
@@ -346,7 +403,7 @@
 					$is_preset = !empty($_REQUEST['preset']) && is_array($_REQUEST['preset']) && in_array($group_id, $_REQUEST['preset']) ? true : false;
 
 					// Set group and order number
-					$dialplan_detail_group_user = $_POST['group_'.$group_id] ?? null;
+					$dialplan_detail_group_user = preg_replace('#[^0-9]#', '', (string) ($_POST['group_'.$group_id] ?? ''));
 					if ($dialplan_detail_group_user != '') {
 						$dialplan_detail_group = $dialplan_detail_group_user;
 					}
@@ -1311,17 +1368,17 @@ if ($action == 'update') {
 							}
 
 							echo "	var start_input = document.getElementById('value_".$group_id."_'+condition_id+'_start');\n";
-							echo "	if(start_input) start_input.value = \"".$cond_val_start."\";\n";
+							echo "	if(start_input) start_input.value = ".json_encode((string) $cond_val_start, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).";\n";
 							echo "	var start_output = document.getElementById('value_".$group_id."_'+condition_id+'_stop');\n";
-							echo "	if(start_output) start_output.value = \"".$cond_val_stop."\";\n";
+							echo "	if(start_output) start_output.value = ".json_encode((string) $cond_val_stop, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).";\n";
 						}
 						else {
 							echo "	load_value_fields(".$group_id.", condition_id, '".$cond_var."');\n";
 							// select the correct dropdown options
 							echo "	var start_sel = document.getElementById('value_".$group_id."_'+condition_id+'_start');\n";
-							echo "	for(var i=0; i<start_sel.options.length; i++){ if(start_sel.options[i].value == \"".$cond_val_start."\"){ start_sel.selectedIndex = i; break; } }\n";
+							echo "	for(var i=0; i<start_sel.options.length; i++){ if(start_sel.options[i].value == ".json_encode((string) $cond_val_start, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)."){ start_sel.selectedIndex = i; break; } }\n";
 							echo "	var stop_sel = document.getElementById('value_".$group_id."_'+condition_id+'_stop');\n";
-							echo "	for(var i=0; i<stop_sel.options.length; i++){ if(stop_sel.options[i].value == \"".$cond_val_stop."\"){ stop_sel.selectedIndex = i; break; } }\n";
+							echo "	for(var i=0; i<stop_sel.options.length; i++){ if(stop_sel.options[i].value == ".json_encode((string) $cond_val_stop, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)."){ stop_sel.selectedIndex = i; break; } }\n";
 						}
 						echo "</script>\n";
 					}
@@ -1416,16 +1473,16 @@ if ($action == 'update') {
 										echo "	change_to_input(document.getElementById('value_".$preset_group_id."_'+condition_id+'_start'));\n";
 										echo "	change_to_input(document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop'));\n";
 										echo "	var start_input = document.getElementById('value_".$preset_group_id."_'+condition_id+'_start');\n";
-										echo "	if(start_input) start_input.value = \"".$cond_val_start."\";\n";
+										echo "	if(start_input) start_input.value = ".json_encode((string) $cond_val_start, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).";\n";
 										echo "	var start_output = document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop');\n";
-										echo "	if (start_output) start_output.value = \"".$cond_val_stop."\";\n";
+										echo "	if (start_output) start_output.value = ".json_encode((string) $cond_val_stop, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).";\n";
 									}
 									else {
 										echo "	load_value_fields(".$preset_group_id.", condition_id, '".$cond_var."');\n";
 										echo "	var start_sel = document.getElementById('value_".$preset_group_id."_'+condition_id+'_start');\n";
-										echo "	for(var i=0; i<start_sel.options.length; i++){ if(start_sel.options[i].value == \"".$cond_val_start."\"){ start_sel.selectedIndex = i; break; } }\n";
+										echo "	for(var i=0; i<start_sel.options.length; i++){ if(start_sel.options[i].value == ".json_encode((string) $cond_val_start, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)."){ start_sel.selectedIndex = i; break; } }\n";
 										echo "	var stop_sel = document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop');\n";
-										echo "	for(var i=0; i<stop_sel.options.length; i++){ if(stop_sel.options[i].value == \"".$cond_val_stop."\"){ stop_sel.selectedIndex = i; break; } }\n";
+										echo "	for(var i=0; i<stop_sel.options.length; i++){ if(stop_sel.options[i].value == ".json_encode((string) $cond_val_stop, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)."){ stop_sel.selectedIndex = i; break; } }\n";
 									}
 									echo "</script>\n";
 								}
@@ -1449,16 +1506,16 @@ if ($action == 'update') {
 										echo "	change_to_input(document.getElementById('value_".$preset_group_id."_'+condition_id+'_start'));\n";
 										echo "	change_to_input(document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop'));\n";
 										echo "	var start_input = document.getElementById('value_".$preset_group_id."_'+condition_id+'_start');\n";
-										echo "	if(start_input) start_input.value = \"".$preset_value_start."\";\n";
+										echo "	if(start_input) start_input.value = ".json_encode((string) $preset_value_start, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).";\n";
 										echo "	var start_output = document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop');\n";
-										echo "	if(start_output) start_output.value = \"".$preset_value_stop."\";\n";
+										echo "	if(start_output) start_output.value = ".json_encode((string) $preset_value_stop, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).";\n";
 									}
 									else {
 										echo "	load_value_fields(".$preset_group_id.", condition_id, '".$preset_variable."');\n";
 										echo "	var start_sel = document.getElementById('value_".$preset_group_id."_'+condition_id+'_start');\n";
-										echo "	for(var i=0; i<start_sel.options.length; i++){ if(start_sel.options[i].value == \"".$preset_value_start."\"){ start_sel.selectedIndex = i; break; } }\n";
+										echo "	for(var i=0; i<start_sel.options.length; i++){ if(start_sel.options[i].value == ".json_encode((string) $preset_value_start, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)."){ start_sel.selectedIndex = i; break; } }\n";
 										echo "	var stop_sel = document.getElementById('value_".$preset_group_id."_'+condition_id+'_stop');\n";
-										echo "	for(var i=0; i<stop_sel.options.length; i++){ if(stop_sel.options[i].value == \"".$preset_value_stop."\"){ stop_sel.selectedIndex = i; break; } }\n";
+										echo "	for(var i=0; i<stop_sel.options.length; i++){ if(stop_sel.options[i].value == ".json_encode((string) $preset_value_stop, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)."){ stop_sel.selectedIndex = i; break; } }\n";
 									}
 									echo "</script>\n\n";
 								}
