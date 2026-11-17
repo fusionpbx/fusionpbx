@@ -159,7 +159,7 @@ class event_guard_service extends service {
 				$ip_address = $json_array['network-ip'] ?? '';
 
 				// Debug info
-				$this->debug("sofia::register_failure network-ip " . $ip_address . ", to-host " . ($json_array['to-host'] ?? ''));
+				$this->debug("sofia::register_failure network-ip " . $ip_address . ", to-host " . $this->sanitize_event_value($json_array['to-host'] ?? ''));
 
 				// Not registered so block the address
 				$is_valid_ip = filter_var($ip_address, FILTER_VALIDATE_IP);
@@ -193,7 +193,7 @@ class event_guard_service extends service {
 						$this->block_delete($row['ip_address'], 'all');
 
 						// Debug info
-						$this->info("unblocked: [ip_address: " . $row['ip_address'] . ", filter: all, to-user: " . $row['extension'] . ", to-host: " . $row['hostname'] . ", line " . __LINE__ . "]");
+						$this->info("unblocked: [ip_address: " . $row['ip_address'] . ", filter: all, to-user: " . $this->sanitize_event_value($row['extension'] ?? '') . ", to-host: " . $this->sanitize_event_value($row['hostname'] ?? '') . ", line " . __LINE__ . "]");
 
 						// Log the blocked IP address to the database
 						$array['event_guard_logs'][$x]['event_guard_log_uuid'] = $row['event_guard_log_uuid'];
@@ -216,8 +216,8 @@ class event_guard_service extends service {
 				$to_host = $json_array['to-host'] ?? '';
 				$ip_address = $json_array['network-ip'] ?? '';
 				if (!empty($to_host)) {
-					// Debug info
-					$this->debug("sofia::pre_register network-ip " . $ip_address . ", to-host " . $to_host);
+					// Debug info, the event values come from a remote client
+					$this->debug("sofia::pre_register network-ip " . $ip_address . ", to-host " . $this->sanitize_event_value($to_host));
 
 					// Validate the to-host IP address
 					$is_valid_ip = filter_var($to_host, FILTER_VALIDATE_IP);
@@ -265,6 +265,39 @@ class event_guard_service extends service {
 	}
 
 	/**
+	 * Sanitize a value taken from a switch event before it is logged or stored.
+	 *
+	 * Event header values are supplied by remote clients so they may contain
+	 * carriage returns and line feeds which would allow forged entries to be
+	 * injected into the service log, or control characters which are unsafe to
+	 * store in the audit table.
+	 *
+	 * @param mixed $value  The value from the event array.
+	 * @param int   $length Optional maximum length of the returned string.
+	 *
+	 * @return string The sanitized value.
+	 */
+	private function sanitize_event_value($value, int $length = 255) : string {
+		//cast to a string then remove control characters including carriage return and line feed
+		$value = (string) $value;
+		$cleaned = preg_replace('/[\x00-\x1F\x7F-\x9F]/u', '', $value);
+
+		//fall back to removing every character outside printable ascii when the value is not valid utf-8
+		if ($cleaned === null) {
+			$cleaned = preg_replace('/[^\x20-\x7E]/', '', $value);
+		}
+
+		//limit the length to keep log lines and stored values bounded, giving preference to multibyte UTF-8
+		if (function_exists('mb_substr')) {
+			$cleaned = mb_substr($cleaned, 0, $length, 'UTF-8');
+		} else {
+			$cleaned = substr((string) $cleaned, 0, $length);
+		}
+
+		return (string) $cleaned;
+	}
+
+	/**
 	 * Execute a block command for nftables, iptables or pf based on the firewall type.
 	 *
 	 * @param string $ip_address The IP address to block
@@ -291,9 +324,9 @@ class event_guard_service extends service {
 		// Block the IP address
 		$result = $this->firewall->block_add($ip_address, $filter);
 		if ($result) {
-			// Prepare the extension
-			$to_user = $event['to-user'] ?? '';
-			$to_host = $event['to-host'] ?? '';
+			// Prepare the extension, the event values come from a remote client
+			$to_user = $this->sanitize_event_value($event['to-user'] ?? '');
+			$to_host = $this->sanitize_event_value($event['to-host'] ?? '');
 			$extension = !empty($to_host) ? $to_user . '@' . $to_host : $to_user;
 
 			// Log the blocked IP address to the log
@@ -307,7 +340,7 @@ class event_guard_service extends service {
 			$array['event_guard_logs'][0]['filter'] = $filter;
 			$array['event_guard_logs'][0]['ip_address'] = $ip_address;
 			$array['event_guard_logs'][0]['extension'] = $extension;
-			$array['event_guard_logs'][0]['user_agent'] = $event['user-agent'] ?? '';
+			$array['event_guard_logs'][0]['user_agent'] = $this->sanitize_event_value($event['user-agent'] ?? '');
 			$array['event_guard_logs'][0]['log_status'] = 'blocked';
 			$p = permissions::new();
 			$p->add('event_guard_log_add', 'temp');
