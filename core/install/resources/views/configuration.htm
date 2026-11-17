@@ -33,7 +33,7 @@
 					{$label_password}
 				</td>
 				<td class='vtable' align='left'>
-					<input class='formfld' type='text' name='admin_password' maxlength='255' value="{$admin_password}"><br />
+					<input class='formfld' type='password' name='admin_password' maxlength='255' autocomplete='new-password' value="{$admin_password}"><br />
 					Enter the password to use when logging in with the browser.<br />
 				</td>
 			</tr>
@@ -48,6 +48,7 @@
 			</tr>
 			<tr>
 				<td colspan='2' align='right'>
+					<input type='hidden' name='{$token_name}' value='{$token_hash}'>
 					<input type='hidden' name='step' value='2'>
 					<input type='submit' name='' class='btn' value='Next'>
 				</td>
