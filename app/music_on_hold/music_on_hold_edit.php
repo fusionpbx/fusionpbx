@@ -47,6 +47,31 @@
 		$action = "add";
 	}
 
+//verify the music on hold record belongs to the current domain unless the user is allowed to access all domains
+	if (!permission_exists('music_on_hold_all')) {
+		$checked_uuids = [];
+		if (!empty($music_on_hold_uuid) && is_uuid($music_on_hold_uuid)) {
+			$checked_uuids[] = $music_on_hold_uuid;
+		}
+		if (is_uuid($_POST["music_on_hold_uuid"] ?? '')) {
+			$checked_uuids[] = $_POST["music_on_hold_uuid"];
+		}
+		foreach ($checked_uuids as $checked_uuid) {
+			$sql = "select music_on_hold_uuid from v_music_on_hold ";
+			$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$sql .= "and music_on_hold_uuid = :music_on_hold_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['music_on_hold_uuid'] = $checked_uuid;
+			$row = $database->select($sql, $parameters, 'row');
+			if (empty($row)) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
+		unset($checked_uuids);
+	}
+
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		if (permission_exists('music_on_hold_domain')) {
