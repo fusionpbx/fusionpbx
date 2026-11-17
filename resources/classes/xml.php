@@ -70,6 +70,6 @@ class xml {
 		}
 
 		//send the result
-		return ['valid' -> $xml_valid, 'errors' -> $xml_errors];
+		return ['valid' => $xml_valid, 'errors' => $xml_errors];
 	}
 }
