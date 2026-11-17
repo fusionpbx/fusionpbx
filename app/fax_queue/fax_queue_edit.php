@@ -79,21 +79,26 @@
 //get http post variables and set them to php variables
 	if (!empty($_POST) && is_array($_POST)) {
 		//$fax_uuid = $_POST["fax_uuid"];
-		$fax_date = $_POST["fax_date"];
-		$hostname = $_POST["hostname"];
-		$fax_caller_id_name = $_POST["fax_caller_id_name"];
-		$fax_caller_id_number = $_POST["fax_caller_id_number"];
-		$fax_number = $_POST["fax_number"];
-		$fax_prefix = $_POST["fax_prefix"];
-		$fax_email_address = $_POST["fax_email_address"];
-		$fax_file = $_POST["fax_file"];
-		$fax_status = $_POST["fax_status"];
-		$fax_retry_date = $_POST["fax_retry_date"];
-		$fax_notify_date = $_POST["fax_notify_date"] ?? null;
-		$fax_retry_count = $_POST["fax_retry_count"];
-		$fax_accountcode = $_POST["fax_accountcode"];
-		$fax_command = $_POST["fax_command"];
-		$fax_response = $_POST["fax_response"];
+		$fax_date = is_string($_POST["fax_date"] ?? null) ? $_POST["fax_date"] : '';
+		$hostname = is_string($_POST["hostname"] ?? null) ? $_POST["hostname"] : '';
+		$fax_caller_id_name = is_string($_POST["fax_caller_id_name"] ?? null) ? $_POST["fax_caller_id_name"] : '';
+		$fax_caller_id_number = is_string($_POST["fax_caller_id_number"] ?? null) ? $_POST["fax_caller_id_number"] : '';
+		$fax_number = is_string($_POST["fax_number"] ?? null) ? $_POST["fax_number"] : '';
+		$fax_prefix = is_string($_POST["fax_prefix"] ?? null) ? $_POST["fax_prefix"] : '';
+		$fax_email_address = is_string($_POST["fax_email_address"] ?? null) ? $_POST["fax_email_address"] : '';
+		$fax_file = is_string($_POST["fax_file"] ?? null) ? $_POST["fax_file"] : '';
+		$fax_status = is_string($_POST["fax_status"] ?? null) ? $_POST["fax_status"] : '';
+		$fax_retry_date = is_string($_POST["fax_retry_date"] ?? null) ? $_POST["fax_retry_date"] : '';
+		$fax_notify_date = is_string($_POST["fax_notify_date"] ?? null) ? $_POST["fax_notify_date"] : null;
+		$fax_retry_count = is_string($_POST["fax_retry_count"] ?? null) ? $_POST["fax_retry_count"] : '';
+		$fax_accountcode = is_string($_POST["fax_accountcode"] ?? null) ? $_POST["fax_accountcode"] : '';
+		$fax_command = is_string($_POST["fax_command"] ?? null) ? $_POST["fax_command"] : '';
+		$fax_response = is_string($_POST["fax_response"] ?? null) ? $_POST["fax_response"] : '';
+
+		//the status is limited to the values used by the fax queue
+		if (!in_array($fax_status, ['waiting', 'sending', 'trying', 'sent', 'busy', 'failed'])) {
+			$fax_status = '';
+		}
 	}
 
 //process the user data and save it to the database
@@ -169,6 +174,17 @@
 		//add the fax_queue_uuid
 			if (!is_uuid($_POST["fax_queue_uuid"])) {
 				$fax_queue_uuid = uuid();
+			}
+
+		//verify the record belongs to the current domain, the uuid comes from the post array and an existing record is updated rather than inserted
+			$sql = "select domain_uuid from v_fax_queue ";
+			$sql .= "where fax_queue_uuid = :fax_queue_uuid ";
+			$parameters['fax_queue_uuid'] = $fax_queue_uuid;
+			$row = $database->select($sql, $parameters, 'row');
+			unset($sql, $parameters);
+			if (!empty($row) && !empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid']) {
+				header('Location: fax_queue.php'.($query_string ? '?'.$query_string : ''));
+				exit;
 			}
 
 		//prepare the array

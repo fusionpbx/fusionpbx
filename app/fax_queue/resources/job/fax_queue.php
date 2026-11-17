@@ -101,7 +101,7 @@
 
 //make sure the /var/run/fusionpbx directory exists
 	if (!file_exists('/var/run/fusionpbx')) {
-		$result = mkdir('/var/run/fusionpbx', 0777, true);
+		$result = mkdir('/var/run/fusionpbx', 0755, true);
 		if (!$result) {
 			die('Failed to create /var/run/fusionpbx');
 		}
@@ -138,10 +138,13 @@
 	$sql .= "order by domain_uuid asc ";
 	$sql .= "limit :limit ";
 	if (isset($hostname)) {
+		//remove quotes, backslashes and line feeds, the hostname is used in a shell command
+		$hostname = str_replace(["'", "\\", "\r", "\n"], '', $hostname);
 		$parameters['hostname'] = $hostname;
 	}
 	else {
-		$parameters['hostname'] = gethostname();
+		$hostname = gethostname();
+		$parameters['hostname'] = $hostname;
 	}
 	$parameters['limit'] = $fax_queue_limit;
 	$parameters['retry_interval'] = $fax_retry_interval;
@@ -154,6 +157,10 @@
 //process the messages
 	if (is_array($fax_queue) && @sizeof($fax_queue) != 0) {
 		foreach($fax_queue as $row) {
+			// validate the fax_queue_uuid to prevent shell injection
+			if (!is_uuid($row["fax_queue_uuid"])) {
+				continue;
+			}
 			$command = PHP_BINARY." ".dirname(__DIR__, 4)."/app/fax_queue/resources/job/fax_send.php ";
 			$command .= "'action=send&fax_queue_uuid=".$row["fax_queue_uuid"]."&hostname=".$hostname."&debug=true'";
 			if (isset($debug)) {

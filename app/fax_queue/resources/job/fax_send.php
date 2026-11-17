@@ -34,7 +34,7 @@
 	if (isset($_GET['debug'])) {
 		$debug = $_GET['debug'];
 	}
-	if (isset($_GET['file'])) {
+	if (isset($_GET['file']) && is_string($_GET['file'])) {
 		$file = $_GET['file'];
 	}
 
@@ -61,10 +61,9 @@
 	}
 
 //get the primary key
-	if (is_uuid($_GET['fax_queue_uuid'])) {
+	if (is_uuid($_GET['fax_queue_uuid'] ?? '')) {
 		$fax_queue_uuid = $_GET['fax_queue_uuid'];
-		$hostname = $_GET['hostname'];
-		$sleep_seconds = $_GET['sleep'];
+		$sleep_seconds = is_numeric($_GET['sleep'] ?? '') ? intval($_GET['sleep']) : 0;
 	}
 	else {
 		//invalid uuid
@@ -127,12 +126,13 @@
 
 		//check to see if the process id is valid
 		$pid = file_get_contents($file);
-		if (filter_var($pid, FILTER_VALIDATE_INT) === false) {
+		$pid = filter_var($pid, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
+		if ($pid === null || $pid < 1) {
 			return false;
 		}
 
-		//check if the process is running
-		exec('ps -p '.$pid, $output);
+		//check if the process is running the pid is an integer
+		exec('ps -p '.intval($pid), $output);
 		if (count($output) > 1) {
 			return true;
 		}
@@ -171,7 +171,7 @@
 
 //make sure the /var/run/fusionpbx directory exists
 	if (!file_exists('/var/run/fusionpbx')) {
-		$result = mkdir('/var/run/fusionpbx', 0777, true);
+		$result = mkdir('/var/run/fusionpbx', 0755, true);
 		if (!$result) {
 			die('Failed to create /var/run/fusionpbx');
 		}
@@ -180,7 +180,7 @@
 //create the process id file if the process doesn't exist
 	if (!$pid_exists) {
 		//remove the old pid file
-		if (file_exists($file)) {
+		if (file_exists($pid_file)) {
 			unlink($pid_file);
 		}
 
@@ -193,7 +193,7 @@
 	}
 
 //sleep used for debugging
-	if (isset($sleep_seconds)) {
+	if (!empty($sleep_seconds)) {
 		sleep($sleep_seconds);
 	}
 
@@ -207,7 +207,8 @@
 	if (!empty($row)) {
 		$fax_queue_uuid = $row['fax_queue_uuid'];
 		$domain_uuid = $row['domain_uuid'];
-		$domain_name = $row['domain_name'];
+		//remove single quotes, the domain name is embedded in the event socket command
+		$domain_name = escape_quote($row['domain_name']);
 		$fax_uuid = $row['fax_uuid'];
 		$origination_uuid = $row['origination_uuid'];
 		$fax_log_uuid = $row['fax_log_uuid'];
@@ -346,10 +347,17 @@
 		//extract fax_dtmf from the fax number
 			fax_split_dtmf($fax_number, $fax_dtmf);
 
+		//remove characters that would break out of the FreeSWITCH command, these values are used unquoted in the channel variables and bridge (a line feed is sent as an additional command)
+			$fax_number = preg_replace('/[^0-9A-Za-z*#+._@-]/', '', (string) ($fax_number ?? ''));
+			$fax_caller_id_number = preg_replace('/[^0-9A-Za-z*#+._@-]/', '', (string) ($fax_caller_id_number ?? ''));
+
 		//get the fax toll allow
 			if (!empty($fax_toll_allow)) {
 				$channel_variables["toll_allow"] = $fax_toll_allow;
 			}
+
+		//initialize the route array used to build the fax uri
+			$route_array = [];
 
 		//check to see if the destination number is local
 			$local_destination = false;
@@ -444,6 +452,9 @@
 				}
 			}
 
+		//remove quotes, backslashes and line feeds from the bridge (a line feed is sent as an additional command)
+			$fax_uri = str_replace(["'", "\\", "\r", "\n"], '', (string) ($fax_uri ?? ''));
+
 		//set the origination uuid
 			$origination_uuid = uuid();
 
@@ -454,7 +465,7 @@
 			$dial_string .= "fax_uuid="            . $fax_uuid . ",";
 			$dial_string .= "fax_queue_uuid="      . $fax_queue_uuid . ",";
 			$dial_string .= "mailto_address='"     . escape_quote($fax_email_address) . "',";
-			$dial_string .= "mailfrom_address='"   . $email_from . "',";
+			$dial_string .= "mailfrom_address='"   . escape_quote($email_from) . "',";
 			$dial_string .= "fax_retry_attempts="  . $fax_retry_count . ",";
 			$dial_string .= "fax_retry_limit="     . $retry_limit . ",";
 			$dial_string .= "fax_recipient='"      . escape_quote($fax_recipient) . "',";
