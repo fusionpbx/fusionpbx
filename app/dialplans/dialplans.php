@@ -173,11 +173,11 @@
 
 // Set variables from http GET parameters
 	$app_uuid = is_uuid($_GET['app_uuid'] ?? '') ? $_GET['app_uuid'] : '';
-	$context = $_GET['context'] ?? '';
+	$context = is_string($_GET['context'] ?? null) ? $_GET['context'] : '';
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
-	$search = $_GET['search'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
 	$show = $_GET['show'] ?? '';
 
 // Build the query string
@@ -590,14 +590,14 @@
 		if (!empty($dialplan_contexts) && is_array($dialplan_contexts) && @sizeof($dialplan_contexts) != 0) {
 			foreach ($dialplan_contexts as $dialplan_context => $dialplan_subcontexts) {
 				if (is_array($dialplan_subcontexts) && @sizeof($dialplan_subcontexts) != 0) {
-					echo "<option value='".$dialplan_context."' ".($context == $dialplan_context ? "selected='selected'" : null).">".escape($dialplan_context)."</option>\n";
+					echo "<option value='".escape($dialplan_context)."' ".($context == $dialplan_context ? "selected='selected'" : null).">".escape($dialplan_context)."</option>\n";
 					foreach ($dialplan_subcontexts as $dialplan_subcontext) {
-						echo "<option value='".$dialplan_subcontext."@".$dialplan_context."' ".($context == $dialplan_subcontext."@".$dialplan_context ? "selected='selected'" : null).">&nbsp;&nbsp;&nbsp;".escape($dialplan_subcontext)."@</option>\n";
+						echo "<option value='".escape($dialplan_subcontext)."@".escape($dialplan_context)."' ".($context == $dialplan_subcontext."@".$dialplan_context ? "selected='selected'" : null).">&nbsp;&nbsp;&nbsp;".escape($dialplan_subcontext)."@</option>\n";
 					}
 				}
 				else {
 					$dialplan_context_label = in_array($dialplan_context, ['global','public']) ? ucwords($dialplan_context) : $dialplan_context;
-					echo "<option value='".$dialplan_context."' ".($context == $dialplan_context ? "selected='selected'" : null).">".escape($dialplan_context_label)."</option>\n";
+					echo "<option value='".escape($dialplan_context)."' ".($context == $dialplan_context ? "selected='selected'" : null).">".escape($dialplan_context_label)."</option>\n";
 				}
 			}
 		}

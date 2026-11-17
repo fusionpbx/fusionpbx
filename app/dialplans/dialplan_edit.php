@@ -271,9 +271,12 @@
 			$dialplan_name = str_replace(" ", "_", $dialplan_name);
 			$dialplan_name = str_replace("/", "", $dialplan_name);
 
+			//the name is written to the dialplan XML as an attribute value, remove the characters that break out of it
+			$dialplan_name = str_replace(array('<', '>', '"', "'", '&'), '', $dialplan_name);
+
 		//build the array
 			$x = 0;
-			if (is_uuid($_POST["dialplan_uuid"])) {
+			if ($action == 'update' && is_uuid($_POST["dialplan_uuid"])) {
 				$array['dialplans'][$x]['dialplan_uuid'] = $_POST["dialplan_uuid"];
 			}
 			else {
@@ -310,17 +313,18 @@
 						if (!empty($row["dialplan_detail_uuid"])) {
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
 						}
-						if (!preg_match("/system/i", $row["dialplan_detail_type"])) {
+						//block the dangerous applications, they are written to the dialplan XML as attribute values
+						if (!preg_match("/system/i", $row["dialplan_detail_type"]) && !preg_match("/spawn/i", $row["dialplan_detail_type"])) {
 							$dialplan_detail_type = $row["dialplan_detail_type"];
 						}
-						if (!preg_match("/spawn/i", $row["dialplan_detail_type"])) {
-							$dialplan_detail_type = $row["dialplan_detail_type"];
+						else {
+							$dialplan_detail_type = null;
 						}
-						if (!preg_match("/system/i", $row["dialplan_detail_data"])) {
+						if (!preg_match("/system/i", $row["dialplan_detail_data"]) && !preg_match("/spawn/i", $row["dialplan_detail_data"])) {
 							$dialplan_detail_data = $row["dialplan_detail_data"];
 						}
-						if (!preg_match("/spawn/i", $row["dialplan_detail_data"])) {
-							$dialplan_detail_data = $row["dialplan_detail_data"];
+						else {
+							$dialplan_detail_data = null;
 						}
 						$array['dialplans'][$x]['dialplan_details'][$y]['domain_uuid'] = is_uuid($_POST["domain_uuid"]) ? $_POST["domain_uuid"] : null;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
@@ -909,7 +913,7 @@
 								$no_border = ($index == 999) ? "border: none;" : null;
 
 							//begin the row
-								echo "<tr class='".(is_uuid($dialplan_detail_uuid) ? 'draggable' : null)."' data-detail-uuid='".$dialplan_detail_uuid."' data-detail-tag='".$dialplan_detail_tag."'>\n";
+								echo "<tr class='".(is_uuid($dialplan_detail_uuid) ? 'draggable' : null)."' data-detail-uuid='".escape($dialplan_detail_uuid)."' data-detail-tag='".escape($dialplan_detail_tag)."'>\n";
 							//determine whether to hide the element
 								if (empty($dialplan_detail_tag)) {
 									$element['hidden'] = false;

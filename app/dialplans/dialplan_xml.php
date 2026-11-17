@@ -112,42 +112,48 @@
 
 		//sanitize the xml
 			$dialplan_valid = true;
-			if (preg_match("/.*([\"\'])system([\"\']).*>/i", $dialplan_xml)) {
+			//decode character references first, entity encoded values such as &#115;ystem decode to a blocked application when switch parses the dialplan
+			$dialplan_xml_filtered = html_entity_decode($dialplan_xml, ENT_QUOTES | ENT_XML1);
+			if (preg_match("/.*([\"\'])system([\"\']).*>/i", $dialplan_xml_filtered)) {
 				$dialplan_valid = false;
 			}
-			if (preg_match("/.*([\"\'])bgsystem([\"\']).*>/i", $dialplan_xml)) {
+			if (preg_match("/.*([\"\'])bgsystem([\"\']).*>/i", $dialplan_xml_filtered)) {
 				$dialplan_valid = false;
 			}
-			if (preg_match("/.*([\"\'])bg_spawn([\"\']).*>/i", $dialplan_xml)) {
+			if (preg_match("/.*([\"\'])bg_spawn([\"\']).*>/i", $dialplan_xml_filtered)) {
 				$dialplan_valid = false;
 			}
-			if (preg_match("/.*([\"\'])spawn([\"\']).*>/i", $dialplan_xml)) {
+			if (preg_match("/.*([\"\'])spawn([\"\']).*>/i", $dialplan_xml_filtered)) {
 				$dialplan_valid = false;
 			}
-			if (preg_match("/.*([\"\'])spawn_stream([\"\']).*>/i", $dialplan_xml)) {
+			if (preg_match("/.*([\"\'])spawn_stream([\"\']).*>/i", $dialplan_xml_filtered)) {
 				$dialplan_valid = false;
 			}
-			if (preg_match("/.*{system.*/i", $dialplan_xml)) {
+			if (preg_match("/.*{system.*/i", $dialplan_xml_filtered)) {
 				$dialplan_valid = false;
 			}
-			if (preg_match("/.*{bgsystem.*/i", $dialplan_xml)) {
+			if (preg_match("/.*{bgsystem.*/i", $dialplan_xml_filtered)) {
 				$dialplan_valid = false;
 			}
-			if (preg_match("/.*{bg_spawn.*/i", $dialplan_xml)) {
+			if (preg_match("/.*{bg_spawn.*/i", $dialplan_xml_filtered)) {
 				$dialplan_valid = false;
 			}
-			if (preg_match("/.*{spawn.*/i", $dialplan_xml)) {
+			if (preg_match("/.*{spawn.*/i", $dialplan_xml_filtered)) {
 				$dialplan_valid = false;
 			}
-			if (preg_match("/.*{spawn_stream.*/i", $dialplan_xml)) {
+			if (preg_match("/.*{spawn_stream.*/i", $dialplan_xml_filtered)) {
 				$dialplan_valid = false;
 			}
 
 		//disable XML entities and load the XML object to test if the XML is valid
 			if ($dialplan_valid) {
 				preg_match_all('/^\s*<extension.+>(?:[\S\s])+<\/extension>\s*$/mU', $dialplan_xml, $matches);
-				foreach($matches as $match) {
-					if (!xml::valid($xml)) {
+				if (empty($matches[0])) {
+					//nothing matched, the submitted value is not a dialplan extension
+					$dialplan_valid = false;
+				}
+				foreach($matches[0] as $match) {
+					if (!xml::valid($match)['valid']) {
 						//$errors = libxml_get_errors();
 						$dialplan_valid = false;
 						break;
@@ -264,10 +270,16 @@
 
 // load editor preferences/defaults
 	$setting_size = !empty($settings->get('editor', 'font_size')) ? $settings->get('editor', 'font_size') : '12px';
+	if (!preg_match('/^(\d+(\.\d+)?|auto)(px|pt|em|%)$/', (string) $setting_size)) {
+		$setting_size = '12px';
+	}
 	$setting_theme = !empty($settings->get('editor', 'theme')) ? $settings->get('editor', 'theme') : 'cobalt';
-	$setting_invisibles = $settings->get('editor', 'invisibles', 'false');
-	$setting_indenting = $settings->get('editor', 'indent_guides', 'false');
-	$setting_numbering = $settings->get('editor', 'line_numbers', 'true');
+	if (!preg_match('/^[a-zA-Z0-9_]+$/', (string) $setting_theme)) {
+		$setting_theme = 'cobalt';
+	}
+	$setting_invisibles = filter_var($settings->get('editor', 'invisibles', 'false'), FILTER_VALIDATE_BOOLEAN) ? 'true' : 'false';
+	$setting_indenting = filter_var($settings->get('editor', 'indent_guides', 'false'), FILTER_VALIDATE_BOOLEAN) ? 'true' : 'false';
+	$setting_numbering = filter_var($settings->get('editor', 'line_numbers', 'true'), FILTER_VALIDATE_BOOLEAN) ? 'true' : 'false';
 
 //set the button back link
 	if (is_array($dialplan_uuid)) {
@@ -353,7 +365,7 @@
 	echo "<br />\n";
 
 	echo "<div class='card'>\n";
-	echo "	<textarea name='dialplan_xml' id='dialplan_xml' style='display: none;'>".$dialplan_xml."</textarea>";
+	echo "	<textarea name='dialplan_xml' id='dialplan_xml' style='display: none;'>".escape_textarea($dialplan_xml)."</textarea>";
 	echo "	<table cellpadding='0' cellspacing='0' border='0' style='width: 100%;'>\n";
 	echo "		<tr>\n";
 	echo "			<td valign='middle' style='padding: 0 6px;' width='100%'><span id='description'></span></td>\n";

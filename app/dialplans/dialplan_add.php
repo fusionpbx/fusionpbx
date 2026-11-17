@@ -113,6 +113,22 @@
 		//remove the invalid characters from the extension name
 			$dialplan_name = str_replace(" ", "_", $dialplan_name);
 			$dialplan_name = str_replace("/", "", $dialplan_name);
+			//the name is written to the dialplan XML as an attribute value, remove the characters that break out of it
+			$dialplan_name = str_replace(array('<', '>', '"', "'", '&'), '', $dialplan_name);
+
+		//remove the invalid characters from the condition fields and expressions, they are written to the dialplan XML as attribute values
+			if (!empty($condition_field_1)) {
+				$condition_field_1 = str_replace(array('<', '>', '"', "'", '&'), '', $condition_field_1);
+			}
+			if (!empty($condition_field_2)) {
+				$condition_field_2 = str_replace(array('<', '>', '"', "'", '&'), '', $condition_field_2);
+			}
+			if (!empty($condition_expression_1)) {
+				$condition_expression_1 = str_replace(array('<', '>', '"', "'", '&'), '', $condition_expression_1);
+			}
+			if (!empty($condition_expression_2)) {
+				$condition_expression_2 = str_replace(array('<', '>', '"', "'", '&'), '', $condition_expression_2);
+			}
 
 		//add the main dialplan include entry
 			$dialplan_uuid = uuid();
