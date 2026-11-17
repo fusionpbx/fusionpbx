@@ -56,9 +56,9 @@
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
-	$search = $_GET['search'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
 	$show = $_GET['show'] ?? '';
 
 // Build the query string
@@ -88,6 +88,42 @@
 	}
 	else {
 		$action = "add";
+	}
+
+//verify the fifo belongs to the current domain unless allowed to access all domains
+	if (!permission_exists('fifo_all')) {
+		$checked_uuids = [];
+		if (is_uuid($_REQUEST["id"] ?? '')) {
+			$checked_uuids[] = $_REQUEST["id"];
+		}
+		if (is_uuid($_POST["fifo_uuid"] ?? '')) {
+			$checked_uuids[] = $_POST["fifo_uuid"];
+		}
+		foreach ($checked_uuids as $checked_uuid) {
+			$sql = "select domain_uuid from v_fifo ";
+			$sql .= "where fifo_uuid = :fifo_uuid ";
+			$parameters['fifo_uuid'] = $checked_uuid;
+			$row = $database->select($sql, $parameters, 'row');
+			if (!empty($row) && !empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid']) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
+		unset($checked_uuids);
+
+		//verify the posted dialplan uuid does not belong to another domain, it is used to update the dialplan
+		if (is_uuid($_POST["dialplan_uuid"] ?? '')) {
+			$sql = "select domain_uuid from v_dialplans ";
+			$sql .= "where dialplan_uuid = :dialplan_uuid ";
+			$parameters['dialplan_uuid'] = $_POST["dialplan_uuid"];
+			$row = $database->select($sql, $parameters, 'row');
+			if (!empty($row) && !empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid']) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
 	}
 
 //get http post variables and set them to php variables
@@ -126,11 +162,28 @@
 				//prepare the array(s)
 				$x = 0;
 				if (is_array($_POST['fifo_members'])) {
+					//collect the checked member uuids
+					$member_uuids = [];
 					foreach ($_POST['fifo_members'] as $row) {
-						if (is_uuid($row['fifo_member_uuid']) && $row['checked'] == 'true') {
-							$array['fifo'][$x]['checked'] = $row['checked'];
-							$array['fifo'][$x]['fifo_members'][]['fifo_member_uuid'] = $row['fifo_member_uuid'];
-							$x++;
+						if (is_uuid($row['fifo_member_uuid'] ?? '') && ($row['checked'] ?? '') == 'true') {
+							$member_uuids[] = "'" . $row['fifo_member_uuid'] . "'";
+						}
+					}
+
+					//verify the members belong to a queue of the current domain, the uuids come from the post array
+					if (!empty($member_uuids) && is_array($member_uuids) && @sizeof($member_uuids) != 0) {
+						$sql = "select fifo_member_uuid from v_fifo_members ";
+						$sql .= "where fifo_member_uuid in (" . implode(', ', $member_uuids) . ") ";
+						$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+						$rows = $database->select($sql, $parameters, 'all');
+						unset($sql, $parameters);
+						if (is_array($rows) && @sizeof($rows) != 0) {
+							foreach ($rows as $row) {
+								$array['fifo'][$x]['checked'] = 'true';
+								$array['fifo'][$x]['fifo_members'][]['fifo_member_uuid'] = $row['fifo_member_uuid'];
+								$x++;
+							}
 						}
 					}
 				}
@@ -172,13 +225,14 @@
 			if (!empty($dialplan_uuid) && !is_uuid($dialplan_uuid)) { throw new Exception("invalid uuid"); }
 
 			if (is_array($fifo_members)) {
-				$i = 0;
-				foreach ($fifo_members as $row) {
+				//sanitize each row in place using its own key, the keys come from the
+				//posted form and are not necessarily sequential, renumbering them here
+				//would leave the original unsanitized rows in the array
+				foreach ($fifo_members as $i => $row) {
 					$fifo_members[$i]['member_contact'] = preg_replace('#[^a-zA-Z0-9/@.\-\*]#', '', $row["member_contact"] ?? '');
 					$fifo_members[$i]['member_call_timeout'] = preg_replace('#[^0-9]#', '', $row["member_call_timeout"] ?? '20');
 					$fifo_members[$i]['member_wrap_up_time'] = preg_replace('#[^0-9]#', '', $row["member_wrap_up_time"] ?? '10');
 					$fifo_members[$i]['member_enabled'] = $row["member_enabled"];
-					$i++;
 				}
 			}
 
