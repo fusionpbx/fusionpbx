@@ -41,21 +41,33 @@
 		//update the domain session variables
 			$domain_uuid = $_GET["domain_uuid"];
 
-		//get the domain details
+		//get the domain details, limit them to the user's own domain unless access to all domains is granted
 			$sql = "select * from v_domains ";
+			if (!permission_exists('domain_all')) {
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$parameters['domain_uuid'] = $_SESSION['user']['domain_uuid'];
+			}
 			$sql .= "order by domain_name asc ";
-			$domains = $database->select($sql, null, 'all');
+			$domains = $database->select($sql, $parameters ?? [], 'all');
+			unset($sql, $parameters);
+
+		//validate the domain change against the domains array
+			$domain_found = false;
 			if (!empty($domains)) {
 				foreach($domains as $row) {
 					$_SESSION['domains'][$row['domain_uuid']] = $row;
+					if ($row['domain_uuid'] == $domain_uuid) {
+						$domain_found = true;
+					}
 				}
 			}
 			unset($sql, $domains);
 
 		//validate the domain change
-			if (empty($_SESSION['domains'][$domain_uuid])) {
+			if (!$domain_found) {
 				die("invalid domain");
 			}
+			unset($domain_found);
 
 		//update the domain session variables
 			$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
@@ -110,17 +122,17 @@
 	$text = $language->get();
 
 //get the http post data
-	if (!empty($_POST['domains'])) {
-		$action = $_POST['action'] ?? '';
-		$domains = $_POST['domains'] ?? '';
+	if (!empty($_POST['domains']) && is_array($_POST['domains'])) {
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
+		$domains = $_POST['domains'];
 	}
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
 
 // Build the query string
 	$url_params = [];
@@ -142,7 +154,7 @@
 	$query_string = http_build_query($url_params);
 
 //process the http post data by action
-	if (!empty($action) && !empty($domains)) {
+	if (!empty($action) && is_array($domains) && @sizeof($domains) != 0) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('domain_add')) {

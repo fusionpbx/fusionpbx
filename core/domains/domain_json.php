@@ -36,12 +36,12 @@
 
 //get posted data
 	if (!empty($_POST['search'])) {
-		$search = $_POST['search'] ?? '';
+		$search = is_string($_POST['search'] ?? null) ? $_POST['search'] : '';
 	}
 
 //add the search term
 	if (!empty($_GET["search"])) {
-		$search = lower_case($_GET["search"]);
+		$search = lower_case(is_string($_GET["search"] ?? null) ? $_GET["search"] : '');
 	}
 
 //validate the token
