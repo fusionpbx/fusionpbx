@@ -59,8 +59,8 @@
 	$dialplan_text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/dialplans');
 
 //get order and order by
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = is_string($_GET["order_by"] ?? null) ? $_GET["order_by"] : '';
+	$order = is_string($_GET["order"] ?? null) ? $_GET["order"] : '';
 
 //get feature codes from dialplans and call flows
 	$features = feature_codes::fetch_features($database, permission_exists('feature_codes_raw'));
