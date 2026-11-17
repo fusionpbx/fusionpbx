@@ -48,9 +48,13 @@
 	}
 
 //action add or update
-	if ((!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) || !empty($_REQUEST["theme_setting_uuid"])) {
+	if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 		$action = "update";
 		$theme_setting_uuid = $_REQUEST["id"];
+	}
+	elseif (!empty($_REQUEST["theme_setting_uuid"]) && is_uuid($_REQUEST["theme_setting_uuid"])) {
+		$action = "update";
+		$theme_setting_uuid = $_REQUEST["theme_setting_uuid"];
 	}
 	else {
 		$action = "add";
@@ -76,6 +80,29 @@
 				message::add($text['message-invalid_token'],'negative');
 				header('Location: theme_settings.php');
 				exit;
+			}
+
+		//check the permission for the action being taken, the add and edit permissions are checked
+		//together above so without this an add only user could change an existing setting and an
+		//edit only user could create a new one
+			if (($action == "add" && !permission_exists('theme_setting_add')) || ($action == "update" && !permission_exists('theme_setting_edit'))) {
+				echo "access denied";
+				exit;
+			}
+
+		//verify the setting being updated exists and belongs to the theme, both uuids come from the request
+			if ($action == "update") {
+				$sql = "select theme_uuid from v_theme_settings ";
+				$sql .= "where theme_setting_uuid = :theme_setting_uuid ";
+				$parameters['theme_setting_uuid'] = $theme_setting_uuid;
+				$row = $database->select($sql, $parameters, 'row');
+				if (empty($row) || (!empty($theme_uuid) && $theme_uuid != $row['theme_uuid'])) {
+					echo "access denied";
+					exit;
+				}
+				//keep the theme of the setting so the request cannot move it to another theme or detach it
+				$theme_uuid = $row['theme_uuid'];
+				unset($sql, $parameters, $row);
 			}
 
 		//process the http post data by submitted action
@@ -131,8 +158,9 @@
 				return;
 			}
 
-		//add the theme_setting_uuid
-			if (!is_uuid($_POST["theme_setting_uuid"])) {
+		//add the theme_setting_uuid, on add generate one so a submitted uuid cannot be used to
+		//replace a setting that was not verified above
+			if ($action == "add" || !is_uuid($_POST["theme_setting_uuid"] ?? '')) {
 				$theme_setting_uuid = uuid();
 			}
 
@@ -295,7 +323,7 @@
 				else {
 					unset($selected);
 				}
-				echo "		<option value='".$font."' ".$selected.">".$font."</option>\n";
+				echo "		<option value='".escape($font)."' ".$selected.">".escape($font)."</option>\n";
 			}
 			echo "		</optgroup>\n";
 			echo "		<option value='' disabled='disabled'></option>\n";
@@ -304,7 +332,7 @@
 			echo "	<input type='text' class='formfld' ".(($theme_setting_value == '' || $option_found) ? "style='display: none;'" : null)." id='txt_theme_setting_value' name='theme_setting_value' value=\"".escape($theme_setting_value)."\">\n";
 		}
 		else {
-			echo "	<input type='text' class='formfld' id='theme_setting_value' name='theme_setting_value' value=\"".$theme_setting_value."\">\n";
+			echo "	<input type='text' class='formfld' id='theme_setting_value' name='theme_setting_value' value=\"".escape($theme_setting_value)."\">\n";
 		}
 	}
 	elseif ($category == "theme" && $subcategory == "domain_visible" && $name == "text" ) {
@@ -404,7 +432,7 @@
 	}
 	else {
 		if (strlen($theme_setting_value) > 25) {
-			echo "	<textarea class='formfld' style='width: 185px; height: auto; max-height: 300px;' id='theme_setting_value' name='theme_setting_value'>".($theme_setting_value ?? '')."</textarea>\n";
+			echo "	<textarea class='formfld' style='width: 185px; height: auto; max-height: 300px;' id='theme_setting_value' name='theme_setting_value'>".escape_textarea($theme_setting_value)."</textarea>\n";
 
 			echo "	<script>\n";
 			echo "	document.addEventListener('DOMContentLoaded', () => {\n";
