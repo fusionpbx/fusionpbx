@@ -175,7 +175,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 
 //pre-populate the form
 	if (count($_GET)>0 && empty($_POST["persistformvar"])) {
-		$database_uuid = $_GET["id"];
+		$database_uuid = is_string($_GET["id"] ?? null) ? $_GET["id"] : '';
 		$sql = "select * from v_databases ";
 		$sql .= "where database_uuid = :database_uuid ";
 		$parameters['database_uuid'] = $database_uuid;
@@ -367,7 +367,7 @@ if (count($_POST)>0 && empty($_POST["persistformvar"])) {
 	echo "	".$text['label-password']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='database_password' maxlength='255' value=\"".escape($database_password)."\">\n";
+	echo "	<input class='formfld password' type='password' id='database_password' name='database_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"".escape($database_password)."\">\n";
 	echo "<br />\n";
 	echo $text['description-password']."\n";
 	echo "</td>\n";
