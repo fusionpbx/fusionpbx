@@ -65,16 +65,19 @@
 		//define greeting directory
 		$greeting_dir = $settings->get('switch', 'voicemail').'/default/'.$_SESSION['domains'][$_SESSION['domain_uuid']]['domain_name'].'/'.$voicemail_id;
 
-		//get voicemail greeting details from db
+		//get voicemail greeting details from db, restrict the results to the current voicemail box
 		$sql = "select greeting_filename, greeting_base64, greeting_id ";
 		$sql .= "from v_voicemail_greetings ";
 		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and voicemail_id = :voicemail_id ";
 		$sql .= "and voicemail_greeting_uuid = :voicemail_greeting_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['voicemail_id'] = $voicemail_id;
 		$parameters['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
 		$row = $database->select($sql, $parameters, 'row');
 		if (!empty($row) && is_array($row) && @sizeof($row) != 0) {
-			$greeting_filename = $row['greeting_filename'];
+			//the stored file name is used to build a file system path, remove any path components
+			$greeting_filename = basename((string)$row['greeting_filename']);
 			$greeting_id = $row['greeting_id'];
 			if (!empty($settings->get('voicemail', 'storage_type')) && $settings->get('voicemail', 'storage_type') == 'base64' && !empty($row['greeting_base64'])) {
 				$greeting_decoded = base64_decode($row['greeting_base64']);
@@ -84,10 +87,10 @@
 		unset($sql, $greeting_decoded);
 
 		//define full audio file path
-		$full_file_path = $greeting_dir.'/'.$greeting_filename;
+		$full_file_path = isset($greeting_filename) && $greeting_filename !== '' ? $greeting_dir.'/'.$greeting_filename : '';
 
 		//stream waveform file
-		if (file_exists($full_file_path)) {
+		if (!empty($full_file_path) && is_file($full_file_path)) {
 
 			//temporary waveform image filename
 			$waveform_id = preg_replace('#[^A-Za-z0-9]#', '', $_GET['id']);
