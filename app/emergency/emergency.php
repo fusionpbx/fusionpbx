@@ -44,14 +44,35 @@ if (!empty($action) && !empty($emergency_logs) && is_array($emergency_logs) && @
 	//prepare the array
 	if (!empty($emergency_logs)) {
 		foreach ($emergency_logs as $row) {
+			//validate the log uuid
+			if (!is_array($row) || !is_uuid($row['emergency_log_uuid'] ?? '')) {
+				continue;
+			}
 			$array['emergency_logs'][$x]['checked'] = $row['checked'];
 			$array['emergency_logs'][$x]['emergency_log_uuid'] = $row['emergency_log_uuid'];
 			$x++;
 		}
 	}
 
+	//verify the logs belong to the current domain unless allowed to access all domains
+	if (!empty($array['emergency_logs']) && !permission_exists('emergency_logs_view_all')) {
+		foreach ($array['emergency_logs'] as $row) {
+			$sql = "select emergency_log_uuid from v_emergency_logs ";
+			$sql .= "where emergency_log_uuid = :emergency_log_uuid ";
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['emergency_log_uuid'] = $row['emergency_log_uuid'];
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$log = $database->select($sql, $parameters, 'row');
+			if (empty($log)) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $log);
+		}
+	}
+
 	//send the array to the database class
-	if (!empty($action) && $action == 'delete') {
+	if (!empty($action) && $action == 'delete' && !empty($array['emergency_logs'])) {
 		$database->delete($array);
 	}
 
@@ -69,7 +90,7 @@ $search = '';
 $show = '';
 
 //add the search variable
-if (!empty($_GET["search"])) {
+if (!empty($_GET["search"]) && is_string($_GET["search"])) {
 	$search = strtolower($_GET["search"]);
 }
 
@@ -252,11 +273,11 @@ if (!empty($emergency_logs) && is_array($emergency_logs) && @sizeof($emergency_l
 		$domain_name = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
 		if ($permission['xml_cdr_status'] || $permission['xml_cdr_hangup_cause']) {
 			if (!empty($_GET['show']) && $_GET['show'] == 'all' && permission_exists('emergency_logs_view_all')) {
-				echo "	<td>" . (isset($row['status']) && $row['status'] !== '' ? "<a href='https://{$domain_name}/app/xml_cdr/xml_cdr_details.php?id=".urlencode($row['emergency_log_uuid'])."&show=all' target='_blank'>".escape($row['status'])."</a>" : '&nbsp;') . "</td>\n";
+				echo "	<td>" . (isset($row['status']) && $row['status'] !== '' ? "<a href='https://".escape($domain_name)."/app/xml_cdr/xml_cdr_details.php?id=".urlencode($row['emergency_log_uuid'])."&show=all' target='_blank'>".escape($row['status'])."</a>" : '&nbsp;') . "</td>\n";
 			}
 			else {
 				//echo "	<td>" . (isset($row['status']) && $row['status'] !== '' ? escape($row['status']) : '') . "</td>\n";
-				echo "	<td>" . (isset($row['status']) && $row['status'] !== '' ? "<a href='https://{$domain_name}/app/xml_cdr/xml_cdr_details.php?id=".urlencode($row['emergency_log_uuid'])."' target='_blank'>".escape($row['status'])."</a>" : '&nbsp;') . "</td>\n";
+				echo "	<td>" . (isset($row['status']) && $row['status'] !== '' ? "<a href='https://".escape($domain_name)."/app/xml_cdr/xml_cdr_details.php?id=".urlencode($row['emergency_log_uuid'])."' target='_blank'>".escape($row['status'])."</a>" : '&nbsp;') . "</td>\n";
 			}
 		}
 		echo "</tr>\n";
