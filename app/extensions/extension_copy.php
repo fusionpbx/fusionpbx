@@ -40,11 +40,16 @@
 	$text = $language->get();
 
 //set the http get/post variable(s) to a php variable
-	if (is_uuid($_REQUEST["id"]) && $_REQUEST["ext"] != '') {
+	if (is_uuid($_REQUEST["id"]) && is_string($_REQUEST["ext"] ?? null) && $_REQUEST["ext"] != '') {
 		$extension_uuid = $_REQUEST["id"];
 		$extension_new = $_REQUEST["ext"];
+		//remove invalid characters, the same way they are removed when the extension xml file is written
+		$extension_new = str_replace(" ", "_", $extension_new);
+		$extension_new = preg_replace("/[\*:\\/\<\>\|\'\"\?]/", "", $extension_new);
 		if (!is_numeric($extension_new)) {
-			$number_alias_new = $_REQUEST["alias"];
+			$number_alias_new = $_REQUEST["alias"] ?? null;
+			//the number alias is used as the voicemail id, allow digits only
+			$number_alias_new = preg_replace('#[^0-9]#', '', (string) $number_alias_new);
 		}
 		$page = $_REQUEST['page'];
 	}
@@ -74,6 +79,20 @@
 		$url_params['show'] = $show;
 	}
 	$query_string = http_build_query($url_params);
+
+//stop when the extension to copy is not provided
+	if (empty($extension_uuid) || empty($extension_new)) {
+		header("Location: extensions.php".($query_string ? '?'.$query_string : ''));
+		exit;
+	}
+
+//validate the token, this endpoint creates an extension and a voicemail box
+	$token = new token;
+	if (!$token->validate($_SERVER['PHP_SELF'])) {
+		message::add($text['message-invalid_token'], 'negative');
+		header('Location: extensions.php'.($query_string ? '?'.$query_string : ''));
+		exit;
+	}
 
 // skip the copy if the domain extension already exists
 	$extension = new extension;
@@ -228,7 +247,7 @@
 
 		//add voicemail via class
 			$ext = new extension;
-			$ext->domain_uuid = $domain_uuid;
+			$ext->domain_uuid = $_SESSION['domain_uuid'];
 			$ext->extension = $extension_new;
 			$ext->number_alias = $number_alias_new;
 			$ext->voicemail_password = $voicemail_password;

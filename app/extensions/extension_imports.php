@@ -44,6 +44,18 @@
 	$delimiter = $_POST["data_delimiter"] ?? null;
 	$enclosure = $_POST["data_enclosure"] ?? null;
 
+//validate the delimiter and enclosure, they are passed to str_getcsv
+	if (!empty($delimiter) && !in_array($delimiter, [',', '|', "\t"], true)) {
+		$delimiter = ',';
+	}
+	if (!empty($enclosure) && $enclosure !== '"') {
+		$enclosure = '"';
+	}
+
+//validate the row to start importing from
+	$from_row = is_numeric($from_row) ? intval($from_row) : 2;
+	$from_row = ($from_row >= 1 && $from_row <= 99) ? $from_row : 2;
+
 //save the data to the csv file
 	if (isset($_POST['data'])) {
 		$file = $settings->get('server', 'temp')."/extensions-".$_SESSION['domain_name'].".csv";
@@ -54,7 +66,7 @@
 //copy the csv file
 	//$_POST['submit'] == "Upload" &&
 	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('extension_import')) {
-		if ($_POST['type'] == 'csv') {
+		if ($_POST['type'] == 'csv' && strtolower(pathinfo($_FILES['ulfile']['name'], PATHINFO_EXTENSION)) == 'csv') {
 			$upload_name = basename($_FILES['ulfile']['name']);
 			move_uploaded_file($_FILES['ulfile']['tmp_name'], $settings->get('server', 'temp').'/'.$upload_name);
 			$save_msg = "Uploaded file to ".$settings->get('server', 'temp')."/". htmlentities($upload_name);
@@ -205,9 +217,9 @@
 			echo "<br /><br />\n";
 
 			echo "<input name='action' type='hidden' value='import'>\n";
-			echo "<input name='from_row' type='hidden' value='$from_row'>\n";
-			echo "<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
-			echo "<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
+			echo "<input name='from_row' type='hidden' value='".escape($from_row)."'>\n";
+			echo "<input name='data_delimiter' type='hidden' value='".escape($delimiter)."'>\n";
+			echo "<input name='data_enclosure' type='hidden' value='".escape($enclosure)."'>\n";
 			echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 			echo "</form>\n";
@@ -256,7 +268,25 @@
 			}
 
 		//user selected fields
-			$fields = $_POST['fields'];
+			$fields = is_array($_POST['fields'] ?? null) ? $_POST['fields'] : [];
+
+		//limit the fields to the extension schema, they are used as array keys and table names
+			$schema_fields = [];
+			if (!empty($schema) && is_array($schema)) {
+				foreach ($schema as $row) {
+					if (isset($row['table']) && !empty($row['fields'])) {
+						foreach ($row['fields'] as $field_name) {
+							$schema_fields[] = $row['table'].'.'.$field_name;
+						}
+					}
+				}
+			}
+			foreach ($fields as $key => $value) {
+				if (!is_string($value) || !in_array($value, $schema_fields, true)) {
+					unset($fields[$key]);
+				}
+			}
+			unset($schema_fields);
 
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];

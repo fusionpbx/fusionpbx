@@ -494,11 +494,16 @@ class extension {
 						$xml .= "    </variables>\n";
 						$xml .= "  </user>\n";
 
-						if (!is_readable($this->settings->get('switch', 'extensions') . "/" . $row['user_context'])) {
-							mkdir($this->settings->get('switch', 'extensions') . "/" . $row['user_context'], 0770, false);
+						//remove invalid characters from the directory names
+						$user_context_directory   = $row['user_context'];
+						$user_context_directory   = str_replace(" ", "_", $user_context_directory);
+						$user_context_directory   = preg_replace("/[\*:\\/\<\>\|\'\"\?]/", "", $user_context_directory);
+
+						if (!is_readable($this->settings->get('switch', 'extensions') . "/" . $user_context_directory)) {
+							mkdir($this->settings->get('switch', 'extensions') . "/" . $user_context_directory, 0770, false);
 						}
 						if (!empty($extension)) {
-							$fout = fopen($this->settings->get('switch', 'extensions') . "/" . $row['user_context'] . "/v_" . $extension . ".xml", "w");
+							$fout = fopen($this->settings->get('switch', 'extensions') . "/" . $user_context_directory . "/v_" . $extension . ".xml", "w");
 						}
 						$xml .= "</include>\n";
 						fwrite($fout, $xml);
