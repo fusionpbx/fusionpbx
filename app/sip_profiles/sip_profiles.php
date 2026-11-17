@@ -135,7 +135,7 @@
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
 	if (permission_exists('sofia_global_setting_view')) {
-		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>'code','collapse'=>'hide-xs','link'=>'/app/sofia_global_settings/sofia_global_settings.php']);
+		echo button::create(['type'=>'button','label'=>$text['button-settings'],'icon'=>'code','collapse'=>'hide-xs','link'=>PROJECT_PATH . '/app/sofia_global_settings/sofia_global_settings.php']);
 	}
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=''>";
