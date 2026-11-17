@@ -150,6 +150,8 @@
 		$conf .= "error.reporting = 'E_ALL ^ E_NOTICE ^ E_WARNING'\n";
 
 		// Write the config file
+		if (!file_exists($config_file)) { @touch($config_file); }
+		@chmod($config_file, 0640);
 		$file_handle = fopen($config_file,"w");
 		if (!$file_handle){ echo "Failed to write the config file\n"; exit; }
 		fwrite($file_handle, $conf);
@@ -170,6 +172,11 @@
 	else {
 		require_once "resources/check_auth.php";
 		if (!(permission_exists('upgrade_schema') || permission_exists('upgrade_source'))) {
+			echo "access denied";
+			exit;
+		}
+		// Reject requests initiated from another site, this page updates the database and defaults
+		if (!token::same_origin()) {
 			echo "access denied";
 			exit;
 		}
