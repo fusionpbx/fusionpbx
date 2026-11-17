@@ -40,10 +40,10 @@
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'asc' ? 'asc' : 'desc';
-	$search = $_GET['search'] ?? '';
-	$filter = $_GET['filter'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$filter = is_string($_GET['filter'] ?? null) ? $_GET['filter'] : '';
 
 // Build the query string
 	$param = [];
@@ -66,7 +66,7 @@
 
 //get the http post data
 	if (!empty($_POST['event_guard_logs']) && is_array($_POST['event_guard_logs'])) {
-		$action = $_POST['action'];
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
 		$event_guard_logs = $_POST['event_guard_logs'];
 	}
 

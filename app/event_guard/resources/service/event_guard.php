@@ -1,5 +1,11 @@
 <?php
 
+//only allow command line
+if (!defined('STDIN')) {
+	//only allow running this from command line
+	exit;
+}
+
 require_once dirname(__DIR__, 4) . '/resources/require.php';
 
 try {

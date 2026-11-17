@@ -36,10 +36,10 @@
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'asc' ? 'asc' : 'desc';
-	$search = $_GET['search'] ?? '';
-	$filter = $_GET['filter'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$filter = is_string($_GET['filter'] ?? null) ? $_GET['filter'] : '';
 
 // Build the query string
 	$param = [];
@@ -78,13 +78,13 @@
 	$user_agent = '';
 	$log_status = '';
 	if (!empty($_POST) && is_array($_POST)) {
-		$hostname = $_POST["hostname"] ?? '';
-		$log_date = $_POST["log_date"] ?? '';
-		$filter = $_POST["filter"] ?? '';
-		$ip_address = $_POST["ip_address"] ?? '';
-		$extension = $_POST["extension"] ?? '';
-		$user_agent = $_POST["user_agent"] ?? '';
-		$log_status = $_POST["log_status"] ?? '';
+		$hostname = is_string($_POST["hostname"] ?? null) ? $_POST["hostname"] : '';
+		$log_date = is_string($_POST["log_date"] ?? null) ? $_POST["log_date"] : '';
+		$filter = is_string($_POST["filter"] ?? null) ? $_POST["filter"] : '';
+		$ip_address = is_string($_POST["ip_address"] ?? null) ? $_POST["ip_address"] : '';
+		$extension = is_string($_POST["extension"] ?? null) ? $_POST["extension"] : '';
+		$user_agent = is_string($_POST["user_agent"] ?? null) ? $_POST["user_agent"] : '';
+		$log_status = is_string($_POST["log_status"] ?? null) ? $_POST["log_status"] : '';
 	}
 
 //process the user data and save it to the database
