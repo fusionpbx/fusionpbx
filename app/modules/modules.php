@@ -49,11 +49,11 @@
 	if (!empty($_POST['modules'])) {
 		$modules = $_POST['modules'];
 	}
-	if (!empty($_POST['action'])) {
+	if (!empty($_POST['action']) && is_string($_POST['action'])) {
 		$action = $_POST['action'];
 	}
-	if (!empty($_POST['search'])) {
-		$search = $_POST['search'] ?? '';
+	if (!empty($_POST['search']) && is_string($_POST['search'])) {
+		$search = $_POST['search'];
 	}
 
 //set from session variables
