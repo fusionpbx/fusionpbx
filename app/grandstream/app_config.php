@@ -359,7 +359,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Headset RX gain(dB). 1 - -6, 0 - 0, 2 - +6. Default is 0";
 		$y++;
-		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "a3ce83cb-609f-4189-a4cf-569ed36fb76d";
+		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "5375194a-0ca7-4a50-afdf-73f82281305a";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "grandstream_headset_tx_gain";
 		$apps[$x]['default_settings'][$y]['default_setting_name'] = "numeric";
