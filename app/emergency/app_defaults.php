@@ -15,9 +15,11 @@
 			$num_rows = $database->select($sql, null, 'column');
 			if ($num_rows > 0) {
 				//move the values to the new default setting
-				$sql = "update v_default_settings set default_setting_value = '".$row['default_setting_value']."' ";
+				$sql = "update v_default_settings ";
+				$sql .= "set default_setting_value = :default_setting_value ";
 				$sql .= "where default_setting_uuid = '995d09b6-c37b-4eda-a458-5740b955206f' ";
-				$database->execute($sql, null);
+				$parameters['default_setting_value'] = $row['default_setting_value'];
+				$database->execute($sql, $parameters);
 
 				//move the values to the new default setting
 				$sql = "update v_domain_settings set domain_setting_category = 'emergency', domain_setting_subcategory = 'email_address' ";
