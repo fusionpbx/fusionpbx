@@ -109,17 +109,36 @@
 				}
 			}
 
+		//reject a stream that was not found in the accessible records
+			if (empty($stream_path)) {
+				http_response_code(404);
+				exit;
+			}
+
 		//replace the sounds_dir variable in the path
 			$stream_path = str_replace('$${sounds_dir}', $settings->get('switch', 'sounds'), $stream_path);
 			$stream_path = str_replace('..', '', $stream_path);
 
 		//get the file and sanitize it
-			$stream_file = basename($_GET['file']);
-			$search = array('..', '/', ':');
+			$stream_file = basename(is_string($_GET['file'] ?? null) ? $_GET['file'] : '');
+			$search = array('..', '/', '\\', ':', "\0");
 			$stream_file = str_replace($search, '', $stream_file);
+			if (empty($stream_file)) {
+				http_response_code(404);
+				exit;
+			}
 
 		//join the path and file name
 			$stream_full_path = path_join($stream_path, $stream_file);
+
+		//make sure the resolved path stays inside the music on hold directory, also blocks symlinks
+			$stream_path = realpath($stream_path);
+			$stream_full_path = realpath($stream_full_path);
+			if ($stream_path === false || $stream_full_path === false || is_file($stream_full_path) === false
+				|| strpos($stream_full_path, $stream_path.'/') !== 0) {
+				http_response_code(404);
+				exit;
+			}
 
 		//download the file
 			if (file_exists($stream_full_path)) {
@@ -139,7 +158,7 @@
 						case "ogg" : header("Content-Type: audio/ogg"); break;
 					}
 				}
-				header('Content-Disposition: attachment; filename="'.$stream_file.'"');
+				header('Content-Disposition: attachment; filename="'.addcslashes($stream_file, "\"\\").'"');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 				if (!empty($_GET['t']) && $_GET['t'] == "bin") {

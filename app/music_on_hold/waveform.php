@@ -53,15 +53,41 @@
 		$stream_path = $database->select($sql, $parameters ?? null, 'column');
 		unset($sql, $parameters);
 
+		//reject a stream that was not found in the accessible records
+		if (empty($stream_path)) {
+			http_response_code(404);
+			exit;
+		}
+
 		//replace the sounds_dir variable in the path
 		$stream_path = str_replace('$${sounds_dir}', $settings->get('switch', 'sounds'), $stream_path);
-		$stream_path = str_replace('..', '', $stream_path);
 
-		//get the file and sanitize it
-		$stream_file = str_replace(['..','/',':'], '', basename($_GET['data']));
+		//set the path for the directory and make sure it exists
+		$path = realpath($stream_path);
+		if ($path === false) {
+			http_response_code(404);
+			exit;
+		}
 
-		//join the path and file name
-		$stream_full_path = path_join($stream_path, $stream_file);
+		//only allow a bare file name, reject traversal, separators and absolute paths
+		$stream_file = basename(is_string($_GET['data'] ?? null) ? $_GET['data'] : '');
+		$stream_file = str_replace(['..', '/', '\\', ':', "\0"], '', $stream_file);
+		if ($stream_file == '') {
+			http_response_code(404);
+			exit;
+		}
+
+		//build full path
+		$stream_full_path = $path.'/'.$stream_file;
+
+		//make sure the resolved path stays inside the music on hold directory, also blocks symlinks
+		$stream_full_path = realpath($stream_full_path);
+		if ($stream_full_path === false
+			|| is_file($stream_full_path) === false
+			|| strpos($stream_full_path, $path.'/') !== 0) {
+			http_response_code(404);
+			exit;
+		}
 
 		//stream waveform file
 		if (file_exists($stream_full_path)) {

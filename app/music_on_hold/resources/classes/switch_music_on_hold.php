@@ -146,7 +146,7 @@ class switch_music_on_hold {
 						$name = $row['domain_name'] . '/';
 					}
 					$name   .= $row['music_on_hold_name'];
-					$select .= "		<option value='local_stream://" . $name . "' " . (($selected == "local_stream://" . $name) ? 'selected="selected"' : null) . ">" . $row['music_on_hold_name'] . "</option>\n";
+					$select .= "		<option value='local_stream://" . escape($name) . "' " . (($selected == "local_stream://" . $name) ? 'selected="selected"' : null) . ">" . escape($row['music_on_hold_name']) . "</option>\n";
 				}
 				$previous_name = $row['music_on_hold_name'];
 			}
@@ -159,7 +159,7 @@ class switch_music_on_hold {
 			if (is_array($recordings) && sizeof($recordings) > 0) {
 				$select .= "	<optgroup label='" . $text['label-recordings'] . "'>";
 				foreach ($recordings as $recording_value => $recording_name) {
-					$select .= "		<option value='" . $recording_value . "' " . (($selected == $recording_value) ? 'selected="selected"' : null) . ">" . $recording_name . "</option>\n";
+					$select .= "		<option value='" . escape($recording_value) . "' " . (($selected == $recording_value) ? 'selected="selected"' : null) . ">" . escape($recording_name) . "</option>\n";
 				}
 				$select .= "	</optgroup>\n";
 			}
@@ -175,7 +175,7 @@ class switch_music_on_hold {
 			if (is_array($streams) && @sizeof($streams) != 0) {
 				$select .= "	<optgroup label='" . $text['label-streams'] . "'>";
 				foreach ($streams as $row) {
-					$select .= "		<option value='" . $row['stream_location'] . "' " . (($selected == $row['stream_location']) ? 'selected="selected"' : null) . ">" . $row['stream_name'] . "</option>\n";
+					$select .= "		<option value='" . escape($row['stream_location']) . "' " . (($selected == $row['stream_location']) ? 'selected="selected"' : null) . ">" . escape($row['stream_name']) . "</option>\n";
 				}
 				$select .= "	</optgroup>\n";
 			}
@@ -418,13 +418,31 @@ class switch_music_on_hold {
 					foreach ($moh as $music_on_hold_uuid => $row) {
 
 						//prepare path
-						$stream_path = $streams[$music_on_hold_uuid]['music_on_hold_path'];
+						$stream_path = $streams[$music_on_hold_uuid]['music_on_hold_path'] ?? null;
+
+						//reject a record that was not found in the accessible records
+						if (empty($stream_path)) {
+							continue;
+						}
 						$stream_path = str_replace('$${sounds_dir}', $this->settings->get('switch', 'sounds'), $stream_path);
+
+						//set the resolved directory, used to keep deletions inside the music on hold path
+						$stream_dir = realpath($stream_path);
 
 						//delete checked files
 						foreach ($row as $key => $stream_file) {
 							if (is_numeric($key)) {
-								$stream_file_path = str_replace('../', '', path_join($stream_path, $stream_file));
+								//only allow a bare file name, reject traversal, separators and absolute paths
+								$stream_file = basename(str_replace('\\', '/', (string) $stream_file));
+								$stream_file = str_replace(['..', '/', '\\', ':', "\0"], '', $stream_file);
+
+								//make sure the resolved path stays inside the music on hold directory, also blocks symlinks
+								$stream_file_path = realpath(path_join($stream_dir, $stream_file));
+								if ($stream_dir === false || empty($stream_file) || $stream_file_path === false
+									|| strpos($stream_file_path, $stream_dir.'/') !== 0) {
+									continue;
+								}
+
 								if (@unlink($stream_file_path)) {
 									$files_deleted++;
 								}
