@@ -51,11 +51,19 @@
 	}
 
 //get the http value and set as a php variable
-	if (!empty($_REQUEST["menu_uuid"])) {
-		$menu_uuid = $_REQUEST["menu_uuid"];
+	if (!empty($_REQUEST["menu_uuid"]) && is_string($_REQUEST["menu_uuid"])) {
+		//only accept a uuid, it is used to delete and rebuild the menu
+		$menu_uuid = is_uuid($_REQUEST["menu_uuid"]) ? $_REQUEST["menu_uuid"] : '';
 	}
-	if (!empty($_REQUEST["menu_language"])) {
-		$menu_language = $_REQUEST["menu_language"];
+	if (!empty($_REQUEST["menu_language"]) && is_string($_REQUEST["menu_language"])) {
+		//only accept a language code, it is used to store the menu titles
+		$menu_language = preg_match('/^[a-zA-Z0-9\-]{2,10}$/', $_REQUEST["menu_language"]) ? $_REQUEST["menu_language"] : '';
+	}
+
+//stop a tampered request from rebuilding a menu that does not exist
+	if (!defined('STDIN') && empty($included) && !is_uuid($menu_uuid ?? '')) {
+		echo "access denied";
+		return;
 	}
 
 //create the menu object

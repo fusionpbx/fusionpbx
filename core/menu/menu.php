@@ -39,17 +39,17 @@
 	$text = $language->get();
 
 //set additional variables
-	$search = $_GET["search"] ?? '';
+	$search = is_string($_GET["search"] ?? null) ? $_GET["search"] : '';
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 	$button_icon_add = $settings->get('theme', 'button_icon_add') ?? '';
 
 //get the http post data
-	if (!empty($_POST['menus'])) {
-		$action = $_POST['action'] ?? '';
-		$search = $_POST['search'] ?? '';
-		$menus = $_POST['menus'] ?? '';
+	if (!empty($_POST['menus']) && is_array($_POST['menus'])) {
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
+		$search = is_string($_POST['search'] ?? null) ? $_POST['search'] : '';
+		$menus = $_POST['menus'];
 	}
 
 //process the http post data by action
@@ -68,11 +68,11 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = is_string($_GET["order_by"] ?? null) ? $_GET["order_by"] : '';
+	$order = is_string($_GET["order"] ?? null) ? $_GET["order"] : '';
 
 //add the search string
-	if (!empty($_GET["search"])) {
+	if (!empty($_GET["search"]) && is_string($_GET["search"])) {
 		$search =  strtolower($_GET["search"]);
 		$sql_search = " (";
 		$sql_search .= "	lower(menu_name) like :search ";

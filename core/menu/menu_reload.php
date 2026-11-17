@@ -47,7 +47,10 @@
 	}
 
 //get the http value and set as a php variable
-	$menu_uuid = $_REQUEST["menu_uuid"];
+	$menu_uuid = is_string($_REQUEST["menu_uuid"] ?? null) ? $_REQUEST["menu_uuid"] : '';
+	if (!empty($menu_uuid) && !is_uuid($menu_uuid)) {
+		$menu_uuid = '';
+	}
 
 //unset the sesssion menu array
 	unset($_SESSION['menu']['array']);
@@ -60,7 +63,7 @@
 
 //redirect the user
 	//message::add($text['message-reload']);
-	header("Location: ".PROJECT_PATH."/core/menu/menu_edit.php?id=".urlencode($menu_uuid));
+	header("Location: ".PROJECT_PATH."/core/menu/menu_edit.php".(!empty($menu_uuid) ? "?id=".urlencode($menu_uuid) : ''));
 	return;
 
 ?>

@@ -49,10 +49,10 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST) && count($_POST) > 0) {
-		$menu_uuid = $_POST["menu_uuid"] ?? null;
-		$menu_name = $_POST["menu_name"];
-		$menu_language = $_POST["menu_language"];
-		$menu_description = $_POST["menu_description"];
+		$menu_uuid = is_string($_POST["menu_uuid"] ?? null) ? $_POST["menu_uuid"] : null;
+		$menu_name = is_string($_POST["menu_name"] ?? null) ? $_POST["menu_name"] : '';
+		$menu_language = is_string($_POST["menu_language"] ?? null) ? $_POST["menu_language"] : '';
+		$menu_description = is_string($_POST["menu_description"] ?? null) ? $_POST["menu_description"] : '';
 	}
 
 //process the http post

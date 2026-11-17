@@ -35,11 +35,11 @@
 	}
 
 //get the http post data
-	if (!empty($_POST['menu_items'])) {
-		$action = $_POST['action'];
-		$menu_uuid = $_POST['menu_uuid'];
+	if (!empty($_POST['menu_items']) && is_array($_POST['menu_items'])) {
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
+		$menu_uuid = is_string($_POST['menu_uuid'] ?? null) ? $_POST['menu_uuid'] : '';
 		$menu_items = $_POST['menu_items'];
-		$group_uuid = $_POST['group_uuid'];
+		$group_uuid = is_string($_POST['group_uuid'] ?? null) ? $_POST['group_uuid'] : '';
 	}
 
 //process the http post data by action
@@ -58,13 +58,13 @@
 				}
 				break;
 			case 'group_items_add':
-				if (permission_exists('menu_item_edit')) {
+				if (permission_exists('menu_item_edit') && is_uuid($group_uuid)) {
 					$obj = new menu;
 					$obj->assign_items($menu_items, $menu_uuid, $group_uuid);
 				}
 				break;
 			case 'group_items_delete':
-				if (permission_exists('menu_item_delete')) {
+				if (permission_exists('menu_item_delete') && is_uuid($group_uuid)) {
 					$obj = new menu;
 					$obj->unassign_items($menu_items, $menu_uuid, $group_uuid);
 				}
@@ -76,8 +76,8 @@
 	}
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = is_string($_GET["order_by"] ?? null) ? $_GET["order_by"] : '';
+	$order = is_string($_GET["order"] ?? null) ? $_GET["order"] : '';
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
@@ -120,7 +120,8 @@
 				$menu_item_parent_uuid = $row2['menu_item_parent_uuid'];
 				$menu_item_order = $row2['menu_item_order'];
 				$menu_item_title = $row2['menu_item_title'];
-				$menu_item_link = $row2['menu_item_link'];
+				//ignore script based link schemes when displaying the link
+				$menu_item_link = preg_match('#^(javascript|vbscript|data|file):#i', (string) $row2['menu_item_link']) ? '' : $row2['menu_item_link'];
 				$menu_item_icon = $row2['menu_item_icon'];
 				$menu_item_icon_color = $row2['menu_item_icon_color'];
 
@@ -164,6 +165,9 @@
 						break;
 					case "email":
 						$menu_item_link = "<a href='mailto:".escape($menu_item_link)."'>".escape($menu_item_link)."</a>";
+						break;
+					default:
+						$menu_item_link = escape($menu_item_link);
 						break;
 				}
 
@@ -249,7 +253,9 @@
 
 	//get the group list
 	$sql = "select group_uuid, group_name from v_groups ";
-	$groups = $database->select($sql, null, 'all');
+	$sql .= "where (domain_uuid is null or domain_uuid = :domain_uuid) ";
+	$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+	$groups = $database->select($sql, $parameters, 'all');
 	unset($sql, $parameters);
 
 //create token
@@ -329,7 +335,8 @@
 				$menu_item_uuid = $row['menu_item_uuid'];
 				$menu_item_category = $row['menu_item_category'];
 				$menu_item_title = $row['menu_item_title'];
-				$menu_item_link = $row['menu_item_link'];
+				//ignore script based link schemes when displaying the link
+				$menu_item_link = preg_match('#^(javascript|vbscript|data|file):#i', (string) $row['menu_item_link']) ? '' : $row['menu_item_link'];
 				$menu_item_icon = $row['menu_item_icon'];
 				$menu_item_icon_color = $row['menu_item_icon_color'];
 				//$menu_item_protected = $row['menu_item_protected'];
@@ -373,6 +380,9 @@
 						break;
 					case "email":
 						$menu_item_link = "<a href='mailto:".escape($menu_item_link)."'>".escape($menu_item_link)."</a>";
+						break;
+					default:
+						$menu_item_link = escape($menu_item_link);
 						break;
 				}
 
