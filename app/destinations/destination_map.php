@@ -125,15 +125,15 @@ if (!empty($destination_array)) {
 				}
 
 				//set the row URL
-				$list_row_url = '/app/'.$key.'/'.$app_name_edit.'?id='.$row['uuid'];
+				$list_row_url = '/app/'.urlencode($key).'/'.$app_name_edit.'?id='.urlencode($row['uuid']);
 
 				//show the row
-				echo "	<tr class='list-row' href='".$list_row_url."'>\n";
+				echo "	<tr class='list-row' href='".escape($list_row_url)."'>\n";
 				echo "		<td class='overflow no-wrap'>\n";
-				echo "			".$row['label']."\n";
+				echo "			".escape($row['label'])."\n";
 				echo "		</td>\n";
 				echo "		<td class='overflow no-wrap'>\n";
-				echo "			".$row['extension']."\n";
+				echo "			".escape($row['extension'])."\n";
 				echo "		</td>\n";
 				// echo "		<td class='overflow no-wrap'>\n";
 				// echo "			".$row['description']."\n";

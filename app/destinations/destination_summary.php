@@ -52,12 +52,37 @@
 		$quick_select = 3; //set default
 	}
 
+//validate the quick select, it selects a pre-defined date range
+	if (!is_numeric($quick_select) || $quick_select < 1 || $quick_select > 8) {
+		$quick_select = '';
+	}
+
+//validate the date time inputs, they are used to build the date range
+	if (!empty($start_stamp_begin) && !is_string($start_stamp_begin)) {
+		$start_stamp_begin = '';
+	}
+	if (!empty($start_stamp_end) && !is_string($start_stamp_end)) {
+		$start_stamp_end = '';
+	}
+
 //convert time format to 24 hour
 	if (!empty($start_stamp_begin)) {
-		$start_stamp_begin_formatted = ($settings->get('domain', 'time_format') == '24h' ? $start_stamp_begin : DateTime::createFromFormat('Y-m-d h:i a', $start_stamp_begin)->format('Y-m-d H:i'));
+		if ($settings->get('domain', 'time_format') == '24h') {
+			$start_stamp_begin_formatted = preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $start_stamp_begin) === 1 ? $start_stamp_begin : '';
+		}
+		else {
+			$date_time = DateTime::createFromFormat('Y-m-d h:i a', $start_stamp_begin);
+			$start_stamp_begin_formatted = ($date_time !== false) ? $date_time->format('Y-m-d H:i') : '';
+		}
 	}
 	if (!empty($start_stamp_end)) {
-		$start_stamp_end_formatted = ($settings->get('domain', 'time_format') == '24h' ? $start_stamp_end : DateTime::createFromFormat('Y-m-d h:i a', $start_stamp_end)->format('Y-m-d H:i'));
+		if ($settings->get('domain', 'time_format') == '24h') {
+			$start_stamp_end_formatted = preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $start_stamp_end) === 1 ? $start_stamp_end : '';
+		}
+		else {
+			$date_time = DateTime::createFromFormat('Y-m-d h:i a', $start_stamp_end);
+			$start_stamp_end_formatted = ($date_time !== false) ? $date_time->format('Y-m-d H:i') : '';
+		}
 	}
 
 //get the summary
@@ -83,7 +108,7 @@
 		//show the column names on the first line
 			$z = 0;
 			if (!empty($summary) && is_array($summary)) {
-				foreach ($summary[1] as $key => $val) {
+				foreach ($summary[0] as $key => $val) {
 					if ($z == 0) {
 						echo '"'.$key.'"';
 					}
