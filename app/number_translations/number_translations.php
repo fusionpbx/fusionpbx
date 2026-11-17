@@ -40,15 +40,15 @@
 	$text = $language->get();
 
 //set additional variables
-	$search = $_GET["search"] ?? '';
+	$search = is_string($_GET["search"] ?? null) ? $_GET["search"] : '';
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get the http post data
-	if (!empty($_POST['number_translations'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'] ?? '';
+	if (!empty($_POST['number_translations']) && is_array($_POST['number_translations'])) {
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
+		$search = is_string($_POST['search'] ?? null) ? $_POST['search'] : '';
 		$number_translations = $_POST['number_translations'];
 	}
 
@@ -81,8 +81,8 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = is_string($_GET["order_by"] ?? null) ? $_GET["order_by"] : '';
+	$order = is_string($_GET["order"] ?? null) ? $_GET["order"] : '';
 
 //add the search
 	if (!empty($search)) {
@@ -104,7 +104,7 @@
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = $search ? "&search=".$search : null;
-	$page = isset($_GET['page']) ? $_GET['page'] : 0;
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
