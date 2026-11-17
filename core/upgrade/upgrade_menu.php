@@ -434,13 +434,16 @@ function do_upgrade_services($text, settings $settings) {
     } else {
 		$search_file_name = 'debian';
     }
-	
+
 	$core_files = glob(dirname(__DIR__, 2) . "/core/*/resources/service/" . $search_file_name . ".service");
     $app_files = glob(dirname(__DIR__, 2) . "/app/*/resources/service/" . $search_file_name . ".service");
 	$service_files = array_merge($core_files, $app_files);
 	foreach($service_files as $file) {
 		$service_name = get_service_name($file);
+		$service_name = preg_replace('/[^a-zA-Z0-9_-]/', '', $service_name);
+
 		echo " ".$service_name."\n";
+
 		system("cp " . escapeshellarg($file) . " /etc/systemd/system/" . escapeshellarg($service_name) . ".service");
 		system("systemctl daemon-reload");
 		system("systemctl enable --now " . escapeshellarg($service_name));

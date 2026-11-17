@@ -183,9 +183,11 @@
 				$autoload->reload_classes();
 				$autoload->update_cache();
 			}
-			$sel_menu = explode('|', $_POST["sel_menu"] ?? '');
-			$menu_uuid = $sel_menu[0];
-			$menu_language = $sel_menu[1];
+			$sel_menu = is_string($_POST["sel_menu"] ?? null) ? explode('|', $_POST["sel_menu"]) : [];
+			//only accept a uuid, it is used to delete and rebuild the menu
+			$menu_uuid = is_uuid($sel_menu[0] ?? '') ? $sel_menu[0] : '';
+			//only accept a language code, it is used to store the menu titles
+			$menu_language = preg_match('/^[a-zA-Z0-9\-]{2,10}$/', $sel_menu[1] ?? '') ? $sel_menu[1] : '';
 			$included = true;
 			require_once("core/menu/menu_restore_default.php");
 			unset($sel_menu);
@@ -224,12 +226,18 @@
 	}
 
 //process the http get (source preview)
-	if (!empty($_GET['preview'])) {
+	if (!empty($_GET['preview']) && is_string($_GET['preview'])) {
 		//check the permission
 		if (!permission_exists('upgrade_source')) {
 			echo "access denied";
 			exit;
 		}
+		//reject requests initiated from another site, this request runs git commands
+		if (!token::same_origin()) {
+			echo "access denied";
+			exit;
+		}
+		$source_code = [];
 		if (!empty($updateable_repos)) {
 			foreach ($updateable_repos as $app_path => $app) {
 				$repo_info = git_repo_info($app_path);
@@ -362,7 +370,7 @@
 		}
 		if ($branch_return_value == 0 && $commit_return_value == 0) {
 			echo "	<a href='https://github.com/fusionpbx/fusionpbx/compare/".escape($git_current_commit)."...".escape($git_current_branch)."' target='_blank' title='".escape($git_current_commit)."' onclick=\"event.stopPropagation();\"><i>".escape($git_current_branch)."</i></a>";
-			echo "&nbsp;&nbsp;<button type='button' class='btn btn-link btn-xs' onclick=\"event.stopPropagation(); source_preview('core','".$settings->get('theme', 'title', 'FusionPBX')."');\">".$text['button-preview']."</button>\n";
+			echo "&nbsp;&nbsp;<button type='button' class='btn btn-link btn-xs' onclick=\"event.stopPropagation(); source_preview('core',".htmlspecialchars(json_encode((string) $settings->get('theme', 'title', 'FusionPBX'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8').");\">".$text['button-preview']."</button>\n";
 		}
 		echo "	</td>\n";
 		echo "</tr>\n";
@@ -376,7 +384,7 @@
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "<tr onclick=\"if (document.getElementById('do_".$app['app']."')) { document.getElementById('do_".$app['app']."').checked = !document.getElementById('do_".$app['app']."').checked; if (document.getElementById('do_".$app['app']."').checked == false) { document.getElementById('view_source_code_options').checked = false; } }\">\n";
 				echo "	<td width='30%' class='vncell' style='vertical-align: middle;'>\n";
-				echo "		".$app['name']."\n";
+				echo "		".escape($app['name'])."\n";
 				echo "	</td>\n";
 				echo "	<td width='70%' class='vtable' style='height: 50px; cursor: ".($pull_method == 'http' ? "pointer;'" : "help;' title=\"".$text['message-upgrade_manually'].": ".escape($repo_info['url'])."\"").">\n";
 				echo "		<div style='display: flex; align-items: center; margin-bottom: 3px;'>\n";
@@ -386,10 +394,10 @@
 				else {
 					echo "		<i class='fas fa-ban mr-3' style='opacity: 0.3; margin: 0 1px;'></i>\n";
 				}
-				echo "			<span style='margin-left: 6px;'>".$app['description']."</span><br />\n";
+				echo "			<span style='margin-left: 6px;'>".escape($app['description'])."</span><br />\n";
 				echo "		</div>\n";
-				echo "		<span style='font-weight: 600;'>".$app['version']."</span><i><a href='".escape(str_replace(['git@','.com:'],['https://','.com/'], $repo_info['url']))."/compare/".escape($repo_info['commit'])."...".escape($repo_info['branch'])." 'target='_blank' title='".escape($repo_info['commit'])."'><span style='margin-left: 6px;'>".escape($repo_info['branch'])."</span></i></a>\n";
-				echo "		<span style='margin-left: 6px;'><button type='button' class='btn btn-link btn-xs' onclick=\"event.stopPropagation(); source_preview('".$app['app']."','".$app['name']."');\">".$text['button-preview']."</button></span>\n";
+				echo "		<span style='font-weight: 600;'>".escape($app['version'])."</span><i><a href='".escape(str_replace(['git@','.com:'],['https://','.com/'], $repo_info['url']))."/compare/".escape($repo_info['commit'])."...".escape($repo_info['branch'])." 'target='_blank' title='".escape($repo_info['commit'])."'><span style='margin-left: 6px;'>".escape($repo_info['branch'])."</span></i></a>\n";
+				echo "		<span style='margin-left: 6px;'><button type='button' class='btn btn-link btn-xs' onclick=\"event.stopPropagation(); source_preview(".htmlspecialchars(json_encode((string) $app['app'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8').",".htmlspecialchars(json_encode((string) $app['name'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8').");\">".$text['button-preview']."</button></span>\n";
 				echo "	</td>\n";
 				echo "</tr>\n";
 				echo "</table>\n";
@@ -452,10 +460,10 @@
 		if (is_array($result) && sizeof($result) != 0) {
 			foreach ($result as $row) {
 				if ($row["menu_name"] == 'default') {
-					echo "	<option selected value='".$row["menu_uuid"]."|".$row["menu_language"]."'>".$row["menu_name"]."</option>";
+					echo "	<option selected value='".escape($row["menu_uuid"])."|".escape($row["menu_language"])."'>".escape($row["menu_name"])."</option>";
 				}
 				else {
-					echo "	<option value='".$row["menu_uuid"]."|".$row["menu_language"]."'>".$row["menu_name"]."</option>";
+					echo "	<option value='".escape($row["menu_uuid"])."|".escape($row["menu_language"])."'>".escape($row["menu_name"])."</option>";
 				}
 			}
 		}
@@ -541,7 +549,7 @@
 	echo "<script>\n";
 	echo "function source_preview(source, title) {\n";
 	echo "	$.ajax({\n";
-	echo "		url: '".$_SERVER['PHP_SELF']."?preview=' + source + '&title=' + title,\n";
+	echo "		url: ".json_encode((string) ($_SERVER['PHP_SELF'] ?? ''), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT)." + '?preview=' + source + '&title=' + title,\n";
 	echo "		type: 'get',\n";
 	echo "		processData: false,\n";
 	echo "		contentType: false,\n";

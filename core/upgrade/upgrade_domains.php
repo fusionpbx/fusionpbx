@@ -24,14 +24,14 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//check the permission
+// Check the permission
 	if(defined('STDIN')) {
 		//includes files
 		require_once dirname(__DIR__, 2) . "/resources/require.php";
 		$display_type = 'text'; //html, text
 	}
 	else if (!$included) {
-		//includes files
+		// Includes files
 		require_once dirname(__DIR__, 2) . "/resources/require.php";
 		require_once "resources/check_auth.php";
 		if (permission_exists('upgrade_apps') || if_group("superadmin")) {
@@ -41,10 +41,15 @@
 			echo "access denied";
 			exit;
 		}
+		// Reject requests initiated from another site, this page updates the domain defaults
+		if (!token::same_origin()) {
+			echo "access denied";
+			exit;
+		}
 		$display_type = 'html'; //html, text
 	}
 
-//run all app_defaults.php files
+// Run all app_defaults.php files
 	$domain = new domains;
 	$domain->upgrade();
 

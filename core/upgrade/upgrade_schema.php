@@ -47,6 +47,11 @@
 			echo "access denied";
 			exit;
 		}
+		//reject requests initiated from another site, this page updates the database schema
+		if (!token::same_origin()) {
+			echo "access denied";
+			exit;
+		}
 		require_once "resources/header.php";
 
 		//set the title and format
