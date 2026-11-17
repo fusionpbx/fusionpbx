@@ -129,11 +129,36 @@ if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 	$action = "add";
 }
 
+//verify the extension belongs to the current domain unless allowed to select a domain or access all domains
+if (!permission_exists('extension_domain') && !permission_exists('extension_all')) {
+	$checked_uuids = [];
+	if (is_uuid($_REQUEST["id"] ?? '')) {
+		$checked_uuids[] = $_REQUEST["id"];
+	}
+	if (is_uuid($_POST["extension_uuid"] ?? '')) {
+		$checked_uuids[] = $_POST["extension_uuid"];
+	}
+	foreach ($checked_uuids as $checked_uuid) {
+		$sql = "select extension_uuid from v_extensions ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and extension_uuid = :extension_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['extension_uuid'] = $checked_uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $row);
+	}
+	unset($checked_uuids);
+}
+
 // Set variables from http GET parameters
 $page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 $order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
 $order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
-$search = $_GET['search'] ?? '';
+$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
 $show = $_GET['show'] ?? '';
 
 // Build the query string
@@ -177,6 +202,8 @@ if (!empty($_POST)) {
 	//get the values from the HTTP POST and save them as PHP variables
 	if ($action == 'add' || permission_exists("extension_extension")) {
 		$extension = str_replace(' ', '-', $_POST["extension"]);
+		//remove characters that are invalid in a file or directory name
+		$extension = preg_replace('#[*:\\/<>|"\'?]#', '', $extension);
 	} else { //lookup extension based on submitted uuid
 		$sql = "select extension from v_extensions where extension_uuid = :extension_uuid";
 		$parameters['extension_uuid'] = $extension_uuid;
@@ -184,6 +211,10 @@ if (!empty($_POST)) {
 		unset($sql, $parameters);
 	}
 	$number_alias = $_POST["number_alias"] ?? null;
+	//the number alias is used as the voicemail id and directory name, allow digits only
+	if (!empty($number_alias)) {
+		$number_alias = preg_replace('#[^0-9]#', '', (string) $number_alias);
+	}
 	$password = $_POST["password"] ?? null;
 
 	//server verification on account code
@@ -213,7 +244,15 @@ if (!empty($_POST)) {
 	$voicemail_file = $_POST["voicemail_file"];
 	$voicemail_local_after_email = $_POST["voicemail_local_after_email"];
 	$user_context = $_POST["user_context"];
+	//the context becomes a directory name when the extension xml is written, remove path separators
+	$user_context = preg_replace('#[/\\\\]#', '', $user_context);
 	$range = $_POST["range"] ?? null;
+	//the range is a loop count, require a number within the values offered by the form
+	if (isset($range) && (!is_numeric($range) || $range < 1 || $range > 5000)) {
+		unset($range);
+	} elseif (isset($range)) {
+		$range = intval($range);
+	}
 	$missed_call_app = $_POST["missed_call_app"];
 	$missed_call_data = $_POST["missed_call_data"];
 	$toll_allow = $_POST["toll_allow"];
@@ -346,6 +385,14 @@ if (!empty($_POST)) {
 
 //delete the user from the v_extension_users
 if (!empty($_REQUEST["delete_type"]) && $_REQUEST["delete_type"] == "user" && is_uuid($_REQUEST["delete_uuid"]) && permission_exists("extension_delete")) {
+	//validate the token
+	$token = new token;
+	if (!$token->validate($_SERVER['PHP_SELF'])) {
+		message::add($text['message-invalid_token'], 'negative');
+		header('Location: extensions.php'.($query_string ? '?'.$query_string : ''));
+		exit;
+	}
+
 	//set the variables
 	$extension_uuid = $_REQUEST["id"];
 	$user_uuid = $_REQUEST["delete_uuid"];
@@ -373,8 +420,29 @@ if (!empty($_REQUEST["delete_type"]) && $_REQUEST["delete_type"] == "user" && is
 //delete the line from the v_device_lines
 if (is_dir(dirname(__DIR__, 2) . '/app/devices')) {
 	if (!empty($_REQUEST["delete_type"]) && $_REQUEST["delete_type"] == "device_line" && is_uuid($_REQUEST["delete_uuid"]) && permission_exists("extension_delete")) {
+		//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'], 'negative');
+			header('Location: extensions.php'.($query_string ? '?'.$query_string : ''));
+			exit;
+		}
+
 		//set the variables
 		$device_line_uuid = $_REQUEST["delete_uuid"];
+
+		//verify the device line belongs to the current domain
+		$sql = "select device_line_uuid from v_device_lines ";
+		$sql .= "where domain_uuid = :domain_uuid ";
+		$sql .= "and device_line_uuid = :device_line_uuid ";
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'] ?? ($domain_uuid ?? null);
+		$parameters['device_line_uuid'] = $device_line_uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $row);
 
 		//delete device_line
 		$array['device_lines'][0]['device_line_uuid'] = $device_line_uuid;
@@ -1249,6 +1317,9 @@ if (!isset($voicemail_recording_options)) {
 $object = new token;
 $token = $object->create($_SERVER['PHP_SELF']);
 
+//create a token for the state changing copy link (it validates against its own path)
+$token_copy = $object->create(dirname($_SERVER['PHP_SELF']) . '/extension_copy.php');
+
 //set the back button
 $_SESSION['call_forward_back'] = $_SERVER['PHP_SELF'] . (!empty($extension_uuid) ? '?id=' . $extension_uuid : null);
 
@@ -1282,13 +1353,13 @@ echo "function copy_extension() {\n";
 echo "	var new_ext = prompt('" . $text['message-extension'] . "');\n";
 echo "	if (new_ext != null) {\n";
 echo "		if (!isNaN(new_ext)) {\n";
-echo "			document.location.href='extension_copy.php?id=" . escape($extension_uuid ?? '') . "&ext=' + new_ext + '" . ($query_string ? '&'.$query_string : '') . "';\n";
+echo "			document.location.href='extension_copy.php?id=" . escape($extension_uuid ?? '') . "&ext=' + new_ext + '" . ($query_string ? '&'.$query_string : '') . '&'.$token_copy['name'].'='.$token_copy['hash'] . "';\n";
 echo "		}\n";
 echo "		else {\n";
 echo "			var new_number_alias = prompt('" . $text['message-number_alias'] . "');\n";
 echo "			if (new_number_alias != null) {\n";
 echo "				if (!isNaN(new_number_alias)) {\n";
-echo "					document.location.href='extension_copy.php?id=" . escape($extension_uuid ?? '') . "&ext=' + new_ext + '&alias=' + new_number_alias + '" . ($query_string ? '&'.$query_string : '') . "';\n";
+echo "					document.location.href='extension_copy.php?id=" . escape($extension_uuid ?? '') . "&ext=' + new_ext + '&alias=' + new_number_alias + '" . ($query_string ? '&'.$query_string : '') . '&'.$token_copy['name'].'='.$token_copy['hash'] . "';\n";
 echo "				}\n";
 echo "			}\n";
 echo "		}\n";
