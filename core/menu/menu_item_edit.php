@@ -100,27 +100,32 @@
 
 //get the HTTP POST variables and set them as PHP variables
 	if (!empty($_POST)) {
-		$menu_uuid = $_POST["menu_uuid"] ?? '';
-		$menu_item_uuid = $_POST["menu_item_uuid"] ?? '';
-		$menu_item_title = $_POST["menu_item_title"] ?? '';
-		$menu_item_link = $_POST["menu_item_link"] ?? '';
-		$menu_item_category = $_POST["menu_item_category"] ?? '';
-		$menu_item_icon = $_POST["menu_item_icon"] ?? '';
-		$menu_item_icon_color = $_POST["menu_item_icon_color"] ?? '';
-		$menu_item_description = $_POST["menu_item_description"] ?? '';
+		$menu_uuid = is_string($_POST["menu_uuid"] ?? null) ? $_POST["menu_uuid"] : '';
+		$menu_item_uuid = is_string($_POST["menu_item_uuid"] ?? null) ? $_POST["menu_item_uuid"] : '';
+		$menu_item_title = is_string($_POST["menu_item_title"] ?? null) ? $_POST["menu_item_title"] : '';
+		$menu_item_link = is_string($_POST["menu_item_link"] ?? null) ? $_POST["menu_item_link"] : '';
+		$menu_item_category = is_string($_POST["menu_item_category"] ?? null) ? $_POST["menu_item_category"] : '';
+		$menu_item_icon = is_string($_POST["menu_item_icon"] ?? null) ? $_POST["menu_item_icon"] : '';
+		$menu_item_icon_color = is_string($_POST["menu_item_icon_color"] ?? null) ? $_POST["menu_item_icon_color"] : '';
+		$menu_item_description = is_string($_POST["menu_item_description"] ?? null) ? $_POST["menu_item_description"] : '';
 		//$menu_item_protected = $_POST["menu_item_protected"] ?? '';
-		$menu_item_parent_uuid = $_POST["menu_item_parent_uuid"] ?? null;
-		$menu_item_order = $_POST["menu_item_order"] ?? '';
+		$menu_item_parent_uuid = is_string($_POST["menu_item_parent_uuid"] ?? null) ? $_POST["menu_item_parent_uuid"] : null;
+		$menu_item_order = is_string($_POST["menu_item_order"] ?? null) ? $_POST["menu_item_order"] : '';
 	}
 
 //sanitize the menu link
 	$menu_item_link = preg_replace('#[^a-zA-Z0-9_:\-\.\&\=\?\/]#', '', $menu_item_link);
 
+//remove script based link schemes, they are not valid menu links
+	if (!empty($menu_item_link) && preg_match('#^(javascript|vbscript|data|file):#i', $menu_item_link)) {
+		$menu_item_link = '';
+	}
+
 //when a HTTP POST is available then process it
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		if ($action == "update") {
-			$menu_item_uuid = $_POST["menu_item_uuid"];
+			$menu_item_uuid = is_string($_POST["menu_item_uuid"] ?? null) ? $_POST["menu_item_uuid"] : '';
 		}
 
 		//validate the token
@@ -237,8 +242,23 @@
 					$group_data = explode('|', $group_uuid_name);
 					$group_uuid = $group_data[0];
 					$group_name = $group_data[1];
+					//verify the group exists and is available to the current domain, the values come from the post array
+						if (is_uuid($group_uuid)) {
+							$sql = "select group_uuid, group_name from v_groups ";
+							$sql .= "where group_uuid = :group_uuid ";
+							$sql .= "and (domain_uuid is null or domain_uuid = :domain_uuid) ";
+							$parameters['group_uuid'] = $group_uuid;
+							$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+							$group_row = $database->select($sql, $parameters, 'row');
+							unset($sql, $parameters);
+						}
+						else {
+							$group_row = [];
+						}
 					//add the group to the menu
-						if (is_uuid($menu_item_uuid)) {
+						if (is_uuid($menu_item_uuid) && !empty($group_row)) {
+							$group_uuid = $group_row['group_uuid'];
+							$group_name = $group_row['group_name'];
 							$menu_item_group_uuid = uuid();
 							$array['menu_item_groups'][0]['menu_item_group_uuid'] = $menu_item_group_uuid;
 							$array['menu_item_groups'][0]['menu_uuid'] = $menu_uuid;
@@ -302,7 +322,7 @@
 	}
 
 //pre-populate the form
-	if (!empty($_GET["menu_item_uuid"]) && empty($_POST["persistformvar"])) {
+	if (!empty($_GET["menu_item_uuid"]) && is_string($_GET["menu_item_uuid"]) && empty($_POST["persistformvar"])) {
 		$menu_item_uuid = $_GET["menu_item_uuid"];
 
 		$sql = "select * from v_menu_items ";

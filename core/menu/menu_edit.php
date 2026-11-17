@@ -49,10 +49,10 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST) && count($_POST) > 0) {
-		$menu_uuid = $_POST["menu_uuid"] ?? null;
-		$menu_name = $_POST["menu_name"];
-		$menu_language = $_POST["menu_language"];
-		$menu_description = $_POST["menu_description"];
+		$menu_uuid = is_string($_POST["menu_uuid"] ?? null) ? $_POST["menu_uuid"] : null;
+		$menu_name = is_string($_POST["menu_name"] ?? null) ? $_POST["menu_name"] : '';
+		$menu_language = is_string($_POST["menu_language"] ?? null) ? $_POST["menu_language"] : '';
+		$menu_description = is_string($_POST["menu_description"] ?? null) ? $_POST["menu_description"] : '';
 	}
 
 //process the http post
@@ -106,14 +106,49 @@
 
 			if ($action == "update") {
 				//update menu item order if drag and drop was used
-					if (!empty($_POST['menu_item_order'])) {
+					if (!empty($_POST['menu_item_order']) && is_string($_POST['menu_item_order'])) {
 						$menu_item_order = explode(",", $_POST["menu_item_order"]);
 
 						foreach ($menu_item_order as $y => $item) {
-							list($uuid, $parent_uuid, $order) = explode("|", $item);
+							$parts = explode("|", $item);
+							if (@sizeof($parts) != 3) {
+								continue;
+							}
+							list($uuid, $parent_uuid, $order) = $parts;
+
+							//only accept a menu item of the current menu with a numeric order, the values come from the post array
+							if (!is_uuid($uuid) || !is_numeric($order)) {
+								continue;
+							}
+							$sql = "select menu_item_uuid from v_menu_items ";
+							$sql .= "where menu_uuid = :menu_uuid ";
+							$sql .= "and menu_item_uuid = :menu_item_uuid ";
+							$parameters['menu_uuid'] = $menu_uuid;
+							$parameters['menu_item_uuid'] = $uuid;
+							$menu_item_exists = $database->select($sql, $parameters, 'column');
+							unset($sql, $parameters);
+							if (empty($menu_item_exists)) {
+								continue;
+							}
+
+							//the parent must be a menu item of the current menu or null
+							$menu_item_parent_uuid = null;
+							if (is_uuid($parent_uuid)) {
+								$sql = "select menu_item_uuid from v_menu_items ";
+								$sql .= "where menu_uuid = :menu_uuid ";
+								$sql .= "and menu_item_uuid = :menu_item_parent_uuid ";
+								$parameters['menu_uuid'] = $menu_uuid;
+								$parameters['menu_item_parent_uuid'] = $parent_uuid;
+								$parent_exists = $database->select($sql, $parameters, 'column');
+								unset($sql, $parameters);
+								if (!empty($parent_exists)) {
+									$menu_item_parent_uuid = $parent_uuid;
+								}
+							}
+
 							$array['menu_items'][$y]['menu_uuid'] = $menu_uuid;
 							$array['menu_items'][$y]['menu_item_uuid'] = $uuid;
-							$array['menu_items'][$y]['menu_item_parent_uuid'] = $parent_uuid;
+							$array['menu_items'][$y]['menu_item_parent_uuid'] = $menu_item_parent_uuid;
 							$array['menu_items'][$y]['menu_item_order'] = $order;
 						}
 					}
