@@ -131,11 +131,11 @@
 				echo "						0.00001,\n";
 				echo "						],\n";
 				echo "					backgroundColor: [\n";
-				echo "						'".($settings->get('theme', 'dashboard_domain_limits_chart_color_used') ?? '#03c04a')."',\n";
-				echo "						'".($settings->get('theme', 'dashboard_domain_limits_chart_color_remaining') ?? '#d4d4d4')."'\n";
+				echo "						".json_encode((string) ($settings->get('theme', 'dashboard_domain_limits_chart_color_used') ?? '#03c04a'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).",\n";
+				echo "						".json_encode((string) ($settings->get('theme', 'dashboard_domain_limits_chart_color_remaining') ?? '#d4d4d4'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)."\n";
 				echo "					],\n";
-				echo "					borderColor: '".$settings->get('theme', 'dashboard_chart_border_color')."',\n";
-				echo "					borderWidth: '".$settings->get('theme', 'dashboard_chart_border_width')."'\n";
+				echo "					borderColor: ".json_encode((string) $settings->get('theme', 'dashboard_chart_border_color'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).",\n";
+				echo "					borderWidth: ".json_encode((string) $settings->get('theme', 'dashboard_chart_border_width'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)."\n";
 				echo "				}]\n";
 				echo "			},\n";
 				echo "			options: {\n";
@@ -161,7 +161,7 @@
 				echo "						ctx.font = chart_text_size + ' ' + chart_text_font;\n";
 				echo "						ctx.textBaseline = 'middle';\n";
 				echo "						ctx.textAlign = 'center';\n";
-				echo "						ctx.fillStyle = '".$widget_number_text_color."';\n";
+				echo "						ctx.fillStyle = ".json_encode((string) ($widget_number_text_color), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)."\n";
 				echo "						ctx.fillText(options.text, width / 2, top + (height / 2));\n";
 				echo "						ctx.save();\n";
 				echo "				}\n";
@@ -190,7 +190,7 @@
 				echo "</tr>\n";
 
 			//data
-				foreach ($_SESSION['limit'] as $category => $value) {
+				foreach ($_SESSION['limit'] ?? [] as $category => $value) {
 					$used = $usage[$category];
 					$limit = $value['numeric'];
 					switch ($category) {
@@ -226,12 +226,14 @@
 							if (!permission_exists('ring_group_view')) { continue 2; }
 							$url = '/app/ring_groups/ring_groups.php';
 							break;
+						default:
+							continue 2;
 					}
 					$tr_link = "href='".PROJECT_PATH.$url."'";
 					echo "<tr ".$tr_link." style='cursor: pointer;'>\n";
 					echo "<td valign='top' class='".$row_style[$c]." hud_text'><a ".$tr_link.">".escape($text['label-'.$category])."</a></td>\n";
 					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$used."</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".$limit."</td>\n";
+					echo "<td valign='top' class='".$row_style[$c]." hud_text' style='text-align: center;'>".escape($limit)."</td>\n";
 					echo "</tr>\n";
 					$c = ($c) ? 0 : 1;
 				}
