@@ -88,6 +88,7 @@
 		$destination_accountcode = '';
 
 		//use the destination_uuid to set the condition_expression_1
+		$destination_found = false;
 		if (is_uuid($destination_uuid)) {
 			$sql = "select * from v_destinations ";
 			$sql .= "where domain_uuid = :domain_uuid ";
@@ -101,6 +102,7 @@
 				$fax_uuid = $row["fax_uuid"];
 				$destination_carrier = $row["destination_carrier"] ?? null;
 				$destination_accountcode = $row["destination_accountcode"];
+				$destination_found = true;
 			}
 			unset($sql, $parameters, $row);
 		}
@@ -153,6 +155,16 @@
 		//remove the invalid characters from the extension name
 			$dialplan_name = str_replace(" ", "_", $dialplan_name);
 			$dialplan_name = str_replace("/", "", $dialplan_name);
+			//the name is written to the dialplan XML as an attribute value, remove the characters that break out of it
+			$dialplan_name = str_replace(array('<', '>', '"', "'", '&'), '', $dialplan_name);
+
+		//remove the invalid characters from the condition fields, they are written to the dialplan XML as attribute values
+			if (!empty($condition_field_1)) {
+				$condition_field_1 = str_replace(array('<', '>', '"', "'", '&'), '', $condition_field_1);
+			}
+			if (!empty($condition_field_2)) {
+				$condition_field_2 = str_replace(array('<', '>', '"', "'", '&'), '', $condition_field_2);
+			}
 
 		//set the context
 			$context = '$${domain_name}';
@@ -182,7 +194,7 @@
 			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'condition';
 			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $condition_field_1;
-			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $condition_expression_1;
+			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = xml::escape($condition_expression_1);
 			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 			$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
@@ -194,7 +206,7 @@
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'condition';
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = $condition_field_2;
-				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $condition_expression_2;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = xml::escape($condition_expression_2);
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 			}
@@ -207,7 +219,7 @@
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'accountcode='.$destination_accountcode;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'accountcode='.xml::sanitize($destination_accountcode);
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 			}
@@ -220,7 +232,7 @@
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'carrier='.$destination_carrier;
+				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'carrier='.xml::sanitize($destination_carrier);
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 				$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 			}
@@ -303,7 +315,7 @@
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "execute_on_tone_detect=transfer ".$fax_extension." XML ".$_SESSION["context"];
+					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "execute_on_tone_detect=transfer ".xml::sanitize($fax_extension)." XML ".$_SESSION["context"];
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 					$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 
@@ -389,7 +401,7 @@
 			}
 
 		//update the destination dialplan_uuid
-			if (is_uuid($destination_uuid)) {
+			if (is_uuid($destination_uuid) && $destination_found) {
 
 				$p = permissions::new();
 				$p->add('destination_edit', 'temp');
@@ -405,7 +417,7 @@
 			unset($array);
 
 		//remove temp permission, if exists
-			if (is_uuid($destination_uuid)) {
+			if (is_uuid($destination_uuid) && $destination_found) {
 				$p->delete('destination_edit', 'temp');
 			}
 
