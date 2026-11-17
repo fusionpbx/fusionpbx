@@ -73,8 +73,13 @@
 	}
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = is_string($_GET["order_by"] ?? null) ? $_GET["order_by"] : '';
+	$order = is_string($_GET["order"] ?? null) ? $_GET["order"] : '';
+
+//limit the order by to the columns shown in the list
+	if (!in_array($order_by, ['database_driver', 'database_type', 'database_host', 'database_name', 'database_description'], true)) {
+		$order_by = '';
+	}
 
 //prepare to page the results
 	$sql = "select count(*) from v_databases ";
@@ -83,7 +88,7 @@
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "";
-	$page = isset($_GET['page']) ? $_GET['page'] : 0;
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
