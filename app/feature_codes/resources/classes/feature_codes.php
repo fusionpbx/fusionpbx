@@ -66,8 +66,15 @@ class feature_codes {
 	 */
 	public static function fetch_features(database $database, bool $include_raw = false): array {
 		$domain_uuid = $_SESSION['domain_uuid'] ?? '';
-		$order_by = $_GET['order_by'] ?? '';
-		$order = $_GET['order'] ?? '';
+		$order_by = is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '';
+		$order = is_string($_GET['order'] ?? null) ? $_GET['order'] : '';
+
+		//limit the order by to the columns shown in the report, sorting on any other
+		//column (for example call_flow_pin_number or dialplan_xml) would disclose its
+		//values to users without permission to view them
+		if (!in_array($order_by, ['feature_code', 'dialplan_name'], true)) {
+			$order_by = '';
+		}
 		$sql = "SELECT d.dialplan_uuid, d.dialplan_name, ";
 		$sql .= "COALESCE(NULLIF(cf.call_flow_feature_code, ''), d.dialplan_number) AS feature_code, ";
 		$sql .= "COALESCE(cf.call_flow_description, d.dialplan_description) AS dialplan_description ";
@@ -75,12 +82,13 @@ class feature_codes {
 			$sql .= ", d.dialplan_xml ";
 		}
 		$sql .= "FROM v_dialplans d ";
-		$sql .= "LEFT JOIN v_call_flows cf ON cf.dialplan_uuid = d.dialplan_uuid ";
+		$sql .= "LEFT JOIN v_call_flows cf ON cf.dialplan_uuid = d.dialplan_uuid AND (cf.domain_uuid = :cf_domain_uuid OR cf.domain_uuid IS NULL) ";
 		$sql .= "WHERE d.dialplan_enabled = 'true' ";
 		$sql .= "AND (d.dialplan_number LIKE '*%' OR NULLIF(cf.call_flow_feature_code, '') IS NOT NULL) ";
 		$sql .= "AND (d.domain_uuid = :domain_uuid OR d.domain_uuid IS NULL) ";
 		$sql .= order_by($order_by, $order, 'feature_code', 'asc');
 		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['cf_domain_uuid'] = $domain_uuid;
 		$result = $database->select($sql, $parameters, 'all');
 		return is_array($result) ? $result : [];
 	}
