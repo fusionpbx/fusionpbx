@@ -72,7 +72,7 @@
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the uuid
-			if ($action == "update") {
+			if ($action == "update" && !empty($_POST["module_uuid"]) && is_uuid($_POST["module_uuid"])) {
 				$module_uuid = $_POST["module_uuid"];
 			}
 
@@ -90,6 +90,12 @@
 			if (empty($module_name)) { $msg .= $text['message-required'].$text['label-module_name']."<br>\n"; }
 			//if (empty($module_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 			if (empty($module_category)) { $msg .= $text['message-required'].$text['label-module_category']."<br>\n"; }
+			if (!empty($module_name) && (!is_string($module_name) || !preg_match('/^[0-9A-Za-z\-_.]+$/D', $module_name))) {
+				$msg .= ($text['message-invalid_module_name'] ?? 'Invalid Module Name') . "<br>\n";
+			}
+			if (!empty($module_order) && !is_numeric($module_order)) {
+				$msg .= ($text['message-invalid_module_order'] ?? 'Invalid Module Order') . "<br>\n";
+			}
 			// if (empty($module_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 			// if (empty($module_default_enabled)) { $msg .= $text['message-required'].$text['label-default_enabled']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
@@ -144,7 +150,7 @@
 	}
 
 //pre-populate the form
-	if (!empty($_GET) && empty($_POST["persistformvar"])) {
+	if (!empty($_GET["id"]) && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$module_uuid = $_GET["id"];
 		$sql = "select * from v_modules ";
 		$sql .= "where module_uuid = :module_uuid ";

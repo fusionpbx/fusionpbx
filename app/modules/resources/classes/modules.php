@@ -864,6 +864,10 @@ class modules {
 						if (substr($file, -4) == ".dll") {
 							$name = substr($file, 0, -4);
 						}
+						//skip files that do not resolve to a valid module name
+						if (!preg_match('/^[0-9A-Za-z\-_.]+$/D', (string) $name)) {
+							continue;
+						}
 						if (!$this->exists($name)) {
 							//set module found to true
 							$module_found = true;
@@ -936,10 +940,12 @@ class modules {
 		if (is_array($result) && @sizeof($result) != 0) {
 			foreach ($result as $row) {
 				if ($prev_module_cat != $row['module_category']) {
-					$xml .= "\n		<!-- " . $row['module_category'] . " -->\n";
+					//remove the comment terminator to keep the generated xml valid
+					$module_category = str_replace('--', '', (string) $row['module_category']);
+					$xml .= "\n		<!-- " . xml::escape($module_category) . " -->\n";
 				}
 				if ($row['module_enabled']) {
-					$xml .= "		<load module=\"" . $row['module_name'] . "\"/>\n";
+					$xml .= "		<load module=\"" . xml::escape($row['module_name']) . "\"/>\n";
 				}
 				$prev_module_cat = $row['module_category'];
 			}
@@ -1049,6 +1055,10 @@ class modules {
 					if ($esl->is_connected()) {
 						//control modules
 						foreach ($modules as $module_uuid => $module) {
+							//validate the module name to prevent command injection into the switch
+							if (!preg_match('/^[0-9A-Za-z\-_.]+$/D', (string) $module['name'])) {
+								continue;
+							}
 							if ($module['enabled'] == 'true') {
 								$responses[$module_uuid]['module']  = $module['name'];
 								$responses[$module_uuid]['message'] = trim(event_socket::api($action . ' ' . $module['name']));
@@ -1138,7 +1148,8 @@ class modules {
 					//stop modules
 					if ($esl->is_connected()) {
 						foreach ($modules as $module_uuid => $module) {
-							if ($this->active($module['name'])) {
+							//validate the module name to prevent command injection into the switch
+							if (preg_match('/^[0-9A-Za-z\-_.]+$/D', (string) $module['name']) && $this->active($module['name'])) {
 								$responses[$module_uuid]['module']  = $module['name'];
 								$responses[$module_uuid]['message'] = trim(event_socket::api('unload ' . $module['name']));
 							}
@@ -1237,7 +1248,8 @@ class modules {
 					//stop modules if active
 					if ($esl->is_connected()) {
 						foreach ($modules as $module_uuid => $module) {
-							if ($this->active($module['name'])) {
+							//validate the module name to prevent command injection into the switch
+							if (preg_match('/^[0-9A-Za-z\-_.]+$/D', (string) $module['name']) && $this->active($module['name'])) {
 								$cmd                                = 'unload ' . $module['name'];
 								$responses[$module_uuid]['module']  = $module['name'];
 								$responses[$module_uuid]['message'] = trim(event_socket::api($cmd));
