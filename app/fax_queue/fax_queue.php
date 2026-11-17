@@ -80,17 +80,17 @@
 	$query_string = http_build_query($param);
 
 //get the http post data
-	if (isset($_REQUEST['action'])) {
+	if (isset($_REQUEST['action']) && is_string($_REQUEST['action'])) {
 		$action = $_REQUEST['action'];
 	}
 
 //get the fax_queue item checked
-	if (isset($_REQUEST['fax_queue'])) {
+	if (isset($_REQUEST['fax_queue']) && is_array($_REQUEST['fax_queue'])) {
 		$fax_queue = $_REQUEST['fax_queue'];
 	}
 
 //process the http post data by action
-	if (!empty($action) && !empty($fax_queue) && !empty($fax_queue)) {
+	if (in_array($action ?? '', ['copy', 'resend', 'delete']) && is_array($fax_queue ?? null) && @sizeof($fax_queue) != 0) {
 
 		//validate the token
 			$token = new token;
@@ -377,7 +377,7 @@
 					$list_row_url .= '&domain_uuid='.urlencode($row['domain_uuid']).'&domain_change=true';
 				}
 			}
-			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			echo "<tr class='list-row' href='".escape($list_row_url)."'>\n";
 			if ($permission['fax_queue_add'] || $permission['fax_queue_edit'] || $permission['fax_queue_delete']) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='fax_queue[$x][checked]' id='checkbox_".$x."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all').checked = false; }\">\n";

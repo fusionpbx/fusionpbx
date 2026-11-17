@@ -169,20 +169,35 @@ class fax_queue {
 
 			//resend multiple faxes
 			if (is_array($records) && @sizeof($records) != 0) {
+				//get the checked records of the current domain
+				foreach ($records as $record) {
+					if (($record['checked'] ?? '') == 'true' && is_uuid($record['fax_queue_uuid'] ?? '')) {
+						$uuids[] = "'" . $record['fax_queue_uuid'] . "'";
+					}
+				}
+				if (is_array($uuids) && @sizeof($uuids) != 0) {
+					$sql = "select " . $this->name . "_uuid as uuid from v_" . $this->table . " ";
+					$sql .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows = $this->database->select($sql, $parameters, 'all');
+					unset($sql, $parameters, $uuids);
+				}
+
 				//build the fax array
 				$x = 0;
-				foreach ($records as $record) {
-					//add to the array
-					if ($record['checked'] == 'true' && is_uuid($record['fax_queue_uuid'])) {
-						$array[$this->table][$x][$this->name . '_uuid'] = $record['fax_queue_uuid'];
+				if (is_array($rows) && @sizeof($rows) != 0) {
+					foreach ($rows as $row) {
+						//add to the array
+						$array[$this->table][$x][$this->name . '_uuid'] = $row['uuid'];
 						$array[$this->table][$x]['fax_status']          = 'waiting';
 						$array[$this->table][$x]['fax_retry_date']      = null;
 						$array[$this->table][$x]['fax_notify_date']     = null;
 						$array[$this->table][$x]['fax_retry_count']     = '0';
-					}
 
-					//increment the id
-					$x++;
+						//increment the id
+						$x++;
+					}
 				}
 
 				//save the changes
