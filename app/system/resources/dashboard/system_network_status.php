@@ -51,8 +51,8 @@ echo "</span>\n";
 
 		// Use your theme colors: [main, accent1, accent2]
 		const dashboard_network_usage_chart_main_color = [
-			'<?php echo($settings->get('theme', 'dashboard_network_usage_chart_main_color', [0 => '#03c04a'])[0]); ?>',  // green default
-			'<?php echo($settings->get('theme', 'dashboard_network_usage_chart_main_color', [1 => '#ff9933'])[1]); ?>'   // orange default
+			<?php echo json_encode((string) ($settings->get('theme', 'dashboard_network_usage_chart_main_color', [0 => '#03c04a'])[0]), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,  // green default
+			<?php echo json_encode((string) ($settings->get('theme', 'dashboard_network_usage_chart_main_color', [1 => '#ff9933'])[1]), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>   // orange default
 		];
 
 		function format_bitrate(v) {

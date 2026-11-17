@@ -167,11 +167,11 @@ if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {
 	echo "					datasets: [{\n";
 	echo "							data: ['".$total_running."','".($total_services-$total_running)."'],\n";
 	echo "							backgroundColor: [\n";
-	echo "								'".$settings->get('theme', 'dashboard_system_counts_chart_main_color','#2a9df4')."',\n";
-	echo "								'".$settings->get('theme', 'dashboard_system_counts_chart_sub_color','#d4d4d4')."'\n";
+	echo "								".json_encode((string) ($settings->get('theme', 'dashboard_system_counts_chart_main_color','#2a9df4')), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).",\n";
+	echo "								".json_encode((string) ($settings->get('theme', 'dashboard_system_counts_chart_sub_color','#d4d4d4')), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)."\n";
 	echo "							],\n";
-	echo "							borderColor: '".$settings->get('theme', 'dashboard_chart_border_color')."',\n";
-	echo "							borderWidth: '".$settings->get('theme', 'dashboard_chart_border_width')."'\n";
+	echo "							borderColor: ".json_encode((string) ($settings->get('theme', 'dashboard_chart_border_color')), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).",\n";
+	echo "							borderWidth: ".json_encode((string) ($settings->get('theme', 'dashboard_chart_border_width')), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)."\n";
 	echo "					}]\n";
 	echo "				},\n";
 	echo "				options: {\n";
@@ -185,7 +185,7 @@ if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {
 	echo "							labels: {\n";
 	echo "								usePointStyle: true,\n";
 	echo "								pointStyle: 'rect',\n";
-	echo "								color: '$widget_label_text_color'\n";
+	echo "								color: ".json_encode((string) ($widget_label_text_color), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)."\n";
 	echo "							}\n";
 	echo "						}\n";
 	echo "					}\n";
@@ -197,7 +197,7 @@ if (!isset($widget_chart_type) || $widget_chart_type == "doughnut") {
 	echo "						ctx.font = chart_text_size + ' ' + chart_text_font;\n";
 	echo "						ctx.textBaseline = 'middle';\n";
 	echo "						ctx.textAlign = 'center';\n";
-	echo "						ctx.fillStyle = '$widget_number_text_color';\n";
+	echo "							ctx.fillStyle = ".json_encode((string) ($widget_number_text_color), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).";\n";
 	echo "						ctx.fillText(options.text, width / 2, top + (height / 2));\n";
 	echo "						ctx.save();\n";
 	echo "					}\n";
