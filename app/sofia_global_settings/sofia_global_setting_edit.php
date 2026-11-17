@@ -74,31 +74,35 @@
 			}
 
 		//process the http post data by submitted action
-			if (!empty($_POST['action']) && !empty($_POST['action'])) {
+			if (!empty($_POST['action']) && $action == 'update' && is_uuid($sofia_global_setting_uuid)) {
 
 				//prepare the array(s)
-				//send the array to the database class
+				$array['sofia_global_settings'][0]['checked'] = 'true';
+				$array['sofia_global_settings'][0]['sofia_global_setting_uuid'] = $sofia_global_setting_uuid;
+
+				//send the array to the class
+				$obj = new sofia_global_settings;
 				switch ($_POST['action']) {
 					case 'copy':
 						if (permission_exists('sofia_global_setting_add')) {
-							$database->copy($array);
+							$obj->copy($array['sofia_global_settings']);
 						}
 						break;
 					case 'delete':
 						if (permission_exists('sofia_global_setting_delete')) {
-							$database->delete($array);
+							$obj->delete($array['sofia_global_settings']);
 						}
 						break;
 					case 'toggle':
-						if (permission_exists('sofia_global_setting_update')) {
-							$database->toggle($array);
+						if (permission_exists('sofia_global_setting_edit')) {
+							$obj->toggle($array['sofia_global_settings']);
 						}
 						break;
 				}
 
 				//redirect the user
 				if (in_array($_POST['action'], array('copy', 'delete', 'toggle'))) {
-					header('Location: sofia_global_setting_edit.php?id='.$id);
+					header('Location: sofia_global_settings.php');
 					exit;
 				}
 			}
@@ -106,7 +110,7 @@
 		//check for all required data
 			$msg = '';
 			if (empty($global_setting_name)) { $msg .= $text['message-required']." ".$text['label-global_setting_name']."<br>\n"; }
-			if (empty($global_setting_value)) { $msg .= $text['message-required']." ".$text['label-global_setting_value']."<br>\n"; }
+			if (!isset($global_setting_value) || $global_setting_value === '') { $msg .= $text['message-required']." ".$text['label-global_setting_value']."<br>\n"; }
 			//if (empty($global_setting_description)) { $msg .= $text['message-required']." ".$text['label-global_setting_description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -183,10 +187,10 @@
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','collapse'=>'hide-xs','style'=>'margin-right: 15px;','link'=>'sofia_global_settings.php']);
 	if ($action == 'update') {
-		if (permission_exists('_add')) {
+		if (permission_exists('sofia_global_setting_add')) {
 			echo button::create(['type'=>'button','label'=>$text['button-copy'],'icon'=>$settings->get('theme', 'button_icon_copy'),'id'=>'btn_copy','name'=>'btn_copy','style'=>'display: none;','onclick'=>"modal_open('modal-copy','btn_copy');"]);
 		}
-		if (permission_exists('_delete')) {
+		if (permission_exists('sofia_global_setting_delete')) {
 			echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none; margin-right: 15px;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 		}
 	}
