@@ -32,6 +32,9 @@
 			$obj->settings();
 			unset($obj);
 
+		//reload the settings, the switch default settings may have just been created or repaired
+			$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid]);
+
 		//add the module object
 			$module = new modules;
 
