@@ -53,10 +53,10 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
-		$number_translation_name = $_POST["number_translation_name"];
-		$number_translation_details = $_POST["number_translation_details"];
-		$number_translation_enabled = $_POST["number_translation_enabled"];
-		$number_translation_description = $_POST["number_translation_description"];
+		$number_translation_name = is_string($_POST["number_translation_name"] ?? null) ? $_POST["number_translation_name"] : '';
+		$number_translation_details = is_array($_POST["number_translation_details"] ?? null) ? $_POST["number_translation_details"] : [];
+		$number_translation_enabled = ($_POST["number_translation_enabled"] ?? 'false') === 'true' ? 'true' : 'false';
+		$number_translation_description = is_string($_POST["number_translation_description"] ?? null) ? $_POST["number_translation_description"] : '';
 	}
 
 //process the user data and save it to the database
@@ -74,9 +74,13 @@
 			if (!empty($_POST['action']) && !empty($_POST['action'])) {
 
 				//prepare the array(s)
+				$array = [];
 				$x = 0;
-				foreach ($_POST['number_translation_details'] as $row) {
-					if (is_uuid($row['number_translation_uuid']) && $row['checked'] === 'true') {
+				foreach ($number_translation_details as $row) {
+					if (!is_array($row)) {
+						continue;
+					}
+					if (is_uuid($row['number_translation_uuid'] ?? '') && ($row['checked'] ?? '') === 'true') {
 						$array['number_translations'][$x]['checked'] = $row['checked'];
 						$array['number_translations'][$x]['number_translation_details'][]['number_translation_detail_uuid'] = $row['number_translation_detail_uuid'];
 						$x++;
@@ -84,22 +88,24 @@
 				}
 
 				//send the array to the database class
-				switch ($_POST['action']) {
-					case 'copy':
-						if (permission_exists('number_translation_add')) {
-							$database->copy($array);
-						}
-						break;
-					case 'delete':
-						if (permission_exists('number_translation_delete')) {
-							$database->delete($array);
-						}
-						break;
-					case 'toggle':
-						if (permission_exists('number_translation_update')) {
-							$database->toggle($array);
-						}
-						break;
+				if (!empty($array)) {
+					switch ($_POST['action']) {
+						case 'copy':
+							if (permission_exists('number_translation_add')) {
+								$database->copy($array);
+							}
+							break;
+						case 'delete':
+							if (permission_exists('number_translation_delete')) {
+								$database->delete($array);
+							}
+							break;
+						case 'toggle':
+							if (permission_exists('number_translation_update')) {
+								$database->toggle($array);
+							}
+							break;
+					}
 				}
 
 				//redirect the user
@@ -136,11 +142,15 @@
 			$y = 0;
 			if (is_array($number_translation_details)) {
 				foreach ($number_translation_details as $row) {
+					//validate the row, it comes from the http post data
+					if (!is_array($row)) {
+						continue;
+					}
 					if (!empty($row['number_translation_detail_regex'])) {
-						$array['number_translations'][0]['number_translation_details'][$y]['number_translation_detail_uuid'] = $row["number_translation_detail_uuid"];
-						$array['number_translations'][0]['number_translation_details'][$y]['number_translation_detail_regex'] = $row["number_translation_detail_regex"];
-						$array['number_translations'][0]['number_translation_details'][$y]['number_translation_detail_replace'] = $row["number_translation_detail_replace"];
-						$array['number_translations'][0]['number_translation_details'][$y]['number_translation_detail_order'] = $row["number_translation_detail_order"];
+						$array['number_translations'][0]['number_translation_details'][$y]['number_translation_detail_uuid'] = is_uuid($row["number_translation_detail_uuid"] ?? '') ? $row["number_translation_detail_uuid"] : uuid();
+						$array['number_translations'][0]['number_translation_details'][$y]['number_translation_detail_regex'] = is_string($row["number_translation_detail_regex"] ?? null) ? $row["number_translation_detail_regex"] : '';
+						$array['number_translations'][0]['number_translation_details'][$y]['number_translation_detail_replace'] = is_string($row["number_translation_detail_replace"] ?? null) ? $row["number_translation_detail_replace"] : '';
+						$array['number_translations'][0]['number_translation_details'][$y]['number_translation_detail_order'] = preg_replace('#[^0-9]#', '', (string)($row["number_translation_detail_order"] ?? ''));
 						$y++;
 					}
 				}

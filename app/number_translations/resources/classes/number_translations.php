@@ -111,8 +111,8 @@ class number_translations {
 				libxml_disable_entity_loader(true);
 			}
 
-			//convert the xml string to an xml object
-			$xml = simplexml_load_string($this->xml);
+			//convert the xml string to an xml object, disable network access during parsing
+			$xml = simplexml_load_string($this->xml, 'SimpleXMLElement', LIBXML_NONET);
 			//convert to json
 			$json = json_encode($xml);
 			//convert to an array
@@ -123,6 +123,13 @@ class number_translations {
 		} else {
 			throw new Exception("require either json or xml to import");
 		}
+
+		//validate the imported document, it may have come from an untrusted file
+		if (!is_array($number_translation) || !is_string($number_translation['@attributes']['name'] ?? null) || $number_translation['@attributes']['name'] === '') {
+			unset ($this->xml, $this->json);
+			return;
+		}
+
 		//check if the number_translation exists
 		if (!$this->number_translation_exists($number_translation['@attributes']['name'])) {
 			//begin insert array
@@ -132,7 +139,7 @@ class number_translations {
 			if (!empty($number_translation['@attributes']['enabled'])) {
 				$array['number_translations'][$x]['number_translation_enabled'] = $number_translation['@attributes']['enabled'];
 			}
-			$array['number_translations'][$x]['number_translation_description'] = $number_translation['@attributes']['description'];
+			$array['number_translations'][$x]['number_translation_description'] = $number_translation['@attributes']['description'] ?? '';
 			//loop through the condition array
 			$order = 5;
 			if (isset($number_translation['rule'])) {
@@ -198,7 +205,7 @@ class number_translations {
 
 				//build the delete array
 				foreach ($records as $x => $record) {
-					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+					if (is_array($record) && ($record['checked'] ?? '') == 'true' && is_uuid($record['uuid'] ?? '')) {
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid']                 = $record['uuid'];
 						$array['number_translation_details'][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
 					}
@@ -261,7 +268,7 @@ class number_translations {
 
 				//build the delete array
 				foreach ($records as $x => $record) {
-					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+					if (is_array($record) && ($record['checked'] ?? '') == 'true' && is_uuid($record['uuid'] ?? '')) {
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
 						$array[$this->table][$x]['number_translation_uuid']   = $this->number_translation_uuid;
 					}
@@ -309,7 +316,7 @@ class number_translations {
 
 				//get current toggle state
 				foreach ($records as $x => $record) {
-					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+					if (is_array($record) && ($record['checked'] ?? '') == 'true' && is_uuid($record['uuid'] ?? '')) {
 						$uuids[] = "'" . $record['uuid'] . "'";
 					}
 				}
@@ -379,7 +386,7 @@ class number_translations {
 
 				//get checked records
 				foreach ($records as $x => $record) {
-					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+					if (is_array($record) && ($record['checked'] ?? '') == 'true' && is_uuid($record['uuid'] ?? '')) {
 						$uuids[] = "'" . $record['uuid'] . "'";
 					}
 				}

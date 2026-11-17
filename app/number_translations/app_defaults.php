@@ -56,8 +56,8 @@
 					libxml_disable_entity_loader(true);
 				}
 
-				//convert the xml string to an xml object
-				$xml = simplexml_load_string($xml);
+				//convert the xml string to an xml object, disable network access during parsing
+				$xml = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NONET);
 
 				//convert to json
 				$json = json_encode($xml);

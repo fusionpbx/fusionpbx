@@ -47,8 +47,8 @@
 	}
 
 //set the variables
-	$cmd = $_GET['cmd'];
-	$rdr = $_GET['rdr'];
+	$cmd = is_string($_GET['cmd'] ?? null) ? $_GET['cmd'] : '';
+	$rdr = is_string($_GET['rdr'] ?? null) ? $_GET['rdr'] : '';
 
 //create the event socket connection
 	$esl = event_socket::create();
