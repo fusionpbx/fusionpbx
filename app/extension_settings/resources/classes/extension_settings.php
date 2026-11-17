@@ -120,7 +120,7 @@ class extension_settings {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -141,13 +141,13 @@ class extension_settings {
 						$array[$this->table][$x]['domain_uuid']         = $this->domain_uuid;
 
 						if (empty($this->extension_uuid)) {
-							$sql                       = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle, extension_uuid ";
-							$sql                       .= "from v_" . $this->table . " ";
-							$sql                       .= "where " . $this->name . "_uuid in :uuid ";
-							$sql                       .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+							$sql = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle, extension_uuid ";
+							$sql .= "from v_" . $this->table . " ";
+							$sql .= "where " . $this->name . "_uuid = :uuid ";
+							$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 							$parameters['domain_uuid'] = $this->domain_uuid;
-							$parameters['uuid']        = $record['uuid'];
-							$rows                      = $this->database->select($sql, $parameters, 'all');
+							$parameters['uuid'] = $record['uuid'];
+							$rows = $this->database->select($sql, $parameters, 'all');
 							if (is_array($rows) && @sizeof($rows) != 0) {
 								$this->extension_uuid = $rows[0]['extension_uuid'];
 							}
@@ -167,11 +167,11 @@ class extension_settings {
 
 					//clear the cache
 					if (!empty($this->extension_uuid)) {
-						$sql                          = "select extension, number_alias, user_context from v_extensions ";
-						$sql                          .= "where extension_uuid = :extension_uuid ";
+						$sql = "select extension, number_alias, user_context from v_extensions ";
+						$sql .= "where extension_uuid = :extension_uuid ";
 						$parameters['extension_uuid'] = $this->extension_uuid;
-						$extension                    = $this->database->select($sql, $parameters, 'row');
-						$cache                        = new cache;
+						$extension = $this->database->select($sql, $parameters, 'row');
+						$cache = new cache;
 						$cache->delete("directory:" . $extension["extension"] . "@" . $extension["user_context"]);
 						$cache->delete("directory:" . $extension["number_alias"] . "@" . $extension["user_context"]);
 					}
@@ -198,7 +198,7 @@ class extension_settings {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -217,11 +217,11 @@ class extension_settings {
 					}
 				}
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle, extension_uuid from v_" . $this->table . " ";
-					$sql                       .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
-					$sql                       .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql = "select " . $this->name . "_uuid as uuid, " . $this->toggle_field . " as toggle, extension_uuid from v_" . $this->table . " ";
+					$sql .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						$this->extension_uuid = $rows[0]['extension_uuid'];
 						foreach ($rows as $row) {
@@ -250,11 +250,11 @@ class extension_settings {
 					unset($array);
 
 					//clear the cache
-					$sql                          = "select extension, number_alias, user_context from v_extensions ";
-					$sql                          .= "where extension_uuid = :extension_uuid ";
+					$sql = "select extension, number_alias, user_context from v_extensions ";
+					$sql .= "where extension_uuid = :extension_uuid ";
 					$parameters['extension_uuid'] = $this->extension_uuid;
-					$extension                    = $this->database->select($sql, $parameters, 'row');
-					$cache                        = new cache;
+					$extension = $this->database->select($sql, $parameters, 'row');
+					$cache = new cache;
 					$cache->delete("directory:" . $extension["extension"] . "@" . $extension["user_context"]);
 					$cache->delete("directory:" . $extension["number_alias"] . "@" . $extension["user_context"]);
 
@@ -292,7 +292,6 @@ class extension_settings {
 
 			//copy the checked records
 			if (is_array($records) && @sizeof($records) != 0) {
-
 				//get checked records
 				foreach ($records as $record) {
 					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
@@ -302,17 +301,17 @@ class extension_settings {
 
 				//create the array from existing data
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select * from v_" . $this->table . " ";
-					$sql                       .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
-					$sql                       .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where " . $this->name . "_uuid in (" . implode(', ', $uuids) . ") ";
+					$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $x => $row) {
 							//convert boolean values to a string
 							foreach ($row as $key => $value) {
 								if (gettype($value) == 'boolean') {
-									$value     = $value ? 'true' : 'false';
+									$value = $value ? 'true' : 'false';
 									$row[$key] = $value;
 								}
 							}
@@ -321,7 +320,8 @@ class extension_settings {
 							$array[$this->table][$x] = $row;
 
 							//overwrite
-							$array[$this->table][$x][$this->name . '_uuid']    = uuid();
+							$array[$this->table][$x][$this->name . '_uuid'] = uuid();
+							$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
 							$array[$this->table][$x][$this->name . '_enabled'] = $row['extension_setting_enabled'] === true ? 'true' : 'false';
 							$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field] ?? '') . ' (' . $text['label-copy'] . ')';
 
