@@ -311,11 +311,11 @@
 							datasets: [{
 								data: ['<?php echo $domain_active; ?>', '<?php echo $domain_inactive; ?>'],
 								backgroundColor: [
-									'<?php echo ($settings->get('theme', 'dashboard_system_counts_chart_main_color') ?? '#2a9df4'); ?>',
-									'<?php echo ($settings->get('theme', 'dashboard_system_counts_chart_sub_color') ?? '#d4d4d4'); ?>'
+									<?php echo json_encode((string) ($settings->get('theme', 'dashboard_system_counts_chart_main_color') ?? '#2a9df4'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,
+									<?php echo json_encode((string) ($settings->get('theme', 'dashboard_system_counts_chart_sub_color') ?? '#d4d4d4'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>
 								],
-								borderColor: '<?php echo $settings->get('theme', 'dashboard_chart_border_color'); ?>',
-								borderWidth: '<?php echo $settings->get('theme', 'dashboard_chart_border_width'); ?>',
+								borderColor: <?php echo json_encode((string) $settings->get('theme', 'dashboard_chart_border_color'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,
+								borderWidth: <?php echo json_encode((string) $settings->get('theme', 'dashboard_chart_border_width'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,
 							}]
 						},
 						options: {
@@ -329,7 +329,7 @@
 									labels: {
 										usePointStyle: true,
 										pointStyle: 'rect',
-										color: '<?php echo $widget_label_text_color; ?>'
+										color: <?php echo json_encode((string) ($widget_label_text_color), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>
 									}
 								}
 							}
@@ -341,7 +341,7 @@
 								ctx.font = chart_text_size + ' ' + chart_text_font;
 								ctx.textBaseline = 'middle';
 								ctx.textAlign = 'center';
-								ctx.fillStyle = '<?php echo $widget_number_text_color; ?>';
+								ctx.fillStyle = <?php echo json_encode((string) ($widget_number_text_color), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
 								ctx.fillText(options.text, width / 2, top + (height / 2));
 								ctx.save();
 							}

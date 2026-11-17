@@ -58,17 +58,17 @@
 									backgroundColor: [
 										<?php
 										if ($percent_disk_usage <= 80) {
-											echo "'".($settings->get('theme', 'dashboard_disk_usage_chart_main_color')[0] ?? '#03c04a')."',\n";
+											echo "".json_encode((string) ($settings->get('theme', 'dashboard_disk_usage_chart_main_color')[0] ?? '#03c04a'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).",\n";
 										} else if ($percent_disk_usage <= 90) {
-											echo "'".($settings->get('theme', 'dashboard_disk_usage_chart_main_color')[1] ?? '#ff9933')."',\n";
+											echo "".json_encode((string) ($settings->get('theme', 'dashboard_disk_usage_chart_main_color')[1] ?? '#ff9933'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).",\n";
 										} else if ($percent_disk_usage > 90) {
-											echo "'".($settings->get('theme', 'dashboard_disk_usage_chart_main_color')[2] ?? '#ea4c46')."',\n";
+											echo "".json_encode((string) ($settings->get('theme', 'dashboard_disk_usage_chart_main_color')[2] ?? '#ea4c46'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).",\n";
 										}
 										?>
-										'<?php echo ($settings->get('theme', 'dashboard_disk_usage_chart_sub_color') ?? '#d4d4d4'); ?>'
+										<?php echo json_encode((string) ($settings->get('theme', 'dashboard_disk_usage_chart_sub_color') ?? '#d4d4d4'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>
 									],
-									borderColor: '<?php echo $settings->get('theme', 'dashboard_chart_border_color'); ?>',
-									borderWidth: '<?php echo $settings->get('theme', 'dashboard_chart_border_width'); ?>',
+									borderColor: <?php echo json_encode((string) ($settings->get('theme', 'dashboard_chart_border_color')), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,
+									borderWidth: <?php echo json_encode((string) ($settings->get('theme', 'dashboard_chart_border_width')), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,
 								}]
 							},
 							options: {
@@ -87,7 +87,7 @@
 									ctx.font = chart_text_size + ' ' + chart_text_font;
 									ctx.textBaseline = 'middle';
 									ctx.textAlign = 'center';
-									ctx.fillStyle = '<?php echo $widget_number_text_color; ?>';
+									ctx.fillStyle = <?php echo json_encode((string) ($widget_number_text_color), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
 									ctx.fillText(options.text + '%', width / 2, top + (height / 2) + 35);
 									ctx.save();
 								}

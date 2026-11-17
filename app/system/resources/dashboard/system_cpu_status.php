@@ -63,9 +63,9 @@
 
 			const cpu_status_subject = '<?php echo system_dashboard_service::CPU_STATUS_TOPIC; ?>';
 			const dashboard_cpu_usage_chart_main_color = [
-				'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a'); ?>',
-				'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933'); ?>',
-				'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46'); ?>'
+				<?php echo json_encode((string) ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,
+				<?php echo json_encode((string) ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,
+				<?php echo json_encode((string) ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>
 			];
 
 			function connect_cpu_status_websocket() {
@@ -222,9 +222,9 @@
 
 			const cpu_status_subject = '<?php echo system_dashboard_service::CPU_STATUS_TOPIC; ?>';
 			const dashboard_cpu_usage_chart_main_color = [
-				'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a'); ?>',
-				'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933'); ?>',
-				'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46'); ?>'
+				<?php echo json_encode((string) ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,
+				<?php echo json_encode((string) ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,
+				<?php echo json_encode((string) ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>
 			];
 
 			function connect_cpu_status_websocket() {
@@ -266,11 +266,11 @@
 
 				// Update color based on threshold
 				if (cpu_rounded <= 60) {
-					chart.data.datasets[0].backgroundColor[0] = '<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a'); ?>';
+					chart.data.datasets[0].backgroundColor[0] = <?php echo json_encode((string) ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
 				} else if (cpu_rounded <= 80) {
-					chart.data.datasets[0].backgroundColor[0] = '<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933'); ?>';
+					chart.data.datasets[0].backgroundColor[0] = <?php echo json_encode((string) ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
 				} else {
-					chart.data.datasets[0].backgroundColor[0] = '<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46'); ?>';
+					chart.data.datasets[0].backgroundColor[0] = <?php echo json_encode((string) ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
 				}
 
 				chart.options.plugins.chart_number_2.text = cpu_rounded;
@@ -292,17 +292,17 @@
 							backgroundColor: [
 								<?php
 								if ($percent_cpu <= 60) {
-									echo "'".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a')."',\n";
+									echo "".json_encode((string) ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[0] ?? '#03c04a'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).",\n";
 								} else if ($percent_cpu <= 80) {
-									echo "'".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933')."',\n";
+									echo "".json_encode((string) ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[1] ?? '#ff9933'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).",\n";
 								} else if ($percent_cpu > 80) {
-									echo "'".($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46')."',\n";
+									echo "".json_encode((string) ($settings->get('theme', 'dashboard_cpu_usage_chart_main_color')[2] ?? '#ea4c46'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).",\n";
 								}
 								?>
-								'<?php echo ($settings->get('theme', 'dashboard_cpu_usage_chart_sub_color') ?? '#d4d4d4'); ?>'
+								<?php echo json_encode((string) ($settings->get('theme', 'dashboard_cpu_usage_chart_sub_color') ?? '#d4d4d4'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>
 							],
-							borderColor: '<?php echo $settings->get('theme', 'dashboard_chart_border_color'); ?>',
-							borderWidth: '<?php echo $settings->get('theme', 'dashboard_chart_border_width'); ?>'
+							borderColor: <?php echo json_encode((string) ($settings->get('theme', 'dashboard_chart_border_color')), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,
+							borderWidth: <?php echo json_encode((string) ($settings->get('theme', 'dashboard_chart_border_width')), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>
 						}]
 					},
 					options: {
@@ -325,7 +325,7 @@
 							ctx.font = chart_text_size + ' ' + chart_text_font;
 							ctx.textBaseline = 'middle';
 							ctx.textAlign = 'center';
-							ctx.fillStyle = '<?php echo $widget_number_text_color; ?>';
+							ctx.fillStyle = <?php echo json_encode((string) ($widget_number_text_color), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
 							ctx.fillText(options.text + '%', width / 2, top + (height / 2) + 35);
 							ctx.save();
 						}
