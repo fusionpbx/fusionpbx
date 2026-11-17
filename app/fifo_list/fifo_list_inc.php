@@ -39,7 +39,11 @@
 	$text = $language->get();
 
 //include theme config for button images
-	include_once("themes/".$settings->get('domain', 'template', 'default')."/config.php");
+	$template_name = (string)$settings->get('domain', 'template', 'default');
+	if (!preg_match('#^[A-Za-z0-9._-]+$#', $template_name) || $template_name === '.' || $template_name === '..') {
+		$template_name = 'default';
+	}
+	include_once("themes/".$template_name."/config.php");
 
 //show the list
 	$switch_cmd = 'fifo list';
@@ -69,6 +73,13 @@
 		  </fifo>
 		</fifo_report>
 		*/
+
+		//queue names are extension@domain so compare the domain part to prevent access to other domains
+		$domain_name = $_SESSION['domain_name'] ?? '';
+		$queue_in_domain = function ($queue_name) use ($domain_name): bool {
+			$at = strrpos((string) $queue_name, '@');
+			return $domain_name !== '' && $at !== false && strcasecmp(substr((string) $queue_name, $at + 1), $domain_name) === 0;
+		};
 
 		$c = 0;
 		$row_style["0"] = "row_style0";
@@ -112,7 +123,7 @@
 			}
 			else {
 				//show only the fifo queues that match the domain_name
-					if (stripos($name, $_SESSION['domain_name']) !== false) {
+					if ($queue_in_domain($name)) {
 						echo "<tr >\n";
 						echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick."><a href='fifo_interactive.php?c=".urlencode($name)."'>".escape($tmp_name)."</a></td>\n";
 						echo "<td valign='top' class='".$row_style[$c]."' ".$td_onclick.">".escape($consumer_count)."</td>\n";

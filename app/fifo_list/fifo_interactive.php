@@ -39,11 +39,13 @@
 	$text = $language->get();
 
 //get the fifo_name from http and set it to a php variable
-	$fifo_name = preg_replace('#[^a-zA-Z0-9\_\@\-./]#', '', $_REQUEST["c"]);
+	$fifo_name = preg_replace('#[^a-zA-Z0-9\_\@\-./]#', '', is_string($_REQUEST["c"] ?? null) ? $_REQUEST["c"] : '');
 
 //if not the user is not a member of the superadmin then restrict to viewing their own domain
 	if (!if_group("superadmin")) {
-		if (stripos($fifo_name, $_SESSION['domain_name']) === false) {
+		$domain_name = $_SESSION['domain_name'] ?? '';
+		$at = strrpos($fifo_name, '@');
+		if ($fifo_name === '' || $domain_name === '' || $at === false || strcasecmp(substr($fifo_name, $at + 1), $domain_name) !== 0) {
 			echo "access denied";
 			exit;
 		}
