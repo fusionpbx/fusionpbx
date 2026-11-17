@@ -47,9 +47,9 @@
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
-	$search = $_GET['search'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
 	$show = $_GET['show'] ?? '';
 
 // Build the query string
@@ -105,6 +105,7 @@
 					$obj = new gateways;
 					$obj->delete($gateways);
 				}
+				break;
 			case 'start':
 				$esl = event_socket::create();
 				if ($esl && permission_exists('gateway_edit')) {
