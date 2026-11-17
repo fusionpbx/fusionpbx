@@ -110,6 +110,22 @@ class install {
 		$this->database_username = str_replace(array("\r", "\n"), '', (string) $this->database_username);
 		$this->database_password = str_replace(array("\r", "\n"), '', (string) $this->database_password);
 
+		//the port is used in the database connection string, it must be a number
+		if ($this->database_port !== '' && !preg_match('/^[0-9]+$/', $this->database_port)) {
+			$this->message = "Database port must be a number.\n";
+			return false;
+		}
+
+		//these values are written unquoted to the config file and used in the database connection string,
+		//reject values that would break the file, add settings to it, or inject connection parameters
+		$unsafe_values = array($this->database_host, $this->database_name, $this->database_username);
+		foreach ($unsafe_values as $value) {
+			if (preg_match('/[\\"\'&();=^\|~#$ \x00-\x1f\x7f]/', $value)) {
+				$this->message = "Invalid characters in the database settings.\n";
+				return false;
+			}
+		}
+
 		//build the config file
 		$conf = "\n";
 		$conf .= "#database system settings\n";
