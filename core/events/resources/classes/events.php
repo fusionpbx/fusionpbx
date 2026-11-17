@@ -54,8 +54,14 @@ class events {
 	 * 		php file is named <name>.php
 	 */
 	private function load_plugins() {
-		$base = realpath(dirname(__FILE__)) . "/plugins";
+		$base = realpath(dirname(__FILE__) . "/plugins");
+		if (empty($base)) {
+			return;
+		}
 		$this->plugins = glob($base . "/*.php");
+		if (!is_array($this->plugins)) {
+			$this->plugins = array();
+		}
 		foreach($this->plugins as $plugin) {
 			//include the plugin php file and define the class name
 				include_once $plugin;
@@ -63,6 +69,9 @@ class events {
 				$class_name = "plugin_".$plugin_name;
 
 			//create the plugin object so that it can be stored and called later
+				if (!class_exists($class_name)) {
+					continue;
+				}
 				$obj = new $class_name();
 				$this->plugins[$plugin_name] = $obj;
 
@@ -76,7 +85,7 @@ class events {
 
 	/**
 	 * Run the plugin method
-	 * @param strint $method
+	 * @param string $method
 	 * @param string $args
 	 *
 	 */
@@ -90,7 +99,7 @@ class events {
 			$obj = call_user_func_array(array($this->plugins[$this->methods[$method]], $method), $args);
 		}
 		catch (Exception $e) {
-			echo 'Exception: ',  $e->getMessage(), "\n";
+			error_log('events ' . $method . ' Exception: ' . $e->getMessage());
 		}
 		return $obj;
 	}
