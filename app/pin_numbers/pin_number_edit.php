@@ -54,7 +54,8 @@
 	if (count($_POST)>0) {
 		$pin_number = $_POST["pin_number"];
 		$accountcode = $_POST["accountcode"];
-		$enabled = $_POST["enabled"];
+		//the enabled field is a boolean, allow only the values offered by the form
+		$enabled = in_array($_POST["enabled"] ?? '', ['true', 'false'], true) ? $_POST["enabled"] : 'true';
 		$description = $_POST["description"];
 	}
 
@@ -62,7 +63,13 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 	$msg = '';
 	if ($action == "update") {
-		$pin_number_uuid = $_POST["pin_number_uuid"];
+		//require a valid uuid, it is used to verify the record belongs to the domain and to save the record
+		$pin_number_uuid = is_uuid($_POST["pin_number_uuid"] ?? '') ? $_POST["pin_number_uuid"] : '';
+		if (empty($pin_number_uuid)) {
+			message::add($text['message-access_denied'] ?? 'Access denied', 'negative');
+			header('Location: pin_numbers.php');
+			exit;
+		}
 	}
 
 	//validate the token

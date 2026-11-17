@@ -40,9 +40,9 @@
 	$text = $language->get();
 
 //get posted data
-	if (is_array($_POST['pin_numbers'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'] ?? '';
+	if (is_array($_POST['pin_numbers'] ?? null)) {
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
+		$search = is_string($_POST['search'] ?? null) ? $_POST['search'] : '';
 		$pin_numbers = $_POST['pin_numbers'];
 	}
 
@@ -74,11 +74,11 @@
 	}
 
 //get order and order by
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
+	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 
 //add the search term
-	$search = strtolower($_GET["search"]);
+	$search = is_string($_GET["search"] ?? null) ? strtolower($_GET["search"]) : '';
 	if (!empty($search)) {
 		$sql_search = "and (";
 		$sql_search .= "lower(pin_number) like :search ";
