@@ -48,9 +48,12 @@
 	header("X-Content-Type-Options: nosniff");
 	header("Referrer-Policy: strict-origin-when-cross-origin");
 
+//mark the session cookie secure when the installer itself is being served over https
+	$is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? '') == '443');
+
 //start the session before text object stores values in session
 	ini_set("session.cookie_httponly", 'true');
-	ini_set("session.cookie_secure", 'false');
+	ini_set("session.cookie_secure", $is_https ? 'true' : 'false');
 	ini_set("session.cookie_samesite", 'Lax');
 	session_start();
 
@@ -136,6 +139,15 @@
 
 //process and save the data
 	if (!empty($_POST)) {
+		//validate the token to prevent CSRF, the installer creates an administrator account
+			$token_object = new token;
+			if (!$token_object->validate('install')) {
+				unset($_SESSION['install']);
+				http_response_code(403);
+				echo $text['message-invalid_token'];
+				exit;
+			}
+
 		foreach($_POST as $key => $value) {
 			switch($key) {
 				case 'admin_username':
@@ -146,7 +158,7 @@
 				case 'database_name':
 				case 'database_username':
 				case 'database_password':
-					$_SESSION['install'][$key] = $value;
+					$_SESSION['install'][$key] = is_scalar($value) ? (string) $value : '';
 			}
 		}
 		if (!empty($_REQUEST["step"]) && $_REQUEST["step"] == "install") {
@@ -155,6 +167,13 @@
 				echo "<pre>\n";
 				print_r($_SESSION['install']);
 				echo "</pre>\n";
+				exit;
+			}
+
+			//check for all required data, an empty password would create a superadmin account that anyone can use
+			if (empty($_SESSION['install']['admin_username']) || empty($_SESSION['install']['admin_password'])) {
+				unset($_SESSION['install']);
+				echo "Username and Password Required";
 				exit;
 			}
 
@@ -184,6 +203,13 @@
 
 			//get the domain name
 			$domain_name = $_SESSION['install']['domain_name'];
+
+			//check the domain name, it is used in file and directory paths
+			if (!preg_match('/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/', $domain_name)) {
+				unset($_SESSION['install']);
+				echo "Domain Name Invalid";
+				exit;
+			}
 
 			//check to see if the domain name exists if it does update the domain_uuid
 			$sql = "select domain_uuid from v_domains ";
@@ -221,6 +247,9 @@
 				//remove the temporary permission
 				$p->delete("domain_add", "temp");
 			}
+
+			//rotate the session to avoid session fixation before storing privileged values
+			session_regenerate_id(true);
 
 			//set the session domain ID and name
 			$_SESSION['domain_uuid'] = $domain_uuid;
@@ -317,9 +346,12 @@
 			#app defaults
 			$output = shell_exec('cd '.dirname(__DIR__, 2).' && php '.dirname(__DIR__, 2).'/core/upgrade/upgrade_domains.php');
 
+			//remove the submitted credentials from the session
+			unset($_SESSION['install']);
+
 			//install completed - prompt the user to login
 			header("Location: /logout.php");
-	exit;
+			exit;
 		}
 	}
 
@@ -343,6 +375,12 @@
 	$view->template_dir = dirname(__DIR__, 2).'/core/install/resources/views/';
 	$view->cache_dir = sys_get_temp_dir();
 	$view->init();
+
+//create a token to protect the form submissions from CSRF
+	$token_object = new token;
+	$token = $token_object->create('install');
+	$view->assign("token_name", $token['name']);
+	$view->assign("token_hash", $token['hash']);
 
 //assign default values to the template
 	$view->assign("admin_username", "admin");
