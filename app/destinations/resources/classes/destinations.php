@@ -493,7 +493,7 @@
 					$destination_label = str_replace("transfer", "", $destination_label);
 					$destination_label = str_replace("XML ".$this->domain_name, "", $destination_label);
 					if (!empty($destination_value) || !empty($destination_label)) {
-						$response .= "			<option value='".escape($destination_value)."' selected='selected'>".trim($destination_label)."</option>\n";
+						$response .= "			<option value='".escape($destination_value)."' selected='selected'>".escape(trim($destination_label))."</option>\n";
 					}
 				}
 				$response .= "	</select>\n";

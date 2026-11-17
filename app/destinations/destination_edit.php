@@ -60,6 +60,42 @@
 		$action = "add";
 	}
 
+//verify the destination belongs to the current domain unless the user is allowed to access all domains
+	if (!permission_exists('destination_domain') && !permission_exists('destination_all')) {
+		$checked_uuids = [];
+		if (!empty($destination_uuid) && is_uuid($destination_uuid)) {
+			$checked_uuids[] = $destination_uuid;
+		}
+		if (is_uuid($_POST["destination_uuid"] ?? '')) {
+			$checked_uuids[] = $_POST["destination_uuid"];
+		}
+		foreach ($checked_uuids as $checked_uuid) {
+			$sql = "select domain_uuid from v_destinations ";
+			$sql .= "where destination_uuid = :destination_uuid ";
+			$parameters['destination_uuid'] = $checked_uuid;
+			$row = $database->select($sql, $parameters, 'row');
+			if (!empty($row) && !empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid']) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
+		unset($checked_uuids);
+
+		//verify the posted dialplan uuid does not belong to another domain, it is used to update the dialplan
+		if (is_uuid($_POST["dialplan_uuid"] ?? '')) {
+			$sql = "select domain_uuid from v_dialplans ";
+			$sql .= "where dialplan_uuid = :dialplan_uuid ";
+			$parameters['dialplan_uuid'] = $_POST["dialplan_uuid"];
+			$row = $database->select($sql, $parameters, 'row');
+			if (!empty($row) && !empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid']) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
+	}
+
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
@@ -128,9 +164,12 @@
 			}
 
 		//set the variables
-			$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
-			$domain_uuid = $_POST["domain_uuid"];
-			$destination_type = $_POST["destination_type"];
+			$dialplan_uuid = is_uuid($_POST["dialplan_uuid"] ?? '') ? $_POST["dialplan_uuid"] : null;
+			$domain_uuid = $_POST["domain_uuid"] ?? null;
+			if (!empty($domain_uuid) && !is_uuid($domain_uuid)) {
+				$domain_uuid = $_SESSION['domain_uuid'] ?? null;
+			}
+			$destination_type = $_POST["destination_type"] ?? '';
 			$destination_condition_field = $_POST["destination_condition_field"] ?? null;
 			$destination_number = $_POST["destination_number"];
 			$destination_prefix = $_POST["destination_prefix"];
@@ -141,14 +180,25 @@
 			$destination_caller_id_number = $_POST["destination_caller_id_number"];
 			$destination_cid_name_prefix = $_POST["destination_cid_name_prefix"];
 			$destination_context = $_POST["destination_context"];
-			$destination_conditions = $_POST["destination_conditions"];
-			$destination_actions = $_POST["destination_actions"];
-			$fax_uuid = $_POST["fax_uuid"];
-			$provider_uuid = $_POST["provider_uuid"] ?? null;
-			$user_uuid = $_POST["user_uuid"];
-			$group_uuid = $_POST["group_uuid"];
-			$destination_order= $_POST["destination_order"];
-			$destination_enabled = $_POST["destination_enabled"];
+			$destination_conditions = is_array($_POST["destination_conditions"] ?? null) ? $_POST["destination_conditions"] : [];
+			$destination_actions = is_array($_POST["destination_actions"] ?? null) ? $_POST["destination_actions"] : [];
+			//the destination type selects the dialplan and context behavior, limit it to known values
+			switch ($destination_type) {
+				case 'inbound': break;
+				case 'outbound': break;
+				case 'local': break;
+				default: $destination_type = 'inbound';
+			}
+			//the context is used as a cache key and stored in the dialplan, limit it to safe characters
+			if (!empty($destination_context) && $destination_context !== '${domain_name}' && !preg_match('/^[A-Za-z0-9._\-]+$/D', $destination_context)) {
+				$destination_context = preg_replace('#[^A-Za-z0-9._\-]#', '', $destination_context);
+			}
+			$fax_uuid = is_uuid($_POST["fax_uuid"] ?? '') ? $_POST["fax_uuid"] : null;
+			$provider_uuid = is_uuid($_POST["provider_uuid"] ?? '') ? $_POST["provider_uuid"] : null;
+			$user_uuid = is_uuid($_POST["user_uuid"] ?? '') ? $_POST["user_uuid"] : null;
+			$group_uuid = is_uuid($_POST["group_uuid"] ?? '') ? $_POST["group_uuid"] : null;
+			$destination_order = is_numeric($_POST["destination_order"] ?? '') ? intval($_POST["destination_order"]) : 100;
+			$destination_enabled = ($_POST["destination_enabled"] ?? 'true') === 'false' ? 'false' : 'true';
 			$destination_description = $_POST["destination_description"];
 			$destination_sell = check_float($_POST["destination_sell"] ?? '');
 			$currency = $_POST["currency"] ?? null;
@@ -190,6 +240,22 @@
 //process the http post
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
+		//the domain is limited to the session domain unless the user may select a domain or access all domains
+			if (!permission_exists('destination_domain') && !permission_exists('destination_all')) {
+				$domain_uuid = $_SESSION['domain_uuid'] ?? null;
+			}
+			elseif (!permission_exists('destination_domain') && !empty($domain_uuid) && is_uuid($domain_uuid)) {
+				//access all domains is allowed to edit in another domain, verify the domain exists rather than trusting the posted value
+					$sql = "select domain_uuid from v_domains ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$parameters['domain_uuid'] = $domain_uuid;
+					$row = $database->select($sql, $parameters, 'row');
+					if (empty($row)) {
+						unset($domain_uuid);
+					}
+					unset($sql, $parameters, $row);
+			}
+
 		//initialize the destinations object
 			if (permission_exists('destination_domain') && !empty($domain_uuid) && is_uuid($domain_uuid)) {
 				$destination->domain_uuid = $domain_uuid;
@@ -201,6 +267,16 @@
 			}
 			if ($destination_type =="outbound" && empty($destination_context)) {
 				$destination_context = $_SESSION['domain_name'];
+			}
+
+		//check the permission for the action
+			if ($action == "update" && !permission_exists('destination_edit')) {
+				echo "access denied";
+				exit;
+			}
+			if ($action == "add" && !permission_exists('destination_add')) {
+				echo "access denied";
+				exit;
 			}
 
 		//validate the token

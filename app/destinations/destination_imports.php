@@ -48,10 +48,19 @@
 	$destination_context = $_POST["destination_context"] ?? null;
 	$destination_record = $_POST["destination_record"] ?? null;
 
+//validate the delimiter and enclosure, they are passed to str_getcsv
+	if (!empty($delimiter) && !in_array($delimiter, [',', '|', "\t"], true)) {
+		$delimiter = ',';
+	}
+	if (!empty($enclosure) && $enclosure !== '"') {
+		$enclosure = '"';
+	}
+
 //set the defaults
 	$destination_type = $destination_type ?? 'inbound';
 	$destination_context = $destination_context ?? 'public';
-	$from_row = $from_row ?? '2';
+	$from_row = is_numeric($from_row) ? intval($from_row) : 2;
+	$from_row = ($from_row >= 1 && $from_row <= 99) ? $from_row : 2;
 	$destination_enabled = $destination_enabled ?? true;
 	if ($destination_type =="outbound" && $destination_context == "public") { $destination_context = $_SESSION['domain_name']; }
 	if ($destination_type =="outbound" && empty($destination_context)) { $destination_context = $_SESSION['domain_name']; }
@@ -153,12 +162,29 @@
 			$p = permissions::new();
 
 		//user selected fields
-			$fields = $_POST['fields'];
-			$domain_uuid = $_POST['domain_uuid'];
-			$destination_record = $_POST['destination_record'];
-			$destination_type = $_POST['destination_type'];
-			$destination_context = $_POST['destination_context'];
-			$destination_enabled = $_POST['destination_enabled'];
+			$fields = is_array($_POST['fields'] ?? null) ? $_POST['fields'] : [];
+			$destination_record = $_POST['destination_record'] ?? null;
+			$destination_type = $_POST['destination_type'] ?? 'inbound';
+			$destination_context = $_POST['destination_context'] ?? 'public';
+			$destination_enabled = $_POST['destination_enabled'] ?? true;
+
+		//limit the fields to the destination schema, they are used as array keys and table names
+			if (!empty($schema)) {
+				$schema_fields = [];
+				foreach ($schema as $row) {
+					if (isset($row['table']) && !empty($row['fields'])) {
+						foreach ($row['fields'] as $field_name) {
+							$schema_fields[] = $row['table'].'.'.$field_name;
+						}
+					}
+				}
+				foreach ($fields as $key => $value) {
+					if (!is_string($value) || !in_array($value, $schema_fields, true)) {
+						unset($fields[$key]);
+					}
+				}
+				unset($schema_fields);
+			}
 
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
@@ -576,11 +602,10 @@
 			}
 
 		//user selected fields
-			$fields = $_POST['fields'];
-			$domain_uuid = $_POST['domain_uuid'];
-			$destination_type = $_POST['destination_type'];
-			$destination_context = $_POST['destination_context'];
-			$destination_enabled = $_POST['destination_enabled'];
+			$fields = is_array($_POST['fields'] ?? null) ? $_POST['fields'] : [];
+			$destination_type = $_POST['destination_type'] ?? 'inbound';
+			$destination_context = $_POST['destination_context'] ?? 'public';
+			$destination_enabled = $_POST['destination_enabled'] ?? true;
 
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
@@ -779,7 +804,7 @@
 				echo "		".$text['label-file_name']."\n";
 				echo "</td>\n";
 				echo "<td class='vtable' align='left'>\n";
-				echo "		<b>".$_SESSION['file_name']."</b>\n";
+				echo "		<b>".escape($_SESSION['file_name'])."</b>\n";
 				echo "<br />\n";
 				//echo $text['description-file_name']."\n";
 				echo "</td>\n";
