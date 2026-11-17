@@ -74,10 +74,10 @@
 //process the http post
 	if (!empty($_POST)) {
 		//get the HTTP values and set as variables
-			$domain_language = $_POST["domain_language"];
-			$domain_time_zone = $_POST["domain_time_zone"];
-			$domain_time_format = $_POST["domain_time_format"];
-			$domain_theme = $_POST["domain_theme"];
+			$domain_language = is_string($_POST["domain_language"] ?? null) ? $_POST["domain_language"] : '';
+			$domain_time_zone = is_string($_POST["domain_time_zone"] ?? null) ? $_POST["domain_time_zone"] : '';
+			$domain_time_format = is_string($_POST["domain_time_format"] ?? null) ? $_POST["domain_time_format"] : '';
+			$domain_theme = is_string($_POST["domain_theme"] ?? null) ? $_POST["domain_theme"] : '';
 
 		//validate the token
 			$token = new token;

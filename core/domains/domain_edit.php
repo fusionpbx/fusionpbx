@@ -62,17 +62,17 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
-		$domain_name = strtolower($_POST["domain_name"]);
-		$domain_enabled = $_POST["domain_enabled"];
-		$domain_description = $_POST["domain_description"];
+		$domain_name = strtolower(is_string($_POST["domain_name"] ?? null) ? $_POST["domain_name"] : '');
+		$domain_enabled = is_string($_POST["domain_enabled"] ?? null) ? $_POST["domain_enabled"] : 'true';
+		$domain_description = is_string($_POST["domain_description"] ?? null) ? $_POST["domain_description"] : '';
 	}
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
 
 // Build the query string
 	$url_params = [];
