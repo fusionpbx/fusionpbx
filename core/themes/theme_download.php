@@ -64,6 +64,22 @@
 
 //define the functions
 	/**
+	 * Escapes a field for CSV. A leading = + - @ or tab is interpreted as a formula by
+	 * spreadsheet applications so it is neutralized before being written to the file.
+	 *
+	 * @param mixed $value The value to escape.
+	 *
+	 * @return string The escaped value.
+	 */
+	function csv_escape($value): string {
+		$value = (string) $value;
+		if ($value !== '' && strpbrk($value[0], "=+-@\t\r") !== false) {
+			$value = "'" . $value;
+		}
+		return $value;
+	}
+
+	/**
 	 * Converts a multi-dimensional array to CSV format.
 	 *
 	 * This function assumes that the input array is a collection of themes,
@@ -107,7 +123,8 @@
 		$file_pointer = fopen("php://output", 'w');
 		fputcsv($file_pointer, $headers);
 		foreach ($array as $row) {
-			fputcsv($file_pointer, $row);
+			//the exported values are user supplied so escape each field before writing it
+			fputcsv($file_pointer, array_map('csv_escape', $row));
 		}
 		fclose($file_pointer);
 		return ob_get_clean();
@@ -123,6 +140,9 @@
 	 * @return void No return value. This function only sends HTTP headers and does not generate any output.
 	 */
 	function download_send_headers($filename) {
+		// sanitize the file name
+		$filename = preg_replace('#[^a-zA-Z0-9._\-]#', '_', $filename);
+
 		// disable caching
 		$now = gmdate("D, d M Y H:i:s");
 		header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
@@ -160,9 +180,14 @@
 
 		//validate columns
 			foreach($column_group as $table_name => $columns) {
-				foreach ($columns as $column_name) {
-					if (!in_array($column_name, $available_columns[$table_name])) {
-						unset($column_group[$table_name][$column_name]);
+				if (!is_array($columns)) {
+					unset($column_group[$table_name]);
+					continue;
+				}
+				foreach ($columns as $key => $column_name) {
+					//the column names are added to the select statement so only allow known ones
+					if (!is_string($column_name) || !in_array($column_name, $available_columns[$table_name], true)) {
+						unset($column_group[$table_name][$key]);
 					}
 				}
 			}

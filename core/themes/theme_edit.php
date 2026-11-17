@@ -125,6 +125,19 @@
 				}
 			}
 
+		//validate the columns to limit them only to the valid column names
+			$allowed_setting_columns = ['theme_uuid', 'theme_setting_uuid', 'theme_setting_name', 'theme_setting_type', 'theme_setting_value', 'theme_setting_order', 'theme_setting_enabled', 'theme_setting_description'];
+			if (is_array($theme_settings) && @sizeof($theme_settings) != 0) {
+				foreach ($theme_settings as $x => $setting) {
+					if (!is_array($setting)) {
+						unset($theme_settings[$x]);
+						continue;
+					}
+					$theme_settings[$x] = array_intersect_key($setting, array_flip($allowed_setting_columns));
+					$theme_settings[$x]['theme_uuid'] = $theme_uuid;
+				}
+			}
+
 		//prepare the array
 			$array['themes'][0]['theme_uuid'] = $theme_uuid;
 			$array['themes'][0]['theme_category'] = $theme_category;
@@ -448,7 +461,7 @@
 			echo "	<input type='hidden' name='theme_settings[$x][theme_setting_type]' value='".escape($row['theme_setting_type'])."'>\n";
 			if (substr_count($row['theme_setting_name'], "_color") > 0 || str_starts_with($row['theme_setting_value'] ?? '', "rgb") || str_starts_with($row['theme_setting_value'] ?? '', "#")) {
 				echo "	<input type='text' class='formfld colorpicker' id='colorpicker_$x' name='theme_settings[$x][theme_setting_value]' value=\"".escape($row['theme_setting_value'])."\">\n";
-				echo "	<div id='color_$x' style='display: inline-block; width: 15px; height: 15px; background: ".escape($row['theme_setting_value'])."; margin-right: 4px; vertical-align: middle; border: 1px solid ".(color_adjust($row['theme_setting_value'], -0.18))."; padding: -1px;'></div>\n";
+				echo "	<div id='color_$x' style='display: inline-block; width: 15px; height: 15px; background: ".escape($row['theme_setting_value'])."; margin-right: 4px; vertical-align: middle; border: 1px solid ".escape(color_adjust($row['theme_setting_value'], -0.18))."; padding: -1px;'></div>\n";
 				echo "	<script>\n";
 				echo "	$('#colorpicker_$x').on('changeColor', function (event) {\n";
 				echo "		document.getElementById('color_$x').style.background = event.color.toHex();\n";

@@ -45,10 +45,22 @@
 	ini_set('max_execution_time',7200);
 
 //get the http get values and set them as php variables
-	$action = $_POST["action"] ?? null;
+	$action = is_string($_POST["action"] ?? null) ? $_POST["action"] : null;
 	$from_row = $_POST["from_row"] ?? null;
 	$delimiter = $_POST["data_delimiter"] ?? null;
 	$enclosure = $_POST["data_enclosure"] ?? null;
+
+//validate the delimiter and enclosure, they are passed to explode and str_getcsv
+	if (!empty($delimiter) && !in_array($delimiter, [',', '|', "\t"], true)) {
+		$delimiter = ',';
+	}
+	if (!empty($enclosure) && $enclosure !== '"') {
+		$enclosure = '"';
+	}
+
+//validate the row to start importing from
+	$from_row = is_numeric($from_row) ? intval($from_row) : 2;
+	$from_row = ($from_row >= 1 && $from_row <= 99) ? $from_row : 2;
 
 //save the data to the csv file
 	if (isset($_POST['data'])) {
@@ -69,10 +81,25 @@
 		}
 	}
 
+//validate the session file is within the expected temp directory
+	if (!empty($_SESSION['file'])) {
+		$temp_dir = realpath($settings->get('server', 'temp'));
+		$file_real = realpath($_SESSION['file']);
+		if ($temp_dir === false || $file_real === false || strpos($file_real, $temp_dir . DIRECTORY_SEPARATOR) !== 0) {
+			unset($_SESSION['file']);
+		}
+	}
+
 //get the schema
 	if (!empty($delimiter) && file_exists($_SESSION['file'] ?? '')) {
 		//get the first line
-			$line = fgets(fopen($_SESSION['file'], 'r'));
+			$fh = @fopen($_SESSION['file'], 'r');
+			if ($fh) {
+				$line = fgets($fh);
+				fclose($fh);
+			} else {
+				$line = '';
+			}
 			$line_fields = explode($delimiter, $line);
 
 		//get the schema
@@ -187,9 +214,9 @@
 			echo "<br /><br />\n";
 
 			echo "<input name='action' type='hidden' value='import'>\n";
-			echo "<input name='from_row' type='hidden' value='$from_row'>\n";
-			echo "<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
-			echo "<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
+			echo "<input name='from_row' type='hidden' value='".escape($from_row)."'>\n";
+			echo "<input name='data_delimiter' type='hidden' value='".escape($delimiter)."'>\n";
+			echo "<input name='data_enclosure' type='hidden' value='".escape($enclosure)."'>\n";
 			echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 			echo "</form>\n";
