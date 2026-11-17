@@ -211,7 +211,7 @@
 			$dialplan_number = $row["dialplan_number"];
 			$dialplan_order = $row["dialplan_order"];
 			$dialplan_continue = $row["dialplan_continue"];
-			$dialplan_context = $row["dialplan_context"];
+			$dialplan_context = $row["dialplan_context"] ?? '';
 			$dialplan_xml = $row["dialplan_xml"];
 			$dialplan_enabled = $row["dialplan_enabled"];
 			$dialplan_description = $row["dialplan_description"];
