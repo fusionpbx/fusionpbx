@@ -53,10 +53,19 @@
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'asc' ? 'asc' : 'desc';
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
+
+//limit the order by to the columns shown in the list
+	$allowed_order_by = ['domain_name', 'username', 'type', 'result', 'remote_address', 'user_agent', 'timestamp'];
+	if ($has_column_detail) {
+		$allowed_order_by[] = 'detail';
+	}
+	if (!in_array($order_by, $allowed_order_by, true)) {
+		$order_by = '';
+	}
 
 // Build the query string
 	$param = [];
@@ -79,7 +88,7 @@
 
 //get the http post data
 	if (!empty($_POST['user_logs']) && is_array($_POST['user_logs'])) {
-		$action = $_POST['action'];
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
 		$user_logs = $_POST['user_logs'];
 	}
 
@@ -302,10 +311,11 @@
 	if (!empty($user_logs) && is_array($user_logs) && @sizeof($user_logs) != 0) {
 		$x = 0;
 		foreach ($user_logs as $row) {
-			//check the session status
+			//check the session status, validate the session id before using it as a file name
+			$session_status = '';
 			$session_file = 'sess_'.$row['session_id'];
 			if (!empty($row['result']) && $row['result'] == 'success') {
-				$session_status = (!empty($row['session_id']) && file_exists($session_path.'/'.$session_file)) ? 'active' : 'inactive';
+				$session_status = (!empty($row['session_id']) && preg_match('/^[a-zA-Z0-9,-]+$/', $row['session_id']) && file_exists($session_path.'/'.$session_file)) ? 'active' : 'inactive';
 			}
 			elseif (!empty($row['result']) && $row['result'] == 'failure') {
 				$session_status = 'failed';
