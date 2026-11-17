@@ -237,7 +237,7 @@ class sofia_global_settings {
 
 							//add copy to the description
 							$array[$this->table][$x][$this->name . '_uuid']    = uuid();
-							$array[$this->table][$x]['global_setting_enabled'] = $row['global_setting_enabled'] === true ? 'true' : 'false';
+							$array[$this->table][$x]['global_setting_enabled'] = filter_var($row['global_setting_enabled'], FILTER_VALIDATE_BOOLEAN) ? 'true' : 'false';
 							$array[$this->table][$x][$this->description_field] = trim($row[$this->description_field] ?? '') . trim(' (' . $text['label-copy'] . ')');
 
 							//increment the id

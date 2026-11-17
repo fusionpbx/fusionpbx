@@ -229,7 +229,7 @@
 			echo "	<td>".escape($row['global_setting_value'])."</td>\n";
 			if (permission_exists('sofia_global_setting_edit')) {
 				echo "	<td class='no-link center'>\n";
-				echo "		<input type='hidden' name='number_translations[$x][global_setting_enabled]' value='".escape($row['global_setting_enabled'])."' />\n";
+				echo "		<input type='hidden' name='sofia_global_settings[$x][global_setting_enabled]' value='".escape($row['global_setting_enabled'])."' />\n";
 				echo button::create(['type'=>'submit','class'=>'link','label'=>$text['label-'.$row['global_setting_enabled']],'title'=>$text['button-toggle'],'onclick'=>"list_self_check('checkbox_".$x."'); list_action_set('toggle'); list_form_submit('form_list')"]);
 			}
 			else {
