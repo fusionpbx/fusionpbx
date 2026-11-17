@@ -319,7 +319,7 @@ class gateways {
 
 				//filter out unchecked gateways, build where clause for below
 				foreach ($records as $record) {
-					if (!empty($record['checked']) == 'true' && is_uuid($record['uuid'])) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 						$uuids[] = "'" . $record['uuid'] . "'";
 					}
 				}
