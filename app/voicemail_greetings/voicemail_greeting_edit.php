@@ -34,6 +34,24 @@
 		exit;
 	}
 
+//a user that cannot view voicemails may only manage the greetings of their own assigned extensions
+	if (!permission_exists('voicemail_view')) {
+		$extension_assigned = false;
+		if (!empty($_SESSION['user']['extension']) && is_array($_SESSION['user']['extension'])) {
+			foreach ($_SESSION['user']['extension'] as $row) {
+				if ((is_numeric($row['number_alias']) && $row['number_alias'] == ($_REQUEST['voicemail_id'] ?? '')) || $row['user'] == ($_REQUEST['voicemail_id'] ?? '')) {
+					$extension_assigned = true;
+					break;
+				}
+			}
+		}
+		if (!$extension_assigned) {
+			echo "access denied";
+			exit;
+		}
+		unset($extension_assigned, $row);
+	}
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -96,9 +114,25 @@
 		$voicemail_id = $_REQUEST["voicemail_id"];
 	}
 
+//verify the voicemail greeting being updated belongs to the current domain
+	if ($action == 'update' && is_uuid($voicemail_greeting_uuid)) {
+		$sql = "select voicemail_greeting_uuid from v_voicemail_greetings ";
+		$sql .= "where voicemail_greeting_uuid = :voicemail_greeting_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $row);
+	}
+
 //get the form value and set to php variables
 	if (!empty($_POST) && is_array($_POST)) {
-		$greeting_id = $_POST["greeting_id"];
+		//the greeting id is used in arithmetic and to build the file name, only allow a whole number
+		$greeting_id = isset($_POST["greeting_id"]) && is_scalar($_POST["greeting_id"]) && ctype_digit((string)$_POST["greeting_id"]) ? (int)$_POST["greeting_id"] : null;
 		$greeting_name = $_POST["greeting_name"];
 		$greeting_voice = $_POST["greeting_voice"];
 		//$greeting_model = $_POST["greeting_model"];
@@ -112,6 +146,14 @@
 	}
 
 if (!empty($_POST) && empty($_POST["persistformvar"])) {
+
+	//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: ../voicemails/voicemails.php');
+			exit;
+		}
 
 	//delete the voicemail greeting
 		if (permission_exists('voicemail_greeting_delete')) {
@@ -129,14 +171,6 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 				header("Location: voicemail_greetings.php?id=".$voicemail_id);
 				exit;
 			}
-		}
-
-	//validate the token
-		$token = new token;
-		if (!$token->validate($_SERVER['PHP_SELF'])) {
-			message::add($text['message-invalid_token'],'negative');
-			header('Location: ../voicemails/voicemails.php');
-			exit;
 		}
 
 	//check for all required data
@@ -180,9 +214,10 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		//set the recording format
 		$greeting_files = glob($greeting_path.'/greeting_*');
 
-		if (empty($greeting_format) && !empty($greeting_files)) {
-			$index = $greeting_id - 1;
-			$greeting_format = pathinfo($greeting_files[$index], PATHINFO_EXTENSION);
+		if (empty($greeting_format) && !empty($greeting_files) && is_numeric($greeting_id)) {
+			$index = (int)$greeting_id - 1;
+			//the extension comes from a file name on disk, limit it to word characters before using it in a file name
+			$greeting_format = preg_replace('#[^a-zA-Z0-9]#', '', pathinfo($greeting_files[$index] ?? '', PATHINFO_EXTENSION));
 		} else {
 			$greeting_format = $greeting_format ?? 'wav';
 		}
@@ -399,7 +434,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 				echo "		<option value=''></option>\n";
 				foreach ($voices as $category => $sub_array) {
 					$category = $text['label-'.$category] ?? $category;
-					echo "<optgroup label='".$category."' data-type='".$category."'>\n";
+					echo "<optgroup label='".escape($category)."' data-type='".escape($category)."'>\n";
 					foreach ($sub_array as $key => $voice) {
 						$greeting_voice_selected = (!empty($greeting_voice) && $key == $greeting_voice) ? "selected='selected'" : null;
 						echo "		<option value='".escape($key)."' $greeting_voice_selected>".escape(ucwords($voice))."</option>\n";

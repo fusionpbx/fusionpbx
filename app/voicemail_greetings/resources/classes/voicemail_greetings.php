@@ -153,14 +153,18 @@ class voicemail_greetings {
 					}
 				}
 
-				//get necessary greeting details
+				//get necessary greeting details, restrict the results to the current domain and voicemail box
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
 					$sql  = "select " . $this->uuid_prefix . "uuid as uuid, greeting_filename, greeting_id from v_" . $this->table . " ";
 					$sql  .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
-					$rows = $this->database->select($sql, $parameters ?? null, 'all');
+					$sql  .= "and domain_uuid = :domain_uuid ";
+					$sql  .= "and voicemail_id = :voicemail_id ";
+					$parameters['domain_uuid']   = $this->domain_uuid;
+					$parameters['voicemail_id']  = $this->voicemail_id;
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
-							$greeting_filenames[$row['uuid']]  = $row['greeting_filename'];
+							$greeting_filenames[$row['uuid']]  = basename((string)$row['greeting_filename']);
 							$greeting_ids[$this->voicemail_id] = $row['greeting_id'];
 						}
 					}

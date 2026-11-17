@@ -101,9 +101,14 @@
 	if (!empty($_GET['a']) && $_GET['a'] == "download" && (permission_exists('voicemail_greeting_play') || permission_exists('voicemail_greeting_download'))) {
 		if ($_GET['type'] == "rec") {
 			//get the id
-			$voicemail_greeting_uuid = $_GET['uuid'];
+			$voicemail_greeting_uuid = $_GET['uuid'] ?? '';
 
-			//get voicemail greeting details from db
+			//the greeting uuid is used to look up the recording, require a valid uuid
+			if (!is_uuid($voicemail_greeting_uuid)) {
+				exit;
+			}
+
+			//get voicemail greeting details from db, restrict the results to the current voicemail box when known
 			$sql = "select greeting_filename, greeting_base64, greeting_id ";
 			$sql .= "from v_voicemail_greetings ";
 			$sql .= "where domain_uuid = :domain_uuid ";
@@ -111,9 +116,14 @@
 			$parameters = [];
 			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 			$parameters['voicemail_greeting_uuid'] = $voicemail_greeting_uuid;
+			if ($voicemail_id !== '') {
+				$sql .= "and voicemail_id = :voicemail_id ";
+				$parameters['voicemail_id'] = $voicemail_id;
+			}
 			$row = $database->select($sql, $parameters, 'row');
 			if (is_array($row) && @sizeof($row) != 0) {
-				$greeting_filename = $row['greeting_filename'];
+				//the stored file name is used to build a file system path, remove any path components
+				$greeting_filename = basename((string)$row['greeting_filename']);
 				$greeting_id = $row['greeting_id'];
 				if (!empty($settings->get('voicemail', 'storage_type')) && $settings->get('voicemail', 'storage_type') == 'base64' && $row['greeting_base64'] != '') {
 					$greeting_decoded = base64_decode($row['greeting_base64']);
@@ -138,7 +148,7 @@
 						case "ogg" : header("Content-Type: audio/ogg"); break;
 					}
 				}
-				header('Content-Disposition: attachment; filename="'.$greeting_filename.'"');
+				header('Content-Disposition: attachment; filename="'.addcslashes($greeting_filename, "\"\\").'"');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 				if (!empty($_GET['t']) && $_GET['t'] == "bin") {
@@ -287,8 +297,19 @@
 
 //set the greeting
 	if (!empty($_REQUEST['action']) && $_REQUEST['action'] == "set") {
-		//save the greeting_id to a variable
-		$greeting_id = $_REQUEST['greeting_id'];
+		//validate the token
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header('Location: voicemail_greetings.php?id='.urlencode($voicemail_id));
+			exit;
+		}
+
+		//save the greeting_id to a variable, only allow a whole number
+		$greeting_id = $_REQUEST['greeting_id'] ?? '';
+		if (!is_scalar($greeting_id) || !ctype_digit((string)$greeting_id)) {
+			exit;
+		}
 
 		//set the greeting_id
 		$sql = "update v_voicemails ";
@@ -483,7 +504,7 @@
 			}
 			echo "	<td class='center no-link'>";
 			$selected = ($row['greeting_id'] == $selected_greeting_id) ? true : false;
-			echo 		"<input type='radio' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".urlencode($voicemail_id)."&greeting_id=".urlencode($row['greeting_id'])."&action=set&order_by=".$order_by."&order=".$order."';\" name='greeting_id' value='".escape($row['greeting_id'])."' ".(($selected) ? "checked='checked'" : null)." style='display: block; width: 20px; height: auto; margin: auto calc(50% - 10px);'>\n";
+			echo 		"<input type='radio' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".urlencode($voicemail_id)."&greeting_id=".urlencode($row['greeting_id'])."&action=set&order_by=".$order_by."&order=".$order."&".$token['name']."=".$token['hash']."';\" name='greeting_id' value='".escape($row['greeting_id'])."' ".(($selected) ? "checked='checked'" : null)." style='display: block; width: 20px; height: auto; margin: auto calc(50% - 10px);'>\n";
 			echo "	</td>\n";
 			echo "	<td class='center'>".escape($row['greeting_id'])."</td>\n";
 			echo "	<td class='no-wrap'>";
@@ -522,7 +543,9 @@
 				echo "	<td class='center no-wrap hide-xs'>".$file_size."</td>\n";
 			}
 			else {
-				if (file_exists($greeting_dir.'/'.$row['greeting_filename'])) {
+				//the stored file name is used to build a file system path, remove any path components
+				$greeting_stat_path = $greeting_dir.'/'.basename((string)$row['greeting_filename']);
+				if (file_exists($greeting_stat_path)) {
 					date_default_timezone_set($settings->get('domain', 'time_zone', date_default_timezone_get()));
 					if ($settings->get('domain', 'time_format') == '24h') {
 						$time_format = 'H:i:s';
@@ -530,8 +553,8 @@
 					else {
 						$time_format = 'h:i:s a';
 					}
-					$file_size = byte_convert(filesize($greeting_dir.'/'.$row['greeting_filename']));
-					$file_date = date("M d, Y ".$time_format, filemtime($greeting_dir.'/'.$row['greeting_filename']));
+					$file_size = byte_convert(filesize($greeting_stat_path));
+					$file_date = date("M d, Y ".$time_format, filemtime($greeting_stat_path));
 				} else {
 					$file_size = 0;
 					$file_date = '';
