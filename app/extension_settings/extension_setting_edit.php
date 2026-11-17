@@ -60,6 +60,46 @@
 		$extension_uuid = $_REQUEST["extension_uuid"];
 	}
 
+//verify the extension setting belongs to the current domain unless allowed to access all domains
+	if (!permission_exists('extension_setting_all')) {
+		$checked_uuids = [];
+		if (is_uuid($_REQUEST["id"] ?? '')) {
+			$checked_uuids[] = $_REQUEST["id"];
+		}
+		if (is_uuid($_REQUEST["extension_setting_uuid"] ?? '')) {
+			$checked_uuids[] = $_REQUEST["extension_setting_uuid"];
+		}
+		foreach ($checked_uuids as $checked_uuid) {
+			$sql = "select extension_setting_uuid from v_extension_settings ";
+			$sql .= "where extension_setting_uuid = :extension_setting_uuid ";
+			$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
+			$parameters['extension_setting_uuid'] = $checked_uuid;
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$row = $database->select($sql, $parameters, 'row');
+			if (empty($row)) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
+		unset($checked_uuids);
+	}
+
+//verify the parent extension belongs to the current domain
+	if (!permission_exists('extension_setting_all') && is_uuid($_REQUEST["extension_uuid"] ?? '')) {
+		$sql = "select extension_uuid from v_extensions ";
+		$sql .= "where extension_uuid = :extension_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['extension_uuid'] = $_REQUEST["extension_uuid"];
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $row);
+	}
+
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$domain_uuid = $_POST["domain_uuid"] ?? null;
