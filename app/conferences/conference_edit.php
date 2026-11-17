@@ -81,6 +81,44 @@
 		$action = "add";
 	}
 
+//verify the conference belongs to the current domain unless allowed to access all domains
+	if (!permission_exists('conference_all')) {
+		$checked_uuids = [];
+		if (is_uuid($_REQUEST["id"] ?? '')) {
+			$checked_uuids[] = $_REQUEST["id"];
+		}
+		if (is_uuid($_POST["conference_uuid"] ?? '')) {
+			$checked_uuids[] = $_POST["conference_uuid"];
+		}
+		foreach ($checked_uuids as $checked_uuid) {
+			$sql = "select conference_uuid from v_conferences ";
+			$sql .= "where conference_uuid = :conference_uuid ";
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['conference_uuid'] = $checked_uuid;
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$row = $database->select($sql, $parameters, 'row');
+			if (empty($row)) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
+		unset($checked_uuids);
+
+		//verify the posted dialplan uuid does not belong to another domain, it is used to update the dialplan
+		if (is_uuid($_POST["dialplan_uuid"] ?? '')) {
+			$sql = "select domain_uuid from v_dialplans ";
+			$sql .= "where dialplan_uuid = :dialplan_uuid ";
+			$parameters['dialplan_uuid'] = $_POST["dialplan_uuid"];
+			$row = $database->select($sql, $parameters, 'row');
+			if (!empty($row) && !empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid']) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
+	}
+
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
@@ -106,10 +144,26 @@
 		//sanitize the conference name
 		$conference_name = preg_replace("/[^A-Za-z0-9\- ]/", "", $conference_name);
 		//$conference_name = str_replace(" ", "-", $conference_name);
+
+		//sanitize the conference profile and flags, both are written into the conference
+		//application data where an unescaped brace would close the flags section and allow
+		//additional conference arguments to be appended
+		$conference_profile = preg_replace("/[^A-Za-z0-9\-_.]/", "", (string) $conference_profile);
+		$conference_flags = preg_replace("/[^A-Za-z0-9\-_|]/", "", (string) $conference_flags);
 	}
 
 //delete the user from the v_conference_users
-	if (!empty($_GET["a"]) && $_GET["a"] == "delete" && permission_exists("conference_delete")) {
+	if (!empty($_GET["a"]) && $_GET["a"] == "delete" && permission_exists("conference_delete")
+		&& is_uuid($_REQUEST["id"] ?? '')
+		&& is_uuid($_REQUEST["user_uuid"] ?? '')) {
+
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: conferences.php'.($query_string ? '?'.$query_string : ''));
+				exit;
+			}
 
 		$user_uuid = $_REQUEST["user_uuid"];
 		$conference_uuid = $_REQUEST["id"];
@@ -134,6 +188,14 @@
 
 //add the user to the v_conference_users
 	if (!empty($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["user_uuid"]) && is_uuid($_REQUEST["id"]) && (empty($_GET["a"]) || $_GET["a"] != "delete")) {
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: conference_edit.php?id='.urlencode($_REQUEST["id"]).($query_string ? '&'.$query_string : ''));
+				exit;
+			}
+
 		//set the variables
 			$user_uuid = $_REQUEST["user_uuid"];
 			$conference_uuid = $_REQUEST["id"];
@@ -168,6 +230,10 @@
 				$dialplan_uuid = uuid();
 			}
 			if ($action == "update") {
+				if (!permission_exists('conference_edit')) {
+					echo "access denied";
+					exit;
+				}
 				$conference_uuid = $_POST["conference_uuid"];
 			}
 
@@ -190,6 +256,27 @@
 			//if (empty($conference_order)) { $msg .= "Please provide: Order<br>\n"; }
 			//if (empty($conference_description)) { $msg .= "Please provide: Description<br>\n"; }
 			if (empty($conference_enabled)) { $msg .= "".$text['confirm-enabled']."<br>\n"; }
+
+		//validate the extension and pin number, both are interpolated into the dialplan condition regex
+			if (!empty($conference_extension) && !ctype_digit((string)$conference_extension)) {
+				$msg .= "".$text['confirm-extension']." ".$text['message-numbers_only']."<br>\n";
+			}
+			if (!empty($conference_pin_number) && (!ctype_digit((string)$conference_pin_number) || strlen((string)$conference_pin_number) > 20)) {
+				$msg .= "".$text['confirm-pin_number']." ".$text['message-numbers_only']."<br>\n";
+			}
+
+		//validate the conference profile against the profiles stored in the database
+			if (!empty($conference_profile)) {
+				$sql = "select profile_name from v_conference_profiles ";
+				$sql .= "where profile_name = :profile_name ";
+				$parameters['profile_name'] = $conference_profile;
+				$row = $database->select($sql, $parameters, 'row');
+				if (empty($row)) {
+					$msg .= "".$text['confirm-profile']."<br>\n";
+				}
+				unset($sql, $parameters, $row);
+			}
+
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				$document['title'] = $text['title-conference'];
 				require_once "resources/header.php";
@@ -455,7 +542,7 @@
 					echo "		<tr>\n";
 					echo "			<td class='vtable'>".escape($field['username'])."</td>\n";
 					echo "			<td>\n";
-					echo "				<a href='conference_edit.php?id=".urlencode($conference_uuid)."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".urlencode($field['user_uuid'])."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete-2']."')\">$v_link_label_delete</a>\n";
+					echo "				<a href='conference_edit.php?id=".urlencode($conference_uuid)."&domain_uuid=".urlencode($_SESSION['domain_uuid'])."&user_uuid=".urlencode($field['user_uuid'])."&a=delete&".$token['name']."=".$token['hash']."' alt='delete' onclick=\"return confirm('".$text['confirm-delete-2']."')\">$v_link_label_delete</a>\n";
 					echo "			</td>\n";
 					echo "		</tr>\n";
 				}
