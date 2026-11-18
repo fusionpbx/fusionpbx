@@ -70,8 +70,9 @@
 		//stream waveform file
 		if ($full_recording_path != '/' && file_exists($full_recording_path)) {
 
-			//temporary waveform image filename
-			$temp_filename = 'waveform_'.$_GET['id'].'_'.rand(0000,9999).'.png';
+			//temporary waveform image filename, outside the document root and with an
+			//unguessable suffix so that it cannot be pre-created or fetched by others
+			$temp_filename = sys_get_temp_dir().'/waveform_'.$_GET['id'].'_'.bin2hex(random_bytes(8)).'.png';
 
 			//create temporary waveform image, if doesn't exist
 			if (file_exists($temp_filename)) {
@@ -102,7 +103,7 @@
 				header("Content-Type: application/download");
 				header("Content-Description: File Transfer");
 				header("Content-Type: image/png");
-				header('Content-Disposition: attachment; filename="'.$temp_filename.'"');
+				header('Content-Disposition: attachment; filename="'.addcslashes(basename($temp_filename), "\"\\").'"');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 				header("Content-Length: ".filesize($temp_filename));
