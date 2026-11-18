@@ -51,9 +51,9 @@
 
 //get the http post data
 	if (!empty($_POST['action'])) {
-		$action = $_POST['action'] ?? '';
-		$user_uuid = $_POST['user_uuid'] ?? '';
-		$user_settings = $_POST['user_settings'] ?? '';
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
+		$user_uuid = is_string($_POST['user_uuid'] ?? null) ? $_POST['user_uuid'] : '';
+		$user_settings = is_array($_POST['user_settings'] ?? null) ? $_POST['user_settings'] : [];
 
 		//process the http post data by action
 			if (!empty($user_settings)) {
@@ -107,8 +107,8 @@
 */
 
 //get the variables
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = is_string($_GET["order_by"] ?? null) ? $_GET["order_by"] : '';
+	$order = is_string($_GET["order"] ?? null) ? $_GET["order"] : '';
 
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
@@ -142,7 +142,7 @@
 	$param = '';
 	$paging_controls = '';
 	if (isset($_GET['page'])) {
-		$page = $_GET['page'];
+		$page = is_numeric($_GET['page']) ? $_GET['page'] : 0;
 		if (empty($page)) { $page = 0; $_GET['page'] = 0; }
 		list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 		$offset = $rows_per_page * $page;
@@ -187,11 +187,11 @@
 	echo "	<div class='heading'><b id='heading_sub'>".$text['title-user_settings']."</b></div>\n";
 	echo "	<div class='actions'>\n";
 	if (permission_exists('user_add') || permission_exists('user_edit')) {
-		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'/core/users/user_edit.php?id='.$user_uuid]);
+		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','link'=>'/core/users/user_edit.php?id='.urlencode($user_uuid)]);
 	}
 	echo button::create(['type'=>'button','id'=>'action_bar_sub_button_back','label'=>$text['button-back'],'icon'=>$button_icon_back,'style'=>'margin-right: 15px; display: none;','link'=>'users.php']);
 	if (permission_exists('user_setting_add')) {
-		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$button_icon_add,'id'=>'btn_add','link'=>PROJECT_PATH.'/core/user_settings/user_setting_edit.php?user_uuid='.urlencode($_GET['id'])]);
+		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$button_icon_add,'id'=>'btn_add','link'=>PROJECT_PATH.'/core/user_settings/user_setting_edit.php?user_uuid='.urlencode(is_string($_GET['id'] ?? null) ? $_GET['id'] : '')]);
 	}
 	if (permission_exists('user_setting_edit') && $user_settings) {
 		echo button::create(['type'=>'button','label'=>$text['button-toggle'],'icon'=>$button_icon_toggle,'id'=>'btn_toggle','name'=>'btn_toggle','style'=>'display: none;','onclick'=>"modal_open('modal-toggle','btn_toggle');"]);
@@ -215,7 +215,7 @@
 
 	echo "<form id='form_list' method='post' action='/core/user_settings/user_settings.php'>\n";
 	echo "<input type='hidden' name='action' id='action' value=''>\n";
-	echo "<input type='hidden' name='user_uuid' value='".$user_uuid."'>\n";
+	echo "<input type='hidden' name='user_uuid' value='".escape($user_uuid)."'>\n";
 
 
 	if (!empty($user_settings)) {
@@ -269,7 +269,7 @@
 			if (permission_exists('user_setting_edit')) {
 				$list_row_url = PROJECT_PATH."/core/user_settings/user_setting_edit.php?user_uuid=".$row['user_uuid']."&id=".$row['user_setting_uuid'];
 			}
-			echo "<tr class='list-row' href='".$list_row_url."'>\n";
+			echo "<tr class='list-row' href='".escape($list_row_url ?? '')."'>\n";
 			if (permission_exists('user_setting_add') || permission_exists('user_setting_edit') || permission_exists('user_setting_delete')) {
 				echo "	<td class='checkbox'>\n";
 				echo "		<input type='checkbox' name='user_settings[$x][checked]' id='checkbox_".$x."' class='checkbox_".$user_setting_category."' value='true' onclick=\"checkbox_on_change(this); if (!this.checked) { document.getElementById('checkbox_all_".$user_setting_category."').checked = false; }\">\n";
