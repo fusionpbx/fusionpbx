@@ -868,6 +868,12 @@ class call_recordings {
 
 			$c_start = $start;
 			$c_end   = $end;
+			//reject a malformed range header, only a single byte range of digits is used below
+			if (!preg_match('/^bytes=(\d+-\d*|-\d+)$/i', (string) $_SERVER['HTTP_RANGE'])) {
+				header('HTTP/1.1 416 Requested Range Not Satisfiable');
+				header("Content-Range: bytes $start-$end/$size");
+				exit;
+			}
 			// Extract the range string
 			[, $range] = explode('=', $_SERVER['HTTP_RANGE'], 2);
 			// Make sure the client hasn't sent us a multibyte range
