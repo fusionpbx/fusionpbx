@@ -138,7 +138,7 @@ class services {
 			$x = 0;
 			foreach ($records as $record) {
 				// Add to the array
-				if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+				if (is_array($record) && ($record['checked'] ?? '') == 'true' && is_uuid($record['uuid'] ?? '')) {
 					$array[$this->table][$x][$this->name.'_uuid'] = $record['uuid'];
 				}
 
@@ -193,7 +193,7 @@ class services {
 			$services = '';
 			// Get current toggle state
 			foreach($records as $record) {
-				if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+				if (is_array($record) && ($record['checked'] ?? '') == 'true' && is_uuid($record['uuid'] ?? '')) {
 					$uuids[] = "'".$record['uuid']."'";
 				}
 			}
@@ -267,7 +267,7 @@ class services {
 			$uuids = [];
 			// Get current reload state
 			foreach($records as $record) {
-				if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+				if (is_array($record) && ($record['checked'] ?? '') == 'true' && is_uuid($record['uuid'] ?? '')) {
 					$uuids[] = "'".$record['uuid']."'";
 				}
 			}
@@ -814,10 +814,10 @@ class services {
 
 			// Run the stop command
 			if (stristr(PHP_OS, 'Linux')) {
-				system("systemctl stop ".escapeshellarg($service['name']));
+				system("systemctl stop ".escapeshellarg($service_name));
 			}
 			if (stristr(PHP_OS, 'BSD')) {
-				system("service ".escapeshellarg($service['name']). "stop");
+				system("service ".escapeshellarg($service_name). "stop");
 			}
 		}
 	}

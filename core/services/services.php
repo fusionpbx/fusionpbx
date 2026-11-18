@@ -43,8 +43,8 @@
 
 // get the http post data
 	if (!empty($_POST['services']) && is_array($_POST['services'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'];
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
+		$search = is_string($_POST['search'] ?? null) ? $_POST['search'] : '';
 		$services = $_POST['services'];
 	}
 
@@ -87,8 +87,13 @@
 	}
 
 // get order and order by
-	$order_by = $_GET["order_by"] ?? null;
-	$order = $_GET["order"] ?? null;
+	$order_by = is_string($_GET["order_by"] ?? null) ? $_GET["order_by"] : '';
+	$order = is_string($_GET["order"] ?? null) ? $_GET["order"] : '';
+
+// limit the order by to the columns shown in the list
+	if (!in_array($order_by, ['service_name', 'service_category', 'service_enabled'], true)) {
+		$order_by = '';
+	}
 
 // define the variables
 	$search = '';
@@ -96,7 +101,7 @@
 	$list_row_url = '';
 
 // add the search variable
-	if (!empty($_GET["search"])) {
+	if (is_string($_GET["search"] ?? null) && !empty($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
 	}
 
@@ -240,7 +245,7 @@
 				: "<span style='background-color: #dc3545; color: white; padding: 2px 8px; border-radius: 10px;'>".$text['label-no']."</span>";
 			$etime = isset($row['service_etime']) ? $service_object->format_etime($row['service_etime']) : '-';
 			$pid = $row['service_pid'] ?? '';
-			$tooltip_attr = $pid ? "title='PID: $pid'" : '';
+			$tooltip_attr = $pid ? "title='PID: ".escape($pid)."'" : '';
 
 			if (permission_exists('service_edit')) {
 				$list_row_url = "service_edit.php?id=".urlencode($row['service_uuid']);
