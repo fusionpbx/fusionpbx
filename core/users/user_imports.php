@@ -185,9 +185,9 @@
 			echo "<br /><br />\n";
 
 			echo "<input name='action' type='hidden' value='import'>\n";
-			echo "<input name='from_row' type='hidden' value='$from_row'>\n";
-			echo "<input name='data_delimiter' type='hidden' value='$delimiter'>\n";
-			echo "<input name='data_enclosure' type='hidden' value='$enclosure'>\n";
+			echo "<input name='from_row' type='hidden' value='".escape($from_row)."'>\n";
+			echo "<input name='data_delimiter' type='hidden' value='".escape($delimiter)."'>\n";
+			echo "<input name='data_enclosure' type='hidden' value='".escape($enclosure)."'>\n";
 			echo "<input type='hidden' name='".$token['name']."' value='".$token['hash']."'>\n";
 
 			echo "</form>\n";
@@ -240,7 +240,23 @@
 			//require_once "resources/header.php";
 
 		//user selected fields
-			$fields = $_POST['fields'];
+			$fields = $_POST['fields'] ?? [];
+
+		//build the list of table and field names the import is allowed to write, only the
+		//fields defined by the schema may be posted, this prevents writing to any other
+		//table or column such as a group name or a domain uuid
+			$allowed_fields = [];
+			if (!empty($schema) && is_array($schema)) {
+				foreach ($schema as $row) {
+					if (!empty($row['fields']) && is_array($row['fields'])) {
+						foreach ($row['fields'] as $field) {
+							if ($field != 'domain_uuid') {
+								$allowed_fields[] = $row['table'].".".$field;
+							}
+						}
+					}
+				}
+			}
 
 		//set the domain_uuid
 			$domain_uuid = $_SESSION['domain_uuid'];
@@ -290,6 +306,11 @@
 									//	$result[$key] = preg_replace('{\D}', '', $result[$key]);
 									//}
 
+									//only allow the fields defined by the schema
+									if (!in_array($value, $allowed_fields)) {
+										continue;
+									}
+
 									//build the data array
 									if (!empty($table_name)) {
 										if (empty($parent)) {
@@ -329,9 +350,12 @@
 							//set the password hash cost
 								$options = array('cost' => 10);
 
-							//set the hash the user password
-								$password = $array['users'][$row_id]['password'];
-								$array['users'][$row_id]['password'] = password_hash($password, PASSWORD_DEFAULT, $options);
+							//set the hash the user password, only when the csv provided one,
+								//otherwise an account would be created with a blank password
+								$password = $array['users'][$row_id]['password'] ?? '';
+								if (!empty($password)) {
+									$array['users'][$row_id]['password'] = password_hash($password, PASSWORD_DEFAULT, $options);
+								}
 
 							//set the user_uuid
 								$array['users'][$row_id]['user_uuid'] = $user_uuid;
