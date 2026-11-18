@@ -73,7 +73,7 @@
 
 		//get the totp secret
 			if (in_array('totp', $settings->get('authentication', 'methods', []))) {
-				$user_totp_secret = strtoupper($_POST["user_totp_secret"]);
+				$user_totp_secret = strtoupper(is_string($_POST["user_totp_secret"] ?? null) ? $_POST["user_totp_secret"] : '');
 			}
 
 		//process the passkey registration or deletion
@@ -921,9 +921,9 @@
 	echo "</script>\n";
 
 	echo "<form name='frm' id='frm' method='post' enctype='multipart/form-data'>\n";
-	echo "<input type='hidden' name='contact_email_uuid' value='".$contact_email_uuid."'>\n";
-	echo "<input type='hidden' name='contact_phone_uuid' value='".$contact_phone_uuid."'>\n";
-	echo "<input type='hidden' name='contact_address_uuid' value='".$contact_address_uuid."'>\n";
+	echo "<input type='hidden' name='contact_email_uuid' value='".escape($contact_email_uuid)."'>\n";
+	echo "<input type='hidden' name='contact_phone_uuid' value='".escape($contact_phone_uuid)."'>\n";
+	echo "<input type='hidden' name='contact_address_uuid' value='".escape($contact_address_uuid)."'>\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
 	echo "	<div class='heading'><b>".$text['title-user_profile']."</b></div>\n";
@@ -1036,7 +1036,7 @@
 		}
 		else {
 			echo "	<div id='totp_qr' style='display:none;'>\n";
-			echo "		".$user_totp_secret."<br />\n";
+			echo "		".escape($user_totp_secret)."<br />\n";
 			echo "		<img src=\"data:image/jpeg;base64,".base64_encode($image)."\" style='margin-top: 0px; padding: 5px; background: white; max-width: 100%;'><br />\n";
 			echo "		".$text['description-user_totp_qr_code']."<br /><br />\n";
 			echo "	</div>\n";
@@ -1436,8 +1436,12 @@
 	echo "	<td class='vtable' align='left'>";
 	if (!empty($attachment_filename) && !empty($attachment_content)) {
 		$attachment_type = strtolower(pathinfo($attachment_filename, PATHINFO_EXTENSION));
-		echo "	<label class='mt-1' for='contact_attachment_uuid'><input type='checkbox' name='contact_attachment_uuid' id='contact_attachment_uuid' value='".$contact_attachment_uuid."'> ".$text['label-delete']."</label><br>\n";
-		echo "	<img id='contact_attachment' style='width: 100%; max-width: 300px; height: auto; border-radius: ".$settings->get('theme', 'input_border_radius', '3px').";' src='data:image/".$attachment_type.";base64,".$attachment_content."'>\n";
+		//limit the mime subtype to a known image extension, the filename comes from the upload
+		if (!in_array($attachment_type, ['jpg','jpeg','gif','png','webp'])) {
+			$attachment_type = 'png';
+		}
+		echo "	<label class='mt-1' for='contact_attachment_uuid'><input type='checkbox' name='contact_attachment_uuid' id='contact_attachment_uuid' value='".escape($contact_attachment_uuid)."'> ".$text['label-delete']."</label><br>\n";
+		echo "	<img id='contact_attachment' style='width: 100%; max-width: 300px; height: auto; border-radius: ".$settings->get('theme', 'input_border_radius', '3px').";' src='data:image/".escape($attachment_type).";base64,".escape($attachment_content)."'>\n";
 	}
 	else {
 		echo "	<input class='formfld' type='file' name='contact_attachment'>\n";

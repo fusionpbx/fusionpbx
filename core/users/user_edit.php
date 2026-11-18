@@ -323,7 +323,7 @@ if (permission_exists('user_edit') && $action == 'edit'
 				$message_key = $_POST["message_key"];
 			}
 			if (in_array('totp', $settings->get('authentication', 'methods', []))) {
-				$user_totp_secret = strtoupper($_POST["user_totp_secret"]);
+				$user_totp_secret = strtoupper(is_string($_POST["user_totp_secret"] ?? null) ? $_POST["user_totp_secret"] : '');
 			}
 			// if (!empty($_REQUEST["id"])) {
 			// 	// If they have it on and the reset button was pressed, then clear the TOTP secret so it can be reconfigured on next login
@@ -651,11 +651,13 @@ if (permission_exists('user_edit') && $action == 'edit'
 			}
 			unset($sql, $parameters, $row);
 
+		//array index for the user_groups records below (was previously undefined)
+			$n = 0;
+
 		//assign the user to the group
 			if ((permission_exists('user_add') || permission_exists('user_edit')) && !empty($_REQUEST["group_uuid_name"])) {
 				$group_data = explode('|', $group_uuid_name);
 				$group_uuid = $group_data[0];
-				$group_name = $group_data[1];
 
 				//compare the group level to only add groups at the same level or lower than the user
 				$sql = "select * from v_groups ";
@@ -667,7 +669,10 @@ if (permission_exists('user_edit') && $action == 'edit'
 				//delegation rule: groups in a lower level are open (hierarchy), but a group at your own level
 				//may only be assigned if you are a member of it (you can only give out groups you are part of)
 				$my_group_uuids = array_column($_SESSION['user']['groups'] ?? [], 'group_uuid');
-				if ($row['group_level'] < $_SESSION['user']['group_level'] || in_array($group_uuid, $my_group_uuids)) {
+				if (!empty($row) && ($row['group_level'] < $_SESSION['user']['group_level'] || in_array($group_uuid, $my_group_uuids))) {
+					//use the group name from the database and never the one supplied by the client,
+					//permissions are assigned to users by group name
+					$group_name = $row['group_name'];
 					$array['user_groups'][$n]['user_group_uuid'] = uuid();
 					$array['user_groups'][$n]['domain_uuid'] = $domain_uuid;
 					$array['user_groups'][$n]['group_name'] = $group_name;
@@ -1035,7 +1040,7 @@ if (permission_exists('user_edit') && $action == 'edit'
 	}
 
 	echo "<form name='frm' id='frm' method='post'>\n";
-	echo "<input type='hidden' name='search' id='search' value=\"".($search ?? '')."\" />\n";
+	echo "<input type='hidden' name='search' id='search' value=\"".escape($search ?? '')."\" />\n";
 	//echo "<input type='hidden' name='reset_totp' id='reset_totp' value='false' />\n";
 
 	echo "<div class='action_bar' id='action_bar'>\n";
@@ -1524,7 +1529,7 @@ if (permission_exists('user_edit') && $action == 'edit'
 		}
 		else {
 			echo "	<div id='totp_qr' style='display:none;'>\n";
-			echo "		".$user_totp_secret."<br />\n";
+			echo "		".escape($user_totp_secret)."<br />\n";
 			echo "		<img src=\"data:image/jpeg;base64,".base64_encode($image)."\" style='margin-top: 0px; padding: 5px; background: white; max-width: 100%;'><br />\n";
 			echo "		".$text['description-user_totp_qr_code']."<br /><br />\n";
 			echo "	</div>\n";
