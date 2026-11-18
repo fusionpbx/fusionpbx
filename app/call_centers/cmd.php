@@ -47,10 +47,8 @@
 	}
 
 //get the variables
-	$cmd = $_GET['cmd'];
-	$call_center_queue_uuid = $_GET["id"];
-	$agent_uuid = $_GET['agent_uuid'];
-	$agent_status = $_GET['agent_status'];
+	$cmd = is_string($_GET['cmd'] ?? null) ? $_GET['cmd'] : '';
+	$call_center_queue_uuid = is_string($_GET["id"] ?? null) ? $_GET["id"] : '';
 
 //validate the variables
 	switch ($cmd) {
@@ -79,7 +77,7 @@
 	}
 
 //run call center commands load, unload or reload
-	if (isset($queue_extension) && isset($cmd)) {
+	if (isset($queue_extension) && is_numeric($queue_extension) && isset($cmd)) {
 		$event_socket = event_socket::create();
 		if ($event_socket->is_connected()) {
 			$response = event_socket::api('reloadxml');

@@ -63,8 +63,21 @@
 		}
 
 		//get the agent id
-		if (is_uuid($_POST['agents'][0]['id'])) {
+		if (is_uuid($_POST['agents'][0]['id'] ?? '')) {
 			$agent_uuid = $_POST['agents'][0]['id'];
+		}
+
+		//confirm the agent belongs to the current domain before changing it
+		if (is_uuid($agent_uuid ?? '')) {
+			$sql = "select call_center_agent_uuid from v_call_center_agents ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and call_center_agent_uuid = :call_center_agent_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['call_center_agent_uuid'] = $agent_uuid;
+			if (empty($database->select($sql, $parameters, 'column'))) {
+				unset($agent_uuid);
+			}
+			unset($sql, $parameters);
 		}
 
 		//get the agent details from event socket
@@ -89,14 +102,16 @@
 		}
 
 		//save the agent_stat change to the database
-		$array['call_center_agents'][0]['call_center_agent_uuid'] = $agent_uuid;
-		$array['call_center_agents'][0]['domain_uuid'] = $_SESSION['user']['domain_uuid'];
-		$array['call_center_agents'][0]['agent_status'] = $agent_status;
-		$result = $database->save($array);
+		if (is_uuid($agent_uuid ?? '')) {
+			$array['call_center_agents'][0]['call_center_agent_uuid'] = $agent_uuid;
+			$array['call_center_agents'][0]['domain_uuid'] = $_SESSION['user']['domain_uuid'];
+			$array['call_center_agents'][0]['agent_status'] = $agent_status;
+			$result = $database->save($array);
 
-		//send the agent status status to mod_call_center
-		$cmd = "callcenter_config agent set status ".$agent_uuid." '".$agent_status."'";
-		$response = event_socket::api($cmd);
+			//send the agent status status to mod_call_center
+			$cmd = "callcenter_config agent set status ".$agent_uuid." '".$agent_status."'";
+			$response = event_socket::api($cmd);
+		}
 
 		//add or delete agents from the queue assigned by the tier
 		foreach ($_POST['agents'] as $row) {

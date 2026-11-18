@@ -164,11 +164,26 @@
 				$agent_contact = str_replace("@", "/", $agent_contact);
 			}
 
+		//get the user from the current domain, prevents changing users in another domain
+\			if (is_uuid($user_uuid)) {
+				$sql = "select user_uuid from v_users ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and user_uuid = :user_uuid ";
+				$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+				$parameters['user_uuid'] = $user_uuid;
+				$user_domain_uuid = $database->select($sql, $parameters, 'column');
+				unset($sql, $parameters);
+			}
+
 		//freeswitch expands the contact string, so we need to sanitize it.
 			$agent_contact = str_replace('$', '', $agent_contact);
 			$agent_contact = str_replace("'", "", $agent_contact);
 			$agent_type = str_replace("'", "", $agent_type);
 			$agent_status = str_replace("'", "", $agent_status);
+			//remove line breaks, they would allow additional commands to be sent to the event socket
+			$agent_contact = preg_replace('/[\r\n\t]/', '', (string) $agent_contact);
+			$agent_type = preg_replace('/[\r\n\t]/', '', (string) $agent_type);
+			$agent_status = preg_replace('/[\r\n\t]/', '', (string) $agent_status);
 			$agent_call_timeout = preg_replace('#[^0-9]#', '', $agent_call_timeout);
 			$agent_reject_delay_time = preg_replace('#[^0-9]#', '', $agent_reject_delay_time);
 			$agent_busy_delay_time = preg_replace('#[^0-9]#', '', $agent_busy_delay_time);
@@ -194,9 +209,11 @@
 			$array['call_center_agents'][0]['agent_busy_delay_time'] = $agent_busy_delay_time;
 			$array['call_center_agents'][0]['agent_record'] = $agent_record;
 			if (is_uuid($user_uuid)) {
-				$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
-				$array['users'][0]['user_uuid'] = $user_uuid;
-				$array['users'][0]['user_status'] = $agent_status;
+				if (!empty($user_domain_uuid)) {
+					$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+					$array['users'][0]['user_uuid'] = $user_uuid;
+					$array['users'][0]['user_status'] = $agent_status;
+				}
 			}
 
 		//save to the database
