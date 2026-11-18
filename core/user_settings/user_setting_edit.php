@@ -71,22 +71,37 @@
 		$user_uuid = $_GET["user_uuid"];
 	}
 
+//require the user to be in the current domain unless the user_all permission
+	if (!empty($user_uuid) && !permission_exists('user_all')) {
+		$sql = "select user_uuid from v_users ";
+		$sql .= "where user_uuid = :user_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['user_uuid'] = $user_uuid;
+		$parameters['domain_uuid'] = $domain_uuid;
+		$user_found = $database->select($sql, $parameters, 'column');
+		if (empty($user_found)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $user_found);
+	}
+
 //get http post variables and set them to php variables
 	if (!empty($_REQUEST)) {
-		$user_setting_category = strtolower($_REQUEST["user_setting_category"] ?? '');
-		$user_setting_subcategory = strtolower($_POST["user_setting_subcategory"] ?? '');
-		$user_setting_name = strtolower($_POST["user_setting_name"] ?? '');
-		$user_setting_value = $_POST["user_setting_value"] ?? '';
-		$user_setting_order = $_POST["user_setting_order"] ?? '';
-		$user_setting_enabled = $_POST["user_setting_enabled"] ?? true;
-		$user_setting_description = $_POST["user_setting_description"] ?? '';
+		$user_setting_category = strtolower(is_string($_REQUEST["user_setting_category"] ?? null) ? $_REQUEST["user_setting_category"] : '');
+		$user_setting_subcategory = strtolower(is_string($_POST["user_setting_subcategory"] ?? null) ? $_POST["user_setting_subcategory"] : '');
+		$user_setting_name = strtolower(is_string($_POST["user_setting_name"] ?? null) ? $_POST["user_setting_name"] : '');
+		$user_setting_value = is_string($_POST["user_setting_value"] ?? null) ? $_POST["user_setting_value"] : '';
+		$user_setting_order = is_string($_POST["user_setting_order"] ?? null) ? $_POST["user_setting_order"] : '';
+		$user_setting_enabled = is_string($_POST["user_setting_enabled"] ?? null) ? $_POST["user_setting_enabled"] : true;
+		$user_setting_description = is_string($_POST["user_setting_description"] ?? null) ? $_POST["user_setting_description"] : '';
 	}
 
 if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 	$msg = '';
 	if ($action == "update") {
-		$user_setting_uuid = $_POST["user_setting_uuid"];
+		$user_setting_uuid = is_uuid($_POST["user_setting_uuid"] ?? '') ? $_POST["user_setting_uuid"] : '';
 	}
 
 	//validate the token
@@ -324,6 +339,10 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		$sql .= "from v_user_settings ";
 		$sql .= "where user_setting_uuid = :user_setting_uuid ";
 		$sql .= "and user_uuid = :user_uuid ";
+		if (!permission_exists('user_all')) {
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+		}
 		$parameters['user_setting_uuid'] = $user_setting_uuid;
 		$parameters['user_uuid'] = $user_uuid;
 		$row = $database->select($sql, $parameters, 'row');
@@ -397,7 +416,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		if (is_array($allowed_categories) && sizeof($allowed_categories) > 0) {
 			foreach ($allowed_categories as $category) {
 				$selected = ($user_setting_category == $category) ? 'selected' : null;
-				echo "		<option value='".$category."' ".$selected.">".ucwords(str_replace('_',' ',$category))."</option>\n";
+				echo "		<option value='".escape($category)."' ".$selected.">".ucwords(str_replace('_',' ',escape($category)))."</option>\n";
 			}
 		}
 		echo "	</select>";
@@ -487,10 +506,10 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 		echo "		<option value=''></option>\n";
 		foreach ($_SESSION['app']['languages'] as $key => $value) {
 			if ($user_setting_value == $key) {
-				echo "		<option value='$value' selected='selected'>$value</option>\n";
+				echo "		<option value='".escape($value)."' selected='selected'>".escape($value)."</option>\n";
 			}
 			else {
-				echo "		<option value='$value'>$value</option>\n";
+				echo "		<option value='".escape($value)."'>".escape($value)."</option>\n";
 			}
 		}
 		echo "		</select>\n";
@@ -509,7 +528,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 				if ($x > 0) {
 					echo "		</optgroup>\n";
 				}
-				echo "		<optgroup label='".$category."'>\n";
+				echo "		<optgroup label='".escape($category)."'>\n";
 			}
 			if (!empty($val)) {
 				$time_zone_offset = get_time_zone_offset($val)/3600;
@@ -526,10 +545,10 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 				}
 			}
 			if ($val == $user_setting_value) {
-				echo "			<option value='".$val."' selected='selected'>(UTC ".$time_zone_offset_hours.":".$time_zone_offset_minutes.") ".$val."</option>\n";
+				echo "			<option value='".escape($val)."' selected='selected'>(UTC ".escape($time_zone_offset_hours).":".escape($time_zone_offset_minutes).") ".escape($val)."</option>\n";
 			}
 			else {
-				echo "			<option value='".$val."'>(UTC ".escape($time_zone_offset_hours).":".escape($time_zone_offset_minutes).") ".$val."</option>\n";
+				echo "			<option value='".escape($val)."'>(UTC ".escape($time_zone_offset_hours).":".escape($time_zone_offset_minutes).") ".escape($val)."</option>\n";
 			}
 			$previous_category = $category;
 			$x++;
@@ -563,7 +582,7 @@ if (!empty($_POST) && empty($_POST["persistformvar"])) {
 				else {
 					unset($selected);
 				}
-				echo "		<option value='".$font."' ".$selected.">".$font."</option>\n";
+				echo "		<option value='".escape($font)."' ".$selected.">".escape($font)."</option>\n";
 			}
 			echo "		</optgroup>\n";
 			echo "		<option value='' disabled='disabled'></option>\n";

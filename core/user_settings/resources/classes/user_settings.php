@@ -122,7 +122,7 @@ class user_settings {
 
 				//build the delete array
 				foreach ($records as $x => $record) {
-					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 						$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $record['uuid'];
 						$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
 					}
@@ -172,16 +172,16 @@ class user_settings {
 
 				//get current toggle state
 				foreach ($records as $x => $record) {
-					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+					if (!empty($record['checked']) && $record['checked'] == 'true' && is_uuid($record['uuid'])) {
 						$uuids[] = "'" . $record['uuid'] . "'";
 					}
 				}
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
-					$sql                       .= "where domain_uuid = :domain_uuid ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle from v_" . $this->table . " ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$states[$row['uuid']] = $row['toggle'];
@@ -202,9 +202,7 @@ class user_settings {
 
 				//save the changes
 				if (is_array($array) && @sizeof($array) != 0) {
-
 					//save the array
-
 					$this->database->save($array);
 					unset($array);
 
