@@ -55,15 +55,25 @@
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
-		$domain_uuid = $_POST["domain_uuid"];
-		$template_language = $_POST["template_language"];
-		$template_category = $_POST["template_category"];
-		$template_subcategory = $_POST["template_subcategory"];
-		$template_subject = $_POST["template_subject"];
-		$template_body = $_POST["template_body"];
-		$template_type = $_POST["template_type"];
-		$template_enabled = $_POST["template_enabled"];
-		$template_description = $_POST["template_description"];
+		$domain_uuid = is_string($_POST["domain_uuid"] ?? null) ? $_POST["domain_uuid"] : '';
+		$template_language = is_string($_POST["template_language"] ?? null) ? $_POST["template_language"] : '';
+		$template_category = is_string($_POST["template_category"] ?? null) ? $_POST["template_category"] : '';
+		$template_subcategory = is_string($_POST["template_subcategory"] ?? null) ? $_POST["template_subcategory"] : '';
+		$template_subject = is_string($_POST["template_subject"] ?? null) ? $_POST["template_subject"] : '';
+		$template_body = is_string($_POST["template_body"] ?? null) ? $_POST["template_body"] : '';
+		$template_type = is_string($_POST["template_type"] ?? null) ? $_POST["template_type"] : '';
+		$template_enabled = is_string($_POST["template_enabled"] ?? null) ? $_POST["template_enabled"] : '';
+		$template_description = is_string($_POST["template_description"] ?? null) ? $_POST["template_description"] : '';
+
+		//the type is limited to the values used by the email templates
+		if (!in_array($template_type, ['html', 'text'], true)) {
+			$template_type = 'html';
+		}
+
+		//the enabled field is limited to a boolean value
+		if (!in_array($template_enabled, ['true', 'false'], true)) {
+			$template_enabled = 'true';
+		}
 	}
 
 //verify the email template belongs to the current domain or is global
@@ -166,7 +176,7 @@
 	}
 
 //pre-populate the form
-	if (count($_GET)>0 && empty($_POST["persistformvar"])) {
+	if (!empty($_GET) && empty($_POST["persistformvar"]) && is_uuid($_GET["id"] ?? '')) {
 		$email_template_uuid = $_GET["id"];
 		$sql = "select ";
 		$sql .= "email_template_uuid, ";
@@ -201,10 +211,16 @@
 
 //load editor preferences/defaults
 	$setting_size = !empty($settings->get('editor', 'font_size')) ? $settings->get('editor', 'font_size') : '12px';
+	if (!preg_match('/^(\d+(\.\d+)?|auto)(px|pt|em|%)$/', (string) $setting_size)) {
+		$setting_size = '12px';
+	}
 	$setting_theme = !empty($settings->get('editor', 'theme')) ? $settings->get('editor', 'theme') : 'cobalt';
-	$setting_invisibles = $settings->get('editor', 'invisibles', 'false');
-	$setting_indenting = $settings->get('editor', 'indent_guides', 'false');
-	$setting_numbering = $settings->get('editor', 'line_numbers', 'true');
+	if (!preg_match('/^[a-zA-Z0-9_]+$/', (string) $setting_theme)) {
+		$setting_theme = 'cobalt';
+	}
+	$setting_invisibles = filter_var($settings->get('editor', 'invisibles', 'false'), FILTER_VALIDATE_BOOLEAN) ? 'true' : 'false';
+	$setting_indenting = filter_var($settings->get('editor', 'indent_guides', 'false'), FILTER_VALIDATE_BOOLEAN) ? 'true' : 'false';
+	$setting_numbering = filter_var($settings->get('editor', 'line_numbers', 'true'), FILTER_VALIDATE_BOOLEAN) ? 'true' : 'false';
 
 //set the defaults
 	$template_enabled = $template_enabled ?? true;

@@ -42,10 +42,15 @@
 
 //get posted data
 	if (!empty($_POST['email_template_list'])) {
-		$action = $_POST['action'];
-		$category = $_POST['category'] ?? null;
-		$search = $_POST['search'] ?? '';
-		$email_template_list = $_POST['email_template_list'];
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
+		$category = is_string($_POST['category'] ?? null) ? $_POST['category'] : null;
+		$search = is_string($_POST['search'] ?? null) ? $_POST['search'] : '';
+		$email_template_list = is_array($_POST['email_template_list']) ? $_POST['email_template_list'] : [];
+
+		//the action is limited to the actions used by the list page
+		if (!in_array($action, ['copy', 'toggle', 'delete'], true)) {
+			$action = '';
+		}
 	}
 
 //process the http post data by action
@@ -76,8 +81,13 @@
 	}
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
+	$order_by = is_string($_GET["order_by"] ?? null) ? $_GET["order_by"] : '';
+	$order = is_string($_GET["order"] ?? null) ? $_GET["order"] : '';
+
+//limit the order by to the columns shown in the list
+	if (!in_array($order_by, ['template_language', 'template_category', 'template_subcategory', 'template_subject', 'template_type', 'template_enabled', 'template_description'], true)) {
+		$order_by = '';
+	}
 
 //determine the template language
 	if (empty($_GET['template_language'])) {
@@ -86,12 +96,15 @@
 	elseif ($_GET['template_language'] == 'all') {
 		$template_language = '';
 	}
-	else {
+	elseif (is_string($_GET['template_language'])) {
 		$template_language = $_GET['template_language'];
+	}
+	else {
+		$template_language = $domain_language;
 	}
 
 //add the category
-	$category = strtolower($_GET["category"] ?? '');
+	$category = strtolower(is_string($_GET["category"] ?? null) ? $_GET["category"] : '');
 	if ($category) {
 		$sql_category = "and (";
 		$sql_category .= " lower(template_category) = :category";
@@ -100,7 +113,7 @@
 	}
 
 //add the search term
-	$search = strtolower($_GET["search"] ?? '');
+	$search = strtolower(is_string($_GET["search"] ?? null) ? $_GET["search"] : '');
 	if (!empty($search)) {
 		$sql_search = " (";
 		$sql_search .= " lower(template_language) like :search ";
@@ -141,10 +154,10 @@
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = "&search=".$search;
-	if (!empty($_GET['show']) == "all" && permission_exists('email_template_all')) {
+	if (!empty($_GET['show']) && $_GET['show'] == "all" && permission_exists('email_template_all')) {
 		$param .= "&show=all";
 	}
-	$page = isset($_GET['page']) ? $_GET['page'] : 0;
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
