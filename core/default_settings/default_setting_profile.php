@@ -86,6 +86,13 @@
 				exit;
 			}
 
+		//check the time zone is not empty and in the array, it is written to the dialplan details
+			if (!empty($global_time_zone) && !in_array($global_time_zone, DateTimeZone::listIdentifiers(), true)) {
+				message::add($text['message-time_zone_invalid'],'negative');
+				header('Location: default_setting_profile.php');
+				exit;
+			}
+
 		//check to see if domain language is set
 			$row = $default_settings['domain']['language'] ?? [];
 			$i = 0;
