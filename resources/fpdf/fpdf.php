@@ -275,8 +275,8 @@ function AliasNbPages($alias='{nb}')
 
 function Error($msg)
 {
-	// Fatal error
-	die('<b>FPDF error:</b> '.$msg);
+	// Fatal error - Escape the message to prevent cross-site scripting when it contains user input
+	die('<b>FPDF error:</b> '.htmlspecialchars((string)$msg, ENT_QUOTES, 'UTF-8'));
 }
 
 function Open()
@@ -1006,7 +1006,7 @@ function Output($name='', $dest='')
 			{
 				// We send to a browser
 				header('Content-Type: application/pdf');
-				header('Content-Disposition: inline; filename="'.$name.'"');
+				header('Content-Disposition: inline; filename="'.$this->_sanitize_filename($name).'"');
 				header('Cache-Control: private, max-age=0, must-revalidate');
 				header('Pragma: public');
 			}
@@ -1016,7 +1016,7 @@ function Output($name='', $dest='')
 			// Download file
 			$this->_checkoutput();
 			header('Content-Type: application/x-download');
-			header('Content-Disposition: attachment; filename="'.$name.'"');
+			header('Content-Disposition: attachment; filename="'.$this->_sanitize_filename($name).'"');
 			header('Cache-Control: private, max-age=0, must-revalidate');
 			header('Pragma: public');
 			echo $this->buffer;
@@ -1053,6 +1053,15 @@ function _dochecks()
 		$this->Error('mbstring overloading must be disabled');
 }
 
+function _sanitize_filename($name)
+{
+	// Remove characters that could break out of the quoted filename in the Content-Disposition header
+	$name = str_replace(array("\r","\n","\0",'"','\\'), '', (string)$name);
+	if($name=='')
+		$name = 'doc.pdf';
+	return $name;
+}
+
 function _checkoutput()
 {
 	if(PHP_SAPI!='cli')
@@ -1085,6 +1094,8 @@ function _getpagesize($size)
 	}
 	else
 	{
+		if(!is_array($size) || !isset($size[0]) || !isset($size[1]) || !is_numeric($size[0]) || !is_numeric($size[1]))
+			$this->Error('Incorrect page size');
 		if($size[0]>$size[1])
 			return array($size[1], $size[0]);
 		else
@@ -1140,6 +1151,9 @@ function _endpage()
 function _loadfont($font)
 {
 	// Load a font definition file from the font directory
+	$font = basename($font); //prevent path traversal outside the font directory
+	if(!preg_match('/^[a-zA-Z0-9_.\-]+\.php$/',$font))
+		$this->Error('Invalid font definition file: '.$font);
 	include($this->fontpath.$font);
 	$a = get_defined_vars();
 	if(!isset($a['name']))
