@@ -43,12 +43,22 @@
 		$domain_uuid = $_GET['id'];
 	}
 
+//set the domain to the current domain when not provided, a domain other than the current one
+//requires permission to select or view all domains, this prevents reading another domain's settings
+	if (empty($domain_uuid) || !is_uuid($domain_uuid)) {
+		$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+	}
+	if ($domain_uuid != ($_SESSION['domain_uuid'] ?? '') && !permission_exists('domain_select') && !permission_exists('domain_setting_all')) {
+		echo "access denied";
+		exit;
+	}
+
 // Set variables from GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
 
 // Build the query string
 	$param = [];
@@ -75,9 +85,19 @@
 //get the http post data
 	if (!empty($_POST['action'])) {
 		$action = $_POST['action'] ?? '';
-		$domain_uuid = $_POST['domain_uuid'] ?? '';
+		$domain_uuid = is_string($_POST['domain_uuid'] ?? null) ? $_POST['domain_uuid'] : '';
 		$domain_settings = $_POST['domain_settings'] ?? '';
-		$domain_uuid_target = $_POST['domain_uuid_target'] ?? '';
+		$domain_uuid_target = is_string($_POST['domain_uuid_target'] ?? null) ? $_POST['domain_uuid_target'] : '';
+
+		//the domain the action applies to comes from the post array, limit it to a domain
+		//the user is allowed to manage
+			if (!is_uuid($domain_uuid)) {
+				$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+			}
+			if ($domain_uuid != ($_SESSION['domain_uuid'] ?? '') && !permission_exists('domain_select') && !permission_exists('domain_setting_all')) {
+				echo "access denied";
+				exit;
+			}
 
 		//process the http post data by action
 			if (!empty($domain_settings)) {
@@ -108,13 +128,13 @@
 			}
 
 		//redirect
-			header('Location: '.PROJECT_PATH.'/core/domain_settings/domain_settings.php?id='.urlencode($_REQUEST['domain_uuid']).($query_string ? '&'.$query_string : ''));
+			header('Location: '.PROJECT_PATH.'/core/domain_settings/domain_settings.php?id='.urlencode(is_string($_REQUEST['domain_uuid'] ?? null) ? $_REQUEST['domain_uuid'] : '').($query_string ? '&'.$query_string : ''));
 			exit;
 	}
 
 //get order and order by and sanitize the values
-	$order_by = $_GET["order_by"] ?? '';
-	$order =  $_GET["order"] ?? '';
+	$order_by = is_string($_GET["order_by"] ?? null) ? $_GET["order_by"] : '';
+	$order =  is_string($_GET["order"] ?? null) ? $_GET["order"] : '';
 
 //get the domain_name
 	$sql = "select domain_name from v_domains ";
@@ -271,6 +291,8 @@
 		$x = 0;
 		foreach ($domain_settings as $row) {
 			$domain_setting_category = strtolower($row['domain_setting_category']);
+			//remove any characters that are not allowed in an id, class or javascript string
+			$domain_setting_category = preg_replace('#[^a-z0-9_]#', '', $domain_setting_category);
 
 			$label_domain_setting_category = $row['domain_setting_category'];
 			switch (strtolower($label_domain_setting_category)) {
@@ -363,7 +385,7 @@
 				unset($sql, $parameters, $sub_result, $sub_row);
 			}
 			else if ($category == "domain" && $subcategory == "template" && $name == "name" ) {
-				echo "		".ucwords($row['domain_setting_value']);
+				echo "		".escape(ucwords($row['domain_setting_value']));
 			}
 			else if ($category == "domain" && $subcategory == "time_format" && $name == "text" ) {
 				switch ($row['domain_setting_value']) {
@@ -408,7 +430,7 @@
 				}
 			}
 			else if ((substr_count($subcategory, "_color") > 0 || str_starts_with($row['domain_setting_value'] ?? '', "rgb") || str_starts_with($row['domain_setting_value'] ?? '', "#")) && ($name == "text" || $name == 'array')) {
-				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['domain_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.(color_adjust($row['domain_setting_value'], -0.18)).'; padding: -1px;'));
+				echo "		".(img_spacer('15px', '15px', 'background: '.escape($row['domain_setting_value']).'; margin-right: 4px; vertical-align: middle; border: 1px solid '.escape(color_adjust($row['domain_setting_value'], -0.18)).'; padding: -1px;'));
 				echo "<span style=\"font-family: 'Courier New'; line-height: 6pt;\">".escape($row['domain_setting_value'])."</span>\n";
 			}
 			else if ($category == 'users' && $subcategory == 'username_format' && $name == 'text') {
