@@ -71,15 +71,25 @@
 		$domain_uuid = $_GET["domain_uuid"];
 	}
 
+//set the domain to the current domain when not provided, a domain other than the current one
+//requires the domain_select permission and must exist in the session domain list
+	if (empty($domain_uuid) || !is_uuid($domain_uuid)) {
+		$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+	}
+	if ($domain_uuid != ($_SESSION['domain_uuid'] ?? '') && (!permission_exists('domain_select') || empty($_SESSION['domains'][$domain_uuid]))) {
+		echo "access denied";
+		exit;
+	}
+
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
-		$domain_setting_category = strtolower($_POST["domain_setting_category"]);
-		$domain_setting_subcategory = strtolower($_POST["domain_setting_subcategory"]);
-		$domain_setting_name = strtolower($_POST["domain_setting_name"]);
-		$domain_setting_value = $_POST["domain_setting_value"];
-		$domain_setting_order = $_POST["domain_setting_order"];
-		$domain_setting_enabled = $_POST["domain_setting_enabled"];
-		$domain_setting_description = $_POST["domain_setting_description"];
+		$domain_setting_category = strtolower(is_string($_POST["domain_setting_category"] ?? null) ? $_POST["domain_setting_category"] : '');
+		$domain_setting_subcategory = strtolower(is_string($_POST["domain_setting_subcategory"] ?? null) ? $_POST["domain_setting_subcategory"] : '');
+		$domain_setting_name = strtolower(is_string($_POST["domain_setting_name"] ?? null) ? $_POST["domain_setting_name"] : '');
+		$domain_setting_value = is_string($_POST["domain_setting_value"] ?? null) ? $_POST["domain_setting_value"] : '';
+		$domain_setting_order = is_string($_POST["domain_setting_order"] ?? null) ? $_POST["domain_setting_order"] : '';
+		$domain_setting_enabled = is_string($_POST["domain_setting_enabled"] ?? null) ? $_POST["domain_setting_enabled"] : true;
+		$domain_setting_description = is_string($_POST["domain_setting_description"] ?? null) ? $_POST["domain_setting_description"] : '';
 	}
 
 //sanitize the variables
@@ -91,7 +101,7 @@
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get the domain setting uuid
-			if ($action == "update" && !empty($_POST["domain_setting_uuid"])) {
+			if ($action == "update" && is_uuid($_POST["domain_setting_uuid"] ?? '')) {
 				$domain_setting_uuid = $_POST["domain_setting_uuid"];
 			}
 
@@ -103,6 +113,21 @@
 				exit;
 			}
 
+		//verify the setting being updated belongs to the domain, the uuid comes from the request
+			if ($action == "update") {
+				$sql = "select domain_setting_uuid from v_domain_settings ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and domain_setting_uuid = :domain_setting_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters['domain_setting_uuid'] = $domain_setting_uuid;
+				$row = $database->select($sql, $parameters, 'row');
+				if (empty($row)) {
+					echo "access denied";
+					exit;
+				}
+				unset($sql, $parameters, $row);
+			}
+
 		//check for all required/authorized data
 			$msg = '';
 			if (empty($domain_setting_category) || (!empty($allowed_categories) && !in_array(strtolower($domain_setting_category), $allowed_categories))) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
@@ -110,6 +135,8 @@
 			if (empty($domain_setting_name)) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
 			//if (empty($domain_setting_value)) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
 			if (empty($domain_setting_order)) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+			//validate the time zone against the list of supported identifiers before it is written to the dialplan
+			if ($domain_setting_category == "domain" && $domain_setting_subcategory == "time_zone" && $domain_setting_name == "name" && !empty($domain_setting_value) && !in_array($domain_setting_value, DateTimeZone::listIdentifiers(), true)) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
 			//if (empty($domain_setting_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
 				require_once "resources/header.php";
@@ -656,7 +683,7 @@
 		echo "    </select>\n";
 	}
 	elseif ($category == "theme" && $subcategory == "custom_css_code" && $name == "text" ) {
-		echo "	<textarea class='formfld' style='min-width: 100%; height: 300px; font-family: courier, monospace; overflow: auto; resize: vertical' id='domain_setting_value' name='domain_setting_value' wrap='off'>".$row['domain_setting_value']."</textarea>\n";
+		echo "	<textarea class='formfld' style='min-width: 100%; height: 300px; font-family: courier, monospace; overflow: auto; resize: vertical' id='domain_setting_value' name='domain_setting_value' wrap='off'>".escape_textarea($row['domain_setting_value'])."</textarea>\n";
 	}
 	elseif ($category == "theme" && $subcategory == "button_icons" && $name == "text" ) {
 		echo "    <select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
@@ -746,7 +773,7 @@
 		echo "	</select>\n";
 	}
 	elseif (!empty($row['domain_setting_value']) && is_json($row['domain_setting_value'])) {
-		echo "	<textarea class='formfld' style='width: 100%; height: 80px; font-family: courier, monospace; overflow: auto;' id='domain_setting_value' name='domain_setting_value' wrap='off'>".$row['domain_setting_value']."</textarea>\n";
+		echo "	<textarea class='formfld' style='width: 100%; height: 80px; font-family: courier, monospace; overflow: auto;' id='domain_setting_value' name='domain_setting_value' wrap='off'>".escape_textarea($row['domain_setting_value'])."</textarea>\n";
 	}
 	elseif ($name == "boolean") {
 		echo "	<select class='formfld' id='domain_setting_value' name='domain_setting_value'>\n";
@@ -762,7 +789,7 @@
 	}
 	else {
 		if (isset($row['domain_setting_value']) && strlen($row['domain_setting_value']) > 25) {
-			echo "	<textarea class='formfld' style='width: 185px; height: auto; max-height: 300px;' id='domain_setting_value' name='domain_setting_value'>".($row['domain_setting_value'] ?? '')."</textarea>\n";
+			echo "	<textarea class='formfld' style='width: 185px; height: auto; max-height: 300px;' id='domain_setting_value' name='domain_setting_value'>".escape_textarea($row['domain_setting_value'] ?? '')."</textarea>\n";
 
 			echo "	<script>\n";
 			echo "	document.addEventListener('DOMContentLoaded', () => {\n";
