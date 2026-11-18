@@ -89,9 +89,40 @@
 		$action = "add";
 	}
 
+//check the permission for the action being taken
+	if (($action == 'add' && !permission_exists('call_center_queue_add')) || ($action == 'update' && !permission_exists('call_center_queue_edit'))) {
+		echo "access denied";
+		exit;
+	}
+
 //get the domain details
 	$domain_uuid = $_SESSION['domain_uuid'];
 	$domain_name = $_SESSION['domain_name'];
+
+//verify the queue belongs to the current domain, records are always saved to the current domain
+	if ($action == 'update') {
+		$checked_uuids = [];
+		if (is_uuid($_REQUEST["id"] ?? '')) {
+			$checked_uuids[] = $_REQUEST["id"];
+		}
+		if (is_uuid($_POST["call_center_queue_uuid"] ?? '')) {
+			$checked_uuids[] = $_POST["call_center_queue_uuid"];
+		}
+		foreach ($checked_uuids as $checked_uuid) {
+			$sql = "select call_center_queue_uuid from v_call_center_queues ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and call_center_queue_uuid = :call_center_queue_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['call_center_queue_uuid'] = $checked_uuid;
+			$row = $database->select($sql, $parameters, 'row');
+			if (empty($row)) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
+		unset($checked_uuids);
+	}
 
 //initialize the destination object
 	$destination = new destinations;
@@ -176,6 +207,14 @@
 			$queue_dialect = $language_array[1] ?? '';
 			$queue_voice = $language_array[2] ?? '';
 
+		//the queue extension is numeric, it is used in the dialplan expression and in event socket commands
+			if (!is_string($queue_extension)) {
+				$queue_extension = '';
+			}
+			elseif ($queue_extension !== '' && preg_match('#^[0-9]+$#', $queue_extension) !== 1) {
+				$queue_extension = preg_replace('#[^0-9]#', '', $queue_extension);
+			}
+
 		//remove invalid characters
 			$queue_cid_prefix = str_replace(":", "-", $queue_cid_prefix);
 			$queue_cid_prefix = str_replace("\"", "", $queue_cid_prefix);
@@ -185,7 +224,15 @@
 	}
 
 //delete the tier (agent from the queue)
-	if (!empty($_REQUEST["a"]) && $_REQUEST["a"] == "delete" && is_uuid($_REQUEST["id"]) && permission_exists("call_center_tier_delete")) {
+	if (!empty($_REQUEST["a"]) && $_REQUEST["a"] == "delete" && is_uuid($_REQUEST["id"]) && is_uuid($_REQUEST["call_center_tier_uuid"] ?? '') && permission_exists("call_center_tier_delete")) {
+		//validate the token
+			$token = new token;
+			if (!$token->validate($_SERVER['PHP_SELF'])) {
+				message::add($text['message-invalid_token'],'negative');
+				header('Location: call_center_queues.php'.($query_string ? '?'.$query_string : ''));
+				exit;
+			}
+
 		//set the variables
 			$call_center_queue_uuid = $_REQUEST["id"];
 			$call_center_tier_uuid = $_REQUEST["call_center_tier_uuid"];
@@ -248,7 +295,9 @@
 			//override domain_uuid and queue_context values
 			if ($action == 'update' && is_uuid($call_center_queue_uuid)) {
 				$sql = "select * from v_call_center_queues ";
-				$sql .= "where call_center_queue_uuid = :call_center_queue_uuid ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and call_center_queue_uuid = :call_center_queue_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
 				$parameters['call_center_queue_uuid'] = $call_center_queue_uuid;
 				$row = $database->select($sql, $parameters, 'row');
 				if (!empty($row)) {
@@ -311,16 +360,79 @@
 				$_POST["call_center_queue_uuid"] = $call_center_queue_uuid;
 			}
 
-		//add the dialplan_uuid
-			if (empty($_POST["dialplan_uuid"])) {
+		//add or validate the dialplan_uuid, it is written into the dialplan and used as its key
+			if (empty($_POST["dialplan_uuid"]) || !is_uuid($_POST["dialplan_uuid"])) {
 				$dialplan_uuid = uuid();
 				$_POST["dialplan_uuid"] = $dialplan_uuid;
 			}
+			else {
+				//set the dialplan uuid
+				$dialplan_uuid = $_POST["dialplan_uuid"];
 
-		//update the call centier tiers array
-			$x = 0;
-			if (!empty($_POST["call_center_tiers"])) {
+				//the dialplan must belong to the current domain
+				$sql = "select dialplan_uuid from v_dialplans ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and dialplan_uuid = :dialplan_uuid ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters['dialplan_uuid'] = $dialplan_uuid;
+				$dialplan_row = $database->select($sql, $parameters, 'row');
+				if (empty($dialplan_row)) {
+					//check whether the dialplan exists in another domain before generating a new uuid
+					$sql = "select dialplan_uuid from v_dialplans ";
+					$sql .= "where dialplan_uuid = :dialplan_uuid ";
+					$parameters = [];
+					$parameters['dialplan_uuid'] = $dialplan_uuid;
+					if (!empty($database->select($sql, $parameters, 'row'))) {
+						echo "access denied";
+						exit;
+					}
+				}
+				unset($sql, $parameters, $dialplan_row);
+			}
+
+		//validate the tier rows before they are saved, the caller controls these array keys
+			if (!empty($_POST["call_center_tiers"]) && is_array($_POST["call_center_tiers"])) {
 				foreach ($_POST["call_center_tiers"] as $row) {
+					if (!is_array($row)) {
+						unset($_POST["call_center_tiers"]);
+						break;
+					}
+					//the tier uuid must be a valid uuid, and belong to the current domain when provided
+					$tier_uuid = $row['call_center_tier_uuid'] ?? '';
+					if ($tier_uuid !== '' && !is_uuid($tier_uuid)) {
+						unset($_POST["call_center_tiers"]);
+						break;
+					}
+					//the queue uuid must match the queue being edited
+					$tier_queue_uuid = $row['queue_uuid'] ?? '';
+					if ($tier_queue_uuid !== '' && !is_uuid($tier_queue_uuid)) {
+						unset($_POST["call_center_tiers"]);
+						break;
+					}
+				}
+			}
+			$x = 0;
+			if (!empty($_POST["call_center_tiers"]) && is_array($_POST["call_center_tiers"])) {
+				foreach ($_POST["call_center_tiers"] as $row) {
+					//verify any existing tier belongs to the current domain
+						if (!empty($row['call_center_tier_uuid']) && is_uuid($row['call_center_tier_uuid'])) {
+							$sql = "select call_center_tier_uuid from v_call_center_tiers ";
+							$sql .= "where domain_uuid = :domain_uuid ";
+							$sql .= "and call_center_tier_uuid = :call_center_tier_uuid ";
+							$parameters['domain_uuid'] = $domain_uuid;
+							$parameters['call_center_tier_uuid'] = $row['call_center_tier_uuid'];
+							$tier_row = $database->select($sql, $parameters, 'row');
+							if (empty($tier_row)) {
+								echo "access denied";
+								exit;
+							}
+							unset($sql, $parameters, $tier_row);
+						}
+					//the tier must belong to the queue being edited
+						if (!empty($row['queue_uuid']) && $row['queue_uuid'] != ($_POST["call_center_queue_uuid"] ?? '')) {
+							$x++;
+							continue;
+						}
 					//add the domain_uuid
 						if (empty($row["domain_uuid"])) {
 							$_POST["call_center_tiers"][$x]["domain_uuid"] = $domain_uuid;
@@ -580,13 +692,13 @@
 						}
 						usleep(200);
 						//agent set level
-						if (is_numeric($queue_extension) && is_numeric($tier_level)) {
+						if (is_numeric($queue_extension) && is_uuid($call_center_agent_uuid) && is_numeric($tier_level)) {
 							$cmd = "callcenter_config tier set level ".$queue_extension."@".$domain_name." ".$call_center_agent_uuid." ".$tier_level;
 							$response = event_socket::api($cmd);
 						}
 						usleep(200);
 						//agent set position
-						if (is_numeric($queue_extension) && is_numeric($tier_position)) {
+						if (is_numeric($queue_extension) && is_uuid($call_center_agent_uuid) && is_numeric($tier_position)) {
 							$cmd = "callcenter_config tier set position ".$queue_extension."@".$domain_name." ".$tier_position;
 							$response = event_socket::api($cmd);
 						}

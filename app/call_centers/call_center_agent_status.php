@@ -171,18 +171,29 @@
 					if ($esl->is_connected()) {
 						//set the user_status
 							if (!isset($row['queue_name'])) {
-								$array['users'][0]['user_uuid'] = $row['user_uuid'] ?? null;
-								$array['users'][0]['user_status'] = $row['agent_status'];
-								$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
+								//get the user from the current domain, prevents changing users in another domain
+								$sql = "select user_uuid from v_users ";
+								$sql .= "where domain_uuid = :domain_uuid ";
+								$sql .= "and user_uuid = :user_uuid ";
+								$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+								$parameters['user_uuid'] = $row['user_uuid'] ?? null;
+								$user_domain_uuid = $database->select($sql, $parameters, 'column');
+								unset($sql, $parameters);
 
-								$p = permissions::new();
-								$p->add('user_edit', 'temp');
+								if (!empty($user_domain_uuid)) {
+									$array['users'][0]['user_uuid'] = $row['user_uuid'];
+									$array['users'][0]['user_status'] = $row['agent_status'];
+									$array['users'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
 
-								$database->save($array);
-								//$response = $database->message;
-								unset($array);
+									$p = permissions::new();
+									$p->add('user_edit', 'temp');
 
-								$p->delete('user_edit', 'temp');
+									$database->save($array);
+									//$response = $database->message;
+									unset($array);
+
+									$p->delete('user_edit', 'temp');
+								}
 							}
 
 						//validate the agent status
@@ -216,7 +227,7 @@
 									}
 								}
 								else {
-									if (is_uuid($row['agent_uuid'])) {
+									if (is_uuid($row['agent_uuid']) && !empty($agent_status)) {
 										//set the agent status
 										$command = "callcenter_config agent set status ".$row['agent_uuid']." '".$agent_status."'";
 										$response = event_socket::api($command);
@@ -232,7 +243,8 @@
 							}
 							//echo $command."\n";
 
-						//get the queue_id
+						//get the queue_id, only queues in the current domain are known here
+							$queue_id = null;
 							if (isset($row['queue_uuid']) && is_uuid($row['queue_uuid'])) {
 								if (!empty($call_center_queues)) {
 									foreach ($call_center_queues as $queue) {
@@ -250,7 +262,7 @@
 								//$response = event_socket::command($command);
 
 								//assign the agent to the queue
-								if (is_uuid($row['queue_uuid']) && is_uuid($row['agent_uuid'])) {
+								if (is_uuid($row['queue_uuid']) && is_uuid($row['agent_uuid']) && !empty($queue_id)) {
 									$command = "callcenter_config tier add ".$queue_id." ".$row['agent_uuid']." 1 1";
 									$response = event_socket::api($command);
 								}
@@ -258,7 +270,7 @@
 
 						//un-assign the agent from the queue
 							if (isset($row['queue_uuid']) && $row['agent_status'] == 'Logged Out') {
-								if (is_uuid($row['queue_uuid']) && is_uuid($row['agent_uuid'])) {
+								if (is_uuid($row['queue_uuid']) && is_uuid($row['agent_uuid']) && !empty($queue_id)) {
 									$command = "callcenter_config tier del ".$queue_id." ".$row['agent_uuid'];
 									//echo $command."<br />\n";
 									$response = event_socket::api($command);
@@ -394,7 +406,7 @@
 							$x++;
 							$onclick = "onclick=\"cycle('agents[".$x."][agent_status]');\"";
 							$html .= "	<tr class='list-row'>\n";
-							$html .= "		<td ".$onclick." class='pct-80 no-wrap'>".$queue['queue_name']."</td>\n";
+							$html .= "		<td ".$onclick." class='pct-80 no-wrap'>".escape($queue['queue_name'])."</td>\n";
 							$html .= "		<td>\n";
 							if ($queue['queue_status'] == "Available") {
 								$html .= "		".$text['option-available']."\n";
