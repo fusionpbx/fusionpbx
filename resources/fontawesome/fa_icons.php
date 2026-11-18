@@ -27,6 +27,16 @@
 //includes files
 require_once dirname(__DIR__, 2) . "/resources/require.php";
 
+//get http get variables and set them to php variables
+$search = is_string($_GET['search'] ?? null) ? trim(strtolower($_GET['search'])) : '';
+$output = is_string($_GET['output'] ?? null) ? $_GET['output'] : '';
+
+//block unauthenticated direct access to the icon list, this file is also included by authorized pages
+if (realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME'] ?? '') && empty($_SESSION['authorized'])) {
+	echo "access denied";
+	exit;
+}
+
 //load icons
 $font_awesome_icons = [];
 if (file_exists(dirname(__DIR__, 2).'/resources/fontawesome/metadata/icons.json')) {
@@ -68,14 +78,14 @@ if (file_exists(dirname(__DIR__, 2).'/resources/fontawesome/metadata/icons.json'
 						}
 						//filter by search, if submitted
 						if (
-							!empty($_GET['search']) &&
-							strlen(trim($_GET['search'])) >= 3 &&
+							!empty($search) &&
+							strlen($search) >= 3 &&
 							(
 								empty($terms) ||
 								(
 									!empty($terms) &&
 									is_array($terms) &&
-									!in_array(trim(strtolower($_GET['search'])), $terms)
+									!in_array($search, $terms)
 								)
 							)
 							) {
@@ -109,9 +119,9 @@ if (file_exists(dirname(__DIR__, 2).'/resources/fontawesome/metadata/icons.json'
 
 //output icons
 if (
-	!empty($_GET['output']) && $_GET['output'] == 'icons' &&
+	!empty($output) && $output == 'icons' &&
 	!empty($font_awesome_icons) && is_array($font_awesome_icons)
-	) {
+) {
 	foreach ($font_awesome_icons as $icon) {
 		echo "<span class='".escape(implode(' ', $icon['classes']))." fa-fw' style='font-size: 24px; float: left; margin: 0 8px 8px 0; cursor: pointer; opacity: 0.3;' title='".escape($icon['label'])."' onclick=\"$('#selected_icon').val('".escape(implode(' ', $icon['classes']))."'); $('#icon_color').show(); $('#icons').slideUp(); $('#icon_search').fadeOut(200, function() { $('#icon_search').val(''); $('#grid_icon').fadeIn(); });\" onmouseover=\"this.style.opacity='1';\" onmouseout=\"this.style.opacity='0.3';\"></span>\n";
 	}
