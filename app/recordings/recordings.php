@@ -482,6 +482,9 @@
 	if (permission_exists('recording_add') && $speech_enabled == 'true') {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$theme_button_icon_add,'id'=>'btn_add','link'=>'recording_edit.php']);
 	}
+	if (permission_exists('recording_add')) {
+		echo recording_call::button('', '', ['label' => true]);
+	}
 	if (permission_exists('recording_delete') && $recordings) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$theme_button_icon_delete,'id'=>'btn_delete','name'=>'btn_delete','style'=>'display: none;','onclick'=>"modal_open('modal-delete','btn_delete');"]);
 	}
