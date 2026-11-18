@@ -61,7 +61,7 @@
 		$default_setting_category = strtolower($_REQUEST["default_setting_category"] ?? '');
 		$default_setting_subcategory = strtolower($_POST["default_setting_subcategory"] ?? '');
 		$default_setting_name = strtolower($_POST["default_setting_name"] ?? '');
-		$default_setting_value = $_POST["default_setting_value"] ?? '';
+		$default_setting_value = is_string($_POST["default_setting_value"] ?? null) ? $_POST["default_setting_value"] : '';
 		$default_setting_order = $_POST["default_setting_order"] ?? '';
 		$default_setting_enabled = $_POST["default_setting_enabled"] ?? true;
 		$default_setting_description = $_POST["default_setting_description"] ?? '';
@@ -121,6 +121,8 @@
 			if (empty($default_setting_name)) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
 			//if (empty($default_setting_value)) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
 			if (empty($default_setting_order)) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+			//validate the time zone against the list of supported identifiers
+			if ($default_setting_category == "domain" && $default_setting_subcategory == "time_zone" && !empty($default_setting_value) && !in_array($default_setting_value, DateTimeZone::listIdentifiers(), true)) { $msg .= $text['message-time_zone_invalid']."<br>\n"; }
 			//if (empty($default_setting_enabled)) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 			//if (empty($default_setting_description)) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 			if (!empty($msg) && empty($_POST["persistformvar"])) {
@@ -537,7 +539,7 @@
 				else {
 					unset($selected);
 				}
-				echo "		<option value='".$font."' ".$selected.">".$font."</option>\n";
+				echo "		<option value='".escape($font)."' ".$selected.">".escape($font)."</option>\n";
 			}
 			echo "		</optgroup>\n";
 			echo "		<option value='' disabled='disabled'></option>\n";

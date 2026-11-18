@@ -49,9 +49,9 @@
 	$text = $language->get();
 
 //set the variables
-	if (!empty($_POST['default_settings'])) {
-		$action = $_POST['action'];
-		$domain_uuid = $_POST['domain_uuid'];
+	if (!empty($_POST['default_settings']) && is_array($_POST['default_settings'])) {
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
+		$domain_uuid = is_string($_POST['domain_uuid'] ?? null) ? $_POST['domain_uuid'] : '';
 		$default_settings = $_POST['default_settings'];
 	} else {
 		$action = '';
@@ -119,7 +119,9 @@
 
 		switch ($action) {
 			case 'copy':
-				if ($permission['default_setting_add']) {
+				//the copy writes to another domain's settings, require the same permissions
+				//that the list and the class require for cross domain access
+				if ($permission['default_setting_add'] && $permission['domain_select'] && $permission['domain_setting_add']) {
 					$obj = new default_settings;
 					$obj->domain_uuid = $domain_uuid;
 					$obj->copy($default_settings);
@@ -141,10 +143,6 @@
 		header('Location: default_settings.php'.($query_string ? '?'.$query_string : ''));
 		exit;
 	}
-
-//get order and order by and sanitize the values
-	$order_by = (!empty($_GET["order_by"])) ? $_GET["order_by"] : '';
-	$order = (!empty($_GET["order"])) ? $_GET["order"] : '';
 
 //get the count
 	$sql = "select count(default_setting_uuid) from v_default_settings ";
