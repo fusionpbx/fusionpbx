@@ -57,12 +57,19 @@
 		$action = "add";
 	}
 
+// check the permission for the action being taken
+	if (($action == 'add' && !permission_exists('service_add')) || ($action == 'update' && !permission_exists('service_edit'))) {
+		echo "access denied";
+		exit;
+	}
+
 // get http post variables and set them to php variables
 	if (!empty($_POST)) {
-		$service_name = $_POST["service_name"];
-		$service_category = $_POST["service_category"];
-		$service_enabled = $_POST["service_enabled"];
-		$service_description = $_POST["service_description"];
+		$service_name = is_string($_POST["service_name"] ?? null) ? $_POST["service_name"] : '';
+		$service_category = is_string($_POST["service_category"] ?? null) ? $_POST["service_category"] : '';
+		//the enabled field is a boolean, allow only the values offered by the form
+		$service_enabled = in_array($_POST["service_enabled"] ?? '', ['true', 'false'], true) ? $_POST["service_enabled"] : '';
+		$service_description = is_string($_POST["service_description"] ?? null) ? $_POST["service_description"] : '';
 	}
 
 // process the data and save it to the database
