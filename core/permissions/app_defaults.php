@@ -2,7 +2,11 @@
 
 if ($domains_processed == 1) {
 
+	//define an empty array
+		$array = [];
+
 	//add the permissions
+		$database_permissions = [];
 		if (empty($database_permissions)) {
 			$sql = "select * from v_permissions \n";
 			$database_permissions = $database->select($sql, null, 'all');
