@@ -8,8 +8,8 @@
 /**
  * Import necessary dependencies
  */
-require_once 'QRByte.php';
-require_once 'QRMode.php';
+require_once __DIR__ . '/QRByte.php';
+require_once __DIR__ . '/QRMode.php';
 
 /**
  * This class provides the 8bit Byte implementaton of a QRByte

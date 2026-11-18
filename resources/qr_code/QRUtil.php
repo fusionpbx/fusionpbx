@@ -8,8 +8,8 @@
 /**
  * Import necessary dependencies
  */
-require_once 'QRCodeException.php';
-require_once 'QRPolynominal.php';
+require_once __DIR__ . '/QRCodeException.php';
+require_once __DIR__ . '/QRPolynominal.php';
 
 /**
  * Derived exception
