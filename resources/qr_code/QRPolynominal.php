@@ -8,9 +8,9 @@
 /**
  * Import necessary dependencies
  */
-require_once 'QRUtil.php';
-require_once 'QRMath.php';
-require_once 'QRCodeException.php';
+require_once __DIR__ . '/QRUtil.php';
+require_once __DIR__ . '/QRMath.php';
+require_once __DIR__ . '/QRCodeException.php';
 
 /**
  * Derived exception

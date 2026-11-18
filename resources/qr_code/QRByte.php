@@ -8,7 +8,7 @@
 /**
  * Import necessary dependencies
  */
-require_once 'QRBitBuffer.php';
+require_once __DIR__ . '/QRBitBuffer.php';
 
 /**
  * This interface describes a QRByte implementation

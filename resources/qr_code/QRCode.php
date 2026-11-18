@@ -22,11 +22,11 @@
 /**
  * Import necessary dependencies
  */
-require_once 'QR8bitByte.php';
-require_once 'QRBitBuffer.php';
-require_once 'QRRSBlock.php';
-require_once 'QRUtil.php';
-require_once 'QRCodeException.php';
+require_once __DIR__ . '/QR8bitByte.php';
+require_once __DIR__ . '/QRBitBuffer.php';
+require_once __DIR__ . '/QRRSBlock.php';
+require_once __DIR__ . '/QRUtil.php';
+require_once __DIR__ . '/QRCodeException.php';
 
 /**
  * This is the main class
