@@ -41,10 +41,21 @@
 
 // Set variables from GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
+
+//limit the order by to the columns shown in the list
+	if (!in_array($order_by, ['domain_name', 'agent_name', 'agent_id', 'agent_type', 'agent_call_timeout', 'agent_contact', 'agent_max_no_answer', 'agent_status'], true)) {
+		$order_by = '';
+	}
+
+//listing agents across domains requires the call center all permission,
+	if ($show == 'all' && !permission_exists('call_center_all')) {
+		echo "access denied";
+		exit;
+	}
 
 // Build the query string
 	$param = [];
@@ -117,7 +128,7 @@
 	$sql .= "where true ";
 	if ($show != "all" || !permission_exists('call_center_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid or domain_uuid is null) ";
-		$parameters['domain_uuid'] = $domain_uuid;
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
 	}
 	if (!empty($search)) {
 		$sql .= "and (";
