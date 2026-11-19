@@ -53,10 +53,10 @@
 
 // Set variables from GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
 
 // Build the query string
 	$param = [];
@@ -86,6 +86,44 @@
 		$action = "add";
 	}
 
+//verify the call flow belongs to the current domain unless allowed to access all domains
+	if (!permission_exists('call_flow_all')) {
+		$checked_uuids = [];
+		if (is_uuid($_REQUEST["id"] ?? '')) {
+			$checked_uuids[] = $_REQUEST["id"];
+		}
+		if (is_uuid($_POST["call_flow_uuid"] ?? '')) {
+			$checked_uuids[] = $_POST["call_flow_uuid"];
+		}
+		foreach ($checked_uuids as $checked_uuid) {
+			$sql = "select call_flow_uuid from v_call_flows ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and call_flow_uuid = :call_flow_uuid ";
+			$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+			$parameters['call_flow_uuid'] = $checked_uuid;
+			$row = $database->select($sql, $parameters, 'row');
+			if (empty($row)) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
+		unset($checked_uuids);
+
+		//verify the posted dialplan uuid does not belong to another domain, it is used to update the dialplan
+		if (is_uuid($_POST["dialplan_uuid"] ?? '')) {
+			$sql = "select domain_uuid from v_dialplans ";
+			$sql .= "where dialplan_uuid = :dialplan_uuid ";
+			$parameters['dialplan_uuid'] = $_POST["dialplan_uuid"];
+			$row = $database->select($sql, $parameters, 'row');
+			if (!empty($row) && !empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid']) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
+	}
+
 //initialize the destinations object
 	$destination = new destinations;
 
@@ -93,22 +131,24 @@
 	if (!empty($_POST)) {
 
 		//set the variables from the http values
-			$call_flow_uuid = $_POST["call_flow_uuid"] ?? null;
-			$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
-			$call_flow_name = $_POST["call_flow_name"];
-			$call_flow_extension = $_POST["call_flow_extension"];
-			$call_flow_feature_code = $_POST["call_flow_feature_code"];
-			$call_flow_status = $_POST["call_flow_status"];
-			$call_flow_pin_number = $_POST["call_flow_pin_number"];
-			$call_flow_label = $_POST["call_flow_label"];
-			$call_flow_sound = $_POST["call_flow_sound"];
-			$call_flow_destination = $_POST["call_flow_destination"];
-			$call_flow_alternate_label = $_POST["call_flow_alternate_label"];
-			$call_flow_alternate_sound = $_POST["call_flow_alternate_sound"];
-			$call_flow_alternate_destination = $_POST["call_flow_alternate_destination"];
-			$call_flow_context = $_POST["call_flow_context"];
-			$call_flow_enabled = $_POST["call_flow_enabled"];
-			$call_flow_description = $_POST["call_flow_description"];
+			$call_flow_uuid = is_string($_POST["call_flow_uuid"] ?? null) ? $_POST["call_flow_uuid"] : null;
+			$dialplan_uuid = is_string($_POST["dialplan_uuid"] ?? null) ? $_POST["dialplan_uuid"] : null;
+			$call_flow_name = is_string($_POST["call_flow_name"] ?? null) ? $_POST["call_flow_name"] : '';
+			$call_flow_extension = is_string($_POST["call_flow_extension"] ?? null) ? $_POST["call_flow_extension"] : '';
+			$call_flow_feature_code = is_string($_POST["call_flow_feature_code"] ?? null) ? $_POST["call_flow_feature_code"] : '';
+			//the status field is a boolean, allow only the values offered by the form
+			$call_flow_status = in_array($_POST["call_flow_status"] ?? '', ['true', 'false'], true) ? $_POST["call_flow_status"] : '';
+			$call_flow_pin_number = is_string($_POST["call_flow_pin_number"] ?? null) ? $_POST["call_flow_pin_number"] : '';
+			$call_flow_label = is_string($_POST["call_flow_label"] ?? null) ? $_POST["call_flow_label"] : '';
+			$call_flow_sound = is_string($_POST["call_flow_sound"] ?? null) ? $_POST["call_flow_sound"] : '';
+			$call_flow_destination = is_string($_POST["call_flow_destination"] ?? null) ? $_POST["call_flow_destination"] : '';
+			$call_flow_alternate_label = is_string($_POST["call_flow_alternate_label"] ?? null) ? $_POST["call_flow_alternate_label"] : '';
+			$call_flow_alternate_sound = is_string($_POST["call_flow_alternate_sound"] ?? null) ? $_POST["call_flow_alternate_sound"] : '';
+			$call_flow_alternate_destination = is_string($_POST["call_flow_alternate_destination"] ?? null) ? $_POST["call_flow_alternate_destination"] : '';
+			$call_flow_context = is_string($_POST["call_flow_context"] ?? null) ? $_POST["call_flow_context"] : '';
+			//the enabled field is a boolean, allow only the values offered by the form
+			$call_flow_enabled = in_array($_POST["call_flow_enabled"] ?? '', ['true', 'false'], true) ? $_POST["call_flow_enabled"] : '';
+			$call_flow_description = is_string($_POST["call_flow_description"] ?? null) ? $_POST["call_flow_description"] : '';
 
 		//seperate the action and the param
 			$destination_array = explode(":", $call_flow_destination);
@@ -126,7 +166,7 @@
 
 		//get the uuid from the POST
 			if ($action == "update") {
-				$call_flow_uuid = $_POST["call_flow_uuid"];
+				$call_flow_uuid = is_string($_POST["call_flow_uuid"] ?? null) ? $_POST["call_flow_uuid"] : '';
 			}
 
 		//validate the token
@@ -279,6 +319,9 @@
 		if (!empty($call_flow_feature_code)) {
 			$esl = event_socket::create();
 			if ($esl->is_connected()) {
+				//remove line breaks, they would break out of the event header
+				$call_flow_feature_code = preg_replace('#[\r\n]#', '', $call_flow_feature_code);
+
 				//send the event
 				$event = "sendevent PRESENCE_IN\n";
 				$event .= "proto: flow\n";
@@ -330,7 +373,7 @@
 	} //(is_array($_POST) && empty($_POST["persistformvar"]))
 
 //pre-populate the form
-	if (!empty($_GET) && empty($_POST["persistformvar"])) {
+	if (!empty($_GET) && is_uuid($_GET["id"] ?? '') && empty($_POST["persistformvar"])) {
 		$call_flow_uuid = $_GET["id"];
 		$sql = "select * from v_call_flows ";
 		$sql .= "where domain_uuid = :domain_uuid ";
