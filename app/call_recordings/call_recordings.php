@@ -152,9 +152,10 @@
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
-	list($paging_controls_mini, $rows_per_page) = paging($num_rows ?? null, $query_string, $rows_per_page, true, $result_count); //top
-	list($paging_controls, $rows_per_page) = paging($num_rows ?? null, $query_string, $rows_per_page, false, $result_count); //bottom
-	$offset = $rows_per_page * $page;
+	if (!is_numeric($rows_per_page) || $rows_per_page < 1) {
+		$rows_per_page = 50;
+	}
+	$offset = intval($rows_per_page) * intval($page);
 
 //get the list
 	$sql = "select r.domain_uuid, d.domain_name, r.call_recording_uuid, r.call_direction, ";
@@ -178,6 +179,16 @@
 	$parameters['time_zone'] = $time_zone;
 	$call_recordings = $database->select($sql, $parameters ?? null, 'all');
 	unset($sql, $parameters);
+
+//set the result count, used to disable the next page button when this is the last page
+	$result_count = is_array($call_recordings) ? sizeof($call_recordings) : 0;
+
+//prepare to page the results
+	$rows_per_page = $settings->get('domain', 'paging', 50);
+	if (!is_numeric($rows_per_page) || $rows_per_page < 1) { $rows_per_page = 50; }
+	list($paging_controls, $rows_per_page) = paging($result_count, $query_string, $rows_per_page);
+	list($paging_controls_mini, $rows_per_page) = paging($result_count, $query_string, $rows_per_page, true);
+	$offset = intval($rows_per_page) * intval($page);
 
 //create token
 	$object = new token;
@@ -207,7 +218,7 @@
 		}
 	}
 	if ($show !== 'all' && permission_exists('call_recording_all')) {
-		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?type='.urlencode($destination_type ?? '').'&show=all']);
+		echo button::create(['type'=>'button','label'=>$text['button-show_all'],'icon'=>$settings->get('theme', 'button_icon_all'),'link'=>'?show=all'.(!empty($search) ? '&search='.urlencode($search) : null)]);
 	}
 	echo 		"<input type='text' class='txt list-search' name='search' id='search' value=\"".escape($search)."\" placeholder=\"".$text['label-search']."\" onkeydown=\"$('#btn_reset').hide(); $('#btn_search').show();\">";
 	echo button::create(['label'=>$text['button-search'],'icon'=>$settings->get('theme', 'button_icon_search'),'type'=>'submit','id'=>'btn_search','style'=>(!empty($search) ? 'display: none;' : null),'collapse'=>'hide-xs']);
@@ -259,13 +270,18 @@
 	echo th_order_by('call_recording_date', $text['label-call_recording_date'], $order_by, $order, null, "class='pct-20 center'", $query_string);
 	echo th_order_by('call_direction', $text['label-call_direction'], $order_by, $order, null, "class='hide-sm-dn shrink'", $query_string);
 	if (permission_exists('xml_cdr_details')) {
-		echo "	<td class='action-button'>&nbsp;</td>\n";
+		echo "	<th class='action-button'>&nbsp;</th>\n";
+		$col_count++;
 	}
 	echo "</tr>\n";
 
 	if (is_array($call_recordings) && @sizeof($call_recordings) != 0) {
 		$x = 0;
 		foreach ($call_recordings as $row) {
+			//reset the row url, prevents a previous row's url being reused when
+			//the current row does not have the play permission
+			$list_row_url = '';
+
 			//playback progress bar
 			if (permission_exists('call_recording_play')) {
 				echo "<tr class='list-row' id='recording_progress_bar_".escape($row['call_recording_uuid'])."' style='display: none;' onclick=\"recording_seek(event,'".escape($row['call_recording_uuid'])."')\"><td id='playback_progress_bar_background_".escape($row['call_recording_uuid'])."' class='playback_progress_bar_background' colspan='".$col_count."'><span class='playback_progress_bar' id='recording_progress_".escape($row['call_recording_uuid'])."'></span></td>".(permission_exists('xml_cdr_details') ? "<td class='action-button' style='border-bottom: none !important;'></td>" : null)."</tr>\n";
