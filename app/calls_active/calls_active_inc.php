@@ -57,6 +57,11 @@
 	$show = trim($_REQUEST["show"] ?? '');
 	if ($show != "all") { $show = ''; }
 
+//validate the theme name to prevent path traversal
+	if (!preg_match('#^[A-Za-z0-9._-]+$#', (string) $template_name)) {
+		$template_name = 'default';
+	}
+
 //include theme config for button images
 	include_once("themes/".$template_name."/config.php");
 
@@ -250,7 +255,7 @@
 					echo "		<td class='button right' style='padding-right: 0;'>\n";
 					//eavesdrop
 					if (permission_exists('call_active_eavesdrop') && $callstate == 'ACTIVE' && !empty($user['extensions']) && !in_array($cid_num, $user['extensions'])) {
-						echo button::create(['type'=>'button','label'=>$text['label-eavesdrop'],'icon'=>'headphones','collapse'=>'hide-lg-dn','onclick'=>"if (confirm('".$text['confirm-eavesdrop']."')) { eavesdrop_call('".escape($cid_num)."','".escape($uuid)."'); } else { this.blur(); return false; }",'onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
+						echo button::create(['type'=>'button','label'=>$text['label-eavesdrop'],'icon'=>'headphones','collapse'=>'hide-lg-dn','onclick'=>"if (confirm('".$text['confirm-eavesdrop']."')) { eavesdrop_call(".json_encode((string) $cid_num, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP).",".json_encode((string) $uuid, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP)."); } else { this.blur(); return false; }",'onmouseover'=>'refresh_stop()','onmouseout'=>'refresh_start()']);
 					}
 					//hangup
 					if (permission_exists('call_active_hangup')) {
