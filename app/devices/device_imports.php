@@ -59,9 +59,11 @@
 	}
 
 //copy the csv file
-	//$_POST['submit'] == "Upload" &&
 	if (!empty($_FILES['ulfile']['tmp_name']) && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('device_import')) {
-		if ($_POST['type'] == 'csv') {
+		//accept csv files only, the client supplied name must never reach the file system as-is
+		$upload_extension = strtolower(pathinfo(basename(str_replace('\\', '/', $_FILES['ulfile']['name'] ?? '')), PATHINFO_EXTENSION));
+		if (($_POST['type'] ?? '') == 'csv' && $upload_extension == 'csv') {
+			//write to a server generated name, this prevents path traversal from the uploaded file name
 			$file = $settings->get('server', 'temp')."/devices-".$_SESSION['domain_name'].".csv";
 			if (move_uploaded_file($_FILES['ulfile']['tmp_name'], $file)) {
 				$_SESSION['file'] = $file;
