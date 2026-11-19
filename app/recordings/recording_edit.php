@@ -94,10 +94,10 @@
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
 
 // Build the query string
 	$param = [];
@@ -125,6 +125,32 @@
 	}
 	else {
 		$action = 'add';
+	}
+
+//verify the recording belongs to the current domain unless allowed to access all domains,
+//the uuid is used to update the record and the save does not limit the update by domain
+	if (!permission_exists('recording_all')) {
+		$checked_uuids = [];
+		if (!empty($recording_uuid) && is_uuid($recording_uuid)) {
+			$checked_uuids[] = $recording_uuid;
+		}
+		if (is_uuid($_POST["recording_uuid"] ?? '')) {
+			$checked_uuids[] = $_POST["recording_uuid"];
+		}
+		foreach ($checked_uuids as $checked_uuid) {
+			$sql = "select recording_uuid from v_recordings ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and recording_uuid = :recording_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['recording_uuid'] = $checked_uuid;
+			$row = $database->select($sql, $parameters, 'row');
+			if (empty($row)) {
+				echo "access denied";
+				exit;
+			}
+			unset($sql, $parameters, $row);
+		}
+		unset($checked_uuids);
 	}
 
 //get the form value and set to php variables

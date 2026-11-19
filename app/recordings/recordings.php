@@ -67,10 +67,10 @@
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
 
 // Build the query string
 	$param = [];
@@ -105,7 +105,7 @@
 				}
 
 			//if from recordings, get recording details from db
-				$recording_uuid = $_GET['id']; //recordings
+				$recording_uuid = is_string($_GET['id'] ?? null) ? $_GET['id'] : ''; //recordings
 				if ($recording_uuid != '') {
 					$sql = "select recording_filename, recording_base64 ";
 					$sql .= "from v_recordings ";
@@ -118,7 +118,7 @@
 						$recording_filename = $row['recording_filename'];
 					}
 					unset($sql, $parameters);
-				} elseif ($_GET['filename']) {
+				} elseif (is_string($_GET['filename'] ?? null) && $_GET['filename']) {
 					$recording_filename = basename($_GET['filename']);
 				}
 
@@ -288,7 +288,7 @@
 							$recording_name = str_replace(['"', "'", "`"], '', $recording_name);
 							$recording_name = preg_replace('/\s+/', ' ', trim($recording_name));
 							$recording_name = ucwords(strtolower($recording_name));
-							$recording_description = $_GET['rd'];
+							$recording_description = is_string($_GET['rd'] ?? null) ? $_GET['rd'] : '';
 						//build array
 							$array['recordings'][0]['domain_uuid'] = $domain_uuid;
 							$array['recordings'][0]['recording_uuid'] = $recording_uuid;
@@ -366,7 +366,7 @@
 //get the total recordings from the database
 	$sql = "select count(*) from v_recordings ";
 	$sql .= "where true ";
-	if ($show != "all" || !permission_exists('conference_center_all')) {
+	if ($show != "all" || !permission_exists('recording_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
@@ -410,7 +410,7 @@
 	$sql .= "recording_name, recording_filename, recording_description ";
 	$sql .= "from v_recordings ";
 	$sql .= "where true ";
-	if ($show != "all" || !permission_exists('conference_center_all')) {
+	if ($show != "all" || !permission_exists('recording_all')) {
 		$sql .= "and (domain_uuid = :domain_uuid) ";
 		$parameters['domain_uuid'] = $domain_uuid;
 	}
@@ -708,6 +708,12 @@
 
 			$c_start = $start;
 			$c_end   = $end;
+			//reject a malformed range header, only a single byte range of digits is used below
+			if (!preg_match('/^bytes=(\d+-\d*|-\d+)$/i', (string) $_SERVER['HTTP_RANGE'])) {
+				header('HTTP/1.1 416 Requested Range Not Satisfiable');
+				header("Content-Range: bytes $start-$end/$size");
+				exit;
+			}
 			// Extract the range string
 			[, $range] = explode('=', $_SERVER['HTTP_RANGE'], 2);
 			// Make sure the client hasn't sent us a multibyte range
@@ -723,14 +729,14 @@
 			// If the range starts with an '-' we start from the beginning
 			// If not, we forward the file pointer
 			// And make sure to get the end byte if spesified
-			if ($range == '-') {
+			if (substr($range, 0, 1) == '-') {
 				// The n-number of the last bytes is requested
-				$c_start = $size - substr($range, 1);
+				$c_start = $size - (int) substr($range, 1);
 			}
 			else {
 				$range  = explode('-', $range);
-				$c_start = $range[0];
-				$c_end   = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $size;
+				$c_start = (int) $range[0];
+				$c_end   = (isset($range[1]) && is_numeric($range[1])) ? (int) $range[1] : $size;
 			}
 			/* Check the range and make sure it's treated according to the specs.
 			* http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
@@ -738,7 +744,7 @@
 			// End bytes can not be larger than $end.
 			$c_end = ($c_end > $end) ? $end : $c_end;
 			// Validate the requested range and return an error if it's not correct.
-			if ($c_start > $c_end || $c_start > $size - 1 || $c_end >= $size) {
+			if ($c_start < 0 || $c_start > $c_end || $c_start > $size - 1 || $c_end >= $size) {
 
 				header('HTTP/1.1 416 Requested Range Not Satisfiable');
 				header("Content-Range: bytes $start-$end/$size");
