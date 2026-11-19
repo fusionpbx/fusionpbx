@@ -875,7 +875,7 @@ class database {
 		}
 
 		// sanitize the table name
-		// $this->table = self::sanitize($this->table); // no longer needed
+		$this->table = self::sanitize((string) $this->table);
 
 		// get the number of rows
 		$sql = 'select count(*) as num_rows from ' . $this->table . ' ';
@@ -1335,6 +1335,9 @@ class database {
 			$this->connect();
 		}
 
+		// sanitize the table name
+		$this->table = self::sanitize((string) $this->table);
+
 		// get data from the database
 		$sql = 'select * from ' . $this->table . ' ';
 		$params = [];
@@ -1416,11 +1419,11 @@ class database {
 
 		// limit
 		if (isset($this->limit) && is_numeric($this->limit)) {
-			$sql .= 'limit ' . $this->limit . ' ';
+			$sql .= 'limit ' . (int) $this->limit . ' ';
 		}
 		// offset
 		if (isset($this->offset) && is_numeric($this->offset)) {
-			$sql .= 'offset ' . $this->offset . ' ';
+			$sql .= 'offset ' . (int) $this->offset . ' ';
 		}
 
 		$prep_statement = $this->db->prepare($sql);
@@ -1544,7 +1547,10 @@ class database {
 			// use the array to get a copy of the parent data before deleting it
 			foreach ($new_array as $table_name => $rows) {
 				foreach ($rows as $row) {
+					// sanitize the table name
 					$table_name = self::sanitize($table_name);
+
+					// build the sql from the fields in each row
 					$sql = 'select * from ' . self::TABLE_PREFIX . $table_name . ' ';
 					$i = 0;
 					foreach ($row as $field_name => $field_value) {
@@ -1571,6 +1577,7 @@ class database {
 						}
 					}
 				}
+
 				// only execute when the table actually has rows to fetch
 				if (!empty($rows) && !empty($sql) && !empty($parameters)) {
 					$results = $this->execute($sql, $parameters, 'all');
@@ -1748,7 +1755,7 @@ class database {
 			$sql .= '(';
 			$sql .= "'" . uuid() . "', ";
 			if (isset($this->domain_uuid) && is_uuid($this->domain_uuid)) {
-				$sql .= "'" . $this->domain_uuid . "', ";
+				$sql .= ':domain_uuid, ';
 			}
 			if (isset($this->user_uuid) && is_uuid($this->user_uuid)) {
 				$sql .= ':user_uuid, ';
@@ -1759,9 +1766,9 @@ class database {
 			if (isset($this->app_name) && !empty($this->app_name)) {
 				$sql .= ':app_name, ';
 			}
-			$sql .= "'" . $message['code'] . "', ";
+			$sql .= ':transaction_code, ';
 			$sql .= ':remote_address, ';
-			$sql .= "'" . $transaction_type . "', ";
+			$sql .= ':transaction_type, ';
 			$sql .= 'now(), ';
 			if (is_array($old_array)) {
 				$sql .= ':transaction_old, ';
@@ -1782,9 +1789,14 @@ class database {
 			if (isset($this->app_uuid) && is_uuid($this->app_uuid)) {
 				$statement->bindParam(':app_uuid', $this->app_uuid);
 			}
+			if (isset($this->domain_uuid) && is_uuid($this->domain_uuid)) {
+				$statement->bindParam(':domain_uuid', $this->domain_uuid);
+			}
 			if (isset($this->app_name) && !empty($this->app_name)) {
 				$statement->bindParam(':app_name', $this->app_name);
 			}
+			$statement->bindValue(':transaction_code', (string) ($message['code'] ?? ''));
+			$statement->bindValue(':transaction_type', (string) $transaction_type);
 			$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);
 			if (is_array($old_array)) {
 				$old_json = json_encode($old_array, JSON_PRETTY_PRINT);
@@ -2015,6 +2027,9 @@ class database {
 			$this->uuid = $array['uuid'];
 		}
 
+		// sanitize the name, it is a public property so the magic set function is not used
+		$this->name = self::sanitize((string) $this->name);
+
 		// build the query
 		$sql = 'SELECT * FROM ' . self::TABLE_PREFIX . $this->name . ' ';
 		$params = [];
@@ -2073,11 +2088,11 @@ class database {
 			}
 			// limit
 			if (isset($array['limit']) && is_numeric($array['limit'])) {
-				$sql .= 'LIMIT ' . $array['limit'] . ' ';
+				$sql .= 'LIMIT ' . (int) $array['limit'] . ' ';
 			}
 			// offset
 			if (isset($array['offset']) && is_numeric($array['offset'])) {
-				$sql .= 'OFFSET ' . $array['offset'] . ' ';
+				$sql .= 'OFFSET ' . (int) $array['offset'] . ' ';
 			}
 		}
 		// execute the query, and return the results
@@ -2211,10 +2226,13 @@ class database {
 			// unset the array
 			unset($array);
 
-			// use the array to get a copy of the parent data before deleting it
+			// use the array to get a copy of the parent data before copying it
 			foreach ($copy_array as $table_name => $rows) {
 				foreach ($rows as $row) {
+					// sanitize the table name
 					$table_name = self::sanitize($table_name);
+
+					// build the sql from the fields in each row
 					$sql = 'select * from ' . self::TABLE_PREFIX . $table_name . ' ';
 					$i = 0;
 					foreach ($row as $field_name => $field_value) {
@@ -2456,12 +2474,13 @@ class database {
 							// determine action update or delete, and get the original data
 							if ($parent_key_exists) {
 								$sql = 'SELECT ' . implode(', ', $parent_field_names) . ' FROM ' . $table_name . ' ';
-								$sql .= 'WHERE ' . $parent_key_name . " = '" . $parent_key_value . "'; ";
+								$sql .= 'WHERE ' . $parent_key_name . ' = :parent_key_value; ';
 								$prep_statement = $this->db->prepare($sql);
 								if ($prep_statement) {
 									// get the data
 									try {
-										$prep_statement->execute();
+										$parameters['parent_key_value'] = $parent_key_value;
+										$prep_statement->execute($parameters);
 										$parent_results = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 									} catch (PDOException $e) {
 										// rollback the transaction on error
@@ -2884,12 +2903,13 @@ class database {
 											// determine sql update or delete and get the original data
 											if ($uuid_exists) {
 												$sql = 'SELECT ' . implode(', ', $child_field_names) . ' FROM ' . $child_table_name . ' ';
-												$sql .= 'WHERE ' . $child_key_name . " = '" . $child_key_value . "'; ";
+												$sql .= 'WHERE ' . $child_key_name . ' = :child_key_value; ';
 												try {
 													$prep_statement = $this->db->prepare($sql);
 													if ($prep_statement) {
 														// get the data
-														$prep_statement->execute();
+														$parameters['child_key_value'] = $child_key_value;
+														$prep_statement->execute($parameters);
 														$child_results = $prep_statement->fetch(PDO::FETCH_ASSOC);
 
 														// set the action
@@ -3391,9 +3411,9 @@ class database {
 				if (isset($this->app_name) && !empty($this->app_name)) {
 					$sql .= ':app_name, ';
 				}
-				$sql .= "'" . $message['code'] . "', ";
+				$sql .= ':transaction_code, ';
 				$sql .= ':remote_address, ';
-				$sql .= "'" . $transaction_type . "', ";
+				$sql .= ':transaction_type, ';
 				$sql .= 'now(), ';
 				if (!empty($old_json)) {
 					$sql .= ':transaction_old, ';
@@ -3420,6 +3440,8 @@ class database {
 				if (isset($this->app_name) && !empty($this->app_name)) {
 					$statement->bindParam(':app_name', $this->app_name);
 				}
+				$statement->bindValue(':transaction_code', (string) ($message['code'] ?? ''));
+				$statement->bindValue(':transaction_type', (string) $transaction_type);
 				$statement->bindParam(':remote_address', $_SERVER['REMOTE_ADDR']);
 				if (!empty($old_json)) {
 					$old_json = json_encode($old_array, JSON_PRETTY_PRINT);
