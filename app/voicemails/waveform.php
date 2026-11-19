@@ -42,6 +42,9 @@
 //create the waveform file
 	if (!empty($_GET['id']) && !empty($_GET['type'])) {
 
+		//validate the id, it is used to build file names and paths
+		$id = preg_replace('/[^a-zA-Z0-9_-]/', '', is_string($_GET['id']) ? (string)$_GET['id'] : '');
+
 		//generate random number
 		$rand = rand(0000,9999);
 
@@ -58,6 +61,11 @@
 					$voicemail_uuid = $data[1];
 					unset($data);
 
+					//validate the voicemail id and uuid, they are used to build the file path
+					if (!is_numeric($voicemail_id) || !is_uuid($voicemail_uuid)) {
+						break;
+					}
+
 					//set source folder path
 					$path = $settings->get('switch', 'voicemail').'/default/'.$_SESSION['domain_name'].'/'.$voicemail_id;
 
@@ -65,7 +73,7 @@
 					if (
 						is_numeric($voicemail_id) &&
 						is_uuid($voicemail_uuid) &&
-						is_uuid($_GET['id']) &&
+						is_uuid($id) &&
 						!empty($settings->get('voicemail', 'storage_type')) &&
 						$settings->get('voicemail', 'storage_type') == 'base64'
 						) {
@@ -83,13 +91,13 @@
 						$parameters['voicemail_id'] = $voicemail_id;
 						$parameters['voicemail_uuid'] = $voicemail_uuid;
 						$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
-						$parameters['voicemail_message_uuid'] = $_GET['id'];
+						$parameters['voicemail_message_uuid'] = $id;
 						$message_base64 = $database->select($sql, $parameters, 'column');
 						if (!empty($message_base64)) {
 							$message_decoded = base64_decode($message_base64);
-							file_put_contents($path.'/waveform_'.$_GET['id'].'_'.$rand.'.ext', $message_decoded);
+							file_put_contents($path.'/waveform_'.$id.'_'.$rand.'.ext', $message_decoded);
 							$finfo = finfo_open(FILEINFO_MIME_TYPE); //determine mime type (requires PHP >= 5.3.0, must be manually enabled on Windows)
-							$file_mime = finfo_file($finfo, $path.'/waveform_'.$_GET['id'].'_'.$rand.'.ext');
+							$file_mime = finfo_file($finfo, $path.'/waveform_'.$id.'_'.$rand.'.ext');
 							finfo_close($finfo);
 							switch ($file_mime) {
 								case 'audio/x-wav':
@@ -101,33 +109,33 @@
 									$file_ext = 'mp3';
 									break;
 							}
-							rename($path.'/waveform_'.$_GET['id'].'_'.$rand.'.ext', $path.'/waveform_'.$_GET['id'].'_'.$rand.'.'.$file_ext);
+							rename($path.'/waveform_'.$id.'_'.$rand.'.ext', $path.'/waveform_'.$id.'_'.$rand.'.'.$file_ext);
 						}
 						unset($sql, $parameters, $message_base64, $message_decoded);
 					}
 
 					//prepare full file path
-					if (file_exists($path.'/waveform_'.$_GET['id'].'_'.$rand.'.wav')) {
+					if (file_exists($path.'/waveform_'.$id.'_'.$rand.'.wav')) {
 						$file_ext = 'wav';
-						$full_file_path = $path.'/waveform_'.$_GET['id'].'_'.$rand.'.wav';
+						$full_file_path = $path.'/waveform_'.$id.'_'.$rand.'.wav';
 					}
-					else if (file_exists($path.'/waveform_'.$_GET['id'].'_'.$rand.'.mp3')) {
+					else if (file_exists($path.'/waveform_'.$id.'_'.$rand.'.mp3')) {
 						$file_ext = 'mp3';
-						$full_file_path = $path.'/waveform_'.$_GET['id'].'_'.$rand.'.mp3';
+						$full_file_path = $path.'/waveform_'.$id.'_'.$rand.'.mp3';
 					}
 					else {
-						if (file_exists($path.'/msg_'.$_GET['id'].'.wav')) {
-							copy($path.'/msg_'.$_GET['id'].'.wav', $path.'/waveform_'.$_GET['id'].'_'.$rand.'.wav');
-							if (file_exists($path.'/waveform_'.$_GET['id'].'_'.$rand.'.wav')) {
+						if (file_exists($path.'/msg_'.$id.'.wav')) {
+							copy($path.'/msg_'.$id.'.wav', $path.'/waveform_'.$id.'_'.$rand.'.wav');
+							if (file_exists($path.'/waveform_'.$id.'_'.$rand.'.wav')) {
 								$file_ext = 'wav';
-								$full_file_path = $path.'/waveform_'.$_GET['id'].'_'.$rand.'.wav';
+								$full_file_path = $path.'/waveform_'.$id.'_'.$rand.'.wav';
 							}
 						}
-						else if (file_exists($path.'/msg_'.$_GET['id'].'.mp3')) {
-							copy($path.'/msg_'.$_GET['id'].'.mp3', $path.'/waveform_'.$_GET['id'].'_'.$rand.'.mp3');
-							if (file_exists($path.'/waveform_'.$_GET['id'].'_'.$rand.'.mp3')) {
+						else if (file_exists($path.'/msg_'.$id.'.mp3')) {
+							copy($path.'/msg_'.$id.'.mp3', $path.'/waveform_'.$id.'_'.$rand.'.mp3');
+							if (file_exists($path.'/waveform_'.$id.'_'.$rand.'.mp3')) {
 								$file_ext = 'mp3';
-								$full_file_path = $path.'/waveform_'.$_GET['id'].'_'.$rand.'.mp3';
+								$full_file_path = $path.'/waveform_'.$id.'_'.$rand.'.mp3';
 							}
 						}
 					}
@@ -174,6 +182,11 @@
 				$voicemail_greeting_uuid = $data[1];
 				unset($data);
 
+				//validate the voicemail id and greeting uuid, they are used to build the file path
+				if (!is_numeric($voicemail_id) || !is_uuid($voicemail_greeting_uuid)) {
+					break;
+				}
+
 				//get currently selected greeting
 				$sql = "select greeting_id from v_voicemails ";
 				$sql .= "where domain_uuid = :domain_uuid ";
@@ -213,8 +226,9 @@
 		//stream waveform file
 		if (file_exists($full_file_path)) {
 
-			//temporary waveform image filename
-			$temp_filename = 'waveform_'.$_GET['id'].'_'.$rand.'.png';
+			//temporary waveform image filename, outside the document root and with an
+			//unguessable suffix so that it cannot be pre-created or fetched by others
+			$temp_filename = sys_get_temp_dir().'/waveform_'.$id.'_'.bin2hex(random_bytes(8)).'.png';
 
 			//create temporary waveform image, if doesn't exist
 			if (file_exists($temp_filename)) {
@@ -245,7 +259,7 @@
 				header("Content-Type: application/download");
 				header("Content-Description: File Transfer");
 				header("Content-Type: image/png");
-				header('Content-Disposition: attachment; filename="'.$temp_filename.'"');
+				header('Content-Disposition: attachment; filename="'.basename($temp_filename).'"');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 				header("Content-Length: ".filesize($temp_filename));
@@ -261,8 +275,8 @@
 		switch ($_GET['type']) {
 
 			case 'message':
-				if (file_exists($path.'/waveform_'.$_GET['id'].'_'.$rand.'.'.$file_ext)) {
-					@unlink($path.'/waveform_'.$_GET['id'].'_'.$rand.'.'.$file_ext);
+				if (file_exists($path.'/waveform_'.$id.'_'.$rand.'.'.$file_ext)) {
+					@unlink($path.'/waveform_'.$id.'_'.$rand.'.'.$file_ext);
 				}
 				break;
 
