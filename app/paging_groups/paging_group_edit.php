@@ -62,7 +62,7 @@
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
-	$search = $_GET['search'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
 	$show = $_GET['show'] ?? '';
 
 // Build the query string
@@ -99,10 +99,10 @@
 	$recordings = $database->select($sql, $parameters, 'all');
 
 //action add or update
-	if ((!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) || !empty($_REQUEST["paging_group_uuid"])) {
+	if ((!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) || (!empty($_REQUEST["paging_group_uuid"]) && is_uuid($_REQUEST["paging_group_uuid"]))) {
 		$action = "update";
-		$paging_group_uuid = $_REQUEST["id"];
-		if (!empty($_REQUEST["paging_group_uuid"])) {
+		$paging_group_uuid = $_REQUEST["id"] ?? '';
+		if (!empty($_REQUEST["paging_group_uuid"]) && is_uuid($_REQUEST["paging_group_uuid"])) {
 			$paging_group_uuid = $_REQUEST["paging_group_uuid"];
 		}
 
@@ -124,6 +124,19 @@
 	else {
 		$action = "add";
 		$paging_group_uuid = '';
+	}
+
+//verify the posted dialplan uuid does not belong to another domain, it is used to update the dialplan
+	if (!permission_exists('paging_group_all') && is_uuid($_POST["dialplan_uuid"] ?? '')) {
+		$sql = "select domain_uuid from v_dialplans ";
+		$sql .= "where dialplan_uuid = :dialplan_uuid ";
+		$dialplan_parameters['dialplan_uuid'] = $_POST["dialplan_uuid"];
+		$row = $database->select($sql, $dialplan_parameters, 'row');
+		if (!empty($row) && !empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid']) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $dialplan_parameters, $row);
 	}
 
 //get http post variables and set them to php variables
@@ -199,6 +212,8 @@
 			$msg = '';
 			if (empty($paging_group_name)) { $msg .= $text['message-required']." ".$text['label-paging_group_name']."<br>\n"; }
 			if (empty($paging_group_extension)) { $msg .= $text['message-required']." ".$text['label-paging_group_extension']."<br>\n"; }
+			//the extension is interpolated into the dialplan condition regex, allow numbers only
+			if (!empty($paging_group_extension) && !ctype_digit((string)$paging_group_extension)) { $msg .= $text['message-required']." ".$text['label-paging_group_extension']." (numbers only)<br>\n"; }
 			//if (strlen($dialplan_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-dialplan_uuid']."<br>\n"; }
 			//if (strlen($paging_group_pin_number) == 0) { $msg .= $text['message-required']." ".$text['label-paging_group_pin_number']."<br>\n"; }
 			//if (strlen($paging_group_destinations) == 0) { $msg .= $text['message-required']." ".$text['label-paging_group_destinations']."<br>\n"; }
@@ -233,6 +248,15 @@
 				$dialplan_uuid = uuid();
 			}
 
+		//sanitize the destination numbers, they are written to the dialplan and used by page.lua to originate calls
+			if (is_array($paging_group_destinations)) {
+				foreach ($paging_group_destinations as $i => $destination_row) {
+					if (isset($destination_row['destination_number'])) {
+						$paging_group_destinations[$i]['destination_number'] = preg_replace('/[^0-9A-Za-z*#+._@-]/', '', (string) $destination_row['destination_number']);
+					}
+				}
+			}
+
 		//build the destinations string
 			$destinations = '';
 			if (is_array($paging_group_destinations)) {
@@ -250,6 +274,15 @@
 			}
 			else if ($paging_group_type == 'intercom') {
 				$paging_group_mute = 'false';
+			}
+
+		//sanitize the caller id, both are embedded unquoted or single quoted in the originate command built by page.lua
+			$paging_group_caller_id_name = preg_replace("/['\\\r\n]/", '', (string) ($paging_group_caller_id_name ?? ''));
+			$paging_group_caller_id_number = preg_replace('/[^0-9A-Za-z*#+._@-]/', '', (string) ($paging_group_caller_id_number ?? ''));
+
+		//the announcement sound becomes a file path read by a shell command in page.lua, allow path characters only
+			if (!empty($paging_group_announcement_sound)) {
+				$paging_group_announcement_sound = preg_replace('/[^A-Za-z0-9.:_\/-]/', '', (string) $paging_group_announcement_sound);
 			}
 
 		//build the xml dialplan
@@ -281,7 +314,7 @@
 				$announcement_recording_filename = $database->select($sql, $parameters, 'column');
 				unset($sql, $parameters);
 				if (!empty($announcement_recording_filename)) {
-					$dialplan_xml .= "		<action application=\"set\" data=\"recording_filename=".xml::sanitize($settings->get('switch', 'recordings').'/'.$domain_name.'/'.$announcement_recording_filename)."\"/>\n";
+					$dialplan_xml .= "		<action application=\"set\" data=\"recording_filename=".xml::sanitize($settings->get('switch', 'recordings').'/'.$_SESSION['domain_name'].'/'.$announcement_recording_filename)."\"/>\n";
 				}
 			}
 			$dialplan_xml .= "		<action application=\"lua\" data=\"page.lua\" />\n";
