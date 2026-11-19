@@ -42,16 +42,17 @@
 //define the variables
 	$action = '';
 	$search = '';
+	$vars = [];
 
 //get posted data
-	if (!empty($_POST['vars'])) {
-		$action = $_POST['action'] ?? '';
-		$search = $_POST['search'] ?? '';
-		$vars = $_POST['vars'] ?? '';
+	if (is_array($_POST['vars'] ?? null)) {
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
+		$search = is_string($_POST['search'] ?? null) ? $_POST['search'] : '';
+		$vars = $_POST['vars'];
 	}
 
 //process the http post data by action
-	if (!empty($action)) {
+	if ($action != '' && is_array($vars) && @sizeof($vars) != 0) {
 		switch ($action) {
 			case 'copy':
 				if (permission_exists('var_add')) {
@@ -86,7 +87,7 @@
 
 //get the count
 	$sql = "select count(var_uuid) from v_vars ";
-	if (!empty($_GET["search"])) {
+	if (is_string($_GET["search"] ?? null) && !empty($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
 		$sql .= "where (";
 		$sql .= "	lower(var_category) like :search ";
@@ -104,7 +105,7 @@
 	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = $search ? "&search=".$search : null;
 	$param = $order_by ? "&order_by=".$order_by."&order=".$order : null;
-	$page = empty($_GET['page']) ? $page = 0 : $page = $_GET['page'];
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 	[$paging_controls, $rows_per_page] = paging($num_rows, $param, $rows_per_page);
 	[$paging_controls_mini, $rows_per_page] = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -119,7 +120,7 @@
 	$sql .= "cast(var_enabled as text), \n";
 	$sql .= "var_description \n";
 	$sql .= "from v_vars ";
-	if (!empty($_GET["search"])) {
+	if (is_string($_GET["search"] ?? null) && !empty($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
 		$sql .= "where (";
 		$sql .= "	lower(var_category) like :search ";

@@ -66,9 +66,9 @@ if ($domains_processed == 1) {
 					 $xml_file = dirname(__DIR__, 2) . '/app/switch/resources/conf/vars.xml';
 				}
 
-			//load the xml and save it into an array
+			//load the xml and save it into an array, disable network access during parsing
 				$xml_string = file_get_contents($xml_file);
-				$xml = simplexml_load_string($xml_string);
+				$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NONET);
 				$json = json_encode($xml);
 				$variables = json_decode($json, true);
 				//<X-PRE-PROCESS cmd="set" data="global_codec_prefs=G7221@32000h,G7221@16000h,G722,PCMU,PCMA" category="Codecs" enabled="true"/>
