@@ -49,10 +49,10 @@
 
 // Set variables from GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') == 'desc' ? 'desc' : 'asc';
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
 
 // Build the query string
 	$param = [];
@@ -75,6 +75,9 @@
 
 //set the time zone
 	$time_zone = $settings->get('domain', 'time_zone', date_default_timezone_get());
+	if (!is_string($time_zone) || !in_array($time_zone, DateTimeZone::listIdentifiers(), true)) {
+		$time_zone = date_default_timezone_get();
+	}
 	date_default_timezone_set($time_zone);
 
 //set the time format options: 12h, 24h
@@ -94,31 +97,47 @@
 		$action = "add";
 	}
 
-//get order and order by and sanitize the values
-	$order_by = $_GET["order_by"] ?? '';
-	$order = $_GET["order"] ?? '';
-
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		//get the variables from the http post
-		$domain_uuid = permission_exists('call_block_domain') ? $_POST["domain_uuid"] : $_SESSION['domain_uuid'];
-		$call_block_direction = $_POST["call_block_direction"];
-		$extension_uuid = $_POST["extension_uuid"];
-		$call_block_name = $_POST["call_block_name"] ?? null;
-		$call_block_country_code = $_POST["call_block_country_code"] ?? null;
-		$call_block_number = $_POST["call_block_number"] ?? null;
-		$call_block_enabled = $_POST["call_block_enabled"];
-		$call_block_description = $_POST["call_block_description"] ?? null;
+		$domain_uuid = permission_exists('call_block_domain') ? (is_string($_POST["domain_uuid"] ?? null) ? $_POST["domain_uuid"] : '') : ($_SESSION['domain_uuid'] ?? '');
+		$call_block_direction = is_string($_POST["call_block_direction"] ?? null) ? $_POST["call_block_direction"] : '';
+		$extension_uuid = is_string($_POST["extension_uuid"] ?? null) ? $_POST["extension_uuid"] : '';
+		$call_block_name = is_string($_POST["call_block_name"] ?? null) ? $_POST["call_block_name"] : null;
+		$call_block_country_code = is_string($_POST["call_block_country_code"] ?? null) ? $_POST["call_block_country_code"] : null;
+		$call_block_number = is_string($_POST["call_block_number"] ?? null) ? $_POST["call_block_number"] : null;
+		$call_block_enabled = is_string($_POST["call_block_enabled"] ?? null) ? $_POST["call_block_enabled"] : '';
+		$call_block_description = is_string($_POST["call_block_description"] ?? null) ? $_POST["call_block_description"] : null;
 
 		//get the call block app and data
-		$action_array = explode(':', $_POST["call_block_action"]);
+		$action_array = explode(':', is_string($_POST["call_block_action"] ?? null) ? $_POST["call_block_action"] : '');
 		$call_block_app = $action_array[0];
 		$call_block_data = $action_array[1] ?? null;
 
+		//the app is limited to the values used by call block
+		if (!in_array($call_block_app, ['reject', 'busy', 'hold', 'extension', 'ivr', 'ring_group', 'voicemail'], true)) {
+			$call_block_app = 'reject';
+		}
+
+		//the data is limited to the characters used by extensions, ivr menus, ring groups and voicemails
+		if (!empty($call_block_data) && !preg_match('#^[0-9A-Za-z*_.+\-%]+$#', $call_block_data)) {
+			$call_block_data = null;
+		}
+
+		//the direction is limited to the values used by call block
+		if (!in_array($call_block_direction, ['inbound', 'outbound'], true)) {
+			$call_block_direction = 'inbound';
+		}
+
+		//the enabled field is limited to a boolean value
+		if (!in_array($call_block_enabled, ['true', 'false'], true)) {
+			$call_block_enabled = '';
+		}
+
 		//sanitize the data
 		$extension_uuid = (!empty($extension_uuid) && is_uuid($extension_uuid)) ? $extension_uuid : null;
-		$call_block_country_code = preg_replace('#[^0-9./]#', '', $call_block_country_code ?? '');
-		$call_block_number = preg_replace('#[^0-9./]#', '', $call_block_number ?? '');
+		$call_block_country_code = preg_replace('#[^0-9./]#', '', (string) $call_block_country_code);
+		$call_block_number = preg_replace('#[^0-9./]#', '', (string) $call_block_number);
 	}
 
 //handle the http post
@@ -138,7 +157,7 @@
 						}
 						break;
 					case 'add':
-						$xml_cdrs = $_POST['xml_cdrs'] ?? null;
+						$xml_cdrs = is_array($_POST['xml_cdrs'] ?? null) ? $_POST['xml_cdrs'] : null;
 						if (!empty($xml_cdrs) && permission_exists('call_block_add')) {
 							$obj = new call_block;
 							$obj->call_block_direction = $call_block_direction;
@@ -218,7 +237,7 @@
 					}
 
 				//save the data to the database
-					if ($action == "add") {
+					if ($action == "add" && permission_exists('call_block_add')) {
 						$array['call_block'][0]['call_block_uuid'] = uuid();
 						$array['call_block'][0]['domain_uuid'] = $domain_uuid;
 						$array['call_block'][0]['call_block_direction'] = $call_block_direction;
@@ -240,7 +259,7 @@
 						header("Location: call_block.php".($query_string ? '?'.$query_string : ''));
 						return;
 					}
-					if ($action == "update") {
+					if ($action == "update" && permission_exists('call_block_edit')) {
 						if (!empty($domain_uuid) && is_uuid($domain_uuid)) {
 							$sql = "select c.call_block_country_code, c.call_block_number, d.domain_name ";
 							$sql .= "from v_call_block as c ";
@@ -302,7 +321,7 @@
 	}
 
 //pre-populate the form
-	if (!empty($_GET["id"]) && empty($_POST["persistformvar"])) {
+	if (!empty($_GET["id"]) && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$call_block_uuid = $_GET["id"];
 		$sql = "select * from v_call_block ";
 		$sql .= "where ( ";

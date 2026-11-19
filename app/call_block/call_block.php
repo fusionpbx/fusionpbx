@@ -44,10 +44,10 @@
 
 // Set variables from GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') == 'desc' ? 'desc' : 'asc';
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
 
 // Build the query string
 	$param = [];
@@ -73,8 +73,8 @@
 
 //get posted data
 	if (!empty($_POST['call_blocks'])) {
-		$action = $_POST['action'];
-		$call_blocks = $_POST['call_blocks'];
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
+		$call_blocks = is_array($_POST['call_blocks']) ? $_POST['call_blocks'] : [];
 	}
 
 //process the http post data by action

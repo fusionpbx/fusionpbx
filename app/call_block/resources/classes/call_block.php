@@ -71,7 +71,7 @@ class call_block {
 	 * Initializes the object with setting array.
 	 *
 	 * @param array $setting_array An array containing settings for domain, user, and database connections. Defaults to
-	 *                             an empty array.
+	 *       an empty array.
 	 *
 	 * @return void
 	 */
@@ -79,28 +79,28 @@ class call_block {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
 		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
-		$config         = $setting_array['config'] ?? config::load();
+		$config = $setting_array['config'] ?? config::load();
 		$this->database = $setting_array['database'] ?? database::new(['config' => $config]);
 		$this->settings = $setting_array['settings'] ?? new settings(['database' => $this->database, 'domain_uuid' => $this->domain_uuid, 'user_uuid' => $this->user_uuid]);
 
 		//assign private variables
 		$this->permission_prefix = 'call_block_';
-		$this->list_page         = 'call_block.php';
-		$this->table             = 'call_block';
-		$this->uuid_prefix       = 'call_block_';
-		$this->toggle_field      = 'call_block_enabled';
-		$this->toggle_values     = ['true', 'false'];
+		$this->list_page = 'call_block.php';
+		$this->table = 'call_block';
+		$this->uuid_prefix = 'call_block_';
+		$this->toggle_field = 'call_block_enabled';
+		$this->toggle_values = ['true', 'false'];
 	}
 
 	/**
 	 * Deletes one or more records.
 	 *
 	 * @param array $records An array of record IDs to delete, where each ID is an associative array
-	 *                       containing 'uuid' and 'checked' keys. The 'checked' value indicates
-	 *                       whether the corresponding checkbox was checked for deletion.
+	 * containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 * whether the corresponding checkbox was checked for deletion.
 	 *
 	 * @return void No return value; this method modifies the database state and sets a message.
 	 */
@@ -109,7 +109,7 @@ class call_block {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -137,10 +137,10 @@ class call_block {
 					if (permission_exists('call_block_domain')) {
 						$sql .= " or domain_uuid is null ";
 					}
-					$sql                       .= ") ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql .= ") ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$call_block_numbers[$row['uuid']] = $row['call_block_number'];
@@ -161,7 +161,6 @@ class call_block {
 
 				//delete the checked rows
 				if (is_array($array) && @sizeof($array) != 0) {
-
 					//execute delete
 					$this->database->delete($array);
 					unset($array);
@@ -184,8 +183,8 @@ class call_block {
 	 * Toggles the state of one or more records.
 	 *
 	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
-	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
-	 *                        whether the corresponding checkbox was checked for deletion.
+	 *  containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *  whether the corresponding checkbox was checked for deletion.
 	 *
 	 * @return void No return value; this method modifies the database state and sets a message.
 	 */
@@ -194,7 +193,7 @@ class call_block {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -214,11 +213,16 @@ class call_block {
 					}
 				}
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, call_block_number from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, call_block_number from v_" . $this->table . " ";
+					$sql .= "where ( ";
+					$sql .= "	domain_uuid = :domain_uuid ";
+					if (permission_exists('call_block_domain')) {
+						$sql .= "	or domain_uuid is null ";
+					}
+					$sql .= ") ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$states[$row['uuid']] = $row['toggle'];
@@ -232,15 +236,13 @@ class call_block {
 				$x = 0;
 				foreach ($states as $uuid => $state) {
 					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]         = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $state == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 					$x++;
 				}
 
 				//save the changes
 				if (is_array($array) && @sizeof($array) != 0) {
-
 					//save the array
-
 					$this->database->save($array);
 					unset($array);
 
@@ -263,8 +265,8 @@ class call_block {
 	 * Copies one or more records
 	 *
 	 * @param array $records  An array of record IDs to delete, where each ID is an associative array
-	 *                        containing 'uuid' and 'checked' keys. The 'checked' value indicates
-	 *                        whether the corresponding checkbox was checked for deletion.
+	 *  containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *  whether the corresponding checkbox was checked for deletion.
 	 *
 	 * @return void No return value; this method modifies the database state and sets a message.
 	 */
@@ -295,14 +297,18 @@ class call_block {
 
 				//create insert array from existing data
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select * from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					$sql .= "where ( ";
+					$sql .= "	domain_uuid = :domain_uuid ";
+					if (permission_exists('call_block_domain')) {
+						$sql .= "	or domain_uuid is null ";
+					}
+					$sql .= ") ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $x => $row) {
-
 							//convert boolean values to a string
 							foreach ($row as $key => $value) {
 								if (gettype($value) == 'boolean') {
@@ -317,7 +323,6 @@ class call_block {
 							//overwrite
 							$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = uuid();
 							$array[$this->table][$x]['call_block_description']    = trim($row['call_block_description'] . ' (' . $text['label-copy'] . ')');
-
 						}
 					}
 					unset($sql, $parameters, $rows, $row);
@@ -325,15 +330,12 @@ class call_block {
 
 				//save the changes and set the message
 				if (is_array($array) && @sizeof($array) != 0) {
-
 					//save the array
-
 					$this->database->save($array);
 					unset($array);
 
 					//set message
 					message::add($text['message-copy']);
-
 				}
 				unset($records);
 			}
@@ -345,8 +347,8 @@ class call_block {
 	 * Adds one or more records
 	 *
 	 * @param array $records   An array of record IDs to delete, where each ID is an associative array
-	 *                         containing 'uuid' and 'checked' keys. The 'checked' value indicates
-	 *                         whether the corresponding checkbox was checked for deletion.
+	 *   containing 'uuid' and 'checked' keys. The 'checked' value indicates
+	 *   whether the corresponding checkbox was checked for deletion.
 	 *
 	 * @return void No return value; this method modifies the database state and sets a message.
 	 */
@@ -355,7 +357,7 @@ class call_block {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -378,38 +380,40 @@ class call_block {
 				//get the caller id info from call detail records
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
 					$sql  = "select caller_id_name, caller_id_number, caller_destination from v_xml_cdr ";
-					$sql  .= "where xml_cdr_uuid in (" . implode(', ', $uuids) . ") ";
-					$rows = $this->database->select($sql, $parameters ?? null, 'all');
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and xml_cdr_uuid in (" . implode(', ', $uuids) . ") ";
+					$parameters['domain_uuid'] = $this->domain_uuid;
+					$rows = $this->database->select($sql, $parameters, 'all');
 					unset($sql, $parameters);
 				}
 
 				//get the caller id info from call detail records
 				if (is_uuid($this->domain_uuid)) {
 					//get the destination country code
-					$sql                       = "select distinct(destination_prefix), ";
-					$sql                       .= "(select count(destination_prefix) from v_destinations where domain_uuid = :domain_uuid and destination_prefix = d.destination_prefix) as count ";
-					$sql                       .= "from v_destinations as d ";
-					$sql                       .= "where domain_uuid = :domain_uuid ";
-					$sql                       .= "and destination_prefix <> '' ";
-					$sql                       .= "and destination_enabled = true ";
-					$sql                       .= "order by count desc limit 1; ";
+					$sql = "select distinct(destination_prefix), ";
+					$sql .= "(select count(destination_prefix) from v_destinations where domain_uuid = :domain_uuid and destination_prefix = d.destination_prefix) as count ";
+					$sql .= "from v_destinations as d ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and destination_prefix <> '' ";
+					$sql .= "and destination_enabled = true ";
+					$sql .= "order by count desc limit 1; ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$destination_country_code  = $this->database->select($sql, $parameters ?? null, 'column');
+					$destination_country_code = $this->database->select($sql, $parameters ?? null, 'column');
 					unset($sql, $parameters);
 
 					//use the the destination country code to set the country code
 					if (!empty($destination_country_code)) {
 						$destination_country_code = trim($destination_country_code, "+ ");
-						$country_code             = $destination_country_code;
+						$country_code = $destination_country_code;
 					}
 				}
 
 				//get the users that are assigned to the extension
 				if (!permission_exists('call_block_extension')) {
-					$sql                     = "select extension_uuid from v_extension_users ";
-					$sql                     .= "where user_uuid = :user_uuid ";
+					$sql = "select extension_uuid from v_extension_users ";
+					$sql .= "where user_uuid = :user_uuid ";
 					$parameters['user_uuid'] = $this->user_uuid;
-					$user_extensions         = $this->database->select($sql, $parameters ?? null, 'all');
+					$user_extensions = $this->database->select($sql, $parameters ?? null, 'all');
 					unset($sql, $parameters);
 				}
 
@@ -491,12 +495,12 @@ class call_block {
 				if (is_array($array) && @sizeof($array) != 0) {
 
 					//ensure call block is enabled in the dialplan (build update array)
-					$sql                       = "select dialplan_uuid from v_dialplans ";
-					$sql                       .= "where domain_uuid = :domain_uuid ";
-					$sql                       .= "and app_uuid = '" . self::app_uuid . "' ";
-					$sql                       .= "and dialplan_enabled <> true ";
+					$sql = "select dialplan_uuid from v_dialplans ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and app_uuid = '" . self::app_uuid . "' ";
+					$sql .= "and dialplan_enabled <> true ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters);
+					$rows = $this->database->select($sql, $parameters);
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $x => $row) {
 							$array['dialplans'][$x]['dialplan_uuid']    = $row['dialplan_uuid'];
