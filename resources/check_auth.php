@@ -31,11 +31,6 @@
 	$language = new text;
 	$text = $language->get(null, 'resources');
 
-//for compatibility, require this library if less than version 5.5
-	if (version_compare(phpversion(), '5.5', '<')) {
-		require_once "resources/functions/password.php";
-	}
-
 //start the session
 	if (function_exists('session_start')) {
 		if (!isset($_SESSION)) {
