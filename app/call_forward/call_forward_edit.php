@@ -50,10 +50,15 @@
 
 // Set variables from GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
+
+//limit the order by to the columns shown in the list
+	if (!in_array($order_by, ['extension'], true)) {
+		$order_by = '';
+	}
 
 // Build the query string
 	$param = [];
@@ -95,8 +100,12 @@
 		echo "</select>\n";
 	}
 
-//get the extension_uuid
-	$extension_uuid = $_REQUEST["id"];
+//get the extension_uuid, it must be a valid uuid to be used in the query
+	$extension_uuid = is_string($_REQUEST["id"] ?? null) ? trim($_REQUEST["id"]) : '';
+	if (!is_uuid($extension_uuid)) {
+		echo "access denied";
+		exit;
+	}
 
 //get the extension number
 	$sql = "select * from v_extensions ";
@@ -151,33 +160,62 @@
 	if (!empty($_POST) && empty($_POST["persistformvar"])) {
 
 		//get http post variables and set them to php variables
-			$forward_all_enabled = filter_var($_POST["forward_all_enabled"], FILTER_VALIDATE_BOOLEAN);
-			$forward_all_destination = $_POST["forward_all_destination"];
-			$forward_busy_enabled = filter_var($_POST["forward_busy_enabled"], FILTER_VALIDATE_BOOLEAN);
-			$forward_busy_destination = $_POST["forward_busy_destination"];
-			$forward_no_answer_enabled = filter_var($_POST["forward_no_answer_enabled"], FILTER_VALIDATE_BOOLEAN);
-			$forward_no_answer_destination = $_POST["forward_no_answer_destination"];
-			$forward_user_not_registered_enabled = filter_var($_POST["forward_user_not_registered_enabled"], FILTER_VALIDATE_BOOLEAN);
-			$forward_user_not_registered_destination = $_POST["forward_user_not_registered_destination"];
-			$do_not_disturb = filter_var($_POST["do_not_disturb"], FILTER_VALIDATE_BOOLEAN);
+			$forward_all_enabled = filter_var($_POST["forward_all_enabled"] ?? null, FILTER_VALIDATE_BOOLEAN);
+			$forward_all_destination = is_string($_POST["forward_all_destination"] ?? null) ? $_POST["forward_all_destination"] : '';
+			$forward_busy_enabled = filter_var($_POST["forward_busy_enabled"] ?? null, FILTER_VALIDATE_BOOLEAN);
+			$forward_busy_destination = is_string($_POST["forward_busy_destination"] ?? null) ? $_POST["forward_busy_destination"] : '';
+			$forward_no_answer_enabled = filter_var($_POST["forward_no_answer_enabled"] ?? null, FILTER_VALIDATE_BOOLEAN);
+			$forward_no_answer_destination = is_string($_POST["forward_no_answer_destination"] ?? null) ? $_POST["forward_no_answer_destination"] : '';
+			$forward_user_not_registered_enabled = filter_var($_POST["forward_user_not_registered_enabled"] ?? null, FILTER_VALIDATE_BOOLEAN);
+			$forward_user_not_registered_destination = is_string($_POST["forward_user_not_registered_destination"] ?? null) ? $_POST["forward_user_not_registered_destination"] : '';
+			$do_not_disturb = filter_var($_POST["do_not_disturb"] ?? null, FILTER_VALIDATE_BOOLEAN);
 
-			$cid_name_prefix = $_POST["cid_name_prefix"] ?? '';
-			$cid_number_prefix = $_POST["cid_number_prefix"] ?? '';
-			$follow_me_enabled = filter_var($_POST["follow_me_enabled"], FILTER_VALIDATE_BOOLEAN);
-			$follow_me_ignore_busy = filter_var($_POST["follow_me_ignore_busy"], FILTER_VALIDATE_BOOLEAN);
+			//sanitize the call forward destinations, they are dialed by the switch and
+			//are also sent to the phone in the feature event notify
+			$forward_all_destination = preg_replace('#[^\*0-9]#', '', $forward_all_destination);
+			$forward_busy_destination = preg_replace('#[^\*0-9]#', '', $forward_busy_destination);
+			$forward_no_answer_destination = preg_replace('#[^\*0-9]#', '', $forward_no_answer_destination);
+			$forward_user_not_registered_destination = preg_replace('#[^\*0-9]#', '', $forward_user_not_registered_destination);
 
-			$n = 0;
+			$cid_name_prefix = is_string($_POST["cid_name_prefix"] ?? null) ? $_POST["cid_name_prefix"] : '';
+			$cid_number_prefix = is_string($_POST["cid_number_prefix"] ?? null) ? $_POST["cid_number_prefix"] : '';
+			$follow_me_enabled = filter_var($_POST["follow_me_enabled"] ?? null, FILTER_VALIDATE_BOOLEAN);
+			$follow_me_ignore_busy = filter_var($_POST["follow_me_ignore_busy"] ?? null, FILTER_VALIDATE_BOOLEAN);
+
+			//sanitize the caller ID prefixes, they are placed in front of the caller ID
+			//name and number by the switch so restrict them to safe characters
+			if (permission_exists('follow_me_cid_name_prefix')) {
+				$cid_name_prefix = preg_replace('/[^\p{L}\p{N} \-.&()#]/u', '', $cid_name_prefix);
+			}
+			else {
+				$cid_name_prefix = null;
+			}
+			if (permission_exists('follow_me_cid_number_prefix')) {
+				$cid_number_prefix = preg_replace('#[^+*0-9]#', '', $cid_number_prefix);
+			}
+			else {
+				$cid_number_prefix = null;
+			}
+
+			//sanitize the follow me destinations, they are dialed by the switch
+			$destinations = [];
 			$destination_found = false;
-			foreach ($_POST["destinations"] as $field) {
-				$destinations[$n]['uuid'] = $field['uuid'];
-				$destinations[$n]['destination'] = $field['destination'];
-				$destinations[$n]['delay'] = $field['delay'];
-				$destinations[$n]['prompt'] = $field['prompt'];
-				$destinations[$n]['timeout'] = $field['timeout'];
-				if (isset($field['destination'])) {
-					$destination_found = true;
+			if (is_array($_POST["destinations"] ?? null)) {
+				$n = 0;
+				foreach ($_POST["destinations"] as $field) {
+					if (!is_array($field)) {
+						continue;
+					}
+					$destinations[$n]['uuid'] = is_uuid($field['uuid'] ?? null) ? $field['uuid'] : '';   //empty when adding a new destination record
+					$destinations[$n]['destination'] = is_string($field['destination'] ?? null) ? preg_replace('#[^\*0-9]#', '', $field['destination']) : '';
+					$destinations[$n]['delay'] = is_numeric($field['delay'] ?? null) ? (int) $field['delay'] : 0;
+					$destinations[$n]['prompt'] = ($field['prompt'] ?? '') === '1' ? '1' : '';
+					$destinations[$n]['timeout'] = is_numeric($field['timeout'] ?? null) ? (int) $field['timeout'] : 30;
+					if (isset($field['destination'])) {
+						$destination_found = true;
+					}
+					$n++;
 				}
-				$n++;
 			}
 
 		//validate the token
@@ -205,11 +243,6 @@
 
 		//call forward config
 			if (permission_exists('call_forward')) {
-				//sanitize the destinations
-				$forward_all_destination = preg_replace('#[^\*0-9]#', '', $forward_all_destination);
-				$forward_busy_destination = preg_replace('#[^\*0-9]#', '', $forward_busy_destination);
-				$forward_no_answer_destination = preg_replace('#[^\*0-9]#', '', $forward_no_answer_destination);
-				$forward_user_not_registered_destination = preg_replace('#[^\*0-9]#', '', $forward_user_not_registered_destination);
 
 				//build the array
 				$array['extensions'][0]['domain_uuid'] = $_SESSION['domain_uuid'];
@@ -261,13 +294,10 @@
 					$destination_found = false;
 					foreach ($destinations as $field) {
 						if (!empty($field['destination'])) {
-							//sanitize the destination
-							$field['destination'] = preg_replace('#[^\*0-9]#', '', $field['destination']);
-
 							//build the array
 							$array['follow_me'][0]['follow_me_destinations'][$d]['domain_uuid'] = $_SESSION['domain_uuid'];
 							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_uuid'] = $follow_me_uuid;
-							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_destination_uuid'] = $field['uuid'];
+							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_destination_uuid'] = is_uuid($field['uuid']) ? $field['uuid'] : uuid();
 							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_destination'] = $field['destination'];
 							$array['follow_me'][0]['follow_me_destinations'][$d]['follow_me_delay'] = $field['delay'];
 							if (permission_exists('follow_me_prompt')) {
@@ -279,7 +309,10 @@
 							$d++;
 						}
 						else {
-							$follow_me_delete_uuids[] = $field['uuid'];
+							//delete the destination record when it has a valid uuid
+							if (is_uuid($field['uuid'])) {
+								$follow_me_delete_uuids[] = $field['uuid'];
+							}
 						}
 					}
 			}

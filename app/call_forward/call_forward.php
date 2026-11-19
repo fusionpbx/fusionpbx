@@ -45,11 +45,16 @@
 
 // Set variables from GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 	$sort = $order_by == 'extension' ? 'natural' : null;
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
+
+//limit the order by to the columns shown in the list
+	if (!in_array($order_by, ['extension'], true)) {
+		$order_by = '';
+	}
 
 // Build the query string
 	$param = [];
@@ -71,8 +76,8 @@
 	$query_string = http_build_query($param);
 
 //get posted data and set defaults
-	$action = $_POST['action'] ?? '';
-	$extensions = $_POST['extensions'] ?? [];
+	$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
+	$extensions = is_array($_POST['extensions'] ?? null) ? $_POST['extensions'] : [];
 
 //process the http post data by action
 	if (!empty($action) && count($extensions) > 0) {
