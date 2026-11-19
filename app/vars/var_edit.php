@@ -58,16 +58,17 @@
 
 //set http values as php variables
 	if (!empty($_POST)) {
-		$var_category = trim($_POST["var_category"]);
-		$var_name = trim($_POST["var_name"]);
-		$var_value = trim($_POST["var_value"]);
-		$var_command = trim($_POST["var_command"]);
-		$var_hostname = trim($_POST["var_hostname"]);
-		$var_enabled = $_POST["var_enabled"];
-		$var_order = trim($_POST["var_order"]);
-		$var_description = trim($_POST["var_description"]);
+		$var_category = trim(is_string($_POST["var_category"] ?? null) ? $_POST["var_category"] : '');
+		$var_name = trim(is_string($_POST["var_name"] ?? null) ? $_POST["var_name"] : '');
+		$var_value = trim(is_string($_POST["var_value"] ?? null) ? $_POST["var_value"] : '');
+		$var_command = trim(is_string($_POST["var_command"] ?? null) ? $_POST["var_command"] : '');
+		$var_hostname = trim(is_string($_POST["var_hostname"] ?? null) ? $_POST["var_hostname"] : '');
+		//the enabled field is a boolean, allow only the values offered by the form
+		$var_enabled = in_array($_POST["var_enabled"] ?? '', ['true', 'false'], true) ? $_POST["var_enabled"] : 'true';
+		$var_order = trim(is_string($_POST["var_order"] ?? null) ? $_POST["var_order"] : '');
+		$var_description = trim(is_string($_POST["var_description"] ?? null) ? $_POST["var_description"] : '');
 
-		if (!empty($_POST["var_category_other"])) {
+		if (!empty($_POST["var_category_other"]) && is_string($_POST["var_category_other"])) {
 			$var_category = trim($_POST["var_category_other"]);
 		}
 	}
@@ -77,7 +78,7 @@
 
 		//get the uuid
 			if ($action == "update") {
-				$var_uuid = $_POST["var_uuid"];
+				$var_uuid = is_uuid($_POST["var_uuid"] ?? '') ? $_POST["var_uuid"] : '';
 			}
 
 		//validate the token

@@ -91,7 +91,7 @@
 					}
 
 				//delete multiple records
-					if (!empty($records) && @sizeof($records) != 0) {
+					if (is_array($records) && @sizeof($records) != 0) {
 
 						//build the delete array
 							foreach ($records as $x => $record) {
@@ -146,7 +146,7 @@
 					}
 
 				//toggle the checked records
-					if (!empty($records) && @sizeof($records) != 0) {
+					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get current toggle state
 							foreach ($records as $x => $record) {
@@ -167,6 +167,7 @@
 							}
 
 						//build update array
+							$states = is_array($states ?? null) ? $states : [];
 							$x = 0;
 							foreach ($states as $uuid => $state) {
 								$array[$this->table][$x][$this->uuid_prefix.'uuid'] = $uuid;
@@ -222,7 +223,7 @@
 					}
 
 				//copy the checked records
-					if (!empty($records) && @sizeof($records) != 0) {
+					if (is_array($records) && @sizeof($records) != 0) {
 
 						//get checked records
 							foreach ($records as $x => $record) {
