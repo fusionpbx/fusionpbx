@@ -42,11 +42,16 @@
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 	$sort = $order_by == 'ring_group_extension' ? 'natural' : null;
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
+
+//limit the order by to the columns shown in the list
+	if (!in_array($order_by, ['domain_name', 'ring_group_name', 'ring_group_extension', 'ring_group_strategy', 'ring_group_forward_enabled', 'ring_group_enabled', 'ring_group_description'], true)) {
+		$order_by = '';
+	}
 
 // Build the query string
 	$param = [];
@@ -68,8 +73,8 @@
 	$query_string = http_build_query($param);
 
 //get posted data
-	if (!empty($_POST['ring_groups'])) {
-		$action = $_POST['action'];
+	if (!empty($_POST['ring_groups']) && is_array($_POST['ring_groups'])) {
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
 		$ring_groups = $_POST['ring_groups'];
 	}
 

@@ -101,11 +101,11 @@
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 	$sort = $order_by == 'ring_group_extension' ? 'natural' : null;
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
 
 // Build the query string
 	$param = [];
@@ -177,6 +177,19 @@
 	}
 	else {
 		$action = "add";
+	}
+
+//verify the posted dialplan uuid does not belong to another domain, it is used to update the dialplan
+	if (!permission_exists('ring_group_all') && is_uuid($_POST["dialplan_uuid"] ?? '')) {
+		$sql = "select domain_uuid from v_dialplans ";
+		$sql .= "where dialplan_uuid = :dialplan_uuid ";
+		$dialplan_parameters['dialplan_uuid'] = $_POST["dialplan_uuid"];
+		$row = $database->select($sql, $dialplan_parameters, 'row');
+		if (!empty($row) && !empty($row['domain_uuid']) && $row['domain_uuid'] != $_SESSION['domain_uuid']) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $dialplan_parameters, $row);
 	}
 
 //delete the user from the ring group
@@ -262,33 +275,36 @@
 			}
 
 		//set variables from http values
-			$ring_group_name = $_POST["ring_group_name"];
-			$ring_group_extension = $_POST["ring_group_extension"];
-			$ring_group_greeting = $_POST["ring_group_greeting"];
-			$ring_group_wait_announcement = $_POST["ring_group_wait_announcement"];
-			$ring_group_wait_interval = $_POST["ring_group_wait_interval"];
-			$ring_group_strategy = $_POST["ring_group_strategy"];
-			$ring_group_destinations = $_POST["ring_group_destinations"];
-			$ring_group_timeout_action = $_POST["ring_group_timeout_action"];
-			$ring_group_exit_key = $_POST["ring_group_exit_key"] ?? null;
-			$ring_group_call_timeout = $_POST["ring_group_call_timeout"];
-			$ring_group_caller_id_name = str_replace(':', '', $_POST["ring_group_caller_id_name"]);
-			$ring_group_caller_id_number = $_POST["ring_group_caller_id_number"];
-			$ring_group_cid_name_prefix = $_POST["ring_group_cid_name_prefix"] ?? null;
-			$ring_group_cid_number_prefix = $_POST["ring_group_cid_number_prefix"] ?? null;
-			$ring_group_distinctive_ring = $_POST["ring_group_distinctive_ring"];
-			$ring_group_ringback = $_POST["ring_group_ringback"];
-			$ring_group_call_screen_enabled = $_POST["ring_group_call_screen_enabled"];
-			$ring_group_call_forward_enabled = $_POST["ring_group_call_forward_enabled"];
-			$ring_group_follow_me_enabled = $_POST["ring_group_follow_me_enabled"];
-			$ring_group_missed_call_app = $_POST["ring_group_missed_call_app"];
-			$ring_group_missed_call_data = $_POST["ring_group_missed_call_data"];
-			$ring_group_forward_enabled = !empty($_POST["ring_group_forward_destination"]) ? $_POST["ring_group_forward_enabled"] : 'false';
-			$ring_group_forward_destination = $_POST["ring_group_forward_destination"];
-			$ring_group_forward_toll_allow = $_POST["ring_group_forward_toll_allow"];
-			$ring_group_enabled = $_POST["ring_group_enabled"];
-			$ring_group_description = $_POST["ring_group_description"];
-			$dialplan_uuid = $_POST["dialplan_uuid"] ?? null;
+			$ring_group_name = is_string($_POST["ring_group_name"] ?? null) ? $_POST["ring_group_name"] : '';
+			$ring_group_extension = is_string($_POST["ring_group_extension"] ?? null) ? $_POST["ring_group_extension"] : '';
+			$ring_group_greeting = is_string($_POST["ring_group_greeting"] ?? null) ? $_POST["ring_group_greeting"] : '';
+			$ring_group_wait_announcement = is_string($_POST["ring_group_wait_announcement"] ?? null) ? $_POST["ring_group_wait_announcement"] : '';
+			$ring_group_wait_interval = is_string($_POST["ring_group_wait_interval"] ?? null) ? $_POST["ring_group_wait_interval"] : '';
+			//the strategy field offers a fixed set of values, ignore anything else
+			$ring_group_strategy = in_array($_POST["ring_group_strategy"] ?? '', ['enterprise', 'sequence', 'simultaneous', 'random', 'rollover'], true) ? $_POST["ring_group_strategy"] : '';
+			$ring_group_destinations = is_array($_POST["ring_group_destinations"] ?? null) ? $_POST["ring_group_destinations"] : [];
+			$ring_group_timeout_action = is_string($_POST["ring_group_timeout_action"] ?? null) ? $_POST["ring_group_timeout_action"] : '';
+			$ring_group_exit_key = is_string($_POST["ring_group_exit_key"] ?? null) ? $_POST["ring_group_exit_key"] : null;
+			$ring_group_call_timeout = is_string($_POST["ring_group_call_timeout"] ?? null) ? $_POST["ring_group_call_timeout"] : '';
+			$ring_group_caller_id_name = str_replace(':', '', (string) (is_string($_POST["ring_group_caller_id_name"] ?? null) ? $_POST["ring_group_caller_id_name"] : ''));
+			$ring_group_caller_id_number = is_string($_POST["ring_group_caller_id_number"] ?? null) ? $_POST["ring_group_caller_id_number"] : '';
+			$ring_group_cid_name_prefix = is_string($_POST["ring_group_cid_name_prefix"] ?? null) ? $_POST["ring_group_cid_name_prefix"] : null;
+			$ring_group_cid_number_prefix = is_string($_POST["ring_group_cid_number_prefix"] ?? null) ? $_POST["ring_group_cid_number_prefix"] : null;
+			$ring_group_distinctive_ring = is_string($_POST["ring_group_distinctive_ring"] ?? null) ? $_POST["ring_group_distinctive_ring"] : '';
+			$ring_group_ringback = is_string($_POST["ring_group_ringback"] ?? null) ? $_POST["ring_group_ringback"] : '';
+			//the following fields are booleans, allow only the values offered by the form
+			$ring_group_call_screen_enabled = in_array($_POST["ring_group_call_screen_enabled"] ?? '', ['true', 'false'], true) ? $_POST["ring_group_call_screen_enabled"] : 'false';
+			$ring_group_call_forward_enabled = in_array($_POST["ring_group_call_forward_enabled"] ?? '', ['true', 'false'], true) ? $_POST["ring_group_call_forward_enabled"] : 'false';
+			$ring_group_follow_me_enabled = in_array($_POST["ring_group_follow_me_enabled"] ?? '', ['true', 'false'], true) ? $_POST["ring_group_follow_me_enabled"] : 'false';
+			$ring_group_missed_call_app = is_string($_POST["ring_group_missed_call_app"] ?? null) ? $_POST["ring_group_missed_call_app"] : '';
+			$ring_group_missed_call_data = is_string($_POST["ring_group_missed_call_data"] ?? null) ? $_POST["ring_group_missed_call_data"] : '';
+			$ring_group_forward_enabled = !empty($_POST["ring_group_forward_destination"]) && in_array($_POST["ring_group_forward_enabled"] ?? '', ['true', 'false'], true) ? $_POST["ring_group_forward_enabled"] : 'false';
+			$ring_group_forward_destination = is_string($_POST["ring_group_forward_destination"] ?? null) ? $_POST["ring_group_forward_destination"] : '';
+			$ring_group_forward_toll_allow = is_string($_POST["ring_group_forward_toll_allow"] ?? null) ? $_POST["ring_group_forward_toll_allow"] : '';
+			//the enabled field is a boolean, allow only the values offered by the form
+			$ring_group_enabled = in_array($_POST["ring_group_enabled"] ?? '', ['true', 'false'], true) ? $_POST["ring_group_enabled"] : 'false';
+			$ring_group_description = is_string($_POST["ring_group_description"] ?? null) ? $_POST["ring_group_description"] : '';
+			$dialplan_uuid = is_string($_POST["dialplan_uuid"] ?? null) ? $_POST["dialplan_uuid"] : null;
 			//$ring_group_timeout_action = "transfer:1001 XML default";
 			$ring_group_timeout_array = explode(":", $ring_group_timeout_action);
 			$ring_group_timeout_app = array_shift($ring_group_timeout_array);
@@ -298,11 +314,11 @@
 			$destination_delay = $_POST["destination_delay"] ?? null;
 			$destination_timeout = $_POST["destination_timeout"] ?? null;
 			$destination_prompt = $_POST["destination_prompt"] ?? null;
-			$ring_group_destinations_delete = $_POST["ring_group_destinations_delete"] ?? null;
+			$ring_group_destinations_delete = is_array($_POST["ring_group_destinations_delete"] ?? null) ? $_POST["ring_group_destinations_delete"] : null;
 
 		//set the context for users that do not have the permission
 			if (permission_exists('ring_group_context')) {
-				$ring_group_context = $_POST["ring_group_context"];
+				$ring_group_context = is_string($_POST["ring_group_context"] ?? null) ? $_POST["ring_group_context"] : '';
 			}
 			else if ($action == 'add') {
 				$ring_group_context = $domain_name;
@@ -340,6 +356,19 @@
 
 		//set the variables
 		$user_uuid = $_REQUEST["user_uuid"];
+
+		//get the user from the current domain, prevents assigning users in another domain
+			$sql = "select user_uuid from v_users ";
+			$sql .= "where domain_uuid = :domain_uuid ";
+			$sql .= "and user_uuid = :user_uuid ";
+			$parameters['domain_uuid'] = $domain_uuid;
+			$parameters['user_uuid'] = $user_uuid;
+			$user_domain_uuid = $database->select($sql, $parameters, 'column');
+			unset($sql, $parameters);
+			if (empty($user_domain_uuid)) {
+				echo "access denied";
+				exit;
+			}
 
 		//build array
 		$array['ring_group_users'][0]['ring_group_user_uuid'] = uuid();
