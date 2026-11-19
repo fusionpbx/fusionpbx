@@ -165,7 +165,7 @@
 			}
 
 		//get the user from the current domain, prevents changing users in another domain
-\			if (is_uuid($user_uuid)) {
+			if (is_uuid($user_uuid)) {
 				$sql = "select user_uuid from v_users ";
 				$sql .= "where domain_uuid = :domain_uuid ";
 				$sql .= "and user_uuid = :user_uuid ";
