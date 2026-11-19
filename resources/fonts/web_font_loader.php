@@ -2,7 +2,7 @@
 //includes files
 	require_once dirname(__DIR__, 2) . "/resources/require.php";
 
-$font_loader_version = (is_string($_GET['v'] ?? null) && preg_match('/^[0-9.]+$/', $_GET['v'])) ? $_GET['v'] : '1';
+$font_loader_version = (is_string($_GET['v'] ?? null) && preg_match('/^[0-9.]+$/D', $_GET['v'])) ? $_GET['v'] : '1';
 
 header("Content-type: text/javascript; charset: UTF-8");
 
@@ -12,7 +12,7 @@ header("Content-type: text/javascript; charset: UTF-8");
 			if (is_array($_SESSION['theme']) && sizeof($_SESSION['theme']) > 0) {
 				foreach ($_SESSION['theme'] as $subcategory => $type) {
 					if (substr_count($subcategory, '_font') > 0) {
-						$font_string = $type['text'];
+						$font_string = $type['text'] ?? '';
 						if ($font_string != '') {
 							if (substr_count($font_string, ',') > 0) {
 								$tmp_array = explode(',', $font_string);
@@ -63,7 +63,7 @@ header("Content-type: text/javascript; charset: UTF-8");
 					};
 					(function(d) {
 						var wf = d.createElement('script'), s = d.scripts[0];
-						wf.src = '//ajax.googleapis.com/ajax/libs/webfont/<?php echo $font_loader_version; ?>/webfont.js';
+						wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/<?php echo $font_loader_version; ?>/webfont.js';
 						s.parentNode.insertBefore(wf, s);
 					})(document);
 					<?php
