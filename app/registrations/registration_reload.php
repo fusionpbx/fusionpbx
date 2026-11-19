@@ -39,7 +39,7 @@
 	$text = $language->get();
 
 //get the queue_name and set it as a variable
-	$show = $_GET['show'];
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
 
 //get the header
 	require_once "resources/header.php";
