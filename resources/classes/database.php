@@ -2477,6 +2477,7 @@ class database {
 										$parameters['parent_key_value'] = $parent_key_value;
 										$prep_statement->execute($parameters);
 										$parent_results = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+										unset($parameters);
 									} catch (PDOException $e) {
 										// rollback the transaction on error
 										if ($this->db->inTransaction()) {
@@ -2906,6 +2907,7 @@ class database {
 														$parameters['child_key_value'] = $child_key_value;
 														$prep_statement->execute($parameters);
 														$child_results = $prep_statement->fetch(PDO::FETCH_ASSOC);
+														unset($parameters);
 
 														// set the action
 														if (is_array($child_results)) {
