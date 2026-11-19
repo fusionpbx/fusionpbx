@@ -38,13 +38,24 @@
 	$language = new text;
 	$text = $language->get();
 
+//validate the token
+	$token = new token;
+	if (!$token->validate($_SERVER['PHP_SELF'])) {
+		message::add($text['message-invalid_token'],'negative');
+		header('Location: voicemails.php');
+		exit;
+	}
+
 //get submitted variables
-	$voicemail_messages = $_REQUEST["voicemail_messages"];
+	$voicemail_messages = $_REQUEST["voicemail_messages"] ?? [];
 
 //toggle the voicemail message
 	$toggled = 0;
 	if (is_array($voicemail_messages) && sizeof($voicemail_messages) > 0) {
 		foreach ($voicemail_messages as $voicemail_uuid => $voicemail_message_uuids) {
+			if (!is_array($voicemail_message_uuids)) {
+				continue;
+			}
 			foreach ($voicemail_message_uuids as $voicemail_message_uuid) {
 				if (is_uuid($voicemail_uuid) && is_uuid($voicemail_message_uuid)) {
 					$voicemail = new voicemail;

@@ -50,11 +50,11 @@
 
 // Set variables from http GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 	$sort = $order_by == 'voicemail_id' ? 'natural' : '';
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
 
 // Build the query string
 	$param = [];
@@ -76,11 +76,11 @@
 	$query_string = http_build_query($param);
 
 //get the http post data
-	$action = $_POST['action'] ?? '';
+	$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
 	$voicemails = $_POST['voicemails'] ?? [];
 
 //process the http post data by action
-	if (!empty($action) && !empty($voicemails)) {
+	if (!empty($action) && !empty($voicemails) && is_array($voicemails)) {
 		switch ($action) {
 			case 'toggle':
 				if (permission_exists('voicemail_edit')) {
