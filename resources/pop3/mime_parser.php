@@ -1881,7 +1881,7 @@ class mime_parser_class
 				if(!($data = @fread($file, $this->message_buffer_length)))
 				{
 					$this->SetPHPError('Could not open the message body file '.$path, $php_errormsg);
-					fclose($stream);
+					fclose($file);
 					return(0);
 				}
 				$end=feof($file);
