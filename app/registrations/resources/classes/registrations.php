@@ -191,11 +191,12 @@ class registrations {
 				// Decode the XML and convert it to an array
 				if (strlen($xml_response) > 101) {
 					try {
-						$xml = new SimpleXMLElement($xml_response);
+						//parse the xml, disable network access to prevent external entity retrieval
+						$xml = new SimpleXMLElement($xml_response, LIBXML_NONET);
 					} catch (Exception $e) {
 						echo basename(__FILE__) . "<br />\n";
 						echo "line: " . __line__ . "<br />\n";
-						echo "error: " . $e->getMessage() . "<br />\n";
+						echo "error: " . escape($e->getMessage()) . "<br />\n";
 						//echo $xml_response;
 						exit;
 					}
@@ -368,7 +369,7 @@ class registrations {
 			//filter out unchecked registrations
 			if (is_array($records) && @sizeof($records) != 0) {
 				foreach ($records as $record) {
-					if ($record['checked'] == 'true' && !empty($record['user']) && !empty($record['profile'])) {
+					if (is_array($record) && ($record['checked'] ?? '') == 'true' && !empty($record['user']) && !empty($record['profile'])) {
 						//remove registrations from unrelated domains
 						if (!permission_exists($this->permission_prefix . 'all') && !if_group('superadmin')) {
 							$user_array = explode('@', $record['user']);
@@ -407,6 +408,7 @@ class registrations {
 							//clear the command arguments so a previous registration's values are not reused
 							$command = null;
 							$profile = null;
+							$user = null;
 							$host = null;
 							$vendor = null;
 
@@ -414,7 +416,8 @@ class registrations {
 							if (!empty($registration['profile']) && is_array($sip_profiles) && @sizeof($sip_profiles) != 0) {
 								foreach ($sip_profiles as $field) {
 									if ($field['name'] == $registration['profile'] && preg_match('/^[a-zA-Z0-9_-]+$/u', $field['name'])) {
-										$profile = $registration['profile'];
+										//use the profile name from the database, not the submitted value
+										$profile = $field['name'];
 										break;
 									}
 								}
@@ -424,17 +427,17 @@ class registrations {
 							}
 
 							//validate the submitted user
-							if (!empty($registration['user'])) {
+							if (!empty($registration['user']) && is_string($registration['user'])) {
 								$user = preg_replace('#[^a-zA-Z0-9_\-\.\@]#', '', $registration['user']);
 							}
 
 							//validate the submitted host
-							if (!empty($registration['host'])) {
+							if (!empty($registration['host']) && is_string($registration['host'])) {
 								$host = preg_replace('#[^a-zA-Z0-9_\-\.]#', '', $registration['host']);
 							}
 
 							//lookup vendor by agent
-							if (!empty($registration['agent'])) {
+							if (!empty($registration['agent']) && is_string($registration['agent'])) {
 								$vendor = device::get_vendor_by_agent($registration['agent']);
 							}
 

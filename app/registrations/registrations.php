@@ -41,9 +41,9 @@
 
 //get common submitted data
 	if (!empty($_REQUEST)) {
-		$show = $_REQUEST['show'] ?? null;
-		$search = $_REQUEST['search'] ?? '';
-		$profile = $_REQUEST['profile'] ?? null;
+		$show = is_string($_REQUEST['show'] ?? null) ? $_REQUEST['show'] : null;
+		$search = is_string($_REQUEST['search'] ?? null) ? $_REQUEST['search'] : '';
+		$profile = is_string($_REQUEST['profile'] ?? null) ? $_REQUEST['profile'] : null;
 	}
 
 //define query string array
@@ -52,8 +52,8 @@
 	$qs['profile'] = !empty($profile) ? "&profile=".urlencode($profile) : null;
 
 //get posted data
-	if (!empty($_POST) && is_array($_POST['registrations'])) {
-		$action = $_POST['action'];
+	if (!empty($_POST) && is_array($_POST['registrations'] ?? null)) {
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
 		$registrations = $_POST['registrations'];
 	}
 
@@ -191,7 +191,7 @@
 
 				//prepare the user variable
 				$user = explode('@', $row['user']);
-				if ($user[1] == $_SESSION['domains'][$_SESSION['domain_uuid']]['domain_name']) {
+				if (($user[1] ?? '') == $_SESSION['domains'][$_SESSION['domain_uuid']]['domain_name']) {
 					$user = "<span class='hide-sm-dn'>".escape($row['user'])."</span><span class='hide-md-up cursor-help' title='".escape($row['user'])."'>".escape($user[0])."</span>";
 				}
 				else {
@@ -221,7 +221,7 @@
 				echo "	</td>\n";
 				echo "	<td class=''>".$user."</td>\n";
 				echo "	<td class='' title=\"".escape($row['agent'])."\"><span class='cursor-help'>".escape($row['agent'])."</span></td>\n";
-				echo "	<td class='hide-md-dn' title='".escape($row['contact'])."'>".escape(explode('"',$row['contact'])[1])."</td>\n";
+				echo "	<td class='hide-md-dn' title='".escape($row['contact'])."'>".escape(explode('"',$row['contact'])[1] ?? '')."</td>\n";
 				echo "	<td class='hide-sm-dn no-link'><a href='https://".urlencode($row['lan-ip'])."' target='_blank'>".escape($row['lan-ip'])."</a></td>\n";
 				echo "	<td class='hide-sm-dn no-link'><a href='https://".urlencode($row['network-ip'])."' target='_blank'>".escape($row['network-ip'])."</a></td>\n";
 				echo "	<td class='hide-sm-dn'>".escape($row['network-port'])."</td>\n";
