@@ -54,10 +54,10 @@
 	$list_row_url = '';
 
 //add the search variable
-	$search = strtolower($_GET["search"] ?? '');
+	$search = strtolower(is_string($_GET["search"] ?? null) ? $_GET["search"] : '');
 
 //add the show variable
-	$show = $_GET["show"] ?? '';
+	$show = is_string($_GET["show"] ?? null) ? $_GET["show"] : '';
 
 //prepare the excluded applications array based on permission exists
 	$excluded_app_array = [];
@@ -97,7 +97,7 @@
 	$sql .= " description \n";
 	$sql .= "FROM view_recording_map \n";
 	$sql .= "WHERE true \n";
-	if (!empty($show) && $show === "all" && permission_exists('dialplan_all')) {
+	if (!empty($show) && $show === "all" && permission_exists('recording_all')) {
 		//show all
 	}
 	else {
@@ -144,7 +144,7 @@
 	echo "	<div class='heading'><b>".$text['title-recordings_map']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo 		"<form id='form_search' class='inline' method='get'>\n";
-	if (permission_exists('dialplan_all')) {
+	if (permission_exists('recording_all')) {
 		if ($show == 'all') {
 			echo "		<input type='hidden' name='show' value='all'>\n";
 		}
@@ -228,7 +228,7 @@
 				echo "</tr>\n";
 
 				echo "<tr class='list-header' href='".$list_row_url."'>\n";
-				if (!empty($show) && $show == 'all' && permission_exists('dialplan_all')) {
+				if (!empty($show) && $show == 'all' && permission_exists('recording_all')) {
 					echo "	<th class='' style='width: 150px;'>".escape($text['label-domain_name'])."</th>\n";
 				}
 				echo "	<th class='' style='width: 150px;'>".escape($text['label-name'])."</th>\n";
@@ -246,7 +246,7 @@
 
 			//ad the table row
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
-			if (!empty($show) && $show == 'all' && permission_exists('dialplan_all')) {
+			if (!empty($show) && $show == 'all' && permission_exists('recording_all')) {
 				echo "	<td class=''>".escape($row['domain_name'])."</td>\n";
 			}
 			echo "	<td class=''>".escape($row['name'])."</td>\n";
