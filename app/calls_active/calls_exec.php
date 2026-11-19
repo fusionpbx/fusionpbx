@@ -59,7 +59,7 @@
 			$calls = [];
 			if (is_array($_POST['calls']) && @sizeof($_POST['calls']) != 0) {
 				foreach ($_POST['calls'] as $call) {
-					if ($call['checked'] == 'true' && is_uuid($call['uuid'])) {
+					if (is_array($call) && ($call['checked'] ?? '') == 'true' && is_uuid($call['uuid'] ?? '')) {
 						$calls[] = $call['uuid'];
 					}
 				}
@@ -67,6 +67,32 @@
 			if (!empty($_REQUEST['uuid']) && is_uuid($_REQUEST['uuid'])) {
 				$calls[] = $_REQUEST['uuid'];
 			}
+
+		//limit the commands to channels of the current domain, superadmin is exempt
+			$domain_name = $_SESSION['domain_name'] ?? '';
+			$channel_in_domain = function (?string $uuid) use ($domain_name): bool {
+				if (if_group('superadmin')) {
+					return true;
+				}
+				if ($uuid === '' || !is_uuid($uuid)) {
+					return false;
+				}
+
+				//get the domain of the channel from the switch
+				$channel_domain = trim((string) event_socket::api('uuid_getvar ' . $uuid . ' domain_name'));
+				if ($channel_domain === '' || $channel_domain === '_undef_' || stripos($channel_domain, '-ERR') !== false) {
+					//fall back to the presence id which is user@domain
+						$presence_id = str_replace('%40', '@', trim((string) event_socket::api('uuid_getvar ' . $uuid . ' presence_id')));
+						$presence = explode('@', $presence_id);
+						$channel_domain = $presence[1] ?? '';
+				}
+
+				//compare the domain, a channel without a known domain is not allowed
+				return $channel_domain !== '' && $channel_domain === $domain_name;
+			};
+
+		//remove calls outside the current domain before executing anything
+			$calls = array_values(array_filter($calls, $channel_in_domain));
 
 		//iterate through calls
 			if (count($calls) > 0) {
@@ -91,6 +117,13 @@
 	}
 	else if ($_REQUEST['action'] == 'eavesdrop' && permission_exists('call_active_eavesdrop')) {
 
+		//validate the token
+		$token = new token;
+		if (!$token->validate('/app/calls_active/calls_active_inc.php')) {
+			echo "access denied";
+			exit;
+		}
+
 		//set the allowed regex number pattern
 		$number_pattern = '/^[0-9A-Za-z*#+._-]+$/';
 
@@ -100,10 +133,37 @@
 		$destination = $_GET['destination'] ?? '';
 
 		//deny access if the variables are not valid
-		if (!is_uuid($channnel_uuid) || !preg_match($number_pattern, $extension) || !preg_match($number_pattern, $destination)) {
+		if (!is_uuid($channnel_uuid) || !preg_match($number_pattern, (string) $extension) || !preg_match($number_pattern, (string) $destination)) {
 			echo "access denied";
 			exit;
 		}
+
+		//limit the command to channels of the current domain, superadmin is exempt
+			$domain_name = $_SESSION['domain_name'] ?? '';
+			$channel_in_domain = function (?string $uuid) use ($domain_name): bool {
+				if (if_group('superadmin')) {
+					return true;
+				}
+				if ($uuid === '' || !is_uuid($uuid)) {
+					return false;
+				}
+
+				//get the domain of the channel from the switch
+				$channel_domain = trim((string) event_socket::api('uuid_getvar ' . $uuid . ' domain_name'));
+				if ($channel_domain === '' || $channel_domain === '_undef_' || stripos($channel_domain, '-ERR') !== false) {
+					//fall back to the presence id which is user@domain
+						$presence_id = str_replace('%40', '@', trim((string) event_socket::api('uuid_getvar ' . $uuid . ' presence_id')));
+						$presence = explode('@', $presence_id);
+						$channel_domain = $presence[1] ?? '';
+				}
+
+				//compare the domain, a channel without a known domain is not allowed
+				return $channel_domain !== '' && $channel_domain === $domain_name;
+			};
+			if (!$channel_in_domain($channnel_uuid)) {
+				echo "access denied";
+				exit;
+			}
 
 		$api_cmd = 'bgapi originate {origination_caller_id_name='.$text['label-eavesdrop'].',origination_caller_id_number='.$extension.'}user/'.$destination.'@'.$_SESSION['domain_name'].' &eavesdrop('.$channnel_uuid.')';
 

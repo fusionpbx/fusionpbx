@@ -53,6 +53,12 @@
 		$_SESSION['gateways'][$row['gateway_uuid']] = $row['gateway'];
 	}
 
+//create token (used by the include and the state changing endpoint calls_exec.php)
+	$object = new token;
+	$token = $object->create('/app/calls_active/calls_active_inc.php');
+	$_SESSION['app']['calls_active']['token']['name'] = $token['name'];
+	$_SESSION['app']['calls_active']['token']['hash'] = $token['hash'];
+
 //ajax for refresh
 	?>
 	<script type="text/javascript">
@@ -112,6 +118,8 @@
 
 		function get_eavesdrop_cmd(ext, chan_uuid, destination) {
 			url = "calls_exec.php?action=eavesdrop&ext=" + ext + "&chan_uuid=" + chan_uuid + "&destination=" + destination;
+			//add the token for the endpoint being called (prevents cross site requests)
+			url += '&<?php echo $token['name']; ?>=<?php echo $token['hash']; ?>';
 			return url;
 		}
 
@@ -139,12 +147,6 @@
 			$_SESSION['user']['extensions'][] = $assigned_extensions['user'];
 		}
 	}
-
-//create token
-	$object = new token;
-	$token = $object->create('/app/calls_active/calls_active_inc.php');
-	$_SESSION['app']['calls_active']['token']['name'] = $token['name'];
-	$_SESSION['app']['calls_active']['token']['hash'] = $token['hash'];
 
 //show the content header
 	echo "<div class='action_bar' id='action_bar'>\n";
