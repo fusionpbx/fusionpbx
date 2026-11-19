@@ -39,16 +39,21 @@
 		exit;
 	}
 
+//validate the http get parameters, the type is used to select the file path
+	$id = is_string($_GET['id'] ?? null) ? $_GET['id'] : '';
+	$data = is_string($_GET['data'] ?? null) ? $_GET['data'] : '';
+	$type = in_array($_GET['type'] ?? '', ['recordings', 'sounds'], true) ? $_GET['type'] : '';
+
 //create the waveform file
-	if ($_GET['id'] && !empty($_GET['data']) && !empty($_GET['type'])) {
+	if (!empty($id) && !empty($data) && !empty($type)) {
 
 		//determine path of audio file by type
-		if ($_GET['type'] == 'recordings') {
+		if ($type == 'recordings') {
 
-			$full_file_path = $settings->get('switch', 'recordings')."/".$_SESSION['domain_name'].'/'.basename($_GET['data']);
+			$full_file_path = $settings->get('switch', 'recordings')."/".$_SESSION['domain_name'].'/'.basename($data);
 
 		}
-		else if ($_GET['type'] == 'sounds') {
+		else if ($type == 'sounds') {
 
 			//get first installed language (like en/us/callie)
 			$language_paths = glob($settings->get('switch', 'sounds')."/*/*/*");
@@ -66,7 +71,7 @@
 			$language_path = $language_paths[0];
 
 			//determine the path for sound file
-			$filename_parts = explode('/', str_replace('..', '', $_GET['data']));
+			$filename_parts = explode('/', str_replace('..', '', $data));
 			if (!is_array($filename_parts) || @sizeof($filename_parts) != 2) { exit; }
 			$path = $settings->get('switch', 'sounds').'/'.$language_path.'/'.$filename_parts[0].'/8000/';
 
@@ -79,7 +84,7 @@
 		if (file_exists($full_file_path)) {
 
 			//temporary waveform image filename
-			$temp_filename = 'waveform_'.preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET['id']).'_'.rand(0000,9999).'.png';
+			$temp_filename = 'waveform_'.preg_replace('/[^a-zA-Z0-9_-]/', '', $id).'_'.rand(0000,9999).'.png';
 
 			//create temporary waveform image, if doesn't exist
 			if (file_exists($temp_filename)) {

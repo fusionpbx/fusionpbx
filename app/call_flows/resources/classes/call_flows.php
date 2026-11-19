@@ -96,17 +96,17 @@ class call_flows {
 		//set domain and user UUIDs
 		$this->domain_uuid = $setting_array['domain_uuid'] ?? $_SESSION['domain_uuid'] ?? '';
 		$this->domain_name = $setting_array['domain_name'] ?? $_SESSION['domain_name'] ?? '';
-		$this->user_uuid   = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
+		$this->user_uuid = $setting_array['user_uuid'] ?? $_SESSION['user_uuid'] ?? '';
 
 		//set objects
 		$this->database = $setting_array['database'] ?? database::new();
 
 		//assign private variables
 		$this->permission_prefix = 'call_flow_';
-		$this->list_page         = 'call_flows.php';
-		$this->table             = 'call_flows';
-		$this->uuid_prefix       = 'call_flow_';
-		$this->toggle_values     = ['true', 'false'];
+		$this->list_page = 'call_flows.php';
+		$this->table = 'call_flows';
+		$this->uuid_prefix = 'call_flow_';
+		$this->toggle_values = ['true', 'false'];
 	}
 
 	/**
@@ -123,7 +123,7 @@ class call_flows {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -138,22 +138,22 @@ class call_flows {
 
 				//filter out unchecked call flows, build where clause for below
 				foreach ($records as $x => $record) {
-					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+					if (is_array($record) && ($record['checked'] ?? '') == 'true' && is_uuid($record['uuid'] ?? '')) {
 						$uuids[] = "'" . $record['uuid'] . "'";
 					}
 				}
 
 				//get necessary call flow details
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, dialplan_uuid, call_flow_context from v_" . $this->table . " ";
-					$sql                       .= "where domain_uuid = :domain_uuid ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, dialplan_uuid, call_flow_context from v_" . $this->table . " ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $row) {
 							$call_flows[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
-							$call_flow_contexts[]                      = $row['call_flow_context'];
+							$call_flow_contexts[] = $row['call_flow_context'];
 						}
 					}
 					unset($sql, $parameters, $rows, $row);
@@ -163,11 +163,11 @@ class call_flows {
 				$x = 0;
 				foreach ($call_flows as $call_flow_uuid => $call_flow) {
 					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $call_flow_uuid;
-					$array[$this->table][$x]['domain_uuid']               = $this->domain_uuid;
-					$array['dialplans'][$x]['dialplan_uuid']              = $call_flow['dialplan_uuid'];
-					$array['dialplans'][$x]['domain_uuid']                = $this->domain_uuid;
-					$array['dialplan_details'][$x]['dialplan_uuid']       = $call_flow['dialplan_uuid'];
-					$array['dialplan_details'][$x]['domain_uuid']         = $this->domain_uuid;
+					$array[$this->table][$x]['domain_uuid'] = $this->domain_uuid;
+					$array['dialplans'][$x]['dialplan_uuid'] = $call_flow['dialplan_uuid'];
+					$array['dialplans'][$x]['domain_uuid'] = $this->domain_uuid;
+					$array['dialplan_details'][$x]['dialplan_uuid'] = $call_flow['dialplan_uuid'];
+					$array['dialplan_details'][$x]['domain_uuid'] = $this->domain_uuid;
 					$x++;
 				}
 
@@ -235,29 +235,40 @@ class call_flows {
 				exit;
 			}
 
+			//validate the submitted toggle field, it is used in the SQL statement
+			if (!in_array($this->toggle_field, ['call_flow_status', 'call_flow_enabled'], true)) {
+				header('Location: ' . $this->list_page);
+				exit;
+			}
+
 			//toggle the checked records
 			if (is_array($records) && @sizeof($records) != 0) {
 
 				//get current toggle state
 				foreach ($records as $x => $record) {
-					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+					if (is_array($record) && ($record['checked'] ?? '') == 'true' && is_uuid($record['uuid'] ?? '')) {
 						$uuids[] = "'" . $record['uuid'] . "'";
 					}
 				}
 
 				if (!empty($uuids)) {
-					$sql                       = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, ";
-					$sql                       .= "dialplan_uuid, call_flow_feature_code, call_flow_context from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select " . $this->uuid_prefix . "uuid as uuid, " . $this->toggle_field . " as toggle, ";
+					$sql .= "dialplan_uuid, call_flow_feature_code, call_flow_context from v_" . $this->table . " ";
+					if (permission_exists($this->permission_prefix . 'all')) {
+						$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					}
+					else {
+						$sql .= "where domain_uuid = :domain_uuid ";
+					}
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (!empty($rows)) {
 						foreach ($rows as $row) {
-							$call_flows[$row['uuid']]['state']                  = $row['toggle'];
-							$call_flows[$row['uuid']]['dialplan_uuid']          = $row['dialplan_uuid'];
+							$call_flows[$row['uuid']]['state'] = $row['toggle'];
+							$call_flows[$row['uuid']]['dialplan_uuid'] = $row['dialplan_uuid'];
 							$call_flows[$row['uuid']]['call_flow_feature_code'] = $row['call_flow_feature_code'];
-							$call_flow_contexts[]                               = $row['call_flow_context'];
+							$call_flow_contexts[] = $row['call_flow_context'];
 						}
 					}
 					unset($sql, $parameters, $rows, $row);
@@ -267,9 +278,9 @@ class call_flows {
 				$x = 0;
 				foreach ($call_flows as $uuid => $call_flow) {
 					$array[$this->table][$x][$this->uuid_prefix . 'uuid'] = $uuid;
-					$array[$this->table][$x][$this->toggle_field]         = $call_flow['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
+					$array[$this->table][$x][$this->toggle_field] = $call_flow['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 					if ($this->toggle_field == 'call_flow_enabled') {
-						$array['dialplans'][$x]['dialplan_uuid']    = $call_flow['dialplan_uuid'];
+						$array['dialplans'][$x]['dialplan_uuid'] = $call_flow['dialplan_uuid'];
 						$array['dialplans'][$x]['dialplan_enabled'] = $call_flow['state'] == $this->toggle_values[0] ? $this->toggle_values[1] : $this->toggle_values[0];
 					}
 					$x++;
@@ -315,11 +326,14 @@ class call_flows {
 				//toggle the presence
 				if ($this->toggle_field != 'call_flow_enabled') {
 					foreach ($call_flows as $uuid => $row) {
+						//remove line breaks, they would break out of the event header
+						$call_flow_feature_code = preg_replace('#[\r\n]#', '', $row['call_flow_feature_code']);
+
 						//prepare the event
 						$cmd = "sendevent PRESENCE_IN\n";
 						$cmd .= "proto: flow\n";
-						$cmd .= "login: " . $row['call_flow_feature_code'] . "@" . $this->domain_name . "\n";
-						$cmd .= "from: " . $row['call_flow_feature_code'] . "@" . $this->domain_name . "\n";
+						$cmd .= "login: " . $call_flow_feature_code . "@" . $this->domain_name . "\n";
+						$cmd .= "from: " . $call_flow_feature_code . "@" . $this->domain_name . "\n";
 						$cmd .= "status: Active (1 waiting)\n";
 						$cmd .= "rpid: unknown\n";
 						$cmd .= "event_type: presence\n";
@@ -358,7 +372,7 @@ class call_flows {
 
 			//add multi-lingual support
 			$language = new text;
-			$text     = $language->get();
+			$text = $language->get();
 
 			//validate the token
 			$token = new token;
@@ -373,7 +387,7 @@ class call_flows {
 
 				//get checked records
 				foreach ($records as $x => $record) {
-					if ($record['checked'] == 'true' && is_uuid($record['uuid'])) {
+					if (is_array($record) && ($record['checked'] ?? '') == 'true' && is_uuid($record['uuid'] ?? '')) {
 						$uuids[] = "'" . $record['uuid'] . "'";
 					}
 				}
@@ -382,11 +396,16 @@ class call_flows {
 				if (is_array($uuids) && @sizeof($uuids) != 0) {
 
 					//primary table
-					$sql                       = "select * from v_" . $this->table . " ";
-					$sql                       .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
-					$sql                       .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$sql = "select * from v_" . $this->table . " ";
+					if (permission_exists($this->permission_prefix . 'all')) {
+						$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
+					}
+					else {
+						$sql .= "where domain_uuid = :domain_uuid ";
+					}
+					$sql .= "and " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
 					$parameters['domain_uuid'] = $this->domain_uuid;
-					$rows                      = $this->database->select($sql, $parameters, 'all');
+					$rows = $this->database->select($sql, $parameters, 'all');
 					if (is_array($rows) && @sizeof($rows) != 0) {
 						foreach ($rows as $x => $row) {
 							$new_call_flow_uuid = uuid();
@@ -409,15 +428,15 @@ class call_flows {
 							$array[$this->table][$x]['call_flow_description']     = trim($row['call_flow_description'] . ' (' . $text['label-copy'] . ')');
 
 							//call flow dialplan record
-							$sql_2                         = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
+							$sql_2 = "select * from v_dialplans where dialplan_uuid = :dialplan_uuid";
 							$parameters_2['dialplan_uuid'] = $row['dialplan_uuid'];
-							$dialplan                      = $this->database->select($sql_2, $parameters_2, 'row');
+							$dialplan = $this->database->select($sql_2, $parameters_2, 'row');
 							if (is_array($dialplan) && @sizeof($dialplan) != 0) {
 
 								//convert boolean values to a string
 								foreach ($dialplan as $key => $value) {
 									if (gettype($value) == 'boolean') {
-										$value          = $value ? 'true' : 'false';
+										$value = $value ? 'true' : 'false';
 										$dialplan[$key] = $value;
 									}
 								}
@@ -426,11 +445,11 @@ class call_flows {
 								$array['dialplans'][$x] = $dialplan;
 
 								//overwrite
-								$array['dialplans'][$x]['dialplan_uuid']        = $new_dialplan_uuid;
-								$dialplan_xml                                   = $dialplan['dialplan_xml'];
-								$dialplan_xml                                   = str_replace($row['call_flow_uuid'], $new_call_flow_uuid, $dialplan_xml); //replace source call_flow_uuid with new
-								$dialplan_xml                                   = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
-								$array['dialplans'][$x]['dialplan_xml']         = $dialplan_xml;
+								$array['dialplans'][$x]['dialplan_uuid'] = $new_dialplan_uuid;
+								$dialplan_xml = $dialplan['dialplan_xml'];
+								$dialplan_xml = str_replace($row['call_flow_uuid'], $new_call_flow_uuid, $dialplan_xml); //replace source call_flow_uuid with new
+								$dialplan_xml = str_replace($dialplan['dialplan_uuid'], $new_dialplan_uuid, $dialplan_xml); //replace source dialplan_uuid with new
+								$array['dialplans'][$x]['dialplan_xml'] = $dialplan_xml;
 								$array['dialplans'][$x]['dialplan_description'] = trim($dialplan['dialplan_description'] . ' (' . $text['label-copy'] . ')');
 
 							}
@@ -451,7 +470,6 @@ class call_flows {
 					$p->add('dialplan_add', 'temp');
 
 					//save the array
-
 					$this->database->save($array);
 					unset($array);
 
@@ -464,7 +482,7 @@ class call_flows {
 					//clear the cache
 					if (is_array($call_flow_contexts) && @sizeof($call_flow_contexts) != 0) {
 						$call_flow_contexts = array_unique($call_flow_contexts);
-						$cache              = new cache;
+						$cache = new cache;
 						foreach ($call_flow_contexts as $call_flow_context) {
 							$cache->delete("dialplan:" . $call_flow_context);
 						}

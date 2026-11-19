@@ -41,11 +41,16 @@
 
 // Set variables from GET parameters
 	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
-	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', $_GET['order_by'] ?? '');
+	$order_by = preg_replace('#[^a-zA-Z0-9_\-]#', '', is_string($_GET['order_by'] ?? null) ? $_GET['order_by'] : '');
 	$order = ($_GET['order'] ?? '') === 'desc' ? 'desc' : 'asc';
 	$sort = $order_by == 'call_flow_extension' ? 'natural' : null;
-	$search = $_GET['search'] ?? '';
-	$show = $_GET['show'] ?? '';
+	$search = is_string($_GET['search'] ?? null) ? $_GET['search'] : '';
+	$show = is_string($_GET['show'] ?? null) ? $_GET['show'] : '';
+
+//limit the order by to the columns shown in the list
+	if (!in_array($order_by, ['domain_name', 'call_flow_name', 'call_flow_extension', 'call_flow_feature_code', 'call_flow_status', 'call_flow_context', 'call_flow_enabled', 'call_flow_description'], true)) {
+		$order_by = '';
+	}
 
 // Build the query string
 	$param = [];
@@ -70,10 +75,10 @@
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
 //get posted data
-	if (!empty($_POST['call_flows'])) {
-		$action = $_POST['action'];
+	if (!empty($_POST['call_flows']) && is_array($_POST['call_flows'])) {
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
 		$call_flows = $_POST['call_flows'];
-		$toggle_field = $_POST['toggle_field'];
+		$toggle_field = is_string($_POST['toggle_field'] ?? null) ? $_POST['toggle_field'] : '';
 	}
 
 //process the http post data by action
