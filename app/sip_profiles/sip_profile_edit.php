@@ -80,15 +80,16 @@
 			}
 
 		//get the HTTP values
-			$sip_profile_uuid = $_POST["sip_profile_uuid"];
-			$sip_profile_name = $_POST["sip_profile_name"];
-			$sip_profile_hostname = $_POST["sip_profile_hostname"];
-			$sip_profile_enabled = $_POST["sip_profile_enabled"];
-			$sip_profile_description = $_POST["sip_profile_description"];
-			$sip_profile_domains = $_POST["sip_profile_domains"];
-			$sip_profile_settings = $_POST["sip_profile_settings"];
-			$sip_profile_domains_delete = $_POST["sip_profile_domains_delete"];
-			$sip_profile_settings_delete = $_POST["sip_profile_settings_delete"];
+			$sip_profile_uuid = is_string($_POST["sip_profile_uuid"] ?? null) ? $_POST["sip_profile_uuid"] : '';
+			$sip_profile_name = is_string($_POST["sip_profile_name"] ?? null) ? $_POST["sip_profile_name"] : '';
+			$sip_profile_hostname = is_string($_POST["sip_profile_hostname"] ?? null) ? $_POST["sip_profile_hostname"] : '';
+			//the enabled field is a boolean, allow only the values offered by the form
+			$sip_profile_enabled = in_array($_POST["sip_profile_enabled"] ?? '', ['true', 'false'], true) ? $_POST["sip_profile_enabled"] : '';
+			$sip_profile_description = is_string($_POST["sip_profile_description"] ?? null) ? $_POST["sip_profile_description"] : '';
+			$sip_profile_domains = is_array($_POST["sip_profile_domains"] ?? null) ? $_POST["sip_profile_domains"] : [];
+			$sip_profile_settings = is_array($_POST["sip_profile_settings"] ?? null) ? $_POST["sip_profile_settings"] : [];
+			$sip_profile_domains_delete = is_array($_POST["sip_profile_domains_delete"] ?? null) ? $_POST["sip_profile_domains_delete"] : [];
+			$sip_profile_settings_delete = is_array($_POST["sip_profile_settings_delete"] ?? null) ? $_POST["sip_profile_settings_delete"] : [];
 	}
 
 //process the user data and save it to the database
@@ -133,12 +134,14 @@
 				exit;
 			}
 
-		//check for duplicate profile name
-			$sql = "select sip_profile_name from v_sip_profiles ".($action == 'update' ? "where sip_profile_name <> :sip_profile_name" : null);
+		//check for duplicate profile name, exclude the record being updated by its own
+			//uuid so that renaming a profile to an existing name is detected
+			$sql = "select sip_profile_name from v_sip_profiles ";
 			if ($action == 'update') {
-				$parameters['sip_profile_name'] = $sip_profile_name;
+				$sql .= "where sip_profile_uuid <> :sip_profile_uuid ";
+				$parameters['sip_profile_uuid'] = $sip_profile_uuid;
 			}
-			$rows = $database->select($sql, $parameters, 'all');
+			$rows = $database->select($sql, $parameters ?? null, 'all');
 			if (!empty($rows) && @sizeof($rows) != 0) {
 				foreach ($rows as $array) {
 					$sip_profile_names[] = $array['sip_profile_name'];
@@ -156,7 +159,7 @@
 			}
 
 		//add the sip_profile_uuid
-			if (!is_uuid($_POST["sip_profile_uuid"])) {
+			if (!is_uuid($_POST["sip_profile_uuid"] ?? null)) {
 				$sip_profile_uuid = uuid();
 			}
 
@@ -270,7 +273,7 @@
 	}
 
 //pre-populate the form
-	if (!empty($_GET["id"]) && empty($_POST["persistformvar"])) {
+	if (is_string($_GET["id"] ?? null) && is_uuid($_GET["id"]) && empty($_POST["persistformvar"])) {
 		$sip_profile_uuid = $_GET["id"];
 		$sql = "select ";
 		$sql .= "sip_profile_name, ";
@@ -501,7 +504,7 @@
 		$label_sip_profile_domain_alias = $row["sip_profile_domain_alias"] !== '' ? $text['label-'.($row["sip_profile_domain_alias"] === true ? 'true' : 'false')] : '';
 		$label_sip_profile_domain_parse = $row["sip_profile_domain_parse"] !== '' ? $text['label-'.($row["sip_profile_domain_parse"] === true ? 'true' : 'false')] : '';
 
-		echo "				<input type='hidden' name='sip_profile_domains[$x][sip_profile_domain_uuid]' value='".(!empty($row["sip_profile_domain_uuid"]) ? $row["sip_profile_domain_uuid"] : uuid())."'>\n";
+		echo "				<input type='hidden' name='sip_profile_domains[$x][sip_profile_domain_uuid]' value='".escape(!empty($row["sip_profile_domain_uuid"]) ? $row["sip_profile_domain_uuid"] : uuid())."'>\n";
 		echo "				<input type='hidden' name='sip_profile_domains[$x][sip_profile_uuid]' value='".escape($sip_profile_uuid)."'>\n";
 		echo "				<td class='vtablerow' style='".$bottom_border."' ".(permission_exists('sip_profile_domain_edit') ? "onclick=\"label_to_form('label_sip_profile_domain_name_$x','sip_profile_domain_name_$x');\"" : null)." nowrap='nowrap'>\n";
 		echo "					&nbsp; <label id='label_sip_profile_domain_name_$x'>".escape($row["sip_profile_domain_name"])."</label>\n";

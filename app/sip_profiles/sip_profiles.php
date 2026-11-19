@@ -45,9 +45,9 @@
 	$sip_profiles = '';
 
 //get the http post data
-	if (!empty($_POST['sip_profiles'])) {
-		$action = $_POST['action'];
-		$search = $_POST['search'] ?? '';
+	if (!empty($_POST['sip_profiles']) && is_array($_POST['sip_profiles'])) {
+		$action = is_string($_POST['action'] ?? null) ? $_POST['action'] : '';
+		$search = is_string($_POST['search'] ?? null) ? $_POST['search'] : '';
 		$sip_profiles = $_POST['sip_profiles'];
 	}
 
@@ -77,17 +77,22 @@
 
 //get order and order by
 	if (isset($_GET["order_by"])) {
-		$order_by = $_GET["order_by"];
+		$order_by = is_string($_GET["order_by"]) ? $_GET["order_by"] : '';
 	}
 	else {
 		$order_by = 'sip_profile_name';
 	}
-	$order = $_GET["order"] ?? '';
+	$order = ($_GET["order"] ?? '') === 'desc' ? 'desc' : 'asc';
+
+//limit the order by to the columns shown in the list
+	if (!in_array($order_by, ['sip_profile_name', 'sip_profile_hostname', 'sip_profile_enabled', 'sip_profile_description'], true)) {
+		$order_by = 'sip_profile_name';
+	}
 
 //prepare to page the results
 	$sql = "select count(sip_profile_uuid) ";
 	$sql .= "from v_sip_profiles ";
-	if (!empty($_GET["search"])) {
+	if (is_string($_GET["search"] ?? null) && !empty($_GET["search"])) {
 		$search = strtolower($_GET["search"]);
 		$sql .= "where (";
 		$sql .= "lower(sip_profile_name) like :search ";
@@ -101,7 +106,7 @@
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = $search ? "&search=".$search : null;
-	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
+	$page = is_numeric($_GET['page'] ?? '') ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;

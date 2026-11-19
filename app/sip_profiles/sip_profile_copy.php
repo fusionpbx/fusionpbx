@@ -30,10 +30,7 @@
 	require_once "resources/paging.php";
 
 //check permissions
-	if (!(permission_exists('dialplan_add')
-		|| permission_exists('inbound_route_add')
-		|| permission_exists('outbound_route_add')
-		|| permission_exists('time_condition_add'))) {
+	if (!permission_exists('sip_profile_add')) {
 		echo "access denied";
 		exit;
 	}
@@ -51,8 +48,8 @@
 	}
 
 //set the http get/post variable(s) to a php variable
-	$sip_profile_uuid = $_REQUEST["id"];
-	$sip_profile_name = $_REQUEST["name"];
+	$sip_profile_uuid = is_string($_REQUEST["id"] ?? null) ? $_REQUEST["id"] : '';
+	$sip_profile_name = is_string($_REQUEST["name"] ?? null) ? $_REQUEST["name"] : '';
 
 //validate the sip profile name, it is used as a file name and in the sofia xml config
 	if (!empty($sip_profile_name) && (!is_string($sip_profile_name) || !preg_match('/^[a-zA-Z0-9_-]+$/u', $sip_profile_name))) {
@@ -152,7 +149,7 @@ if (is_uuid($sip_profile_uuid) && $sip_profile_name != '') {
 			message::add($text['message-sip_profile_unique'], 'negative', 5000);
 
 		//redirect
-			header("Location: sip_profile_edit.php?id=".$sip_profile_uuid);
+			header("Location: sip_profile_edit.php?id=".urlencode($sip_profile_uuid));
 			exit;
 
 	}

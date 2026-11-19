@@ -139,16 +139,18 @@ class sip_profiles {
 				}
 
 				//get necessary sip profile details
-				$sql  = "select " . $this->uuid_prefix . "uuid as uuid, sip_profile_name, sip_profile_hostname from v_" . $this->table . " ";
-				$sql  .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
-				$rows = $this->database->select($sql, $parameters ?? null, 'all');
-				if (is_array($rows) && @sizeof($rows) != 0) {
-					foreach ($rows as $row) {
-						$sip_profiles[$row['uuid']]['name']     = $row['sip_profile_name'];
-						$sip_profiles[$row['uuid']]['hostname'] = $row['sip_profile_hostname'];
+				if (!empty($uuids) && @sizeof($uuids) != 0) {
+					$sql  = "select " . $this->uuid_prefix . "uuid as uuid, sip_profile_name, sip_profile_hostname from v_" . $this->table . " ";
+					$sql .= "where " . $this->uuid_prefix . "uuid in (" . implode(', ', $uuids) . ") ";
+					$rows = $this->database->select($sql, $parameters ?? null, 'all');
+					if (is_array($rows) && @sizeof($rows) != 0) {
+						foreach ($rows as $row) {
+							$sip_profiles[$row['uuid']]['name']     = $row['sip_profile_name'];
+							$sip_profiles[$row['uuid']]['hostname'] = $row['sip_profile_hostname'];
+						}
 					}
+					unset($sql, $parameters, $rows, $row);
 				}
-				unset($sql, $parameters, $rows, $row);
 
 				//build the delete array
 				$x = 0;
