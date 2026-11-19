@@ -708,7 +708,7 @@ class pop3_stream
 				if(IsSet($query["workstation"]))
 					$this->pop3->workstation = UrlDecode($query["workstation"]);
 				if(IsSet($query["authentication_mechanism"]))
-					$this->pop3->realm = UrlDecode($query["authentication_mechanism"]);
+					$this->pop3->authentication_mechanism = UrlDecode($query["authentication_mechanism"]);
 			}
 			if(IsSet($query["quit_handshake"]))
 				$this->pop3->quit_handshake = intval($query["quit_handshake"]);

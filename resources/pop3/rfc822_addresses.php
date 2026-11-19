@@ -38,6 +38,8 @@ class rfc822_addresses_class
 	/* Private variables */
 
 	var $v = '';
+	var $comment_depth = 0;
+	var $max_comment_depth = 100;
 
 	/* Public variables */
 
@@ -305,7 +307,14 @@ class rfc822_addresses_class
 				return(0);
 			if(!IsSet($content))
 			{
-				if(!$this->ParseComment($c, $content))
+				if(++$this->comment_depth > $this->max_comment_depth)
+				{
+					--$this->comment_depth;
+					return($this->SetPositionedWarning('the comment nesting level is too deep', $p));
+				}
+				$parsed = $this->ParseComment($c, $content);
+				--$this->comment_depth;
+				if(!$parsed)
 					return(0);
 				if(!IsSet($content))
 					return(1);
