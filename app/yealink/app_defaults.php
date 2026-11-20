@@ -40,10 +40,12 @@
 				$row['default_setting_value'] = '1';
 			}
 			$sql = "update v_default_settings ";
-			$sql .= "set default_setting_value = ".$row['default_setting_value'].",  ";
+			$sql .= "set default_setting_value = :default_setting_value,  ";
 			$sql .= "default_setting_description = 'Only Accept Trusted Certificates 0-Disabled (default), 1-Enabled.'  ";
-			$sql .= "where default_setting_uuid = '".$row['default_setting_uuid']."'; ";
-			$database->execute($sql, null);
+			$sql .= "where default_setting_uuid = :default_setting_uuid; ";
+			$parameters['default_setting_value'] = $row['default_setting_value'];
+			$parameters['default_setting_uuid'] = $row['default_setting_uuid'];
+			$database->execute($sql, $parameters);
 			unset($sql);
 		}
 
