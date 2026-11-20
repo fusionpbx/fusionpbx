@@ -260,7 +260,7 @@
 			}
 		};
 		if (search) {
-			xhttp.open("GET", "/core/contacts/contact_json.php?search="+search, true);
+			xhttp.open("GET", "/core/contacts/contact_json.php?search="+encodeURIComponent(search), true);
 		}
 		else {
 			xhttp.open("GET", "/core/contacts/contact_json.php", true);
