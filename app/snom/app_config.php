@@ -163,6 +163,7 @@
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "9945b97c-f366-11e9-a713-2a2ae2dbcce4";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "snom_firmware_d375";
+		$apps[$x]['default_settings'][$y]['default_setting_name'] = "text";
 		$apps[$x]['default_settings'][$y]['default_setting_value'] = "10.1.175.10/bin/snomD375-10.1.175.10-SIP-r.bin";
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "false";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "Filename of the D375 firmware";
