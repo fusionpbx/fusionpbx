@@ -9,6 +9,17 @@ function select_group_option(original_select_id, group_select_id, option_select_
 		return;
 	}
 
+	// Look up elements by comparing values directly instead of interpolating them
+	// into a CSS selector, which would allow a value containing quotes or brackets
+	// to break out of the selector (selector injection / script errors).
+	const find_optgroup_by_label = function(label) {
+		return Array.from(original_select.querySelectorAll('optgroup')).find(optgroup => optgroup.label === label) || null;
+	};
+
+	const find_option_by_value = function(container, value) {
+		return Array.from(container.querySelectorAll('option')).find(option => option.value === value) || null;
+	};
+
 	// Populate group select with optgroup labels
 	const optgroups = original_select.querySelectorAll('optgroup');
 	optgroups.forEach(optgroup => {
@@ -25,7 +36,7 @@ function select_group_option(original_select_id, group_select_id, option_select_
 
 		if (selected_group) {
 			option_select.disabled = false;
-			const optgroup = original_select.querySelector(`optgroup[label="${selected_group}"]`);
+			const optgroup = find_optgroup_by_label(selected_group);
 			if (optgroup) {
 				const options = optgroup.querySelectorAll('option');
 				options.forEach(opt => {
@@ -45,7 +56,7 @@ function select_group_option(original_select_id, group_select_id, option_select_
 	if (original_value) {
 		// Find which optgroup contains the selected option
 		const selected_optgroup = Array.from(original_select.querySelectorAll('optgroup')).find(optgroup =>
-			optgroup.querySelector(`option[value="${original_value}"]`)
+			find_option_by_value(optgroup, original_value)
 		);
 
 		if (selected_optgroup) {
@@ -53,7 +64,7 @@ function select_group_option(original_select_id, group_select_id, option_select_
 			group_select.value = selected_optgroup.label;
 
 			// Populate and select the corresponding option
-			const optgroup = original_select.querySelector(`optgroup[label="${selected_optgroup.label}"]`);
+			const optgroup = find_optgroup_by_label(selected_optgroup.label);
 			if (optgroup) {
 				const options = optgroup.querySelectorAll('option');
 				option_select.innerHTML = '<option value=""></option>';
