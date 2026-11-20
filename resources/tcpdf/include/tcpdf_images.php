@@ -213,6 +213,11 @@ class TCPDF_IMAGES {
 		while (($pos = strpos($data, "ICC_PROFILE\0", $offset)) !== false) {
 			// get ICC sequence length
 			$length = (TCPDF_STATIC::_getUSHORT($data, ($pos - 2)) - 16);
+			if ($length < 0) {
+				// invalid ICC sequence length: skip this segment to avoid an infinite loop
+				$offset = ($pos + 14);
+				continue;
+			}
 			// marker sequence number
 			$msn = max(1, ord($data[($pos + 12)]));
 			// number of markers (total of APP2 used)
@@ -297,9 +302,17 @@ class TCPDF_IMAGES {
 		$trns = '';
 		$data = '';
 		$icc = false;
+		// get the file size to validate the declared chunk lengths
+		$fstat = fstat($f);
+		$filesize = (($fstat !== false) ? intval($fstat['size']) : 0);
 		$n = TCPDF_STATIC::_freadint($f);
 		do {
 			$type = fread($f, 4);
+			if (($n < 0) OR (($filesize > 0) AND (($n + 4) > ($filesize - ftell($f))))) {
+				// invalid or oversized chunk length
+				fclose($f);
+				return false;
+			}
 			if ($type == 'PLTE') {
 				// read palette
 				$pal = TCPDF_STATIC::rfread($f, $n);
@@ -337,7 +350,13 @@ class TCPDF_IMAGES {
 					return false;
 				}
 				// read ICC Color Profile
-				$icc = TCPDF_STATIC::rfread($f, ($n - $len - 2));
+				$icclen = ($n - $len - 2);
+				if ($icclen < 1) {
+					// invalid iCCP chunk
+					fclose($f);
+					return false;
+				}
+				$icc = TCPDF_STATIC::rfread($f, $icclen);
 				// decompress profile
 				$icc = gzuncompress($icc);
 				fread($f, 4);
