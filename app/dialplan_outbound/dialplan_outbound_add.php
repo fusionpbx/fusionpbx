@@ -223,6 +223,25 @@
 				exit;
 			}
 
+		//verify the gateway belongs to the current domain unless allowed to use any gateway
+			if (!permission_exists('outbound_route_any_gateway')) {
+				foreach (array($gateway_uuid, $gateway_2_id, $gateway_3_id) as $check_gateway_uuid) {
+					if (is_uuid($check_gateway_uuid)) {
+						$sql = "select gateway_uuid from v_gateways ";
+						$sql .= "where domain_uuid = :domain_uuid ";
+						$sql .= "and gateway_uuid = :gateway_uuid ";
+						$parameters['domain_uuid'] = $domain_uuid;
+						$parameters['gateway_uuid'] = $check_gateway_uuid;
+						$row = $database->select($sql, $parameters, 'row');
+						if (empty($row)) {
+							echo "access denied";
+							exit;
+						}
+						unset($sql, $parameters, $row);
+					}
+				}
+			}
+
 		//check for all required data
 			$msg = '';
 			if (empty($gateway)) { $msg .= $text['message-provide'].": ".$text['label-gateway-name']."<br>\n"; }
@@ -495,7 +514,7 @@
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'condition';
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'destination_number';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $dialplan_expression;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = xml::escape($dialplan_expression);
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
@@ -518,6 +537,9 @@
 
 					//set the uuid
 						$dialplan_uuid = uuid();
+
+					//the name is written to the dialplan XML as an attribute value, remove the characters that break out of it
+						$dialplan_name = str_replace(array('<', '>', '"', "'", '&'), '', $dialplan_name);
 
 					//build the array - outbound route
 						$array['dialplans'][$x]['domain_uuid'] = $domain_uuid;
@@ -547,7 +569,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'condition';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = '${toll_allow}';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $toll_allow;
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = xml::escape($toll_allow);
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
@@ -559,7 +581,7 @@
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'condition';
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'destination_number';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $dialplan_expression;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = xml::escape($dialplan_expression);
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = true;
@@ -572,7 +594,7 @@
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'sip_h_accountcode='.$accountcode;
+								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'sip_h_accountcode='.xml::sanitize($accountcode);
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 								$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'false';
@@ -733,7 +755,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'enum';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $prefix_number."$1 e164.org";
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = xml::sanitize($prefix_number)."$1 e164.org";
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
@@ -745,7 +767,7 @@
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "limit_max=".$limit;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = "limit_max=".xml::sanitize($limit);
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = $limit_enable;
@@ -801,7 +823,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'set';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'provider_prefix='.$prefix_number;
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = 'provider_prefix='.xml::sanitize($prefix_number);
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
@@ -813,7 +835,7 @@
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = ($gateway_type == "transfer") ? 'transfer' : 'bridge';;
-						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $bridge_data;
+						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = xml::escape($bridge_data);
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 						$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
@@ -825,7 +847,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'bridge';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $bridge_2_data;
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = xml::escape($bridge_2_data);
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
@@ -838,7 +860,7 @@
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_uuid'] = $dialplan_uuid;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_tag'] = 'action';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_type'] = 'bridge';
-							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = $bridge_3_data;
+							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_data'] = xml::escape($bridge_3_data);
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_order'] = $y * 10;
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_group'] = '0';
 							$array['dialplans'][$x]['dialplan_details'][$y]['dialplan_detail_enabled'] = 'true';
@@ -1021,7 +1043,7 @@
 				}
 				if (empty($domain_name)) { $domain_name = $text['label-global']; }
 				echo "</optgroup>";
-				echo "<optgroup label='&nbsp; &nbsp;".$domain_name."'>\n";
+				echo "<optgroup label='&nbsp; &nbsp;".escape($domain_name)."'>\n";
 			}
 			if (!empty($gateway_name) && $row['gateway'] == $gateway_name) {
 				echo "<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
@@ -1044,7 +1066,7 @@
 	if (permission_exists('bridge_view')) {
 		echo "	<optgroup label='".$text['label-bridges']."'>\n";
 		foreach($bridges as $row) {
-			echo "		<option value=\"bridge:".$row['bridge_destination']."\">".$row['bridge_name']."</option>\n";
+			echo "		<option value=\"bridge:".escape($row['bridge_destination'])."\">".escape($row['bridge_name'])."</option>\n";
 		}
 		echo "	</optgroup>\n";
 	}
@@ -1082,7 +1104,7 @@
 				}
 				if (empty($domain_name)) { $domain_name = $text['label-global']; }
 				echo "	</optgroup>\n";
-				echo "	<optgroup label='&nbsp; &nbsp;".$domain_name."'>\n";
+				echo "	<optgroup label='&nbsp; &nbsp;".escape($domain_name)."'>\n";
 			}
 			if (!empty($gateway_2_name) && $row['gateway'] == $gateway_2_name) {
 				echo "		<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
@@ -1105,7 +1127,7 @@
 	if (permission_exists('bridge_view')) {
 		echo "	<optgroup label='".$text['label-bridges']."'>\n";
 		foreach($bridges as $row) {
-			echo "		<option value=\"bridge:".$row['bridge_destination']."\">".$row['bridge_name']."</option>\n";
+			echo "		<option value=\"bridge:".escape($row['bridge_destination'])."\">".escape($row['bridge_name'])."</option>\n";
 		}
 		echo "	</optgroup>\n";
 	}
@@ -1143,7 +1165,7 @@
 				}
 				if (empty($domain_name)) { $domain_name = $text['label-global']; }
 				echo "	</optgroup>\n";
-				echo "	<optgroup label='&nbsp; &nbsp;".$domain_name."'>\n";
+				echo "	<optgroup label='&nbsp; &nbsp;".escape($domain_name)."'>\n";
 			}
 			if (!empty($gateway_3_name) && $row['gateway'] == $gateway_3_name) {
 				echo "		<option value=\"".escape($row['gateway_uuid']).":".escape($row['gateway'])."\" selected=\"selected\">".escape($row['gateway'])."</option>\n";
@@ -1166,7 +1188,7 @@
 	if (permission_exists('bridge_view')) {
 		echo "	<optgroup label='".$text['label-bridges']."'>\n";
 		foreach($bridges as $row) {
-			echo "		<option value=\"bridge:".$row['bridge_destination']."\">".$row['bridge_name']."</option>\n";
+			echo "		<option value=\"bridge:".escape($row['bridge_destination'])."\">".escape($row['bridge_name'])."</option>\n";
 		}
 		echo "	</optgroup>\n";
 	}
