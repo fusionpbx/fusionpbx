@@ -173,6 +173,7 @@ class plugin_email {
 				$parameters['domain_uuid'] = $_SESSION["domain_uuid"];
 			}
 			$sql .= "and (user_type = 'default' or user_type is null) ";
+			$sql .= "and (user_enabled = true or user_enabled is null) ";
 			$parameters['username'] = $_REQUEST['username'];
 			$row = $this->database->select($sql, $parameters, 'row');
 			unset($parameters);

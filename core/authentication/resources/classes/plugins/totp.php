@@ -191,6 +191,7 @@ class plugin_totp {
 				$parameters['domain_uuid'] = $this->domain_uuid;
 			}
 			$sql .= "and (u.user_type = 'default' or u.user_type is null) ";
+			$sql .= "and (u.user_enabled = true or u.user_enabled is null) ";
 			$parameters['username'] = $this->username;
 			$row = $this->database->select($sql, $parameters, 'row');
 			if (empty($row) || !is_array($row) || @sizeof($row) == 0) {
