@@ -78,7 +78,7 @@
 		$xml_response = trim($event_socket->request($cmd));
 		if ($xml_response) {
 			//read the xml string into an xml object
-			$xml = new SimpleXMLElement($xml_response);
+			$xml = new SimpleXMLElement($xml_response, LIBXML_NONET);
 
 			//sort the SIP profiles alphabetically
 			//turn into array
@@ -109,7 +109,7 @@
 			$xml_string .= "</profiles>";
 
 			//read the xml string into a new xml object
-			$xml = simplexml_load_string($xml_string);
+			$xml = simplexml_load_string($xml_string, 'SimpleXMLElement', LIBXML_NONET);
 		}
 	}
 	catch(Exception $e) {
@@ -120,7 +120,7 @@
 		$cmd = "api sofia xmlstatus gateway";
 		$xml_response = trim($event_socket->request($cmd));
 		if ($xml_response) {
-			$xml_gateways = new SimpleXMLElement($xml_response);
+			$xml_gateways = new SimpleXMLElement($xml_response, LIBXML_NONET);
 		}
 	}
 	catch(Exception $e) {
@@ -259,6 +259,10 @@
 //sofia status profile
 	if ($event_socket && permission_exists('system_status_sofia_status_profile')) {
 		foreach ($sip_profiles as $sip_profile_name => $sip_profile_uuid) {
+			//skip profiles with a name that cannot be safely passed to the event socket
+			if (!preg_match('/^[a-zA-Z0-9_-]+$/u', (string) $sip_profile_name)) {
+				continue;
+			}
 			$xml_response = trim($event_socket->request("api sofia xmlstatus profile ".$sip_profile_name));
 
 			if ($xml_response == "Invalid Profile!") {
@@ -271,7 +275,7 @@
 			$xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
 			$xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
 			try {
-				$xml = new SimpleXMLElement($xml_response);
+				$xml = new SimpleXMLElement($xml_response, LIBXML_NONET);
 			}
 			catch(Exception $e) {
 				echo escape($e->getMessage());
