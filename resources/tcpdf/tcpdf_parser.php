@@ -87,6 +87,25 @@ class TCPDF_PARSER {
 		'ignore_missing_filter_decoders' => true,
 	);
 
+	/**
+	 * Maximum allowed nesting level for PDF objects (arrays and dictionaries).
+	 * It prevents a stack overflow caused by malicious deeply nested data.
+	 * @private
+	 */
+	private $max_nesting_level = 100;
+
+	/**
+	 * Current object nesting level.
+	 * @private
+	 */
+	private $nesting_level = 0;
+
+	/**
+	 * Array of already visited cross-reference offsets, used to avoid infinite recursion on cyclic /Prev entries.
+	 * @private
+	 */
+	private $visited_xref_offsets = array();
+
 // -----------------------------------------------------------------------------
 
 	/**
@@ -167,6 +186,11 @@ class TCPDF_PARSER {
 	 * @since 1.0.000 (2011-05-24)
 	 */
 	protected function getXrefData($offset=0, $xref=array()) {
+		if (isset($this->visited_xref_offsets[$offset])) {
+			// this xref offset has already been visited: stop to avoid infinite recursion on cyclic /Prev entries
+			return $xref;
+		}
+		$this->visited_xref_offsets[$offset] = true;
 		if ($offset == 0) {
 			// find last startxref
 			if (preg_match_all('/[\r\n]startxref[\s]*[\r\n]+([0-9]+)[\s]*[\r\n]+%%EOF/i', $this->pdfdata, $matches, PREG_SET_ORDER, $offset) == 0) {
@@ -495,6 +519,12 @@ class TCPDF_PARSER {
 	 * @since 1.0.000 (2011-06-20)
 	 */
 	protected function getRawObject($offset=0) {
+		++$this->nesting_level;
+		if ($this->nesting_level > $this->max_nesting_level) {
+			// too deeply nested objects: refuse to continue to avoid a stack overflow
+			--$this->nesting_level;
+			$this->Error('Maximum PDF object nesting level exceeded');
+		}
 		$objtype = ''; // object type to be returned
 		$objval = ''; // object value to be returned
 		// skip initial white space chars: \x00 null (NUL), \x09 horizontal tab (HT), \x0A line feed (LF), \x0C form feed (FF), \x0D carriage return (CR), \x20 space (SP)
@@ -508,6 +538,7 @@ class TCPDF_PARSER {
 				$next = strcspn($this->pdfdata, "\r\n", $offset);
 				if ($next > 0) {
 					$offset += $next;
+					--$this->nesting_level;
 					return $this->getRawObject($offset);
 				}
 				break;
@@ -566,11 +597,12 @@ class TCPDF_PARSER {
 					// get array content
 					$objval = array();
 					do {
+						$oldoffset = $offset;
 						// get element
 						$element = $this->getRawObject($offset);
 						$offset = $element[2];
 						$objval[] = $element;
-					} while ($element[0] != ']');
+					} while (($element[0] != ']') AND ($offset != $oldoffset));
 					// remove closing delimiter
 					array_pop($objval);
 				}
@@ -586,11 +618,12 @@ class TCPDF_PARSER {
 						// get array content
 						$objval = array();
 						do {
+							$oldoffset = $offset;
 							// get element
 							$element = $this->getRawObject($offset);
 							$offset = $element[2];
 							$objval[] = $element;
-						} while ($element[0] != '>>');
+						} while (($element[0] != '>>') AND ($offset != $oldoffset));
 						// remove closing delimiter
 						array_pop($objval);
 					}
@@ -662,6 +695,7 @@ class TCPDF_PARSER {
 				break;
 			}
 		}
+		--$this->nesting_level;
 		return array($objtype, $objval, $offset);
 	}
 
