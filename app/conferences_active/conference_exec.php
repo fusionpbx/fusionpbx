@@ -89,6 +89,27 @@
 		$name = $database->select($sql, $parameters, 'column');
 		unset ($parameters, $sql);
 	}
+	elseif (!if_group('superadmin')) {
+		//verify the conference belongs to the current domain, a uuid name is a conference center room
+		$sql = "select conference_room_uuid ";
+		$sql .= "from v_conference_rooms ";
+		$sql .= "where conference_room_uuid = :conference_room_uuid ";
+		$sql .= "and domain_uuid = :domain_uuid ";
+		$parameters['conference_room_uuid'] = $name;
+		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset ($parameters, $sql, $row);
+	}
+
+//validate the conference name to prevent command injection into the switch commands
+	if (!preg_match('/^[0-9A-Za-z\-_.]+$/D', (string) ($name ?? ''))) {
+		echo "access denied";
+		exit;
+	}
 
 //append the domain name to the conference name
 	$name = $name .'@'.$_SESSION['domain_name'];
@@ -97,6 +118,29 @@
 	if (!is_uuid($uuid)) {
 		$uuid = null;
 	}
+
+//limit the commands to channels of the current domain, superadmin is exempt
+	$domain_name = $_SESSION['domain_name'] ?? '';
+	$channel_in_domain = function (?string $uuid) use ($domain_name): bool {
+		if (if_group('superadmin')) {
+			return true;
+		}
+		if ($uuid === '' || !is_uuid($uuid)) {
+			return false;
+		}
+
+		//get the domain of the channel from the switch
+		$channel_domain = trim((string) event_socket::api('uuid_getvar ' . $uuid . ' domain_name'));
+		if ($channel_domain === '' || $channel_domain === '_undef_' || stripos($channel_domain, '-ERR') !== false) {
+			//fall back to the presence id which is user@domain
+			$presence_id = str_replace('%40', '@', trim((string) event_socket::api('uuid_getvar ' . $uuid . ' presence_id')));
+			$presence = explode('@', $presence_id);
+			$channel_domain = $presence[1] ?? '';
+		}
+
+		//compare the domain, a channel without a known domain is not allowed
+		return $channel_domain !== '' && $channel_domain === $domain_name;
+	};
 
 //validate direction
 	switch ($direction) {
@@ -144,6 +188,29 @@
 			$data = null;
 	}
 
+//require the permission for the requested action, the view permission alone does not authorize changes
+	$data_permissions = [
+		"lock" => "conference_interactive_lock",
+		"unlock" => "conference_interactive_lock",
+		"mute" => "conference_interactive_mute",
+		"unmute" => "conference_interactive_mute",
+		"mute non_moderator" => "conference_interactive_mute",
+		"unmute non_moderator" => "conference_interactive_mute",
+		"deaf" => "conference_interactive_deaf",
+		"undeaf" => "conference_interactive_deaf",
+		"kick" => "conference_interactive_kick",
+		"kick all" => "conference_interactive_kick",
+		"energy" => "conference_interactive_energy",
+		"volume_in" => "conference_interactive_volume",
+		"volume_out" => "conference_interactive_gain",
+	];
+	if (!empty($data)) {
+		if (!isset($data_permissions[$data]) || !permission_exists($data_permissions[$data])) {
+			echo "access denied";
+			exit;
+		}
+	}
+
 //validate the numeric id
 	if (!is_numeric($id)) {
 		$id = null;
@@ -166,6 +233,9 @@
 		}
 		catch(Exception $e) {
 			//echo $e->getMessage();
+		}
+		if (!isset($xml)) {
+			return;
 		}
 		$session_uuid = $xml->conference['uuid'];
 		$x = 0;
@@ -243,6 +313,10 @@
 						$switch_result = event_socket::api($switch_cmd);
 					}
 					elseif ($data == "kick") {
+						if (!$channel_in_domain($uuid)) {
+							echo "access denied";
+							exit;
+						}
 						$switch_result = event_socket::api("uuid_kill $uuid");
 					}
 					elseif ($data == "kick all") {
@@ -251,8 +325,11 @@
 					}
 					elseif ($data == "mute" || $data == "unmute" || $data == "mute non_moderator" || $data == "unmute non_moderator") {
 						$switch_result = event_socket::api($switch_cmd);
-						$switch_cmd = "uuid_setvar ".$uuid. " hand_raised false";
-						event_socket::api($switch_cmd);
+						//the channel uuid is optional, update it only when it belongs to the current domain
+						if ($channel_in_domain($uuid)) {
+							$switch_cmd = "uuid_setvar ".$uuid. " hand_raised false";
+							event_socket::api($switch_cmd);
+						}
 					}
 					elseif ($data == "deaf" || $data == "undeaf" ) {
 						$switch_result = event_socket::api($switch_cmd);
