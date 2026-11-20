@@ -48,7 +48,7 @@
 
 //set the variables
 	$profile = $_GET['profile'] ?? null;
-	$action = $_GET['action'];
+	$action = is_string($_GET['action'] ?? null) ? $_GET['action'] : '';
 	$gateway = $_GET['gateway'] ?? null;
 
 //validate the sip profile name
@@ -84,7 +84,7 @@
 	$sql .= "and sip_profile_setting_name = 'sip-port' ";
 	$sql .= "and sip_profile_setting_enabled = true ";
 	$sql .= "limit 1";
-	$parameters['profile_name'] = $profile;
+	$parameters['profile_name'] = $profile_name;
 	$profile_port = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 
@@ -94,7 +94,7 @@
 	$sql .= "and sip_profile_setting_name = 'tls-sip-port' ";
 	$sql .= "and sip_profile_setting_enabled = true ";
 	$sql .= "limit 1";
-	$parameters['profile_name'] = $profile;
+	$parameters['profile_name'] = $profile_name;
 	$profile_tls_port = $database->select($sql, $parameters, 'column');
 	unset($sql, $parameters);
 
@@ -123,8 +123,8 @@
 		case "start":
 			$command = "sofia profile '".$profile_name."' start";
 			//ensure there are no stuck ports before trying to start the profile
-			force_close_port($profile_port);
-			force_close_port($profile_tls_port);
+			force_close_port((string) $profile_port);
+			force_close_port((string) $profile_tls_port);
 			break;
 		case "stop":
 			$command = "sofia profile '".$profile_name."' stop";
@@ -139,6 +139,12 @@
 			$command = "sofia profile '".$profile_name."' rescan";
 			break;
 		case "cache-flush":
+			//check the flush cache permission
+			if (!permission_exists('sip_status_flush_cache')) {
+				echo "access denied";
+				exit;
+			}
+			//clear the cache
 			$cache = new cache;
 			$response = $cache->flush();
 			//trigger clear cache for any classes that require it
