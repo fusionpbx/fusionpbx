@@ -593,6 +593,8 @@ class authentication {
 				foreach ($_SESSION['domains'] as $row) {
 					if (lower_case($row['domain_name']) == lower_case($domain_name)) {
 						$this->domain_uuid = $row['domain_uuid'];
+						//use the domain name from the database
+						$domain_name = $row['domain_name'];
 						$domain_exists = true;
 						break;
 					}
@@ -618,6 +620,8 @@ class authentication {
 				if (lower_case($row['domain_name']) == lower_case($this->domain_name)) {
 					$this->domain_uuid = $row['domain_uuid'];
 					$_SESSION['domain_uuid'] = $row['domain_uuid'];
+					//use the domain name from the database
+					$this->domain_name = $row['domain_name'];
 					break;
 				}
 			}
@@ -629,7 +633,19 @@ class authentication {
 
 		//set the domain settings
 		if (!empty($this->domain_name) && !empty($_SESSION["domain_uuid"])) {
-			$_SESSION['domain_name'] = $this->domain_name;
+			//prove the domain name exists in the domains table before storing it in the
+			//session, the value can come from HTTP_HOST or a request parameter and must
+			//never become the session domain name unvalidated. when the submitted value is
+			//not a domain, derive the name from the domain uuid instead of storing it.
+			$verified_domain_name = domains::find_name($this->domain_name, $this->database);
+			if ($verified_domain_name === false) {
+				//the submitted value is not a domain in the database - derive the name from the
+				//domain uuid instead so the session name always matches the session domain uuid
+				$verified_domain_name = domains::find_name_by_uuid($_SESSION["domain_uuid"], $this->database);
+			}
+			if ($verified_domain_name !== false) {
+				$_SESSION['domain_name'] = $verified_domain_name;
+			}
 			$_SESSION['domain_parent_uuid'] = $_SESSION["domain_uuid"];
 		}
 
