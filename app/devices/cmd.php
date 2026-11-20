@@ -123,10 +123,12 @@
 				$referer = (string)$_SERVER['HTTP_REFERER'];
 				$parsed_url = @parse_url($referer);
 				$path = $parsed_url['path'] ?? '';
+				parse_str($parsed_url['query'] ?? '', $query);
+				$query_string = http_build_query($query);
 				$is_same_origin = empty($parsed_url['host']) || strtolower($parsed_url['host']) === strtolower($_SERVER['HTTP_HOST'] ?? '');
 				if ($is_same_origin && $path !== '' && $path[0] === '/' && strpos($path, '//') === false
 					&& preg_match('/[\x00-\x1f\x7f]/', $path) === 0 && substr_count($path, '..') === 0) {
-					$location = $path;
+					$location = $path.($query_string ? '?'.$query_string : null);
 				}
 			}
 			header("Location: ".$location);
