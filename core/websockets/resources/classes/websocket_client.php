@@ -261,6 +261,11 @@ class websocket_client {
 		// Sanitize the token name to prevent path traversal / arbitrary file access.
 		// Legitimate token names are 64-char hex strings (token::create()), so [A-Za-z0-9_] is safe.
 		$token_name = preg_replace('/[^A-Za-z0-9_]/', '', (string) $token_name);
+		// Reject an empty name. Without this, every token name that sanitizes to nothing resolves to
+		// the same file which would allow a locally planted file to authenticate the connection.
+		if ($token_name === '') {
+			return '';
+		}
 		// Try to store in RAM first
 		if (is_dir('/dev/shm') && is_writable('/dev/shm')) {
 			$token_file = '/dev/shm/' . $token_name . '.php';
@@ -533,6 +538,11 @@ class websocket_client {
 		// The include can be used as a function: "$array = include($token_file);"
 		//
 		file_put_contents($token_file, $file_contents);
+
+		//
+		// The token grants access to the web socket service so restrict the file to the owner only.
+		//
+		@chmod($token_file, 0600);
 
 		return [$array['token']['name'], $array['token']['hash']];
 	}

@@ -516,8 +516,8 @@ class subscriber {
 			return false;
 		}
 
-		// validate the name and hash
-		$valid = ($token_name === $this->token_name && $token_hash === $this->token_hash);
+		// validate the name and hash using a timing safe comparison
+		$valid = (hash_equals((string) $this->token_name, (string) $token_name) && hash_equals((string) $this->token_hash, (string) $token_hash));
 
 		// Get the current epoch time
 		$server_time = time();
@@ -580,8 +580,8 @@ class subscriber {
 			$token_time  = intval($array['token']['time'] ?? 0);
 			$token_limit = intval($array['token']['limit'] ?? 0);
 
-			// Compare the token given in the request with the one that was in local storage
-			$valid = $token_name === $request_token['name'] && $token_hash === $request_token['hash'];
+			// Compare the token given in the request with the one that was in local storage using a timing safe comparison
+			$valid = hash_equals((string) $token_name, (string) $request_token['name']) && hash_equals((string) $token_hash, (string) $request_token['hash']);
 
 			// If the token is supposed to have a time limit then check the token time
 			if ($token_limit > 0) {
@@ -908,6 +908,11 @@ class subscriber {
 		// Sanitize the token name to prevent path traversal / arbitrary file access.
 		// Legitimate token names are 64-char hex strings (token::create()), so [A-Za-z0-9_] is safe.
 		$token_name = preg_replace('/[^A-Za-z0-9_]/', '', (string) $token_name);
+		// Reject an empty name. Without this, every token name that sanitizes to nothing resolves to
+		// the same file which would allow a locally planted file to authenticate the connection.
+		if ($token_name === '') {
+			return '';
+		}
 		// Try to store in RAM first
 		if (is_dir('/dev/shm') && is_writable('/dev/shm')) {
 			$token_file = '/dev/shm/' . $token_name . '.php';
@@ -989,6 +994,11 @@ class subscriber {
 		// The include can be used as a function: "$array = include($token_file);"
 		//
 		file_put_contents($token_file, $file_contents);
+
+		//
+		// The token grants access to the web socket service so restrict the file to the owner only.
+		//
+		@chmod($token_file, 0600);
 	}
 
 	/**
