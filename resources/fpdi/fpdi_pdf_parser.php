@@ -25,13 +25,22 @@ require_once('pdf_parser.php');
 class fpdi_pdf_parser extends pdf_parser
 {
     /**
+     * Maximum depth of the page tree and inherited object lookups.
+     *
+     * Limits the recursion on documents which define cyclic references by /Parent or /Kids.
+     *
+     * @var int
+     */
+    const MAX_TREE_DEPTH = 50;
+
+    /**
      * Pages
      *
      * Index begins at 0
      *
      * @var array
      */
-    protected $_pages;
+    protected $_pages = array();
 
     /**
      * Page count
@@ -123,8 +132,12 @@ class fpdi_pdf_parser extends pdf_parser
      * @param array $obj Array of pdf-data
      * @return array|boolean
      */
-    protected function _getPageResources($obj)
+    protected function _getPageResources($obj, $depth = 0)
     {
+        if ($depth >= self::MAX_TREE_DEPTH) {
+            return false;
+        }
+
     	$obj = $this->resolveObject($obj);
 
         // If the current object has a resources
@@ -142,7 +155,7 @@ class fpdi_pdf_parser extends pdf_parser
             return false;
         }
 
-        $res = $this->_getPageResources($obj[1][1]['/Parent']);
+        $res = $this->_getPageResources($obj[1][1]['/Parent'], $depth + 1);
         if ($res[0] == pdf_parser::TYPE_OBJECT)
             return $res[1];
         return $res;
@@ -175,20 +188,24 @@ class fpdi_pdf_parser extends pdf_parser
      * @param array $contentRef
      * @return array
      */
-    protected function _getPageContent($contentRef)
+    protected function _getPageContent($contentRef, $depth = 0)
     {
         $contents = array();
+
+        if ($depth >= self::MAX_TREE_DEPTH) {
+            return $contents;
+        }
 
         if ($contentRef[0] == pdf_parser::TYPE_OBJREF) {
             $content = $this->resolveObject($contentRef);
             if ($content[1][0] == pdf_parser::TYPE_ARRAY) {
-                $contents = $this->_getPageContent($content[1]);
+                $contents = $this->_getPageContent($content[1], $depth + 1);
             } else {
                 $contents[] = $content;
             }
         } else if ($contentRef[0] == pdf_parser::TYPE_ARRAY) {
             foreach ($contentRef[1] AS $tmp_content_ref) {
-                $contents = array_merge($contents, $this->_getPageContent($tmp_content_ref));
+                $contents = array_merge($contents, $this->_getPageContent($tmp_content_ref, $depth + 1));
             }
         }
 
@@ -206,8 +223,12 @@ class fpdi_pdf_parser extends pdf_parser
      *
      * @return array|boolean
      */
-    protected function _getPageBox($page, $boxIndex, $k)
+    protected function _getPageBox($page, $boxIndex, $k, $depth = 0)
     {
+        if ($depth >= self::MAX_TREE_DEPTH) {
+            return false;
+        }
+
         $page = $this->resolveObject($page);
         $box = null;
         if (isset($page[1][1][$boxIndex])) {
@@ -234,7 +255,7 @@ class fpdi_pdf_parser extends pdf_parser
         } else if (!isset($page[1][1]['/Parent'])) {
             return false;
         } else {
-            return $this->_getPageBox($this->resolveObject($page[1][1]['/Parent']), $boxIndex, $k);
+            return $this->_getPageBox($this->resolveObject($page[1][1]['/Parent']), $boxIndex, $k, $depth + 1);
         }
     }
 
@@ -297,8 +318,12 @@ class fpdi_pdf_parser extends pdf_parser
      * @param array $obj A /Page dictionary
      * @return array|bool
      */
-    protected function _getPageRotation($obj)
+    protected function _getPageRotation($obj, $depth = 0)
     {
+        if ($depth >= self::MAX_TREE_DEPTH) {
+            return false;
+        }
+
     	$obj = $this->resolveObject($obj);
     	if (isset($obj[1][1]['/Rotate'])) {
     		$res = $this->resolveObject($obj[1][1]['/Rotate']);
@@ -311,7 +336,7 @@ class fpdi_pdf_parser extends pdf_parser
             return false;
         }
 
-        $res = $this->_getPageRotation($obj[1][1]['/Parent']);
+        $res = $this->_getPageRotation($obj[1][1]['/Parent'], $depth + 1);
         if ($res[0] == pdf_parser::TYPE_OBJECT)
             return $res[1];
 
@@ -325,8 +350,12 @@ class fpdi_pdf_parser extends pdf_parser
      * @param array $result The result array
      * @throws Exception
      */
-    protected function _readPages(&$pages, &$result)
+    protected function _readPages(&$pages, &$result, $depth = 0)
     {
+        if ($depth >= self::MAX_TREE_DEPTH) {
+            throw new Exception('Page tree is nested too deeply.');
+        }
+
         // Get the kids dictionary
     	$_kids = $this->resolveObject($pages[1][1]['/Kids']);
 
@@ -345,7 +374,7 @@ class fpdi_pdf_parser extends pdf_parser
             if ($pg[1][1]['/Type'][1] === '/Pages') {
                 // If one of the kids is an embedded
     			// /Pages array, resolve it as well.
-                $this->_readPages($pg, $result);
+                $this->_readPages($pg, $result, $depth + 1);
     		} else {
     			$result[] = $pg;
     		}

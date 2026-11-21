@@ -165,11 +165,13 @@ if (!class_exists('TCPDF', false)) {
                                 ord($s[$count]) <= ord('9')) {
                                 $oct = ''. $s[$count];
 
-                                if (ord($s[$count+1]) >= ord('0') &&
+                                if (isset($s[$count+1]) &&
+                                    ord($s[$count+1]) >= ord('0') &&
                                     ord($s[$count+1]) <= ord('9')) {
                                     $oct .= $s[++$count];
 
-                                    if (ord($s[$count+1]) >= ord('0') &&
+                                    if (isset($s[$count+1]) &&
+                                        ord($s[$count+1]) >= ord('0') &&
                                         ord($s[$count+1]) <= ord('9')) {
                                         $oct .= $s[++$count];
                                     }

@@ -142,7 +142,16 @@ class pdf_context
                 if ($toRead < 1)
                     break;
 
-                $this->buffer .= fread($this->file, $toRead);
+                $readData = fread($this->file, $toRead);
+                // stop if the stream delivers no data at all, otherwise a token or a
+                // requested length which exceeds the file size loops forever here.
+                if ($readData === '' || $readData === false) {
+                    $this->length = strlen($this->buffer);
+
+                    return false;
+                }
+
+                $this->buffer .= $readData;
             } while ((($this->length = strlen($this->buffer)) != $totalLength) && !feof($this->file));
 
             return true;
