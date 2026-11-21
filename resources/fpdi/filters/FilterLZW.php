@@ -42,7 +42,7 @@ class FilterLZW
      */
     public function decode($data)
     {
-        if ($data[0] == 0x00 && $data[1] == 0x01) {
+        if (isset($data[1]) && $data[0] == 0x00 && $data[1] == 0x01) {
             throw new Exception('LZW flavour not supported.');
         }
 
@@ -141,7 +141,7 @@ class FilterLZW
      */
     protected function _getNextCode()
     {
-        if ($this->_bytePointer == $this->_dataLength) {
+        if ($this->_bytePointer >= $this->_dataLength) {
             return 257;
         }
 
@@ -149,8 +149,15 @@ class FilterLZW
         $this->_nextBits += 8;
 
         if ($this->_nextBits < $this->_bitsToGet) {
-            $this->_nextData = ($this->_nextData << 8) | (ord($this->_data[$this->_bytePointer++]) & 0xff);
-            $this->_nextBits += 8;
+            // read only as much as the data provides, otherwise a truncated stream would be
+            // read past its end and the decompression would never stop.
+            if ($this->_bytePointer >= $this->_dataLength) {
+                $this->_nextData = ($this->_nextData << 8);
+                $this->_nextBits += 8;
+            } else {
+                $this->_nextData = ($this->_nextData << 8) | (ord($this->_data[$this->_bytePointer++]) & 0xff);
+                $this->_nextBits += 8;
+            }
         }
 
         $code = ($this->_nextData >> ($this->_nextBits - $this->_bitsToGet)) & $this->_andTable[$this->_bitsToGet-9];

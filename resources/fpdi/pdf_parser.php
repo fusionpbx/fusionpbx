@@ -114,6 +114,13 @@ class pdf_parser
     const TYPE_REAL = 12;
 
     /**
+     * Maximum nesting depth of arrays and dictionaries read from a document.
+     *
+     * @var int
+     */
+    const MAX_VALUE_DEPTH = 100;
+
+    /**
      * Define the amount of byte in which the initial keyword of a PDF document should be searched.
      *
      * @var int
@@ -133,6 +140,27 @@ class pdf_parser
      * @var resource
      */
     protected $_f;
+
+    /**
+     * Offsets of already processed xref tables, used to stop a cyclic /Prev chain
+     *
+     * @var array
+     */
+    protected $_visitedXrefOffsets = array();
+
+    /**
+     * Object references which are currently resolved, used to stop cyclic references
+     *
+     * @var array
+     */
+    protected $_resolveStack = array();
+
+    /**
+     * Current nesting depth of the value which is read by _readValue()
+     *
+     * @var int
+     */
+    protected $_valueDepth = 0;
 
     /**
      * PDF Context
@@ -314,7 +342,9 @@ class pdf_parser
      */
     protected function _readXref(&$result, $offset)
     {
-        $tempPos = $offset - min(20, $offset);
+        $this->_visitedXrefOffsets[(int) $offset] = true;
+
+        $tempPos = (int) $offset - min(20, (int) $offset);
         fseek($this->_f, $tempPos); // set some bytes backwards to fetch corrupted docs
 
         $data = fread($this->_f, 100);
@@ -414,7 +444,13 @@ class pdf_parser
         }
 
         if (isset($trailer[1]['/Prev'])) {
-            $this->_readXref($result, $trailer[1]['/Prev'][1]);
+            $prevOffset = (int) $trailer[1]['/Prev'][1];
+
+            // ignore an invalid /Prev value and stop here if this xref table was already
+            // processed, otherwise a crafted document follows a cyclic chain until memory is exhausted.
+            if (is_numeric($trailer[1]['/Prev'][1]) && $prevOffset >= 0 && !isset($this->_visitedXrefOffsets[$prevOffset])) {
+                $this->_readXref($result, $prevOffset);
+            }
         }
 
         $trailer = null;
@@ -481,7 +517,18 @@ class pdf_parser
                         return false;
                     }
 
-                    if (($value =   $this->_readValue($c)) === false) {
+                    if ($this->_valueDepth >= self::MAX_VALUE_DEPTH) {
+                        return false;
+                    }
+
+                    $this->_valueDepth++;
+                    try {
+                        $value = $this->_readValue($c);
+                    } finally {
+                        $this->_valueDepth--;
+                    }
+
+                    if ($value === false) {
                         return false;
                     }
 
@@ -508,7 +555,18 @@ class pdf_parser
                         return false;
                     }
 
-                    if (($value = $this->_readValue($c, $token)) === false) {
+                    if ($this->_valueDepth >= self::MAX_VALUE_DEPTH) {
+                        return false;
+                    }
+
+                    $this->_valueDepth++;
+                    try {
+                        $value = $this->_readValue($c, $token);
+                    } finally {
+                        $this->_valueDepth--;
+                    }
+
+                    if ($value === false) {
                         return false;
                     }
 
@@ -559,6 +617,23 @@ class pdf_parser
                     $length = $tmpLength[1][1];
                 } else {
                     $length = $this->_currentObj[1][1]['/Length'][1];
+                }
+
+                // a crafted document can define an invalid or endless /Length value, which would
+                // either raise a fatal error or allocate memory far beyond the size of the file.
+                if (!is_numeric($length)) {
+                    $length = 0;
+                } else {
+                    $length = (int) $length;
+
+                    $fileStat = is_resource($this->_f) ? fstat($this->_f) : false;
+                    if ($fileStat !== false && $fileStat['size'] > 0) {
+                        $maxLength = $fileStat['size'] - $startPos - $e;
+
+                        if ($length > $maxLength) {
+                            $length = $maxLength > 0 ? $maxLength : 0;
+                        }
+                    }
                 }
 
                 if ($length > 0) {
@@ -644,65 +719,83 @@ class pdf_parser
             // This is a reference, resolve it
             if (isset($this->_xref['xref'][$objSpec[1]][$objSpec[2]])) {
 
-                // Save current file position
-                // This is needed if you want to resolve
-                // references while you're reading another object
-                // (e.g.: if you need to determine the length
-                // of a stream)
+                $objectKey = $objSpec[1] . ' ' . $objSpec[2];
 
-                $oldPos = $c->getPos();
-
-                // Reposition the file pointer and
-                // load the object header.
-
-                $c->reset($this->_xref['xref'][$objSpec[1]][$objSpec[2]]);
-
-                $header = $this->_readValue($c);
-
-                if ($header[0] != self::TYPE_OBJDEC || $header[1] != $objSpec[1] || $header[2] != $objSpec[2]) {
-                    $toSearchFor = $objSpec[1] . ' ' . $objSpec[2] . ' obj';
-                    if (preg_match('/' . $toSearchFor . '/', $c->buffer)) {
-                        $c->offset = strpos($c->buffer, $toSearchFor) + strlen($toSearchFor);
-                        // reset stack
-                        $c->stack = array();
-                    } else {
-                        throw new Exception(
-                            sprintf("Unable to find object (%s, %s) at expected location.", $objSpec[1], $objSpec[2])
-                        );
-                    }
+                // Stop here if this object is already being resolved. A crafted document can
+                // reference itself (e.g. a /Length value which points to its own object), which
+                // would otherwise resolve recursively until the memory limit is exhausted.
+                if (isset($this->_resolveStack[$objectKey])) {
+                    throw new Exception(
+                        sprintf("Cyclic reference while resolving object (%s, %s).", $objSpec[1], $objSpec[2])
+                    );
                 }
 
-                // If we're being asked to store all the information
-                // about the object, we add the object ID and generation
-                // number for later use
-                $result = array (
-                    self::TYPE_OBJECT,
-                    'obj' => $objSpec[1],
-                    'gen' => $objSpec[2]
-                );
+                $this->_resolveStack[$objectKey] = true;
 
-                $this->_currentObj =& $result;
+                try {
+                    // Save current file position
+                    // This is needed if you want to resolve
+                    // references while you're reading another object
+                    // (e.g.: if you need to determine the length
+                    // of a stream)
 
-                // Now simply read the object data until
-                // we encounter an end-of-object marker
-                while (true) {
-                    $value = $this->_readValue($c);
-                    if ($value === false || count($result) > 4) {
-                        // in this case the parser couldn't find an "endobj" so we break here
-                        break;
+                    $oldPos = $c->getPos();
+
+                    // Reposition the file pointer and
+                    // load the object header.
+
+                    $c->reset($this->_xref['xref'][$objSpec[1]][$objSpec[2]]);
+
+                    $header = $this->_readValue($c);
+
+                    if ($header[0] != self::TYPE_OBJDEC || $header[1] != $objSpec[1] || $header[2] != $objSpec[2]) {
+                        $toSearchFor = $objSpec[1] . ' ' . $objSpec[2] . ' obj';
+                        if (preg_match('/' . $toSearchFor . '/', $c->buffer)) {
+                            $c->offset = strpos($c->buffer, $toSearchFor) + strlen($toSearchFor);
+                            // reset stack
+                            $c->stack = array();
+                        } else {
+                            throw new Exception(
+                                sprintf("Unable to find object (%s, %s) at expected location.", $objSpec[1], $objSpec[2])
+                            );
+                        }
                     }
 
-                    if ($value[0] == self::TYPE_TOKEN && $value[1] === 'endobj') {
-                        break;
+                    // If we're being asked to store all the information
+                    // about the object, we add the object ID and generation
+                    // number for later use
+                    $result = array (
+                        self::TYPE_OBJECT,
+                        'obj' => $objSpec[1],
+                        'gen' => $objSpec[2]
+                    );
+
+                    $this->_currentObj =& $result;
+
+                    // Now simply read the object data until
+                    // we encounter an end-of-object marker
+                    while (true) {
+                        $value = $this->_readValue($c);
+                        if ($value === false || count($result) > 4) {
+                            // in this case the parser couldn't find an "endobj" so we break here
+                            break;
+                        }
+
+                        if ($value[0] == self::TYPE_TOKEN && $value[1] === 'endobj') {
+                            break;
+                        }
+
+                        $result[] = $value;
                     }
 
-                    $result[] = $value;
-                }
+                    $c->reset($oldPos);
 
-                $c->reset($oldPos);
+                    if (isset($result[2][0]) && $result[2][0] == self::TYPE_STREAM) {
+                        $result[0] = self::TYPE_STREAM;
+                    }
 
-                if (isset($result[2][0]) && $result[2][0] == self::TYPE_STREAM) {
-                    $result[0] = self::TYPE_STREAM;
+                } finally {
+                    unset($this->_resolveStack[$objectKey]);
                 }
 
             } else {
@@ -820,7 +913,10 @@ class pdf_parser
                         // we increase the size of the buffer
                         // and try again--just to be safe.
 
-                        $c->increaseLength();
+                        if (!$c->increaseLength()) {
+                            // no more data available - the token ends at the end of the file
+                            break;
+                        }
                     }
                 }
 
