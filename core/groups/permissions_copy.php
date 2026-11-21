@@ -34,6 +34,12 @@
 		exit;
 	}
 
+//reject requests initiated from another site
+	if (!token::same_origin()) {
+		echo "access denied";
+		exit;
+	}
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();

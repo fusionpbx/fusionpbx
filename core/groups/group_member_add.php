@@ -35,10 +35,10 @@
 	}
 
 //get the http values and set them as variables
-	$domain_uuid = $_POST["domain_uuid"];
-	$group_uuid = $_POST["group_uuid"];
-	$group_name = $_POST["group_name"];
-	$user_uuid = $_POST["user_uuid"];
+	$domain_uuid = $_POST["domain_uuid"] ?? '';
+	$group_uuid = $_POST["group_uuid"] ?? '';
+	$group_name = $_POST["group_name"] ?? '';
+	$user_uuid = $_POST["user_uuid"] ?? '';
 
 //validate the token
 	$token = new token;
@@ -61,6 +61,29 @@
 	if (!if_group("superadmin") && $group_name == "superadmin") {
 		echo "access denied";
 		return;
+	}
+
+//the domain is limited to the domains in the session list
+	if (!empty($domain_uuid) && empty($_SESSION['domains'][$domain_uuid])) {
+		echo "access denied";
+		return;
+	}
+
+//verify the user exists and belongs to the domain of the membership unless the user may access all domains
+	if (is_uuid($user_uuid)) {
+		$sql = "select user_uuid from v_users ";
+		$sql .= "where user_uuid = :user_uuid ";
+		if (!permission_exists('user_all')) {
+			$sql .= "and domain_uuid = :domain_uuid ";
+			$parameters['domain_uuid'] = is_uuid($domain_uuid) ? $domain_uuid : ($_SESSION['domain_uuid'] ?? '');
+		}
+		$parameters['user_uuid'] = $user_uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			return;
+		}
+		unset($sql, $parameters, $row);
 	}
 
 //add the user to the group

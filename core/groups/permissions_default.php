@@ -39,6 +39,16 @@
 	$language = new text;
 	$text = $language->get();
 
+//validate the token when accessed directly
+	if (empty($included) || !$included) {
+		$token = new token;
+		if (!$token->validate($_SERVER['PHP_SELF'])) {
+			message::add($text['message-invalid_token'],'negative');
+			header("Location: groups.php");
+			return;
+		}
+	}
+
 //permission restore default
 	$permission = new permission;
 	$permission->restore();

@@ -111,7 +111,7 @@
 	$rows_per_page = $settings->get('domain', 'paging', 50);
 	$param = $search ? "&search=".$search : null;
 	$param = ($show == 'all' && permission_exists('group_all')) ? "&show=all" : null;
-	$page = !empty($_GET['page']) ? $_GET['page'] : 0;
+	$page = !empty($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 0;
 	list($paging_controls, $rows_per_page) = paging($num_rows, $param, $rows_per_page);
 	list($paging_controls_mini, $rows_per_page) = paging($num_rows, $param, $rows_per_page, true);
 	$offset = $rows_per_page * $page;
@@ -156,6 +156,9 @@
 	$object = new token;
 	$token = $object->create($_SERVER['PHP_SELF']);
 
+//create a token for the restore default script
+	$token_default = $object->create(dirname($_SERVER['PHP_SELF']) . '/permissions_default.php');
+
 //include the header
 	$document['title'] = $text['title-groups'];
 	require_once "resources/header.php";
@@ -165,7 +168,7 @@
 	echo "	<div class='heading'><b>".$text['title-groups']."</b><div class='count'>".number_format($num_rows)."</div></div>\n";
 	echo "	<div class='actions'>\n";
 	echo button::create(['type'=>'button','label'=>$text['button-users'],'icon'=>$settings->get('theme', 'button_icon_users'),'onclick'=>"window.location='../users/users.php'"]);
-	echo button::create(['type'=>'button','label'=>$text['button-restore_default'],'icon'=>$settings->get('theme', 'button_icon_sync'),'style'=>'margin-right: 15px;','link'=>'permissions_default.php']);
+	echo button::create(['type'=>'button','label'=>$text['button-restore_default'],'icon'=>$settings->get('theme', 'button_icon_sync'),'style'=>'margin-right: 15px;','link'=>'permissions_default.php?'.$token_default['name'].'='.$token_default['hash']]);
 	if (permission_exists('group_add')) {
 		echo button::create(['type'=>'button','label'=>$text['button-add'],'icon'=>$settings->get('theme', 'button_icon_add'),'id'=>'btn_add','link'=>'group_edit.php']);
 	}
