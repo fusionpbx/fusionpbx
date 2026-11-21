@@ -371,7 +371,7 @@ class websocket_service extends service {
 
 		foreach ($subscribers as $subscriber) {
 			$caller_context = strtolower($message->caller_context ?? '');
-			if (!empty($caller_context) && $subscriber->has_subscribed_to($service_name) && ($subscriber->show_all || $caller_context === $subscriber->domain_name || $caller_context === 'public' || $caller_context === 'default'
+			if (!empty($caller_context) && $subscriber->has_subscribed_to($service_name) && ($subscriber->has_debug_subscribe_all() || $caller_context === $subscriber->domain_name || $caller_context === 'public' || $caller_context === 'default'
 				)
 			) {
 				$filtered[] = $subscriber;
@@ -506,10 +506,16 @@ class websocket_service extends service {
 				} else {
 					// Message does not have a service name
 					$this->warning("The message does not have a service name. All messages must have a service name to direct their query to.");
-					$subscriber->send(websocket_message::request_is_bad($message->id, 'INVALID', $message->topic));
+					$subscriber->send(websocket_message::request_is_bad($message->request_id(), 'INVALID', $message->topic));
 				}
 			} catch (socket_disconnected_exception $sde) {
 				$this->handle_disconnect($sde->id);
+			} catch (\subscriber_exception $se) {
+				// Leave subscriber exceptions to the caller which disconnects the subscriber
+				throw $se;
+			} catch (\Throwable $t) {
+				// A malformed message must not stop the service for the other clients
+				$this->warning("Unable to process message for subscriber " . $subscriber->id . ": " . $t->getMessage());
 			}
 	}
 
@@ -868,7 +874,7 @@ class websocket_service extends service {
 		foreach ($diff as $socket) {
 			// We must check before closing the socket that it is a resource or a fatal error will occur
 			if (is_resource($socket)) {
-				@fwrite($resource, "\x88\x00"); // 0x88 = close frame, no payload
+				@fwrite($socket, "\x88\x00"); // 0x88 = close frame, no payload
 				@fclose($socket);
 			}
 			// Trigger the disconnect so any hooks can clean up their lists
@@ -876,6 +882,12 @@ class websocket_service extends service {
 		}
 		return true;
 	}
+
+	// Maximum allowed handshake request header size in bytes
+	const MAX_HANDSHAKE_LENGTH = 8192;
+
+	// Seconds a client is given to send the handshake before it is disconnected
+	const HANDSHAKE_TIMEOUT_SECONDS = 5;
 
 	/**
 	 * Performs web socket handshake on new connection.
@@ -886,9 +898,15 @@ class websocket_service extends service {
 	protected function handshake($resource): void {
 		// ensure blocking to read full header
 		stream_set_blocking($resource, true);
+		// limit the time allowed to send the handshake so a client cannot block this loop forever
+		stream_set_timeout($resource, self::HANDSHAKE_TIMEOUT_SECONDS);
 		$request_header = '';
 		while (($line = fgets($resource)) !== false) {
 			$request_header .= $line;
+			// limit the header size so a client cannot exhaust memory with an endless request
+			if (strlen($request_header) > self::MAX_HANDSHAKE_LENGTH) {
+				throw new invalid_handshake_exception($resource, "WebSocket handshake header too large");
+			}
 			if (rtrim($line) === '') {
 				break;
 			}

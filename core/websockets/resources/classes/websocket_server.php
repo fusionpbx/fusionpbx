@@ -232,9 +232,17 @@ class websocket_server {
 			if (in_array($this->server_socket, $read, true)) {
 				$conn = @stream_socket_accept($this->server_socket, 0);
 				if ($conn) {
-					// complete handshake on blocking socket
-					stream_set_blocking($conn, true);
-					$this->handshake($conn);
+					try {
+						// complete handshake on blocking socket
+						stream_set_blocking($conn, true);
+						$this->handshake($conn);
+					} catch (\invalid_handshake_exception $ex) {
+						$this->warn('Invalid handshake from resource ' . (int)$conn);
+						if (is_resource($conn)) {
+							@fclose($conn);
+						}
+						continue;
+					}
 					// switch to non-blocking for further reads
 					stream_set_blocking($conn, false);
 					// add them to the websocket list
@@ -469,6 +477,12 @@ class websocket_server {
 		}
 	}
 
+	// Maximum allowed handshake request header size in bytes
+	const MAX_HANDSHAKE_LENGTH = 8192;
+
+	// Seconds a client is given to send the handshake before it is disconnected
+	const HANDSHAKE_TIMEOUT_SECONDS = 5;
+
 	/**
 	 * Performs web socket handshake on new connection.
 	 *
@@ -477,9 +491,15 @@ class websocket_server {
 	protected function handshake($socket) {
 		// ensure blocking to read full header
 		stream_set_blocking($socket, true);
+		// limit the time allowed to send the handshake so a client cannot block this loop forever
+		stream_set_timeout($socket, self::HANDSHAKE_TIMEOUT_SECONDS);
 		$request_header = '';
 		while (($line = fgets($socket)) !== false) {
 			$request_header .= $line;
+			// limit the header size so a client cannot exhaust memory with an endless request
+			if (strlen($request_header) > self::MAX_HANDSHAKE_LENGTH) {
+				throw new \invalid_handshake_exception($socket, "WebSocket handshake header too large");
+			}
 			if (rtrim($line) === '') {
 				break;
 			}
@@ -629,9 +649,7 @@ class websocket_server {
 					return null;
 				case 0xA: // PONG
 					$this->info("Received PONG");
-					$reason = $this->read_bytes($socket, 2);
-					$this->info("Reason: $reason");
-						continue 2; // Skip returning PONG
+					continue 2; // Skip returning PONG
 				case 0x1: // TEXT frame
 				case 0x0: // Continuation frame
 					$payload_data .= $payload;
