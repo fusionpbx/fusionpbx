@@ -64,12 +64,50 @@
 		$group_description = $_POST["group_description"] ?? '';
 	}
 
+//set the user's group level, groups above this level cannot be edited or created by the user
+	$user_group_level = (int) ($_SESSION['user']['group_level'] ?? 0);
+
+//the domain is limited to the current domain unless the user may access all domains
+	if (!empty($domain_uuid) && !permission_exists('group_all') && $domain_uuid != ($_SESSION['domain_uuid'] ?? '')) {
+		//the domain was rejected, keep the group in the current domain rather than moving it to another one
+		$domain_uuid = $_SESSION['domain_uuid'] ?? '';
+	}
+
+//the group level is limited to the user's group level, this prevents creating a group or raising an
+//existing group above the user in the hierarchy where it would no longer be visible or manageable
+	if (!empty($_POST)) {
+		$group_level = (int)$group_level;
+		if ($group_level > $user_group_level) {
+			//the level was rejected, keep the group at the highest level the user is allowed to assign
+			$group_level = $user_group_level;
+		}
+	}
+
 //verify the group belongs to the current domain or is global
 	if (!empty($group_uuid) && is_uuid($group_uuid) && !permission_exists('group_all')) {
 		$sql = "select group_uuid from v_groups ";
 		$sql .= "where (domain_uuid = :domain_uuid or domain_uuid is null) ";
 		$sql .= "and group_uuid = :group_uuid ";
 		$parameters['domain_uuid'] = $_SESSION['domain_uuid'];
+		$parameters['group_uuid'] = $group_uuid;
+		$row = $database->select($sql, $parameters, 'row');
+		if (empty($row)) {
+			echo "access denied";
+			exit;
+		}
+		unset($sql, $parameters, $row);
+	}
+
+//verify the group level is at or below the user's group level, matching the filter used in groups.php,
+//this prevents viewing, editing, copying or deleting groups that are above the user in the hierarchy
+	if (!empty($group_uuid) && is_uuid($group_uuid)) {
+		$sql = "select group_uuid from v_groups ";
+		$sql .= "where ( ";
+		$sql .= "	group_level <= :group_level ";
+		$sql .= "	or group_level is null ";
+		$sql .= ") ";
+		$sql .= "and group_uuid = :group_uuid ";
+		$parameters['group_level'] = $user_group_level;
 		$parameters['group_uuid'] = $group_uuid;
 		$row = $database->select($sql, $parameters, 'row');
 		if (empty($row)) {
@@ -276,7 +314,7 @@
 			echo "		<option value='".$row['domain_uuid']."' selected='selected'>".escape($row['domain_name'])."</option>\n";
 		}
 		else {
-			echo "		<option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+			echo "		<option value='".$row['domain_uuid']."'>".escape($row['domain_name'])."</option>\n";
 		}
 	}
 	echo "	</select>\n";
@@ -293,6 +331,10 @@
 		echo "	<select class='formfld' name='group_level'>\n";
 		echo "		<option value=''></option>\n";
 		for ($l = 10; $l <=90; $l += 10) {
+			//only offer levels that the user is allowed to assign
+			if ($l > $user_group_level) {
+				continue;
+			}
 			$selected = $group_level == $l ? "selected='selected'" : null;
 			echo "		<option value='".$l."' ".$selected.">".$l."</option>\n";
 		}

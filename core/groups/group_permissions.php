@@ -36,7 +36,7 @@
 
 //get the group_uuid
 	if (!empty($_REQUEST["group_uuid"])) {
-		$group_uuid = $_GET['group_uuid'];
+		$group_uuid = $_REQUEST['group_uuid'];
 	}
 
 //get the group_name
