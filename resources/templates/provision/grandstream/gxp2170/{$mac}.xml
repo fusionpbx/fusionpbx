@@ -678,21 +678,23 @@
 		<!-- #Enable Local Call Features. Default is Yes -->
 		<!-- #Mandatory -->
 		<!-- No, Yes -->
-		<item name="account.{$row.line_number}.featureCodes.callFeatures">No</item>
-
+		<item name="account.{$row.line_number}.featureCodes.callFeatures">{$grandstream_local_call_features}</item>
+		
 		<!-- DND Call Feature On -->
-		<item name="account.{$row.line_number}.featureCodes.dndOn">*78</item>
-
+		<!-- *78 -->
+		<item name="account.{$row.line_number}.featureCodes.dndOn">{$grandstream_featurecodes_dndon}</item>
+			
 		<!-- DND Call Feature Off  -->
-		<item name="account.{$row.line_number}.featureCodes.dndOff">*79</item>
-
+		<!-- *79 -->
+		<item name="account.{$row.line_number}.featureCodes.dndOff">{$grandstream_featurecodes_dndoff}</item>
+		
 		<!-- #Call Forward Always - On -->
-		<!-- # String -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOn">*72</item>
-
+		<!-- *72 -->
+		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOn">{$grandstream_callforwardunconditionallyon}</item>
+		
 		<!-- #Call Forward Always - Off -->
-		<!-- # String -->
-		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOff">*73</item>
+		<!-- *73 -->
+		<item name="account.{$row.line_number}.featureCodes.callForwardUnconditionallyOff">{$grandstream_callforwardunconditionallyoff}</item>
 
 		<!-- #Call Forward Always- Target -->
 		<!-- # String -->
