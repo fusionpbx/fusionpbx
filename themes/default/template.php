@@ -6,7 +6,7 @@
 		<!DOCTYPE html>
 	{/if}
 
-<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='{$document_language|default:"en-us"}' lang='{$document_language|default:"en-us"}'>
 <head>
 <meta charset='utf-8'>
 <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
