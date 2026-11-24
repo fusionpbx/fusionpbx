@@ -417,12 +417,12 @@
 					//verify any existing tier belongs to the current domain
 						if (!empty($row['call_center_tier_uuid']) && is_uuid($row['call_center_tier_uuid'])) {
 							$sql = "select call_center_tier_uuid from v_call_center_tiers ";
-							$sql .= "where domain_uuid = :domain_uuid ";
+							$sql .= "where domain_uuid != :domain_uuid ";
 							$sql .= "and call_center_tier_uuid = :call_center_tier_uuid ";
 							$parameters['domain_uuid'] = $domain_uuid;
 							$parameters['call_center_tier_uuid'] = $row['call_center_tier_uuid'];
 							$tier_row = $database->select($sql, $parameters, 'row');
-							if (empty($tier_row)) {
+							if (!empty($tier_row)) {
 								echo "access denied";
 								exit;
 							}
