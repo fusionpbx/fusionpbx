@@ -422,7 +422,7 @@ if (!function_exists('fax_split_dtmf')) {
 			}
 
 			//add blank page
-			$total_pages = $fax_page_count; //Starts total count with attachment pages 
+			$total_pages = $fax_page_count; //Starts total count with attachment pages
 			$pdf->AddPage('P', array($page_width, $page_height));
 
 			// content offset, if necessary
@@ -925,24 +925,31 @@ if (!defined('STDIN')) {
 		if ($settings->get('contact','permissions', false)) {
 			if (is_array($user_group_uuids) && @sizeof($user_group_uuids) != 0) {
 				//only show contacts assigned to current user's group(s) and those not assigned to any group
-				$sql .= "and (";
+				$sql .= "and ( ";
+				// Assigned Users
 				$sql .= "	c.contact_uuid in ( ";
-				$sql .= "		select contact_uuid from v_contact_groups ";
+				$sql .= "		select contact_uuid from v_contact_users ";
 				$sql .= "		where (";
-				foreach ($user_group_uuids as $index => $user_group_uuid) {
-					$sql .= $or;
-					$sql .= "		group_uuid = :group_uuid_".$index." ";
-					$parameters['group_uuid_'.$index] = $user_group_uuid;
-					$or = " or ";
-				}
-				unset($user_group_uuids, $index, $user_group_uuid, $or);
+				$sql .= "           user_uuid = :user_uuid ";
 				$sql .= "		) ";
 				$sql .= "		and domain_uuid = :domain_uuid ";
 				$sql .= "	) ";
-				$sql .= "	or ";
-				$sql .= "	c.contact_uuid not in ( ";
+				$parameters['user_uuid'] = $user_uuid;
+				// Assigned Groups
+				$sql .= " or ";
+				$sql .= "	c.contact_uuid in ( ";
 				$sql .= "		select contact_uuid from v_contact_groups ";
-				$sql .= "		where domain_uuid = :domain_uuid ";
+				$sql .= "		where (";
+				$i = 0;
+				foreach ($user_group_uuids as $index => $user_group_uuid) {
+					$sql .= ($i > 0) ? " or " : "";
+					$sql .= "		group_uuid = :group_uuid_".$index." ";
+					$parameters['group_uuid_'.$index] = $user_group_uuid;
+					$i++;
+				}
+				unset($user_group_uuids, $index, $user_group_uuid);
+				$sql .= "		) ";
+				$sql .= "		and domain_uuid = :domain_uuid ";
 				$sql .= "	) ";
 				$sql .= ") ";
 			}
