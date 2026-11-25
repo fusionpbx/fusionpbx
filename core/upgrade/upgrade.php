@@ -790,8 +790,11 @@ function update_file_permissions($text, settings $settings) {
 				continue;
 			}
 
+			// Determine the owner
+			$owner = ($dir == $project_root) ? 'root' : $web_user;
+
 			// Update the file ownership to use the web server user
-			exec("chown -R $web_user:$web_user " . escapeshellarg($dir), $chown_output, $chown_return);
+			exec("chown -R $owner:$owner " . escapeshellarg($dir), $chown_output, $chown_return);
 			if ($chown_return !== 0) {
 				echo "WARNING: failed to change ownership of $dir (chown exit code $chown_return)\n";
 			}
