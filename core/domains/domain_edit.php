@@ -713,21 +713,38 @@
 			}
 		}
 
-		//indent each option by its depth in the tree
-		foreach ($domains_by_uuid as $uuid => $domain_row) {
-			if (in_array($uuid, $excluded_domain_uuids, true)) {
-				continue;
+		//list each domain directly after its parent and indent it by its depth in the tree.
+		//a domain whose parent is not part of the list is treated as a root.
+			$root_domain_uuids = [];
+			foreach ($domains_by_uuid as $uuid => $domain_row) {
+				if (!isset($domains_by_uuid[$domain_row['domain_parent_uuid'] ?? ''])) {
+					$root_domain_uuids[] = $uuid;
+				}
 			}
-			$depth = 0;
-			$parent_uuid = $domain_row['domain_parent_uuid'] ?? '';
-			$visited = [$uuid];
-			while (!empty($parent_uuid) && isset($domains_by_uuid[$parent_uuid]) && !in_array($parent_uuid, $visited, true)) {
-				$visited[] = $parent_uuid;
-				$parent_uuid = $domains_by_uuid[$parent_uuid]['domain_parent_uuid'] ?? '';
-				$depth++;
+
+			//walk the tree from each root, reversing keeps the siblings in name order
+			$stack = [];
+			foreach (array_reverse($root_domain_uuids) as $uuid) {
+				$stack[] = ['uuid' => $uuid, 'depth' => 0];
 			}
-			$parent_domain_options[$uuid] = ['name' => $domain_row['domain_name'], 'depth' => $depth];
-		}
+			while (!empty($stack)) {
+				$item = array_pop($stack);
+				if (!in_array($item['uuid'], $excluded_domain_uuids, true)) {
+					$parent_domain_options[$item['uuid']] = ['name' => $domains_by_uuid[$item['uuid']]['domain_name'], 'depth' => $item['depth']];
+				}
+				foreach (array_reverse($children_by_uuid[$item['uuid']] ?? []) as $child_uuid) {
+					$stack[] = ['uuid' => $child_uuid, 'depth' => $item['depth'] + 1];
+				}
+			}
+
+			//include any domain not reached from a root so the options stay complete should
+			//the data ever hold a parent child loop
+			foreach ($domains_by_uuid as $uuid => $domain_row) {
+				if (!isset($parent_domain_options[$uuid]) && !in_array($uuid, $excluded_domain_uuids, true)) {
+					$parent_domain_options[$uuid] = ['name' => $domain_row['domain_name'], 'depth' => 0];
+				}
+			}
+			unset($root_domain_uuids, $stack, $item, $child_uuid);
 		unset($domain_rows, $domains_by_uuid, $children_by_uuid, $excluded_domain_uuids);
 	}
 
