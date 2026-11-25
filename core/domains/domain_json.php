@@ -57,10 +57,30 @@
 
 //get the list of domains
 	if (permission_exists('domain_all') || permission_exists('domain_select')) {
+
+		//a user without domain_all is limited to their own domain and the child domains below
+		//it in the parent child tree. the same restriction is used by the domains list in
+		//core/domains/domains.php and by the domain change check in resources/require.php.
+		$user_domain_uuid = $_SESSION['user']['domain_uuid'] ?? '';
+		$restrict_domains = !permission_exists('domain_all') && is_uuid($user_domain_uuid);
+
 		$sql = "select * ";
 		$sql .= "from v_domains ";
 		$sql .= "where true ";
 		$sql .= "and domain_enabled = true \n";
+		if ($restrict_domains) {
+			if ($database->select("select domain_uuid from view_domains limit 1 ", null, 'column') !== false) {
+				//the view holds the parent child relationship, a domain is included when the
+				//user's domain appears anywhere in its path which gives their own domain and
+				//every domain below it
+				$sql .= "and domain_uuid in (select domain_uuid from view_domains where :user_domain_uuid = any(domain_uuid_path)) \n";
+			}
+			else {
+				//when the view has not been created yet only the user's own domain is included
+				$sql .= "and domain_uuid = :user_domain_uuid \n";
+			}
+			$parameters['user_domain_uuid'] = $user_domain_uuid;
+		}
 		if (isset($search)) {
 			$sql .= "	and ( ";
 			$sql .= "		lower(domain_name) like :search ";

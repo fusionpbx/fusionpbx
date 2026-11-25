@@ -29,90 +29,8 @@
 	require_once "resources/check_auth.php";
 	require_once "resources/paging.php";
 
-//redirect admin to app instead
-	if (file_exists(dirname(__DIR__, 2)."/app/domains/app_config.php") && !permission_exists('domain_all') && !is_cli()) {
-		header("Location: ".PROJECT_PATH."/app/domains/domains.php");
-		exit;
-	}
-
-//change the domain
-	if (!empty($_GET["domain_uuid"]) && is_uuid($_GET["domain_uuid"]) && $_GET["domain_change"] == "true" && permission_exists('domain_select')) {
-
-		//update the domain session variables
-			$domain_uuid = $_GET["domain_uuid"];
-
-		//get the domain details, limit them to the user's own domain unless access to all domains is granted
-			$sql = "select * from v_domains ";
-			if (!permission_exists('domain_all')) {
-				$sql .= "where domain_uuid = :domain_uuid ";
-				$parameters['domain_uuid'] = $_SESSION['user']['domain_uuid'];
-			}
-			$sql .= "order by domain_name asc ";
-			$domains = $database->select($sql, $parameters ?? [], 'all');
-			unset($sql, $parameters);
-
-		//validate the domain change against the domains array
-			$domain_found = false;
-			if (!empty($domains)) {
-				foreach($domains as $row) {
-					$_SESSION['domains'][$row['domain_uuid']] = $row;
-					if ($row['domain_uuid'] == $domain_uuid) {
-						$domain_found = true;
-					}
-				}
-			}
-			unset($sql, $domains);
-
-		//validate the domain change
-			if (!$domain_found) {
-				die("invalid domain");
-			}
-			unset($domain_found);
-
-		//update the domain session variables
-			$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
-			$_SESSION['domain_uuid'] = $domain_uuid;
-			$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
-			$_SESSION["context"] = $_SESSION["domain_name"];
-
-		//clear the extension array so that it is regenerated for the selected domain
-			unset($_SESSION['extension_array']);
-
-		//set the setting arrays
-			$domain = new domains();
-			$domain->set();
-
-		//initialize the settings object
-			$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $user_uuid]);
-
-		//reload domain on domain change, if enabled
-			if ($settings->get('menu', 'domain_change_reload', false)) {
-				//unset the session menu array
-					unset($_SESSION['menu']['array']);
-
-				//get the menu array and save it to the session
-					$menu = new menu;
-					$menu->menu_uuid = $settings->get('domain', 'menu');
-					$_SESSION['menu']['array'] = $menu->menu_array();
-					unset($menu);
-			}
-
-		//redirect the user
-			if (!empty($_SESSION["login"]["destination"])) {
-				// to default, or domain specific, login destination
-				header("Location: ".PROJECT_PATH.$settings->get('login', 'destination'));
-			}
-			else {
-				header("Location: ".PROJECT_PATH."/core/dashboard/");
-			}
-			exit;
-	}
-
 //check permission
-	if (permission_exists('domain_all') && permission_exists('domain_view')) {
-		//access granted
-	}
-	else {
+	if (!permission_exists('domain_view')) {
 		echo "access denied";
 		exit;
 	}
@@ -120,6 +38,34 @@
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
+
+//the domains view holds the parent child relationship between domains, it is defined in
+//resources/database/views/domains.php and created by the schema update. when the view has
+//not been created yet the list falls back to a flat list of domains.
+	$domains_view_available = false;
+	if ($database->select("select domain_uuid from view_domains limit 1 ", null, 'column') !== false) {
+		$domains_view_available = true;
+	}
+
+//a user without domain_all is limited to their own domain and the domains below it in the
+//parent child tree. the same restriction is used by the list, the count and the actions.
+	$user_domain_uuid = $_SESSION['user']['domain_uuid'] ?? '';
+	$restrict_domains = !permission_exists('domain_all') && is_uuid($user_domain_uuid);
+
+//build the domain restrictions used by the count and the list queries
+	$sql_restrict = '';
+	if ($restrict_domains) {
+		if ($domains_view_available) {
+			//a domain is included when the user's domain appears anywhere in its path,
+			//this gives the user's own domain and every domain below it
+			$sql_restrict = "domain_uuid in (select domain_uuid from view_domains where :user_domain_uuid = any(domain_uuid_path)) ";
+			$restrict_parameters['user_domain_uuid'] = $user_domain_uuid;
+		}
+		else {
+			$sql_restrict = "domain_uuid = :user_domain_uuid ";
+			$restrict_parameters['user_domain_uuid'] = $user_domain_uuid;
+		}
+	}
 
 //get the http post data
 	if (!empty($_POST['domains']) && is_array($_POST['domains'])) {
@@ -153,28 +99,119 @@
 	}
 	$query_string = http_build_query($url_params);
 
+//get the domain uuids the user is allowed to manage, used to validate posted records
+	$allowed_domain_uuids = [];
+	if ($restrict_domains) {
+		if ($domains_view_available) {
+			$sql = "select domain_uuid from view_domains ";
+			$sql .= "where :user_domain_uuid = any(domain_uuid_path) ";
+			$result = $database->select($sql, ['user_domain_uuid' => $user_domain_uuid], 'all');
+			if (is_array($result)) {
+				$allowed_domain_uuids = array_column($result, 'domain_uuid');
+			}
+			unset($sql, $result);
+		}
+		else {
+			$allowed_domain_uuids[] = $user_domain_uuid;
+		}
+	}
+
+//change the domain
+	if (!empty($_GET["domain_uuid"]) && is_uuid($_GET["domain_uuid"]) && !empty($_GET["domain_change"]) && $_GET["domain_change"] == "true" && permission_exists('domain_select')) {
+
+		//the requested domain must be in the user's own tree unless access to all domains is granted
+			if (permission_exists('domain_all') || in_array($_GET["domain_uuid"], $allowed_domain_uuids, true)) {
+
+				//get the domain details from the database to prove the domain exists
+					$sql = "select * from v_domains ";
+					$sql .= "where domain_uuid = :domain_uuid ";
+					$parameters['domain_uuid'] = $_GET["domain_uuid"];
+					$row = $database->select($sql, $parameters, 'row');
+					unset($sql, $parameters);
+
+				//update the domain session variables with values proven to exist in v_domains
+					if (is_array($row) && @sizeof($row) != 0) {
+						$domain_uuid = $_GET["domain_uuid"];
+						$_SESSION['domains'][$domain_uuid] = $row;
+						$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
+						$_SESSION['domain_uuid'] = $domain_uuid;
+						$_SESSION["domain_name"] = $row['domain_name'];
+						$_SESSION["context"] = $row['domain_name'];
+
+						//clear the extension array so that it is regenerated for the selected domain
+							unset($_SESSION['extension_array']);
+
+						//set the setting arrays
+							$domain = new domains();
+							$domain->set();
+
+						//initialize the settings object
+							$settings = new settings(['database' => $database, 'domain_uuid' => $domain_uuid, 'user_uuid' => $_SESSION['user_uuid'] ?? '']);
+
+						//reload domain on domain change, if enabled
+							if ($settings->get('menu', 'domain_change_reload', false)) {
+								//unset the session menu array
+									unset($_SESSION['menu']['array']);
+
+								//get the menu array and save it to the session
+									$menu = new menu;
+									$menu->menu_uuid = $settings->get('domain', 'menu');
+									$_SESSION['menu']['array'] = $menu->menu_array();
+									unset($menu);
+							}
+
+						//redirect the user
+							if (!empty($_SESSION["login"]["destination"])) {
+								// to default, or domain specific, login destination
+								header("Location: ".PROJECT_PATH.$settings->get('login', 'destination'));
+							}
+							else {
+								header("Location: ".PROJECT_PATH."/core/dashboard/");
+							}
+							exit;
+					}
+			}
+
+		//the domain was not found or is not in the user's tree
+			die("invalid domain");
+	}
+
 //process the http post data by action
 	if (!empty($action) && is_array($domains) && @sizeof($domains) != 0) {
-		switch ($action) {
-			case 'copy':
-				if (permission_exists('domain_add')) {
-					$obj = new domains;
-					$obj->copy($domains);
+
+		//limit the posted records to the domains the user is allowed to manage
+			if ($restrict_domains) {
+				foreach ($domains as $i => $row) {
+					if (!in_array($row['uuid'] ?? '', $allowed_domain_uuids, true)) {
+						unset($domains[$i]);
+					}
 				}
-				break;
-			case 'toggle':
-				if (permission_exists('domain_edit')) {
-					$obj = new domains;
-					$obj->toggle($domains);
+				$domains = array_values($domains);
+			}
+
+		//process the action on the allowed records
+			if (@sizeof($domains) != 0) {
+				switch ($action) {
+					case 'copy':
+						if (permission_exists('domain_add')) {
+							$obj = new domains;
+							$obj->copy($domains);
+						}
+						break;
+					case 'toggle':
+						if (permission_exists('domain_edit')) {
+							$obj = new domains;
+							$obj->toggle($domains);
+						}
+						break;
+					case 'delete':
+						if (permission_exists('domain_delete')) {
+							$obj = new domains;
+							$obj->delete($domains);
+						}
+						break;
 				}
-				break;
-			case 'delete':
-				if (permission_exists('domain_delete')) {
-					$obj = new domains;
-					$obj->delete($domains);
-				}
-				break;
-		}
+			}
 
 		header('Location: domains.php'.($query_string ? '?'.$query_string : ''));
 		exit;
@@ -183,16 +220,26 @@
 //set from session variables
 	$list_row_edit_button = $settings->get('theme', 'list_row_edit_button', false);
 
-//get the count
-	$sql = "select count(domain_uuid) from v_domains ";
+//build the search and restriction conditions
+	$sql_conditions = [];
+	$parameters = $restrict_parameters ?? [];
 	if (!empty($search)) {
-		$sql .= "where (";
-		$sql .= "	lower(domain_name) like :search ";
-		$sql .= "	or lower(domain_description) like :search ";
-		$sql .= ") ";
+		$sql_conditions[] = "( \n";
+		$sql_conditions[] = "	lower(domain_name) like :search \n";
+		$sql_conditions[] = "	or lower(domain_description) like :search \n";
+		$sql_conditions[] = ") ";
 		$parameters['search'] = '%'.lower_case($search).'%';
 	}
-	$num_rows = $database->select($sql, $parameters ?? null, 'column');
+	if (!empty($sql_restrict)) {
+		$sql_conditions[] = $sql_restrict;
+	}
+
+//get the count
+	$sql = "select count(domain_uuid) from v_domains ";
+	if (!empty($sql_conditions)) {
+		$sql .= "where " . implode(" and ", $sql_conditions);
+	}
+	$num_rows = (int) $database->select($sql, $parameters ?? null, 'column');
 
 //prepare to page the results
 	$rows_per_page = $settings->get('domain', 'paging', 50);
@@ -201,19 +248,28 @@
 	$offset = $rows_per_page * $page;
 
 //get the list
-	$sql = "select domain_uuid, domain_name, cast(domain_enabled as text), domain_description ";
-	$sql .= "from v_domains ";
-	if (!empty($search)) {
-		$sql .= "where (";
-		$sql .= "	lower(domain_name) like :search ";
-		$sql .= "	or lower(domain_description) like :search ";
-		$sql .= ") ";
-		$parameters['search'] = '%'.lower_case($search).'%';
+	if ($domains_view_available) {
+		//the view provides the level and path used to indent child domains under their parent
+		$sql = "select level, domain_uuid, domain_parent_uuid, domain_name, parent_domain, cast(domain_enabled as text) as domain_enabled, domain_description ";
+		$sql .= "from view_domains \n";
 	}
-	$sql .= order_by($order_by, $order, 'domain_name', 'asc');
+	else {
+		$sql = "select 1 as level, domain_uuid, domain_parent_uuid, domain_name, null as parent_domain, cast(domain_enabled as text) as domain_enabled, domain_description ";
+		$sql .= "from v_domains \n";
+	}
+	if (!empty($sql_conditions)) {
+		$sql .= "where " . implode(" and ", $sql_conditions);
+	}
+	if ($domains_view_available && empty($order_by)) {
+		//order by the path so that each child domain follows its parent in the list
+		$sql .= "order by domain_name_path asc \n";
+	}
+	else {
+		$sql .= order_by($order_by, $order, 'domain_name', 'asc');
+	}
 	$sql .= limit_offset($rows_per_page, $offset);
 	$domains = $database->select($sql, $parameters ?? null, 'all');
-	unset($sql, $parameters);
+	unset($sql, $parameters, $sql_conditions, $restrict_parameters, $sql_restrict);
 
 //create token
 	$object = new token;
@@ -278,6 +334,9 @@
 		echo th_order_by('domain_name', $text['label-domain'], $order_by, $order, null, null, $query_string);
 	}
 	echo th_order_by('domain_name', $text['label-domain_name'], $order_by, $order, null, null, $query_string);
+	if ($domains_view_available) {
+		echo "	<th class='hide-sm-dn'>".$text['label-parent_domain']."</th>\n";
+	}
 	echo "<th class='center'>".$text['label-tools']."</th>";
 	echo th_order_by('domain_enabled', $text['label-domain_enabled'], $order_by, $order, null, "class='center'", $query_string);
 	echo "	<th class='hide-sm-dn'>".$text['label-domain_description']."</th>\n";
@@ -293,6 +352,10 @@
 			if (permission_exists('domain_edit')) {
 				$list_row_url = "domain_edit.php?id=".urlencode($row['domain_uuid']).($query_string ? '&'.$query_string : '');
 			}
+
+			//indent child domains under their parent domain
+				$indent = !empty($row['level']) && $num_rows > 1 ? str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;", (int) $row['level'] - 1) : '';
+
 			echo "<tr class='list-row' href='".$list_row_url."'>\n";
 			if (permission_exists('domain_edit') || permission_exists('domain_delete')) {
 				echo "	<td class='checkbox'>\n";
@@ -301,18 +364,23 @@
 				echo "	</td>\n";
 			}
 			if ($show == 'all' && permission_exists('domain_all')) {
-				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'])."</td>\n";
+				echo "	<td>".escape($_SESSION['domains'][$row['domain_uuid']]['domain_name'] ?? '')."</td>\n";
 			}
 			echo "	<td>\n";
 			if (permission_exists('domain_edit')) {
-				echo "	<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['domain_name'])."</a>\n";
+				echo "	".$indent."<a href='".$list_row_url."' title=\"".$text['button-edit']."\">".escape($row['domain_name'])."</a>\n";
 			}
 			else {
-				echo "	".escape($row['domain_name']);
+				echo "	".$indent.escape($row['domain_name']);
 			}
 			echo "	</td>\n";
+			if ($domains_view_available) {
+				echo "	<td class='hide-sm-dn'>".escape(!empty($row['parent_domain']) ? $row['parent_domain'] : '')."</td>\n";
+			}
 			echo "	<td class='no-link center'>\n";
-			echo "		<a href='".PROJECT_PATH."/core/domains/domains.php?domain_uuid=".urlencode($row['domain_uuid'])."&domain_change=true'>".$text['label-manage']."</a>";
+			if (permission_exists('domain_select') && (permission_exists('domain_all') || in_array($row['domain_uuid'], $allowed_domain_uuids, true))) {
+				echo "		<a href='".PROJECT_PATH."/core/domains/domains.php?domain_uuid=".urlencode($row['domain_uuid'])."&domain_change=true'>".$text['label-manage']."</a>";
+			}
 			if (permission_exists('domain_setting_view')) {
 				$list_setting_url = PROJECT_PATH."/core/domain_settings/domain_settings.php?id=".urlencode($row['domain_uuid']);
 				echo "&nbsp;&nbsp; <a href='".$list_setting_url."'\">".$text['button-settings'];

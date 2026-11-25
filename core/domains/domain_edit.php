@@ -41,16 +41,45 @@
 
 //set the defaults
 	$domain_name = '';
+	$domain_parent_uuid = '';
 	$domain_description = '';
 
-//action add or update
-	$domain_all_access = permission_exists('domain_add') && (!file_exists(dirname(__DIR__, 2)."/app/domains/") || permission_exists('domain_all'));
-	if (!$domain_all_access) {
-		//admin editing own domain/settings
-		$domain_uuid = $_SESSION['domain_uuid'];
-		$action = "update";
+//the domains view holds the parent child relationship between domains, it is defined in
+//core/domains/resources/database/views/domains.php and created by the schema update. when
+//the view has not been created yet a user without domain_all is limited to their own domain.
+	$domains_view_available = false;
+	if ($database->select("select domain_uuid from view_domains limit 1 ", null, 'column') !== false) {
+		$domains_view_available = true;
 	}
-	else {
+
+//a user with domain_all manages every domain. a user without domain_all is limited to their
+//own domain and the child domains below it in the parent child tree.
+	$user_domain_uuid = $_SESSION['user']['domain_uuid'] ?? '';
+	$domain_all_access = permission_exists('domain_all');
+	$restrict_domains = !$domain_all_access && is_uuid($user_domain_uuid);
+
+//get the domain uuids the user is allowed to manage
+	$allowed_domain_uuids = [];
+	if ($restrict_domains) {
+		if ($domains_view_available) {
+			$sql = "select domain_uuid from view_domains ";
+			$sql .= "where :user_domain_uuid = any(domain_uuid_path) ";
+			$result = $database->select($sql, ['user_domain_uuid' => $user_domain_uuid], 'all');
+			if (is_array($result)) {
+				$allowed_domain_uuids = array_column($result, 'domain_uuid');
+			}
+			unset($sql, $result);
+		}
+		else {
+			$allowed_domain_uuids[] = $user_domain_uuid;
+		}
+	}
+
+//a user that can add domains manages their own tree, any other user edits their own domain
+	$domain_tree_access = !$domain_all_access && permission_exists('domain_add');
+
+//action add or update
+	if ($domain_all_access || $domain_tree_access) {
 		if (!empty($_REQUEST["id"]) && is_uuid($_REQUEST["id"])) {
 			$action = "update";
 			$domain_uuid = $_REQUEST["id"];
@@ -59,10 +88,22 @@
 			$action = "add";
 		}
 	}
+	else {
+		//admin editing own domain/settings
+		$domain_uuid = $_SESSION['domain_uuid'];
+		$action = "update";
+	}
+
+//the domain must be in the domains the user is allowed to manage
+	if ($action == "update" && $restrict_domains && !in_array($domain_uuid, $allowed_domain_uuids, true)) {
+		echo "access denied";
+		exit;
+	}
 
 //get http post variables and set them to php variables
 	if (!empty($_POST)) {
 		$domain_name = strtolower(is_string($_POST["domain_name"] ?? null) ? $_POST["domain_name"] : '');
+		$domain_parent_uuid = is_string($_POST["domain_parent_uuid"] ?? null) ? $_POST["domain_parent_uuid"] : '';
 		$domain_enabled = is_string($_POST["domain_enabled"] ?? null) ? $_POST["domain_enabled"] : 'true';
 		$domain_description = is_string($_POST["domain_description"] ?? null) ? $_POST["domain_description"] : '';
 	}
@@ -138,6 +179,47 @@
 				$msg .= $text['message-domain_name_invalid']."<br>\n";
 			}
 
+		//validate the parent domain, it must exist and be manageable by the user
+			if (!empty($domain_parent_uuid)) {
+				if (!is_uuid($domain_parent_uuid)) {
+					$msg .= $text['message-parent_invalid']."<br>\n";
+				}
+				else {
+					$sql = "select count(*) from v_domains ";
+					$sql .= "where domain_uuid = :domain_parent_uuid ";
+					$parameters['domain_parent_uuid'] = $domain_parent_uuid;
+					if ($database->select($sql, $parameters, 'column') == 0) {
+						$msg .= $text['message-parent_invalid']."<br>\n";
+					}
+					unset($sql, $parameters);
+
+					if ($restrict_domains && !in_array($domain_parent_uuid, $allowed_domain_uuids, true)) {
+						$msg .= ($text['message-access_denied'] ?? 'Access denied')."<br>\n";
+					}
+
+					//a domain can not be its own parent or the parent of its own parent
+						if ($action == 'update' && $domain_parent_uuid == $domain_uuid) {
+							$msg .= $text['message-parent_invalid']."<br>\n";
+						}
+						elseif ($action == 'update' && $domains_view_available) {
+							$sql = "select count(*) from view_domains ";
+							$sql .= "where domain_uuid = :domain_parent_uuid ";
+							$sql .= "and :domain_uuid = any(domain_uuid_path) ";
+							$parameters['domain_parent_uuid'] = $domain_parent_uuid;
+							$parameters['domain_uuid'] = $domain_uuid;
+							if ($database->select($sql, $parameters, 'column') > 0) {
+								$msg .= $text['message-parent_invalid']."<br>\n";
+							}
+							unset($sql, $parameters);
+						}
+				}
+			}
+
+		//a domain added by a user without domain_all must be below a parent domain
+			if ($action == 'add' && $restrict_domains && empty($domain_parent_uuid)) {
+				$msg .= $text['message-parent_required']."<br>\n";
+			}
+
 		//check for a duplicate domain name
 			if ($action == 'add') {
 				$sql = "select count(*) from v_domains ";
@@ -184,6 +266,9 @@
 						$array['domains'][0]['domain_uuid'] = $domain_uuid;
 						$array['domains'][0]['domain_name'] = $domain_name;
 						$array['domains'][0]['domain_enabled'] = $domain_enabled;
+						if (!empty($domain_parent_uuid)) {
+							$array['domains'][0]['domain_parent_uuid'] = $domain_parent_uuid;
+						}
 						$array['domains'][0]['domain_description'] = $domain_description;
 
 						//create a copy of the domain array as the database save method empties the array that we still need.
@@ -240,10 +325,18 @@
 						$original_domain_name = $database->select($sql, $parameters, 'column');
 						unset($sql, $parameters);
 
-					//update domain name, description
+					//update domain name, parent and description
 						$array['domains'][0]['domain_uuid'] = $domain_uuid;
 						$array['domains'][0]['domain_name'] = $domain_name;
 						$array['domains'][0]['domain_enabled'] = $domain_enabled;
+						if ($domain_all_access) {
+							//an empty parent clears the parent, a user without domain_all can only
+							//move a domain to another parent within their own tree
+							$array['domains'][0]['domain_parent_uuid'] = !empty($domain_parent_uuid) ? $domain_parent_uuid : null;
+						}
+						elseif (!empty($domain_parent_uuid)) {
+							$array['domains'][0]['domain_parent_uuid'] = $domain_parent_uuid;
+						}
 						$array['domains'][0]['domain_description'] = $domain_description;
 						$database->save($array);
 
@@ -544,7 +637,7 @@
 			//redirect the browser
 				if ($action == "update") {
 					message::add($text['message-update']);
-					if (!permission_exists('domain_add')) { //admin, updating own domain
+					if (!permission_exists('domain_add') || $restrict_domains) { //admin, updating own domain or a domain in their tree
 						header("Location: domain_edit.php".($query_string ? '?'.$query_string : ''));
 					}
 					else {
@@ -564,6 +657,7 @@
 		$sql = "select ";
 		$sql .= "domain_uuid, ";
 		$sql .= "domain_name, ";
+		$sql .= "domain_parent_uuid, ";
 		$sql .= "domain_enabled, ";
 		$sql .= "domain_description ";
 		$sql .= "from v_domains ";
@@ -572,10 +666,69 @@
 		$row = $database->select($sql, $parameters, 'row');
 		if (is_array($row) && sizeof($row) != 0) {
 			$domain_name = strtolower($row["domain_name"]);
+			$domain_parent_uuid = !empty($row["domain_parent_uuid"]) ? $row["domain_parent_uuid"] : '';
 			$domain_enabled = $row["domain_enabled"];
 			$domain_description = $row["domain_description"];
 		}
 		unset($sql, $parameters, $row);
+	}
+
+//get the parent domain options. a domain can not be its own parent nor a descendant of
+//itself, and a user without domain_all is limited to the domains they manage.
+	$parent_domain_options = [];
+	if ($domain_all_access || $domain_tree_access) {
+		$sql = "select domain_uuid, domain_parent_uuid, domain_name from v_domains ";
+		if ($restrict_domains && !empty($allowed_domain_uuids)) {
+			$sql .= "where domain_uuid in (" . implode(',', array_fill(0, count($allowed_domain_uuids), '?')) . ") ";
+			$parameters = $allowed_domain_uuids;
+		}
+		elseif ($restrict_domains) {
+			$sql .= "where 1 != 1 ";
+			$parameters = [];
+		}
+		$sql .= "order by domain_name asc ";
+		$domain_rows = $database->select($sql, $parameters ?? null, 'all');
+		unset($sql, $parameters);
+
+		//build the parent child map
+		$domains_by_uuid = [];
+		$children_by_uuid = [];
+		if (is_array($domain_rows)) {
+			foreach ($domain_rows as $domain_row) {
+				$domains_by_uuid[$domain_row['domain_uuid']] = $domain_row;
+				$children_by_uuid[$domain_row['domain_parent_uuid'] ?? ''][] = $domain_row['domain_uuid'];
+			}
+		}
+
+		//when editing a domain, exclude itself and everything below it, they can not be its parent
+		$excluded_domain_uuids = [];
+		if ($action == 'update' && !empty($domain_uuid)) {
+			$excluded_domain_uuids[] = $domain_uuid;
+			for ($i = 0; $i < count($excluded_domain_uuids); $i++) {
+				foreach ($children_by_uuid[$excluded_domain_uuids[$i]] ?? [] as $child_uuid) {
+					if (!in_array($child_uuid, $excluded_domain_uuids, true)) {
+						$excluded_domain_uuids[] = $child_uuid;
+					}
+				}
+			}
+		}
+
+		//indent each option by its depth in the tree
+		foreach ($domains_by_uuid as $uuid => $domain_row) {
+			if (in_array($uuid, $excluded_domain_uuids, true)) {
+				continue;
+			}
+			$depth = 0;
+			$parent_uuid = $domain_row['domain_parent_uuid'] ?? '';
+			$visited = [$uuid];
+			while (!empty($parent_uuid) && isset($domains_by_uuid[$parent_uuid]) && !in_array($parent_uuid, $visited, true)) {
+				$visited[] = $parent_uuid;
+				$parent_uuid = $domains_by_uuid[$parent_uuid]['domain_parent_uuid'] ?? '';
+				$depth++;
+			}
+			$parent_domain_options[$uuid] = ['name' => $domain_row['domain_name'], 'depth' => $depth];
+		}
+		unset($domain_rows, $domains_by_uuid, $children_by_uuid, $excluded_domain_uuids);
 	}
 
 //set the defaults
@@ -649,7 +802,7 @@
 	echo "	</div>\n";
 	echo "	<div class='actions'>\n";
 
-	if (permission_exists('domain_add')) {
+	if (permission_exists('domain_add') || $restrict_domains) {
 		echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$settings->get('theme', 'button_icon_back'),'id'=>'btn_back','style'=>'margin-right: 15px;','link'=>'domains.php'.($query_string ? '?'.$query_string : '')]);
 	}
 	if ($action == "update" && permission_exists('domain_setting_view')) {
@@ -658,9 +811,19 @@
 	if (permission_exists('domain_delete') && is_array($_SESSION['domains']) && @sizeof($_SESSION['domains']) > 1 && $domain_uuid != $_SESSION['domain_uuid']) {
 		echo button::create(['type'=>'button','label'=>$text['button-delete'],'icon'=>$settings->get('theme', 'button_icon_delete'),'onclick'=>"modal_open('modal-delete-domain','btn_delete_domain');"]);
 	}
-	if (permission_exists("domain_select") && is_array($_SESSION['domains']) && @sizeof($_SESSION['domains']) > 1) {
+	//limit the domain selector to the domains the user manages
+	$selector_domains = $_SESSION['domains'];
+	if ($restrict_domains && is_array($selector_domains)) {
+		foreach ($selector_domains as $key => $value) {
+			if (!in_array($value['domain_uuid'] ?? '', $allowed_domain_uuids, true)) {
+				unset($selector_domains[$key]);
+			}
+		}
+	}
+
+	if (permission_exists("domain_select") && is_array($selector_domains) && @sizeof($selector_domains) > 1) {
 		echo "<select id='domains' class='formfld' style='width: auto;' onchange=\"window.location.href='?id=' + document.getElementById('domains').options[document.getElementById('domains').selectedIndex].value;\">\n";
-		foreach ($_SESSION['domains'] as $domain) {
+		foreach ($selector_domains as $domain) {
 			$selected = $domain["domain_uuid"] == $domain_uuid ? "selected='selected'" : null;
 			echo "	<option value='".escape($domain["domain_uuid"])."' ".$selected.">".escape($domain["domain_name"])."</option>\n";
 		}
@@ -699,6 +862,26 @@
 	echo $text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if ($domain_all_access || $domain_tree_access) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-parent_domain']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' style='min-width: 150px;' name='domain_parent_uuid' id='domain_parent_uuid'>\n";
+		if (!$restrict_domains) {
+			echo "		<option value='' ".(empty($domain_parent_uuid) ? "selected='selected'" : null).">".$text['label-no_parent']."</option>\n";
+		}
+		foreach ($parent_domain_options as $uuid => $option) {
+			echo "		<option value='".escape($uuid)."'".($domain_parent_uuid == $uuid ? " selected='selected'" : null).">".str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $option['depth']).escape($option['name'])."</option>\n";
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-parent_domain']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";

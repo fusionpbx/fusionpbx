@@ -173,6 +173,31 @@
 				die("invalid domain");
 			}
 
+		//a user without domain_all is limited to their own domain and the domains below it
+		//in the parent child tree, the relationship comes from the domains view defined in
+		//core/domains/resources/database/views/domains.php
+			if (!permission_exists('domain_all') && !empty($_SESSION['user']['domain_uuid'])) {
+				$domain_change_allowed = false;
+				$sql = "select count(*) from view_domains ";
+				$sql .= "where domain_uuid = :domain_uuid ";
+				$sql .= "and :user_domain_uuid = any(domain_uuid_path) ";
+				$parameters['domain_uuid'] = $domain_uuid;
+				$parameters['user_domain_uuid'] = $_SESSION['user']['domain_uuid'];
+				if ((int) $database->select($sql, $parameters, 'column') > 0) {
+					$domain_change_allowed = true;
+				}
+				unset($sql, $parameters);
+
+				//when the view has not been created yet only the user's own domain is allowed
+				if (!$domain_change_allowed && $_SESSION['user']['domain_uuid'] === $domain_uuid) {
+					$domain_change_allowed = true;
+				}
+
+				if (!$domain_change_allowed) {
+					die("invalid domain");
+				}
+			}
+
 		//update the domain session variables from the domain proven to exist
 			$_SESSION["previous_domain_uuid"] = $_SESSION['domain_uuid'];
 			$_SESSION['domain_uuid'] = $domain_uuid;
