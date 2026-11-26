@@ -115,6 +115,14 @@ class switch_settings {
 		$vars['log_dir'] = $vars['log_dir'] ?? '';
 		$vars['mod_dir'] = $vars['mod_dir'] ?? '';
 
+		//do not write empty values when FreeSWITCH did not answer on the event socket
+		if ($vars['base_dir'] === '' || $vars['conf_dir'] === '' || $vars['sounds_dir'] === '') {
+			if (PHP_SAPI === 'cli') {
+				echo "FreeSWITCH did not answer on the event socket. The switch default settings were not updated.\n";
+			}
+			return;
+		}
+		
 		//set the bin directory
 		if ($vars['base_dir'] == "/usr/local/freeswitch") {
 			$bin = '/usr/local/freeswitch/bin';
@@ -250,8 +258,9 @@ class switch_settings {
 		$default_settings = $this->database->select($sql, null, 'all');
 		unset($sql);
 
-		//find the missing default settings
+		//find the missing default settings and the existing ones with an empty value
 		$x = 0;
+		$repair = [];
 		foreach ($array as $setting) {
 			$found = false;
 			$missing[$x] = $setting;
@@ -260,6 +269,10 @@ class switch_settings {
 					$found = true;
 					//remove items from the array that were found
 					unset($missing[$x]);
+					//the row exists with an empty value and FreeSWITCH now provides one
+					if (trim($row['default_setting_value'] ?? '') === '' && trim($setting['default_setting_value'] ?? '') !== '') {
+						$repair[$row['default_setting_uuid']] = $setting['default_setting_value'];
+					}
 				}
 			}
 			$x++;
@@ -299,6 +312,31 @@ class switch_settings {
 			unset($missing);
 		}
 
+				//repair the existing default settings that have an empty value
+		if (!empty($repair)) {
+			$update = [];
+			$i = 1;
+			foreach ($repair as $uuid => $value) {
+				$update['default_settings'][$i]['default_setting_uuid'] = $uuid;
+				$update['default_settings'][$i]['default_setting_value'] = $value;
+				$i++;
+			}
+
+			//grant temporary permissions
+			$p = permissions::new();
+			$p->add('default_setting_edit', 'temp');
+
+			//execute update
+			$this->database->save($update);
+
+			//clear the apcu cache
+			settings::clear_cache();
+
+			//revoke temporary permissions
+			$p->delete('default_setting_edit', 'temp');
+			unset($update, $repair);
+		}
+		
 		//set the default settings
 		if (!empty($array) && is_array($array)) {
 			foreach ($array as $row) {
