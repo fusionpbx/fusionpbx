@@ -97,8 +97,12 @@
 	$apps[$x]['permissions'][$y]['groups'][] = "admin";
 	$y++;
 	$apps[$x]['permissions'][$y]['name'] = "active_call_whisper";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
 	$y++;
 	$apps[$x]['permissions'][$y]['name'] = "active_call_barge";
+	$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+	$apps[$x]['permissions'][$y]['groups'][] = "admin";
 	$y++;
 
 // Tab visibility permissions
