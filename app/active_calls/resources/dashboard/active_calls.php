@@ -28,9 +28,9 @@ $project_root = dirname(__DIR__, 4);
 
 //includes files
 require_once "$project_root/resources/require.php";
-
-//check permisions
 require_once "$project_root/resources/check_auth.php";
+
+//check permissions
 if (!permission_exists('call_active_view')) {
 	return;
 }

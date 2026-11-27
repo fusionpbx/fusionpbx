@@ -6,8 +6,7 @@
 
 //check permissions
 	if (!(permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb'))) {
-		echo "access denied";
-		exit;
+		return;
 	}
 
 //convert to a key

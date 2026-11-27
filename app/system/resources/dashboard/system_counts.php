@@ -2,12 +2,11 @@
 
 //includes files
 	require_once dirname(__DIR__, 4) . "/resources/require.php";
-
-//check permisions
 	require_once "resources/check_auth.php";
+
+//check permissions
 	if (!permission_exists('system_view_info')) {
-		echo "access denied";
-		exit;
+		return;
 	}
 
 //convert to a key

@@ -32,8 +32,7 @@
 
 //check permissions
 	if (!permission_exists('service_view')) {
-		echo "access denied";
-		exit;
+		return;
 	}
 
 //function to format etime into friendly display

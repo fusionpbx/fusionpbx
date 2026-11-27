@@ -26,6 +26,11 @@
 	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
+//check permissions
+	if (!permission_exists('device_key_view')) {
+		return;
+	}
+
 //define global variable(s)
 	global $database;
 

@@ -1,19 +1,18 @@
 <?php
 
-	//includes files
+//includes files
 	require_once dirname(__DIR__, 4) . "/resources/require.php";
-
-	//check permisions
 	require_once "resources/check_auth.php";
+
+//check permissions
 	if (!permission_exists('system_view_cpu')) {
-		echo "access denied";
-		exit;
+		return;
 	}
 
 //convert to a key
 	$widget_key = str_replace(' ', '_', strtolower($widget_name));
 
-	//add multi-lingual support
+//add multi-lingual support
 	$language = new text;
 	$text = $language->get($settings->get('domain', 'language', 'en-us'), 'app/system');
 

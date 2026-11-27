@@ -2,15 +2,11 @@
 
 //includes files
 	require_once  dirname(__DIR__, 4) . "/resources/require.php";
-
-//check permisions
 	require_once "resources/check_auth.php";
-	if (permission_exists('voicemail_view') || permission_exists('voicemail_message_view')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
+
+//check permissions
+	if (!(permission_exists('voicemail_view') || permission_exists('voicemail_message_view'))) {
+		return;
 	}
 
 //convert to a key

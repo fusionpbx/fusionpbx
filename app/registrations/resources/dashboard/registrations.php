@@ -4,6 +4,11 @@
 	require_once  dirname(__DIR__, 4) . "/resources/require.php";
 	require_once "resources/check_auth.php";
 
+//check permissions
+	if (!(permission_exists('registration_domain') || permission_exists('registration_all'))) {
+		return;
+	}
+
 //convert to a key
 	$widget_key = str_replace(' ', '_', strtolower($widget_name));
 

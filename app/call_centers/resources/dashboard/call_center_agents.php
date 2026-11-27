@@ -30,8 +30,7 @@
 
 //check permissions
 	if (!permission_exists('call_center_queue_view')) {
-		echo "access denied";
-		exit;
+		return;
 	}
 
 //convert to a key

@@ -2,15 +2,15 @@
 
 //includes files
 	require_once dirname(__DIR__, 4) . "/resources/require.php";
-
-//check permisions
 	require_once "resources/check_auth.php";
-	if (permission_exists("switch_version")
+
+//check permissions
+	if (!(permission_exists("switch_version")
 		|| permission_exists("switch_uptime")
 		|| permission_exists("switch_channels")
 		|| permission_exists("switch_registrations")
-		||  permission_exists("registration_all")) {
-		//access granted
+		||  permission_exists("registration_all"))) {
+		return;
 	}
 
 //convert to a key
@@ -36,7 +36,7 @@
 
 //switch version
 	if (permission_exists('switch_version') && $esl->is_connected()) {
-		$switch_version = event_socket::api('version');
+		$switch_version = $esl->request('api version');
 		preg_match("/FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)/", $switch_version, $matches);
 		$switch_version = $matches[1];
 		$switch_bits = $matches[2];
@@ -44,7 +44,7 @@
 
 //switch uptime
 	if (permission_exists('switch_uptime') && $esl->is_connected()) {
-		$tmp = event_socket::api('status');
+		$tmp = $esl->request('api status');
 		$tmp = explode("\n", $tmp);
 		$tmp = $tmp[0];
 		$tmp = explode(' ', $tmp);
@@ -62,7 +62,7 @@
 	$channels = '';
 	$tr_link_channels = '';
 	if (permission_exists('switch_channels') && $esl->is_connected()) {
-		$tmp = event_socket::api('status');
+		$tmp = $esl->request('api status');
 		$matches = Array();
 		preg_match("/(\d+)\s+session\(s\)\s+\-\speak/", $tmp, $matches);
 		$channels = $matches[1] ? $matches[1] : 0;
