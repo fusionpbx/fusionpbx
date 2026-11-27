@@ -182,10 +182,21 @@ foreach ($child_widgets as $row) {
 		$child_widget_name = $widget_path_array[1];
 		$path_array = glob(dirname(__DIR__, 4).'/*/'.$application_name.'/resources/dashboard/'.$child_widget_name.'.php');
 
-		echo "<div class='child_widget ".$widget_details_state."' id='".$widget_id."' draggable='false'>\n";
+		//render the child widget to a buffer, widgets return without output when the user lacks permission
+		$widget_html = '';
 		if (!empty($path_array[0]) && file_exists($path_array[0])) {
+			ob_start();
 			include $path_array[0];
+			$widget_html = ob_get_clean();
 		}
+
+		//skip the container when nothing was rendered, prevents empty spots in the grid
+		if (trim((string) $widget_html) === '') {
+			continue;
+		}
+
+		echo "<div class='child_widget ".$widget_details_state."' id='".$widget_id."' draggable='false'>\n";
+		echo $widget_html;
 		echo "</div>\n";
 	}
 

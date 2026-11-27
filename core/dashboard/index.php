@@ -724,10 +724,21 @@ window.addEventListener('resize', update_parent_height);
 		// Widget class
 		$widget_class = ($widget_path == 'dashboard/parent' ? 'parent_widget' : 'widget');
 
-		echo "<div class='".$widget_class." details_".$widget_details_state." draggable' id='".$widget_id."' draggable='false'>\n";
+		//render the widget to a buffer, widgets return without output when the user lacks permission
+		$widget_html = '';
 		if (!empty($path_array[0]) && file_exists($path_array[0])) {
+			ob_start();
 			include $path_array[0];
+			$widget_html = ob_get_clean();
 		}
+
+		//skip the container when nothing was rendered, prevents empty spots in the grid
+		if (trim((string) $widget_html) === '') {
+			continue;
+		}
+
+		echo "<div class='".$widget_class." details_".$widget_details_state." draggable' id='".$widget_id."' draggable='false'>\n";
+		echo $widget_html;
 		echo "</div>\n";
 
 		$x++;
